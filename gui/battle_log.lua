@@ -70,7 +70,7 @@ bl.Display.Item.Damage = function(damage)
     --     damage_string = Format_Number(damage, 6)
     end
 
-    return Format_Number(damage)
+    return Col.String.Format_Number(damage)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ bl.Display.Item.TP = function(tp_value)
         --     color = C_Orange
         -- end
         -- return '('..Format_Number(tp_value, 5, color, nil, nil, true)..')'
-        return Format_Number(tp_value)
+        return Col.String.Format_Number(tp_value)
     end
     return " "
 end

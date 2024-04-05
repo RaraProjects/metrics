@@ -80,6 +80,7 @@ end)
 -- --------------------------------------------------------------------------
 ashita.events.register('d3d_present', 'present_cb', function ()
     UI.ShowDemoWindow()
+    -- TO DO: Add throttling.
     Window.Populate()
 end)
 
@@ -91,8 +92,6 @@ Test_Gobal = true
 ashita.events.register('command', 'command_cb', function (e)
 	local command_args = e.command:lower():args()
     if table.contains({'/metrics'}, command_args[1]) then
-		A.Chat.Message("Command: " .. tostring(Test_Gobal))
-        Monitor.Test(Test_Gobal)
-        A.Chat.Message("Command: " .. tostring(Test_Gobal))
+
 	end
 end)

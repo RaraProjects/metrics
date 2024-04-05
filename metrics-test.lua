@@ -40,7 +40,6 @@ require("packets.events")
 -- require('data.settings')
 
 require('magic_numbers')
-require('string_lib')
 require('lib')
 
 
@@ -49,7 +48,7 @@ require('lib')
 Window = require("gui._window")
 Col = require('gui._columns')
 Blog = require('gui.battle_log')
-Monitor = require('gui.table')
+Monitor = require('gui.team')
 Focus = require('gui.focus')
 Settings = require("gui.settings")
 

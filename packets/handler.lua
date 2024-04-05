@@ -475,9 +475,8 @@ p.Action.Finish_Spell_Casting = function(action, actor_mob, log_offense)
             target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = "test"} end
 
-            new_damage = p.Handler.Spell(spell_data, result, actor_mob.name, target.name)
+            new_damage = p.Handler.Spell_Damage(spell_data, result, actor_mob.name, target.name)
             if not new_damage then new_damage = 0 end
-
             damage = damage + new_damage
         end
     end
@@ -490,7 +489,7 @@ p.Action.Finish_Spell_Casting = function(action, actor_mob, log_offense)
     -- Log the use of the spell
     Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.MAGIC, spell_name, p.Metric.COUNT)
 
-    if Lists.Spell.Damaging[spell_id] and not actor_mob.is_npc then
+    if Lists.Spell.Damaging[spell_id] then
         Blog.Log.Add(actor_mob.name, spell_name, damage, nil, nil, 'spell', spell_data)
     end
 end
@@ -504,27 +503,27 @@ end
 -- player_name : name of the player that did the action
 -- target_name : name of the target that received the action
 ------------------------------------------------------------------------------------------------------
-p.Handler.Spell = function(spell_data, metadata, player_name, target_name)
+p.Handler.Spell_Damage = function(spell_data, metadata, player_name, target_name)
     if not spell_data then return 0 end
 
-    local spell_name = spell_data.Name[0]
-    local spell_id = spell_data.Id
-    local spell_mapped = false
+    local spell_id = spell_data.Index
+    local spell_name = A.Spell.Name(spell_id, spell_data)
+    local is_mapped = false
     local damage = metadata.param or 0
 
     if Lists.Spell.Damaging[spell_id] then
         Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.MAGIC, damage, spell_name)
-        spell_mapped = true
+        is_mapped = true
     end
 
     -- TO DO: Handle Overcure
     if Lists.Spell.Healing[spell_id] then
     	Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.HEALING, damage, spell_name)
-        spell_mapped = true
+        is_mapped = true
     end
 
-    if not spell_mapped then
-        --Add_Message_To_Chat('W', 'Handle_Spell^handling', tostring(spell_name)..' is not included in Damage_Spells global.')
+    if not is_mapped then
+        A.Chat.Debug("Handler.Spell_Damage: " .. tostring(spell_id) .. " " .. tostring(spell_name) .. " is not included in list of damaging spells.")
     end
 
     return damage
@@ -550,8 +549,6 @@ p.Action.Job_Ability = function(act, actor_mob, log_offense)
     else
         ability_data = {Id = ability_id, Name = A.Ability.Name(ability_id, ability_data)}
     end
-
-	-- A.Chat.Debug("Action.Job_Ability: " .. tostring(ability_data.Name) .. " " .. tostring(actor_mob.name))
 
     local result, target
     local damage = 0
@@ -623,6 +620,8 @@ p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, own
         Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
         Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.COUNT)
     end
+
+    A.Chat.Debug("Handler.Ability " .. tostring(ability_id) .. " " .. tostring(ability_data.Name))
 
     -- TO DO: Need to get the ID for BloodPactRage
     if (Lists.Ability.Damaging[ability_id] or Lists.Ability.Avatar[ability_id] or ability_data.Type == A.Ability.Enum.Type.PETOFFENSE) and owner_mob then
@@ -718,7 +717,9 @@ p.Action.Pet_Ability = function(act, actor_mob, log_offense)
         ability_data = Lists.Ability.Avatar[ability_id]
         avatar = true
     else
-        ability_data = A.Ability.ID(ability_id)
+        -- Need to offset ability ID by 512.
+        -- Tested for Wyverns
+        ability_data = A.Ability.ID(ability_id + 512)
     end
 
     if not ability_data then

@@ -49,38 +49,6 @@ monitor.Settings.Accuracy_Show_Attempts = false
 monitor.Settings.Show_Help_Text = false
 monitor.Settings.Include_SC_Damage = false
 
--- monitor.Display.Columns = {
---     ["pet"] = 4,
---     ["crit"] = 1,
---     ["sc"] = 1,
---     ["heal"] = 1,
---     ["death"] = 1,
--- }
-
-
-
-------------------------------------------------------------------------------------------------------
--- 
-------------------------------------------------------------------------------------------------------
-monitor.Test = function(test)
-    A.Chat.Message("Inside Test " .. tostring(test))
-    test = false
-    -- local list = Model.Data.Initialized_Players
-    -- local flags = ImGuiComboFlags_None
-    -- local item_current_idx = 1
-
-    -- local name_sort = {}
-    -- for player_name, _ in pairs(list) do
-    --     table.insert(name_sort, player_name)
-    -- end
-    -- table.sort(name_sort)
-    -- list = name_sort
-
-    -- for i, player_name in ipairs(list) do
-    --     A.Chat.Message(tostring(i) .. player_name)
-    -- end
-end
-
 ------------------------------------------------------------------------------------------------------
 -- 
 ------------------------------------------------------------------------------------------------------
@@ -105,7 +73,7 @@ end
 -- 
 ------------------------------------------------------------------------------------------------------
 monitor.Display.Screen.Table = function()
-    monitor.Display.Item.Mob_Filter()
+    Window.Dropdown.Mob_Filter()
     if UI.BeginTable("table1", monitor.Display.Columns.Current, Window.Table.Flags.None) then
         monitor.Display.Item.Headers()
         local player_name = "Debug"
@@ -117,34 +85,6 @@ monitor.Display.Screen.Table = function()
             end
         end
         UI.EndTable()
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- 
-------------------------------------------------------------------------------------------------------
-monitor.Display.Item.Mob_Filter = function()
-    local list = Model.Data.Mob_List_Sorted
-    local flags = ImGuiComboFlags_None
-    if list[1] then
-        if UI.BeginCombo("Mob Filter", list[monitor.Display.Dropdown.Mob.Index], flags) then
-            for n = 1, #list, 1 do
-                local is_selected = monitor.Display.Dropdown.Mob.Index == n
-                if UI.Selectable(list[n], is_selected) then
-                    monitor.Display.Dropdown.Mob.Index = n
-                    Model.Mob_Filter = list[n]
-                end
-                -- Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-                if is_selected then
-                    UI.SetItemDefaultFocus()
-                end
-            end
-            UI.EndCombo()
-        end
-    else
-        if UI.BeginCombo("Mob Filter", "!NONE", flags) then
-            UI.EndCombo()
-        end
     end
 end
 
@@ -182,8 +122,6 @@ end
 -- 
 ------------------------------------------------------------------------------------------------------
 monitor.Display.Item.Rows = function(player_name)
-    local melee_attempts = Model.Get.Data(player_name, 'melee', 'count')
-
     -- ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "Pink");
 
     UI.TableNextRow()
@@ -192,21 +130,21 @@ monitor.Display.Item.Rows = function(player_name)
     UI.TableNextColumn() UI.Text(Col.Damage.Total(player_name))
     UI.TableNextColumn() UI.Text(Col.Acc.Running(player_name))
     if not monitor.Display.Flags.Total_Damage_Only then
-        UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, "combined"))
-        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, "melee"))
-        if monitor.Display.Flags.Crit then UI.TableNextColumn() UI.Text(Col.Crit.Rate(player_name, melee_attempts)) end
-        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, "ws"))
-        if monitor.Settings.Include_SC_Damage then UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, "sc")) end
-        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, "ranged"))
-        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, "magic"))
-        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, "ability"))
+        UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, Model.Enum.Misc.COMBINED))
+        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE))
+        if monitor.Display.Flags.Crit then UI.TableNextColumn() UI.Text(Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE)) end
+        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.WS))
+        if monitor.Settings.Include_SC_Damage then UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.SC)) end
+        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.RANGED))
+        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC))
+        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.ABILITY))
         if monitor.Display.Flags.Pet then
-            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, "pet_melee"))
-            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, "pet_ws"))
-            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, "pet_ranged"))
-            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, "pet_ability"))
+            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE))
+            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS))
+            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED))
+            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY))
         end
-        if monitor.Display.Flags.Healing then UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, "healing")) end
+        if monitor.Display.Flags.Healing then UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.HEALING)) end
         if monitor.Display.Flags.Deaths then UI.TableNextColumn() UI.Text(Col.Deaths(player_name)) end
     end
 end

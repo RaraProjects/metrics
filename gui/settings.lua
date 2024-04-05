@@ -2,6 +2,12 @@ local s = {}
 
 s.Screen = {}
 
+-- TO DO
+-- Add font scaling slider
+-- Add theme seleciton
+-- Add field to change running accuracy limit
+-- Add reset to default settings button
+
 ------------------------------------------------------------------------------------------------------
 -- 
 ------------------------------------------------------------------------------------------------------
@@ -33,8 +39,8 @@ s.Screen.Settings = function()
     end
 
     -- Table
-    if UI.CollapsingHeader("Table Settings") then
-        if UI.BeginTable("Table Settings", 3) then
+    if UI.CollapsingHeader("Team Settings") then
+        if UI.BeginTable("Team Settings", 3) then
             UI.TableNextColumn()
             if UI.Checkbox("Total Damage Only", {Monitor.Display.Flags.Total_Damage_Only}) then
                 Monitor.Display.Flags.Total_Damage_Only = not Monitor.Display.Flags.Total_Damage_Only

@@ -42,6 +42,7 @@ m.Lists = {
 
 m.Enum = {
 	Filter = {NO_MOB = "!NONE"},
+	Misc = {IGNORE = 'ignore', COMBINED = 'combined'},
 	Node   = {
 		CATALOG = "catalog",
 		PET_CATALOG = "pet_catalog"
@@ -132,10 +133,15 @@ m.Set = {}
 m.Inc = {}
 m.Util = {}
 
+-- MODEL OVERVIEW
+-- 1. Action takes place.
+-- 2. Initialize Data and Catalog nodes.
+-- 3. Further actions update the data and catalog nodes.
+
 ------------------------------------------------------------------------------------------------------
 -- Resets the parsing data and clears the battle log.
 ------------------------------------------------------------------------------------------------------
-m.Reset = function()
+m.Initialize = function()
 	m.Mob_Filter = m.Enum.Filter.NO_MOB
 	m.Data.Parse = {}
 	m.Data.Trackable = {}
@@ -151,11 +157,6 @@ m.Reset = function()
 	Pet_Catalog_Damage_Race = {}
 	Blog.Reset()
 end
-
--- MODEL OVERVIEW
--- 1. Action takes place.
--- 2. Initialize Data and Catalog nodes.
--- 3. Further actions update the data and catalog nodes.
 
 ------------------------------------------------------------------------------------------------------
 -- Initializes an "actor:target" combination in the primary data and catalog data nodes.
@@ -846,7 +847,7 @@ m.Get.Total_Party_Damage = function()
 
         m.Init.Data(index)
 
-        total_damage = total_damage + m.Get.Data(player_name, 'total', m.Enum.Metric.TOTAL)
+        total_damage = total_damage + m.Get.Data(player_name, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
     end
 
     -- Party 2
@@ -861,7 +862,7 @@ m.Get.Total_Party_Damage = function()
 
 			m.Init.Data(index)
 
-			total_damage = total_damage + m.Get.Data(player_name, 'total', m.Enum.Metric.TOTAL)
+			total_damage = total_damage + m.Get.Data(player_name, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
 		end
 	end
 
@@ -877,7 +878,7 @@ m.Get.Total_Party_Damage = function()
 
 			m.Init.Data(index)
 
-			total_damage = total_damage + m.Get.Data(player_name, 'total', m.Enum.Metric.TOTAL)
+			total_damage = total_damage + m.Get.Data(player_name, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
 		end
 	end
 
@@ -922,10 +923,10 @@ end
 -- Returns the players accuracy for the last running accuracy limit amount of attempts.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string primary index for the Running_Accuracy_Data table
----@return string
+---@return table
 ------------------------------------------------------------------------------------------------------
 m.Get.Running_Accuracy = function(player_name)
-	if not m.Data.Running_Accuracy[player_name] then return "0" end
+	if not m.Data.Running_Accuracy[player_name] then return {0, 0} end
 	local hits = 0
 	local count = 0
 
@@ -935,7 +936,7 @@ m.Get.Running_Accuracy = function(player_name)
 		count = count + 1
 	end
 
-	return Format_Percent(hits, count)
+	return {hits, count}
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -960,9 +961,9 @@ m.Util.Populate_Total_Damage_Table = function()
 	local damage
 	for index, _ in pairs(m.Data.Initialized_Players) do
 		if Monitor.Settings.Include_SC_Damage then
-			damage = m.Get.Data(index, 'total', m.Enum.Metric.TOTAL)
+			damage = m.Get.Data(index, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
 		else
-			damage = m.Get.Data(index, 'total_no_sc', m.Enum.Metric.TOTAL)
+			damage = m.Get.Data(index, m.Enum.Trackable.TOTAL_NO_SC, m.Enum.Metric.TOTAL)
 		end
 		table.insert(m.Data.Total_Damage_Sorted, {index, damage})
 	end
@@ -972,9 +973,11 @@ end
 -- Sorting function for the sorted cataloged damage table.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string name of the player that did the cataloged action
+---@param focus_type string the trackable that is of interest.
 ------------------------------------------------------------------------------------------------------
-m.Sort.Catalog_Damage = function(player_name)
-	m.Util.Populate_Catalog_Damage_Table(player_name)
+m.Sort.Catalog_Damage = function(player_name, focus_type)
+	if not focus_type then return nil end
+	m.Util.Populate_Catalog_Damage_Table(player_name, focus_type)
 	table.sort(m.Data.Catalog_Damage_Race, function (a, b)
 		local a_damage = a[2]
 		local b_damage = b[2]
@@ -1002,11 +1005,13 @@ end
 -- This table contains the total amount of damage that each recognized player has done for a cataloged action.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string name of the player that did the cataloged action
+---@param focus_type string the trackable that is of interest.
 ------------------------------------------------------------------------------------------------------
-m.Util.Populate_Catalog_Damage_Table = function(player_name)
+m.Util.Populate_Catalog_Damage_Table = function(player_name, focus_type)
+	if not focus_type then return nil end
 	m.Data.Catalog_Damage_Race = {}
-	for action_name, _ in pairs(m.Data.Trackable[Focus.Settings.Trackable][player_name]) do
-		table.insert(m.Data.Catalog_Damage_Race, {action_name, m.Get.Catalog(player_name, Focus.Settings.Trackable, action_name, m.Enum.Metric.TOTAL)})
+	for action_name, _ in pairs(m.Data.Trackable[focus_type][player_name]) do
+		table.insert(m.Data.Catalog_Damage_Race, {action_name, m.Get.Catalog(player_name, focus_type, action_name, m.Enum.Metric.TOTAL)})
 	end
 end
 

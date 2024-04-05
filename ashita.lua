@@ -386,7 +386,7 @@ a.Spell.Name = function(id, data)
         spell = a.Spell.ID(id)
     end
     if not spell then return "Error" end
-    return spell.Name[0]
+    return spell.Name[1]
 end
 
 -- ------------------------------------------------------------------------------------------------------
