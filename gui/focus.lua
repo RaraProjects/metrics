@@ -234,12 +234,12 @@ f.Display.Pet = function(player_name, pet_total)
 
     if pet_total > 0 then
         -- Headers
-        UI.TableSetupColumn("Pet T", flags, damage)
+        UI.TableSetupColumn("Total", flags, damage)
         UI.TableSetupColumn("% Damage", flags, damage)
-        UI.TableSetupColumn("Pet M", flags, damage)
-        UI.TableSetupColumn("Pet R", flags, damage)
-        UI.TableSetupColumn("Pet WS", flags, damage)
-        UI.TableSetupColumn("Pet A", flags, damage)
+        UI.TableSetupColumn("Melee", flags, damage)
+        UI.TableSetupColumn("Ranged", flags, damage)
+        UI.TableSetupColumn("Weaponskill", flags, damage)
+        UI.TableSetupColumn("Ability", flags, damage)
         UI.TableHeadersRow()
 
         -- Data
@@ -250,6 +250,119 @@ f.Display.Pet = function(player_name, pet_total)
         UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, 'pet_ranged'))
         UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, 'pet_ws'))
         UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, 'pet_ability'))
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- 
+------------------------------------------------------------------------------------------------------
+f.Display.Pet_Single_Data = function(player_name)
+    local flags = f.Display.Columns.Flags
+    local damage = f.Display.Columns.Width.Damage
+    local name = f.Display.Columns.Width.Name
+
+    for pet_name, _ in pairs(Model.Data.Initialized_Pets[player_name]) do
+        if UI.CollapsingHeader(pet_name, ImGuiTreeNodeFlags_None) then
+            if UI.BeginTable(pet_name, 6, f.Display.Table.Flags) then
+                UI.TableSetupColumn("Total", flags, damage)
+                UI.TableSetupColumn("% Damage", flags, damage)
+                UI.TableSetupColumn("Melee", flags, damage)
+                UI.TableSetupColumn("Ranged", flags, damage)
+                UI.TableSetupColumn("Weaponskill", flags, damage)
+                UI.TableSetupColumn("Ability", flags, damage)
+                UI.TableHeadersRow()
+
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, 'pet'))
+                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, 'pet', true))
+                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, 'pet_melee'))
+                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, 'pet_ranged'))
+                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, 'pet_ws'))
+                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, 'pet_ability'))
+                UI.EndTable()
+            end
+
+
+            if UI.BeginTable(pet_name.." single", 7, f.Display.Table.Flags) then
+                -- Headers
+                UI.TableSetupColumn("Action Name", flags, name)
+                UI.TableSetupColumn("Total", flags, damage)
+                UI.TableSetupColumn("Count", flags, damage)
+                UI.TableSetupColumn("Acc", flags, damage)
+                UI.TableSetupColumn("Avg", flags, damage)
+                UI.TableSetupColumn("Min", flags, damage)
+                UI.TableSetupColumn("Max", flags, damage)
+                UI.TableHeadersRow()
+
+                Model.Sort.Pet_Catalog_Damage(player_name, pet_name)
+
+                -- -- Data
+                local action_name, trackable
+                for _, data in ipairs(Model.Data.Pet_Catalog_Damage_Race) do
+                    action_name = data[1]
+                    trackable = data[3]
+                    f.Display.Item.Pet_Single_Row(player_name, pet_name, action_name, trackable)
+                end
+                UI.EndTable()
+            end
+
+        end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- 
+------------------------------------------------------------------------------------------------------
+f.Display.Item.Pet_Single_Row = function(player_name, pet_name, action_name, trackable)
+    UI.TableNextRow()
+    UI.TableNextColumn() UI.Text(action_name)
+    UI.TableNextColumn() UI.Text(Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, 'total'))
+    UI.TableNextColumn() UI.Text(Col.Single.Pet_Attempts(player_name, pet_name, action_name, trackable))
+    UI.TableNextColumn() UI.Text(Col.Single.Pet_Acc(player_name, pet_name, action_name, trackable))
+    UI.TableNextColumn() UI.Text(Col.Single.Pet_Average(player_name, pet_name, action_name, trackable))
+
+    local min = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, 'min')
+    if min == 100000 then
+        UI.TableNextColumn() UI.Text(Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, 'ignore'))
+    else
+        UI.TableNextColumn() UI.Text(Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, 'min'))
+    end
+
+    UI.TableNextColumn() UI.Text(Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, 'max'))
+end
+
+------------------------------------------------------------------------------------------------------
+-- 
+------------------------------------------------------------------------------------------------------
+f.Display.Single_Data = function(player_name)
+    if not f.Settings.Trackable then f.Settings.Trackable = 'ws' end
+    local flags = f.Display.Columns.Flags
+    local damage = f.Display.Columns.Width.Damage
+    local percent = f.Display.Columns.Width.Percent
+    local name = f.Display.Columns.Width.Name
+    local single = f.Display.Columns.Width.Single
+
+    -- Error Protection
+    if not Model.Data.Trackable[f.Settings.Trackable] then return nil end
+    if not Model.Data.Trackable[f.Settings.Trackable][player_name] then return nil end
+
+    -- Headers
+    UI.TableSetupColumn("Name", flags, name)
+    UI.TableSetupColumn("Total", flags, damage)
+    UI.TableSetupColumn("Count", flags, damage)
+    UI.TableSetupColumn("Acc", flags, damage)
+    UI.TableSetupColumn("Avg", flags, damage)
+    UI.TableSetupColumn("Min", flags, damage)
+    UI.TableSetupColumn("Max", flags, damage)
+    UI.TableHeadersRow()
+
+    Model.Sort.Catalog_Damage(player_name)
+
+    -- Data
+    local action_name
+    for _, data in ipairs(Model.Data.Catalog_Damage_Race) do
+        action_name = data[1]
+        f.Display.Item.Single_Row(player_name, action_name)
     end
 end
 
@@ -305,45 +418,12 @@ end
 ------------------------------------------------------------------------------------------------------
 -- 
 ------------------------------------------------------------------------------------------------------
-f.Display.Single_Data = function(player_name)
-    if not f.Settings.Trackable then f.Settings.Trackable = 'ws' end
-    local flags = f.Display.Columns.Flags
-    local damage = f.Display.Columns.Width.Damage
-    local percent = f.Display.Columns.Width.Percent
-    local name = f.Display.Columns.Width.Name
-    local single = f.Display.Columns.Width.Single
-
-    -- Error Protection
-    if not Model.Data.Trackable_Data[f.Settings.Trackable] then return nil end
-    if not Model.Data.Trackable_Data[f.Settings.Trackable][player_name] then return nil end
-
-    -- Headers
-    UI.TableSetupColumn("Name", flags, name)
-    UI.TableSetupColumn("Total", flags, damage)
-    UI.TableSetupColumn("Count", flags, damage)
-    UI.TableSetupColumn("Acc", flags, damage)
-    UI.TableSetupColumn("Avg", flags, damage)
-    UI.TableSetupColumn("Min", flags, damage)
-    UI.TableSetupColumn("Max", flags, damage)
-    UI.TableHeadersRow()
-
-    Model.Sort.Catalog_Damage(player_name)
-
-    -- Data
-    local action_name
-    for _, data in ipairs(Model.Data.Catalog_Damage_Race) do
-        action_name = data[1]
-        f.Display.Item.Single_Row(player_name, action_name)
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- 
-------------------------------------------------------------------------------------------------------
 f.Populate = function()
     f.Display.Item.Player_Filter()
     local player_name = f.Display.Dropdown.Focus
     -- Focus_Window.Add_Line(player_name..' ('..Col_Grand_Total(player_name)..')')
+
+    --A.Chat.Message("Populate " .. player_name)
 
     local melee_total = Model.Get.Data(player_name, 'melee', 'total')
     local ranged_total = Model.Get.Data(player_name, 'ranged', 'total')
@@ -424,10 +504,11 @@ f.Populate = function()
                 f.Display.Pet(player_name, pet_total)
                 UI.EndTable()
             end
+            f.Display.Pet_Single_Data(player_name)
         end
     end
 
-    if Model.Data.Trackable_Data[f.Settings.Trackable] and Model.Data.Trackable_Data[f.Settings.Trackable][player_name] then
+    if Model.Data.Trackable[f.Settings.Trackable] and Model.Data.Trackable[f.Settings.Trackable][player_name] then
         if UI.CollapsingHeader("Catalog", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Single", 7, f.Display.Table.Flags) then
                 f.Display.Single_Data(player_name)
@@ -435,6 +516,8 @@ f.Populate = function()
             end
         end
     end
+
+    -- Pet/Avatar Specific Catalogs
 end
 
 return f

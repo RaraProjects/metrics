@@ -1,36 +1,3 @@
-Column_Widths = {
-    ['name']     = 15,
-    ['dmg']      = 11,
-    ['comp dmg'] = 7,
-    ['percent']  = 8,
-    ['small']    = 8,
-    ['single']   = 4
-}
-
---[[
-    DESCRIPTION:    Gets some data about who is taking the action.
-    PARAMETERS :
-        entity_id   ID of the entity.
-    RETURNS    :    Table containing discrete data about the entity.
-]] 
-function Get_Entity_Data(entity_id)
-    if (entity_id == nil) then return end
-
-    local entity = windower.ffxi.get_mob_by_id(entity_id)
-    if (entity == nil) then return end
-
-    local entity_data = {}
-    entity_data['name']        = entity.name
-    entity_data['is_npc']      = entity.is_npc
-    entity_data['is_party']    = entity.in_party
-    entity_data['is_alliance'] = entity.in_alliance
-    entity_data['mob_type']    = entity.entity_type
-    entity_data['spawn_type']  = entity.spawn_type
-    entity_data['pet_index']   = entity.pet_index
-
-    return entity_data
-end
-
 --[[
     DESCRIPTION:    Checks to see if a given string matches your character's name.
     PARAMETERS :
@@ -79,25 +46,3 @@ function Count_Table_Elements(table)
     return count
 end
 
---[[
-    DESCRIPTION:
-]]
-function Get_Discrete_Melee_Type(animation_id)
-
-    if (animation_id == 0) then
-        return 'melee primary'
-
-    elseif (animation_id == 1) then
-        return 'melee secondary'
-
-    elseif (animation_id == 2) or (animation_id == 3) then
-        return 'melee kicks'
-
-    elseif (animation_id == 4) then
-        return 'throwing'
-
-    else
-        return 'default'
-    end
-
-end

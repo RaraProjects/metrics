@@ -1,5 +1,5 @@
 --[[
-Copyright © 2020, Amarara of Quetzalcoatl
+Copyright © 2024, Metra of HorizonXI
 All rights reserved.
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -14,7 +14,7 @@ modification, are permitted provided that the following conditions are met:
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL --Amarara-- BE LIABLE FOR ANY
+DISCLAIMED. IN NO EVENT SHALL --Metra-- BE LIABLE FOR ANY
 DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
 (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
 LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
@@ -23,36 +23,27 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ]]
 
-addon.author = 'Amarara'
+addon.author = 'Metra'
 addon.name = "Metrics-Test"
 addon.version = '1.0.0'
 addon.commands = {'p', 'parse'}
 
--- Res     = require('resources')
--- Texts   = require('texts')
--- Packets = require('packets')
-
--- Debugging
-LUA_Name = 'PARSE'
-
 Lists = require("lists")
+WS = require("resources.weapon_skills")
+Pet_Skill = require("resources.monster_skills")
 
 UI = require("imgui")
 A = require("ashita")
-PT = require("party") -- might not need this.
-WS = require("data.weapon_skills")
+Model = require('model')
 require("packets.events")
 
 -- require('data.settings')
 
 require('magic_numbers')
--- require('debug_tools')
 require('string_lib')
 require('lib')
--- require('csv_log')
-Model = require('model')
 
--- require('commands')
+
 
 -- Windows
 Window = require("gui._window")
@@ -63,6 +54,7 @@ Focus = require('gui.focus')
 Settings = require("gui.settings")
 
 
+Window.Initialize()
 
 -- Record all offensive actions from players or pets in party or alliance
 

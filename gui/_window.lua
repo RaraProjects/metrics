@@ -53,7 +53,6 @@ w.Screen = {}
 -- Populate the data in the monitor window.
 ------------------------------------------------------------------------------------------------------
 w.Populate = function()
-    w.Set_Style()
     if UI.Begin(w.Window.Name, false, w.Window.Flags) then
         if UI.BeginTabBar("Tabs", w.Tabs.Flags) then
             -- Tab 1
@@ -87,7 +86,7 @@ end
 -- Found the font scaling code here:
 -- https://skia.googlesource.com/external/github.com/ocornut/imgui/+/v1.51/imgui_demo.cpp
 ------------------------------------------------------------------------------------------------------
-w.Set_Style = function()
+w.Initialize = function()
     local style = UI.GetStyle()
     -- style:ScaleAllSizes(1.0)
     -- style.Colors[ImGuiCol_TableHeaderBg] =

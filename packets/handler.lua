@@ -5,6 +5,13 @@ local p = {}
 p.Action = {}
 p.Handler = {}
 p.Packets = {}
+p.Util = {}
+
+p.Mode = Model.Enum.Mode
+p.Trackable = Model.Enum.Trackable
+p.Metric = Model.Enum.Metric
+
+-- Everything is pretty self explanatory except...
 
 -- ------------------------------------------------------------------------------------------------------
 -- Parse the melee attack packet.
@@ -14,7 +21,7 @@ p.Packets = {}
 -- log_offense : boolean of if we should log the data; initial filtering happens in action packet
 -- ------------------------------------------------------------------------------------------------------
 p.Action.Melee = function(act, actor_mob, owner_mob, log_offense)
-	if not log_offense then return end	-- Will need to adjust this when implementing defense metrics.
+	if not log_offense then return end
 
 	local result, target
 	local damage = 0
@@ -29,14 +36,6 @@ p.Action.Melee = function(act, actor_mob, owner_mob, log_offense)
 	end
 
 	-- if not actor_mob.is_npc then
-		-- if Log_CSV then
-		-- 	local data = {
-		-- 		["Actor Name"] = actor_mob.name,
-		-- 		["Action Name"] = "Melee",
-		-- 		["Melee"] = damage
-		-- 	}
-		-- 	Add_CSV_Entry(data)
-		-- end
 		if Blog.Display.Flags.Melee then
 			local blog_name = actor_mob.name
             if owner_mob then
@@ -74,141 +73,146 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
     local damage = metadata.param
     local throwing = false
 
-    local e_broad_melee_type = Model.Enum.Trackable.MELEE
-    local e_discrete_melee_type = Get_Discrete_Melee_Type(animation_id)
+    local melee_type_broad = Model.Enum.Trackable.MELEE
+    local melee_type_discrete = p.Util.Discrete_Melee_Type(animation_id)
 
     -- Need special handling for pets
+    local pet_name
     if owner_mob then
-        e_broad_melee_type = Model.Enum.Trackable.PET_MELEE
-        e_discrete_melee_type = Model.Enum.Trackable.PET_MELEE_DISCRETE
+        melee_type_broad = Model.Enum.Trackable.PET_MELEE
+        melee_type_discrete = Model.Enum.Trackable.PET_MELEE_DISCRETE
+        pet_name = player_name
         player_name = owner_mob.name
     end
 
     local audits = {
         player_name = player_name,
         target_name = target_name,
+        pet_name = pet_name,
     }
 
-    local e_inc = Model.Enum.Mode.INC
-    local e_set = Model.Enum.Mode.SET
-
     -- Totals ///////////////////////////////////////////////////////
-    Model.Update.Data('inc', damage, audits, 'total', 'total')
-    Model.Update.Data('inc', damage, audits, 'total_no_sc', 'total')
-    Model.Update.Data('inc', damage, audits, e_discrete_melee_type, 'total')
-    Model.Update.Data('inc',      1, audits, e_discrete_melee_type, 'count')
+    Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.TOTAL, p.Metric.TOTAL)
+    Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.TOTAL_NO_SC, p.Metric.TOTAL)
+    Model.Update.Data(p.Mode.INC, damage, audits, melee_type_discrete, p.Metric.TOTAL)
+    Model.Update.Data(p.Mode.INC,      1, audits, melee_type_discrete, p.Metric.COUNT)
 
     if owner_mob then
-        Model.Update.Data('inc', damage, audits, 'pet', 'total')
+        Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
     end
 
     -- Melee ////////////////////////////////////////////////////////
     if animation_id >= 0 and animation_id < 4 then
-        Model.Update.Data('inc', damage, audits, e_broad_melee_type, 'total')
-        Model.Update.Data('inc',      1, audits, e_broad_melee_type, 'count')
-
+        Model.Update.Data(p.Mode.INC, damage, audits, melee_type_broad, p.Metric.TOTAL)
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad, p.Metric.COUNT)
     -- Throwing /////////////////////////////////////////////////////
     elseif animation_id == 4 then
         throwing = true
-        Model.Update.Data('inc', damage, audits, 'ranged', 'total')
-        Model.Update.Data('inc',      1, audits, 'ranged', 'count')
-
+        Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.RANGED, p.Metric.TOTAL)
+        Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.COUNT)
     -- Unhandled Animation //////////////////////////////////////////
     else
-        Add_Message_To_Chat('W', 'Melee_Damage^handling', 'Unhandled animation: '..tostring(animation_id))
+        A.Chat.Debug("Handler.Melee: Unhandled animation: "..tostring(animation_id))
     end
 
     -- Min/Max //////////////////////////////////////////////////////
     if throwing then
-        if damage > 0 and (damage < Model.Get.Data(player_name, 'ranged', 'min')) then Model.Update.Data('set', damage, audits, 'ranged', 'min') end
-        if damage > Model.Get.Data(player_name, 'ranged', 'max') then Model.Update.Data('set', damage, audits, 'ranged', 'max') end
+        if damage > 0 and (damage < Model.Get.Data(player_name, p.Trackable.RANGED, p.Metric.MIN)) then Model.Update.Data(p.Mode.SET, damage, audits, p.Trackable.RANGED, p.Metric.MIN) end
+        if damage > Model.Get.Data(player_name, p.Trackable.RANGED, p.Metric.MAX) then Model.Update.Data(p.Mode.SET, damage, audits, p.Trackable.RANGED, p.Metric.MAX) end
     else
-        if damage > 0 and (damage < Model.Get.Data(player_name, e_broad_melee_type, 'min')) then Model.Update.Data('set', damage, audits, e_broad_melee_type, 'min') end
-        if damage > Model.Get.Data(player_name, e_broad_melee_type, 'max') then Model.Update.Data('set', damage, audits, e_broad_melee_type, 'max') end
+        if damage > 0 and (damage < Model.Get.Data(player_name, melee_type_broad, p.Metric.MIN)) then Model.Update.Data(p.Mode.SET, damage, audits, melee_type_broad, p.Metric.MIN) end
+        if damage > Model.Get.Data(player_name, melee_type_broad, p.Metric.MAX) then Model.Update.Data(p.Mode.SET, damage, audits, melee_type_broad, p.Metric.MAX) end
     end
 
     -- Enspell //////////////////////////////////////////////////////
     local enspell_damage = metadata.add_effect_param
     if enspell_damage > 0 then
         -- Element of the enspell is in add_effect_animation
-        Model.Update.Data('inc', enspell_damage, audits, 'magic',   'total')
-        Model.Update.Data('inc', enspell_damage, audits, 'enspell', 'total')
-        Model.Update.Data('inc',              1, audits, 'magic', 'count')
-        if enspell_damage < Model.Get.Data(player_name, 'magic', 'min') then Model.Update.Data('set', enspell_damage, audits, 'magic', 'min') end
-        if enspell_damage > Model.Get.Data(player_name, 'magic', 'max') then Model.Update.Data('set', enspell_damage, audits, 'magic', 'max') end
+        Model.Update.Data(p.Mode.INC, enspell_damage, audits, p.Trackable.MAGIC,   p.Metric.TOTAL)
+        Model.Update.Data(p.Mode.INC, enspell_damage, audits, p.Trackable.ENSPELL, p.Metric.TOTAL)
+        Model.Update.Data(p.Mode.INC,              1, audits, p.Trackable.MAGIC, p.Metric.COUNT)
+        if enspell_damage < Model.Get.Data(player_name, p.Trackable.MAGIC, p.Metric.MIN) then Model.Update.Data(p.Mode.SET, enspell_damage, audits, p.Trackable.MAGIC, p.Metric.MIN) end
+        if enspell_damage > Model.Get.Data(player_name, p.Trackable.MAGIC, p.Metric.MAX) then Model.Update.Data(p.Mode.SET, enspell_damage, audits, p.Trackable.MAGIC, p.Metric.MAX) end
     end
 
     -- Metadata /////////////////////////////////////////////////////
     local message_id = metadata.message
 
-    -- Hit
+    -- Hit //////////////////////////////////////////////////////////
     if message_id == 1 then
-        Model.Update.Data('inc',      1, audits, e_broad_melee_type,    'hits')
-        Model.Update.Data('inc',      1, audits, e_discrete_melee_type, 'hits')
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_discrete, p.Metric.HIT_COUNT)
         Model.Update.Running_Accuracy(player_name, true)
-
-    -- Healing with melee attacks
+    -- Healing with melee attacks ///////////////////////////////////
     elseif message_id == 3 or message_id == 373 then
-        Model.Update.Data('inc',      1, audits, e_broad_melee_type,    'hits')
-        Model.Update.Data('inc',      1, audits, e_discrete_melee_type, 'hits')
-        Model.Update.Data('inc', damage, audits, e_broad_melee_type,    'mob heal')
-
-    -- Misses
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_discrete, p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC, damage, audits, melee_type_broad,    p.Metric.MOB_HEAL)
+    -- Misses ///////////////////////////////////////////////////////
     elseif message_id == 15 then
-        Model.Update.Data('inc',      1, audits, e_broad_melee_type, 'misses')
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad, p.Metric.MISS_COUNT)
         Model.Update.Running_Accuracy(player_name, false)
-
-    -- DRK vs. Omen Gorger
+    -- DRK vs. Omen Gorger //////////////////////////////////////////
     elseif message_id == 30 then
-        Add_Message_To_Chat('A', 'Melee_Damage^handling', 'Attack Nuance 30 -- DRK vs. Omen Gorger')
-
-    -- Attack absorbed by shadows
+        A.Chat.Debug("Attack Nuance 30 -- DRK vs. Omen Gorger")
+    -- Attack absorbed by shadows ///////////////////////////////////
     elseif message_id == 31 then
-        Model.Update.Data('inc',      1, audits, e_broad_melee_type,    'hits')
-        Model.Update.Data('inc',      1, audits, e_discrete_melee_type, 'hits')
-        Model.Update.Data('inc',      1, audits, e_broad_melee_type,    'shadows')
-
-    -- Attack dodged (Perfect Dodge) / Remove the count so perfect dodge doesn't count.
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_discrete, p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.SHADOWS)
+    -- Attack dodged (Perfect Dodge) ////////////////////////////////
+    -- Remove the count so perfect dodge doesn't count.
     elseif message_id == 32 then
-        Model.Update.Data('inc',     -1, audits, e_broad_melee_type,    'count')
-        Model.Update.Data('inc',     -1, audits, e_discrete_melee_type, 'count')
-
-    -- Critical Hits
+        Model.Update.Data(p.Mode.INC,     -1, audits, melee_type_broad,    p.Metric.COUNT)
+        Model.Update.Data(p.Mode.INC,     -1, audits, melee_type_discrete, p.Metric.COUNT)
+    -- Critical Hits ////////////////////////////////////////////////
     elseif message_id == 67 then
-        Model.Update.Data('inc',      1, audits, e_broad_melee_type,    'hits')
-        Model.Update.Data('inc',      1, audits, e_discrete_melee_type, 'hits')
-        Model.Update.Data('inc',      1, audits, e_broad_melee_type,    'crits')
-        Model.Update.Data('inc', damage, audits, e_broad_melee_type,    'crit damage')
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_discrete, p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.CRIT_COUNT)
+        Model.Update.Data(p.Mode.INC, damage, audits, melee_type_broad,    p.Metric.CRIT_DAMAGE)
         Model.Update.Running_Accuracy(player_name, true)
-
-    -- Throwing Critical Hit
+    -- Throwing Critical Hit ////////////////////////////////////////
     elseif message_id == 353 then
-        Model.Update.Data('inc',      1, audits, 'ranged', 'hits')
-        Model.Update.Data('inc',      1, audits, 'ranged', 'crits')
-        Model.Update.Data('inc', damage, audits, 'ranged', 'crit damage')
+        Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.CRIT_COUNT)
+        Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.RANGED, p.Metric.CRIT_DAMAGE)
         Model.Update.Running_Accuracy(player_name, true)
-
-    -- Throwing Miss
+    -- Throwing Miss ////////////////////////////////////////////////
     elseif message_id == 354 then
-        Model.Update.Data('inc',      1, audits, 'ranged', 'misses')
+        Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.MISS_COUNT)
         Model.Update.Running_Accuracy(player_name, false)
-
-    -- Throwing Square Hit
+    -- Throwing Square Hit //////////////////////////////////////////
     elseif message_id == 576 then
-        Model.Update.Data('inc',      1, audits, 'ranged', 'hits')
+        Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.HIT_COUNT)
         Model.Update.Running_Accuracy(player_name, true)
-
-    -- Throwing Truestrike
+    -- Throwing Truestrike //////////////////////////////////////////
     elseif message_id == 577 then
-        Model.Update.Data('inc',      1, audits, 'ranged', 'hits')
+        Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.HIT_COUNT)
         Model.Update.Running_Accuracy(player_name, true)
-
     else
         Blog.Log.Add(player_name, 'Att. nuance '..message_id) end
 
     local spikes = metadata.spike_effect_effect
 
     return damage
+end
+
+------------------------------------------------------------------------------------------------------
+--
+------------------------------------------------------------------------------------------------------
+p.Util.Discrete_Melee_Type = function(animation_id)
+    if animation_id == 0 then
+        return p.Trackable.MELEE_MAIN
+    elseif animation_id == 1 then
+        return p.Trackable.MELEE_OFFH
+    elseif animation_id == 2 or animation_id == 3 then
+        return p.Trackable.MELEE_KICK
+    elseif animation_id == 4 then
+        return p.Trackable.THROWING
+    else
+        return p.Trackable.DEFAULT
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -229,23 +233,14 @@ p.Action.Ranged = function(act, actor_mob, log_offense)
             result = act.targets[target_index].actions[action_index]
             target = A.Mob.Get_Mob_By_ID(act.targets[target_index].id)
             if target then
-                A.Chat.Message("Handler - Ranged Attack")
                 damage = damage + p.Handler.Ranged(result, actor_mob.name, target.name)
             end
         end
     end
 
     -- if not actor_mob.is_npc then
-        if Log_CSV then
-            local data = {
-                ["Actor Name"] = actor_mob.name,
-                ["Action Name"] = "Ranged",
-                ["Ranged"] = damage
-            }
-            Add_CSV_Entry(data)
-        end
         if Blog.Display.Flags.Ranged then
-            Blog.Log.Add(actor_mob.name, 'Ranged', damage)
+            Blog.Log.Add(actor_mob.name, p.Trackable.RANGED, damage)
         end
     -- end
 end
@@ -265,10 +260,10 @@ p.Handler.Ranged = function(metadata, player_name, target_name, owner_mob)
     -- Need special handling for pets
     local ranged_type
     if owner_mob then
-        ranged_type = 'pet_ranged'
+        ranged_type = p.Trackable.PET_RANGED
         player_name = owner_mob.name
     else
-        ranged_type = 'ranged'
+        ranged_type = p.Trackable.RANGED
     end
 
     local audits = {
@@ -277,68 +272,61 @@ p.Handler.Ranged = function(metadata, player_name, target_name, owner_mob)
     }
 
     -- Totals ///////////////////////////////////////////////////////
-    Model.Update.Data('inc', damage, audits, 'total',  'total')
-    Model.Update.Data('inc', damage, audits, 'total_no_sc', 'total')
-    Model.Update.Data('inc',      1, audits, ranged_type, 'count')
+    Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.TOTAL,  p.Metric.TOTAL)
+    Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.TOTAL_NO_SC, p.Metric.TOTAL)
+    Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.COUNT)
 
     if owner_mob then
-        Model.Update.Data('inc', damage, audits, 'pet', 'total')
+        Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
     end
 
     -- Miss /////////////////////////////////////////////////////////
     if message_id == 354 then
-    	Model.Update.Data('inc',      1, audits, ranged_type, 'misses')
+    	Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.MISS_COUNT)
         Model.Update.Running_Accuracy(player_name, false)
     	return damage
-
     -- Shadows //////////////////////////////////////////////////////
     elseif message_id == 31 then
-        Model.Update.Data('inc',      1, audits, ranged_type, 'hits')
-        Model.Update.Data('inc',      1, audits, ranged_type, 'shadows')
+        Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.SHADOWS)
         return damage
-
     -- Puppet ///////////////////////////////////////////////////////
     elseif message_id == 185 then
-        Model.Update.Data('inc',      1, audits, ranged_type, 'hits')
-        Model.Update.Data('inc', damage, audits, ranged_type, 'total')
+        Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.TOTAL)
         Model.Update.Running_Accuracy(player_name, true)
-
     -- Regular Hit //////////////////////////////////////////////////
     elseif message_id == 352 then
-        Model.Update.Data('inc',      1, audits, ranged_type, 'hits')
-        Model.Update.Data('inc', damage, audits, ranged_type, 'total')
+        Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.TOTAL)
         Model.Update.Running_Accuracy(player_name, true)
-
     -- Square Hit ///////////////////////////////////////////////////
     elseif message_id == 576 then
-        Model.Update.Data('inc',      1, audits, ranged_type, 'hits')
-        Model.Update.Data('inc', damage, audits, ranged_type, 'total')
+        Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.TOTAL)
         Model.Update.Running_Accuracy(player_name, true)
-
     -- Truestrike ///////////////////////////////////////////////////
     elseif message_id == 577 then
-        Model.Update.Data('inc',      1, audits, ranged_type, 'hits')
-        Model.Update.Data('inc', damage, audits, ranged_type, 'total')
+        Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.TOTAL)
         Model.Update.Running_Accuracy(player_name, true)
-
     -- Crit /////////////////////////////////////////////////////////
     elseif message_id == 353 then
-        A.Chat.Message("Handling - Crit Ranged Attack")
-        Model.Update.Data('inc',      1, audits, ranged_type, 'hits')
-        Model.Update.Data('inc',      1, audits, ranged_type, 'crits')
-        Model.Update.Data('inc', damage, audits, ranged_type, 'crit damage')
-        Model.Update.Data('inc', damage, audits, ranged_type, 'total')
+        Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.CRIT_COUNT)
+        Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.CRIT_DAMAGE)
+        Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.TOTAL)
         Model.Update.Running_Accuracy(player_name, true)
-
     else
-        Blog.Log.Add(player_name, 'Ranged nuance '..tostring(message_id)) end
-
-    if damage == 0 then
-        Add_Message_To_Chat('W', 'Handle_Ranged^handling', 'Ranged damage was 0.')
+        Blog.Log.Add(player_name, "Missing Ranged Nuance "..tostring(message_id))
     end
 
-    if damage > 0 and (damage < Model.Get.Data(player_name, ranged_type, 'min')) then Model.Update.Data('set', damage, audits, ranged_type, 'min') end
-    if damage > Model.Get.Data(player_name, ranged_type, 'max') then Model.Update.Data('set', damage, audits, ranged_type, 'max') end
+    if damage == 0 then
+        A.Chat.Debug("Ranged damage was 0.")
+    end
+
+    if damage > 0 and (damage < Model.Get.Data(player_name, ranged_type, p.Metric.MIN)) then Model.Update.Data(p.Mode.SET, damage, audits, ranged_type, p.Metric.MIN) end
+    if damage > Model.Get.Data(player_name, ranged_type, p.Metric.MAX) then Model.Update.Data(p.Mode.SET, damage, audits, ranged_type, p.Metric.MAX) end
 
     return damage
 end
@@ -391,38 +379,23 @@ p.Action.Finish_Weaponskill = function(action, actor_mob, log_offense)
 
     -- Finalize weaponskill data
     -- Have to do it outside of the loop to avoid counting attempts and hits multiple times
-
     local audits = {
         player_name = actor_mob.name,
         target_name = target.name,
     }
 
-    Model.Update.Data('inc', 1, audits, 'ws', 'count')
-    Model.Update.Catalog_Metric('inc', 1, audits, 'ws', ws_name, 'count')
+    Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.WS, p.Metric.COUNT)
+    Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.WS, ws_name, p.Metric.COUNT)
 
     if damage > 0 then
-        Model.Update.Data('inc', 1, audits, 'ws', 'hits')
-        Model.Update.Catalog_Metric('inc', 1, audits, 'ws', ws_name, 'hits')
+        Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.WS, p.Metric.HIT_COUNT)
+        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.WS, ws_name, p.Metric.HIT_COUNT)
     end
 
     -- Update the battle log
     -- if not actor_mob.is_npc then
-        if Log_CSV then
-            local data = {
-                ["Actor Name"] = actor_mob.name,
-                ["Action Name"] = ws_data.name,
-                ["WS"] = damage
-            }
-            Add_CSV_Entry(data)
-
-            data = {
-                ["Actor Name"] = actor_mob.name,
-                ["Action Name"] = sc_name,
-                ["SC"] = sc_damage
-            }
-        end
         if Blog.Display.Flags.WS then
-            Blog.Log.Add(actor_mob.name, ws_name, damage, nil, A.Party.Refresh(actor_mob.name, 'tp'), 'ws', ws_data)
+            Blog.Log.Add(actor_mob.name, ws_name, damage, nil, A.Party.Refresh(actor_mob.name, A.Mob.Enum.Party_Node.TP), p.Trackable.WS, ws_data)
         end
         if Blog.Display.Flags.SC and skillchain then
             Blog.Log.Add(actor_mob.name, sc_name, sc_damage, nil, nil)
@@ -442,22 +415,25 @@ end
 p.Handler.Weaponskill = function(metadata, player_name, target_name, ws_name, owner_mob)
     local damage = metadata.param
 
-    local ws_type = 'ws'
+    local ws_type = p.Trackable.WS
+    local pet_name
     if owner_mob then
+        pet_name = player_name
         player_name = owner_mob.name
-        ws_type = 'pet_ws'
+        ws_type = p.Trackable.PET_WS
     end
 
     local audits = {
         player_name = player_name,
         target_name = target_name,
+        pet_name = pet_name,
     }
 
     if owner_mob then
-        Model.Update.Data('inc', damage, audits, 'pet', 'total')
+        Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
     end
 
-    Model.Update.Catalog_Damage(player_name, target_name, ws_type, damage, ws_name)
+    Model.Update.Catalog_Damage(player_name, target_name, ws_type, damage, ws_name, pet_name)
 
     return damage
 end
@@ -472,7 +448,7 @@ end
 ------------------------------------------------------------------------------------------------------
 p.Handler.Skillchain = function(metadata, player_name, target_name, sc_name)
     local damage = metadata.add_effect_param
-    Model.Update.Catalog_Damage(player_name, target_name, 'sc', damage, sc_name)
+    Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.SC, damage, sc_name)
     return damage
 end
 
@@ -512,7 +488,7 @@ p.Action.Finish_Spell_Casting = function(action, actor_mob, log_offense)
     }
 
     -- Log the use of the spell
-    Model.Update.Catalog_Metric('inc', 1, audits, 'magic', spell_name, 'count')
+    Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.MAGIC, spell_name, p.Metric.COUNT)
 
     if Lists.Spell.Damaging[spell_id] and not actor_mob.is_npc then
         Blog.Log.Add(actor_mob.name, spell_name, damage, nil, nil, 'spell', spell_data)
@@ -537,13 +513,13 @@ p.Handler.Spell = function(spell_data, metadata, player_name, target_name)
     local damage = metadata.param or 0
 
     if Lists.Spell.Damaging[spell_id] then
-        Model.Update.Catalog_Damage(player_name, target_name, 'magic', damage, spell_name)
+        Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.MAGIC, damage, spell_name)
         spell_mapped = true
     end
 
     -- TO DO: Handle Overcure
     if Lists.Spell.Healing[spell_id] then
-    	Model.Update.Catalog_Damage(player_name, target_name, 'healing', damage, spell_name)
+    	Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.HEALING, damage, spell_name)
         spell_mapped = true
     end
 
@@ -567,9 +543,15 @@ p.Action.Job_Ability = function(act, actor_mob, log_offense)
 	-- Need to provide an offset to get to the abilities. Otherwise I get WS information.
 	local ability_id = act.param + 512
     local ability_data = A.Ability.ID(ability_id)
-    if not ability_data then return nil end
-	local ability_name = A.Ability.Name(ability_id, ability_data)
-	A.Chat.Message(tostring(ability_name))
+
+    -- Handle missing abilities.
+    if not ability_data then
+        ability_data = {Id = ability_id, Name = "UNK Ability (" .. ability_id .. ")"}
+    else
+        ability_data = {Id = ability_id, Name = A.Ability.Name(ability_id, ability_data)}
+    end
+
+	-- A.Chat.Debug("Action.Job_Ability: " .. tostring(ability_data.Name) .. " " .. tostring(actor_mob.name))
 
     local result, target
     local damage = 0
@@ -589,18 +571,28 @@ p.Action.Job_Ability = function(act, actor_mob, log_offense)
     }
 
     -- Log the use of the ability
-    Model.Update.Catalog_Metric('inc', 1, audits, 'ability', ability_name, 'count')
+    Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.ABILITY, ability_data.Name, p.Metric.COUNT)
+
+    -- Ignore abilities the player uses on themself that don't do any damage directly.
+    if ability_data.Type == A.Ability.Enum.Type.BLOODPACTRAGE or
+       ability_data.Type == A.Ability.Enum.Type.BLOODPACTWARD or
+       ability_data.Type == A.Ability.Enum.Type.PETLOGISTICS then
+        A.Chat.Debug("Handler.Ability ignore ability.")
+        return damage
+    end
 
     -- Battle log message gets handled in Handle_Ability if the damage is >0
     -- if Blog.Display.Flags.Ability and not actor_mob.is_npc and damage <= 0 then
     if Blog.Display.Flags.Ability and damage >= 0 then
-        Blog.Log.Add(actor_mob.name, ability_name, damage)
+        Blog.Log.Add(actor_mob.name, ability_data.Name, damage)
     end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Set data for an ability action.
 -- This includes pet damage (since they are ability based).
+-- Using an ability to cause a pet to attack gets captured here, but the actual data for the damage
+-- done comes in a different packet. SMN comes in Pet_Ability and then routes back to here.
 ------------------------------------------------------------------------------------------------------
 -- act         : the main packet; need it to get spell ID
 -- metadata    : contains all the information for the action
@@ -611,31 +603,35 @@ end
 p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, owner_mob)
     local player_name = actor_mob.name
     local ability_id = ability_data.Id
-    local ability_name = A.Ability.Name(ability_id, ability_data)
+    local ability_name = ability_data.Name
     local damage = metadata.param
 
-    local ability_type = "ability"
+    local ability_type = p.Trackable.ABILITY
+    local pet_name
     if owner_mob then
-        ability_type = "pet_ability"
+        ability_type = p.Trackable.PET_ABILITY
+        pet_name = owner_mob.name
     end
 
     local audits = {
         player_name = player_name,
         target_name = target_name,
+        pet_name = pet_name,
     }
 
     if owner_mob then
-        Model.Update.Data("inc", damage, audits, "pet", "total")
+        Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
+        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.COUNT)
     end
 
     -- TO DO: Need to get the ID for BloodPactRage
-    if Lists.Ability.Damaging[ability_id] or (ability_data.Type == "BloodPactRage") then
+    if (Lists.Ability.Damaging[ability_id] or Lists.Ability.Avatar[ability_id] or ability_data.Type == A.Ability.Enum.Type.PETOFFENSE) and owner_mob then
+        Model.Update.Catalog_Damage(player_name, target_name, ability_type, damage, ability_name, owner_mob.name)
         if damage > 0 then
-            Model.Update.Catalog_Damage(player_name, target_name, ability_type, damage, ability_name)
-
-            if not actor_mob.is_npc then
+            Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.HIT_COUNT)
+            -- if not actor_mob.is_npc then
                 Blog.Log.Add(player_name, ability_name, damage, nil, nil, ability_type, ability_data)
-            end
+            -- end
         end
     end
 
@@ -651,10 +647,10 @@ end
 -- log_offense : boolean of if we should log the data; initial filtering happens in action packet
 ------------------------------------------------------------------------------------------------------
 p.Action.Finish_Monster_TP_Move = function(act, actor_mob, log_offense)
-    if not log_offense then return end
+    if not log_offense then return false end
 
     -- Check to see if the pet belongs to anyone in the party.
-    local owner_mob = A.Mob.Pet_Owner(act)
+    local owner_mob = A.Mob.Pet_Owner(actor_mob)
 
     local result, target, ws_name, sc_id, sc_name
     local sc_damage  = 0
@@ -674,8 +670,8 @@ p.Action.Finish_Monster_TP_Move = function(act, actor_mob, log_offense)
                 damage = result.param
 
             else
-                local ws_data = Res.monster_abilities[act.param]
-                ws_name = ws_data.name
+                local ws_data = Pet_Skill[act.param]
+                ws_name = ws_data.en
 
                 -- Check for skillchains
                 sc_id = result.add_effect_message
@@ -691,9 +687,11 @@ p.Action.Finish_Monster_TP_Move = function(act, actor_mob, log_offense)
         end
     end
 
-    if Log_Pet and owner_mob then
-        Blog.Log.Add(actor_mob.name, ws_name, damage)
+    if Blog.Display.Flags.Pet and owner_mob then
+        Blog.Log.Add(actor_mob.name .. " (" .. owner_mob.name .. ")", ws_name, damage)
     end
+
+    return true
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -701,19 +699,36 @@ end
 -- SMN bloodpacts; DRG wyvern breaths
 ------------------------------------------------------------------------------------------------------
 -- act         : action packet data
--- actor_mob   : the mob data of the entity performing the action
+-- actor_mob   : the mob data of the entity performing the action; If SMN this will be your avatar
 -- log_offense : boolean of if we should log the data; initial filtering happens in action packet
 ------------------------------------------------------------------------------------------------------
 p.Action.Pet_Ability = function(act, actor_mob, log_offense)
-    if not log_offense then return end
+    if not log_offense then return false end
 
     -- Check to see if the pet belongs to anyone in the party.
-    local owner_mob = A.Mob.Pet_Owner(act)
+    local owner_mob = A.Mob.Pet_Owner(actor_mob)
+    if not owner_mob then return false end
 
-    local ability_name = A.Ability.Name(act.param)
-    if not ability_name then
-        Add_Message_To_Chat('E', 'Pet_Ability^packet_handling', 'Ability name not found.')
-        return false
+    local ability_id = act.param
+    local ability_data
+    local avatar = false
+
+    -- Handle offset for Blood Pacts
+    if ability_id >= 831 and ability_id <= 838 then
+        ability_data = Lists.Ability.Avatar[ability_id]
+        avatar = true
+    else
+        ability_data = A.Ability.ID(ability_id)
+    end
+
+    if not ability_data then
+        ability_data = {Id = ability_id, Name = "UNK Ability (" .. ability_id .. ")"}
+    else
+        if avatar then
+            ability_data = {Id = ability_id, Name = ability_data.en}
+        else
+            ability_data = {Id = ability_id, Name = A.Ability.Name(ability_id, ability_data)}
+        end
     end
 
     local result, target
@@ -722,9 +737,9 @@ p.Action.Pet_Ability = function(act, actor_mob, log_offense)
     for target_index, target_value in pairs(act.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = act.targets[target_index].actions[action_index]
-            target = windower.ffxi.get_mob_by_id(act.targets[target_index].id)
+            target = A.Mob.Get_Mob_By_ID(act.targets[target_index].id)
             if not target then target = {name = 'test'} end
-            damage = damage + p.Handler.Ability(act, result, owner_mob, target.name, owner_mob)
+            damage = damage + p.Handler.Ability(ability_data, result, owner_mob, target.name, actor_mob)
         end
     end
 
@@ -734,12 +749,37 @@ p.Action.Pet_Ability = function(act, actor_mob, log_offense)
     }
 
     if damage > 0 then
-        Model.Update.Data('inc', 1, audits, 'ability', 'hits')
-
-        if Log_Pet then
-            Blog.Log.Add(actor_mob.name, ability_name, damage)
-        end
+        Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.ABILITY, p.Metric.HIT_COUNT)
+        if Blog.Display.Flags.Pet then Blog.Log.Add(actor_mob.name, ability_data.Name, damage) end
     end
+
+    return true
+end
+
+------------------------------------------------------------------------------------------------------
+-- Parse the player death message.
+------------------------------------------------------------------------------------------------------
+-- actor_id  : mob id of the entity performing the action
+-- target_id : mob id of the entity receiving the action (this is the person dying)
+------------------------------------------------------------------------------------------------------
+function Player_Death(actor_id, target_id)
+    local target = A.Mob.Get_Mob_By_ID(target_id)
+    if not target then return end
+
+    local log_death = target.in_party or target.in_alliance
+    if not log_death then return end
+
+    local actor = A.Mob.Get_Mob_By_ID(actor_id)
+    if not actor then return end
+
+    local audits = {
+        player_name = target.name,
+        target_name = actor.name,
+    }
+
+    Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.DEATH, p.Metric.COUNT)
+
+    if Blog.Display.Flags.Deaths then Blog.Log.Add(actor.name, 'Death', 0) end
 end
 
 -- ------------------------------------------------------------------------------------------------------

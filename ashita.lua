@@ -6,11 +6,31 @@ a.Data = {}
 a.Chat = {}
 a.Party = {}
 a.Party.List = {}
-a.Mob = {}
-a.Ability = {}
 a.Spell = {}
 a.WS = {}
 a.Item = {}
+
+a.Mob = {}
+a.Mob.Enum = {}
+a.Mob.Enum.Party_Node = {
+    TP = "TP"
+}
+a.Mob.Enum.Type = {
+    PLAYER = 0,
+    PET = 2, -- Avatar, Jug Pet, Trust
+}
+
+a.Ability = {}
+a.Ability.Enum = {}
+a.Ability.Enum.Type = {
+    PETSUMMON = 1,      -- BST Beastial Loyalty
+    PETLOGISTICS = 2,   -- Player uses this on themself. Fight, Heel, Stay, etc.
+    BLOODPACTRAGE = 6,  -- Player uses this on themself.
+    BLOODPACTWARD = 10, -- Player uses this on themself.
+    PETABILITY = 18,    -- Offensive BST/SMN ability.
+}
+
+a.Debug = true
 
 -- ------------------------------------------------------------------------------------------------------
 -- https://github.com/AshitaXI/Ashita-v4beta/blob/main/plugins/sdk/Ashita.h
@@ -143,7 +163,7 @@ a.Party.Refresh = function(player_name, node)
             if player_name and node then
                 local party_name = data:GetMemberName(slot)
                 if party_name == player_name then
-                    if node == "tp" then
+                    if node == a.Mob.Enum.Party_Node.TP then
                         return_data = data:GetMemberTP(slot)
                     end
                 end
@@ -249,7 +269,7 @@ a.Mob.Data = function(id, flag)
     entity.target_index = entity_manager:GetTargetIndex(index)
     entity.pet_index = entity_manager:GetPetTargetIndex(index)
     entity.claim_id = entity_manager:GetClaimStatus(index)
-    entity.is_npc = entity_manager:GetNpcWalkMode(index)
+    entity.is_npc = entity_manager:GetType(index)
 
     a.Party.Refresh()
     local affiliation = a.Party.Is_Affiliate(index)
@@ -307,6 +327,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Get ability data.
 -- https://wiki.ashitaxi.com/doku.php?id=addons:adk:iresourcemanager
+-- Type 6  = SMN using BloodPactRage
+-- Type 10 = BloodPactWard
+-- Type 18 = BloodPactRage
+-- Offsets
+-- WS have zero offset.
+-- Abilities have 512 offset.
 -- ------------------------------------------------------------------------------------------------------
 a.Ability.ID = function(id)
     return AshitaCore:GetResourceManager():GetAbilityById(id)
@@ -392,6 +418,13 @@ a.Chat.Message = function(message)
     --AshitaCore:GetChatManager():QueueCommand(-1, tostring(message))
     --AshitaCore:GetChatManager():AddChatMessage(255, tostring(message))
     print("METRICS: " .. message)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Adds a message in game chat if the debug flag is on.
+-- ------------------------------------------------------------------------------------------------------
+a.Chat.Debug = function(message)
+    if a.Data then print("METRICS DEBUG: " .. message) end
 end
 
 return a

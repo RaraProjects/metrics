@@ -163,7 +163,7 @@ end
         number      The number to be checked if it is zero.
 ]] 
 function Remove_Zero(number)
-    if number == 0 or number == 999999 then
+    if number == 999999 then
         return " "
     end
     return number

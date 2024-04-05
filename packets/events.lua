@@ -1,4 +1,4 @@
-P = require("packets.action_handler")
+P = require("packets.handler")
 
 -- From Parse by Flippant and Wintersolstice
 -- From Thorny
@@ -96,29 +96,3 @@ ashita.events.register('command', 'command_cb', function (e)
         A.Chat.Message("Command: " .. tostring(Test_Gobal))
 	end
 end)
-
-------------------------------------------------------------------------------------------------------
--- Parse the player death message.
-------------------------------------------------------------------------------------------------------
--- actor_id  : mob id of the entity performing the action
--- target_id : mob id of the entity receiving the action (this is the person dying)
-------------------------------------------------------------------------------------------------------
-function Player_Death(actor_id, target_id)
-    local target = windower.ffxi.get_mob_by_id(target_id)
-    if (not target) then return end
-
-    local log_death = (target.in_party) or (target.in_alliance)
-    if (not log_death) then return end
-
-    local actor = windower.ffxi.get_mob_by_id(actor_id)
-    if (not actor) then return end
-
-    local audits = {
-        player_name = target.name,
-        target_name = actor.name,
-    }
-
-    Update_Data('inc', 1, audits, 'death', 'count')
-
-    if (Log_Deaths) then Blog.Log.Add(actor.name, 'Death', 0) end
-end
