@@ -41,11 +41,11 @@ f.Display.Melee = function(player_name)
         if UI.CollapsingHeader("Melee", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Melee", 5, table_flags) then
                 -- Headers
-                UI.TableSetupColumn("Raw\nDamage", col_flags, width)
-                UI.TableSetupColumn("Total\nDamage %", col_flags, width)
-                UI.TableSetupColumn("Total\nAccuracy %", col_flags, width)
-                UI.TableSetupColumn("Main\nAccuracy %", col_flags, width)
-                UI.TableSetupColumn("Offhand\nAccuracy %", col_flags, width)
+                UI.TableSetupColumn("Raw Melee\nDamage", col_flags, width)
+                UI.TableSetupColumn("Total Melee\nDamage %", col_flags, width)
+                UI.TableSetupColumn("Total Melee\nAccuracy %", col_flags, width)
+                UI.TableSetupColumn("Main Hand\nAccuracy %", col_flags, width)
+                UI.TableSetupColumn("Off Hand\nAccuracy %", col_flags, width)
                 UI.TableHeadersRow()
 
                 -- Data
@@ -77,11 +77,11 @@ f.Display.Ranged = function(player_name)
         if UI.CollapsingHeader("Ranged", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Ranged", 5, table_flags) then
                 -- Headers
-                UI.TableSetupColumn("Raw\nDamage", col_flags, width)
-                UI.TableSetupColumn("Total\nDamage %", col_flags, width)
-                UI.TableSetupColumn("Total\nAccuracy %", col_flags, width)
-                UI.TableSetupColumn("Crit\nDamage", col_flags, width)
-                UI.TableSetupColumn("Crit\nDamage %", col_flags, width)
+                UI.TableSetupColumn("Raw Ranged\nDamage", col_flags, width)
+                UI.TableSetupColumn("Total Ranged\nDamage %", col_flags, width)
+                UI.TableSetupColumn("Total Ranged\nAccuracy %", col_flags, width)
+                UI.TableSetupColumn("Ranged Crit\nDamage", col_flags, width)
+                UI.TableSetupColumn("Ranged Crit\nDamage %", col_flags, width)
                 UI.TableHeadersRow()
 
                 -- Data
@@ -113,10 +113,10 @@ f.Display.Crits = function(player_name)
         if UI.CollapsingHeader("Critical Hits", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Crits", 5, table_flags) then
                 -- Headers
-                UI.TableSetupColumn("Raw\nDamage", col_flags, width)
-                UI.TableSetupColumn("Total\nDamage %", col_flags, width)
-                UI.TableSetupColumn("Total\nCrit Rate %", col_flags, width)
-                UI.TableSetupColumn("Melee\nCrit Rate %", col_flags, width)
+                UI.TableSetupColumn("Raw Crit\nDamage", col_flags, width)
+                UI.TableSetupColumn("Total Crit\nDamage %", col_flags, width)
+                UI.TableSetupColumn("Total \nCrit Rate %", col_flags, width)
+                UI.TableSetupColumn("Melee \nCrit Rate %", col_flags, width)
                 UI.TableSetupColumn("Ranged\nCrit Rate %", col_flags, width)
                 UI.TableHeadersRow()
 
@@ -152,7 +152,7 @@ f.Display.WS_and_SC = function(player_name)
                 -- Headers
                 UI.TableSetupColumn("Raw WS\nDamage", col_flags, width)
                 UI.TableSetupColumn("Total WS\nDamage %", col_flags, width)
-                UI.TableSetupColumn("Total\nAccuracy %", col_flags, width)
+                UI.TableSetupColumn("Total WS\nAccuracy %", col_flags, width)
                 UI.TableSetupColumn("Raw SC\nDamage", col_flags, width)
                 UI.TableSetupColumn("Total SC\nDamage %", col_flags, width)
                 UI.TableHeadersRow()
@@ -190,16 +190,22 @@ f.Display.Magic = function(player_name)
     local magic_total = Model.Get.Data(player_name, Model.Enum.Trackable.MAGIC, Model.Enum.Metric.TOTAL)
     if magic_total > 0 then
         if UI.CollapsingHeader("Magic", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Magic", 2, table_flags) then
+            if UI.BeginTable("Magic", 5, table_flags) then
                 -- Headers
-                UI.TableSetupColumn("Raw\nDamage", col_flags, width)
-                UI.TableSetupColumn("Total\nDamage %", col_flags, width)
+                UI.TableSetupColumn("Raw Magic\nDamage", col_flags, width)
+                UI.TableSetupColumn("Total Magic\nDamage %", col_flags, width)
+                UI.TableSetupColumn("Raw Burst\nDamage", col_flags, width)
+                UI.TableSetupColumn("Burst %\nTotal Damage", col_flags, width)
+                UI.TableSetupColumn("Burst %\nMagic Damage", col_flags, width)
                 UI.TableHeadersRow()
 
                 -- Data
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable))
                 UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable, true))
+                UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name))
+                UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name, true))
+                UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name, true, true))
                 UI.EndTable()
             end
             f.Display.Single_Data(player_name, Model.Enum.Trackable.MAGIC)
@@ -223,8 +229,8 @@ f.Display.Ability = function(player_name)
         if UI.CollapsingHeader("Ability", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Ability", 2, table_flags) then
                 -- Headers
-                UI.TableSetupColumn("Raw\nDamage", col_flags, width)
-                UI.TableSetupColumn("Total\nDamage %", col_flags, width)
+                UI.TableSetupColumn("Raw Ability\nDamage", col_flags, width)
+                UI.TableSetupColumn("Total Ability\nDamage %", col_flags, width)
                 UI.TableHeadersRow()
 
                 -- Data
@@ -251,7 +257,7 @@ f.Display.Healing = function(player_name)
 
     local healing_total = Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, Model.Enum.Metric.TOTAL)
     if healing_total > 0 then
-        if UI.CollapsingHeader("Healing", ImGuiTreeNodeFlags_None) then
+        if UI.CollapsingHeader("Raw Healing", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Healing", 2, table_flags) then
                 -- Headers
                 UI.TableSetupColumn("Raw\nHealing", col_flags, width)
@@ -283,12 +289,12 @@ f.Display.Pet = function(player_name)
         if UI.CollapsingHeader("Pets", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Pets", 6, table_flags) then
                 -- Headers
-                UI.TableSetupColumn("Raw\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Total\nDamage %", col_flags, damage)
-                UI.TableSetupColumn("Melee\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Ranged\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Weaponskill\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Ability\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Raw Pet\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Total Pet\nDamage %", col_flags, damage)
+                UI.TableSetupColumn("Pet Melee\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Pet Ranged\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Pet WS\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Pet Ability\nDamage", col_flags, damage)
                 UI.TableHeadersRow()
 
                 -- Data
@@ -322,12 +328,15 @@ f.Display.Single_Data = function(player_name, focus_type)
     if not Model.Data.Trackable[focus_type] then return nil end
     if not Model.Data.Trackable[focus_type][player_name] then return nil end
 
-    if UI.CollapsingHeader(" >>> " .. focus_type .. " - Catalog", ImGuiTreeNodeFlags_None) then
+    local acc_string = "\nAccuracy %"
+    if focus_type == Model.Enum.Trackable.MAGIC then acc_string = "\nBursts" end
+
+    if UI.TreeNode(focus_type) then
         if UI.BeginTable(focus_type, 7, flags) then
             UI.TableSetupColumn("\nAction Name", flags, name)
             UI.TableSetupColumn("Total\nDamage", flags, damage)
             UI.TableSetupColumn("\nAttempts", flags, damage)
-            UI.TableSetupColumn("\nAccuracy %", flags, damage)
+            UI.TableSetupColumn(acc_string, flags, damage)
             UI.TableSetupColumn("Average\nDamage", flags, damage)
             UI.TableSetupColumn("Minimum\nDamage", flags, damage)
             UI.TableSetupColumn("Maximum\nDamage", flags, damage)
@@ -343,6 +352,7 @@ f.Display.Single_Data = function(player_name, focus_type)
             end
             UI.EndTable()
         end
+        UI.TreePop()
     end
 end
 
@@ -358,7 +368,11 @@ f.Display.Util.Single_Row = function(player_name, action_name, focus_type)
     UI.TableNextColumn() UI.Text(action_name)
     UI.TableNextColumn() UI.Text(Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.TOTAL))
     UI.TableNextColumn() UI.Text(Col.Single.Attempts(player_name, action_name, focus_type))
-    UI.TableNextColumn() UI.Text(Col.Single.Acc(player_name, action_name, focus_type))
+    if focus_type == Model.Enum.Trackable.MAGIC then
+        UI.TableNextColumn() UI.Text(Col.Single.Bursts(player_name, action_name))
+    else  
+        UI.TableNextColumn() UI.Text(Col.Single.Acc(player_name, action_name, focus_type))
+    end
     UI.TableNextColumn() UI.Text(Col.Single.Average(player_name, action_name, focus_type))
     local min = Model.Get.Catalog(player_name, focus_type, action_name, Model.Enum.Metric.MIN)
     if min == 100000 then

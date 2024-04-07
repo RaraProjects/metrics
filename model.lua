@@ -1,45 +1,5 @@
 local m = {}
 
-m.Lists = {
-	Trackables = {
-		'total',
-		'total_no_sc',
-		'melee',
-		'melee primary',
-		'melee secondary',
-		'melee kicks',
-		'pet_melee',
-		'pet_melee_discrete',
-		'ranged',
-		'pet_ranged',
-		'throwing',
-		'ws',
-		'pet_ws',
-		'sc',
-		'ability',
-		'pet_ability',
-		'magic',
-		'enspell',
-		'nuke',
-		'healing',
-		'pet',
-		'death',
-		'default',
-	},
-	Metrics = {
-		'total',
-		'count',
-		'hits',
-		'crits',
-		'crit damage',
-		'misses',
-		'shadows',
-		'mob heal',
-		'min',
-		'max',
-	}
-}
-
 m.Enum = {
 	Misc = {
 		IGNORE   = 'ignore',
@@ -64,12 +24,12 @@ m.Enum = {
 		RANGED      = 'ranged',
 		PET_RANGED  = 'pet_ranged',
 		THROWING    = 'throwing',
-		WS          = 'ws',
+		WS          = 'Weaponskills',
 		PET_WS      = 'pet_ws',
-		SC          = 'sc',
-		ABILITY     = 'ability',
+		SC          = 'Skillchains',
+		ABILITY     = 'Abilities',
 		PET_ABILITY = 'pet_ability',
-		MAGIC       = 'magic',
+		MAGIC       = 'Spells',
 		ENSPELL     = 'enspell',
 		NUKE        = 'nuke',
 		HEALING     = "healing",
@@ -78,16 +38,18 @@ m.Enum = {
 		DEFAULT     = 'default',
 	},
 	Metric = {
-		TOTAL       = 'total',
-		COUNT       = 'count',
-		HIT_COUNT   = 'hits',
-		CRIT_COUNT  = 'crits',
-		CRIT_DAMAGE = 'crit damage',
-		MISS_COUNT  = 'misses',
-		SHADOWS     = 'shadows',
-		MOB_HEAL    = 'mob heal',
-		MIN         = 'min',
-		MAX         = 'max',
+		TOTAL        = 'total',
+		COUNT        = 'count',
+		HIT_COUNT    = 'hits',
+		CRIT_COUNT   = 'crits',
+		CRIT_DAMAGE  = 'crit damage',
+		MISS_COUNT   = 'misses',
+		SHADOWS      = 'shadows',
+		MOB_HEAL     = 'mob heal',
+		MIN          = 'min',
+		MAX          = 'max',
+		BURST_COUNT  = 'burst count',
+		BURST_DAMAGE = 'burst damage'
 	},
 	Mode = {
 		INC = "inc",
@@ -192,10 +154,10 @@ m.Init.Data = function(index, player_name, pet_name)
 	if pet_name then m.Init.Pet_Data(index, player_name, pet_name) end
 
 	-- Initialize data nodes
-	for _, trackable in pairs(m.Lists.Trackables) do
+	for _, trackable in pairs(m.Enum.Trackable) do
 		m.Data.Parse[index][trackable] = {}
 		m.Data.Parse[index][trackable][m.Enum.Node.CATALOG] = {}
-		for _, metric in pairs(m.Lists.Metrics) do
+		for _, metric in pairs(m.Enum.Metric) do
 			m.Set.Data(0, index, trackable, metric)
 		end
 	end
@@ -275,7 +237,7 @@ m.Init.Catalog_Action = function(index, player_name, trackable, action_name, pet
 	if pet_name then m.Init.Pet_Catalog(index, player_name, trackable, action_name, pet_name) end
 
 	-- Initialize catalog data nodes
-	for _, metric in pairs(m.Lists.Metrics) do
+	for _, metric in pairs(m.Enum.Metric) do
 		m.Set.Catalog(0, index, trackable, action_name, metric)
 	end
 
@@ -371,8 +333,9 @@ end
 ---@param damage number damage value to be logged.
 ---@param action_name string the name of the action to be cataloged.
 ---@param pet_name? string
+---@param burst? boolean whether or not a magic burst took place.
 ------------------------------------------------------------------------------------------------------
-m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, action_name, pet_name)
+m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, action_name, pet_name, burst)
     local index = m.Util.Build_Index(player_name, mob_name)
     m.Init.Catalog_Action(index, player_name, trackable, action_name, pet_name)
 
@@ -387,6 +350,9 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
     	m.Update.Data(m.Enum.Mode.INC, damage, audits, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
 		if trackable ~= m.Enum.Trackable.SC then
 			m.Update.Data(m.Enum.Mode.INC, damage, audits, m.Enum.Trackable.TOTAL_NO_SC, m.Enum.Metric.TOTAL)
+		end
+		if trackable == m.Enum.Trackable.MAGIC and burst then
+			m.Update.Data(m.Enum.Mode.INC, damage, audits, trackable, m.Enum.Metric.BURST_DAMAGE)
 		end
     end
 
@@ -405,6 +371,9 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
     -- Catalog data, min and max
 	-- 'count' gets incremented in the packet handling.
     m.Update.Catalog_Metric(m.Enum.Mode.INC, damage, audits, trackable, action_name, m.Enum.Metric.TOTAL)
+	if trackable == m.Enum.Trackable.MAGIC and burst then
+		m.Update.Catalog_Metric(m.Enum.Mode.INC, damage, audits, trackable, action_name, m.Enum.Metric.BURST_DAMAGE)
+	end
 
     if damage > 0 and damage < m.Get.Catalog(player_name, trackable, action_name, m.Enum.Metric.MIN) then
     	m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MIN)

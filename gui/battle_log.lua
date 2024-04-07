@@ -39,7 +39,8 @@ bl.Enum.Thresholds = {
 }
 bl.Enum.Text = {
     MISS = "MISS!",
-    NA = "---"
+    NA   = "---",
+    MB   = "Burst!",
 }
 
 -- FUTURE CONSIDERATIONS
@@ -80,7 +81,7 @@ end
 ---@param player_name string name of the player that took the action
 ---@param action_name string name of the action the player took (like a weaponskill or ability).
 ---@param damage? number usually how much damage the action did.
----@param tp_value? number how much TP was used by the weaponskill.
+---@param tp_value? number|string how much TP was used by the weaponskill.
 ---@param action_type? string a trackable from the data model.
 ---@param action_data? table additional information about the action to help with text formatting.
 ------------------------------------------------------------------------------------------------------
@@ -91,7 +92,7 @@ bl.Add = function(player_name, action_name, damage, tp_value, action_type, actio
         Name   = bl.Util.Name(player_name),
         Damage = bl.Util.Damage(damage),
         Action = bl.Util.Action(action_name, action_type, action_data),
-        TP     = bl.Util.TP(tp_value)
+        TP     = bl.Util.TP(tp_value, action_type)
     }
     table.insert(bl.Log, 1, entry)
 end
@@ -155,12 +156,18 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Format the TP component of the battle log.
+-- Will also show if a spell cast is a magic burst.
 ------------------------------------------------------------------------------------------------------
 ---@param tp_value? number how much TP was used by the weaponskill
+---@param action_type? string a trackable from the data model.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-bl.Util.TP = function(tp_value)
-    if tp_value then return Col.String.Format_Number(tp_value) end
+bl.Util.TP = function(tp_value, action_type)
+    if action_type == Model.Enum.Trackable.MAGIC then
+        return tostring(tp_value)
+    else
+        if tp_value then return Col.String.Format_Number(tp_value) end
+    end
     return " "
 end
 

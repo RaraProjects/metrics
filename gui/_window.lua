@@ -5,6 +5,7 @@ w.Window = {
     Alpha = 0.85,
     Font_Scaling = 0.85,
     Style = 1,
+    Visible = true,
     Flags = bit.bor(
     ImGuiWindowFlags_AlwaysAutoResize,
     ImGuiWindowFlags_NoSavedSettings,
@@ -147,7 +148,7 @@ end
 ------------------------------------------------------------------------------------------------------
 w.Populate = function()
     -- Add Zone Check Player.GetIsZoning
-    if UI.Begin(w.Window.Name, false, w.Window.Flags) then
+    if UI.Begin(w.Window.Name, w.Window.Visible, w.Window.Flags) then
         if UI.BeginTabBar(w.Tabs.Names.PARENT, w.Tabs.Flags) then
             if UI.BeginTabItem(w.Tabs.Names.TEAM) then
                 Team.Populate()

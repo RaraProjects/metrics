@@ -27,7 +27,7 @@ a.Enum.Mob = {
     PETTYPE    = 2, -- Type
 }
 a.Enum.Ability = {
-    PETSUMMON     = 1,  -- Type: BST Beastial Loyalty
+    NORMAL        = 1,  -- Type: Normal Ability
     PETLOGISTICS  = 2,  -- Type: Fight, Heel, Stay, etc.
     BLOODPACTRAGE = 6,  -- Type: 
     BLOODPACTWARD = 10, -- Type: 
@@ -535,7 +535,7 @@ a.Packets.Build_Action = function (data)
 	act.recast       = parsed_packet.info
 	act.targets      = {}
 
-	for _, v in ipairs (parsed_packet.target) do
+	for _, v in ipairs(parsed_packet.target) do
 		local target = {}
 
 		target.id           = v.m_uID

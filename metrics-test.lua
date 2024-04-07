@@ -112,9 +112,11 @@ end)
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('command', 'command_cb', function (e)
     local command_args = e.command:lower():args()
----@diagnostic disable-next-line: empty-block
+---@diagnostic disable-next-line: undefined-field
     if table.contains({"/metrics"}, command_args[1]) then
-
+        if command_args[2] == "show" then
+            Window.Window.Visible = not Window.Window.Visible
+        end
     end
 end)
 

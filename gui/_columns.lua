@@ -5,6 +5,7 @@ c.Acc = {}
 c.Crit = {}
 c.Single = {}
 c.String = {}
+c.Util = {}
 
 -- Easier reference for Model's ENUMs.
 c.Mode = Model.Enum.Mode
@@ -22,7 +23,7 @@ c.Metric = Model.Enum.Metric
 c.Damage.By_Type = function(player_name, damage_type, percent)
     local focused_damage = Model.Get.Data(player_name, damage_type, c.Metric.TOTAL)
     if percent then
-        local total_damage = Model.Get.Data(player_name, c.Trackable.TOTAL, c.Metric.TOTAL)
+        local total_damage = c.Util.Total_Damage(player_name)
         return c.String.Format_Percent(focused_damage, total_damage)
     end
     return c.String.Format_Number(focused_damage)
@@ -47,6 +48,25 @@ c.Damage.Pet_By_Type = function(player_name, pet_name, damage_type, percent)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Grabs the magic burst damage for the player.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param percent? boolean whether or not the damage should be raw or percent.
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Damage.Burst = function(player_name, percent, magic_only)
+    local focused_damage = Model.Get.Data(player_name, Model.Enum.Trackable.MAGIC, c.Metric.BURST_DAMAGE)
+    if percent then
+        local total_damage = c.Util.Total_Damage(player_name)
+        if magic_only then
+            total_damage = Model.Get.Data(player_name, c.Trackable.MAGIC, c.Metric.TOTAL)
+        end
+        return c.String.Format_Percent(focused_damage, total_damage)
+    end
+    return c.String.Format_Number(focused_damage)
+end
+
+------------------------------------------------------------------------------------------------------
 -- Grabs the total damage that the entity has done.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
@@ -54,19 +74,29 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 c.Damage.Total = function(player_name, percent)
-    local grand_total = 0
-    if Team.Settings.Include_SC_Damage then
-        grand_total = Model.Get.Data(player_name, c.Trackable.TOTAL, c.Metric.TOTAL)
-    else
-        grand_total = Model.Get.Data(player_name, c.Trackable.TOTAL_NO_SC, c.Metric.TOTAL)
-    end
-
+    local grand_total = c.Util.Total_Damage(player_name)
     if percent then
         local party_damage = Model.Get.Total_Party_Damage()
         return c.String.Format_Percent(grand_total, party_damage)
     end
-
     return c.String.Format_Number(grand_total)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Grabs the total damage that the entity has done.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@return number
+------------------------------------------------------------------------------------------------------
+c.Util.Total_Damage = function(player_name)
+    if player_name then
+        if Team.Settings.Include_SC_Damage then
+            return Model.Get.Data(player_name, c.Trackable.TOTAL, c.Metric.TOTAL)
+        else
+            return Model.Get.Data(player_name, c.Trackable.TOTAL_NO_SC, c.Metric.TOTAL)
+        end
+    end
+    return 0
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -154,7 +184,7 @@ c.Crit.Damage = function(player_name, damage_type, percent)
     end
 
     if percent then
-        local total_damage = Model.Get.Data(player_name, c.Trackable.TOTAL, c.Metric.TOTAL)
+        local total_damage = c.Util.Total_Damage(player_name)
         return c.String.Format_Percent(crit_damage, total_damage)
     end
 
@@ -192,7 +222,7 @@ c.Single.Damage = function(player_name, action_name, focus_type, metric, percent
     end
 
     if percent then
-        local total_damage = Model.Get.Data(player_name, c.Trackable.TOTAL, c.Metric.TOTAL)
+        local total_damage = c.Util.Total_Damage(player_name)
         return c.String.Format_Percent(single_damage, total_damage)
     end
 
@@ -255,6 +285,19 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Single.Pet_Attempts = function(player_name, pet_name, action_name, trackable)
     local single_attempts = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.COUNT)
+    return c.String.Format_Number(single_attempts)
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- Grabs how many times a cataloged action was magic burst.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name string
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Single.Bursts = function(player_name, action_name)
+    local single_attempts = Model.Get.Catalog(player_name, Model.Enum.Trackable.MAGIC, action_name, c.Metric.BURST_COUNT)
     return c.String.Format_Number(single_attempts)
 end
 

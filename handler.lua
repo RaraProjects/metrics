@@ -9,6 +9,9 @@ p.Mode = Model.Enum.Mode
 p.Trackable = Model.Enum.Trackable
 p.Metric = Model.Enum.Metric
 
+-- FUTURE CONSIDERATIONS 
+-- TO DO: Show Magic Bursts in Battle Log
+
 -- ------------------------------------------------------------------------------------------------------
 -- Parse the melee attack packet.
 -- ------------------------------------------------------------------------------------------------------
@@ -466,6 +469,7 @@ p.Action.Finish_Spell_Casting = function(action, actor_mob, log_offense)
     local spell_data = A.Spell.ID(spell_id)
     if not spell_data then return nil end
 	local spell_name = A.Spell.Name(spell_id, spell_data)
+    local is_burst = false
 
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
@@ -473,8 +477,10 @@ p.Action.Finish_Spell_Casting = function(action, actor_mob, log_offense)
             target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = "test"} end
 
-            new_damage = p.Handler.Spell_Damage(spell_data, result, actor_mob.name, target.name)
+            is_burst = result.message == 252
+            new_damage = p.Handler.Spell_Damage(spell_data, result, actor_mob.name, target.name, is_burst)
             if not new_damage then new_damage = 0 end
+
             damage = damage + new_damage
         end
     end
@@ -486,9 +492,12 @@ p.Action.Finish_Spell_Casting = function(action, actor_mob, log_offense)
 
     -- Log the use of the spell
     Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.MAGIC, spell_name, p.Metric.COUNT)
+    if is_burst then Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.MAGIC, spell_name, p.Metric.BURST_COUNT) end
 
     if Lists.Spell.Damaging[spell_id] and Blog.Flags.Magic then
-        Blog.Add(actor_mob.name, spell_name, damage, nil, Model.Enum.Trackable.MAGIC, spell_data)
+        local burst_message = ""
+        if is_burst then burst_message = Blog.Enum.Text.MB end
+        Blog.Add(actor_mob.name, spell_name, damage, burst_message, Model.Enum.Trackable.MAGIC, spell_data)
     end
 end
 
@@ -500,9 +509,10 @@ end
 ---@param metadata table contains all the information for the action
 ---@param player_name string name of the player that did the action
 ---@param target_name string name of the target that received the action
+---@param burst boolean true if this cast was a magic burst.
 ---@return number
 ------------------------------------------------------------------------------------------------------
-p.Handler.Spell_Damage = function(spell_data, metadata, player_name, target_name)
+p.Handler.Spell_Damage = function(spell_data, metadata, player_name, target_name, burst)
     if not spell_data then return 0 end
 
     local spell_id = spell_data.Index
@@ -511,13 +521,13 @@ p.Handler.Spell_Damage = function(spell_data, metadata, player_name, target_name
     local damage = metadata.param or 0
 
     if Lists.Spell.Damaging[spell_id] then
-        Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.MAGIC, damage, spell_name)
+        Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.MAGIC, damage, spell_name, nil, burst)
         is_mapped = true
     end
 
     -- TO DO: Handle Overcure
     if Lists.Spell.Healing[spell_id] then
-    	Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.HEALING, damage, spell_name)
+    	Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.HEALING, damage, spell_name, nil, burst)
         is_mapped = true
     end
 
@@ -601,8 +611,6 @@ p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, own
     local ability_name = ability_data.Name
     local damage = metadata.param
 
-    A.Chat.Debug("Handler.Ability " .. tostring(ability_name) .. " " .. tostring(ability_id))
-
     local ability_type = p.Trackable.ABILITY
     local pet_name
     if owner_mob then
@@ -658,6 +666,8 @@ p.Action.Finish_Monster_TP_Move = function(action, actor_mob, log_offense)
             target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
 
+            A.Chat.Debug("Action.Finish_Monster_TP_Move: " .. tostring(action.param) .. " " .. tostring(actor_mob.name))
+
             -- Puppet ranged attack
             if action.param == 1949 then
                 p.Handler.Ranged(result, actor_mob.name, target.name, owner_mob)
@@ -707,8 +717,6 @@ p.Action.Pet_Ability = function(action, actor_mob, log_offense)
     local ability_id = action.param
     local ability_data
     local avatar = false
-
-    A.Chat.Debug("Action.Pet_Ability " .. tostring(ability_id))
 
     -- Handle offset for Blood Pacts. I don't know why they are all out of order.
     if (ability_id >= 831 and ability_id <= 893)
