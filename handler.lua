@@ -9,25 +9,24 @@ p.Mode = Model.Enum.Mode
 p.Trackable = Model.Enum.Trackable
 p.Metric = Model.Enum.Metric
 
--- Everything is pretty self explanatory except...
-
 -- ------------------------------------------------------------------------------------------------------
 -- Parse the melee attack packet.
 -- ------------------------------------------------------------------------------------------------------
--- act         : action packet data
--- actor_mob   : the mob data of the entity performing the action
--- log_offense : boolean of if we should log the data; initial filtering happens in action packet
+---@param action table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+---@param owner_mob table (if pet) the mob data of the entity's owner.
+---@param log_offense boolean if this action should actually be logged.
 -- ------------------------------------------------------------------------------------------------------
-p.Action.Melee = function(act, actor_mob, owner_mob, log_offense)
+p.Action.Melee = function(action, actor_mob, owner_mob, log_offense)
 	if not log_offense then return end
 
 	local result, target
 	local damage = 0
 
-	for target_index, target_value in pairs(act.targets) do
+	for target_index, target_value in pairs(action.targets) do
 		for action_index, _ in pairs(target_value.actions) do
-			result = act.targets[target_index].actions[action_index]
-			target = A.Mob.Get_Mob_By_ID(act.targets[target_index].id)
+			result = action.targets[target_index].actions[action_index]
+			target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
 			if not target then target = {name = 'test'} end
 			damage = damage + p.Handler.Melee(result, actor_mob.name, target.name, owner_mob)
 		end
@@ -59,10 +58,11 @@ end
 -- reaction 			8: hit; consistently on MNK vs Apex bats
 -- 						9: miss?; very rarely on MNK vs Apex bats
 ------------------------------------------------------------------------------------------------------
--- metadata    : contains all the information for the action
--- player_name : name of the player that did the action
--- target_name : name of the target that received the action
--- owner_mob   : if the action was from a pet then this will hold the owner's mob
+---@param metadata table contains all the information for the action.
+---@param player_name string name of the player that did the action.
+---@param target_name string name of the target that received the action.
+---@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
+---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
     local animation_id = metadata.animation
@@ -195,7 +195,10 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
 end
 
 ------------------------------------------------------------------------------------------------------
---
+-- Map an animation to a discrete type of melee action.
+------------------------------------------------------------------------------------------------------
+---@param animation_id number represents, primary attack, offhand attack, kicking, etc.
+---@return string
 ------------------------------------------------------------------------------------------------------
 p.Util.Discrete_Melee_Type = function(animation_id)
     if animation_id == 0 then
@@ -214,9 +217,9 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Parse the ranged attack packet.
 ------------------------------------------------------------------------------------------------------
--- act         : action packet data
--- actor_mob   : the mob data of the entity performing the action
--- log_offense : boolean of if we should log the data; initial filtering happens in action packet
+---@param act table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
 p.Action.Ranged = function(act, actor_mob, log_offense)
     if not log_offense then return end
@@ -242,10 +245,11 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Set data for a ranged attack action.
 ------------------------------------------------------------------------------------------------------
--- metadata    : contains all the information for the action
--- player_name : name of the player that did the action
--- target_name : name of the target that received the action
--- owner_mob   : if the action was from a pet then this will hold the owner's mob
+---@param metadata table contains all the information for the action.
+---@param player_name string name of the player that did the action.
+---@param target_name string name of the target that received the action.
+---@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
+---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Ranged = function(metadata, player_name, target_name, owner_mob)
     local damage = metadata.param
@@ -328,9 +332,9 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Parse the weaponskill packet.
 ------------------------------------------------------------------------------------------------------
--- act         : action packet data
--- actor_mob   : the mob data of the entity performing the action
--- log_offense : boolean of if we should log the data; initial filtering happens in action packet
+---@param action table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
 p.Action.Finish_Weaponskill = function(action, actor_mob, log_offense)
     if not log_offense then return end
@@ -398,11 +402,12 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Set data for a weaponskill action.
 ------------------------------------------------------------------------------------------------------
--- metadata    : contains all the information for the action
--- player_name : name of the player that did the action
--- target_name : name of the target that received the action
--- ws_name     : name of the weaponskill
--- owner_mob   : if the action was from a pet then this will hold the owner's mob
+---@param metadata table contains all the information for the action.
+---@param player_name string name of the player that did the action.
+---@param target_name string name of the target that received the action.
+---@param ws_name string name of the weaponskill that was used.
+---@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
+---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Weaponskill = function(metadata, player_name, target_name, ws_name, owner_mob)
     local damage = metadata.param
@@ -433,10 +438,11 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Set data for a skillchain action.
 ------------------------------------------------------------------------------------------------------
--- metadata    : contains all the information for the action
--- player_name : name of the player that did the action
--- target_name : name of the target that received the action
--- sc_name     : name of the skillchain
+---@param metadata table contains all the information for the action.
+---@param player_name string name of the player that did the action.
+---@param target_name string name of the target that received the action.
+---@param sc_name string name of the skillchain that happened.
+---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Skillchain = function(metadata, player_name, target_name, sc_name)
     local damage = metadata.add_effect_param
@@ -447,9 +453,9 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Parse the finish spell casting packet.
 ------------------------------------------------------------------------------------------------------
--- act         : action packet data
--- actor_mob   : the mob data of the entity performing the action
--- log_offense : boolean of if we should log the data; initial filtering happens in action packet
+---@param action table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
 p.Action.Finish_Spell_Casting = function(action, actor_mob, log_offense)
     if not log_offense then return nil end
@@ -490,10 +496,11 @@ end
 -- Set data for a spell action (including healing).
 -- Not all spells do damage and not all spells heal this will sort those out.
 ------------------------------------------------------------------------------------------------------
--- act         : the main packet; need it to get spell ID
--- metadata    : contains all the information for the action
--- player_name : name of the player that did the action
--- target_name : name of the target that received the action
+---@param spell_data table the main packet; need it to get spell ID
+---@param metadata table contains all the information for the action
+---@param player_name string name of the player that did the action
+---@param target_name string name of the target that received the action
+---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Spell_Damage = function(spell_data, metadata, player_name, target_name)
     if not spell_data then return 0 end
@@ -524,15 +531,15 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Parse the job ability casting packet.
 ------------------------------------------------------------------------------------------------------
--- act         : action packet data
--- actor_mob   : the mob data of the entity performing the action
--- log_offense : boolean of if we should log the data; initial filtering happens in action packet
+---@param action table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-p.Action.Job_Ability = function(act, actor_mob, log_offense)
+p.Action.Job_Ability = function(action, actor_mob, log_offense)
     if not log_offense then return end
 
 	-- Need to provide an offset to get to the abilities. Otherwise I get WS information.
-	local ability_id = act.param + 512
+	local ability_id = action.param + 512
     local ability_data = A.Ability.ID(ability_id)
 
     -- Handle missing abilities.
@@ -545,10 +552,10 @@ p.Action.Job_Ability = function(act, actor_mob, log_offense)
     local result, target
     local damage = 0
 
-    for target_index, target_value in pairs(act.targets) do
+    for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
-            result = act.targets[target_index].actions[action_index]
-            target = A.Mob.Get_Mob_By_ID(act.targets[target_index].id)
+            result = action.targets[target_index].actions[action_index]
+            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
             damage = damage + p.Handler.Ability(ability_data, result, actor_mob, target.name)
         end
@@ -581,11 +588,12 @@ end
 -- Using an ability to cause a pet to attack gets captured here, but the actual data for the damage
 -- done comes in a different packet. SMN comes in Pet_Ability and then routes back to here.
 ------------------------------------------------------------------------------------------------------
--- act         : the main packet; need it to get spell ID
--- metadata    : contains all the information for the action
--- actor_mob   : mob of the player that did the action
--- target_name : name of the target that received the action
--- owner_mob   : if the action was from a pet then this will hold the owner's mob
+---@param ability_data table the main packet; need it to get ability ID
+---@param metadata table contains all the information for the action.
+---@param actor_mob table name of the player that did the action.
+---@param target_name string name of the target that received the action.
+---@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
+---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, owner_mob)
     local player_name = actor_mob.name
@@ -627,11 +635,11 @@ end
 -- Parse the finish monster TP move packet.
 -- Puppet ranged attacks fall into this too.
 ------------------------------------------------------------------------------------------------------
--- act         : action packet data
--- actor_mob   : the mob data of the entity performing the action
--- log_offense : boolean of if we should log the data; initial filtering happens in action packet
+---@param action table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-p.Action.Finish_Monster_TP_Move = function(act, actor_mob, log_offense)
+p.Action.Finish_Monster_TP_Move = function(action, actor_mob, log_offense)
     if not log_offense then return false end
 
     -- Check to see if the pet belongs to anyone in the party.
@@ -641,21 +649,21 @@ p.Action.Finish_Monster_TP_Move = function(act, actor_mob, log_offense)
     local sc_damage  = 0
     local damage     = 0
 
-    for target_index, target_value in pairs(act.targets) do
+    for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
 
-            result = act.targets[target_index].actions[action_index]
-            target = A.Mob.Get_Mob_By_ID(act.targets[target_index].id)
+            result = action.targets[target_index].actions[action_index]
+            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
 
             -- Puppet ranged attack
-            if act.param == 1949 then
+            if action.param == 1949 then
                 p.Handler.Ranged(result, actor_mob.name, target.name, owner_mob)
                 ws_name = 'Pet Ranged'
                 damage = result.param
 
             else
-                local ws_data = Pet_Skill[act.param]
+                local ws_data = Pet_Skill[action.param]
                 ws_name = ws_data.en
 
                 -- Check for skillchains
@@ -683,18 +691,18 @@ end
 -- Parse the pet ability packet.
 -- SMN bloodpacts; DRG wyvern breaths
 ------------------------------------------------------------------------------------------------------
--- act         : action packet data
--- actor_mob   : the mob data of the entity performing the action; If SMN this will be your avatar
--- log_offense : boolean of if we should log the data; initial filtering happens in action packet
+---@param action table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-p.Action.Pet_Ability = function(act, actor_mob, log_offense)
+p.Action.Pet_Ability = function(action, actor_mob, log_offense)
     if not log_offense then return false end
 
     -- Check to see if the pet belongs to anyone in the party.
     local owner_mob = A.Mob.Pet_Owner(actor_mob)
     if not owner_mob then return false end
 
-    local ability_id = act.param
+    local ability_id = action.param
     local ability_data
     local avatar = false
 
@@ -721,10 +729,10 @@ p.Action.Pet_Ability = function(act, actor_mob, log_offense)
     local result, target
     local damage = 0
 
-    for target_index, target_value in pairs(act.targets) do
+    for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
-            result = act.targets[target_index].actions[action_index]
-            target = A.Mob.Get_Mob_By_ID(act.targets[target_index].id)
+            result = action.targets[target_index].actions[action_index]
+            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
             damage = damage + p.Handler.Ability(ability_data, result, owner_mob, target.name, actor_mob)
         end
@@ -746,8 +754,8 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Parse the player death message.
 ------------------------------------------------------------------------------------------------------
--- actor_id  : mob id of the entity performing the action
--- target_id : mob id of the entity receiving the action (this is the person dying)
+---@param actor_id number mob id of the entity performing the action
+---@param target_id number mob id of the entity receiving the action (this is the person dying)
 ------------------------------------------------------------------------------------------------------
 function Player_Death(actor_id, target_id)
     local target = A.Mob.Get_Mob_By_ID(target_id)
