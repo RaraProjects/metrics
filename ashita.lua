@@ -380,6 +380,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Get ability data.
 -- https://wiki.ashitaxi.com/doku.php?id=addons:adk:iresourcemanager
+-- Type 1  = Special Ability (2-hour), Third Eye,
 -- Type 6  = SMN using BloodPactRage
 -- Type 10 = BloodPactWard
 -- Type 18 = BloodPactRage

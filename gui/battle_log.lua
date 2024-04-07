@@ -138,15 +138,17 @@ end
 -- Format the action component of the battle log.
 ------------------------------------------------------------------------------------------------------
 ---@param action_name string
----@param action_type string a trackable from the data model.
----@param action_data table additional information about the action to help with text formatting.
+---@param action_type? string a trackable from the data model.
+---@param action_data? table additional information about the action to help with text formatting.
 ---@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
 bl.Util.Action = function(action_name, action_type, action_data)
     local color = Window.Colors.White
-    if action_type == Model.Enum.Trackable.MAGIC then
-        local element = action_data.Element
-        color = Window.Colors.Elements[element]
+    if action_type and action_data then
+        if action_type == Model.Enum.Trackable.MAGIC then
+            local element = action_data.Element
+            color = Window.Colors.Elements[element]
+        end
     end
     return {Value = action_name, Color = color}
 end
@@ -154,7 +156,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Format the TP component of the battle log.
 ------------------------------------------------------------------------------------------------------
----@param tp_value number how much TP was used by the weaponskill
+---@param tp_value? number how much TP was used by the weaponskill
 ---@return string
 ------------------------------------------------------------------------------------------------------
 bl.Util.TP = function(tp_value)

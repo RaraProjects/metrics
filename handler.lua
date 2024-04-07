@@ -601,6 +601,8 @@ p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, own
     local ability_name = ability_data.Name
     local damage = metadata.param
 
+    A.Chat.Debug("Handler.Ability " .. tostring(ability_name) .. " " .. tostring(ability_id))
+
     local ability_type = p.Trackable.ABILITY
     local pet_name
     if owner_mob then
@@ -706,8 +708,13 @@ p.Action.Pet_Ability = function(action, actor_mob, log_offense)
     local ability_data
     local avatar = false
 
-    -- Handle offset for Blood Pacts
-    if ability_id >= 831 and ability_id <= 838 then
+    A.Chat.Debug("Action.Pet_Ability " .. tostring(ability_id))
+
+    -- Handle offset for Blood Pacts. I don't know why they are all out of order.
+    if (ability_id >= 831 and ability_id <= 893)
+        or (ability_id >= 906 and ability_id <= 912)
+        or (ability_id >= 1904 and ability_id <= 1911)
+        or ability_id == 1154 then
         ability_data = Lists.Ability.Avatar[ability_id]
         avatar = true
     else
