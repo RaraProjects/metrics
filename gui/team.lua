@@ -53,7 +53,7 @@ t.Defaults.Settings = {
 ------------------------------------------------------------------------------------------------------
 t.Populate = function()
     Window.Widget.Mob_Filter()
-    if UI.BeginTable("table1", t.Display.Columns.Current, Window.Table.Flags.Team) then
+    if UI.BeginTable("Team", t.Display.Columns.Current, Window.Table.Flags.Team) then
         t.Display.Headers()
         local player_name = "Debug"
         Model.Sort.Damage()

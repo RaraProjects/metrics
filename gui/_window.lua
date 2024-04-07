@@ -58,6 +58,9 @@ w.Tabs.Names = {
     FOCUS     = "Focus",
     BATTLELOG = "Battle Log",
     SETTINGS  = "Settings",
+    MOBVIEW   = "Mob Viewer",
+    PACKETS   = "Packet Viewer",
+    ERRORS    = "Error Log",
 }
 w.Tabs.Flags = ImGuiTabBarFlags_None
 
@@ -165,6 +168,18 @@ w.Populate = function()
                 end
                 if UI.BeginTabItem(w.Tabs.Names.SETTINGS) then
                     Settings.Populate()
+                    UI.EndTabItem()
+                end
+                if UI.BeginTabItem(w.Tabs.Names.MOBVIEW) then
+                    _Debug.Mob.View(A.Mob.Get_Mob_By_Target(A.Enum.Mob.TARGET))
+                    UI.EndTabItem()
+                end
+                if UI.BeginTabItem(w.Tabs.Names.PACKETS) then
+                    _Debug.Packet.Populate()
+                    UI.EndTabItem()
+                end
+                if UI.BeginTabItem(w.Tabs.Names.ERRORS) then
+                    _Debug.Error.Populate()
                     UI.EndTabItem()
                 end
                 UI.EndTabBar()

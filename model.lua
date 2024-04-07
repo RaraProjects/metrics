@@ -135,7 +135,10 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 m.Init.Data = function(index, player_name, pet_name)
-	if not index then return false end
+	if not index then
+		_Debug.Error.Add("Init.Data: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil index passed in." )
+		return false
+	end
 
 	-- Check to see if the nodes have already been initialized for the player and the pet.
 	if m.Data.Parse[index] then
@@ -186,10 +189,10 @@ m.Init.Pet_Data = function(index, player_name, pet_name)
 	m.Data.Parse[index][pet_name] = {}
 
 	-- Initialize data nodes
-	for _, trackable in pairs(m.Lists.Trackables) do
+	for _, trackable in pairs(m.Enum.Trackable) do
 		m.Data.Parse[index][pet_name][trackable] = {}
 		m.Data.Parse[index][pet_name][trackable][m.Enum.Node.CATALOG] = {}
-		for _, metric in pairs(m.Lists.Metrics) do
+		for _, metric in pairs(m.Enum.Metric) do
 			m.Set.Pet_Data(0, index, pet_name, trackable, metric)
 		end
 	end
@@ -219,7 +222,10 @@ end
 ---@return boolean an initialization was performed.
 ------------------------------------------------------------------------------------------------------
 m.Init.Catalog_Action = function(index, player_name, trackable, action_name, pet_name)
-	if not index or not player_name or not trackable or not action_name then return false end
+	if not index or not player_name or not trackable or not action_name then
+		_Debug.Error.Add("Init.Catalog_Action: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil required parameter passed in." )
+		return false
+	end
 
 	m.Init.Data(index, player_name, pet_name)
 
@@ -403,7 +409,10 @@ m.Update.Catalog_Metric = function(mode, value, audits, trackable, action_name, 
 	local pet_name = audits.pet_name
 	local index = m.Util.Build_Index(player_name, target_name)
 
-	if not trackable or not player_name or not action_name then return false end
+	if not trackable or not player_name or not action_name then
+		_Debug.Error.Add("Update.Catalog_Metric: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil required parameter passed in." )
+		return false
+	end
 	m.Init.Catalog_Action(index, player_name, trackable, action_name, pet_name)
 	if not m.Data.Initialized_Players[player_name] then m.Data.Initialized_Players[player_name] = true end
 
@@ -438,7 +447,10 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 m.Set.Data = function(value, index, trackable, metric)
-	if not value or not index or not trackable or not metric then return false end
+	if not value or not index or not trackable or not metric then
+		_Debug.Error.Add("Set.Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		return false
+	end
 	m.Data.Parse[index][trackable][metric] = value
 	return true
 end
@@ -454,7 +466,10 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 m.Set.Pet_Data = function(value, index, pet_name, trackable, metric)
-	if not value or not index or not pet_name or not trackable or not metric then return false end
+	if not value or not index or not pet_name or not trackable or not metric then
+		_Debug.Error.Add("Set.Pet_Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		return false
+	end
 	m.Data.Parse[index][pet_name][trackable][metric] = value
 	return true
 end
@@ -473,7 +488,10 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 m.Set.Catalog = function(value, index, trackable, action_name, metric)
-	if not value or not index or not trackable or not action_name or not metric then return false end
+	if not value or not index or not trackable or not action_name or not metric then
+		_Debug.Error.Add("Set.Catalog: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		return false
+	end
 	m.Data.Parse[index][trackable][m.Enum.Node.CATALOG][action_name][metric] = value
 	return true
 end
@@ -493,7 +511,10 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 m.Set.Pet_Catalog = function(value, index, pet_name, trackable, action_name, metric)
-	if not value or not index or not pet_name or not trackable or not action_name or not metric then return false end
+	if not value or not index or not pet_name or not trackable or not action_name or not metric then
+		_Debug.Error.Add("Set.Pet_Catalog: {" .. tostring(index) .. "} {" .. tostring(pet_name) .. "} {".. tostring(trackable) .. "} nil required parameter passed in." )
+		return false
+	end
 	m.Data.Parse[index][pet_name][trackable][m.Enum.Node.CATALOG][action_name][metric] = value
 	return true
 end
@@ -508,7 +529,10 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 m.Inc.Data = function(value, index, trackable, metric)
-	if not value or not index or not trackable or not metric then return false end
+	if not value or not index or not trackable or not metric then
+		_Debug.Error.Add("Inc.Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		return false
+	end
 	m.Data.Parse[index][trackable][metric] = m.Data.Parse[index][trackable][metric] + value
 	return true
 end
@@ -524,7 +548,10 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 m.Inc.Pet_Data = function(value, index, pet_name, trackable, metric)
-	if not value or not index or not pet_name or not trackable or not metric then return false end
+	if not value or not index or not pet_name or not trackable or not metric then
+		_Debug.Error.Add("Inc.Pet_Data: {" .. tostring(index) .. "} {" .. tostring(pet_name) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		return false
+	end
 	m.Data.Parse[index][pet_name][trackable][metric] = m.Data.Parse[index][pet_name][trackable][metric] + value
 	return true
 end
@@ -543,7 +570,10 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 m.Inc.Catalog = function(value, index, trackable, action_name, metric)
-	if not value or not index or not trackable or not action_name or not metric then return false end
+	if not value or not index or not trackable or not action_name or not metric then
+		_Debug.Error.Add("Inc.Catalog: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		return false
+	end
 	m.Data.Parse[index][trackable][m.Enum.Node.CATALOG][action_name][metric]
 	= m.Data.Parse[index][trackable][m.Enum.Node.CATALOG][action_name][metric] + value
 	return true
@@ -564,7 +594,10 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 m.Inc.Pet_Catalog = function(value, index, pet_name, trackable, action_name, metric)
-	if not value or not index or not pet_name or not trackable or not action_name or not metric then return false end
+	if not value or not index or not pet_name or not trackable or not action_name or not metric then
+		_Debug.Error.Add("Inc.Pet_Catalog: {" .. tostring(index) .. "} {" .. tostring(pet_name) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		return false
+	end
 	m.Data.Parse[index][pet_name][trackable][m.Enum.Node.CATALOG][action_name][metric]
 	= m.Data.Parse[index][pet_name][trackable][m.Enum.Node.CATALOG][action_name][metric] + value
 	return true
@@ -817,8 +850,10 @@ end
 ------------------------------------------------------------------------------------------------------
 m.Get.Total_Party_Damage = function()
     local party = A.Data.Party()
-	if not party then return -1 end
-    if not party.party1_count then return -1 end
+	if not party or not party.party1_count then
+		_Debug.Error.Add("Get.Total_Party_Damage: Received nil party data from Ashita.")
+		return -1
+	end
 
     local player, player_name, index
     local total_damage = 0
@@ -830,7 +865,10 @@ m.Get.Total_Party_Damage = function()
 	local starting_slot = A.Party.Start_Slot(1)
     for slot = starting_slot, pt1_count, 1 do
 		player = party[slot]
-        if not player then return -1 end
+        if not player then
+			_Debug.Error.Add("Get.Total_Party_Damage: Received nil party member data in Party 1.")
+			return -1
+		end
 
         player_name = player.name
         index = m.Util.Build_Index(player_name)
@@ -845,7 +883,10 @@ m.Get.Total_Party_Damage = function()
 		starting_slot = A.Party.Start_Slot(2)
 		for slot = starting_slot, pt2_count + starting_slot, 1 do
 			player = party[slot]
-			if not player then return -1 end
+			if not player then
+				_Debug.Error.Add("Get.Total_Party_Damage: Received nil party member data in Party 2.")
+				return -1
+			end
 
 			player_name = player.name
 			index = m.Util.Build_Index(player_name)
@@ -861,7 +902,10 @@ m.Get.Total_Party_Damage = function()
 		starting_slot = A.Party.Start_Slot(3)
 		for slot = starting_slot, pt3_count + starting_slot, 1 do
 			player = party[slot]
-			if not player then return -1 end
+			if not player then
+				_Debug.Error.Add("Get.Total_Party_Damage: Received nil party member data in Party 3.")
+				return -1
+			end
 
 			player_name = player.name
 			index = m.Util.Build_Index(player_name)
@@ -883,8 +927,14 @@ end
 ---@return string [actor_name:target_name]
 ------------------------------------------------------------------------------------------------------
 m.Util.Build_Index = function(actor_name, target_name)
-	if not target_name then target_name = m.Enum.Index.DEBUG end
-	if not actor_name then return m.Enum.Index.DEBUG end
+	if not target_name then
+		_Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil target name passed in.")
+		target_name = m.Enum.Index.DEBUG
+	end
+	if not actor_name then
+		_Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil actor name passed in.")
+		return m.Enum.Index.DEBUG
+	end
 	if target_name ~= m.Enum.Index.DEBUG and not m.Data.Initialized_Mobs[target_name] then
 		m.Data.Initialized_Mobs[target_name] = true
 		table.insert(m.Data.Mob_List_Sorted, target_name)
@@ -902,7 +952,10 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 m.Update.Running_Accuracy = function(player_name, hit)
-	if not m.Data.Running_Accuracy[player_name] then return false end
+	if not m.Data.Running_Accuracy[player_name] then
+		_Debug.Error.Add("Update.Running_Accuracy: {" .. tostring(player_name) .. "} is missing in Data.Running_Accuracy.")
+		return false
+	end
 	local max = #m.Data.Running_Accuracy[player_name]
     if max >= m.Settings.Running_Accuracy_Limit then table.remove(m.Data.Running_Accuracy[player_name], m.Settings.Running_Accuracy_Limit) end
 	table.insert(m.Data.Running_Accuracy[player_name], 1, hit)
@@ -916,7 +969,10 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 m.Get.Running_Accuracy = function(player_name)
-	if not m.Data.Running_Accuracy[player_name] then return {0, 0} end
+	if not m.Data.Running_Accuracy[player_name] then
+		_Debug.Error.Add("Get.Running_Accuracy: Attemp to get {" .. tostring(player_name) .. "} running accuracy, but it didn't exist.")
+		return {0, 0}
+	end
 	local hits = 0
 	local count = 0
 
@@ -966,7 +1022,10 @@ end
 ---@param focus_type string the trackable that is of interest.
 ------------------------------------------------------------------------------------------------------
 m.Sort.Catalog_Damage = function(player_name, focus_type)
-	if not focus_type then return nil end
+	if not focus_type then
+		_Debug.Error.Add("Sort.Catalog_Damage: {" .. tostring(player_name) .. "} focus_type wasn't provided.")
+		return nil
+	end
 	m.Util.Populate_Catalog_Damage_Table(player_name, focus_type)
 	table.sort(m.Data.Catalog_Damage_Race, function (a, b)
 		local a_damage = a[2]
@@ -998,7 +1057,10 @@ end
 ---@param focus_type string the trackable that is of interest.
 ------------------------------------------------------------------------------------------------------
 m.Util.Populate_Catalog_Damage_Table = function(player_name, focus_type)
-	if not focus_type then return nil end
+	if not focus_type then
+		_Debug.Error.Add("Util.Populate_Total_Damage_Table: {" .. tostring(player_name) .. "} focus_type wasn't provided.")
+		return nil
+	end
 	m.Data.Catalog_Damage_Race = {}
 	for action_name, _ in pairs(m.Data.Trackable[focus_type][player_name]) do
 		table.insert(m.Data.Catalog_Damage_Race, {action_name, m.Get.Catalog(player_name, focus_type, action_name, m.Enum.Metric.TOTAL)})

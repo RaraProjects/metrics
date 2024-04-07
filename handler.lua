@@ -68,6 +68,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
+    _Debug.Packet.Add(player_name, target_name, "Melee", metadata)
     local animation_id = metadata.animation
     local damage = metadata.param
     local throwing = false
@@ -111,7 +112,7 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
         Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.COUNT)
     -- Unhandled Animation //////////////////////////////////////////
     else
-        A.Chat.Debug("Handler.Melee: Unhandled animation: "..tostring(animation_id))
+        _Debug.Error.Add("Handler.Melee: {" .. tostring(player_name) .. "} Unhandled animation: " .. tostring(animation_id))
     end
 
     -- Min/Max //////////////////////////////////////////////////////
@@ -153,7 +154,7 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
         Model.Update.Running_Accuracy(player_name, false)
     -- DRK vs. Omen Gorger //////////////////////////////////////////
     elseif message_id == 30 then
-        A.Chat.Debug("Attack Nuance 30 -- DRK vs. Omen Gorger")
+        _Debug.Error.Add("Handler.Melee: {" .. tostring(player_name) .. "} Attack Nuance 30 -- DRK vs. Omen Gorger")
     -- Attack absorbed by shadows ///////////////////////////////////
     elseif message_id == 31 then
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.HIT_COUNT)
@@ -190,7 +191,8 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
         Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.HIT_COUNT)
         Model.Update.Running_Accuracy(player_name, true)
     else
-        Blog.Add(player_name, 'Att. nuance '..message_id) end
+        _Debug.Error.Add("Handler.Melee: {" .. tostring(player_name) .. "} Unhandled Melee Nuance " .. tostring(message_id))
+    end
 
     local spikes = metadata.spike_effect_effect
 
@@ -255,6 +257,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Ranged = function(metadata, player_name, target_name, owner_mob)
+    _Debug.Packet.Add(player_name, target_name, "Ranged", metadata)
     local damage = metadata.param
     local message_id = metadata.message
 
@@ -319,11 +322,7 @@ p.Handler.Ranged = function(metadata, player_name, target_name, owner_mob)
         Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.TOTAL)
         Model.Update.Running_Accuracy(player_name, true)
     else
-        Blog.Add(player_name, "Missing Ranged Nuance "..tostring(message_id))
-    end
-
-    if damage == 0 then
-        A.Chat.Debug("Ranged damage was 0.")
+        _Debug.Error.Add("Handler.Ranged: {" .. tostring(player_name) .. "} Unhandled Ranged Nuance " .. tostring(message_id))
     end
 
     if damage > 0 and (damage < Model.Get.Data(player_name, ranged_type, p.Metric.MIN)) then Model.Update.Data(p.Mode.SET, damage, audits, ranged_type, p.Metric.MIN) end
@@ -420,10 +419,11 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Weaponskill = function(metadata, player_name, target_name, ws_name, owner_mob)
+    _Debug.Packet.Add(player_name, target_name, "Weaponskill", metadata)
     local damage = metadata.param
-
     local ws_type = p.Trackable.WS
     local pet_name
+
     if owner_mob then
         pet_name = player_name
         player_name = owner_mob.name
@@ -455,6 +455,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Skillchain = function(metadata, player_name, target_name, sc_name)
+    _Debug.Packet.Add(player_name, target_name, "Skillchain", metadata)
     local damage = metadata.add_effect_param
     Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.SC, damage, sc_name)
     return damage
@@ -520,6 +521,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Spell_Damage = function(spell_data, metadata, player_name, target_name, burst)
+    _Debug.Packet.Add(player_name, target_name, "Spell", metadata)
     if not spell_data then return 0 end
 
     local spell_id = spell_data.Index
@@ -539,7 +541,7 @@ p.Handler.Spell_Damage = function(spell_data, metadata, player_name, target_name
     end
 
     if not is_mapped then
-        A.Chat.Debug("Handler.Spell_Damage: " .. tostring(spell_id) .. " " .. tostring(spell_name) .. " is not included in list of damaging spells.")
+        _Debug.Error.Add("Handler.Spell_Damage: {" .. tostring(player_name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
     end
 
     return damage
@@ -561,6 +563,7 @@ p.Action.Job_Ability = function(action, actor_mob, log_offense)
 
     -- Handle missing abilities.
     if not ability_data then
+        _Debug.Error.Add("Action.Job_Ability: {" .. tostring(actor_mob.name) .. "} Data on ability ID " .. tostring(ability_id) .. " is unavailable.")
         ability_data = {Id = ability_id, Name = "UNK Ability (" .. ability_id .. ")"}
     else
         ability_data = {Id = ability_id, Name = A.Ability.Name(ability_id, ability_data)}
@@ -590,7 +593,7 @@ p.Action.Job_Ability = function(action, actor_mob, log_offense)
     if ability_data.Type == A.Enum.Ability.BLOODPACTRAGE or
        ability_data.Type == A.Enum.Ability.BLOODPACTWARD or
        ability_data.Type == A.Enum.Ability.PETLOGISTICS then
-        A.Chat.Debug("Handler.Ability ignore ability.")
+        _Debug.Error.Add("Action.Job_Ability: {" .. tostring(actor_mob.name) .. "} Ignoring ability ID " .. tostring(ability_id) .. " due to type " .. tostring(ability_data.Type))
         return damage
     end
 
@@ -613,6 +616,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, owner_mob)
+    _Debug.Packet.Add(actor_mob.name, target_name, "Ability", metadata)
     local player_name = actor_mob.name
     local ability_id = ability_data.Id
     local ability_name = ability_data.Name
@@ -668,21 +672,22 @@ p.Action.Finish_Monster_TP_Move = function(action, actor_mob, log_offense)
 
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
-
             result = action.targets[target_index].actions[action_index]
             target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
 
-            A.Chat.Debug("Action.Finish_Monster_TP_Move: " .. tostring(action.param) .. " " .. tostring(actor_mob.name))
-
             -- Puppet ranged attack
             if action.param == 1949 then
                 p.Handler.Ranged(result, actor_mob.name, target.name, owner_mob)
-                ws_name = 'Pet Ranged'
+                ws_name = "Pet Ranged"
                 damage = result.param
 
             else
                 local ws_data = Pet_Skill[action.param]
+                if not ws_data then
+                    _Debug.Error.Add("Action.Finish_Monster_TP_Move: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action.param) .. " unampped in Pet_Skill.")
+                    ws_data = {id = action.param, en = "UNK Ability (" .. action.param .. ")"}
+                end
                 ws_name = ws_data.en
 
                 -- Check for skillchains
@@ -739,6 +744,7 @@ p.Action.Pet_Ability = function(action, actor_mob, log_offense)
     end
 
     if not ability_data then
+        _Debug.Error.Add("Action.Pet_Ability: {" .. tostring(actor_mob.name) .. "} Data on ability ID " .. tostring(ability_id) .. " is unavailable.")
         ability_data = {Id = ability_id, Name = "UNK Ability (" .. ability_id .. ")"}
     else
         if avatar then

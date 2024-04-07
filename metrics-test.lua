@@ -30,7 +30,6 @@ addon.commands = {'p', 'parse'}
 
 _Globals = {}
 _Globals.Initialized = false
-_Globals.Debug = true
 
 -- Resources
 Lists = require("lists")
@@ -50,6 +49,12 @@ Blog = require('gui.battle_log')
 Team = require('gui.team')
 Focus = require('gui.focus')
 Settings = require("gui.settings")
+
+-- Debug
+require("debug.debug")
+require("debug.mob_viewer")
+require("debug.packet_viewer")
+require("debug.error_log")
 
 -- Initialization
 Window.Initialize()

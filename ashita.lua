@@ -281,6 +281,8 @@ end
 -- Get mob data. Trying to make this behave like get_mob_by_id() in windower.
 -- Ashita  : https://github.com/AshitaXI/Ashita-v4beta/blob/main/plugins/sdk/Ashita.h
 -- Windower: https://github.com/Windower/Lua/wiki/FFXI-Functions
+-- HXUI    : https://github.com/tirem/HXUI
+-- Zone might only come from the party packet.
 -- ------------------------------------------------------------------------------------------------------
 ---@param id number this can be an ID or an index. If it's an ID then set the convert_id flag.
 ---@param convert_id? boolean if an ID is supplied then the it will be need to be converted to an index.
@@ -296,20 +298,20 @@ a.Mob.Data = function(id, convert_id)
     local entity = {}
 
     entity.name = entity_manager:GetName(index)
-    entity.id = id
-    entity.index = index
+    entity.id = string.sub(string.format("0x%X", entity_manager:GetServerId(index)), -3) -- This came from HXUI
+    entity.index = index    -- Primary identifier.
     entity.entity_type = entity_manager:GetType(index)
-    entity.status = entity_manager:GetStatus(index)
-    entity.distance = entity_manager:GetDistance(index)
+    entity.status = entity_manager:GetStatus(index)             -- Idle [0], Engaged [1], Healing [33]
+    entity.distance = entity_manager:GetDistance(index)         -- This distance is NOT in yalms.
     entity.hpp = entity_manager:GetHPPercent(index)
-    entity.zone = entity_manager:GetZoneId(index)
     entity.x = entity_manager:GetLocalPositionX(index)
     entity.y = entity_manager:GetLocalPositionY(index)
     entity.z = entity_manager:GetLocalPositionZ(index)
-    entity.target_index = entity_manager:GetTargetIndex(index)
-    entity.pet_index = entity_manager:GetPetTargetIndex(index)
-    entity.claim_id = entity_manager:GetClaimStatus(index)
-    entity.is_npc = entity_manager:GetType(index)
+    entity.target_index = entity_manager:GetTargetIndex(index)  -- Should be same as index.
+    entity.pet_index = entity_manager:GetPetTargetIndex(index)  -- The index of the entity's pet. This should be blank for the pet.
+    entity.claim_id = entity_manager:GetClaimStatus(index)      -- The server ID of the entity who has claim.
+    entity.spawn_flags = entity_manager:GetSpawnFlags(index)    -- Player [525], Avatar/Jug Pet [258], Mob [16], Trust [4366]
+    -- entity.is_npc = entity_manager:GetSpawnFlags(index)
 
     a.Party.Refresh()
     local affiliation = a.Party.Is_Affiliate(index)
@@ -501,15 +503,6 @@ end
 -- ------------------------------------------------------------------------------------------------------
 a.Chat.Message = function(message)
     print("METRICS: " .. message)
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Adds a message in game chat if the debug flag is on.
--- ------------------------------------------------------------------------------------------------------
----@param message string
--- ------------------------------------------------------------------------------------------------------
-a.Chat.Debug = function(message)
-    if _Globals.Debug then print("METRICS DEBUG: " .. message) end
 end
 
 -- ------------------------------------------------------------------------------------------------------
