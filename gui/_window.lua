@@ -31,7 +31,8 @@ w.Table = {}
 w.Table.Flags = {
     None = bit.bor(ImGuiTableFlags_None),
     Resizable = bit.bor(ImGuiTableFlags_NoSavedSettings, ImGuiTableFlags_Resizable, ImGuiTableFlags_SizingStretchProp, ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
-    -- Focus_Table = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders)
+    Borders = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
+    Team = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_Reorderable)
 }
 
 -- Columns ///////////////////////
@@ -82,9 +83,9 @@ w.Colors = {
     Red    = {1.0, 0.0, 0.0, 1.0},
     Green  = {0.0, 1.0, 0.0, 1.0},
     Blue   = {0.0, 0.0, 1.0, 1.0},
-    -- Orange = '\\cs(255,146,3)'
-    -- Yellow = '\\cs(255,198,0)'
-    -- Bright_Green = '\\cs(3,252,3)'
+    Orange = {0.9, 0.6, 0.0, 1.0},
+    Yellow = {0.9, 1.0, 0.0, 1.0},
+    Bright_Green = {0.2, 1.0, 0.0, 1.0},
     Purple = {0.7, 0.2, 1.0, 1.0},
     Dim    = {0.2, 0.2, 0.2, 1.0},
     -- Elements
@@ -147,28 +148,29 @@ end
 -- Populate the data in the monitor window.
 ------------------------------------------------------------------------------------------------------
 w.Populate = function()
-    -- Add Zone Check Player.GetIsZoning
-    if UI.Begin(w.Window.Name, w.Window.Visible, w.Window.Flags) then
-        if UI.BeginTabBar(w.Tabs.Names.PARENT, w.Tabs.Flags) then
-            if UI.BeginTabItem(w.Tabs.Names.TEAM) then
-                Team.Populate()
-                UI.EndTabItem()
+    if not A.States.Zoning then
+        if UI.Begin(w.Window.Name, w.Window.Visible, w.Window.Flags) then
+            if UI.BeginTabBar(w.Tabs.Names.PARENT, w.Tabs.Flags) then
+                if UI.BeginTabItem(w.Tabs.Names.TEAM) then
+                    Team.Populate()
+                    UI.EndTabItem()
+                end
+                if UI.BeginTabItem(w.Tabs.Names.FOCUS) then
+                    Focus.Populate()
+                    UI.EndTabItem()
+                end
+                if UI.BeginTabItem(w.Tabs.Names.BATTLELOG) then
+                    Blog.Populate()
+                    UI.EndTabItem()
+                end
+                if UI.BeginTabItem(w.Tabs.Names.SETTINGS) then
+                    Settings.Populate()
+                    UI.EndTabItem()
+                end
+                UI.EndTabBar()
             end
-            if UI.BeginTabItem(w.Tabs.Names.FOCUS) then
-                Focus.Populate()
-                UI.EndTabItem()
-            end
-            if UI.BeginTabItem(w.Tabs.Names.BATTLELOG) then
-                Blog.Populate()
-                UI.EndTabItem()
-            end
-            if UI.BeginTabItem(w.Tabs.Names.SETTINGS) then
-                Settings.Populate()
-                UI.EndTabItem()
-            end
-            UI.EndTabBar()
+            UI.End()
         end
-        UI.End()
     end
 end
 

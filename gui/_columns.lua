@@ -377,12 +377,14 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Create a nicely formatted number string.
+-- I floor the number to get rid of any decimals. Decimals were a problem with the average column.
 ------------------------------------------------------------------------------------------------------
 ---@param number number this should be an actual number and not a string.
 ---@return string
 ------------------------------------------------------------------------------------------------------
 c.String.Format_Number = function(number)
     if Team.Settings.Condensed_Numbers then return c.String.Compact_Number(number) end
+    number = math.floor(number)
     return c.String.Add_Comma(number)
 end
 

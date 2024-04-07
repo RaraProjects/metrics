@@ -66,7 +66,16 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
 
     if not _Globals.Initialized then return nil end
 
-    if packet.id == 0x028 then
+    -- Start Zone
+    if packet.id == 0xB then
+        A.Util.Zoning(true)
+
+    -- End Zone
+    elseif packet.id == 0xA then
+        A.Util.Zoning(false)
+
+    -- Action Packet
+    elseif packet.id == 0x028 then
         local action = A.Packets.Build_Action(packet.data)
         if not action then return nil end
 

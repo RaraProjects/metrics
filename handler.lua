@@ -393,6 +393,13 @@ p.Action.Finish_Weaponskill = function(action, actor_mob, log_offense)
         Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.WS, ws_name, p.Metric.HIT_COUNT)
     end
 
+    if sc_damage > 0 then
+        Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.SC, p.Metric.COUNT)
+        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.SC, sc_name, p.Metric.COUNT)
+        Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.SC, p.Metric.HIT_COUNT)
+        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.SC, sc_name, p.Metric.HIT_COUNT)
+    end
+
     -- Update the battle log
     if Blog.Flags.WS then
         Blog.Add(actor_mob.name, ws_name, damage, A.Party.Refresh(actor_mob.name, A.Enum.Mob.TP), p.Trackable.WS, ws_data)

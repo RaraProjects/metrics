@@ -7,11 +7,17 @@ t.Defaults = {}
 
 t.Display.Columns = {
     Base = 4,
-    Unhidden = 6,
-    Current = 11,
+    Current = 10,
     Max = 18,
-    Default = 11,
+    Default = 10,
 }
+t.Defaults.Columns = {
+    Base = 4,
+    Current = 10,
+    Max = 18,
+    Default = 10,
+}
+
 t.Display.Flags = {
     Total_Damage_Only = false,
     Total_Acc = false,
@@ -47,7 +53,7 @@ t.Defaults.Settings = {
 ------------------------------------------------------------------------------------------------------
 t.Populate = function()
     Window.Widget.Mob_Filter()
-    if UI.BeginTable("table1", t.Display.Columns.Current, Window.Table.Flags.None) then
+    if UI.BeginTable("table1", t.Display.Columns.Current, Window.Table.Flags.Team) then
         t.Display.Headers()
         local player_name = "Debug"
         Model.Sort.Damage()

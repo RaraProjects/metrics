@@ -33,7 +33,7 @@ end
 ------------------------------------------------------------------------------------------------------
 f.Display.Melee = function(player_name)
     local col_flags = Window.Columns.Flags.None
-    local table_flags = Window.Table.Flags.None
+    local table_flags = Window.Table.Flags.Borders
     local width = Window.Columns.Widths.Standard
 
     local melee_total = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.TOTAL)
@@ -68,7 +68,7 @@ end
 ------------------------------------------------------------------------------------------------------
 f.Display.Ranged = function(player_name)
     local col_flags = Window.Columns.Flags.None
-    local table_flags = Window.Table.Flags.None
+    local table_flags = Window.Table.Flags.Borders
     local width = Window.Columns.Widths.Standard
     local trackable = Model.Enum.Trackable.RANGED
 
@@ -104,7 +104,7 @@ end
 ------------------------------------------------------------------------------------------------------
 f.Display.Crits = function(player_name)
     local col_flags = Window.Columns.Flags.None
-    local table_flags = Window.Table.Flags.None
+    local table_flags = Window.Table.Flags.Borders
     local width = Window.Columns.Widths.Standard
 
     local melee_crits = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.CRIT_DAMAGE)
@@ -140,7 +140,7 @@ end
 ------------------------------------------------------------------------------------------------------
 f.Display.WS_and_SC = function(player_name)
     local col_flags = Window.Columns.Flags.None
-    local table_flags = Window.Table.Flags.None
+    local table_flags = Window.Table.Flags.Borders
     local width = Window.Columns.Widths.Standard
     local trackable_ws = Model.Enum.Trackable.WS
     local trackable_sc = Model.Enum.Trackable.SC
@@ -183,7 +183,7 @@ end
 ------------------------------------------------------------------------------------------------------
 f.Display.Magic = function(player_name)
     local col_flags = Window.Columns.Flags.None
-    local table_flags = Window.Table.Flags.None
+    local table_flags = Window.Table.Flags.Borders
     local width = Window.Columns.Widths.Standard
     local trackable = Model.Enum.Trackable.MAGIC
 
@@ -220,7 +220,7 @@ end
 ------------------------------------------------------------------------------------------------------
 f.Display.Ability = function(player_name)
     local col_flags = Window.Columns.Flags.None
-    local table_flags = Window.Table.Flags.None
+    local table_flags = Window.Table.Flags.Borders
     local width = Window.Columns.Widths.Standard
     local trackable = Model.Enum.Trackable.ABILITY
 
@@ -251,7 +251,7 @@ end
 ------------------------------------------------------------------------------------------------------
 f.Display.Healing = function(player_name)
     local col_flags = Window.Columns.Flags.None
-    local table_flags = Window.Table.Flags.None
+    local table_flags = Window.Table.Flags.Borders
     local width = Window.Columns.Widths.Standard
     local trackable = Model.Enum.Trackable.HEALING
 
@@ -281,7 +281,7 @@ end
 ------------------------------------------------------------------------------------------------------
 f.Display.Pet = function(player_name)
     local col_flags = Window.Columns.Flags.None
-    local table_flags = Window.Table.Flags.None
+    local table_flags = Window.Table.Flags.Borders
     local damage = Window.Columns.Widths.Damage
 
     local pet_total = Model.Get.Data(player_name, Model.Enum.Trackable.PET, Model.Enum.Metric.TOTAL)
@@ -320,7 +320,8 @@ end
 ------------------------------------------------------------------------------------------------------
 f.Display.Single_Data = function(player_name, focus_type)
     if not focus_type then return nil end
-    local flags = Window.Columns.Flags.None
+    local table_flags = Window.Table.Flags.Borders
+    local col_flags = Window.Columns.Flags.None
     local damage = Window.Columns.Widths.Damage
     local name = Window.Columns.Widths.Name
 
@@ -332,14 +333,14 @@ f.Display.Single_Data = function(player_name, focus_type)
     if focus_type == Model.Enum.Trackable.MAGIC then acc_string = "\nBursts" end
 
     if UI.TreeNode(focus_type) then
-        if UI.BeginTable(focus_type, 7, flags) then
-            UI.TableSetupColumn("\nAction Name", flags, name)
-            UI.TableSetupColumn("Total\nDamage", flags, damage)
-            UI.TableSetupColumn("\nAttempts", flags, damage)
-            UI.TableSetupColumn(acc_string, flags, damage)
-            UI.TableSetupColumn("Average\nDamage", flags, damage)
-            UI.TableSetupColumn("Minimum\nDamage", flags, damage)
-            UI.TableSetupColumn("Maximum\nDamage", flags, damage)
+        if UI.BeginTable(focus_type, 7, table_flags) then
+            UI.TableSetupColumn("\nAction Name", col_flags, name)
+            UI.TableSetupColumn("Total\nDamage", col_flags, damage)
+            UI.TableSetupColumn("\nAttempts", col_flags, damage)
+            UI.TableSetupColumn(acc_string, col_flags, damage)
+            UI.TableSetupColumn("Average\nDamage", col_flags, damage)
+            UI.TableSetupColumn("Minimum\nDamage", col_flags, damage)
+            UI.TableSetupColumn("Maximum\nDamage", col_flags, damage)
             UI.TableHeadersRow()
 
             Model.Sort.Catalog_Damage(player_name, focus_type)
@@ -389,7 +390,8 @@ end
 ---@param player_name string owner of the pet.
 ------------------------------------------------------------------------------------------------------
 f.Display.Pet_Single_Data = function(player_name)
-    local flags = Window.Columns.Flags.None
+    local table_flags = Window.Table.Flags.Borders
+    local col_flags = Window.Columns.Flags.None
     local damage = Window.Columns.Widths.Damage
     local name = Window.Columns.Widths.Name
 
@@ -397,13 +399,13 @@ f.Display.Pet_Single_Data = function(player_name)
          -- I considered adding the total damage of the pet to the tree node title,
         -- but the damage changing causes the node to recollapse automatically. Annoying.
         if UI.TreeNode(pet_name) then
-            if UI.BeginTable(pet_name, 6, flags) then
-                UI.TableSetupColumn("Total\nDamage", flags, damage)
-                UI.TableSetupColumn("Total\nDamage %", flags, damage)
-                UI.TableSetupColumn("Melee\nDamage", flags, damage)
-                UI.TableSetupColumn("Ranged\nDamage", flags, damage)
-                UI.TableSetupColumn("Weaponskill\nDamage", flags, damage)
-                UI.TableSetupColumn("Ability\nDamage", flags, damage)
+            if UI.BeginTable(pet_name, 6, table_flags) then
+                UI.TableSetupColumn("Total\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Total\nDamage %", col_flags, damage)
+                UI.TableSetupColumn("Melee\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Ranged\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Weaponskill\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Ability\nDamage", col_flags, damage)
                 UI.TableHeadersRow()
 
                 UI.TableNextRow()
@@ -417,15 +419,15 @@ f.Display.Pet_Single_Data = function(player_name)
             end
 
 
-            if UI.BeginTable(pet_name.." single", 7, flags) then
+            if UI.BeginTable(pet_name.." single", 7, col_flags) then
                 -- Headers
-                UI.TableSetupColumn("\nAction Name", flags, name)
-                UI.TableSetupColumn("Total\nDamage", flags, damage)
-                UI.TableSetupColumn("\nAttempts", flags, damage)
-                UI.TableSetupColumn("\nAccuracy %", flags, damage)
-                UI.TableSetupColumn("Average\nDamage", flags, damage)
-                UI.TableSetupColumn("Minimum\nDamage", flags, damage)
-                UI.TableSetupColumn("Maximum\nDamage", flags, damage)
+                UI.TableSetupColumn("\nAction Name", col_flags, name)
+                UI.TableSetupColumn("Total\nDamage", col_flags, damage)
+                UI.TableSetupColumn("\nAttempts", col_flags, damage)
+                UI.TableSetupColumn("\nAccuracy %", col_flags, damage)
+                UI.TableSetupColumn("Average\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Minimum\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Maximum\nDamage", col_flags, damage)
                 UI.TableHeadersRow()
 
                 Model.Sort.Pet_Catalog_Damage(player_name, pet_name)

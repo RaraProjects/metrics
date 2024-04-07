@@ -40,7 +40,7 @@ bl.Enum.Thresholds = {
 bl.Enum.Text = {
     MISS = "MISS!",
     NA   = "---",
-    MB   = "Burst!",
+    MB   = "BURST!",
 }
 
 -- FUTURE CONSIDERATIONS
@@ -66,7 +66,7 @@ end
 -- Loads the battle log data to the screen.
 ------------------------------------------------------------------------------------------------------
 bl.Populate = function()
-    if UI.BeginTable("Blog", 4, Window.Table.Flags.None) then
+    if UI.BeginTable("Blog", 4, Window.Table.Flags.Borders) then
         bl.Display.Headers()
         for _, entry in ipairs(bl.Log) do
             bl.Display.Rows(entry)
@@ -81,18 +81,18 @@ end
 ---@param player_name string name of the player that took the action
 ---@param action_name string name of the action the player took (like a weaponskill or ability).
 ---@param damage? number usually how much damage the action did.
----@param tp_value? number|string how much TP was used by the weaponskill.
+---@param note? number|string how much TP was used by the weaponskill.
 ---@param action_type? string a trackable from the data model.
 ---@param action_data? table additional information about the action to help with text formatting.
 ------------------------------------------------------------------------------------------------------
-bl.Add = function(player_name, action_name, damage, tp_value, action_type, action_data)
+bl.Add = function(player_name, action_name, damage, note, action_type, action_data)
     -- If the blog is at max length then we will need to remove the last element
     if #bl.Log >= bl.Settings.Length then table.remove(bl.Log, bl.Settings.Length) end
     local entry = {
         Name   = bl.Util.Name(player_name),
         Damage = bl.Util.Damage(damage),
         Action = bl.Util.Action(action_name, action_type, action_data),
-        TP     = bl.Util.TP(tp_value, action_type)
+        TP     = bl.Util.Notes(note, action_type)
     }
     table.insert(bl.Log, 1, entry)
 end
@@ -158,15 +158,16 @@ end
 -- Format the TP component of the battle log.
 -- Will also show if a spell cast is a magic burst.
 ------------------------------------------------------------------------------------------------------
----@param tp_value? number how much TP was used by the weaponskill
+---@param note? string|number how much TP was used by the weaponskill
 ---@param action_type? string a trackable from the data model.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-bl.Util.TP = function(tp_value, action_type)
+bl.Util.Notes = function(note, action_type)
     if action_type == Model.Enum.Trackable.MAGIC then
-        return tostring(tp_value)
+        return tostring(note)
     else
-        if tp_value then return Col.String.Format_Number(tp_value) end
+---@diagnostic disable-next-line: param-type-mismatch
+        if note then return Col.String.Format_Number(note) end
     end
     return " "
 end

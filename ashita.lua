@@ -11,9 +11,13 @@ a.Packets = {}
 a.Spell = {}
 a.WS = {}
 a.Item = {}
+a.Util = {}
 
 a.Mob = {}
 a.Ability = {}
+a.States = {
+    Zoning = false,
+}
 
 a.Enum = {}
 a.Enum.Mob = {
@@ -61,7 +65,7 @@ a.Debug = true
 a.Data.Player = function(attribute)
     local player = AshitaCore:GetMemoryManager():GetPlayer()
     if attribute == a.Enum.Mob.ISZONING then
-        return player.GetIsZoning()
+        return player:GetIsZoning()
     end
     return player
 end
@@ -506,6 +510,15 @@ end
 -- ------------------------------------------------------------------------------------------------------
 a.Chat.Debug = function(message)
     if _Globals.Debug then print("METRICS DEBUG: " .. message) end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Keeps track of if the player is zoning or not. Used to hide the window during zoning.
+-- ------------------------------------------------------------------------------------------------------
+---@param zoning boolean
+-- ------------------------------------------------------------------------------------------------------
+a.Util.Zoning = function(zoning)
+    a.States.Zoning = zoning
 end
 
 -- ------------------------------------------------------------------------------------------------------

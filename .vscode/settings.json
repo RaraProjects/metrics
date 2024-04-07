@@ -36,6 +36,7 @@
         "ImGuiWindowFlags_HorizontalScrollbar",
         "ImGuiCol_TableHeaderBg",
         "ImGuiSliderFlags_None",
-        "ImGuiInputTextFlags_CharsDecimal"
+        "ImGuiInputTextFlags_CharsDecimal",
+        "ImGuiTableFlags_Reorderable"
     ]
 }
