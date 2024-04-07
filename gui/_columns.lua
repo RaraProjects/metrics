@@ -55,7 +55,7 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Damage.Total = function(player_name, percent)
     local grand_total = 0
-    if Monitor.Settings.Include_SC_Damage then
+    if Team.Settings.Include_SC_Damage then
         grand_total = Model.Get.Data(player_name, c.Trackable.TOTAL, c.Metric.TOTAL)
     else
         grand_total = Model.Get.Data(player_name, c.Trackable.TOTAL_NO_SC, c.Metric.TOTAL)
@@ -91,7 +91,7 @@ c.Acc.By_Type = function(player_name, acc_type)
         attempts = Model.Get.Data(player_name, acc_type, c.Metric.COUNT)
     end
 
-    if Monitor.Settings.Accuracy_Show_Attempts then
+    if Team.Settings.Accuracy_Show_Attempts then
         return c.String.Format_Number(attempts)
     end
 
@@ -339,7 +339,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 c.String.Format_Number = function(number)
-    if Monitor.Settings.Compact_Mode then return c.String.Compact_Number(number) end
+    if Team.Settings.Condensed_Numbers then return c.String.Compact_Number(number) end
     return c.String.Add_Comma(number)
 end
 

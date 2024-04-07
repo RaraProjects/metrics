@@ -34,6 +34,8 @@
         "ImGuiTableFlags_SizingStretchSame",
         "ImGuiTableFlags_NoSavedSettings",
         "ImGuiWindowFlags_HorizontalScrollbar",
-        "ImGuiCol_TableHeaderBg"
+        "ImGuiCol_TableHeaderBg",
+        "ImGuiSliderFlags_None",
+        "ImGuiInputTextFlags_CharsDecimal"
     ]
 }

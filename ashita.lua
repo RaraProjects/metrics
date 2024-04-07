@@ -1,3 +1,4 @@
+local parser = require('packets._parser') -- from atom0s
 Chat = require("chat")
 
 local a = {}
@@ -5,29 +6,32 @@ local a = {}
 a.Data = {}
 a.Chat = {}
 a.Party = {}
-a.Party.List = {}
+a.Party.List = {}   -- Maintains who is currently in the party.
+a.Packets = {}
 a.Spell = {}
 a.WS = {}
 a.Item = {}
 
 a.Mob = {}
-a.Mob.Enum = {}
-a.Mob.Enum.Party_Node = {
-    TP = "TP"
-}
-a.Mob.Enum.Type = {
-    PLAYER = 0,
-    PET = 2, -- Avatar, Jug Pet, Trust
-}
-
 a.Ability = {}
-a.Ability.Enum = {}
-a.Ability.Enum.Type = {
-    PETSUMMON = 1,      -- BST Beastial Loyalty
-    PETLOGISTICS = 2,   -- Player uses this on themself. Fight, Heel, Stay, etc.
-    BLOODPACTRAGE = 6,  -- Player uses this on themself.
-    BLOODPACTWARD = 10, -- Player uses this on themself.
-    PETABILITY = 18,    -- Offensive BST/SMN ability.
+
+a.Enum = {}
+a.Enum.Mob = {
+    NAME     = "Name",
+    TP       = "TP",
+    ISZONING = "IsZoning",
+    ME       = "me",
+    TARGET   = "t",
+    PET      = "pet",
+    PLAYERTYPE = 0, -- Type
+    PETTYPE    = 2, -- Type
+}
+a.Enum.Ability = {
+    PETSUMMON     = 1,  -- Type: BST Beastial Loyalty
+    PETLOGISTICS  = 2,  -- Type: Fight, Heel, Stay, etc.
+    BLOODPACTRAGE = 6,  -- Type: 
+    BLOODPACTWARD = 10, -- Type: 
+    PETABILITY    = 18, -- Type: Offensive BST/SMN ability.
 }
 
 a.Debug = true
@@ -44,12 +48,22 @@ a.Debug = true
 -- IRecast* GetRecast(void)
 -- ITarget* GetTarget(void)
 -- ------------------------------------------------------------------------------------------------------
+-- TO DO
+-- 1. Finish the pet portion in a.Mob.Get_Mob_By_Target
+-- ------------------------------------------------------------------------------------------------------
 
 -- ------------------------------------------------------------------------------------------------------
--- Get player data.
+-- Get player data. If an attribute is provided then just get that attribute as long as it is handled.
 -- ------------------------------------------------------------------------------------------------------
-a.Data.Player = function()
-    return AshitaCore:GetMemoryManager():GetPlayer()
+---@param attribute string the specific attribute to be returned.
+---@return any
+-- ------------------------------------------------------------------------------------------------------
+a.Data.Player = function(attribute)
+    local player = AshitaCore:GetMemoryManager():GetPlayer()
+    if attribute == a.Enum.Mob.ISZONING then
+        return player.GetIsZoning()
+    end
+    return player
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -68,7 +82,6 @@ end
 -- ------------------------------------------------------------------------------------------------------
 a.Data.Target_Index = function()
     local memory_manager = AshitaCore:GetMemoryManager()
-    local entity_manager = memory_manager:GetEntity()
     local target_manager = memory_manager:GetTarget()
     return target_manager:GetTargetIndex(target_manager:GetIsSubTargetActive())
 end
@@ -146,9 +159,13 @@ end
 -- This is a lighter version than Party() for just caching who is in the party.
 -- It avoids stack overflow by not computing mob structure.
 -- ------------------------------------------------------------------------------------------------------
+---@param player_name? string
+---@param node? string
+---@return nil|number
+-- ------------------------------------------------------------------------------------------------------
 a.Party.Refresh = function(player_name, node)
     local data = AshitaCore:GetMemoryManager():GetParty()
-    if not data then return {} end
+    if not data then return nil end
     local party = {}
     local return_data = nil
     for slot = 0, 17 do
@@ -163,7 +180,7 @@ a.Party.Refresh = function(player_name, node)
             if player_name and node then
                 local party_name = data:GetMemberName(slot)
                 if party_name == player_name then
-                    if node == a.Mob.Enum.Party_Node.TP then
+                    if node == a.Enum.Mob.TP then
                         return_data = data:GetMemberTP(slot)
                     end
                 end
@@ -174,7 +191,10 @@ a.Party.Refresh = function(player_name, node)
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Checks if a mob index is in the party.
+-- Checks if a mob index is in the party or alliance.
+-- ------------------------------------------------------------------------------------------------------
+---@param index number this is different than ID.
+---@return table {party = bool, alliance = bool}
 -- ------------------------------------------------------------------------------------------------------
 a.Party.Is_Affiliate = function(index)
     local party_number = a.Party.List[index]
@@ -194,6 +214,9 @@ end
 -- Since I removed the p0, a10, a20 indicies from party, this function helps party loops find
 -- their starting slot index.
 -- ------------------------------------------------------------------------------------------------------
+---@param party_number number party 1, 2, or 3.
+---@return integer starting slot for that particular party.
+-- ------------------------------------------------------------------------------------------------------
 a.Party.Start_Slot = function(party_number)
     if party_number == 1 then
         return 0
@@ -209,6 +232,9 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Get an index from a mob ID. I got this from WinterSolstice8's parse lua.
 -- Parse: https://github.com/WinterSolstice8/parse
+-- ------------------------------------------------------------------------------------------------------
+---@param id number
+---@return number
 -- ------------------------------------------------------------------------------------------------------
 a.Data.Index_By_ID = function(id)
     local index = bit.band(id, 0x7FF)
@@ -230,12 +256,18 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Get mob data. Trying to make this behave like get_mob_by_id() in windower.
 -- ------------------------------------------------------------------------------------------------------
+---@param id number
+---@return table
+-- ------------------------------------------------------------------------------------------------------
 a.Mob.Get_Mob_By_ID = function(id)
     return a.Mob.Data(id, true)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get mob data. Trying to make this behave like get_mob_by_index() in windower.
+-- ------------------------------------------------------------------------------------------------------
+---@param index number this is different than ID.
+---@return table
 -- ------------------------------------------------------------------------------------------------------
 a.Mob.Get_Mob_By_Index = function(index)
     return a.Mob.Data(index)
@@ -246,9 +278,13 @@ end
 -- Ashita  : https://github.com/AshitaXI/Ashita-v4beta/blob/main/plugins/sdk/Ashita.h
 -- Windower: https://github.com/Windower/Lua/wiki/FFXI-Functions
 -- ------------------------------------------------------------------------------------------------------
-a.Mob.Data = function(id, flag)
+---@param id number this can be an ID or an index. If it's an ID then set the convert_id flag.
+---@param convert_id? boolean if an ID is supplied then the it will be need to be converted to an index.
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+a.Mob.Data = function(id, convert_id)
     local index = id
-    if flag then
+    if convert_id then
         index = a.Data.Index_By_ID(id)
     end
 
@@ -280,25 +316,39 @@ a.Mob.Data = function(id, flag)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Checks to see if a given string matches your character's name.
+-- ------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+a.Mob.Is_Me = function(player_name)
+    local player = a.Mob.Get_Mob_By_Target(a.Enum.Mob.ME)
+    if not player then return false end
+    return player_name == player.name
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Get mob data. Trying to make this behave like get_mob_by_target() in windower.
 -- Ashita  : https://github.com/AshitaXI/Ashita-v4beta/blob/main/plugins/sdk/Ashita.h
 -- Windower: https://github.com/Windower/Lua/wiki/FFXI-Functions
+-- ------------------------------------------------------------------------------------------------------
+---@param target string Things you put in <> in game--me, t, pet, etc.
+---@return table
 -- ------------------------------------------------------------------------------------------------------
 a.Mob.Get_Mob_By_Target = function(target)
     local player = a.Data.Player_Entity()
     if not player then return {} end
     local player_id = player.ServerId
     local player_entity = a.Mob.Get_Mob_By_ID(player_id)
-    A.Chat.Message("Player: " .. player_entity.target_index)
 
-    if target == "me" then
+    if target == a.Enum.Mob.ME then
         return player_entity
-    elseif target == "t" then
+    elseif target == a.Enum.Mob.TARGET then
         local target_index = a.Data.Target_Index()
         if target_index then
             return a.Mob.Get_Mob_By_Index(target_index)
         end
-    elseif target == "pet" then
+    elseif target == a.Enum.Mob.PET then
         -- local pet_index = player_entity.pet_index
         -- local pet_id = pet_entity.ServerId
         -- return a.Data.Mob_By_ID(pet_id)
@@ -310,6 +360,9 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Check to see if the pet belongs to anyone in the party.
 -- Influenced by Flippant parse
+-- ------------------------------------------------------------------------------------------------------
+---@param pet_data table the pet's mob table; needs to have an index.
+---@return table
 -- ------------------------------------------------------------------------------------------------------
 a.Mob.Pet_Owner = function(pet_data)
     local party = A.Data.Party()
@@ -334,12 +387,20 @@ end
 -- WS have zero offset.
 -- Abilities have 512 offset.
 -- ------------------------------------------------------------------------------------------------------
+---@param id number
+---@return table
+-- ------------------------------------------------------------------------------------------------------
 a.Ability.ID = function(id)
     return AshitaCore:GetResourceManager():GetAbilityById(id)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get the name of an ability.
+-- If we already have the ability data then we don't need to get it again.
+-- ------------------------------------------------------------------------------------------------------
+---@param id number ability ID.
+---@param data? table ability table if we already have it. 
+---@return string
 -- ------------------------------------------------------------------------------------------------------
 a.Ability.Name = function(id, data)
     local ability = data
@@ -352,6 +413,9 @@ end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get the current recast time for an ability by the abilities ID.
+-- ------------------------------------------------------------------------------------------------------
+---@param id number ability ID.
+---@return number
 -- ------------------------------------------------------------------------------------------------------
 a.Ability.Recast_ID = function(id)
     local ability_id
@@ -373,12 +437,20 @@ end
 -- Get spell data.
 -- https://wiki.ashitaxi.com/doku.php?id=addons:adk:iresourcemanager
 -- ------------------------------------------------------------------------------------------------------
+---@param id number spell ID.
+---@return table
+-- ------------------------------------------------------------------------------------------------------
 a.Spell.ID = function(id)
     return AshitaCore:GetResourceManager():GetSpellById(id)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get the name of a spell.
+-- If we already have the spell data then we don't need to get it again.
+-- ------------------------------------------------------------------------------------------------------
+---@param id number spell ID.
+---@param data? table spell table if we already have it.
+---@return string
 -- ------------------------------------------------------------------------------------------------------
 a.Spell.Name = function(id, data)
     local spell = data
@@ -395,6 +467,9 @@ end
 -- Some things are treated as weaponskills, but aren't actually. Those can be missing from the WS file.
 -- For those I keep track of them in Missing_WS define in the lists.lua
 -- ------------------------------------------------------------------------------------------------------
+---@param id number weaponskill ID.
+---@return table
+-- ------------------------------------------------------------------------------------------------------
 a.WS.ID = function(id)
     local ws = WS[id]
     if not ws then ws = Lists.WS.Missing_WS[id] end
@@ -403,6 +478,9 @@ end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Checks a piece of gear's level.
+-- ------------------------------------------------------------------------------------------------------
+---@param item_name string
+---@return number
 -- ------------------------------------------------------------------------------------------------------
 a.Item.Get_Item_Level = function(item_name)
     local item = AshitaCore:GetResourceManager():GetItemByName(item_name, 0)
@@ -414,17 +492,100 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Adds a message in game chat.
 -- ------------------------------------------------------------------------------------------------------
+---@param message string
+-- ------------------------------------------------------------------------------------------------------
 a.Chat.Message = function(message)
-    --AshitaCore:GetChatManager():QueueCommand(-1, tostring(message))
-    --AshitaCore:GetChatManager():AddChatMessage(255, tostring(message))
     print("METRICS: " .. message)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Adds a message in game chat if the debug flag is on.
 -- ------------------------------------------------------------------------------------------------------
+---@param message string
+-- ------------------------------------------------------------------------------------------------------
 a.Chat.Debug = function(message)
-    if a.Data then print("METRICS DEBUG: " .. message) end
+    if _Globals.Debug then print("METRICS DEBUG: " .. message) end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Wintersolstice converted the the action packet 0x0028 to the Windower version.
+-- This is basically copy and pasted from Wintersolstice's parse lua.
+-- Ashita  : https://github.com/atom0s/XiPackets/tree/main/world/server/0x0028
+-- Windower: https://github.com/Windower/Lua/wiki/Action-Event
+-- Parse   : https://github.com/WinterSolstice8/parse
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return nil
+-- ------------------------------------------------------------------------------------------------------
+a.Packets.Build_Action = function (data)
+	local parsed_packet = parser.parse(data)
+	local act = {}
+
+	-- Junk packet from server. Ignore it.
+	if parsed_packet.trg_sum == 0 then
+		return nil
+	end
+
+	act.actor_id     = parsed_packet.m_uID
+	act.category     = parsed_packet.cmd_no
+	act.param        = parsed_packet.cmd_arg
+	act.target_count = parsed_packet.trg_sum
+	act.unknown      = 0
+	act.recast       = parsed_packet.info
+	act.targets      = {}
+
+	for _, v in ipairs (parsed_packet.target) do
+		local target = {}
+
+		target.id           = v.m_uID
+		target.action_count = v.result_sum
+		target.actions      = {}
+		for _, action in ipairs (v.result) do
+			local new_action = {}
+
+			new_action.reaction  = action.miss -- These values are different compared to windower, so the code outside of this function was adjusted.
+			new_action.animation = action.sub_kind
+			new_action.effect    = action.info
+			new_action.stagger   = action.scale
+			new_action.param     = action.value
+			new_action.message   = action.message
+			new_action.unknown   = action.bit
+
+			if action.has_proc then
+				new_action.has_add_effect       = true
+				new_action.add_effect_animation = action.proc_kind
+				new_action.add_effect_effect    = action.proc_info
+				new_action.add_effect_param     = action.proc_value
+				new_action.add_effect_message   = action.proc_message
+			else
+				new_action.has_add_effect       = false
+				new_action.add_effect_animation = 0
+				new_action.add_effect_effect    = 0
+				new_action.add_effect_param     = 0
+				new_action.add_effect_message   = 0
+			end
+
+			if action.has_react then
+				new_action.has_spike_effect       = true
+				new_action.spike_effect_animation = action.react_kind
+				new_action.spike_effect_effect    = action.react_info
+				new_action.spike_effect_param     = action.react_value
+				new_action.spike_effect_message   = action.react_message
+			else 
+				new_action.has_spike_effect       = false
+				new_action.spike_effect_animation = 0
+				new_action.spike_effect_effect    = 0
+				new_action.spike_effect_param     = 0
+				new_action.spike_effect_message   = 0
+			end
+
+			table.insert(target.actions, new_action)
+		end
+
+		table.insert(act.targets, target)
+	end
+
+	return act
 end
 
 return a

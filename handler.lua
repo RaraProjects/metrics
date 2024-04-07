@@ -1,5 +1,3 @@
-local parser = require('packets._parser') -- from atom0s
-
 local p = {}
 
 p.Action = {}
@@ -35,15 +33,13 @@ p.Action.Melee = function(act, actor_mob, owner_mob, log_offense)
 		end
 	end
 
-	-- if not actor_mob.is_npc then
-		if Blog.Display.Flags.Melee then
-			local blog_name = actor_mob.name
-            if owner_mob then
-                blog_name = owner_mob.name .. " (" .. actor_mob.name .. ")"
-            end
-            Blog.Log.Add(blog_name, 'Melee', damage)
-		end
-	-- end
+    if Blog.Flags.Melee then
+        local blog_name = actor_mob.name
+        if owner_mob then
+            blog_name = owner_mob.name .. " (" .. actor_mob.name .. ")"
+        end
+        Blog.Add(blog_name, Model.Enum.Trackable.MELEE, damage)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -191,7 +187,7 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
         Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.HIT_COUNT)
         Model.Update.Running_Accuracy(player_name, true)
     else
-        Blog.Log.Add(player_name, 'Att. nuance '..message_id) end
+        Blog.Add(player_name, 'Att. nuance '..message_id) end
 
     local spikes = metadata.spike_effect_effect
 
@@ -238,11 +234,9 @@ p.Action.Ranged = function(act, actor_mob, log_offense)
         end
     end
 
-    -- if not actor_mob.is_npc then
-        if Blog.Display.Flags.Ranged then
-            Blog.Log.Add(actor_mob.name, p.Trackable.RANGED, damage)
-        end
-    -- end
+    if Blog.Flags.Ranged then
+        Blog.Add(actor_mob.name, p.Trackable.RANGED, damage)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -318,7 +312,7 @@ p.Handler.Ranged = function(metadata, player_name, target_name, owner_mob)
         Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.TOTAL)
         Model.Update.Running_Accuracy(player_name, true)
     else
-        Blog.Log.Add(player_name, "Missing Ranged Nuance "..tostring(message_id))
+        Blog.Add(player_name, "Missing Ranged Nuance "..tostring(message_id))
     end
 
     if damage == 0 then
@@ -348,7 +342,7 @@ p.Action.Finish_Weaponskill = function(action, actor_mob, log_offense)
 
     -- Some abilities--like DRG Jumps--oddly show up in this packet
     if Lists.WS.WS_Abilities[ws_id] then
-        P.Action.Job_Ability(action, actor_mob, log_offense)
+        Handler.Action.Job_Ability(action, actor_mob, log_offense)
         return nil
     end
 
@@ -393,14 +387,12 @@ p.Action.Finish_Weaponskill = function(action, actor_mob, log_offense)
     end
 
     -- Update the battle log
-    -- if not actor_mob.is_npc then
-        if Blog.Display.Flags.WS then
-            Blog.Log.Add(actor_mob.name, ws_name, damage, nil, A.Party.Refresh(actor_mob.name, A.Mob.Enum.Party_Node.TP), p.Trackable.WS, ws_data)
-        end
-        if Blog.Display.Flags.SC and skillchain then
-            Blog.Log.Add(actor_mob.name, sc_name, sc_damage, nil, nil)
-        end
-    -- end
+    if Blog.Flags.WS then
+        Blog.Add(actor_mob.name, ws_name, damage, A.Party.Refresh(actor_mob.name, A.Enum.Mob.TP), p.Trackable.WS, ws_data)
+    end
+    if Blog.Flags.SC and skillchain then
+        Blog.Add(actor_mob.name, sc_name, sc_damage, nil, Model.Enum.Trackable.SC)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -489,8 +481,8 @@ p.Action.Finish_Spell_Casting = function(action, actor_mob, log_offense)
     -- Log the use of the spell
     Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.MAGIC, spell_name, p.Metric.COUNT)
 
-    if Lists.Spell.Damaging[spell_id] then
-        Blog.Log.Add(actor_mob.name, spell_name, damage, nil, nil, 'spell', spell_data)
+    if Lists.Spell.Damaging[spell_id] and Blog.Flags.Magic then
+        Blog.Add(actor_mob.name, spell_name, damage, nil, Model.Enum.Trackable.MAGIC, spell_data)
     end
 end
 
@@ -571,17 +563,15 @@ p.Action.Job_Ability = function(act, actor_mob, log_offense)
     Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.ABILITY, ability_data.Name, p.Metric.COUNT)
 
     -- Ignore abilities the player uses on themself that don't do any damage directly.
-    if ability_data.Type == A.Ability.Enum.Type.BLOODPACTRAGE or
-       ability_data.Type == A.Ability.Enum.Type.BLOODPACTWARD or
-       ability_data.Type == A.Ability.Enum.Type.PETLOGISTICS then
+    if ability_data.Type == A.Enum.Ability.BLOODPACTRAGE or
+       ability_data.Type == A.Enum.Ability.BLOODPACTWARD or
+       ability_data.Type == A.Enum.Ability.PETLOGISTICS then
         A.Chat.Debug("Handler.Ability ignore ability.")
         return damage
     end
 
-    -- Battle log message gets handled in Handle_Ability if the damage is >0
-    -- if Blog.Display.Flags.Ability and not actor_mob.is_npc and damage <= 0 then
-    if Blog.Display.Flags.Ability and damage >= 0 then
-        Blog.Log.Add(actor_mob.name, ability_data.Name, damage)
+    if Blog.Flags.Ability and damage >= 0 then
+        Blog.Add(actor_mob.name, ability_data.Name, damage)
     end
 end
 
@@ -621,16 +611,12 @@ p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, own
         Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.COUNT)
     end
 
-    A.Chat.Debug("Handler.Ability " .. tostring(ability_id) .. " " .. tostring(ability_data.Name))
-
     -- TO DO: Need to get the ID for BloodPactRage
-    if (Lists.Ability.Damaging[ability_id] or Lists.Ability.Avatar[ability_id] or ability_data.Type == A.Ability.Enum.Type.PETOFFENSE) and owner_mob then
+    if Blog.Flags.Ability and (Lists.Ability.Damaging[ability_id] or Lists.Ability.Avatar[ability_id]) and owner_mob then
         Model.Update.Catalog_Damage(player_name, target_name, ability_type, damage, ability_name, owner_mob.name)
         if damage > 0 then
             Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.HIT_COUNT)
-            -- if not actor_mob.is_npc then
-                Blog.Log.Add(player_name, ability_name, damage, nil, nil, ability_type, ability_data)
-            -- end
+            Blog.Add(player_name, ability_name, damage, nil, ability_type, ability_data)
         end
     end
 
@@ -686,8 +672,8 @@ p.Action.Finish_Monster_TP_Move = function(act, actor_mob, log_offense)
         end
     end
 
-    if Blog.Display.Flags.Pet and owner_mob then
-        Blog.Log.Add(actor_mob.name .. " (" .. owner_mob.name .. ")", ws_name, damage)
+    if Blog.Flags.Pet and owner_mob then
+        Blog.Add(actor_mob.name .. " (" .. owner_mob.name .. ")", ws_name, damage)
     end
 
     return true
@@ -751,7 +737,7 @@ p.Action.Pet_Ability = function(act, actor_mob, log_offense)
 
     if damage > 0 then
         Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.ABILITY, p.Metric.HIT_COUNT)
-        if Blog.Display.Flags.Pet then Blog.Log.Add(actor_mob.name, ability_data.Name, damage) end
+        if Blog.Flags.Pet then Blog.Add(actor_mob.name, ability_data.Name, damage) end
     end
 
     return true
@@ -780,85 +766,7 @@ function Player_Death(actor_id, target_id)
 
     Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.DEATH, p.Metric.COUNT)
 
-    if Blog.Display.Flags.Deaths then Blog.Log.Add(actor.name, 'Death', 0) end
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Wintersolstice converted the the action packet 0x0028 to the Windower version.
--- This is basically copy and pasted from Wintersolstice's parse lua.
--- Ashita  : https://github.com/atom0s/XiPackets/tree/main/world/server/0x0028
--- Windower: https://github.com/Windower/Lua/wiki/Action-Event
--- Parse   : https://github.com/WinterSolstice8/parse
--- ------------------------------------------------------------------------------------------------------
-p.Packets.Build_Action = function (data)
-	local parsed_packet = parser.parse(data)
-	local act = {}
-
-	-- Junk packet from server. Ignore it.
-	if parsed_packet.trg_sum == 0 then
-		return nil
-	end
-
-	act.actor_id     = parsed_packet.m_uID
-	act.category     = parsed_packet.cmd_no
-	act.param        = parsed_packet.cmd_arg
-	act.target_count = parsed_packet.trg_sum
-	act.unknown      = 0
-	act.recast       = parsed_packet.info
-	act.targets      = {}
-
-	for _, v in ipairs (parsed_packet.target) do
-		local target = {}
-
-		target.id           = v.m_uID
-		target.action_count = v.result_sum
-		target.actions      = {}
-		for _, action in ipairs (v.result) do
-			local new_action = {}
-
-			new_action.reaction  = action.miss -- These values are different compared to windower, so the code outside of this function was adjusted.
-			new_action.animation = action.sub_kind
-			new_action.effect    = action.info
-			new_action.stagger   = action.scale
-			new_action.param     = action.value
-			new_action.message   = action.message
-			new_action.unknown   = action.bit
-
-			if action.has_proc then
-				new_action.has_add_effect       = true
-				new_action.add_effect_animation = action.proc_kind
-				new_action.add_effect_effect    = action.proc_info
-				new_action.add_effect_param     = action.proc_value
-				new_action.add_effect_message   = action.proc_message
-			else
-				new_action.has_add_effect       = false
-				new_action.add_effect_animation = 0
-				new_action.add_effect_effect    = 0
-				new_action.add_effect_param     = 0
-				new_action.add_effect_message   = 0
-			end
-
-			if action.has_react then
-				new_action.has_spike_effect       = true
-				new_action.spike_effect_animation = action.react_kind
-				new_action.spike_effect_effect    = action.react_info
-				new_action.spike_effect_param     = action.react_value
-				new_action.spike_effect_message   = action.react_message
-			else 
-				new_action.has_spike_effect       = false
-				new_action.spike_effect_animation = 0
-				new_action.spike_effect_effect    = 0
-				new_action.spike_effect_param     = 0
-				new_action.spike_effect_message   = 0
-			end
-
-			table.insert(target.actions, new_action)
-		end
-
-		table.insert(act.targets, target)
-	end
-
-	return act
+    if Blog.Flags.Deaths then Blog.Add(actor.name, "Death", 0) end
 end
 
 return p

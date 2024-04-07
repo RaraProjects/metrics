@@ -41,8 +41,10 @@ m.Lists = {
 }
 
 m.Enum = {
-	Filter = {NO_MOB = "!NONE"},
-	Misc = {IGNORE = 'ignore', COMBINED = 'combined'},
+	Misc = {
+		IGNORE = 'ignore',
+		COMBINED = 'combined'
+	},
 	Node   = {
 		CATALOG = "catalog",
 		PET_CATALOG = "pet_catalog"
@@ -98,22 +100,19 @@ m.Enum = {
 m.Settings = {
 	Running_Accuracy_Limit = 25
 }
-
-m.Mob_Filter = m.Enum.Filter.NO_MOB
+m.Settings.Default = {
+	Running_Accuracy_Limit = 25
+}
 
 m.Data = {
-	-- Holds all of the damage data that the parser uses index is.
-	-- [player:mob][trackable][metric]
-	-- [player:mob][trackable][catalog_type][action_name][metric]
-	-- [player:mob][pet_name][trackable][metric]
-	-- [player:mob][pet_name][trackable][metric][catalog_type][action_name][metric]
-	Parse = {},
+	Parse = {},	-- Holds all of the damage data that the parser uses index is.
+				-- [player:mob][trackable][metric]
+				-- [player:mob][trackable][catalog_type][action_name][metric]
+				-- [player:mob][pet_name][trackable][metric]
+				-- [player:mob][pet_name][trackable][metric][catalog_type][action_name][metric]
+
 	Trackable = {},		-- [trackable][player_name] Keeps track of which skills have been initialized
 	Pet_Trackable = {},	-- [trackable][player_name][pet_name]
-	Initialized_Players = {}, 	-- Keeps track of which entities have been initialized
-	Player_List_Sorted = {},
-	Initialized_Mobs = {},
-	Mob_List_Sorted = {},
 	Initialized_Pets = {},
 	Running_Accuracy = {},		-- Keeps track of the running accuracy data
 	Total_Damage_Sorted  = {},	-- Ranks players based on relative total damage done
@@ -122,8 +121,10 @@ m.Data = {
 }
 
 -- Initialize for mob selection drop down.
-m.Data.Initialized_Mobs = {[m.Enum.Filter.NO_MOB] = true}
-m.Data.Mob_List_Sorted = {[1] = m.Enum.Filter.NO_MOB}
+m.Data.Initialized_Players = {}	-- Keeps track of which entities have been initialized
+m.Data.Player_List_Sorted = {}
+m.Data.Initialized_Mobs = {}
+m.Data.Mob_List_Sorted = {}
 
 m.Init = {}
 m.Sort = {}
@@ -142,20 +143,20 @@ m.Util = {}
 -- Resets the parsing data and clears the battle log.
 ------------------------------------------------------------------------------------------------------
 m.Initialize = function()
-	m.Mob_Filter = m.Enum.Filter.NO_MOB
 	m.Data.Parse = {}
 	m.Data.Trackable = {}
 	m.Data.Pet_Trackable = {}
 	m.Data.Initialized_Players = {}
-	m.Data.Player_List_Sorted = {}
-	m.Data.Initialized_Mobs = {[m.Enum.Filter.NO_MOB] = true}
+	m.Data.Player_List_Sorted = {[1] = Window.Dropdown.Enum.NONE}
+	m.Data.Initialized_Mobs = {[Window.Dropdown.Enum.NONE] = true}
 	m.Data.Initialized_Pets = {}
-	m.Data.Mob_List_Sorted = {[1] = m.Enum.Filter.NO_MOB}
+	m.Data.Mob_List_Sorted = {[1] = Window.Dropdown.Enum.NONE}
 	m.Data.Running_Accuracy = {}
 	m.Data.Total_Damage_Sorted  = {}
 	m.Data.Catalog_Damage_Race = {}
 	Pet_Catalog_Damage_Race = {}
-	Blog.Reset()
+	m.Enum.Misc.NONE = Window.Dropdown.Enum.NONE
+	Blog.Reset_Log()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -319,6 +320,7 @@ end
 ------------------------------------------------------------------------------------------------------
 m.Init.Sort_Players = function()
 	local name_sort = {}
+	table.insert(name_sort, Window.Dropdown.Enum.NONE)
 	for player_name, _ in pairs(m.Data.Initialized_Players) do
 		table.insert(name_sort, player_name)
 	end
@@ -608,13 +610,14 @@ end
 ------------------------------------------------------------------------------------------------------
 m.Get.Data = function(player_name, trackable, metric)
 	local total = 0
+	local mob_focus = Window.Util.Get_Mob_Focus()
 	for index, _ in pairs(m.Data.Parse) do
-		if m.Mob_Filter == m.Enum.Filter.NO_MOB then
-			if string.find(index, player_name..":") then
+		if mob_focus == m.Enum.Misc.NONE then
+			if string.find(index, player_name .. ":") then
 				total = total + m.Data.Parse[index][trackable][metric]
 			end
 		else
-			if string.find(index, player_name..":"..m.Mob_Filter) then
+			if string.find(index, player_name .. ":" .. mob_focus) then
 				total = total + m.Data.Parse[index][trackable][metric]
 			end
 		end
@@ -635,15 +638,16 @@ end
 ------------------------------------------------------------------------------------------------------
 m.Get.Pet_Data = function(player_name, pet_name, trackable, metric)
 	local total = 0
+	local mob_focus = Window.Util.Get_Mob_Focus()
 	for index, _ in pairs(m.Data.Parse) do
-		if m.Mob_Filter == m.Enum.Filter.NO_MOB then
-			if string.find(index, player_name..":") then
+		if mob_focus == m.Enum.Misc.NONE then
+			if string.find(index, player_name .. ":") then
 				if m.Data.Parse[index][pet_name] then
 					total = total + m.Data.Parse[index][pet_name][trackable][metric]
 				end
 			end
 		else
-			if string.find(index, player_name..":"..m.Mob_Filter) then
+			if string.find(index, player_name .. ":" .. mob_focus) then
 				if m.Data.Parse[index][pet_name] then
 					total = total + m.Data.Parse[index][pet_name][trackable][metric]
 				end
@@ -665,13 +669,14 @@ end
 ------------------------------------------------------------------------------------------------------
 m.Get.Catalog = function(player_name, trackable, action_name, metric)
 	local total = 0
+	local mob_focus = Window.Util.Get_Mob_Focus()
 	for index, _ in pairs(m.Data.Parse) do
-		if m.Mob_Filter == m.Enum.Filter.NO_MOB then
+		if mob_focus == m.Enum.Misc.NONE then
 			if string.find(index, player_name) then
 				total = m.Util.Catalog_Calc(total, index, trackable, action_name, metric)
 			end
 		else
-			if string.find(index, player_name..":"..m.Mob_Filter) then
+			if string.find(index, player_name .. ":" .. mob_focus) then
 				total = m.Util.Catalog_Calc(total, index, trackable, action_name, metric)
 			end
 		end
@@ -692,13 +697,14 @@ end
 ------------------------------------------------------------------------------------------------------
 m.Get.Pet_Catalog = function(player_name, pet_name, trackable, action_name, metric)
 	local total = 0
+	local mob_focus = Window.Util.Get_Mob_Focus()
 	for index, _ in pairs(m.Data.Parse) do
-		if m.Mob_Filter == m.Enum.Filter.NO_MOB then
+		if mob_focus == m.Enum.Misc.NONE then
 			if string.find(index, player_name) then
 				total = m.Util.Pet_Catalog_Calc(total, index, pet_name, trackable, action_name, metric)
 			end
 		else
-			if string.find(index, player_name..":"..m.Mob_Filter) then
+			if string.find(index, player_name .. ":" .. mob_focus) then
 				total = m.Util.Pet_Catalog_Calc(total, index, pet_name, trackable, action_name, metric)
 			end
 		end
@@ -706,6 +712,19 @@ m.Get.Pet_Catalog = function(player_name, pet_name, trackable, action_name, metr
 	return total
 end
 
+------------------------------------------------------------------------------------------------------
+-- Retrieval function to get the list of mobs that have been acted upon.
+------------------------------------------------------------------------------------------------------
+m.Get.Mob_List_Sorted = function()
+	return m.Data.Mob_List_Sorted
+end
+
+------------------------------------------------------------------------------------------------------
+-- Retrieval function to get the list of players that have data.
+------------------------------------------------------------------------------------------------------
+m.Get.Player_List_Sorted = function()
+	return m.Data.Player_List_Sorted
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Helper function for getting cataloged data.
@@ -913,7 +932,7 @@ end
 ------------------------------------------------------------------------------------------------------
 m.Update.Running_Accuracy = function(player_name, hit)
 	if not m.Data.Running_Accuracy[player_name] then return false end
-	local max = Count_Table_Elements(m.Data.Running_Accuracy[player_name])
+	local max = #m.Data.Running_Accuracy[player_name]
     if max >= m.Settings.Running_Accuracy_Limit then table.remove(m.Data.Running_Accuracy[player_name], m.Settings.Running_Accuracy_Limit) end
 	table.insert(m.Data.Running_Accuracy[player_name], 1, hit)
 	return true
@@ -960,7 +979,7 @@ m.Util.Populate_Total_Damage_Table = function()
 	m.Data.Total_Damage_Sorted = {}
 	local damage
 	for index, _ in pairs(m.Data.Initialized_Players) do
-		if Monitor.Settings.Include_SC_Damage then
+		if Team.Settings.Include_SC_Damage then
 			damage = m.Get.Data(index, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
 		else
 			damage = m.Get.Data(index, m.Enum.Trackable.TOTAL_NO_SC, m.Enum.Metric.TOTAL)
