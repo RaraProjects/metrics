@@ -9,8 +9,20 @@ p.Mode = Model.Enum.Mode
 p.Trackable = Model.Enum.Trackable
 p.Metric = Model.Enum.Metric
 
+p.Enum = {}
+p.Enum.Offsets = {
+    ABILITY = 512,
+    PET  = 512,
+}
+p.Enum.Flags = {
+    IGNORE = "ignore",
+}
+p.Enum.Text = {
+    BLANK = "",
+}
+
 -- FUTURE CONSIDERATIONS 
--- TO DO: Show Magic Bursts in Battle Log
+-- 1. Catalog enspell damage.
 
 -- ------------------------------------------------------------------------------------------------------
 -- Parse the melee attack packet.
@@ -128,9 +140,11 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
     local enspell_damage = metadata.add_effect_param
     if enspell_damage > 0 then
         -- Element of the enspell is in add_effect_animation
-        Model.Update.Data(p.Mode.INC, enspell_damage, audits, p.Trackable.MAGIC,   p.Metric.TOTAL)
-        Model.Update.Data(p.Mode.INC, enspell_damage, audits, p.Trackable.ENSPELL, p.Metric.TOTAL)
-        Model.Update.Data(p.Mode.INC,              1, audits, p.Trackable.MAGIC, p.Metric.COUNT)
+        Model.Update.Data(p.Mode.INC, enspell_damage, audits, p.Trackable.MAGIC,       p.Metric.TOTAL)
+        Model.Update.Data(p.Mode.INC, enspell_damage, audits, p.Trackable.ENSPELL,     p.Metric.TOTAL)
+        Model.Update.Data(p.Mode.INC, enspell_damage, audits, p.Trackable.TOTAL,       p.Metric.TOTAL)  -- It's an extra step to add additional enspell damage to total.
+        Model.Update.Data(p.Mode.INC, enspell_damage, audits, p.Trackable.TOTAL_NO_SC, p.Metric.TOTAL)  -- It's an extra step to add additional enspell damage to total.
+        Model.Update.Data(p.Mode.INC,              1, audits, p.Trackable.MAGIC,       p.Metric.COUNT)
         if enspell_damage < Model.Get.Data(player_name, p.Trackable.MAGIC, p.Metric.MIN) then Model.Update.Data(p.Mode.SET, enspell_damage, audits, p.Trackable.MAGIC, p.Metric.MIN) end
         if enspell_damage > Model.Get.Data(player_name, p.Trackable.MAGIC, p.Metric.MAX) then Model.Update.Data(p.Mode.SET, enspell_damage, audits, p.Trackable.MAGIC, p.Metric.MAX) end
     end
@@ -333,6 +347,8 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Parse the weaponskill packet.
+-- Surprises:
+-- 1. Some abilities--like DRG Jumps--oddly show up in this packet.
 ------------------------------------------------------------------------------------------------------
 ---@param action table action packet data.
 ---@param actor_mob table the mob data of the entity performing the action.
@@ -343,14 +359,11 @@ p.Action.Finish_Weaponskill = function(action, actor_mob, log_offense)
 
 	local ws_id = action.param
     local ws_data = A.WS.ID(ws_id)
-	if not ws_data then return nil end
-	local ws_name = ws_data.en
-
-    -- Some abilities--like DRG Jumps--oddly show up in this packet
-    if Lists.WS.WS_Abilities[ws_id] then
-        Handler.Action.Job_Ability(action, actor_mob, log_offense)
+	if not ws_data then
+        _Debug.Error.Add("Action.Finish_Weaponskill: {" .. tostring(actor_mob.name) .. "} used ws ID " .. tostring(ws_id) .. " and it wasn't found.")
         return nil
     end
+	local ws_name = ws_data.en
 
     local result, target, sc_id, sc_name, skillchain
     local damage    = 0
@@ -360,6 +373,17 @@ p.Action.Finish_Weaponskill = function(action, actor_mob, log_offense)
         for action_index, _ in pairs(target_value.actions) do
 
             result = action.targets[target_index].actions[action_index]
+
+            -- Handle the case where a job ability shows up in the weaponskill packet. Swift Blade and Steal share the same ID...
+            -- I'm differentiating them based on chate message
+            -- Specific case: Steal/Swift Blade, Atonement/Mug, Gale Axe/Jump, Spinning Axe/Super Jump
+            if Lists.WS.WS_Abilities[ws_id] then
+                if result.message ~= 185 and result.message ~= 188 then
+                    Handler.Action.Job_Ability(action, actor_mob, log_offense)
+                    return nil
+                end
+            end
+
             target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
 
@@ -373,7 +397,7 @@ p.Action.Finish_Weaponskill = function(action, actor_mob, log_offense)
             end
 
             -- Need to calculate WS damage here to account for AOE weaponskills
-            damage = damage + p.Handler.Weaponskill(result, actor_mob.name, target.name, ws_name)
+            damage = damage + p.Handler.Weaponskill(result, actor_mob.name, target.name, ws_name, ws_id)
         end
     end
 
@@ -409,16 +433,91 @@ p.Action.Finish_Weaponskill = function(action, actor_mob, log_offense)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Parse the finish monster TP move packet.
+-- BST Pet and Puppet ranged attacks fall into this category.
+------------------------------------------------------------------------------------------------------
+---@param action table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+---@param log_offense boolean if this action should actually be logged.
+------------------------------------------------------------------------------------------------------
+p.Action.Finish_Monster_TP_Move = function(action, actor_mob, log_offense)
+    if not log_offense then return false end
+    local owner_mob = A.Mob.Pet_Owner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
+
+    local result, target, ws_name, sc_id, sc_name
+    local sc_damage  = 0
+    local damage     = 0
+    local action_id  = action.param
+
+    for target_index, target_value in pairs(action.targets) do
+        for action_index, _ in pairs(target_value.actions) do
+            result = action.targets[target_index].actions[action_index]
+            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            if not target then target = {name = 'test'} end
+
+            -- Puppet ranged attack
+            if action_id == 1949 then
+                p.Handler.Ranged(result, actor_mob.name, target.name, owner_mob)
+                ws_name = "Pet Ranged"
+                damage = result.param
+            else
+                -- Get ability data
+                local ws_data = Pet_Skill[action_id]
+                if not ws_data then
+                    _Debug.Error.Add("Action.Finish_Monster_TP_Move: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action_id) .. " unampped in Pet_Skill.")
+                    ws_data = {id = action_id, en = "UNK Ability (" .. action_id .. ")"}
+                end
+                ws_name = ws_data.en
+
+                -- Check for skillchains
+                sc_id = result.add_effect_message
+                if sc_id > 0 then
+                    sc_name    = Lists.WS.Skillchains[sc_id]
+                    sc_damage  = sc_damage + p.Handler.Skillchain(result, actor_mob.name, target.name, sc_name)
+                end
+
+                -- Need to calculate WS damage here to account for AOE weaponskills
+                damage = damage + p.Handler.Weaponskill(result, actor_mob.name, target.name, ws_name, action_id, owner_mob)
+            end
+        end
+    end
+
+    local audits = {
+        player_name = owner_mob.name,
+        target_name = target.name,
+        pet_name = actor_mob.name,
+    }
+    Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.PET_WS, ws_name, p.Metric.COUNT)
+
+    if damage > 0 then
+        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.PET_WS, ws_name, p.Metric.HIT_COUNT)
+    end
+
+    -- The battle log is interesting here. Pets have abilities that have status effects but don't do any damage.
+    -- The text needs a little massaging to avoid making it look like all the pet's status effect abilities missed.
+    -- Additional abilities such as these may need to be added to monster ability filter.
+    if Blog.Flags.Pet and owner_mob then
+        local ignore = nil
+        if not Lists.Ability.Monster_Damaging[action_id] then ignore = p.Enum.Flags.IGNORE end
+        Blog.Add(actor_mob.name .. " (" .. owner_mob.name .. ")", ws_name, damage, p.Enum.Text.BLANK, ignore)
+    end
+
+    return true
+end
+
+------------------------------------------------------------------------------------------------------
 -- Set data for a weaponskill action.
+-- AOE weaponskills will go through this one time for each mob hit.
 ------------------------------------------------------------------------------------------------------
 ---@param metadata table contains all the information for the action.
 ---@param player_name string name of the player that did the action.
 ---@param target_name string name of the target that received the action.
 ---@param ws_name string name of the weaponskill that was used.
+---@param ws_id number ID of the ability that was used. Right now this is used to check monster abilities.
 ---@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
 ---@return number
 ------------------------------------------------------------------------------------------------------
-p.Handler.Weaponskill = function(metadata, player_name, target_name, ws_name, owner_mob)
+p.Handler.Weaponskill = function(metadata, player_name, target_name, ws_name, ws_id, owner_mob)
     _Debug.Packet.Add(player_name, target_name, "Weaponskill", metadata)
     local damage = metadata.param
     local ws_type = p.Trackable.WS
@@ -436,11 +535,26 @@ p.Handler.Weaponskill = function(metadata, player_name, target_name, ws_name, ow
         pet_name = pet_name,
     }
 
+    -- Landing a status effect carries in a value as if it were damage.
     if owner_mob then
         Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
+        if not Lists.Ability.Monster_Damaging[ws_id] then
+            _Debug.Error.Add("Handler.Weaponskill: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
+            damage = 0
+        end
     end
 
+    -- Ignore numbers on these.
+    -- Energy Steal [21]
+    -- Energy Drain [22]
+    -- Starlight [163]
+    -- Moonlight [164]
+
+    -- This handles both the pet and player case.
     Model.Update.Catalog_Damage(player_name, target_name, ws_type, damage, ws_name, pet_name)
+
+    -- Set a flag to make this section show up in the Focus menu.
+    Model.Update.Data(p.Mode.INC, 1, audits, ws_type, p.Metric.COUNT)
 
     return damage
 end
@@ -458,6 +572,168 @@ p.Handler.Skillchain = function(metadata, player_name, target_name, sc_name)
     _Debug.Packet.Add(player_name, target_name, "Skillchain", metadata)
     local damage = metadata.add_effect_param
     Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.SC, damage, sc_name)
+    return damage
+end
+
+------------------------------------------------------------------------------------------------------
+-- Parse the job ability casting packet.
+------------------------------------------------------------------------------------------------------
+---@param action table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+---@param log_offense boolean if this action should actually be logged.
+------------------------------------------------------------------------------------------------------
+p.Action.Job_Ability = function(action, actor_mob, log_offense)
+    if not log_offense then return end
+
+	-- Need to provide an offset to get to the abilities. Otherwise I get WS information.
+	local ability_id = action.param + p.Enum.Offsets.ABILITY
+    local ability_data = A.Ability.ID(ability_id)
+
+    -- Handle missing abilities.
+    if not ability_data then
+        _Debug.Error.Add("Action.Job_Ability: {" .. tostring(actor_mob.name) .. "} Data on ability ID " .. tostring(ability_id) .. " is unavailable.")
+        ability_data = {Id = ability_id, Name = "UNK Ability (" .. ability_id .. ")"}
+    else
+        ability_data = {Id = ability_id, Name = A.Ability.Name(ability_id, ability_data)}
+    end
+
+    -- Process action data.
+    local result, target
+    local damage = 0
+    for target_index, target_value in pairs(action.targets) do
+        for action_index, _ in pairs(target_value.actions) do
+            result = action.targets[target_index].actions[action_index]
+            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            if not target then target = {name = 'test'} end
+            damage = damage + p.Handler.Ability(ability_data, result, actor_mob, target.name)
+        end
+    end
+
+    -- Log remaining action data.
+    local audits = {
+        player_name = actor_mob.name,
+        target_name = target.name,
+    }
+    Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.ABILITY, ability_data.Name, p.Metric.COUNT)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Parse the pet ability packet.
+-- SMN bloodpacts; DRG wyvern breaths
+------------------------------------------------------------------------------------------------------
+---@param action table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+---@param log_offense boolean if this action should actually be logged.
+------------------------------------------------------------------------------------------------------
+p.Action.Pet_Ability = function(action, actor_mob, log_offense)
+    if not log_offense then return false end
+
+    -- Check to see if the pet belongs to anyone in the party.
+    local owner_mob = A.Mob.Pet_Owner(actor_mob)
+    if not owner_mob then return false end
+
+    local ability_id = action.param
+    local ability_data
+    local avatar = false
+
+    -- Handle offset for Blood Pacts. I don't know why they are all out of order.
+    if A.Util.Is_Avatar_Ability(ability_id) then
+        ability_data = Lists.Ability.Avatar[ability_id]
+        avatar = true
+    else
+        ability_data = A.Ability.ID(ability_id + p.Enum.Offsets.PET)
+    end
+
+    -- Need special data handling since pulling from multiple sources.
+    if not ability_data then
+        _Debug.Error.Add("Action.Pet_Ability: {" .. tostring(actor_mob.name) .. "} Data on ability ID " .. tostring(ability_id) .. " is unavailable.")
+        ability_data = {Id = ability_id, Name = "UNK Ability (" .. ability_id .. ")"}
+    else
+        if avatar then
+            ability_data = {Id = ability_id, Name = ability_data.en}
+        else
+            ability_data = {Id = ability_id, Name = A.Ability.Name(ability_id, ability_data)}
+        end
+    end
+
+    local result, target
+    local damage = 0
+    for target_index, target_value in pairs(action.targets) do
+        for action_index, _ in pairs(target_value.actions) do
+            result = action.targets[target_index].actions[action_index]
+            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            if not target then target = {name = 'test'} end
+            damage = damage + p.Handler.Ability(ability_data, result, owner_mob, target.name, actor_mob)
+        end
+    end
+
+    local audits = {
+        player_name = owner_mob.name,
+        target_name = target.name,
+    }
+
+    if damage > 0 then
+        Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.PET_ABILITY, p.Metric.HIT_COUNT)
+        if Blog.Flags.Pet then Blog.Add(owner_mob.name .. " (" .. actor_mob.name .. ")", ability_data.Name, damage) end
+    end
+
+    return true
+end
+
+------------------------------------------------------------------------------------------------------
+-- Set data for an ability action.
+-- This includes pet damage (since they are ability based).
+-- Using an ability to cause a pet to attack gets captured here, but the actual data for the damage
+-- done comes in a different packet. SMN comes in Pet_Ability and then routes back to here.
+------------------------------------------------------------------------------------------------------
+---@param ability_data table the main packet; need it to get ability ID
+---@param metadata table contains all the information for the action.
+---@param actor_mob table name of the player that did the action.
+---@param target_name string name of the target that received the action.
+---@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
+---@return number
+------------------------------------------------------------------------------------------------------
+p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, owner_mob)
+    _Debug.Packet.Add(actor_mob.name, target_name, "Ability", metadata)
+    local player_name = actor_mob.name
+    local ability_id = ability_data.Id
+    local ability_name = ability_data.Name
+    local damage = metadata.param
+    local ability_type = p.Trackable.ABILITY
+
+    local pet_name = nil
+    if owner_mob then
+        ability_type = p.Trackable.PET_ABILITY
+        pet_name = owner_mob.name
+    end
+
+    local audits = {
+        player_name = player_name,
+        target_name = target_name,
+        pet_name = pet_name,
+    }
+
+    if owner_mob then
+        Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
+        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.COUNT)
+        if Lists.Ability.Avatar[ability_id] then
+            Model.Update.Catalog_Damage(player_name, target_name, ability_type, damage, ability_name, owner_mob.name)
+            if damage > 0 then
+                Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.HIT_COUNT)
+            end
+        end
+    else
+        if Lists.Ability.Damaging[ability_id] then
+            if damage > 0 then
+                Model.Update.Catalog_Damage(player_name, target_name, ability_type, damage, ability_name)
+                Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.HIT_COUNT)
+            end
+        end
+    end
+
+    -- Set a flag to make this section show up in the Focus menu.
+    Model.Update.Data(p.Mode.INC, 1, audits, ability_type, p.Metric.COUNT)
+
     return damage
 end
 
@@ -499,7 +775,12 @@ p.Action.Finish_Spell_Casting = function(action, actor_mob, log_offense)
     }
 
     -- Log the use of the spell
-    Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.MAGIC, spell_name, p.Metric.COUNT)
+    if Lists.Spell.Damaging[spell_id] then
+        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.MAGIC, spell_name, p.Metric.COUNT)
+    end
+    if Lists.Spell.Healing[spell_id] then
+        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.HEALING, spell_name, p.Metric.COUNT)
+    end
     if is_burst then Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.MAGIC, spell_name, p.Metric.BURST_COUNT) end
 
     if Lists.Spell.Damaging[spell_id] and Blog.Flags.Magic then
@@ -537,6 +818,17 @@ p.Handler.Spell_Damage = function(spell_data, metadata, player_name, target_name
     -- TO DO: Handle Overcure
     if Lists.Spell.Healing[spell_id] then
     	Model.Update.Catalog_Damage(player_name, target_name, p.Trackable.HEALING, damage, spell_name, nil, burst)
+        local spell_max = Model.Get.Catalog(player_name, p.Trackable.HEALING, spell_name, p.Metric.MAX)
+        local overcure = 0
+        if spell_max > damage then
+            overcure = spell_max - damage
+        end
+        local audits = {
+            player_name = player_name,
+            target_name = target_name,
+        }
+        Model.Update.Data(p.Mode.INC, overcure, audits, p.Trackable.HEALING, p.Metric.OVERCURE)
+        Model.Update.Catalog_Metric(p.Mode.INC, overcure, audits, p.Trackable.HEALING, spell_name, p.Metric.OVERCURE)
         is_mapped = true
     end
 
@@ -545,238 +837,6 @@ p.Handler.Spell_Damage = function(spell_data, metadata, player_name, target_name
     end
 
     return damage
-end
-
-------------------------------------------------------------------------------------------------------
--- Parse the job ability casting packet.
-------------------------------------------------------------------------------------------------------
----@param action table action packet data.
----@param actor_mob table the mob data of the entity performing the action.
----@param log_offense boolean if this action should actually be logged.
-------------------------------------------------------------------------------------------------------
-p.Action.Job_Ability = function(action, actor_mob, log_offense)
-    if not log_offense then return end
-
-	-- Need to provide an offset to get to the abilities. Otherwise I get WS information.
-	local ability_id = action.param + 512
-    local ability_data = A.Ability.ID(ability_id)
-
-    -- Handle missing abilities.
-    if not ability_data then
-        _Debug.Error.Add("Action.Job_Ability: {" .. tostring(actor_mob.name) .. "} Data on ability ID " .. tostring(ability_id) .. " is unavailable.")
-        ability_data = {Id = ability_id, Name = "UNK Ability (" .. ability_id .. ")"}
-    else
-        ability_data = {Id = ability_id, Name = A.Ability.Name(ability_id, ability_data)}
-    end
-
-    local result, target
-    local damage = 0
-
-    for target_index, target_value in pairs(action.targets) do
-        for action_index, _ in pairs(target_value.actions) do
-            result = action.targets[target_index].actions[action_index]
-            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if not target then target = {name = 'test'} end
-            damage = damage + p.Handler.Ability(ability_data, result, actor_mob, target.name)
-        end
-    end
-
-    local audits = {
-        player_name = actor_mob.name,
-        target_name = target.name,
-    }
-
-    -- Log the use of the ability
-    Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.ABILITY, ability_data.Name, p.Metric.COUNT)
-
-    -- Ignore abilities the player uses on themself that don't do any damage directly.
-    if ability_data.Type == A.Enum.Ability.BLOODPACTRAGE or
-       ability_data.Type == A.Enum.Ability.BLOODPACTWARD or
-       ability_data.Type == A.Enum.Ability.PETLOGISTICS then
-        _Debug.Error.Add("Action.Job_Ability: {" .. tostring(actor_mob.name) .. "} Ignoring ability ID " .. tostring(ability_id) .. " due to type " .. tostring(ability_data.Type))
-        return damage
-    end
-
-    if Blog.Flags.Ability and damage >= 0 then
-        Blog.Add(actor_mob.name, ability_data.Name, damage)
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Set data for an ability action.
--- This includes pet damage (since they are ability based).
--- Using an ability to cause a pet to attack gets captured here, but the actual data for the damage
--- done comes in a different packet. SMN comes in Pet_Ability and then routes back to here.
-------------------------------------------------------------------------------------------------------
----@param ability_data table the main packet; need it to get ability ID
----@param metadata table contains all the information for the action.
----@param actor_mob table name of the player that did the action.
----@param target_name string name of the target that received the action.
----@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
----@return number
-------------------------------------------------------------------------------------------------------
-p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, owner_mob)
-    _Debug.Packet.Add(actor_mob.name, target_name, "Ability", metadata)
-    local player_name = actor_mob.name
-    local ability_id = ability_data.Id
-    local ability_name = ability_data.Name
-    local damage = metadata.param
-
-    local ability_type = p.Trackable.ABILITY
-    local pet_name
-    if owner_mob then
-        ability_type = p.Trackable.PET_ABILITY
-        pet_name = owner_mob.name
-    end
-
-    local audits = {
-        player_name = player_name,
-        target_name = target_name,
-        pet_name = pet_name,
-    }
-
-    if owner_mob then
-        Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
-        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.COUNT)
-    end
-
-    -- TO DO: Need to get the ID for BloodPactRage
-    if Blog.Flags.Ability and (Lists.Ability.Damaging[ability_id] or Lists.Ability.Avatar[ability_id]) and owner_mob then
-        Model.Update.Catalog_Damage(player_name, target_name, ability_type, damage, ability_name, owner_mob.name)
-        if damage > 0 then
-            Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.HIT_COUNT)
-            Blog.Add(player_name, ability_name, damage, nil, ability_type, ability_data)
-        end
-    end
-
-    return damage
-end
-
-------------------------------------------------------------------------------------------------------
--- Parse the finish monster TP move packet.
--- Puppet ranged attacks fall into this too.
-------------------------------------------------------------------------------------------------------
----@param action table action packet data.
----@param actor_mob table the mob data of the entity performing the action.
----@param log_offense boolean if this action should actually be logged.
-------------------------------------------------------------------------------------------------------
-p.Action.Finish_Monster_TP_Move = function(action, actor_mob, log_offense)
-    if not log_offense then return false end
-
-    -- Check to see if the pet belongs to anyone in the party.
-    local owner_mob = A.Mob.Pet_Owner(actor_mob)
-
-    local result, target, ws_name, sc_id, sc_name
-    local sc_damage  = 0
-    local damage     = 0
-
-    for target_index, target_value in pairs(action.targets) do
-        for action_index, _ in pairs(target_value.actions) do
-            result = action.targets[target_index].actions[action_index]
-            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if not target then target = {name = 'test'} end
-
-            -- Puppet ranged attack
-            if action.param == 1949 then
-                p.Handler.Ranged(result, actor_mob.name, target.name, owner_mob)
-                ws_name = "Pet Ranged"
-                damage = result.param
-
-            else
-                local ws_data = Pet_Skill[action.param]
-                if not ws_data then
-                    _Debug.Error.Add("Action.Finish_Monster_TP_Move: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action.param) .. " unampped in Pet_Skill.")
-                    ws_data = {id = action.param, en = "UNK Ability (" .. action.param .. ")"}
-                end
-                ws_name = ws_data.en
-
-                -- Check for skillchains
-                sc_id = result.add_effect_message
-                if sc_id > 0 then 
-                    sc_name    = Lists.WS.Skillchains[sc_id]
-                    sc_damage  = sc_damage + p.Handler.Skillchain(result, actor_mob.name, target.name, sc_name)
-                end
-
-                -- Need to calculate WS damage here to account for AOE weaponskills
-                damage = damage + p.Handler.Weaponskill(result, actor_mob.name, target.name, ws_name, owner_mob)
-            end
-
-        end
-    end
-
-    if Blog.Flags.Pet and owner_mob then
-        Blog.Add(actor_mob.name .. " (" .. owner_mob.name .. ")", ws_name, damage)
-    end
-
-    return true
-end
-
-------------------------------------------------------------------------------------------------------
--- Parse the pet ability packet.
--- SMN bloodpacts; DRG wyvern breaths
-------------------------------------------------------------------------------------------------------
----@param action table action packet data.
----@param actor_mob table the mob data of the entity performing the action.
----@param log_offense boolean if this action should actually be logged.
-------------------------------------------------------------------------------------------------------
-p.Action.Pet_Ability = function(action, actor_mob, log_offense)
-    if not log_offense then return false end
-
-    -- Check to see if the pet belongs to anyone in the party.
-    local owner_mob = A.Mob.Pet_Owner(actor_mob)
-    if not owner_mob then return false end
-
-    local ability_id = action.param
-    local ability_data
-    local avatar = false
-
-    -- Handle offset for Blood Pacts. I don't know why they are all out of order.
-    if (ability_id >= 831 and ability_id <= 893)
-        or (ability_id >= 906 and ability_id <= 912)
-        or (ability_id >= 1904 and ability_id <= 1911)
-        or ability_id == 1154 then
-        ability_data = Lists.Ability.Avatar[ability_id]
-        avatar = true
-    else
-        -- Need to offset ability ID by 512.
-        -- Tested for Wyverns
-        ability_data = A.Ability.ID(ability_id + 512)
-    end
-
-    if not ability_data then
-        _Debug.Error.Add("Action.Pet_Ability: {" .. tostring(actor_mob.name) .. "} Data on ability ID " .. tostring(ability_id) .. " is unavailable.")
-        ability_data = {Id = ability_id, Name = "UNK Ability (" .. ability_id .. ")"}
-    else
-        if avatar then
-            ability_data = {Id = ability_id, Name = ability_data.en}
-        else
-            ability_data = {Id = ability_id, Name = A.Ability.Name(ability_id, ability_data)}
-        end
-    end
-
-    local result, target
-    local damage = 0
-
-    for target_index, target_value in pairs(action.targets) do
-        for action_index, _ in pairs(target_value.actions) do
-            result = action.targets[target_index].actions[action_index]
-            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if not target then target = {name = 'test'} end
-            damage = damage + p.Handler.Ability(ability_data, result, owner_mob, target.name, actor_mob)
-        end
-    end
-
-    local audits = {
-        player_name = owner_mob.name,
-        target_name = target.name,
-    }
-
-    if damage > 0 then
-        Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.ABILITY, p.Metric.HIT_COUNT)
-        if Blog.Flags.Pet then Blog.Add(actor_mob.name, ability_data.Name, damage) end
-    end
-
-    return true
 end
 
 ------------------------------------------------------------------------------------------------------

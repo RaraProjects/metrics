@@ -1,9 +1,9 @@
 _Debug.Mob = {}
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Populates the Mob Viewer tab.
 ------------------------------------------------------------------------------------------------------
-_Debug.Mob.View = function(mob)
+_Debug.Mob.Populate = function(mob)
     if mob then
         if UI.BeginTable("table1", 2, Window.Table.Flags.Team) then
             _Debug.Mob.Headers()
@@ -14,7 +14,7 @@ _Debug.Mob.View = function(mob)
 end
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Handles setting up the headers for the mob viewer.
 ------------------------------------------------------------------------------------------------------
 _Debug.Mob.Headers = function()
     local flags = Window.Columns.Flags.None
@@ -24,7 +24,7 @@ _Debug.Mob.Headers = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Creates the rows of the mob viewer.
 ------------------------------------------------------------------------------------------------------
 _Debug.Mob.Rows = function(mob)
     UI.TableNextRow()

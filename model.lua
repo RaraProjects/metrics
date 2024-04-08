@@ -13,32 +13,32 @@ m.Enum = {
 		DEBUG = "Debug"
 	},
 	Trackable = {
-		TOTAL       = "total",
-		TOTAL_NO_SC = 'total_no_sc',
-		MELEE       = 'melee',
-		MELEE_MAIN  = 'melee primary',
-		MELEE_OFFH  = 'melee secondary',
-		MELEE_KICK  = 'melee kicks',
-		PET_MELEE   = 'pet_melee',
+		TOTAL       = "Total",
+		TOTAL_NO_SC = 'No SC Total',
+		MELEE       = 'Melee',
+		MELEE_MAIN  = 'Melee Mainhand',
+		MELEE_OFFH  = 'Melee Offhand',
+		MELEE_KICK  = 'Melee Kicks',
+		PET_MELEE   = 'Pet Melee',
 		PET_MELEE_DISCRETE = 'pet_melee_discrete',
-		RANGED      = 'ranged',
-		PET_RANGED  = 'pet_ranged',
-		THROWING    = 'throwing',
+		RANGED      = 'Ranged',
+		PET_RANGED  = 'Pet Ranged',
+		THROWING    = 'Throwing',
 		WS          = 'Weaponskills',
-		PET_WS      = 'pet_ws',
+		PET_WS      = 'Pet Weaponskill',
 		SC          = 'Skillchains',
 		ABILITY     = 'Abilities',
-		PET_ABILITY = 'pet_ability',
+		PET_ABILITY = 'Pet Ability',
 		MAGIC       = 'Spells',
-		ENSPELL     = 'enspell',
-		NUKE        = 'nuke',
-		HEALING     = "healing",
-		PET         = 'pet',
-		DEATH       = 'death',
-		DEFAULT     = 'default',
+		ENSPELL     = 'Enspell',
+		NUKE        = 'Nuke',
+		HEALING     = "Healing",
+		PET         = 'Pet',
+		DEATH       = 'Death',
+		DEFAULT     = 'Default',
 	},
 	Metric = {
-		TOTAL        = 'total',
+		TOTAL        = 'Total',
 		COUNT        = 'count',
 		HIT_COUNT    = 'hits',
 		CRIT_COUNT   = 'crits',
@@ -49,16 +49,17 @@ m.Enum = {
 		MIN          = 'min',
 		MAX          = 'max',
 		BURST_COUNT  = 'burst count',
-		BURST_DAMAGE = 'burst damage'
+		BURST_DAMAGE = 'burst damage',
+		OVERCURE     = 'overcure'
 	},
 	Mode = {
 		INC = "inc",
 		SET = "set",
 	},
-	Pet_Single_Trackable = {
-		PET_WS      = 'pet_ws',
-		PET_ABILITY = 'pet_ability',
-	}
+}
+m.Enum.Pet_Single_Trackable = {
+	PET_WS      = m.Enum.Trackable.PET_WS,
+	PET_ABILITY = m.Enum.Trackable.PET_ABILITY,
 }
 
 m.Settings = {
@@ -151,7 +152,7 @@ m.Init.Data = function(index, player_name, pet_name)
 	end
 
 	-- Initialize primary node.
-	m.Data.Parse[index] = {}
+	if not m.Data.Parse[index] then m.Data.Parse[index] = {} end
 
 	-- If the player has a pet then intialize those nodes as well.
 	if pet_name then m.Init.Pet_Data(index, player_name, pet_name) end
@@ -186,6 +187,7 @@ end
 ---@param pet_name string used for maintaining various pet indexed tables.
 ------------------------------------------------------------------------------------------------------
 m.Init.Pet_Data = function(index, player_name, pet_name)
+	if m.Data.Parse[index][pet_name] then return nil end
 	m.Data.Parse[index][pet_name] = {}
 
 	-- Initialize data nodes
@@ -273,7 +275,7 @@ m.Init.Pet_Catalog = function(index, player_name, trackable, action_name, pet_na
 	m.Data.Parse[index][pet_name][trackable][m.Enum.Node.CATALOG][action_name] = {}
 
 	-- Initialize catalog data nodes
-	for _, metric in pairs(m.Lists.Metrics) do
+	for _, metric in pairs(m.Enum.Metric) do
 		m.Set.Pet_Catalog(0, index, pet_name, trackable, action_name, metric)
 	end
 
@@ -351,19 +353,19 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
 		pet_name = pet_name,
 	}
 
-	-- Update damage; there is a regular track and a "no skillchains" track.
+	-- Update GRAND TOTAL damage; there is a regular track and a "no skillchains" track.
     if trackable ~= m.Enum.Trackable.HEALING then
     	m.Update.Data(m.Enum.Mode.INC, damage, audits, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
 		if trackable ~= m.Enum.Trackable.SC then
 			m.Update.Data(m.Enum.Mode.INC, damage, audits, m.Enum.Trackable.TOTAL_NO_SC, m.Enum.Metric.TOTAL)
 		end
-		if trackable == m.Enum.Trackable.MAGIC and burst then
-			m.Update.Data(m.Enum.Mode.INC, damage, audits, trackable, m.Enum.Metric.BURST_DAMAGE)
-		end
     end
 
-    -- Overall data, min and max
+    -- Trackable specific overall data, min and max
     m.Update.Data(m.Enum.Mode.INC, damage, audits, trackable, m.Enum.Metric.TOTAL)
+	if trackable == m.Enum.Trackable.MAGIC and burst then
+		m.Update.Data(m.Enum.Mode.INC, damage, audits, trackable, m.Enum.Metric.BURST_DAMAGE)
+	end
 
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
     if damage > 0 and damage < m.Get.Data(player_name, trackable, m.Enum.Metric.MIN) then
@@ -375,7 +377,7 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
 	end
 
     -- Catalog data, min and max
-	-- 'count' gets incremented in the packet handling.
+	-- COUNT gets incremented in the packet handler.
     m.Update.Catalog_Metric(m.Enum.Mode.INC, damage, audits, trackable, action_name, m.Enum.Metric.TOTAL)
 	if trackable == m.Enum.Trackable.MAGIC and burst then
 		m.Update.Catalog_Metric(m.Enum.Mode.INC, damage, audits, trackable, action_name, m.Enum.Metric.BURST_DAMAGE)
@@ -416,6 +418,7 @@ m.Update.Catalog_Metric = function(mode, value, audits, trackable, action_name, 
 	m.Init.Catalog_Action(index, player_name, trackable, action_name, pet_name)
 	if not m.Data.Initialized_Players[player_name] then m.Data.Initialized_Players[player_name] = true end
 
+	-- Set the data.
 	if mode == m.Enum.Mode.INC then
 		m.Inc.Catalog(value, index, trackable, action_name, metric)
 		if pet_name then
@@ -704,7 +707,7 @@ m.Get.Pet_Catalog = function(player_name, pet_name, trackable, action_name, metr
 	local mob_focus = Window.Util.Get_Mob_Focus()
 	for index, _ in pairs(m.Data.Parse) do
 		if mob_focus == m.Enum.Misc.NONE then
-			if string.find(index, player_name) then
+			if string.find(index, player_name .. ":") then
 				total = m.Util.Pet_Catalog_Calc(total, index, pet_name, trackable, action_name, metric)
 			end
 		else
@@ -751,6 +754,9 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Helper function for getting pet cataloged data.
+-- Using an BST pet job ability like Razor Fang will create and index of player:pet with a nil pet node.
+-- The actual damage will come later in the monster TP packet.
+-- Data.Parse[index][pet_name] gets initialized in m.Init.Pet_Data.
 ------------------------------------------------------------------------------------------------------
 ---@param value number the value to increment the node by.
 ---@param index string "player_name:mob_name"
@@ -760,15 +766,17 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 m.Util.Pet_Catalog_Calc = function(value, index, pet_name, trackable, action_name, metric)
-	-- Using an BST pet ability like Razor Fang will create and index of player:pet with a nil pet node.
-	-- The actual damage will come in a later packet.
-	if not m.Data.Parse[index][pet_name] then return 0 end
+	if not m.Data.Parse[index][pet_name] then
+		_Debug.Error.Add("Util.Pet_Catalog_Calc: Tried referencing uninitialized node. " .. tostring(index) .. " " .. tostring(pet_name) .. " " .. tostring(action_name))
+		return value
+	end
 
 	if m.Data.Parse[index][pet_name][trackable][m.Enum.Node.CATALOG][action_name] then
 		if     metric == m.Enum.Metric.MIN then value = m.Util.Pet_Catalog_Calc_Min(value, index, pet_name, trackable, action_name, metric)
 		elseif metric == m.Enum.Metric.MAX then value = m.Util.Pet_Catalog_Calc_Max(value, index, pet_name, trackable, action_name, metric)
 		else   value = value + m.Data.Parse[index][pet_name][trackable][m.Enum.Node.CATALOG][action_name][metric] end
 	end
+
 	return value
 end
 
@@ -871,7 +879,7 @@ m.Get.Total_Party_Damage = function()
 		end
 
         player_name = player.name
-        index = m.Util.Build_Index(player_name)
+        index = m.Util.Build_Index(player_name, m.Enum.Index.DEBUG)
 
         m.Init.Data(index)
 
@@ -889,7 +897,7 @@ m.Get.Total_Party_Damage = function()
 			end
 
 			player_name = player.name
-			index = m.Util.Build_Index(player_name)
+			index = m.Util.Build_Index(player_name, m.Enum.Index.DEBUG)
 
 			m.Init.Data(index)
 
@@ -908,7 +916,7 @@ m.Get.Total_Party_Damage = function()
 			end
 
 			player_name = player.name
-			index = m.Util.Build_Index(player_name)
+			index = m.Util.Build_Index(player_name, m.Enum.Index.DEBUG)
 
 			m.Init.Data(index)
 
@@ -936,6 +944,7 @@ m.Util.Build_Index = function(actor_name, target_name)
 		return m.Enum.Index.DEBUG
 	end
 	if target_name ~= m.Enum.Index.DEBUG and not m.Data.Initialized_Mobs[target_name] then
+		-- TO DO: Only allow mobs with spawn flags == 16 to be added to the mob list.
 		m.Data.Initialized_Mobs[target_name] = true
 		table.insert(m.Data.Mob_List_Sorted, target_name)
 		table.sort(m.Data.Mob_List_Sorted)
@@ -1077,12 +1086,31 @@ end
 m.Util.Pet_Populate_Catalog_Damage_Table = function(player_name, pet_name)
 	m.Data.Pet_Catalog_Damage_Race = {}
 	for _, trackable in pairs(m.Enum.Pet_Single_Trackable) do
-		if m.Data.Pet_Trackable[trackable] and m.Data.Pet_Trackable[trackable][player_name] and m.Data.Pet_Trackable[trackable][player_name][pet_name] then
+		if m.Util.Pet_Catalog_Exists(trackable, player_name, pet_name) then
 			for action_name, _ in pairs(m.Data.Pet_Trackable[trackable][player_name][pet_name]) do
-				table.insert(m.Data.Pet_Catalog_Damage_Race, {action_name, m.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, m.Enum.Metric.TOTAL), trackable})
+				-- local value = m.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, m.Enum.Metric.TOTAL)
+				-- _Debug.Error.Add("Util.Pet_Populate_Catalog_Damage_Table: Inside Double Loop " .. tostring(action_name) .. " " .. tostring(trackable) .. " " .. tostring(player_name) .. " " .. tostring(pet_name) .. " " .. tostring(value))
+				-- table.insert(m.Data.Pet_Catalog_Damage_Race, {action_name, value, trackable})
+				table.insert(m.Data.Pet_Catalog_Damage_Race, {action_name, 999, trackable})
 			end
 		end
 	end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if there is any pet cataloged data for a certain player/pet.
+-- I made this to get check if the pet catalog header should show in the focus window.
+------------------------------------------------------------------------------------------------------
+---@param trackable string a tracked item from the trackable list.
+---@param player_name string
+---@param pet_name string
+---@return boolean
+------------------------------------------------------------------------------------------------------
+m.Util.Pet_Catalog_Exists = function(trackable, player_name, pet_name)
+	if not m.Data.Pet_Trackable[trackable] then return false end
+	if not m.Data.Pet_Trackable[trackable][player_name] then return false end
+	if not m.Data.Pet_Trackable[trackable][player_name][pet_name] then return false end
+	return true
 end
 
 return m

@@ -55,6 +55,7 @@ require("debug.debug")
 require("debug.mob_viewer")
 require("debug.packet_viewer")
 require("debug.error_log")
+require("debug.data_viewer")
 
 -- Initialization
 Window.Initialize()
@@ -82,13 +83,21 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     -- Action Packet
     elseif packet.id == 0x028 then
         local action = A.Packets.Build_Action(packet.data)
-        if not action then return nil end
+        if not action then
+            _Debug.Error.Add("Packet Event: action was nil from Packets.Build_Action")
+            return nil
+        end
 
         local actor_mob = A.Mob.Get_Mob_By_ID(action.actor_id)
-        if not actor_mob then return nil end
+        if not actor_mob then
+            _Debug.Error.Add("Packet Event: actor_mob was nil from Mob.Get_Mob_By_ID")
+            return nil
+        end
 
         local owner_mob = A.Mob.Pet_Owner(actor_mob)
         local log_offense = false
+
+        -- Process action if the actor is an affiliated pet or affiliated player.
         if owner_mob or actor_mob.in_party or actor_mob.in_alliance then log_offense = true end
 
         if     (action.category ==  1) then Handler.Action.Melee(action, actor_mob, owner_mob, log_offense)
@@ -130,6 +139,8 @@ ashita.events.register('command', 'command_cb', function (e)
     if table.contains({"/metrics"}, command_args[1]) then
         if command_args[2] == "show" then
             Window.Window.Visible = not Window.Window.Visible
+        elseif command_args[2] == "debug" then
+            _Debug.Toggle()
         end
     end
 end)

@@ -8,6 +8,7 @@ t.Defaults = {}
 t.Display.Columns = {
     Base = 4,
     Current = 10,
+    Start = 6,
     Max = 18,
     Default = 10,
 }
@@ -20,7 +21,6 @@ t.Defaults.Columns = {
 
 t.Display.Flags = {
     Total_Damage_Only = false,
-    Total_Acc = false,
     Crit = false,
     Pet = false,
     Healing = false,
@@ -87,13 +87,16 @@ t.Util.Calculate_Column_Flags = function()
     if t.Display.Flags.Total_Damage_Only then
         t.Display.Columns.Current = t.Display.Columns.Base
     else
-        local added_columns = t.Display.Columns.Unhidden
+        local added_columns = t.Display.Columns.Start
         if t.Display.Flags.Pet then added_columns = added_columns + 4 end
         if t.Display.Flags.Crit then added_columns = added_columns + 1 end
         if t.Settings.Include_SC_Damage then added_columns = added_columns + 1 end
         if t.Display.Flags.Healing then added_columns = added_columns + 1 end
         if t.Display.Flags.Deaths then added_columns = added_columns + 1 end
+
+        -- Apply new column count.
         t.Display.Columns.Current = t.Display.Columns.Base + added_columns
+
         if t.Display.Columns.Current > t.Display.Columns.Max then
             t.Display.Columns.Current = t.Display.Columns.Max
         end

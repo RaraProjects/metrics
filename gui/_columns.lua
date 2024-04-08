@@ -1,6 +1,7 @@
 local c = {}
 
 c.Damage = {}
+c.Healing = {}
 c.Acc = {}
 c.Crit = {}
 c.Single = {}
@@ -52,6 +53,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param percent? boolean whether or not the damage should be raw or percent.
+---@param magic_only? boolean whether or not the denominator for percent should be total damage or just magic damage.
 ---@return string
 ------------------------------------------------------------------------------------------------------
 c.Damage.Burst = function(player_name, percent, magic_only)
@@ -64,6 +66,16 @@ c.Damage.Burst = function(player_name, percent, magic_only)
         return c.String.Format_Percent(focused_damage, total_damage)
     end
     return c.String.Format_Number(focused_damage)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Grabs the overcure amount for the player.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Healing.Overcure = function(player_name)
+    return c.String.Format_Number(Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, c.Metric.OVERCURE))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -297,8 +309,21 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 c.Single.Bursts = function(player_name, action_name)
-    local single_attempts = Model.Get.Catalog(player_name, Model.Enum.Trackable.MAGIC, action_name, c.Metric.BURST_COUNT)
-    return c.String.Format_Number(single_attempts)
+    local burst_count = Model.Get.Catalog(player_name, Model.Enum.Trackable.MAGIC, action_name, c.Metric.BURST_COUNT)
+    return c.String.Format_Number(burst_count)
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- Grabs how overcure was done with a certain spell.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name string
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Single.Overcure = function(player_name, action_name)
+    local overcure = Model.Get.Catalog(player_name, Model.Enum.Trackable.HEALING, action_name, c.Metric.OVERCURE)
+    return c.String.Format_Number(overcure)
 end
 
 ------------------------------------------------------------------------------------------------------

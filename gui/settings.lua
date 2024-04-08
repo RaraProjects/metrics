@@ -75,12 +75,8 @@ s.Section.Team = function()
                 Team.Display.Flags.Total_Damage_Only = not Team.Display.Flags.Total_Damage_Only
                 Team.Util.Calculate_Column_Flags()
             end
-
-            UI.TableNextColumn()
-            if UI.Checkbox("Total Accuracy", {Team.Display.Flags.Total_Acc}) then
-                Team.Display.Flags.Total_Acc = not Team.Display.Flags.Total_Acc
-                Team.Util.Calculate_Column_Flags()
-            end
+            UI.SameLine() Window.Widget.HelpMarker("Reduces the amount of columns on Team table to just "
+                                                 .."the most essential: Name, %T, Total, and Running Accuracy.")
 
             UI.TableNextColumn()
             if UI.Checkbox("Show Crits", {Team.Display.Flags.Crit}) then

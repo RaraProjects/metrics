@@ -37,6 +37,8 @@
         "ImGuiCol_TableHeaderBg",
         "ImGuiSliderFlags_None",
         "ImGuiInputTextFlags_CharsDecimal",
-        "ImGuiTableFlags_Reorderable"
+        "ImGuiTableFlags_Reorderable",
+        "ImGuiTableFlags_Sortable",
+        "ImGuiTableColumnFlags_DefaultSort"
     ]
 }

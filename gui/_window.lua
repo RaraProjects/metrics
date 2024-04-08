@@ -42,7 +42,7 @@ w.Columns.Flags = {
     Expandable = bit.bor(ImGuiTableColumnFlags_WidthStretch)
 }
 w.Columns.Widths = {
-    Name = 200,
+    Name = 150,
     Damage = 80,
     Percent = 60,
     Single = 40,
@@ -61,6 +61,7 @@ w.Tabs.Names = {
     MOBVIEW   = "Mob Viewer",
     PACKETS   = "Packet Viewer",
     ERRORS    = "Error Log",
+    DATAVIEW  = "Data Viewer",
 }
 w.Tabs.Flags = ImGuiTabBarFlags_None
 
@@ -152,7 +153,8 @@ end
 ------------------------------------------------------------------------------------------------------
 w.Populate = function()
     if not A.States.Zoning then
-        if UI.Begin(w.Window.Name, w.Window.Visible, w.Window.Flags) then
+        if UI.Begin(w.Window.Name, {w.Window.Visible}, w.Window.Flags) then
+            if _Debug.Is_Enabled() then UI.Text("Error Count: " .. tostring(_Debug.Error.Util.Error_Count())) end
             if UI.BeginTabBar(w.Tabs.Names.PARENT, w.Tabs.Flags) then
                 if UI.BeginTabItem(w.Tabs.Names.TEAM) then
                     Team.Populate()
@@ -170,17 +172,23 @@ w.Populate = function()
                     Settings.Populate()
                     UI.EndTabItem()
                 end
-                if UI.BeginTabItem(w.Tabs.Names.MOBVIEW) then
-                    _Debug.Mob.View(A.Mob.Get_Mob_By_Target(A.Enum.Mob.TARGET))
-                    UI.EndTabItem()
-                end
-                if UI.BeginTabItem(w.Tabs.Names.PACKETS) then
-                    _Debug.Packet.Populate()
-                    UI.EndTabItem()
-                end
-                if UI.BeginTabItem(w.Tabs.Names.ERRORS) then
-                    _Debug.Error.Populate()
-                    UI.EndTabItem()
+                if _Debug.Is_Enabled() then
+                    if UI.BeginTabItem(w.Tabs.Names.MOBVIEW) then
+                        _Debug.Mob.Populate(A.Mob.Get_Mob_By_Target(A.Enum.Mob.TARGET))
+                        UI.EndTabItem()
+                    end
+                    if UI.BeginTabItem(w.Tabs.Names.PACKETS) then
+                        _Debug.Packet.Populate()
+                        UI.EndTabItem()
+                    end
+                    if UI.BeginTabItem(w.Tabs.Names.ERRORS) then
+                        _Debug.Error.Populate()
+                        UI.EndTabItem()
+                    end
+                    if UI.BeginTabItem(w.Tabs.Names.DATAVIEW) then
+                        _Debug.Data_View.Populate()
+                        UI.EndTabItem()
+                    end
                 end
                 UI.EndTabBar()
             end

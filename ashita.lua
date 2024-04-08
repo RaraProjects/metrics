@@ -506,6 +506,29 @@ a.Chat.Message = function(message)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Returns whether the given ID is associated with an avatar ability.
+-- Avatar ability IDs are non-sequential and out of order so a special list is manually maintained.
+-- ------------------------------------------------------------------------------------------------------
+---@param id number ability ID.
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+a.Util.Is_Avatar_Ability = function(id)
+    return (id >= 831 and id <= 893) or (id >= 906 and id <= 912) or (id >= 1904 and id <= 1911) or id == 1154
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns whether the given ID is associated with an ability that should be ignored.
+-- These are usually pet logistics ability like Sic, Heel, Assault, Avatar ability kickoff, etc.
+-- Nothing is lost by excluding these because they either do nothing or damage comes in a separate packet.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table ability data.
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+a.Util.Is_Ignore_Ability = function(data)
+    return data.Type == a.Enum.Ability.BLOODPACTRAGE or data.Type == a.Enum.Ability.BLOODPACTWARD or data.Type == a.Enum.Ability.PETLOGISTICS
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Keeps track of if the player is zoning or not. Used to hide the window during zoning.
 -- ------------------------------------------------------------------------------------------------------
 ---@param zoning boolean

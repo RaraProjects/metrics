@@ -35,17 +35,28 @@ f.Display.Melee = function(player_name)
     local col_flags = Window.Columns.Flags.None
     local table_flags = Window.Table.Flags.Borders
     local width = Window.Columns.Widths.Standard
+    local columns = 5
 
     local melee_total = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.TOTAL)
+    local mob_heal = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.MOB_HEAL)
+    local enspell = Model.Get.Data(player_name, Model.Enum.Trackable.ENSPELL, Model.Enum.Metric.TOTAL)
+    local shadows = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.SHADOWS)
+    if mob_heal > 0 then columns = columns + 1 end
+    if enspell > 0 then columns = columns + 1 end
+    if shadows > 0 then columns = columns + 1 end
+
     if melee_total > 0 then
         if UI.CollapsingHeader("Melee", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Melee", 5, table_flags) then
+            if UI.BeginTable("Melee", columns, table_flags) then
                 -- Headers
                 UI.TableSetupColumn("Raw Melee\nDamage", col_flags, width)
                 UI.TableSetupColumn("Total Melee\nDamage %", col_flags, width)
                 UI.TableSetupColumn("Total Melee\nAccuracy %", col_flags, width)
                 UI.TableSetupColumn("Main Hand\nAccuracy %", col_flags, width)
                 UI.TableSetupColumn("Off Hand\nAccuracy %", col_flags, width)
+                if mob_heal > 0 then UI.TableSetupColumn("\nMob Heal", col_flags, width) end
+                if enspell > 0  then UI.TableSetupColumn("(For Ref.)\nEnspell", col_flags, width) end
+                if shadows > 0  then UI.TableSetupColumn("Absorbed by\nShadows", col_flags, width) end
                 UI.TableHeadersRow()
 
                 -- Data
@@ -55,6 +66,9 @@ f.Display.Melee = function(player_name)
                 UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE))
                 UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN))
                 UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFH))
+                if mob_heal > 0 then UI.TableNextColumn() UI.Text(Col.String.Format_Number(mob_heal)) end
+                if enspell > 0  then UI.TableNextColumn() UI.Text(Col.String.Format_Number(enspell)) end
+                if shadows > 0  then UI.TableNextColumn() UI.Text(Col.String.Format_Number(shadows)) end
                 UI.EndTable()
             end
         end
@@ -145,7 +159,7 @@ f.Display.WS_and_SC = function(player_name)
     local trackable_ws = Model.Enum.Trackable.WS
     local trackable_sc = Model.Enum.Trackable.SC
 
-    local ws_total = Model.Get.Data(player_name, Model.Enum.Trackable.WS, Model.Enum.Metric.TOTAL)
+    local ws_total = Model.Get.Data(player_name, Model.Enum.Trackable.WS, Model.Enum.Metric.COUNT)
     if ws_total > 0 then
         if UI.CollapsingHeader("Weaponskill and Skillchain", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("WS and SC", 5, table_flags) then
@@ -190,13 +204,14 @@ f.Display.Magic = function(player_name)
     local magic_total = Model.Get.Data(player_name, Model.Enum.Trackable.MAGIC, Model.Enum.Metric.TOTAL)
     if magic_total > 0 then
         if UI.CollapsingHeader("Magic", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Magic", 5, table_flags) then
+            if UI.BeginTable("Magic", 6, table_flags) then
                 -- Headers
                 UI.TableSetupColumn("Raw Magic\nDamage", col_flags, width)
                 UI.TableSetupColumn("Total Magic\nDamage %", col_flags, width)
                 UI.TableSetupColumn("Raw Burst\nDamage", col_flags, width)
                 UI.TableSetupColumn("Burst %\nTotal Damage", col_flags, width)
                 UI.TableSetupColumn("Burst %\nMagic Damage", col_flags, width)
+                UI.TableSetupColumn("\nEnspell", col_flags, width)
                 UI.TableHeadersRow()
 
                 -- Data
@@ -206,6 +221,7 @@ f.Display.Magic = function(player_name)
                 UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name))
                 UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name, true))
                 UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name, true, true))
+                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.ENSPELL))
                 UI.EndTable()
             end
             f.Display.Single_Data(player_name, Model.Enum.Trackable.MAGIC)
@@ -224,7 +240,7 @@ f.Display.Ability = function(player_name)
     local width = Window.Columns.Widths.Standard
     local trackable = Model.Enum.Trackable.ABILITY
 
-    local ability_total = Model.Get.Data(player_name, Model.Enum.Trackable.ABILITY, Model.Enum.Metric.TOTAL)
+    local ability_total = Model.Get.Data(player_name, Model.Enum.Trackable.ABILITY, Model.Enum.Metric.COUNT)
     if ability_total > 0 then
         if UI.CollapsingHeader("Ability", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Ability", 2, table_flags) then
@@ -257,19 +273,20 @@ f.Display.Healing = function(player_name)
 
     local healing_total = Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, Model.Enum.Metric.TOTAL)
     if healing_total > 0 then
-        if UI.CollapsingHeader("Raw Healing", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Healing", 2, table_flags) then
+        if UI.CollapsingHeader("Heals", ImGuiTreeNodeFlags_None) then
+            if UI.BeginTable("Heals", 2, table_flags) then
                 -- Headers
                 UI.TableSetupColumn("Raw\nHealing", col_flags, width)
-                UI.TableSetupColumn("Total\nDamage %", col_flags, width)
+                UI.TableSetupColumn("Total\nOvercure", col_flags, width)
                 UI.TableHeadersRow()
 
                 -- Data
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable, true))
+                UI.TableNextColumn() UI.Text(Col.Healing.Overcure(player_name))
                 UI.EndTable()
             end
+            f.Display.Single_Data(player_name, Model.Enum.Trackable.HEALING)
         end
     end
 end
@@ -330,17 +347,32 @@ f.Display.Single_Data = function(player_name, focus_type)
     if not Model.Data.Trackable[focus_type][player_name] then return nil end
 
     local acc_string = "\nAccuracy %"
-    if focus_type == Model.Enum.Trackable.MAGIC then acc_string = "\nBursts" end
+    local damage_string = "Damage"
+    local action_string = "Action"
+    if focus_type == Model.Enum.Trackable.MAGIC then
+        action_string = "Spell"
+        acc_string = "\nBursts"
+    elseif focus_type == Model.Enum.Trackable.HEALING then
+        action_string = "Spell"
+        acc_string = "\nOvercure"
+        damage_string = "Healing"
+    elseif focus_type == Model.Enum.Trackable.ABILITY or focus_type == Model.Enum.Trackable.PET_ABILITY or focus_type == Model.Enum.Trackable.PET_WS then
+        action_string = "Ability"
+    elseif focus_type == Model.Enum.Trackable.WS then
+        action_string = "Weaponskill"
+    elseif focus_type == Model.Enum.Trackable.SC then
+        action_string = "Skillchain"
+    end
 
     if UI.TreeNode(focus_type) then
         if UI.BeginTable(focus_type, 7, table_flags) then
-            UI.TableSetupColumn("\nAction Name", col_flags, name)
-            UI.TableSetupColumn("Total\nDamage", col_flags, damage)
+            UI.TableSetupColumn("\n" .. action_string .. " Name", col_flags, name)
+            UI.TableSetupColumn("Total\n" .. damage_string, col_flags, damage)
             UI.TableSetupColumn("\nAttempts", col_flags, damage)
             UI.TableSetupColumn(acc_string, col_flags, damage)
-            UI.TableSetupColumn("Average\nDamage", col_flags, damage)
-            UI.TableSetupColumn("Minimum\nDamage", col_flags, damage)
-            UI.TableSetupColumn("Maximum\nDamage", col_flags, damage)
+            UI.TableSetupColumn("Average\n" .. damage_string, col_flags, damage)
+            UI.TableSetupColumn("Minimum\n" .. damage_string, col_flags, damage)
+            UI.TableSetupColumn("Maximum\n" .. damage_string, col_flags, damage)
             UI.TableHeadersRow()
 
             Model.Sort.Catalog_Damage(player_name, focus_type)
@@ -371,7 +403,9 @@ f.Display.Util.Single_Row = function(player_name, action_name, focus_type)
     UI.TableNextColumn() UI.Text(Col.Single.Attempts(player_name, action_name, focus_type))
     if focus_type == Model.Enum.Trackable.MAGIC then
         UI.TableNextColumn() UI.Text(Col.Single.Bursts(player_name, action_name))
-    else  
+    elseif focus_type == Model.Enum.Trackable.HEALING then
+        UI.TableNextColumn() UI.Text(Col.Single.Overcure(player_name, action_name))
+    else
         UI.TableNextColumn() UI.Text(Col.Single.Acc(player_name, action_name, focus_type))
     end
     UI.TableNextColumn() UI.Text(Col.Single.Average(player_name, action_name, focus_type))
@@ -418,10 +452,9 @@ f.Display.Pet_Single_Data = function(player_name)
                 UI.EndTable()
             end
 
-
-            if UI.BeginTable(pet_name.." single", 7, col_flags) then
+            if UI.BeginTable(pet_name.." single", 7, table_flags) then
                 -- Headers
-                UI.TableSetupColumn("\nAction Name", col_flags, name)
+                UI.TableSetupColumn("Pet\nAction Name", col_flags, name)
                 UI.TableSetupColumn("Total\nDamage", col_flags, damage)
                 UI.TableSetupColumn("\nAttempts", col_flags, damage)
                 UI.TableSetupColumn("\nAccuracy %", col_flags, damage)
@@ -432,12 +465,16 @@ f.Display.Pet_Single_Data = function(player_name)
 
                 Model.Sort.Pet_Catalog_Damage(player_name, pet_name)
 
-                -- -- Data
-                local action_name, trackable
+                -- Data
+                local has_data = false
                 for _, data in ipairs(Model.Data.Pet_Catalog_Damage_Race) do
-                    action_name = data[1]
-                    trackable = data[3]
+                    has_data = true
+                    local action_name = data[1]
+                    local trackable = data[3]
                     f.Display.Util.Pet_Single_Row(player_name, pet_name, action_name, trackable)
+                end
+                if not has_data then
+                    f.Display.Util.Pet_Blank_Row()
                 end
                 UI.EndTable()
             end
@@ -470,6 +507,19 @@ f.Display.Util.Pet_Single_Row = function(player_name, pet_name, action_name, tra
     end
 
     UI.TableNextColumn() UI.Text(Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, Model.Enum.Metric.MAX))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Creates a blank table row for when pets haven't done ability yet, but you can still see their data.
+------------------------------------------------------------------------------------------------------
+f.Display.Util.Pet_Blank_Row = function()
+    UI.TableNextRow()
+    UI.TableNextColumn() UI.Text("None")
+    UI.TableNextColumn() UI.Text("0")
+    UI.TableNextColumn() UI.Text("0")
+    UI.TableNextColumn() UI.Text("0")
+    UI.TableNextColumn() UI.Text("0")
+    UI.TableNextColumn() UI.Text("0")
 end
 
 return f

@@ -3,14 +3,14 @@ _Debug.Packet.Log = {}      -- Entity, Action, Result
 _Debug.Packet.Limit = 30
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Resets the packet viewer.
 ------------------------------------------------------------------------------------------------------
-_Debug.Packet.Clear = function()
+_Debug.Packet.Reset = function()
     _Debug.Packet.Log = {}
 end
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Adds a packet entry to the packet viewer.
 ------------------------------------------------------------------------------------------------------
 _Debug.Packet.Add = function(entity, target, action, result)
     if #_Debug.Packet.Log >= _Debug.Packet.Limit then table.remove(_Debug.Packet.Log, _Debug.Packet.Limit) end
@@ -25,7 +25,7 @@ _Debug.Packet.Add = function(entity, target, action, result)
 end
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Populates the Packet Viewer tab.
 ------------------------------------------------------------------------------------------------------
 _Debug.Packet.Populate = function()
     if UI.BeginTable("Action Packet Log", 21, Window.Table.Flags.Team) then
@@ -38,7 +38,7 @@ _Debug.Packet.Populate = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Handles setting up the headers for the packet viewer.
 ------------------------------------------------------------------------------------------------------
 _Debug.Packet.Headers = function()
     local flags = Window.Columns.Flags.None
@@ -67,7 +67,7 @@ _Debug.Packet.Headers = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Creates the rows of the packet viewer.
 ------------------------------------------------------------------------------------------------------
 _Debug.Packet.Rows = function(data)
     local result = data.Result

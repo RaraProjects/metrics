@@ -90,7 +90,7 @@ bl.Add = function(player_name, action_name, damage, note, action_type, action_da
     if #bl.Log >= bl.Settings.Length then table.remove(bl.Log, bl.Settings.Length) end
     local entry = {
         Name   = bl.Util.Name(player_name),
-        Damage = bl.Util.Damage(damage),
+        Damage = bl.Util.Damage(damage, action_type),
         Action = bl.Util.Action(action_name, action_type, action_data),
         TP     = bl.Util.Notes(note, action_type)
     }
@@ -123,6 +123,8 @@ bl.Util.Damage = function(damage, action_type)
         threshold = bl.Enum.Thresholds.WS
     elseif action_type == Model.Enum.Trackable.MAGIC then
         threshold = bl.Enum.Thresholds.MAGIC
+    elseif action_type == Handler.Enum.Flags.IGNORE then
+        return {Value = bl.Enum.Text.NA, Color = Window.Colors.White}
     end
     -- Generate damage string.
     if not damage then
@@ -163,8 +165,11 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 bl.Util.Notes = function(note, action_type)
-    if action_type == Model.Enum.Trackable.MAGIC then
+    if action_type == Model.Enum.Trackable.MAGIC or action_type == Handler.Enum.Flags.IGNORE then
         return tostring(note)
+    elseif type(note) == "string" then
+        _Debug.Error.Add("Unhandled battle log note. Note: {" .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "}.")
+        return " "
     else
 ---@diagnostic disable-next-line: param-type-mismatch
         if note then return Col.String.Format_Number(note) end

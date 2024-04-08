@@ -17,10 +17,19 @@ l.WS.Missing_WS = {
 
 -- Capture abilities that come in through the WS packet.
 l.WS.WS_Abilities = {
+    [26]   = {id = 26,   english = "Eagle Eye Shot"},
+    [41]   = {id = 41,   english = "Steal"},
+    [45]   = {id = 45,   english = "Mug"},
+    [46]   = {id = 46,   english = "Shield Bash"},
+    [57]   = {id = 57,   english = "Shadowbind"},
     [66]   = {id = 66,   english = "Jump"},
     [67]   = {id = 67,   english = "High Jump"},
+    [68]   = {id = 68,   english = "Super Jump"},
+    [77]   = {id = 77,   english = "Weapon Bash"},
+    [228]  = {id = 228,  english = "Despoil"},
     [260]  = {id = 260,  english = "Spirit Jump"},
     [293]  = {id = 293,  english = "Soul Jump"},
+    [329]  = {id = 329,  english = "Intervene"},
 }
 
 l.WS.Skillchains = {
@@ -34,26 +43,25 @@ l.WS.Skillchains = {
 }
 
 l.Ability.Damaging = {
-    [26]  = {id = 26,  en = "Eagle Eye Shot"},
-    [28]  = {id = 28,  en = "Mijin Gakure"},
-    [45]  = {id = 45,  en = "Mug"},
-    [46]  = {id = 46,  en = "Shield Bash"},
-    [66]  = {id = 66,  en = "Jump"},
-    [67]  = {id = 67,  en = "High Jump"},
-    [77]  = {id = 77,  en = "Weapon Bash"},
-    [82]  = {id = 82,  en = "Chi Blast"},
-    [125] = {id = 125, en = "Fire Shot"},
-    [126] = {id = 126, en = "Ice Shot"},
-    [127] = {id = 127, en = "Wind Shot"},
-    [128] = {id = 128, en = "Earth Shot"},
-    [129] = {id = 129, en = "Thunder Shot"},
-    [130] = {id = 130, en = "Water Shot"},
-    [131] = {id = 131, en = "Light Shot"},
-    [132] = {id = 132, en = "Dark Shot"},
-    [260] = {id = 260, en = "Spirit Jump"},
-    [293] = {id = 293, en = "Soul Jump"},
-    [344] = {id = 344, en = "Swipe"},
-    [368] = {id = 368, en = "Lunge"},
+    [538] = {id = 538, old_id = 26,  en = "Eagle Eye Shot"},
+    [540] = {id = 540, old_id = 28,  en = "Mijin Gakure"},
+    [558] = {id = 558, old_id = 46,  en = "Shield Bash"},
+    [578] = {id = 578, old_id = 66,  en = "Jump"},
+    [579] = {id = 579, old_id = 67,  en = "High Jump"},
+    [580] = {id = 579, old_id = 68,  en = "Super Jump"},
+    [589] = {id = 589, old_id = 77,  en = "Weapon Bash"},
+    [594] = {id = 594, old_id = 82,  en = "Chi Blast"},
+    [637] = {id = 637, old_id = 125, en = "Fire Shot"},
+    [638] = {id = 638, old_id = 126, en = "Ice Shot"},
+    [639] = {id = 639, old_id = 127, en = "Wind Shot"},
+    [640] = {id = 640, old_id = 128, en = "Earth Shot"},
+    [641] = {id = 641, old_id = 129, en = "Thunder Shot"},
+    [642] = {id = 642, old_id = 130, en = "Water Shot"},
+    -- [643] = {id = 643, old_id = 131, en = "Light Shot"}, -- Doesn't actually do any damage.
+    -- [644] = {id = 644, old_id = 132, en = "Dark Shot"},  -- Doesn't actually do any damage.
+    [772] = {id = 772, old_id = 260, en = "Spirit Jump"},
+    [805] = {id = 805, old_id = 293, en = "Soul Jump"},
+    [841] = {id = 841              , en = "Intervene"}
 }
 
 l.Spell.Healing = {
@@ -361,6 +369,12 @@ l.Ability.Avatar = {
     -- [669] = {id=669,en="Chronoshift",ja="クロノシフト",element=7,icon_id=23,mp_cost=0,prefix="/pet",range=0,recast_id=0,targets=32,tp_cost=0,type="BloodPactRage"},
     -- [670] = {id=670,en="Zantetsuken",ja="斬鉄剣",element=7,icon_id=349,mp_cost=0,prefix="/pet",range=8,recast_id=0,targets=32,tp_cost=0,type="BloodPactRage"},
     -- [671] = {id=671,en="Perfect Defense",ja="絶対防御",element=7,icon_id=350,mp_cost=0,prefix="/pet",range=0,recast_id=0,targets=32,tp_cost=0,type="BloodPactRage"},
+}
+
+l.Ability.Monster_Damaging = {
+    [260] = {id=260,en="Lamb Chop",ja="頭突き",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1300},
+    [262] = {id=262,en="Sheep Charge",ja="シープチャージ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=800},
+    [271] = {id=271,en="Razor Fang",ja="レイザーファング",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
 }
 
 return l
