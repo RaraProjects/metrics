@@ -1,32 +1,66 @@
 local s = {}
 
 s.Section = {}
+s.Util = {}
 s.Widget = {}
+s.Widget.Open_Action = -1
 
 ------------------------------------------------------------------------------------------------------
 -- Loads the settings data to the screen.
 ------------------------------------------------------------------------------------------------------
 s.Populate = function()
-    s.Section.Reset()
+    s.Section.Collapse()
+    s.Section.Revert()
+    s.Section.Text_Commands()
     s.Section.Overall()
     s.Section.Team()
+    s.Section.Focus()
     s.Section.Battle_Log()
     s.Section.Gui()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Resets settings to default for the various components.
+-- Collapse setting buttons.
 ------------------------------------------------------------------------------------------------------
-s.Section.Reset = function()
-    local clicked = 0
-    if UI.Button("Revert Settings") then
-        clicked = 1
-        if clicked and 1 then
-            Window.Reset_Settings()
-            Team.Reset()
-            Model.Settings.Running_Accuracy_Limit = Model.Settings.Default.Running_Accuracy_Limit
-            -- Reset flags
+s.Section.Collapse = function()
+    s.Widget.Open_Action = -1
+    if UI.Button("Expand all") then
+        s.Widget.Open_Action = 1
+    end
+    UI.SameLine()
+    if UI.Button("Collapse all") then
+        s.Widget.Open_Action = 0
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Revert and collapse setting buttons.
+------------------------------------------------------------------------------------------------------
+s.Section.Revert = function()
+    s.Util.Check_Collapse()
+    if UI.CollapsingHeader("Revert to Default Inside") then
+        local clicked = 0
+        if UI.Button("Revert to Default Settings") then
+            clicked = 1
+            if clicked and 1 then
+                Window.Reset_Settings()
+                Team.Reset()
+                Model.Settings.Running_Accuracy_Limit = Model.Settings.Default.Running_Accuracy_Limit
+                -- Reset flags
+            end
         end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows text commands the user can use.
+------------------------------------------------------------------------------------------------------
+s.Section.Text_Commands = function()
+    if UI.CollapsingHeader("Text Commands") then
+        UI.Text("Base command: /metrics")
+        UI.Text("Arguments:")
+        UI.BulletText("show -- toggles window visibility.")
+        UI.BulletText("mini -- toggles mini mode.")
     end
 end
 
@@ -36,7 +70,8 @@ end
 s.Section.Overall = function()
     local col_flags = Window.Columns.Flags.None
     local width = Window.Columns.Widths.Settings
-    if UI.CollapsingHeader("Overall") then
+    s.Util.Check_Collapse()
+    if UI.CollapsingHeader("Overall: Affects Multiple Tabs") then
         if UI.BeginTable("Overall", 3) then
             UI.TableSetupColumn("Col 1", col_flags, width)
             UI.TableSetupColumn("Col 2", col_flags, width)
@@ -62,9 +97,9 @@ end
 s.Section.Team = function()
     local col_flags = Window.Columns.Flags.None
     local width = Window.Columns.Widths.Settings
-
-    if UI.CollapsingHeader("Team") then
-        UI.Text("Columns")
+    s.Util.Check_Collapse()
+    if UI.CollapsingHeader("Tab: Team") then
+        UI.Text("Which extra columns should show in the Team tab?")
         if UI.BeginTable("Team", 3) then
             UI.TableSetupColumn("Col 1", col_flags, width)
             UI.TableSetupColumn("Col 2", col_flags, width)
@@ -78,6 +113,8 @@ s.Section.Team = function()
             UI.SameLine() Window.Widget.HelpMarker("Reduces the amount of columns on Team table to just "
                                                  .."the most essential: Name, %T, Total, and Running Accuracy.")
 
+            UI.TableNextColumn()
+            UI.TableNextColumn()
             UI.TableNextColumn()
             if UI.Checkbox("Show Crits", {Team.Display.Flags.Crit}) then
                 Team.Display.Flags.Crit = not Team.Display.Flags.Crit
@@ -97,15 +134,28 @@ s.Section.Team = function()
             end
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show Deaths", {Team.Display.Flags.Deaths}) then
-                Team.Display.Flags.Deaths = not Team.Display.Flags.Deaths
-                Team.Util.Calculate_Column_Flags()
-            end
+            -- if UI.Checkbox("Show Deaths", {Team.Display.Flags.Deaths}) then
+            --     Team.Display.Flags.Deaths = not Team.Display.Flags.Deaths
+            --     Team.Util.Calculate_Column_Flags()
+            -- end
         UI.EndTable()
         end
 
+        UI.Text("Use Ctrl+Click on the component to set the number directly.")
         s.Widget.Player_Limit()
         s.Widget.Acc_Limit()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows settings that affect the Focus screen.
+------------------------------------------------------------------------------------------------------
+s.Section.Focus = function()
+    local col_flags = Window.Columns.Flags.None
+    local width = Window.Columns.Widths.Settings
+    s.Util.Check_Collapse()
+    if UI.CollapsingHeader("Tab: Focus") then
+        UI.Text("Healing Settings")
     end
 end
 
@@ -115,8 +165,9 @@ end
 s.Section.Battle_Log = function()
     local col_flags = Window.Columns.Flags.None
     local width = Window.Columns.Widths.Settings
-
-    if UI.CollapsingHeader("Battle Log") then
+    s.Util.Check_Collapse()
+    if UI.CollapsingHeader("Tab: Battle Log") then
+        UI.Text("Which actions should populate the battle log?")
         if UI.BeginTable("Battle Log", 3) then
             UI.TableSetupColumn("Col 1", col_flags, width)
             UI.TableSetupColumn("Col 2", col_flags, width)
@@ -162,11 +213,14 @@ s.Section.Battle_Log = function()
             end
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show Deaths", {Blog.Flags.Deaths}) then
-                Blog.Flags.Deaths = not Blog.Flags.Deaths
-            end
-        UI.EndTable()
+            -- if UI.Checkbox("Show Deaths", {Blog.Flags.Deaths}) then
+            --     Blog.Flags.Deaths = not Blog.Flags.Deaths
+            -- end
+            UI.EndTable()
         end
+
+        UI.Text("Enable damage highlighting?")
+        UI.Text("If so, what should the damage for each be?")
     end
 end
 
@@ -174,7 +228,9 @@ end
 -- Shows settings that affect the GUI.
 ------------------------------------------------------------------------------------------------------
 s.Section.Gui = function()
-    if UI.CollapsingHeader("GUI") then
+    s.Util.Check_Collapse()
+    if UI.CollapsingHeader("GUI: Window Visuals") then
+        UI.Text("*** These settings will affect all ImGui-based addon visuals. ***")
         Window.Util.Set_Theme()
         s.Widget.Alpha()
         s.Widget.Font_Size()
@@ -252,6 +308,13 @@ s.Widget.Condensed_Numbers = function()
         Team.Util.Calculate_Column_Flags()
     end
     UI.SameLine() Window.Widget.HelpMarker("Condensed is 1.2K instead of 1,200.")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Works in conjunction with collapse all or expand all.
+------------------------------------------------------------------------------------------------------
+s.Util.Check_Collapse = function()
+    if s.Widget.Open_Action ~= -1 then UI.SetNextItemOpen(s.Widget.Open_Action ~= 0) end
 end
 
 return s

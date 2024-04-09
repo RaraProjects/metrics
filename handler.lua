@@ -435,6 +435,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Parse the finish monster TP move packet.
 -- BST Pet and Puppet ranged attacks fall into this category.
+-- Trust abilities can show up here too. They don't have an owner.
 ------------------------------------------------------------------------------------------------------
 ---@param action table action packet data.
 ---@param actor_mob table the mob data of the entity performing the action.
@@ -465,7 +466,7 @@ p.Action.Finish_Monster_TP_Move = function(action, actor_mob, log_offense)
                 local ws_data = Pet_Skill[action_id]
                 if not ws_data then
                     _Debug.Error.Add("Action.Finish_Monster_TP_Move: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action_id) .. " unampped in Pet_Skill.")
-                    ws_data = {id = action_id, en = "UNK Ability (" .. action_id .. ")"}
+                    ws_data = {id = action_id, en = "UNK Mon. Ability (" .. action_id .. ")"}
                 end
                 ws_name = ws_data.en
 
@@ -482,15 +483,27 @@ p.Action.Finish_Monster_TP_Move = function(action, actor_mob, log_offense)
         end
     end
 
+    -- Case where this is a trust or regular monster.
+    local player_name = actor_mob.name
+    local pet_name = nil
+    local trackable = p.Trackable.WS
+
+    -- Case where this is a player's pet using an ability.
+    if owner_mob then
+        player_name = owner_mob.name
+        pet_name = actor_mob.name
+        trackable = p.Trackable.PET_WS
+    end
+
     local audits = {
-        player_name = owner_mob.name,
+        player_name = player_name,
         target_name = target.name,
-        pet_name = actor_mob.name,
+        pet_name = pet_name,
     }
-    Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.PET_WS, ws_name, p.Metric.COUNT)
+    Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, trackable, ws_name, p.Metric.COUNT)
 
     if damage > 0 then
-        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, p.Trackable.PET_WS, ws_name, p.Metric.HIT_COUNT)
+        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, trackable, ws_name, p.Metric.HIT_COUNT)
     end
 
     -- The battle log is interesting here. Pets have abilities that have status effects but don't do any damage.

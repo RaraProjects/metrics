@@ -39,6 +39,8 @@
         "ImGuiInputTextFlags_CharsDecimal",
         "ImGuiTableFlags_Reorderable",
         "ImGuiTableFlags_Sortable",
-        "ImGuiTableColumnFlags_DefaultSort"
+        "ImGuiTableColumnFlags_DefaultSort",
+        "ImGuiTableFlags_ScrollY",
+        "ImGuiStyleVar_IndentSpacing"
     ]
 }

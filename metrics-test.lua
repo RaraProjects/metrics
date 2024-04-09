@@ -115,6 +115,10 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         elseif (action.category == 14) then -- Do nothing (Unblinkable Job Ability)
         end
 
+    -- Can't implement death functionality until I can get this figured out.
+    elseif packet.id == 0x029 then
+        -- _Debug.Error.Add("Packet Event: 0x029.")
+        -- A.Packets.Build_Message(packet)
     end
 end)
 
@@ -137,10 +141,13 @@ ashita.events.register('command', 'command_cb', function (e)
     local command_args = e.command:lower():args()
 ---@diagnostic disable-next-line: undefined-field
     if table.contains({"/metrics"}, command_args[1]) then
-        if command_args[2] == "show" then
-            Window.Window.Visible = not Window.Window.Visible
-        elseif command_args[2] == "debug" then
+        local arg = command_args[2]
+        if arg == "show" then
+            Window.Util.Toggle_Visibility()
+        elseif arg == "debug" then
             _Debug.Toggle()
+        elseif arg == "mini" then
+            Window.Util.Toggle_Mini()
         end
     end
 end)

@@ -1,6 +1,7 @@
 _Debug.Packet = {}
 _Debug.Packet.Log = {}      -- Entity, Action, Result
-_Debug.Packet.Limit = 30
+_Debug.Packet.Limit = 100
+_Debug.Packet.Size = 32
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the packet viewer.
@@ -28,7 +29,8 @@ end
 -- Populates the Packet Viewer tab.
 ------------------------------------------------------------------------------------------------------
 _Debug.Packet.Populate = function()
-    if UI.BeginTable("Action Packet Log", 21, Window.Table.Flags.Team) then
+    local table_size = {0, _Debug.Packet.Size * 8}
+    if UI.BeginTable("Action Packet Log", 21, Window.Table.Flags.Scrollable, table_size) then
         _Debug.Packet.Headers()
         for _, data in ipairs(_Debug.Packet.Log) do
             _Debug.Packet.Rows(data)

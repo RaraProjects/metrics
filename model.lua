@@ -56,10 +56,38 @@ m.Enum = {
 		INC = "inc",
 		SET = "set",
 	},
+	HEALING = {
+		["Cure"]       = 200,
+		["Cure II"]    = 400,
+		["Cure III"]   = 800,
+		["Cure IV"]    = 1000,
+		["Cure V"]     = 1300,
+		["Cure VI"]    = 1500,
+		["Curaga"]     = 200,
+		["Curaga II"]  = 400,
+		["Curaga III"] = 800,
+		["Curaga IV"]  = 1000,
+		["Curaga V"]   = 1300,
+	},
 }
 m.Enum.Pet_Single_Trackable = {
 	PET_WS      = m.Enum.Trackable.PET_WS,
 	PET_ABILITY = m.Enum.Trackable.PET_ABILITY,
+}
+
+-- Needed to prevent Divine Seal from messing up overcure.
+m.Healing_Max = {
+    ["Cure"]       = 200,
+    ["Cure II"]    = 400,
+    ["Cure III"]   = 800,
+    ["Cure IV"]    = 1000,
+    ["Cure V"]     = 1300,
+    ["Cure VI"]    = 1500,
+    ["Curaga"]     = 200,
+    ["Curaga II"]  = 400,
+    ["Curaga III"] = 800,
+    ["Curaga IV"]  = 1000,
+    ["Curaga V"]   = 1300,
 }
 
 m.Settings = {
@@ -121,6 +149,10 @@ m.Initialize = function()
 	m.Data.Catalog_Damage_Race = {}
 	Pet_Catalog_Damage_Race = {}
 	m.Enum.Misc.NONE = Window.Dropdown.Enum.NONE
+	m.Healing_Max = {}
+	for spell, threshold in pairs(m.Enum.HEALING) do
+		m.Healing_Max[spell] = threshold
+	end
 	Blog.Reset_Log()
 end
 
@@ -353,7 +385,8 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
 		pet_name = pet_name,
 	}
 
-	-- Update GRAND TOTAL damage; there is a regular track and a "no skillchains" track.
+	-- GRAND TOTAL ////////////////////////////////////////////////////////////////////////////////
+	-- There is a regular track and a "no skillchains" track.
     if trackable ~= m.Enum.Trackable.HEALING then
     	m.Update.Data(m.Enum.Mode.INC, damage, audits, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
 		if trackable ~= m.Enum.Trackable.SC then
@@ -361,7 +394,7 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
 		end
     end
 
-    -- Trackable specific overall data, min and max
+    -- TRACKABLE TOTAL, MIN, and MAX //////////////////////////////////////////////////////////////
     m.Update.Data(m.Enum.Mode.INC, damage, audits, trackable, m.Enum.Metric.TOTAL)
 	if trackable == m.Enum.Trackable.MAGIC and burst then
 		m.Update.Data(m.Enum.Mode.INC, damage, audits, trackable, m.Enum.Metric.BURST_DAMAGE)
@@ -376,7 +409,7 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
 		m.Update.Data(m.Enum.Mode.SET, damage, audits, trackable, m.Enum.Metric.MAX)
 	end
 
-    -- Catalog data, min and max
+    -- CATALOG TOTAL, MIN, and MAX ////////////////////////////////////////////////////////////////
 	-- COUNT gets incremented in the packet handler.
     m.Update.Catalog_Metric(m.Enum.Mode.INC, damage, audits, trackable, action_name, m.Enum.Metric.TOTAL)
 	if trackable == m.Enum.Trackable.MAGIC and burst then
@@ -388,7 +421,13 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
     end
 
     if damage > m.Get.Catalog(player_name, trackable, action_name, m.Enum.Metric.MAX) then
-    	m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MAX)
+    	-- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
+		if trackable == m.Enum.Trackable.HEALING and damage < Lists.Spell.Healing_Max[action_name] then
+			_Debug.Message("Update.Catalog_Damage: " .. tostring(player_name) .. " " .. action_name .. " " .. tostring(damage) .. " " .. tostring(Lists.Spell.Healing_Max[action_name]))
+			m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MAX)
+		elseif trackable ~= m.Enum.Trackable.HEALING then
+			m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MAX)
+		end
     end
 end
 
@@ -943,12 +982,14 @@ m.Util.Build_Index = function(actor_name, target_name)
 		_Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil actor name passed in.")
 		return m.Enum.Index.DEBUG
 	end
-	if target_name ~= m.Enum.Index.DEBUG and not m.Data.Initialized_Mobs[target_name] then
-		-- TO DO: Only allow mobs with spawn flags == 16 to be added to the mob list.
+
+	-- This is used for the mob focus drop down. Only include unaffiliated non-players in this list.
+	if target_name ~= m.Enum.Index.DEBUG and not m.Data.Initialized_Mobs[target_name] and not m.Data.Initialized_Players[actor_name] then
 		m.Data.Initialized_Mobs[target_name] = true
 		table.insert(m.Data.Mob_List_Sorted, target_name)
 		table.sort(m.Data.Mob_List_Sorted)
 	end
+
 	return actor_name..":"..target_name
 end
 
@@ -978,8 +1019,9 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 m.Get.Running_Accuracy = function(player_name)
+	-- This error can occur in mini mode when trying to load data before the player has been initialized. Not a big deal.
 	if not m.Data.Running_Accuracy[player_name] then
-		_Debug.Error.Add("Get.Running_Accuracy: Attemp to get {" .. tostring(player_name) .. "} running accuracy, but it didn't exist.")
+		_Debug.Error.Add("Get.Running_Accuracy: Attempt to get {" .. tostring(player_name) .. "} running accuracy, but it didn't exist.")
 		return {0, 0}
 	end
 	local hits = 0

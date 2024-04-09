@@ -19,7 +19,7 @@ c.Metric = Model.Enum.Metric
 ---@param player_name string
 ---@param damage_type string a trackable from the model.
 ---@param percent? boolean whether or not the damage should be raw or percent.
----@return string a
+---@return string
 ------------------------------------------------------------------------------------------------------
 c.Damage.By_Type = function(player_name, damage_type, percent)
     local focused_damage = Model.Get.Data(player_name, damage_type, c.Metric.TOTAL)
@@ -28,6 +28,17 @@ c.Damage.By_Type = function(player_name, damage_type, percent)
         return c.String.Format_Percent(focused_damage, total_damage)
     end
     return c.String.Format_Number(focused_damage)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Grabs the damage of a certain trackable that the entity has done. Returns the raw number.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param damage_type string a trackable from the model.
+---@return number
+------------------------------------------------------------------------------------------------------
+c.Damage.By_Type_Raw = function(player_name, damage_type)
+    return Model.Get.Data(player_name, damage_type, c.Metric.TOTAL)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -204,7 +215,9 @@ c.Crit.Damage = function(player_name, damage_type, percent)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- NOT IN USE
 -- Grabs how many times an entity has died.
+-- Can't implement this until I get incoming packet 0x029 (Message) figured out.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@return string
@@ -418,6 +431,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param numerator number The numerator for the percent.
 ---@param denominator number The denominator for the percent.
+---@return string
 ------------------------------------------------------------------------------------------------------
 c.String.Format_Percent = function(numerator, denominator)
     if not denominator or denominator == 0 then return "0" end
@@ -425,6 +439,18 @@ c.String.Format_Percent = function(numerator, denominator)
     if percent == 0 then return "0" end
     local percent_string = string.format("%.1f", percent)
     return tostring(percent_string)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Calculates and returns a raw percent as a number.
+------------------------------------------------------------------------------------------------------
+---@param numerator number The numerator for the percent.
+---@param denominator number The denominator for the percent.
+---@return number
+------------------------------------------------------------------------------------------------------
+c.String.Raw_Percent = function(numerator, denominator)
+    if not denominator or denominator == 0 then return 0 end
+    return numerator / denominator
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -464,8 +490,6 @@ c.String.Compact_Number = function(number)
 
     return tostring(display_number)
 end
-
-
 
 ------------------------------------------------------------------------------------------------------
 -- Adds commas to large numbers for easier readability.

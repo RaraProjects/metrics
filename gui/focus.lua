@@ -2,6 +2,9 @@ local f = {}
 
 f.Display = {}
 f.Display.Util = {}
+f.Display.Flags = {
+    Open_Action = -1,
+}
 
 f.Enum = {
     OVERFLOW = 100000,
@@ -15,7 +18,10 @@ f.Populate = function()
     UI.SameLine()
     Window.Widget.Mob_Filter()
     local player_name = Window.Util.Get_Player_Focus()
-    UI.Text("Grand Total: " .. Col.Damage.Total(player_name))
+    if player_name == Window.Dropdown.Enum.NONE then return nil end
+
+    f.Display.Util.Buttons() UI.SameLine()
+    UI.Text(" Grand Total: " .. Col.Damage.Total(player_name))
     f.Display.Melee(player_name)
     f.Display.Ranged(player_name)
     f.Display.Crits(player_name)
@@ -46,6 +52,7 @@ f.Display.Melee = function(player_name)
     if shadows > 0 then columns = columns + 1 end
 
     if melee_total > 0 then
+        f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Melee", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Melee", columns, table_flags) then
                 -- Headers
@@ -88,6 +95,7 @@ f.Display.Ranged = function(player_name)
 
     local ranged_total = Model.Get.Data(player_name, Model.Enum.Trackable.RANGED, Model.Enum.Metric.TOTAL)
     if ranged_total > 0 then
+        f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Ranged", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Ranged", 5, table_flags) then
                 -- Headers
@@ -124,7 +132,8 @@ f.Display.Crits = function(player_name)
     local melee_crits = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.CRIT_DAMAGE)
     local ranged_crits = Model.Get.Data(player_name, Model.Enum.Trackable.RANGED, Model.Enum.Metric.CRIT_DAMAGE)
     if melee_crits > 0 or ranged_crits > 0 then
-        if UI.CollapsingHeader("Critical Hits", ImGuiTreeNodeFlags_None) then
+        f.Display.Util.Check_Collapse()
+        if UI.CollapsingHeader("Critical Hit Damage", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Crits", 5, table_flags) then
                 -- Headers
                 UI.TableSetupColumn("Raw Crit\nDamage", col_flags, width)
@@ -161,6 +170,7 @@ f.Display.WS_and_SC = function(player_name)
 
     local ws_total = Model.Get.Data(player_name, Model.Enum.Trackable.WS, Model.Enum.Metric.COUNT)
     if ws_total > 0 then
+        f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Weaponskill and Skillchain", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("WS and SC", 5, table_flags) then
                 -- Headers
@@ -203,6 +213,7 @@ f.Display.Magic = function(player_name)
 
     local magic_total = Model.Get.Data(player_name, Model.Enum.Trackable.MAGIC, Model.Enum.Metric.TOTAL)
     if magic_total > 0 then
+        f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Magic", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Magic", 6, table_flags) then
                 -- Headers
@@ -242,6 +253,7 @@ f.Display.Ability = function(player_name)
 
     local ability_total = Model.Get.Data(player_name, Model.Enum.Trackable.ABILITY, Model.Enum.Metric.COUNT)
     if ability_total > 0 then
+        f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Ability", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Ability", 2, table_flags) then
                 -- Headers
@@ -273,6 +285,7 @@ f.Display.Healing = function(player_name)
 
     local healing_total = Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, Model.Enum.Metric.TOTAL)
     if healing_total > 0 then
+        f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Heals", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Heals", 2, table_flags) then
                 -- Headers
@@ -303,6 +316,7 @@ f.Display.Pet = function(player_name)
 
     local pet_total = Model.Get.Data(player_name, Model.Enum.Trackable.PET, Model.Enum.Metric.TOTAL)
     if pet_total > 0 then
+        f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Pets", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Pets", 6, table_flags) then
                 -- Headers
@@ -364,6 +378,7 @@ f.Display.Single_Data = function(player_name, focus_type)
         action_string = "Skillchain"
     end
 
+    f.Display.Util.Check_Collapse()
     if UI.TreeNode(focus_type) then
         if UI.BeginTable(focus_type, 7, table_flags) then
             UI.TableSetupColumn("\n" .. action_string .. " Name", col_flags, name)
@@ -430,8 +445,9 @@ f.Display.Pet_Single_Data = function(player_name)
     local name = Window.Columns.Widths.Name
 
     for pet_name, _ in pairs(Model.Data.Initialized_Pets[player_name]) do
-         -- I considered adding the total damage of the pet to the tree node title,
+        -- I considered adding the total damage of the pet to the tree node title,
         -- but the damage changing causes the node to recollapse automatically. Annoying.
+        f.Display.Util.Check_Collapse()
         if UI.TreeNode(pet_name) then
             if UI.BeginTable(pet_name, 6, table_flags) then
                 UI.TableSetupColumn("Total\nDamage", col_flags, damage)
@@ -520,6 +536,47 @@ f.Display.Util.Pet_Blank_Row = function()
     UI.TableNextColumn() UI.Text("0")
     UI.TableNextColumn() UI.Text("0")
     UI.TableNextColumn() UI.Text("0")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Display a graph of damage types.
+-- NOT IMPLEMENTED due to lack of labels on the bar graphs. :(
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+f.Display.Graph = function(player_name)
+    local total = Col.Util.Total_Damage(player_name)
+    if total <= 0 then return nil end
+    local melee = Col.Damage.By_Type_Raw(player_name, Model.Enum.Trackable.MELEE) / total
+    local ranged = Col.Damage.By_Type_Raw(player_name, Model.Enum.Trackable.RANGED) / total
+    local ws = Col.Damage.By_Type_Raw(player_name, Model.Enum.Trackable.WS) / total
+    local sc = Col.Damage.By_Type_Raw(player_name, Model.Enum.Trackable.SC) / total
+    local magic = Col.Damage.By_Type_Raw(player_name, Model.Enum.Trackable.MAGIC) / total
+    local ability = Col.Damage.By_Type_Raw(player_name, Model.Enum.Trackable.ABILITY) / total
+    local pet = Col.Damage.By_Type_Raw(player_name, Model.Enum.Trackable.PET) / total
+    local graph_data = {melee, ranged, ws, sc, magic, ability, pet}
+    UI.PlotHistogram("Damage Distribution", graph_data, #graph_data, 0, nil, 0, nil, {0, 30})
+end
+
+------------------------------------------------------------------------------------------------------
+-- Collapse header buttons.
+------------------------------------------------------------------------------------------------------
+f.Display.Util.Buttons = function()
+    f.Display.Flags.Open_Action = -1
+    if UI.Button("Expand all") then
+        f.Display.Flags.Open_Action = 1
+    end
+    UI.SameLine()
+    if UI.Button("Collapse all") then
+        f.Display.Flags.Open_Action = 0
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Works in conjunction with collapse all or expand all.
+------------------------------------------------------------------------------------------------------
+f.Display.Util.Check_Collapse = function()
+    if f.Display.Flags.Open_Action ~= -1 then UI.SetNextItemOpen(f.Display.Flags.Open_Action ~= 0) end
 end
 
 return f

@@ -181,11 +181,15 @@ a.Party.Refresh = function(player_name, node)
             a.Party.List[party[slot].index] = party_number
 
             -- Might as well grab some data while looping through.
-            if player_name and node then
-                local party_name = data:GetMemberName(slot)
-                if party_name == player_name then
-                    if node == a.Enum.Mob.TP then
-                        return_data = data:GetMemberTP(slot)
+            if player_name then
+                local member_name = data:GetMemberName(slot)
+                if member_name == player_name then
+                    if node then
+                        if node == a.Enum.Mob.TP then
+                            return_data = data:GetMemberTP(slot)
+                        end
+                    else
+                        return_data = 1
                     end
                 end
             end
@@ -616,6 +620,27 @@ a.Packets.Build_Action = function (data)
 	end
 
 	return act
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Handles parsing messages out of incoming packet 0x029.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return nil
+-- ------------------------------------------------------------------------------------------------------
+a.Packets.Build_Message = function(data)
+    -- player = windower.ffxi.get_player()
+    local p = parser.parse(data)
+    if not p then return nil end
+    local player_id    = p['Actor'] 
+    local target_id    = p['Target']
+    local param_1      = p['Param 1']
+    local param_2      = p['Param 2']
+    local target_index = p['Target Index']
+    local message_id   = p['Message']
+    _Debug.Error.Add("Packets.Build_Message: " .. tostring(message_id))
+    -- local message      = res.action_messages[message_id][language]
+    -- windower.add_to_chat(c_chat, tostring(player_id))
 end
 
 return a

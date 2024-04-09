@@ -80,6 +80,20 @@ l.Spell.Healing = {
     [581] = {id = 581, en = "Healing Breeze"},
 }
 
+l.Spell.Healing_Max = {
+    ["Cure"]       = 200,
+    ["Cure II"]    = 400,
+    ["Cure III"]   = 800,
+    ["Cure IV"]    = 1000,
+    ["Cure V"]     = 1300,
+    ["Cure VI"]    = 1500,
+    ["Curaga"]     = 200,
+    ["Curaga II"]  = 400,
+    ["Curaga III"] = 800,
+    ["Curaga IV"]  = 1000,
+    ["Curaga V"]   = 1300,
+}
+
 l.Spell.Damaging = {
     -- Light Elemental Magic
     [21]  = {id = 21,  en = "Holy"},

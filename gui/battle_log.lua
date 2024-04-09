@@ -28,7 +28,8 @@ bl.Flags.Defaults = {
 }
 
 bl.Settings = {
-    Length = 13
+    Size = 32,
+    Length = 100
 }
 
 bl.Enum = {}
@@ -66,7 +67,8 @@ end
 -- Loads the battle log data to the screen.
 ------------------------------------------------------------------------------------------------------
 bl.Populate = function()
-    if UI.BeginTable("Blog", 4, Window.Table.Flags.Borders) then
+    local table_size = {0, bl.Settings.Size * 8}
+    if UI.BeginTable("Blog", 5, Window.Table.Flags.Scrollable, table_size) then
         bl.Display.Headers()
         for _, entry in ipairs(bl.Log) do
             bl.Display.Rows(entry)
@@ -89,10 +91,11 @@ bl.Add = function(player_name, action_name, damage, note, action_type, action_da
     -- If the blog is at max length then we will need to remove the last element
     if #bl.Log >= bl.Settings.Length then table.remove(bl.Log, bl.Settings.Length) end
     local entry = {
+        Time   = os.date("%X"),
         Name   = bl.Util.Name(player_name),
         Damage = bl.Util.Damage(damage, action_type),
         Action = bl.Util.Action(action_name, action_type, action_data),
-        TP     = bl.Util.Notes(note, action_type)
+        Note   = bl.Util.Notes(note, action_type)
     }
     table.insert(bl.Log, 1, entry)
 end
@@ -171,8 +174,9 @@ bl.Util.Notes = function(note, action_type)
         _Debug.Error.Add("Unhandled battle log note. Note: {" .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "}.")
         return " "
     else
+        -- TP for WS is the default case.
 ---@diagnostic disable-next-line: param-type-mismatch
-        if note then return Col.String.Format_Number(note) end
+        if note then return "TP: " .. Col.String.Format_Number(note) end
     end
     return " "
 end
@@ -182,10 +186,11 @@ end
 ------------------------------------------------------------------------------------------------------
 bl.Display.Headers = function()
     local no_flags = Window.Columns.Flags.None
+    UI.TableSetupColumn("Time", no_flags)
     UI.TableSetupColumn("Name", no_flags)
     UI.TableSetupColumn("Damage", no_flags)
     UI.TableSetupColumn("Action", no_flags)
-    UI.TableSetupColumn("TP", no_flags)
+    UI.TableSetupColumn("Notes", no_flags)
     UI.TableHeadersRow()
 end
 
@@ -194,10 +199,11 @@ end
 ------------------------------------------------------------------------------------------------------
 bl.Display.Rows = function(entry)
     UI.TableNextRow()
+    UI.TableNextColumn() UI.Text(entry.Time)
     UI.TableNextColumn() UI.TextColored(entry.Name.Color, entry.Name.Value)
     UI.TableNextColumn() UI.TextColored(entry.Damage.Color, entry.Damage.Value)
     UI.TableNextColumn() UI.TextColored(entry.Action.Color, entry.Action.Value)
-    UI.TableNextColumn() UI.Text(tostring(entry.TP))
+    UI.TableNextColumn() UI.Text(tostring(entry.Note))
 end
 
 return bl

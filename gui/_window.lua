@@ -6,6 +6,7 @@ w.Window = {
     Font_Scaling = 0.85,
     Style = 1,
     Visible = true,
+    Mini = false,
     Flags = bit.bor(
     ImGuiWindowFlags_AlwaysAutoResize,
     ImGuiWindowFlags_NoSavedSettings,
@@ -32,7 +33,8 @@ w.Table.Flags = {
     None = bit.bor(ImGuiTableFlags_None),
     Resizable = bit.bor(ImGuiTableFlags_NoSavedSettings, ImGuiTableFlags_Resizable, ImGuiTableFlags_SizingStretchProp, ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
     Borders = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
-    Team = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_Reorderable)
+    Team = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
+    Scrollable = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_ScrollY)
 }
 
 -- Columns ///////////////////////
@@ -131,6 +133,7 @@ w.Initialize = function()
     UI.PushStyleVar(ImGuiStyleVar_WindowPadding, {7, 3})
     UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
     UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
+    -- UI.PushStyleVar(ImGuiStyleVar_IndentSpacing, 0) -- Not sure if I like this on or off more.
 
     -- Reset dropdown selections.
     w.Dropdown.Player.Focus = w.Dropdown.Enum.NONE
@@ -152,47 +155,52 @@ end
 -- Populate the data in the monitor window.
 ------------------------------------------------------------------------------------------------------
 w.Populate = function()
-    if not A.States.Zoning then
+    if not A.States.Zoning and w.Window.Visible then
         if UI.Begin(w.Window.Name, {w.Window.Visible}, w.Window.Flags) then
-            if _Debug.Is_Enabled() then UI.Text("Error Count: " .. tostring(_Debug.Error.Util.Error_Count())) end
-            if UI.BeginTabBar(w.Tabs.Names.PARENT, w.Tabs.Flags) then
-                if UI.BeginTabItem(w.Tabs.Names.TEAM) then
-                    Team.Populate()
-                    UI.EndTabItem()
-                end
-                if UI.BeginTabItem(w.Tabs.Names.FOCUS) then
-                    Focus.Populate()
-                    UI.EndTabItem()
-                end
-                if UI.BeginTabItem(w.Tabs.Names.BATTLELOG) then
-                    Blog.Populate()
-                    UI.EndTabItem()
-                end
-                if UI.BeginTabItem(w.Tabs.Names.SETTINGS) then
-                    Settings.Populate()
-                    UI.EndTabItem()
-                end
-                if _Debug.Is_Enabled() then
-                    if UI.BeginTabItem(w.Tabs.Names.MOBVIEW) then
-                        _Debug.Mob.Populate(A.Mob.Get_Mob_By_Target(A.Enum.Mob.TARGET))
+            w.Window.Visible = -1
+            if w.Window.Mini then
+                Team.Mini_Mode()
+            else
+                if _Debug.Is_Enabled() then UI.Text("Error Count: " .. tostring(_Debug.Error.Util.Error_Count())) end
+                if UI.BeginTabBar(w.Tabs.Names.PARENT, w.Tabs.Flags) then
+                    if UI.BeginTabItem(w.Tabs.Names.TEAM) then
+                        Team.Populate()
                         UI.EndTabItem()
                     end
-                    if UI.BeginTabItem(w.Tabs.Names.PACKETS) then
-                        _Debug.Packet.Populate()
+                    if UI.BeginTabItem(w.Tabs.Names.FOCUS) then
+                        Focus.Populate()
                         UI.EndTabItem()
                     end
-                    if UI.BeginTabItem(w.Tabs.Names.ERRORS) then
-                        _Debug.Error.Populate()
+                    if UI.BeginTabItem(w.Tabs.Names.BATTLELOG) then
+                        Blog.Populate()
                         UI.EndTabItem()
                     end
-                    if UI.BeginTabItem(w.Tabs.Names.DATAVIEW) then
-                        _Debug.Data_View.Populate()
+                    if UI.BeginTabItem(w.Tabs.Names.SETTINGS) then
+                        Settings.Populate()
                         UI.EndTabItem()
                     end
+                    if _Debug.Is_Enabled() then
+                        if UI.BeginTabItem(w.Tabs.Names.MOBVIEW) then
+                            _Debug.Mob.Populate(A.Mob.Get_Mob_By_Target(A.Enum.Mob.TARGET))
+                            UI.EndTabItem()
+                        end
+                        if UI.BeginTabItem(w.Tabs.Names.PACKETS) then
+                            _Debug.Packet.Populate()
+                            UI.EndTabItem()
+                        end
+                        if UI.BeginTabItem(w.Tabs.Names.ERRORS) then
+                            _Debug.Error.Populate()
+                            UI.EndTabItem()
+                        end
+                        if UI.BeginTabItem(w.Tabs.Names.DATAVIEW) then
+                            _Debug.Data_View.Populate()
+                            UI.EndTabItem()
+                        end
+                    end
+                    UI.EndTabBar()
                 end
-                UI.EndTabBar()
+                UI.End()
             end
-            UI.End()
         end
     end
 end
@@ -248,6 +256,20 @@ end
 ------------------------------------------------------------------------------------------------------
 w.Util.Get_Mob_Focus = function()
     return w.Dropdown.Mob.Focus
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles window visibility.
+------------------------------------------------------------------------------------------------------
+w.Util.Toggle_Visibility = function()
+    w.Window.Visible = not w.Window.Visible
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles mini mode.
+------------------------------------------------------------------------------------------------------
+w.Util.Toggle_Mini = function()
+    w.Window.Mini = not w.Window.Mini
 end
 
 ------------------------------------------------------------------------------------------------------
