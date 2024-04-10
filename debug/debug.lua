@@ -1,5 +1,5 @@
 _Debug = {}
-_Debug.Enabled = true
+_Debug.Enabled = false
 
 ------------------------------------------------------------------------------------------------------
 -- Is debug mode enabled.

@@ -23,9 +23,9 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ]]
 
-addon.author = 'Metra'
-addon.name = "Metrics-Test"
-addon.version = '0.9.0'
+addon.author = "Metra"
+addon.name = "Metrics"
+addon.version = "0.9.0"
 
 _Globals = {}
 _Globals.Initialized = false
