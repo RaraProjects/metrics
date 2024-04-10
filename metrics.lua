@@ -25,8 +25,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = 'Metra'
 addon.name = "Metrics-Test"
-addon.version = '1.0.0'
-addon.commands = {'p', 'parse'}
+addon.version = '0.9.0'
 
 _Globals = {}
 _Globals.Initialized = false

@@ -127,11 +127,6 @@ m.Set = {}
 m.Inc = {}
 m.Util = {}
 
--- MODEL OVERVIEW
--- 1. Action takes place.
--- 2. Initialize Data and Catalog nodes.
--- 3. Further actions update the data and catalog nodes.
-
 ------------------------------------------------------------------------------------------------------
 -- Resets the parsing data and clears the battle log.
 ------------------------------------------------------------------------------------------------------
