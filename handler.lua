@@ -83,6 +83,7 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
     _Debug.Packet.Add(player_name, target_name, "Melee", metadata)
     local animation_id = metadata.animation
     local damage = metadata.param
+    local message_id = metadata.message
     local throwing = false
 
     local melee_type_broad = Model.Enum.Trackable.MELEE
@@ -102,6 +103,11 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
         target_name = target_name,
         pet_name = pet_name,
     }
+
+    -- Perfect Dodge miss, miss, mob heal, shadows shouldn't count toward damage.
+    if message_id == 32 or message_id == 373 or message_id == 15 or message_id == 31 then
+        damage = 0
+    end
 
     -- Totals ///////////////////////////////////////////////////////
     Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.TOTAL, p.Metric.TOTAL)
@@ -147,10 +153,7 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
         Model.Update.Data(p.Mode.INC,              1, audits, p.Trackable.MAGIC,       p.Metric.COUNT)
         if enspell_damage < Model.Get.Data(player_name, p.Trackable.MAGIC, p.Metric.MIN) then Model.Update.Data(p.Mode.SET, enspell_damage, audits, p.Trackable.MAGIC, p.Metric.MIN) end
         if enspell_damage > Model.Get.Data(player_name, p.Trackable.MAGIC, p.Metric.MAX) then Model.Update.Data(p.Mode.SET, enspell_damage, audits, p.Trackable.MAGIC, p.Metric.MAX) end
-    end
-
-    -- Metadata /////////////////////////////////////////////////////
-    local message_id = metadata.message
+    end    
 
     -- Hit //////////////////////////////////////////////////////////
     if message_id == 1 then

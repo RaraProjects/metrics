@@ -11,6 +11,15 @@ f.Enum = {
 }
 
 ------------------------------------------------------------------------------------------------------
+-- Resets the focus settings.
+------------------------------------------------------------------------------------------------------
+f.Reset_Settings = function()
+    for index, _ in pairs(Model.Healing_Max) do
+        Model.Healing_Max[index] = Model.Enum.HEALING[index]
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Loads the focus data to the screen.
 ------------------------------------------------------------------------------------------------------
 f.Populate = function()
@@ -41,26 +50,28 @@ f.Display.Melee = function(player_name)
     local col_flags = Window.Columns.Flags.None
     local table_flags = Window.Table.Flags.Borders
     local width = Window.Columns.Widths.Standard
-    local columns = 5
+    local primary_columns = 3
 
     local melee_total = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.TOTAL)
     local mob_heal = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.MOB_HEAL)
     local enspell = Model.Get.Data(player_name, Model.Enum.Trackable.ENSPELL, Model.Enum.Metric.TOTAL)
     local shadows = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.SHADOWS)
-    if mob_heal > 0 then columns = columns + 1 end
-    if enspell > 0 then columns = columns + 1 end
-    if shadows > 0 then columns = columns + 1 end
+    local kick_damage = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE_KICK, Model.Enum.Metric.TOTAL)
+    local kick_count = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE_KICK, Model.Enum.Metric.COUNT)
+    local melee_count = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.COUNT)
+
+    if mob_heal > 0 then primary_columns = primary_columns + 1 end
+    if enspell > 0 then primary_columns = primary_columns + 1 end
+    if shadows > 0 then primary_columns = primary_columns + 1 end
 
     if melee_total > 0 then
         f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Melee", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Melee", columns, table_flags) then
+            if UI.BeginTable("Melee 1 ", primary_columns, table_flags) then
                 -- Headers
                 UI.TableSetupColumn("Raw Melee\nDamage", col_flags, width)
                 UI.TableSetupColumn("Total Melee\nDamage %", col_flags, width)
                 UI.TableSetupColumn("Total Melee\nAccuracy %", col_flags, width)
-                UI.TableSetupColumn("Main Hand\nAccuracy %", col_flags, width)
-                UI.TableSetupColumn("Off Hand\nAccuracy %", col_flags, width)
                 if mob_heal > 0 then UI.TableSetupColumn("\nMob Heal", col_flags, width) end
                 if enspell > 0  then UI.TableSetupColumn("(For Ref.)\nEnspell", col_flags, width) end
                 if shadows > 0  then UI.TableSetupColumn("Absorbed by\nShadows", col_flags, width) end
@@ -71,12 +82,54 @@ f.Display.Melee = function(player_name)
                 UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE))
                 UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE, true))
                 UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE))
-                UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN))
-                UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFH))
                 if mob_heal > 0 then UI.TableNextColumn() UI.Text(Col.String.Format_Number(mob_heal)) end
                 if enspell > 0  then UI.TableNextColumn() UI.Text(Col.String.Format_Number(enspell)) end
                 if shadows > 0  then UI.TableNextColumn() UI.Text(Col.String.Format_Number(shadows)) end
                 UI.EndTable()
+            end
+
+            f.Display.Util.Check_Collapse()
+            if UI.TreeNode("Main / Off-hand") then
+                if UI.BeginTable("Melee 2", 4, table_flags) then
+                    -- Headers
+                    UI.TableSetupColumn("Main Hand\nDamage", col_flags, width)
+                    UI.TableSetupColumn("Main Hand\nAccuracy %", col_flags, width)
+                    UI.TableSetupColumn("Off Hand\nDamage", col_flags, width)
+                    UI.TableSetupColumn("Off Hand\nAccuracy %", col_flags, width)
+                    UI.TableHeadersRow()
+
+                    -- Data
+                    UI.TableNextRow()
+                    UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN))
+                    UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN))
+                    UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFH))
+                    UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFH))
+                    UI.EndTable()
+                end
+                UI.TreePop()
+            end
+
+            if kick_damage > 0 then
+                f.Display.Util.Check_Collapse()
+                if UI.TreeNode("Kick Attacks") then
+                    if UI.BeginTable("Melee 3", 4, table_flags) then
+                        -- Headers
+                        UI.TableSetupColumn("Kick\nDamage", col_flags, width)
+                        UI.TableSetupColumn("Kick\nDamage %", col_flags, width)
+                        UI.TableSetupColumn("Kick\nAccuracy", col_flags, width)
+                        UI.TableSetupColumn("Kick\nRate %", col_flags, width)
+                        UI.TableHeadersRow()
+
+                        -- Data
+                        UI.TableNextRow()
+                        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK))
+                        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK, true))
+                        UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK))
+                        UI.TableNextColumn() UI.Text(Col.String.Format_Percent(kick_count, melee_count))
+                        UI.EndTable()
+                    end
+                    UI.TreePop()
+                end
             end
         end
     end

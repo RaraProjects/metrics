@@ -422,8 +422,7 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
 
     if damage > m.Get.Catalog(player_name, trackable, action_name, m.Enum.Metric.MAX) then
     	-- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
-		if trackable == m.Enum.Trackable.HEALING and damage < Lists.Spell.Healing_Max[action_name] then
-			_Debug.Message("Update.Catalog_Damage: " .. tostring(player_name) .. " " .. action_name .. " " .. tostring(damage) .. " " .. tostring(Lists.Spell.Healing_Max[action_name]))
+		if trackable == m.Enum.Trackable.HEALING and damage < Model.Healing_Max[action_name] then
 			m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MAX)
 		elseif trackable ~= m.Enum.Trackable.HEALING then
 			m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MAX)

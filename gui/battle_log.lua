@@ -15,7 +15,7 @@ bl.Flags = {
     Healing = true,
     Deaths  = true,
 }
-bl.Flags.Defaults = {
+bl.Flag_Defaults = {
     Melee   = true,
     Ranged  = true,
     WS      = true,
@@ -27,17 +27,24 @@ bl.Flags.Defaults = {
     Deaths  = true,
 }
 
-bl.Settings = {
-    Size = 32,
-    Length = 100
-}
-
-bl.Enum = {}
-bl.Enum.Thresholds = {
+bl.Thresholds = {
     WS    = 600,
     MAGIC = 1000,
     MAX   = 99999,
 }
+bl.Threshold_Defaults = {
+    WS    = 600,
+    MAGIC = 1000,
+    MAX   = 99999,
+}
+
+bl.Settings = {
+    Size = 32,
+    Length = 100,
+    Damage_Highlighting = true,
+}
+
+bl.Enum = {}
 bl.Enum.Text = {
     MISS = "MISS!",
     NA   = "---",
@@ -58,8 +65,12 @@ end
 -- Resets the battle log settings.
 ------------------------------------------------------------------------------------------------------
 bl.Reset_Settings = function()
+    bl.Settings.Damage_Highlighting = true
     for index, _ in pairs(bl.Flags) do
-        bl.Flags[index] = bl.Flags.Defaults[index]
+        bl.Flags[index] = bl.Flag_Defaults[index]
+    end
+    for index, _ in pairs(bl.Thresholds) do
+        bl.Thresholds[index] = bl.Threshold_Defaults[index]
     end
 end
 
@@ -121,11 +132,11 @@ end
 ------------------------------------------------------------------------------------------------------
 bl.Util.Damage = function(damage, action_type)
     -- Change the color of the text if the damage is over a certain threshold.
-    local threshold = bl.Enum.Thresholds.MAX
+    local threshold = bl.Thresholds.MAX
     if action_type == Model.Enum.Trackable.WS then
-        threshold = bl.Enum.Thresholds.WS
+        threshold = bl.Thresholds.WS
     elseif action_type == Model.Enum.Trackable.MAGIC then
-        threshold = bl.Enum.Thresholds.MAGIC
+        threshold = bl.Thresholds.MAGIC
     elseif action_type == Handler.Enum.Flags.IGNORE then
         return {Value = bl.Enum.Text.NA, Color = Window.Colors.White}
     end

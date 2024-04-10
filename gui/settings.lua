@@ -44,9 +44,10 @@ s.Section.Revert = function()
             clicked = 1
             if clicked and 1 then
                 Window.Reset_Settings()
-                Team.Reset()
+                Team.Reset_Settings()
+                Focus.Reset_Settings()
+                Blog.Reset_Settings()
                 Model.Settings.Running_Accuracy_Limit = Model.Settings.Default.Running_Accuracy_Limit
-                -- Reset flags
             end
         end
     end
@@ -155,7 +156,35 @@ s.Section.Focus = function()
     local width = Window.Columns.Widths.Settings
     s.Util.Check_Collapse()
     if UI.CollapsingHeader("Tab: Focus") then
-        UI.Text("Healing Settings")
+        UI.Text("Set max healing thresholds for overcure.")
+        UI.BulletText("Otherwise Divine Seal will mess up the calculations.")
+        UI.BulletText("Set each value to be about your max healing for each spell.")
+        UI.BulletText("Values can also be a little more--just below Divine Seal values.")
+        UI.BulletText("Curagas should amount healed per person--not in total.")
+        if UI.BeginTable("Battle Log", 2) then
+            UI.TableSetupColumn("Col 1", col_flags)
+            UI.TableSetupColumn("Col 2", col_flags)
+            UI.TableNextColumn()
+            s.Widget.Healing("Cure")
+            UI.TableNextColumn()
+            s.Widget.Healing("Curaga")
+            UI.TableNextColumn()
+            s.Widget.Healing("Cure II")
+            UI.TableNextColumn()
+            s.Widget.Healing("Curaga II")
+            UI.TableNextColumn()
+            s.Widget.Healing("Cure III")
+            UI.TableNextColumn()
+            s.Widget.Healing("Curaga III")
+            UI.TableNextColumn()
+            s.Widget.Healing("Cure IV")
+            UI.TableNextColumn()
+            s.Widget.Healing("Curaga IV")
+            UI.TableNextColumn()
+            s.Widget.Healing("Cure V")
+            UI.EndTable()
+        end
+        
     end
 end
 
@@ -219,8 +248,11 @@ s.Section.Battle_Log = function()
             UI.EndTable()
         end
 
-        UI.Text("Enable damage highlighting?")
-        UI.Text("If so, what should the damage for each be?")
+        UI.Text("Should especially high damage be highlited in the battle log?")
+        s.Widget.Damage_Highlighting()
+        UI.Text("Use Ctrl+Click on the component to set the number directly." )
+        s.Widget.WS_Threshold()
+        s.Widget.Magic_Threshold()
     end
 end
 
@@ -308,6 +340,52 @@ s.Widget.Condensed_Numbers = function()
         Team.Util.Calculate_Column_Flags()
     end
     UI.SameLine() Window.Widget.HelpMarker("Condensed is 1.2K instead of 1,200.")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles whether damage highlighting takes place in the battle log.
+------------------------------------------------------------------------------------------------------
+s.Widget.Damage_Highlighting = function()
+    if UI.Checkbox("Damage Highlighting", {Blog.Settings.Damage_Highlighting}) then
+        Blog.Settings.Damage_Highlighting = not Blog.Settings.Damage_Highlighting
+    end
+    UI.SameLine() Window.Widget.HelpMarker("Damage over certain limits causes the text to highlight. "
+                                    .. "It's a way for you to easily see if you or others are meeting your damage goals. "
+                                    .. "Set the bar high and strive to win.")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Set the battle log damage highlighting threshold for weaponskills.
+------------------------------------------------------------------------------------------------------
+s.Widget.WS_Threshold = function()
+    local ws_threshold = {[1] = Blog.Thresholds.WS}
+    if UI.DragInt("Weaponskill", ws_threshold, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
+        Blog.Thresholds.WS = ws_threshold[1]
+    end
+    UI.SameLine() Window.Widget.HelpMarker("Weaponskill damage over this amount will be highlighted "
+                                    .. "in the battle log.")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Set the battle log damage highlighting threshold for magic.
+------------------------------------------------------------------------------------------------------
+s.Widget.Magic_Threshold = function()
+    local magic_threshold = {[1] = Blog.Thresholds.MAGIC}
+    if UI.DragInt("Spell", magic_threshold, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
+        Blog.Thresholds.MAGIC = magic_threshold[1]
+    end
+    UI.SameLine() Window.Widget.HelpMarker("Magic damage over this amount will be highlighted "
+                                    .. "in the battle log.")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Set the healing threshold defaults to prevent overcure with Divine Seal.
+------------------------------------------------------------------------------------------------------
+s.Widget.Healing = function(spell)
+    local healing_threshold = {[1] = Model.Healing_Max[spell]}
+    if UI.DragInt(spell, healing_threshold, 1, 0, 3000, "%d", ImGuiSliderFlags_None) then
+        Model.Healing_Max[spell] = healing_threshold[1]
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

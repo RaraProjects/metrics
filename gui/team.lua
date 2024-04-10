@@ -70,7 +70,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Resets the Team window to default settings.
 ------------------------------------------------------------------------------------------------------
-t.Reset = function()
+t.Reset_Settings = function()
     for index, _ in pairs(t.Settings) do
         t.Settings[index] = t.Defaults.Settings[index]
     end

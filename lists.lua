@@ -12,9 +12,6 @@ l.WS.Missing_WS = {
     [3502] = {id = 3502, english = "Nott"}
 }
 
--- Gale Axe is taken as Jump.
--- Avalance Axe is taken as High Jump.
-
 -- Capture abilities that come in through the WS packet.
 l.WS.WS_Abilities = {
     [26]   = {id = 26,   english = "Eagle Eye Shot"},
@@ -80,20 +77,6 @@ l.Spell.Healing = {
     [581] = {id = 581, en = "Healing Breeze"},
 }
 
-l.Spell.Healing_Max = {
-    ["Cure"]       = 200,
-    ["Cure II"]    = 400,
-    ["Cure III"]   = 800,
-    ["Cure IV"]    = 1000,
-    ["Cure V"]     = 1300,
-    ["Cure VI"]    = 1500,
-    ["Curaga"]     = 200,
-    ["Curaga II"]  = 400,
-    ["Curaga III"] = 800,
-    ["Curaga IV"]  = 1000,
-    ["Curaga V"]   = 1300,
-}
-
 l.Spell.Damaging = {
     -- Light Elemental Magic
     [21]  = {id = 21,  en = "Holy"},
@@ -108,7 +91,6 @@ l.Spell.Damaging = {
     [40]  = {id = 40,  en = "Banishga III"},
     [41]  = {id = 41,  en = "Banishga IV"},
     [42]  = {id = 42,  en = "Banishga V"},
-
     -- Fire Elemental Magic
     [144] = {id = 144, en = "Fire"},
     [145] = {id = 145, en = "Fire II"},
@@ -124,7 +106,6 @@ l.Spell.Damaging = {
     [204] = {id = 204, en = "Flare"},
     [205] = {id = 205, en = "Flare II"},
     [496] = {id = 496, en = "Firaja"},
-
     -- Ice Elemental Magic
     [149] = {id = 149, en = "Blizzard"},
     [150] = {id = 150, en = "Blizzard II"},
@@ -140,7 +121,6 @@ l.Spell.Damaging = {
     [206] = {id = 206, en = "Freeze"},
     [207] = {id = 207, en = "Freeze II"},
     [497] = {id = 497, en = "Blizzaja"},
-
     -- Wind Elemental Magic
     [154] = {id = 154, en = "Aero"},
     [155] = {id = 155, en = "Aero II"},
@@ -156,7 +136,6 @@ l.Spell.Damaging = {
     [208] = {id = 208, en = "Tornado"},
     [209] = {id = 209, en = "Tornado II"},
     [498] = {id = 498, en = "Aeroja"},
-
     -- Earth Elemental Magic
     [159] = {id = 159, en = "Stone"},
     [160] = {id = 160, en = "Stone II"},
@@ -172,7 +151,6 @@ l.Spell.Damaging = {
     [210] = {id = 210, en = "Quake"},
     [211] = {id = 211, en = "Quake II"},
     [499] = {id = 499, en = "Stoneja"},
-
     -- Thunder Elemental Magic
     [164] = {id = 164, en = "Thunder"},
     [165] = {id = 165, en = "Thunder II"},
@@ -188,7 +166,6 @@ l.Spell.Damaging = {
     [212] = {id = 212, en = "Burst"},
     [213] = {id = 213, en = "Burst II"},
     [500] = {id = 500, en = "Thundaja"},
-
     -- Water Elemental Magic
     [169] = {id = 169, en = "Water"},
     [170] = {id = 170, en = "Water II"},
@@ -204,7 +181,6 @@ l.Spell.Damaging = {
     [214] = {id = 214, en = "Flood"},
     [215] = {id = 215, en = "Flood II"},
     [501] = {id = 501, en = "Waterja"},
-
     -- Dark Elemental Magic
     [245] = {id = 245, en = "Drain"},
     [246] = {id = 246, en = "Drain II"},
@@ -213,10 +189,8 @@ l.Spell.Damaging = {
     [219] = {id = 219, en = "Comet"},
     [503] = {id = 503, en = "Impact"},
     [502] = {id = 502, en = "Kaustra"},
-
     -- Non-elemental Magic
     [218] = {id = 218, en = "Meteor"},
-
     -- BLU Magic
     [708] = {id = 708, en = "Subduction"},
     [720] = {id = 720, en = "Spectral Floe"},
@@ -225,7 +199,6 @@ l.Spell.Damaging = {
     [727] = {id = 727, en = "Silent Storm"},
     [728] = {id = 728, en = "Tenebral Crush"},
     [736] = {id = 736, en = "Thunderbolt"},
-
     -- GEO nukes
     [828] = {id = 828, en = "Fira"},
     [829] = {id = 829, en = "Fira II"},
@@ -245,7 +218,6 @@ l.Spell.Damaging = {
     [838] = {id = 838, en = "Watera"},
     [839] = {id = 839, en = "Watera II"},
     [870] = {id = 870, en = "Watera III"},
-
     -- Helix
     [278] = {id = 278, en = "Geohelix"},
     [279] = {id = 279, en = "Hydrohelix"},
@@ -263,7 +235,6 @@ l.Spell.Damaging = {
     [890] = {id = 890, en = "Ionohelix II"},
     [891] = {id = 891, en = "Noctohelix II"},
     [892] = {id = 892, en = "Luminohelix II"},
-
     -- Ninjustsu Nukes
     [320] = {id = 320, en = "Katon: Ichi"},
     [321] = {id = 321, en = "Katon: Ni"},
@@ -386,9 +357,400 @@ l.Ability.Avatar = {
 }
 
 l.Ability.Monster_Damaging = {
+    -- Rabbit
+    [257] = {id=257,en="Foot Kick",ja="フットキック",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [258] = {id=258,en="Dust Cloud",ja="土煙",element=3,icon_id=43,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=800},
+    [259] = {id=259,en="Whirl Claws",ja="爪旋風脚",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1800},
+    -- Sheep
     [260] = {id=260,en="Lamb Chop",ja="頭突き",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1300},
     [262] = {id=262,en="Sheep Charge",ja="シープチャージ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=800},
+    -- Ram
+    [266] = {id=266,en="Ram Charge",ja="ラムチャージ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [267] = {id=267,en="Rumble",ja="地鳴り",element=3,icon_id=43,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=800},
+    [268] = {id=268,en="Great Bleat",ja="大咆哮",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+    [269] = {id=269,en="Petribreath",ja="ペトロブレス",element=3,icon_id=43,monster_level=40,prefix="/monsterskill",range=9,targets=32,tp_cost=2000},
+    -- Tiger
     [271] = {id=271,en="Razor Fang",ja="レイザーファング",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+    [272] = {id=272,en="Claw Cyclone",ja="クローサイクロン",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=9,targets=32,tp_cost=1800},
+    -- Antlion
+    [273] = {id=273,en="Sandblast",ja="サンドブラスト",element=7,icon_id=47,monster_level=1,prefix="/monsterskill",range=7,targets=32,tp_cost=600},
+    [274] = {id=274,en="Sandpit",ja="サンドピット",element=1,icon_id=41,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=600},
+    [275] = {id=275,en="Venom Spray",ja="ベノムスプレー",element=5,icon_id=45,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=800},
+    [276] = {id=276,en="Mandibular Bite",ja="M.バイト",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1200},
+    -- Dhalmel
+    [278] = {id=278,en="Stomping",ja="ストンピング",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    -- Opo Opo
+    [283] = {id=283,en="Vicious Claw",ja="ビシャスクロー",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1300},
+    [284] = {id=284,en="Stone Throw",ja="投石",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=9,targets=32,tp_cost=1200},
+    [285] = {id=285,en="Spinning Claw",ja="スピニングクロー",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1800},
+    [286] = {id=286,en="Claw Storm",ja="クローストーム",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+    [288] = {id=288,en="Eye Scratch",ja="アイスクラッチ",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    -- Treant
+    [290] = {id=290,en="Drill Branch",ja="ドリルブランチ",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1200},
+    [291] = {id=291,en="Pinecone Bomb",ja="まつぼっくり爆弾",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1200},
+    [292] = {id=292,en="Leafstorm",ja="リーフストーム",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+    [293] = {id=293,en="Entangle",ja="エンタングル",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    -- Mandragora
+    [294] = {id=294,en="Head Butt",ja="ヘッドバット",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [296] = {id=296,en="Wild Oats",ja="種まき",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=9,targets=32,tp_cost=500},
+    [298] = {id=298,en="Leaf Dagger",ja="リーフダガー",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=9,targets=32,tp_cost=800},
+    -- Funguar
+    [300] = {id=300,en="Frogkick",ja="フロッグキック",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [302] = {id=302,en="Queasyshroom",ja="マヨイタケ",element=7,icon_id=47,monster_level=20,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    [303] = {id=303,en="Numbshroom",ja="シビレタケ",element=7,icon_id=47,monster_level=30,prefix="/monsterskill",range=9,targets=32,tp_cost=1200},
+    [304] = {id=304,en="Shakeshroom",ja="オドリタケ",element=7,icon_id=47,monster_level=40,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    [305] = {id=305,en="Silence Gas",ja="サイレスガス",element=7,icon_id=47,monster_level=50,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+    [306] = {id=306,en="Dark Spore",ja="ダークスポア",element=7,icon_id=47,monster_level=60,prefix="/monsterskill",range=9,targets=32,tp_cost=1200},
+    -- Morbol
+    [307] = {id=307,en="Impale",ja="くしざし",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [308] = {id=308,en="Vampiric Lash",ja="吸血ムチ",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [309] = {id=309,en="Somersault",ja="サマーソルト",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=2,targets=32,tp_cost=1300},
+    [310] = {id=310,en="Bad Breath",ja="臭い息",element=3,icon_id=43,monster_level=30,prefix="/monsterskill",range=9,targets=32,tp_cost=2000},
+    [311] = {id=311,en="Sweet Breath",ja="甘い息",element=7,icon_id=47,monster_level=20,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+    -- Cactuar
+    [312] = {id=312,en="Needleshot",ja="ニードルショット",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=12,targets=32,tp_cost=1000},
+    [313] = {id=313,en="1000 Needles",ja="針千本",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1300},
+    -- Bee
+    [319] = {id=319,en="Sharp Sting",ja="シャープスティング",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=12,targets=32,tp_cost=1000},
+    [321] = {id=321,en="Final Sting",ja="ファイナルスピア",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=9,targets=32,tp_cost=2000},
+    -- Beetle    
+    [322] = {id=322,en="Power Attack",ja="パワーアタック",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [324] = {id=324,en="Rhino Attack",ja="ライノアタック",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=2,targets=32,tp_cost=1200},
+    -- Crawler
+    [328] = {id=328,en="Poison Breath",ja="ポイズンブレス",element=5,icon_id=45,monster_level=20,prefix="/monsterskill",range=9,targets=32,tp_cost=1200},
+    -- Scorpion
+    [330] = {id=330,en="Numbing Breath",ja="ナムブレス",element=1,icon_id=41,monster_level=50,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+    [331] = {id=331,en="Cold Breath",ja="コールドブレス",element=1,icon_id=41,monster_level=20,prefix="/monsterskill",range=9,targets=32,tp_cost=1200},
+    [332] = {id=332,en="Mandible Bite",ja="マンディブルバイト",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [333] = {id=333,en="Poison Sting",ja="ポイズンスティング",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=800},
+    [334] = {id=334,en="Death Scissors",ja="デスシザース",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=2,targets=32,tp_cost=2000},
+    [335] = {id=335,en="Wild Rage",ja="大暴れ",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=1300},
+    [336] = {id=336,en="Earth Pounder",ja="アースパウンダー",element=3,icon_id=43,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1200},
+    [337] = {id=337,en="Sharp Strike",ja="シャープストライク",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=0,targets=1,tp_cost=800},
+    -- Diremite
+    [338] = {id=338,en="Double Claw",ja="ダブルクロー",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [339] = {id=339,en="Grapple",ja="グラップル",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=7,targets=32,tp_cost=1500},
+    [341] = {id=341,en="Spinning Top",ja="スピニングトップ",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1200},
+    -- Lizard    
+    [342] = {id=342,en="Tail Blow",ja="テイルブロー",element=6,icon_id=46,monster_level=70,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [343] = {id=343,en="Fireball",ja="ファイアボール",element=0,icon_id=40,monster_level=1,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    [344] = {id=344,en="Blockhead",ja="ブロックヘッド",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+    [345] = {id=345,en="Brain Crush",ja="ブレインクラッシュ",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=2,targets=32,tp_cost=1200},
+    [347] = {id=347,en="Plaguebreath",ja="プレイグブレス",element=5,icon_id=45,monster_level=50,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+    -- Raptor
+    [350] = {id=350,en="Ripper Fang",ja="リッパーファング",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [351] = {id=351,en="Foul Breath",ja="ファウルブレス",element=0,icon_id=40,monster_level=40,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+    [352] = {id=352,en="Frost Breath",ja="フロストブレス",element=1,icon_id=41,monster_level=40,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+    [353] = {id=353,en="Thunderbolt",ja="サンダーボルト",element=4,icon_id=44,monster_level=30,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+    [354] = {id=354,en="Chomp Rush",ja="噛みつきラッシュ",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [355] = {id=355,en="Scythe Tail",ja="サイズテール",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=2,targets=32,tp_cost=1200},
+    -- Bugard    
+    [356] = {id=356,en="Tail Roll",ja="テールロール",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=7,targets=32,tp_cost=1000},
+    [357] = {id=357,en="Tusk",ja="タスク",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=2000},
+    [359] = {id=359,en="Bone Crunch",ja="ボーンクランチ",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    -- Triple Bat
+    [364] = {id=364,en="Blood Drain",ja="吸血",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [365] = {id=365,en="Jet Stream",ja="ジェットストリーム",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    -- Greater Bird
+    [366] = {id=366,en="Blind Vortex",ja="ブラインヴォルテクス",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [367] = {id=367,en="Giga Scream",ja="ギガスクリーム",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [368] = {id=368,en="Dread Dive",ja="ドレッドダイヴ",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [370] = {id=370,en="Stormwind",ja="ストームウィンド",element=2,icon_id=42,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+    -- Cockatrice
+    [371] = {id=371,en="Hammer Beak",ja="ハンマービーク",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [372] = {id=372,en="Poison Pick",ja="ポイズンピック",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    -- Leech
+    [376] = {id=376,en="Suction",ja="吸着",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [377] = {id=377,en="Acid Mist",ja="アシッドミスト",element=5,icon_id=45,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1200},
+    [378] = {id=378,en="Sand Breath",ja="サンドブレス",element=3,icon_id=43,monster_level=20,prefix="/monsterskill",range=7,targets=32,tp_cost=1200},
+    [379] = {id=379,en="Drainkiss",ja="ドレインキッス",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [383] = {id=383,en="Brain Drain",ja="ブレインドレイン",element=7,icon_id=47,monster_level=60,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+    --Slime
+    [384] = {id=384,en="Fluid Spread",ja="フルイドスプレッド",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=7,targets=32,tp_cost=1000},
+    [385] = {id=385,en="Fluid Toss",ja="フルイドスルー",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=9,targets=32,tp_cost=800},
+    [386] = {id=386,en="Digest",ja="消化",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    -- Hecteyes
+    [390] = {id=390,en="Death Ray",ja="デスレイ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    -- Crab
+    [394] = {id=394,en="Bubble Shower",ja="バブルシャワー",element=5,icon_id=45,monster_level=20,prefix="/monsterskill",range=12,targets=32,tp_cost=1500},
+    [396] = {id=396,en="Big Scissors",ja="ビッグシザー",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=800},
+    -- Pugil
+    [400] = {id=400,en="Aqua Ball",ja="アクアボール",element=5,icon_id=45,monster_level=10,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    [401] = {id=401,en="Splash Breath",ja="スプラッシュブレス",element=5,icon_id=45,monster_level=20,prefix="/monsterskill",range=9,targets=32,tp_cost=1200},
+    [402] = {id=402,en="Screwdriver",ja="スクリュードライバー",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=800},
+    -- Sea Monk
+    [405] = {id=405,en="Tentacle",ja="触手",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [406] = {id=406,en="Ink Jet",ja="インクジェット",element=7,icon_id=47,monster_level=10,prefix="/monsterskill",range=9,targets=32,tp_cost=1200},
+    [408] = {id=408,en="Cross Attack",ja="クロスアタック",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+    [410] = {id=410,en="Maelstrom",ja="メイルシュトロム",element=5,icon_id=45,monster_level=60,prefix="/monsterskill",range=7,targets=32,tp_cost=1200},
+    [411] = {id=411,en="Whirlwind",ja="旋風",element=2,icon_id=42,monster_level=50,prefix="/monsterskill",range=7,targets=32,tp_cost=1200},
+    -- Coeurl  
+    [412] = {id=412,en="Petri. Breath",ja="石の吐息",element=3,icon_id=43,monster_level=40,prefix="/monsterskill",range=2,targets=32,tp_cost=800},
+    [414] = {id=414,en="Pounce",ja="パウンス",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1200},
+    [415] = {id=415,en="Charged Whisker",ja="チャージドホイスカー",element=4,icon_id=44,monster_level=50,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+    -- Buffalo 
+    [416] = {id=416,en="Rampant Gnaw",ja="ランパントナウ",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+    [417] = {id=417,en="Big Horn",ja="ビッグホーン",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [418] = {id=418,en="Snort",ja="スノート",element=2,icon_id=42,monster_level=20,prefix="/monsterskill",range=7,targets=32,tp_cost=1000},
+    -- Uragnite
+    [423] = {id=423,en="Palsynyxis",ja="パルジーニクシス",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [424] = {id=424,en="Painful Whip",ja="ペインフルウィップ",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},    
+    -- Eft    
+    [429] = {id=429,en="Nimble Snap",ja="ニンブルスナップ",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+    [430] = {id=430,en="Cyclotail",ja="サイクロテール",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1300},
+    -- Hippogryph
+    [431] = {id=431,en="Back Heel",ja="バックヒール",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1200},
+    [434] = {id=434,en="Choke Breath",ja="チョークブレス",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=7,targets=32,tp_cost=1000},
+    -- Goobbue
+    [436] = {id=436,en="Blow",ja="ブロー",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [437] = {id=437,en="Beatdown",ja="ビートダウン",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [438] = {id=438,en="Uppercut",ja="アッパーカット",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+    -- Lesser Bird 
+    [442] = {id=442,en="Helldive",ja="ヘルダイブ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=800},
+    [443] = {id=443,en="Wing Cutter",ja="ウィングカッター",element=2,icon_id=42,monster_level=10,prefix="/monsterskill",range=9,targets=32,tp_cost=800},
+    -- Behemoth
+    [444] = {id=444,en="Wild Horn",ja="ワイルドホーン",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    [445] = {id=445,en="Thunderbolt",ja="サンダーボルト",element=4,icon_id=44,monster_level=40,prefix="/monsterskill",range=12,targets=32,tp_cost=2000},
+    [446] = {id=446,en="Shock Wave",ja="衝撃波",element=2,icon_id=42,monster_level=10,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    [449] = {id=449,en="Meteor",ja="メテオ",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=12,targets=32,tp_cost=3000},
+    -- Pugil    
+    [450] = {id=450,en="Recoil Dive",ja="リコイルダイブ",element=6,icon_id=46,monster_level=60,prefix="/monsterskill",range=9,targets=32,tp_cost=1250},
+    -- Damselfly
+    [453] = {id=453,en="Cursed Sphere",ja="カースドスフィア",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    [454] = {id=454,en="Venom",ja="毒液",element=5,icon_id=45,monster_level=1,prefix="/monsterskill",range=9,targets=32,tp_cost=700},
+    -- Snow Rabbit    
+    [455] = {id=455,en="Snow Cloud",ja="雪煙",element=1,icon_id=41,monster_level=40,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    -- Sapling
+    [456] = {id=456,en="Sprout Spin",ja="スプラウトスピン",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1200},
+    [458] = {id=458,en="Sprout Smack",ja="スプラウトスマック",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    -- Scorpion    
+    [459] = {id=459,en="Venom Breath",ja="ベノムブレス",element=1,icon_id=41,monster_level=60,prefix="/monsterskill",range=12,targets=32,tp_cost=800},
+    [460] = {id=460,en="Critical Bite",ja="クリティカルバイト",element=6,icon_id=46,monster_level=60,prefix="/monsterskill",range=2,targets=32,tp_cost=1300},
+    [461] = {id=461,en="Venom Sting",ja="ベノムスティング",element=6,icon_id=46,monster_level=80,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [462] = {id=462,en="Stasis",ja="ステーシス",element=6,icon_id=46,monster_level=80,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [463] = {id=463,en="Venom Storm",ja="ベノムストーム",element=6,icon_id=46,monster_level=70,prefix="/monsterskill",range=12,targets=32,tp_cost=1000},
+    [464] = {id=464,en="Earthbreaker",ja="アースブレイカー",element=3,icon_id=43,monster_level=90,prefix="/monsterskill",range=12,targets=32,tp_cost=1500},
+    -- Manticore
+    [466] = {id=466,en="Deadly Hold",ja="デッドリーホールド",element=6,icon_id=46,monster_level=60,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [467] = {id=467,en="Tail Swing",ja="テールスイング",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [468] = {id=468,en="Tail Smash",ja="テールスマッシュ",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [469] = {id=469,en="Heat Breath",ja="火炎の息",element=0,icon_id=40,monster_level=30,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    [471] = {id=471,en="Great Sandstorm",ja="大砂塵",element=2,icon_id=42,monster_level=40,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    [472] = {id=472,en="Great Whirlwind",ja="大旋風",element=2,icon_id=42,monster_level=50,prefix="/monsterskill",range=9,targets=32,tp_cost=1200},
+    -- Tortoise
+    [474] = {id=474,en="Head Butt",ja="ヘッドバット",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1000},
+    [475] = {id=475,en="Tortoise Stomp",ja="トータスストンプ",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=2,targets=32,tp_cost=1200},
+    [477] = {id=477,en="Earth Breath",ja="アースブレス",element=3,icon_id=43,monster_level=40,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    [478] = {id=478,en="Aqua Breath",ja="アクアブレス",element=5,icon_id=45,monster_level=50,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+    -- Spider
+    [479] = {id=479,en="Sickle Slash",ja="シックルスラッシュ",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=2,targets=32,tp_cost=1200},
+    [480] = {id=480,en="Acid Spray",ja="アシッドスプレー",element=5,icon_id=45,monster_level=1,prefix="/monsterskill",range=9,targets=32,tp_cost=800},
 }
+
+
+    
+--     [482] = {id=482,en="Arbor Storm",ja="アーバーストーム",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=12,targets=32,tp_cost=1000},
+-- [483] = {id=483,en="10,000 Needles",ja="針万本",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+--     [484] = {id=484,en="Subsonics",ja="サブソニクス",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=750},
+--     [485] = {id=485,en="Marrow Drain",ja="マロードレイン",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+--     [486] = {id=486,en="Slipstream",ja="スリップストリーム",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=750},
+--     [487] = {id=487,en="Turbulence",ja="タービュレンス",element=2,icon_id=42,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [488] = {id=488,en="Broad. Barrage",ja="ボロードサイド.B",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=2,targets=32,tp_cost=800},
+--     [489] = {id=489,en="Blind. Barrage",ja="ブラインドサイド.B",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=800},
+--     [490] = {id=490,en="Damnation Dive",ja="ダムネーションダイブ",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=7,targets=32,tp_cost=1500},
+--     [491] = {id=491,en="Mucus Spread",ja="ミューカススプレッド",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=6,targets=32,tp_cost=750},
+--     [492] = {id=492,en="Epoxy Spread",ja="イポクシースプレッド",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=6,targets=32,tp_cost=750},
+--     [493] = {id=493,en="Debilitating Drone",ja="耳障りな羽音",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=7,targets=32,tp_cost=1000},
+--     [494] = {id=494,en="Hoof Volley",ja="フーフボレー",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=2,targets=32,tp_cost=2000},
+--     [495] = {id=495,en="Con. Transfer",ja="コンテージョン",element=6,icon_id=46,monster_level=60,prefix="/monsterskill",range=9,targets=32,tp_cost=2000},
+--     [496] = {id=496,en="Toxic Pick",ja="トクシックピック",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+--     [497] = {id=497,en="Crossthrash",ja="クロススラッシュ",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=9,targets=32,tp_cost=1800},
+--     [498] = {id=498,en="Knife Edge Circle",ja="ナイフエッジサークル",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=1300},
+--     [499] = {id=499,en="Train Fall",ja="トレインフォール",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=2,targets=32,tp_cost=2000},
+--     [500] = {id=500,en="Viscid Secretion",ja="粘粘",element=3,icon_id=43,monster_level=40,prefix="/monsterskill",range=7,targets=32,tp_cost=1200},
+--     [501] = {id=501,en="Wild Ginseng",ja="ワイルドジンセン",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=0,targets=1,tp_cost=1200},
+--     [502] = {id=502,en="Hungry Crunch",ja="ハングリークランチ",element=6,icon_id=46,monster_level=60,prefix="/monsterskill",range=2,targets=32,tp_cost=1800},
+--     [503] = {id=503,en="Mighty Snort",ja="マイティースノート",element=2,icon_id=42,monster_level=50,prefix="/monsterskill",range=7,targets=32,tp_cost=1200},
+--     [504] = {id=504,en="Soul Accretion",ja="ソウルアクリーション",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=2,targets=32,tp_cost=1300},
+--     [505] = {id=505,en="Miasmic Breath",ja="臭い酒息",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=12,targets=32,tp_cost=1800},
+--     [506] = {id=506,en="Putrid Breath",ja="忌まわしい嘆息",element=6,icon_id=46,monster_level=60,prefix="/monsterskill",range=12,targets=32,tp_cost=1500},
+--     [507] = {id=507,en="2,000 Needles",ja="針弐千本",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1900},
+--     [508] = {id=508,en="4,000 Needles",ja="針四千本",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=2500},
+--     [509] = {id=509,en="Predatory Glare",ja="プレダトリグレア",element=6,icon_id=46,monster_level=60,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [510] = {id=510,en="Vile Belch",ja="おくび",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [511] = {id=511,en="Hypnic Lamp",ja="ヒプニックランプ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+--     [512] = {id=512,en="Seismic Tail",ja="セイズミックテール",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=2000},
+--     [513] = {id=513,en="Seaspray",ja="潮泡",element=5,icon_id=45,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [514] = {id=514,en="Leeching Current",ja="渦潮",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=9,targets=32,tp_cost=1800},
+--     [515] = {id=515,en="Pecking Flurry",ja="ペッキングフラリー",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=4,targets=32,tp_cost=1000},
+--     [519] = {id=519,en="Onrush",ja="オンラッシュ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [520] = {id=520,en="Stampede",ja="轟足",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+--     [521] = {id=521,en="Flailing Trunk",ja="薙鼻",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1600},
+--     [522] = {id=522,en="Voracious Trunk",ja="吸印",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [523] = {id=523,en="Proboscis Shower",ja="プロバシスシャワー",element=5,icon_id=45,monster_level=50,prefix="/monsterskill",range=8,targets=1,tp_cost=1500},
+--     [524] = {id=524,en="Yawn",ja="ヤーン",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [525] = {id=525,en="Wing Slap",ja="ウィングスラップ",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+--     [526] = {id=526,en="Beak Lunge",ja="ビークランジ",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=7,targets=32,tp_cost=1200},
+--     [527] = {id=527,en="Frigid Shuffle",ja="クールダンス",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [528] = {id=528,en="Wing Whirl",ja="貝独楽",element=2,icon_id=42,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [529] = {id=529,en="Lava Spit",ja="ラヴァスピット",element=0,icon_id=40,monster_level=1,prefix="/monsterskill",range=12,targets=32,tp_cost=1000},
+--     [530] = {id=530,en="Sulfurous Breath",ja="サルファラスブレス",element=0,icon_id=40,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1200},
+--     [531] = {id=531,en="Ululation",ja="ユルレーション",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=12,targets=32,tp_cost=1200},
+--     [532] = {id=532,en="Magma Hoplon",ja="マグマホプロン",element=0,icon_id=40,monster_level=50,prefix="/monsterskill",range=0,targets=1,tp_cost=1200},
+--     [533] = {id=533,en="Gates of Hades",ja="ゲーツオブハデス",element=0,icon_id=40,monster_level=60,prefix="/monsterskill",range=12,targets=32,tp_cost=2500},
+--     [534] = {id=534,en="Incinerate",ja="インシナレート",element=0,icon_id=40,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1200},
+--     [535] = {id=535,en="Vampiric Root",ja="ヴァンピリックルート",element=6,icon_id=46,monster_level=70,prefix="/monsterskill",range=7,targets=32,tp_cost=1500},
+--     [536] = {id=536,en="Amber Scutum",ja="アンバースクトゥム",element=3,icon_id=43,monster_level=1,prefix="/monsterskill",range=0,targets=1,tp_cost=800},
+--     [537] = {id=537,en="Vitriolic Spray",ja="V.スプレー",element=0,icon_id=40,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [538] = {id=538,en="Thermal Pulse",ja="サーマルパルス",element=0,icon_id=40,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [539] = {id=539,en="Cannonball",ja="キャノンボール",element=3,icon_id=43,monster_level=20,prefix="/monsterskill",range=7,targets=32,tp_cost=1000},
+--     [540] = {id=540,en="Heat Barrier",ja="ヒートバリア",element=0,icon_id=40,monster_level=10,prefix="/monsterskill",range=0,targets=1,tp_cost=1200},
+--     [541] = {id=541,en="Vitriolic Shower",ja="V.シャワー",element=0,icon_id=40,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [542] = {id=542,en="Amplification",ja="ねたみ種",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=0,targets=1,tp_cost=1300},
+--     [543] = {id=543,en="Boiling Point",ja="罵詈雑言",element=5,icon_id=45,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [544] = {id=544,en="Xenoglossia",ja="自画自賛",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=8,targets=1,tp_cost=1000},
+--     [545] = {id=545,en="Amorphic Spikes",ja="槍玉",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=7,targets=32,tp_cost=1000},
+--     [546] = {id=546,en="Amorphic Scythe",ja="鎌かけ",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=7,targets=32,tp_cost=1000},
+--     [547] = {id=547,en="Synergism",ja="悪平等",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=8,targets=1,tp_cost=9999},
+--     [548] = {id=548,en="Feeble Bleat",ja="小咆哮",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [549] = {id=549,en="Frenzy Pollen",ja="フレンジーポレン",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=0,targets=1,tp_cost=3000},
+--     [550] = {id=550,en="Magma Fan",ja="マグマファン",element=0,icon_id=40,monster_level=50,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [551] = {id=551,en="Erratic Flutter",ja="エラチックフラッター",element=0,icon_id=40,monster_level=60,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+--     [552] = {id=552,en="Proboscis",ja="プロボシス",element=0,icon_id=40,monster_level=90,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [553] = {id=553,en="Erosion Dust",ja="妖鱗粉",element=0,icon_id=40,monster_level=80,prefix="/monsterskill",range=12,targets=32,tp_cost=1000},
+--     [554] = {id=554,en="Exuviation",ja="イグジュビエーション",element=0,icon_id=40,monster_level=70,prefix="/monsterskill",range=0,targets=1,tp_cost=2000},
+--     [555] = {id=555,en="Fire Break",ja="ファイアブレーク",element=0,icon_id=40,monster_level=95,prefix="/monsterskill",range=8,targets=32,tp_cost=2000},
+--     [556] = {id=556,en="Abominable Belch",ja="長大息",element=6,icon_id=46,monster_level=60,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+--     [557] = {id=557,en="Batterhorn",ja="バッターホーン",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=7,targets=32,tp_cost=1500},
+--     [558] = {id=558,en="Demoralizing Roar",ja="デモラライジングロア",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=10,targets=32,tp_cost=1000},
+--     [559] = {id=559,en="Boiling Blood",ja="ボイリングブラッド",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=0,targets=1,tp_cost=1500},
+--     [560] = {id=560,en="Granite Skin",ja="グラニットスキン",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=0,targets=1,tp_cost=1000},
+--     [561] = {id=561,en="Crippling Slam",ja="クリップリングスラム",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=2000},
+--     [562] = {id=562,en="Aqua Fortis",ja="アクアフォーティス",element=5,icon_id=45,monster_level=30,prefix="/monsterskill",range=12,targets=32,tp_cost=1300},
+--     [563] = {id=563,en="Regurgitation",ja="リガージテーション",element=5,icon_id=45,monster_level=20,prefix="/monsterskill",range=12,targets=32,tp_cost=1300},
+--     [564] = {id=564,en="Delta Thrust",ja="デルタスラスト",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=4,targets=32,tp_cost=1200},
+--     [565] = {id=565,en="Torpefying Charge",ja="T.チャージ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [566] = {id=566,en="Calcifying Mist",ja="C.ミスト",element=5,icon_id=45,monster_level=40,prefix="/monsterskill",range=12,targets=32,tp_cost=1800},
+--     [567] = {id=567,en="Insipid Nip",ja="インシピッドニップ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=7,targets=32,tp_cost=1000},
+--     [568] = {id=568,en="Pandemic Nip",ja="パンデミックニップ",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=7,targets=32,tp_cost=9999},
+--     [569] = {id=569,en="Bombilation",ja="ボンビレーション",element=7,icon_id=47,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [570] = {id=570,en="Cimicine Discharge",ja="C.ディスチャージ",element=7,icon_id=47,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [571] = {id=571,en="Emetic Discharge",ja="E.ディスチャージ",element=7,icon_id=47,monster_level=-1,prefix="/monsterskill",range=9,targets=32,tp_cost=9999},
+--     [572] = {id=572,en="Seedspray",ja="シードスプレー",element=3,icon_id=43,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1200},
+--     [573] = {id=573,en="Viscid Emission",ja="ヴィシドエミッション",element=3,icon_id=43,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [574] = {id=574,en="Rotten Stench",ja="ロトンステンチ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [575] = {id=575,en="Bloody Caress",ja="ブラッディカレス",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=7,targets=32,tp_cost=1200},
+--     [576] = {id=576,en="Fevered Pitch",ja="フィーバードピッチ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=7,targets=32,tp_cost=1000},
+--     [577] = {id=577,en="Plenilune Embrace",ja="P.エンブレイス",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=0,targets=1,tp_cost=2500},
+--     [578] = {id=578,en="Plenilune Embrace",ja="P.エンブレイス",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=0,targets=1,tp_cost=2500},
+--     [579] = {id=579,en="Nox Blast",ja="ノックスブラスト",element=7,icon_id=47,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [580] = {id=580,en="Asuran Claws",ja="アシュラクロー",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1800},
+--     [581] = {id=581,en="Cacophony",ja="カコフォニー",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=0,targets=1,tp_cost=1500},
+--     [582] = {id=582,en="Sudden Lunge",ja="サドンランジ",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=4,targets=32,tp_cost=1000},
+--     [583] = {id=583,en="Noisome Powder",ja="ノイサムパウダー",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [584] = {id=584,en="Nepenthean Hum",ja="ネペンシアンハム",element=2,icon_id=42,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [585] = {id=585,en="Spiral Spin",ja="スパイラルスピン",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+--     [586] = {id=586,en="Spiral Burst",ja="スパイラルバースト",element=0,icon_id=40,monster_level=40,prefix="/monsterskill",range=9,targets=32,tp_cost=1200},
+--     [587] = {id=587,en="Fuscous Ooze",ja="ファスカスウーズ",element=5,icon_id=45,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=2000},
+--     [588] = {id=588,en="Purulent Ooze",ja="ピュルラントウーズ",element=5,icon_id=45,monster_level=1,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [589] = {id=589,en="Corrosive Ooze",ja="コローシブウーズ",element=5,icon_id=45,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [590] = {id=590,en="Mucil. Ooze",ja="ミュシラジナスウーズ",element=5,icon_id=45,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=3000},
+--     [591] = {id=591,en="Dustvoid",ja="ダストヴォイド",element=2,icon_id=42,monster_level=1,prefix="/monsterskill",range=9,targets=32,tp_cost=1000},
+--     [592] = {id=592,en="Slaverous Gale",ja="スラヴェラスゲイル",element=3,icon_id=43,monster_level=10,prefix="/monsterskill",range=9,targets=32,tp_cost=2000},
+--     [593] = {id=593,en="Aeolian Void",ja="イオリアンヴォイド",element=2,icon_id=42,monster_level=20,prefix="/monsterskill",range=9,targets=32,tp_cost=1800},
+--     [594] = {id=594,en="Ex. Purgation",ja="E.パーゲーション",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=9,targets=32,tp_cost=2000},
+--     [595] = {id=595,en="Desiccation",ja="デシケーション",element=6,icon_id=46,monster_level=90,prefix="/monsterskill",range=9,targets=32,tp_cost=3000},
+--     [596] = {id=596,en="Disorienting Waul",ja="魂の咆哮",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=8,targets=32,tp_cost=2000},
+--     [597] = {id=597,en="Microspores",ja="マイクロスポア",element=7,icon_id=47,monster_level=-1,prefix="/monsterskill",range=9,targets=32,tp_cost=9999},
+--     [598] = {id=598,en="Blink of Peril",ja="ブリンクオブペリル",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+--     [599] = {id=599,en="Petal Pirouette",ja="ペタルピルエット",element=6,icon_id=46,monster_level=60,prefix="/monsterskill",range=7,targets=32,tp_cost=1300},
+--     [600] = {id=600,en="Hell Scissors",ja="ヘルシザース",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=2,targets=32,tp_cost=9999},
+--     [601] = {id=601,en="Fatal Scream",ja="フェイタルスクリーム",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+--     [602] = {id=602,en="Amnesic Blast",ja="アムネジクブラスト",element=7,icon_id=47,monster_level=60,prefix="/monsterskill",range=10,targets=32,tp_cost=2000},
+--     [603] = {id=603,en="Demonic Flower",ja="夢狂花",element=6,icon_id=46,monster_level=60,prefix="/monsterskill",range=4,targets=32,tp_cost=1000},
+--     [604] = {id=604,en="Bloody Beak",ja="ブラッディビーク",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=6,targets=32,tp_cost=1300},
+--     [605] = {id=605,en="Warped Wail",ja="ワープドウェール",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=12,targets=32,tp_cost=2000},
+--     [606] = {id=606,en="Reaving Wind",ja="リービンウィンド",element=2,icon_id=42,monster_level=20,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+--     [607] = {id=607,en="Storm Wing",ja="ストームウィング",element=2,icon_id=42,monster_level=1,prefix="/monsterskill",range=12,targets=32,tp_cost=1300},
+--     [608] = {id=608,en="Calamitous Wind",ja="カラミティウィンド",element=2,icon_id=42,monster_level=30,prefix="/monsterskill",range=12,targets=32,tp_cost=1700},
+--     [609] = {id=609,en="Severing Fang",ja="セヴァリンファング",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=4,targets=32,tp_cost=1500},
+--     [610] = {id=610,en="Aqua Blast",ja="アクアブラスト",element=5,icon_id=45,monster_level=10,prefix="/monsterskill",range=10,targets=32,tp_cost=1500},
+--     [611] = {id=611,en="Frozen Mist",ja="フローズンミスト",element=1,icon_id=41,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=3000},
+--     [612] = {id=612,en="Hydro Wave",ja="ハイドロウェーブ",element=5,icon_id=45,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=2500},
+--     [613] = {id=613,en="Ice Guillotine",ja="アイスギロティン",element=1,icon_id=41,monster_level=50,prefix="/monsterskill",range=5,targets=32,tp_cost=2000},
+--     [614] = {id=614,en="Aqua Cannon",ja="アクアキャノン",element=5,icon_id=45,monster_level=60,prefix="/monsterskill",range=11,targets=32,tp_cost=2000},
+--     [615] = {id=615,en="Venom Shower",ja="ベノムシャワー",element=5,icon_id=45,monster_level=60,prefix="/monsterskill",range=12,targets=32,tp_cost=2500},
+--     [616] = {id=616,en="Mega Scissors",ja="メガシザース",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=8,targets=32,tp_cost=2000},
+--     [617] = {id=617,en="Cytokinesis",ja="サイトキネシス",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=12,targets=32,tp_cost=1500},
+--     [618] = {id=618,en="Gravitic Horn",ja="グラビティホーン",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=12,targets=32,tp_cost=9999},
+--     [619] = {id=619,en="Quake Blast",ja="クエイクブラスト",element=3,icon_id=43,monster_level=50,prefix="/monsterskill",range=12,targets=32,tp_cost=2000},
+--     [620] = {id=620,en="Fluid Spread",ja="フルイドスプレッド",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=7,targets=32,tp_cost=1000},
+--     [621] = {id=621,en="Fluid Toss",ja="フルイドスルー",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=9,targets=32,tp_cost=800},
+--     [622] = {id=622,en="Dissolve",ja="ディゾルブ",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=8,targets=32,tp_cost=3000},
+--     [623] = {id=623,en="Mucus Spread",ja="ミューカススプレッド",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=6,targets=32,tp_cost=750},
+--     [624] = {id=624,en="Epoxy Spread",ja="イポクシースプレッド",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=6,targets=32,tp_cost=750},
+--     [625] = {id=625,en="Thousand Spears",ja="サウザンドスピア",element=6,icon_id=46,monster_level=80,prefix="/monsterskill",range=8,targets=32,tp_cost=2000},
+--     [626] = {id=626,en="Phaeosynthesis",ja="闇合成",element=7,icon_id=47,monster_level=80,prefix="/monsterskill",range=2,targets=1,tp_cost=2000},
+--     [627] = {id=627,en="Testudo Tremor",ja="テストゥドトレマー",element=3,icon_id=43,monster_level=60,prefix="/monsterskill",range=9,targets=32,tp_cost=2000},
+--     [628] = {id=628,en="Ecliptic Meteor",ja="エクリプスメテオ",element=7,icon_id=47,monster_level=70,prefix="/monsterskill",range=9,targets=32,tp_cost=2000},
+--     [629] = {id=629,en="Tepal Twist",ja="テパルツイスト",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+--     [630] = {id=630,en="Bloom Fouette",ja="ブルームフェッテ",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+--     [631] = {id=631,en="Petalback Spin",ja="ペタルバックスピン",element=6,icon_id=46,monster_level=90,prefix="/monsterskill",range=7,targets=32,tp_cost=2000},
+--     [632] = {id=632,en="Mortal Blast",ja="モータルブラスト",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+--     [633] = {id=633,en="Gorge",ja="ゴージ",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+--     [634] = {id=634,en="Disgorge",ja="ディスゴージ",element=3,icon_id=43,monster_level=-1,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+--     [635] = {id=635,en="Agaricus",ja="アガリクス",element=7,icon_id=47,monster_level=70,prefix="/monsterskill",range=9,targets=32,tp_cost=2000},
+--     [636] = {id=636,en="Terminal Sting",ja="ターミナルスピア",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=9,targets=32,tp_cost=9999},
+--     [637] = {id=637,en="Booming Bleat",ja="ブーミングブリート",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+--     [638] = {id=638,en="Vacant Gaze",ja="ベイカントゲイズ",element=6,icon_id=46,monster_level=70,prefix="/monsterskill",range=9,targets=32,tp_cost=1500},
+--     [639] = {id=639,en="Psyche Suction",ja="サイキサクション",element=6,icon_id=46,monster_level=70,prefix="/monsterskill",range=9,targets=32,tp_cost=2000},
+--     [640] = {id=640,en="Vermilion Wind",ja="V.ウィンド",element=2,icon_id=42,monster_level=40,prefix="/monsterskill",range=10,targets=32,tp_cost=1500},
+--     [641] = {id=641,en="Tyrant Tusk",ja="タイラントタスク",element=7,icon_id=47,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+--     [642] = {id=642,en="Virulent Haze",ja="ビルレントヘイズ",element=3,icon_id=43,monster_level=50,prefix="/monsterskill",range=8,targets=32,tp_cost=1200},
+--     [643] = {id=643,en="Torment Tusk",ja="トーメントタスク",element=7,icon_id=47,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+--     [644] = {id=644,en="Tarsal Slam",ja="ターサルスラム",element=6,icon_id=46,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+--     [645] = {id=645,en="Acheron Flame",ja="アケロンフレイム",element=0,icon_id=40,monster_level=60,prefix="/monsterskill",range=12,targets=32,tp_cost=3000},
+--     [646] = {id=646,en="Dread Wind",ja="ドレッドウィンド",element=2,icon_id=42,monster_level=50,prefix="/monsterskill",range=12,targets=32,tp_cost=2500},
+--     [647] = {id=647,en="Telsonic Tempest",ja="T.テンペスト",element=2,icon_id=42,monster_level=99,prefix="/monsterskill",range=8,targets=32,tp_cost=2000},
+--     [648] = {id=648,en="Preter. Gleam",ja="クイエセンスグリーム",element=6,icon_id=46,monster_level=80,prefix="/monsterskill",range=8,targets=32,tp_cost=1800},
+--     [649] = {id=649,en="Chupa Blossom",ja="チュパブロッサム",element=7,icon_id=47,monster_level=60,prefix="/monsterskill",range=8,targets=32,tp_cost=3000},
+--     [650] = {id=650,en="Blighted Bouquet",ja="ブライテッドブーケ",element=5,icon_id=45,monster_level=60,prefix="/monsterskill",range=11,targets=32,tp_cost=1800},
+--     [651] = {id=651,en="Booming Bomb.",ja="B.ボンビネーション",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=11,targets=32,tp_cost=1800},
+--     [652] = {id=652,en="Gush o' Goo",ja="グッシュ・オ・グー",element=5,icon_id=45,monster_level=50,prefix="/monsterskill",range=8,targets=32,tp_cost=1800},
+--     [653] = {id=653,en="Yawn",ja="ヤーン",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [654] = {id=654,en="Wing Slap",ja="ウィングスラップ",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
+--     [655] = {id=655,en="Beak Lunge",ja="ビークランジ",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=7,targets=32,tp_cost=1200},
+--     [656] = {id=656,en="Frigid Shuffle",ja="クールダンス",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [657] = {id=657,en="Wing Whirl",ja="貝独楽",element=2,icon_id=42,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [658] = {id=658,en="Whiteout",ja="ホワイトアウト",element=1,icon_id=41,monster_level=50,prefix="/monsterskill",range=12,targets=32,tp_cost=3000},
+--     [659] = {id=659,en="Keratinous Crush",ja="ケラチナスクラッシュ",element=3,icon_id=43,monster_level=-1,prefix="/monsterskill",range=10,targets=32,tp_cost=9999},
+--     [660] = {id=660,en="Rhinowrecker",ja="ライノレッカー",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=8,targets=32,tp_cost=2200},
+--     [661] = {id=661,en="Tropic Tenor",ja="トロピカルテノール",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=10,targets=32,tp_cost=2000},
+--     [662] = {id=662,en="Searing Effulgence",ja="S.エッファルジェンス",element=6,icon_id=46,monster_level=50,prefix="/monsterskill",range=8,targets=32,tp_cost=1800},
+--     [663] = {id=663,en="Tarichutoxin",ja="タリチャトクシン",element=5,icon_id=45,monster_level=50,prefix="/monsterskill",range=8,targets=32,tp_cost=1500},
+--     [664] = {id=664,en="Caliginosity",ja="カリギノシティー",element=7,icon_id=47,monster_level=70,prefix="/monsterskill",range=9,targets=32,tp_cost=2000},
+--     [665] = {id=665,en="Nat. Meditation",ja="ネイチャーメディテイト",element=6,icon_id=46,monster_level=30,prefix="/monsterskill",range=0,targets=1,tp_cost=1500},
+--     [666] = {id=666,en="Sensilla Blades",ja="センシラブレード",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [667] = {id=667,en="Tegmina Buffet",ja="テグミナバフェット",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=4,targets=32,tp_cost=1000},
+--     [668] = {id=668,en="Sanguinary Slash",ja="サングインスラッシュ",element=6,icon_id=46,monster_level=20,prefix="/monsterskill",range=10,targets=32,tp_cost=1000},
+--     [669] = {id=669,en="Orthopterror",ja="オーソプテラー",element=6,icon_id=46,monster_level=40,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [670] = {id=670,en="Temp. Upheaval",ja="T.アップヒーヴ",element=2,icon_id=42,monster_level=1,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [671] = {id=671,en="Slice 'n' Dice",ja="スライスンダイス",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [672] = {id=672,en="Blackout",ja="ブラックアウト",element=7,icon_id=47,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [673] = {id=673,en="Smould. Swarm",ja="S.スウォーム",element=0,icon_id=40,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [674] = {id=674,en="Foul Waters",ja="ファウルウォーター",element=5,icon_id=45,monster_level=1,prefix="/monsterskill",range=10,targets=32,tp_cost=1000},
+--     [675] = {id=675,en="Pestilent Plume",ja="ペステレントプルーム",element=7,icon_id=47,monster_level=10,prefix="/monsterskill",range=10,targets=32,tp_cost=1000},
+--     [676] = {id=676,en="Deadening Haze",ja="デッドヘイズ",element=5,icon_id=45,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [677] = {id=677,en="Venomous Vapor",ja="ヴェノムヴェイパー",element=5,icon_id=45,monster_level=30,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [678] = {id=678,en="Retinal Glare",ja="レテナグレア",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [679] = {id=679,en="Sylvan Slumber",ja="シルバンスランバー",element=7,icon_id=47,monster_level=10,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [680] = {id=680,en="Crushing Gaze",ja="クラッシングゲイズ",element=2,icon_id=42,monster_level=20,prefix="/monsterskill",range=8,targets=32,tp_cost=1000},
+--     [681] = {id=681,en="Vaskania",ja="バスカニア",element=7,icon_id=47,monster_level=-1,prefix="/monsterskill",range=8,targets=32,tp_cost=9999},
+--     [682] = {id=682,en="Whirling Inferno",ja="W.インフェルノ",element=0,icon_id=40,monster_level=50,prefix="/monsterskill",range=9,targets=32,tp_cost=1800},
+--     [683] = {id=683,en="Benumbing Blaze",ja="ベナムブレイズ",element=0,icon_id=40,monster_level=99,prefix="/monsterskill",range=9,targets=32,tp_cost=2500},
+--     [688] = {id=688,en="Frizz",ja="メラ",element=0,icon_id=40,monster_level=1,prefix="/monsterskill",range=12,targets=32,tp_cost=1000},
+--     [689] = {id=689,en="Jittering Jig",ja="情熱の律動",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=1,tp_cost=700},
+--     [690] = {id=690,en="Romp",ja="ロンプ",element=6,icon_id=46,monster_level=10,prefix="/monsterskill",range=4,targets=32,tp_cost=700},
+--     [691] = {id=691,en="Frenetic Flurry",ja="熱狂撃",element=6,icon_id=46,monster_level=1,prefix="/monsterskill",range=2,targets=32,tp_cost=1500},
 
 return l
