@@ -24,11 +24,13 @@ c.Metric = Model.Enum.Metric
 ------------------------------------------------------------------------------------------------------
 c.Damage.By_Type = function(player_name, damage_type, percent, justify)
     local focused_damage = Model.Get.Data(player_name, damage_type, c.Metric.TOTAL)
+    local color = Window.Colors.WHITE
+    if focused_damage == 0 then color = Window.Colors.DIM end
     if percent then
         local total_damage = c.Util.Total_Damage(player_name)
-        return c.String.Format_Percent(focused_damage, total_damage, justify)
+        return UI.TextColored(color, c.String.Format_Percent(focused_damage, total_damage, justify))
     end
-    return c.String.Format_Number(focused_damage, justify)
+    return UI.TextColored(color, c.String.Format_Number(focused_damage, justify))
 end
 
 ------------------------------------------------------------------------------------------------------

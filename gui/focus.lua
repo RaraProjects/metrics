@@ -79,8 +79,8 @@ f.Display.Melee = function(player_name)
 
                 -- Data
                 UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE, true))
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE, true)
                 UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE)
                 if mob_heal > 0 then UI.TableNextColumn() UI.Text(Col.String.Format_Number(mob_heal)) end
                 if enspell > 0  then UI.TableNextColumn() UI.Text(Col.String.Format_Number(enspell)) end
@@ -100,9 +100,9 @@ f.Display.Melee = function(player_name)
 
                     -- Data
                     UI.TableNextRow()
-                    UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN))
+                    UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN)
                     UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN)
-                    UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFH))
+                    UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFH)
                     UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFH)
                     UI.EndTable()
                 end
@@ -122,10 +122,10 @@ f.Display.Melee = function(player_name)
 
                         -- Data
                         UI.TableNextRow()
-                        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK))
-                        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK, true))
+                        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK)
+                        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK, true)
                         UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK)
-                        UI.TableNextColumn() UI.Text(Col.String.Format_Percent(kick_count, melee_count))
+                        UI.TableNextColumn() Col.String.Format_Percent(kick_count, melee_count)
                         UI.EndTable()
                     end
                     UI.TreePop()
@@ -161,8 +161,8 @@ f.Display.Ranged = function(player_name)
 
                 -- Data
                 UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable, true))
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable, true)
                 UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable)
                 UI.TableNextColumn() UI.Text(Col.Crit.Damage(player_name, trackable))
                 UI.TableNextColumn() UI.Text(Col.Crit.Damage(player_name, trackable, true))
@@ -236,11 +236,11 @@ f.Display.WS_and_SC = function(player_name)
 
                 -- Data
                 UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable_ws))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable_ws, true))
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_ws)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_ws, true)
                 UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable_ws)
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable_sc))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable_sc, true))
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_sc)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_sc, true)
                 UI.EndTable()
             end
             if Model.Data.Trackable[Model.Enum.Trackable.WS] and Model.Data.Trackable[Model.Enum.Trackable.WS][player_name] then
@@ -280,12 +280,12 @@ f.Display.Magic = function(player_name)
 
                 -- Data
                 UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable, true))
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable, true)
                 UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name))
                 UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name, true))
                 UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name, true, true))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.ENSPELL))
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ENSPELL)
                 UI.EndTable()
             end
             f.Display.Single_Data(player_name, Model.Enum.Trackable.MAGIC)
@@ -316,8 +316,8 @@ f.Display.Ability = function(player_name)
 
                 -- Data
                 UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable, true))
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable, true)
                 UI.EndTable()
             end
             f.Display.Single_Data(player_name, Model.Enum.Trackable.ABILITY)
@@ -348,7 +348,7 @@ f.Display.Healing = function(player_name)
 
                 -- Data
                 UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, trackable))
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
                 UI.TableNextColumn() UI.Text(Col.Healing.Overcure(player_name))
                 UI.EndTable()
             end
@@ -383,12 +383,12 @@ f.Display.Pet = function(player_name)
 
                 -- Data
                 UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET, true))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS))
-                UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY))
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET, true)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY)
                 UI.EndTable()
             end
             f.Display.Pet_Single_Data(player_name)

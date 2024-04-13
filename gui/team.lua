@@ -142,20 +142,20 @@ t.Display.Rows = function(player_name)
     UI.TableNextColumn() Col.Acc.Running(player_name)
     if not t.Display.Flags.Total_Damage_Only then
         UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Misc.COMBINED, true)
-        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE, false, true))
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE, false, true)
         if t.Display.Flags.Crit then UI.TableNextColumn() UI.Text(Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE, true)) end
-        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.WS, false, true))
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.WS, false, true)
         if t.Settings.Include_SC_Damage then UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.SC, false, true)) end
-        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.RANGED, false, true))
-        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC, false, true))
-        UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.ABILITY, false, true))
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.RANGED, false, true)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC, false, true)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ABILITY, false, true)
         if t.Display.Flags.Pet then
-            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE, false, true))
-            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS, false, true))
-            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED, false, true))
-            UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY, false, true))
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE, false, true)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS, false, true)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED, false, true)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY, false, true)
         end
-        if t.Display.Flags.Healing then UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.HEALING, false, true)) end
+        if t.Display.Flags.Healing then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.HEALING, false, true) end
         -- if t.Display.Flags.Deaths then UI.TableNextColumn() UI.Text(Col.Deaths(player_name)) end
     end
 end
