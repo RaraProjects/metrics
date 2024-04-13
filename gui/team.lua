@@ -165,13 +165,13 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Loads shows just the Team tab with just the player.
 ------------------------------------------------------------------------------------------------------
-t.Mini_Mode = function()
+t.Nano_Mode = function()
     local flags = Window.Columns.Flags.None
     local player = A.Mob.Get_Mob_By_Target(A.Enum.Mob.ME)
     if not player then return nil end
     local player_name = player.name
 
-    if UI.BeginTable("Team Mini", 3, Window.Table.Flags.None) then
+    if UI.BeginTable("Team Nano", 3, Window.Table.Flags.None) then
         UI.TableSetupColumn("%T", flags)
         UI.TableSetupColumn("Total", flags)
         UI.TableSetupColumn("%A-" .. Model.Settings.Running_Accuracy_Limit, flags)
@@ -184,8 +184,36 @@ t.Mini_Mode = function()
 
         UI.EndTable()
     end
+end
 
-    -- Toggle mini-mode off
+------------------------------------------------------------------------------------------------------
+-- Loads shows just the Team tab with just the player.
+------------------------------------------------------------------------------------------------------
+t.Mini_Mode = function()
+    local flags = Window.Columns.Flags.None
+
+    if UI.BeginTable("Team Mini", 4, Window.Table.Flags.Borders) then
+        UI.TableSetupColumn("Name", flags)
+        UI.TableSetupColumn("%T", flags)
+        UI.TableSetupColumn("Total", flags)
+        UI.TableSetupColumn("%A-" .. Model.Settings.Running_Accuracy_Limit, flags)
+        UI.TableHeadersRow()
+
+        local player_name = "Debug"
+        Model.Sort.Damage()
+        for rank, data in ipairs(Model.Data.Total_Damage_Sorted) do
+            if rank <= t.Settings.Rank_Cutoff then
+                player_name = data[1]
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text(player_name)
+                UI.TableNextColumn() UI.Text(Col.Damage.Total(player_name, true))
+                UI.TableNextColumn() UI.Text(Col.Damage.Total(player_name))
+                UI.TableNextColumn() UI.Text(Col.Acc.Running(player_name))
+            end
+        end
+
+        UI.EndTable()
+    end
 end
 
 return t

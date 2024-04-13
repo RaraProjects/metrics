@@ -23,6 +23,8 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ]]
 
+-- Horizon Approved Addon 0457
+
 addon.author = "Metra"
 addon.name = "Metrics"
 addon.version = "0.9.0"
@@ -148,10 +150,13 @@ ashita.events.register('command', 'command_cb', function (e)
             Window.Util.Toggle_Visibility()
         elseif arg == "debug" then
             _Debug.Toggle()
+        elseif arg == "nano" then
+            Window.Util.Toggle_Nano()
         elseif arg == "mini" then
             Window.Util.Toggle_Mini()
         elseif arg == "test" and _Debug.Enabled then
-            _Debug.Unit.Tests.Test()
+            --_Debug.Unit.Tests.Test()
+            -- UI.BeginTabItem(Window.Tabs.Names.FOCUS)
         end
     end
 end)

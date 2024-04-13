@@ -6,6 +6,7 @@ w.Window = {
     Font_Scaling = 0.85,
     Style = 1,
     Visible = true,
+    Nano = false,
     Mini = false,
     Flags = bit.bor(
     ImGuiWindowFlags_AlwaysAutoResize,
@@ -158,7 +159,9 @@ w.Populate = function()
     if not A.States.Zoning and w.Window.Visible then
         if UI.Begin(w.Window.Name, {w.Window.Visible}, w.Window.Flags) then
             w.Window.Visible = -1
-            if w.Window.Mini then
+            if w.Window.Nano then
+                Team.Nano_Mode()
+            elseif w.Window.Mini then
                 Team.Mini_Mode()
             else
                 if _Debug.Is_Enabled() then UI.Text("Error Count: " .. tostring(_Debug.Error.Util.Error_Count())) end
@@ -270,6 +273,15 @@ end
 ------------------------------------------------------------------------------------------------------
 w.Util.Toggle_Mini = function()
     w.Window.Mini = not w.Window.Mini
+    if w.Window.Mini then w.Window.Nano = false end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles nano mode.
+------------------------------------------------------------------------------------------------------
+w.Util.Toggle_Nano = function()
+    w.Window.Nano = not w.Window.Nano
+    if w.Window.Nano then w.Window.Mini = false end
 end
 
 ------------------------------------------------------------------------------------------------------
