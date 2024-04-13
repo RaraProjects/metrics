@@ -37,6 +37,28 @@ a.Enum.Ability = {
     BLOODPACTWARD = 10, -- Type: 
     PETABILITY    = 18, -- Type: Offensive BST/SMN ability.
 }
+a.Enum.Animation = {
+    MELEE_MAIN    = 0,
+    MELEE_OFFHAND = 1,
+    MELEE_KICK    = 2,
+    MELEE_KICK2   = 3,
+    THROWING      = 4,
+}
+a.Enum.Message = {
+    HIT        = 1,
+    MOBHEAL3   = 3,
+    MOBHEAL373 = 373,
+    MISS       = 15,
+    SHADOWS    = 31,
+    DODGE      = 32,
+    CRIT       = 67,
+    RANGEPUP   = 185,
+    RANGEHIT   = 352,
+    RANGECRIT  = 353,
+    RANGEMISS  = 354,
+    SQUARE     = 576,
+    TRUE       = 577,
+}
 
 a.Debug = true
 

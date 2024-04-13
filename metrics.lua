@@ -55,6 +55,7 @@ require("debug.mob_viewer")
 require("debug.packet_viewer")
 require("debug.error_log")
 require("debug.data_viewer")
+require("debug.unit_tests")
 
 -- Initialization
 Window.Initialize()
@@ -128,7 +129,9 @@ end)
 -- https://github.com/ocornut/imgui/blob/master/imgui_tables.cpp
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('d3d_present', 'present_cb', function ()
-    UI.ShowDemoWindow()
+    if _Debug.Enabled then
+        UI.ShowDemoWindow()
+    end
     Window.Populate()
 end)
 
@@ -147,6 +150,8 @@ ashita.events.register('command', 'command_cb', function (e)
             _Debug.Toggle()
         elseif arg == "mini" then
             Window.Util.Toggle_Mini()
+        elseif arg == "test" and _Debug.Enabled then
+            _Debug.Unit.Tests.Test()
         end
     end
 end)

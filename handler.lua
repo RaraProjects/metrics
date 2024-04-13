@@ -105,7 +105,7 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
     }
 
     -- Perfect Dodge miss, miss, mob heal, shadows shouldn't count toward damage.
-    if message_id == 32 or message_id == 373 or message_id == 15 or message_id == 31 then
+    if message_id == A.Enum.Message.DODGE or message_id == A.Enum.Message.MOBHEAL373 or message_id == A.Enum.Message.MISS or message_id == A.Enum.Message.SHADOWS then
         damage = 0
     end
 
@@ -120,11 +120,11 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
     end
 
     -- Melee ////////////////////////////////////////////////////////
-    if animation_id >= 0 and animation_id < 4 then
+    if animation_id >= A.Enum.Animation.MELEE_MAIN and animation_id < A.Enum.Animation.THROWING then
         Model.Update.Data(p.Mode.INC, damage, audits, melee_type_broad, p.Metric.TOTAL)
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad, p.Metric.COUNT)
     -- Throwing /////////////////////////////////////////////////////
-    elseif animation_id == 4 then
+    elseif animation_id == A.Enum.Animation.THROWING then
         throwing = true
         Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.RANGED, p.Metric.TOTAL)
         Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.COUNT)
@@ -156,55 +156,52 @@ p.Handler.Melee = function(metadata, player_name, target_name, owner_mob)
     end    
 
     -- Hit //////////////////////////////////////////////////////////
-    if message_id == 1 then
+    if message_id == A.Enum.Message.HIT then
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_discrete, p.Metric.HIT_COUNT)
         Model.Update.Running_Accuracy(player_name, true)
     -- Healing with melee attacks ///////////////////////////////////
-    elseif message_id == 3 or message_id == 373 then
+    elseif message_id == A.Enum.Message.MOBHEAL3 or message_id == A.Enum.Message.MOBHEAL373 then
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_discrete, p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC, damage, audits, melee_type_broad,    p.Metric.MOB_HEAL)
     -- Misses ///////////////////////////////////////////////////////
-    elseif message_id == 15 then
+    elseif message_id == A.Enum.Message.MISS then
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad, p.Metric.MISS_COUNT)
         Model.Update.Running_Accuracy(player_name, false)
-    -- DRK vs. Omen Gorger //////////////////////////////////////////
-    elseif message_id == 30 then
-        _Debug.Error.Add("Handler.Melee: {" .. tostring(player_name) .. "} Attack Nuance 30 -- DRK vs. Omen Gorger")
     -- Attack absorbed by shadows ///////////////////////////////////
-    elseif message_id == 31 then
+    elseif message_id == A.Enum.Message.SHADOWS then
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_discrete, p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.SHADOWS)
     -- Attack dodged (Perfect Dodge) ////////////////////////////////
     -- Remove the count so perfect dodge doesn't count.
-    elseif message_id == 32 then
+    elseif message_id == A.Enum.Message.DODGE then
         Model.Update.Data(p.Mode.INC,     -1, audits, melee_type_broad,    p.Metric.COUNT)
         Model.Update.Data(p.Mode.INC,     -1, audits, melee_type_discrete, p.Metric.COUNT)
     -- Critical Hits ////////////////////////////////////////////////
-    elseif message_id == 67 then
+    elseif message_id == A.Enum.Message.CRIT then
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_discrete, p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC,      1, audits, melee_type_broad,    p.Metric.CRIT_COUNT)
         Model.Update.Data(p.Mode.INC, damage, audits, melee_type_broad,    p.Metric.CRIT_DAMAGE)
         Model.Update.Running_Accuracy(player_name, true)
     -- Throwing Critical Hit ////////////////////////////////////////
-    elseif message_id == 353 then
+    elseif message_id == A.Enum.Message.RANGECRIT then
         Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.CRIT_COUNT)
         Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.RANGED, p.Metric.CRIT_DAMAGE)
         Model.Update.Running_Accuracy(player_name, true)
     -- Throwing Miss ////////////////////////////////////////////////
-    elseif message_id == 354 then
+    elseif message_id == A.Enum.Message.RANGEMISS then
         Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.MISS_COUNT)
         Model.Update.Running_Accuracy(player_name, false)
     -- Throwing Square Hit //////////////////////////////////////////
-    elseif message_id == 576 then
+    elseif message_id == A.Enum.Message.SQUARE then
         Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.HIT_COUNT)
         Model.Update.Running_Accuracy(player_name, true)
     -- Throwing Truestrike //////////////////////////////////////////
-    elseif message_id == 577 then
+    elseif message_id == A.Enum.Message.TRUE then
         Model.Update.Data(p.Mode.INC,      1, audits, p.Trackable.RANGED, p.Metric.HIT_COUNT)
         Model.Update.Running_Accuracy(player_name, true)
     else
@@ -223,13 +220,13 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 p.Util.Discrete_Melee_Type = function(animation_id)
-    if animation_id == 0 then
+    if animation_id == A.Enum.Animation.MELEE_MAIN then
         return p.Trackable.MELEE_MAIN
-    elseif animation_id == 1 then
+    elseif animation_id == A.Enum.Animation.MELEE_OFFHAND then
         return p.Trackable.MELEE_OFFH
-    elseif animation_id == 2 or animation_id == 3 then
+    elseif animation_id == A.Enum.Animation.MELEE_KICK or animation_id == A.Enum.Animation.MELEE_KICK2 then
         return p.Trackable.MELEE_KICK
-    elseif animation_id == 4 then
+    elseif animation_id == A.Enum.Animation.THROWING then
         return p.Trackable.THROWING
     else
         return p.Trackable.DEFAULT
@@ -302,37 +299,37 @@ p.Handler.Ranged = function(metadata, player_name, target_name, owner_mob)
     end
 
     -- Miss /////////////////////////////////////////////////////////
-    if message_id == 354 then
+    if message_id == A.Enum.Message.RANGEMISS then
     	Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.MISS_COUNT)
         Model.Update.Running_Accuracy(player_name, false)
     	return damage
     -- Shadows //////////////////////////////////////////////////////
-    elseif message_id == 31 then
+    elseif message_id == A.Enum.Message.SHADOWS then
         Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.SHADOWS)
         return damage
     -- Puppet ///////////////////////////////////////////////////////
-    elseif message_id == 185 then
+    elseif message_id == A.Enum.Message.RANGEPUP then
         Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.TOTAL)
         Model.Update.Running_Accuracy(player_name, true)
     -- Regular Hit //////////////////////////////////////////////////
-    elseif message_id == 352 then
+    elseif message_id == A.Enum.Message.RANGEHIT then
         Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.TOTAL)
         Model.Update.Running_Accuracy(player_name, true)
     -- Square Hit ///////////////////////////////////////////////////
-    elseif message_id == 576 then
+    elseif message_id == A.Enum.Message.SQUARE then
         Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.TOTAL)
         Model.Update.Running_Accuracy(player_name, true)
     -- Truestrike ///////////////////////////////////////////////////
-    elseif message_id == 577 then
+    elseif message_id == A.Enum.Message.TRUE then
         Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.TOTAL)
         Model.Update.Running_Accuracy(player_name, true)
     -- Crit /////////////////////////////////////////////////////////
-    elseif message_id == 353 then
+    elseif message_id == A.Enum.Message.RANGECRIT then
         Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.HIT_COUNT)
         Model.Update.Data(p.Mode.INC,      1, audits, ranged_type, p.Metric.CRIT_COUNT)
         Model.Update.Data(p.Mode.INC, damage, audits, ranged_type, p.Metric.CRIT_DAMAGE)
