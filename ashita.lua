@@ -30,6 +30,11 @@ a.Enum.Mob = {
     PLAYERTYPE = 0, -- Type
     PETTYPE    = 2, -- Type
 }
+a.Enum.Spawn_Flags = {
+    MAINPLAYER = 525,
+    OTHERPLAYER = 13,
+    NPC = 2,
+}
 a.Enum.Ability = {
     NORMAL        = 1,  -- Type: Normal Ability
     PETLOGISTICS  = 2,  -- Type: Fight, Heel, Stay, etc.

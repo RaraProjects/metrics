@@ -78,6 +78,9 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     if packet.id == 0xB then
         A.Util.Zoning(true)
 
+    -- 200 0x0C8 Alliance Update
+    -- 221 0x0DD Party Member Update
+
     -- End Zone
     elseif packet.id == 0xA then
         A.Util.Zoning(false)
