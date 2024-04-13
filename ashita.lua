@@ -65,8 +65,6 @@ a.Enum.Message = {
     TRUE       = 577,
 }
 
-a.Debug = true
-
 -- ------------------------------------------------------------------------------------------------------
 -- https://github.com/AshitaXI/Ashita-v4beta/blob/main/plugins/sdk/Ashita.h
 -- Memory Manager Functions
