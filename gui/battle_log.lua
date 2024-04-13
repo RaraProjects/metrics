@@ -5,7 +5,7 @@ bl.Display = {}
 bl.Util = {}
 
 bl.Flags = {
-    Melee   = true,
+    Melee   = false,
     Ranged  = true,
     WS      = true,
     SC      = true,
@@ -16,7 +16,7 @@ bl.Flags = {
     Deaths  = true,
 }
 bl.Flag_Defaults = {
-    Melee   = true,
+    Melee   = false,
     Ranged  = true,
     WS      = true,
     SC      = true,
