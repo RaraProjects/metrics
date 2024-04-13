@@ -100,9 +100,9 @@ c.Damage.Total = function(player_name, percent)
     local grand_total = c.Util.Total_Damage(player_name)
     if percent then
         local party_damage = Model.Get.Total_Party_Damage()
-        return c.String.Format_Percent(grand_total, party_damage)
+        return UI.Text(c.String.Format_Percent(grand_total, party_damage))
     end
-    return c.String.Format_Number(grand_total)
+    return UI.Text(c.String.Format_Number(grand_total))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -144,11 +144,11 @@ c.Acc.By_Type = function(player_name, acc_type)
         attempts = Model.Get.Data(player_name, acc_type, c.Metric.COUNT)
     end
 
-    if Team.Settings.Accuracy_Show_Attempts then
-        return c.String.Format_Number(attempts)
-    end
+    local color = Window.Colors.WHITE
+    local percent = c.String.Raw_Percent(hits, attempts)
+    if percent <= Model.Settings.Accuracy_Warning then color = Window.Colors.RED end
 
-    return c.String.Format_Percent(hits, attempts)
+    return UI.TextColored(color, c.String.Format_Percent(hits, attempts))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -160,7 +160,10 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Acc.Running = function(player_name)
     local accuracy = Model.Get.Running_Accuracy(player_name)
-    return c.String.Format_Percent(accuracy[1], accuracy[2])
+    local color = Window.Colors.WHITE
+    local percent = c.String.Raw_Percent(accuracy[1], accuracy[2])
+    if percent <= Model.Settings.Accuracy_Warning then color = Window.Colors.RED end
+    return UI.TextColored(color, c.String.Format_Percent(accuracy[1], accuracy[2]))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -423,7 +426,7 @@ end
 c.String.Format_Number = function(number)
     if Team.Settings.Condensed_Numbers then return c.String.Compact_Number(number) end
     number = math.floor(number)
-    return c.String.Add_Comma(number)
+    return string.format("%6d", number)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -434,10 +437,10 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 c.String.Format_Percent = function(numerator, denominator)
-    if not denominator or denominator == 0 then return "0" end
+    if not denominator or denominator == 0 then return string.format("%5.1f", 0) end
     local percent = (numerator / denominator) * 100
-    if percent == 0 then return "0" end
-    local percent_string = string.format("%.1f", percent)
+    if percent == 0 then return string.format("%5.1f", 0) end
+    local percent_string = string.format("%5.1f", percent)
     return tostring(percent_string)
 end
 
@@ -464,34 +467,31 @@ c.String.Compact_Number = function(number)
     number = number or 0
 
     local display_number, suffix
-    local format = true
+    local length = 6
 
     -- Millions
     if number >= 1000000 then
         display_number = (number / 1000000)
         suffix = " M"
-
+        length = length - 2
     -- Thousands
     elseif number >= 1000 then
         display_number = (number / 1000)
         suffix = " K"
-
+        length = length - 2
     -- No adjustments necessary
     else
         display_number = number
         suffix = ""
-        format = false
     end
 
-    if number == 0 then return tostring(number) end
+    if number == 0 then return string.format("%" .. length .. "d", number) end
 
-    if format then display_number = string.format("%.1f", display_number) end
-    display_number = display_number..suffix
-
-    return tostring(display_number)
+    return string.format("%" .. length .. "d", display_number) .. suffix
 end
 
 ------------------------------------------------------------------------------------------------------
+-- NOT IN USE. I COULDN'T GET THIS TO WORK WITH RIGHT ALIGNMENT.
 -- Adds commas to large numbers for easier readability.
 ------------------------------------------------------------------------------------------------------
 ---@param number number the number to be formatted with commas.
@@ -500,6 +500,7 @@ end
 c.String.Add_Comma = function(number)
     -- Take the string apart
     local str = tostring(number)
+    str = string.format("%6.0f", str)
     local length = string.len(str)
     local numbers = {}
     for i = 1, length, 1 do numbers[i] = string.byte(str, i) end

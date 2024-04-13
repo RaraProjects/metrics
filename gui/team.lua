@@ -38,13 +38,11 @@ t.Defaults.Flags = {
 t.Settings = {
     Rank_Cutoff = 6,
     Condensed_Numbers = false,
-    Accuracy_Show_Attempts = false,
     Include_SC_Damage = false
 }
 t.Defaults.Settings = {
     Rank_Cutoff = 6,
     Condensed_Numbers = false,
-    Accuracy_Show_Attempts = false,
     Include_SC_Damage = false
 }
 
@@ -139,11 +137,11 @@ end
 t.Display.Rows = function(player_name)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(player_name)
-    UI.TableNextColumn() UI.Text(Col.Damage.Total(player_name, true))
-    UI.TableNextColumn() UI.Text(Col.Damage.Total(player_name))
-    UI.TableNextColumn() UI.Text(Col.Acc.Running(player_name))
+    UI.TableNextColumn() Col.Damage.Total(player_name, true)
+    UI.TableNextColumn() Col.Damage.Total(player_name)
+    UI.TableNextColumn() Col.Acc.Running(player_name)
     if not t.Display.Flags.Total_Damage_Only then
-        UI.TableNextColumn() UI.Text(Col.Acc.By_Type(player_name, Model.Enum.Misc.COMBINED))
+        UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Misc.COMBINED)
         UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE))
         if t.Display.Flags.Crit then UI.TableNextColumn() UI.Text(Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE)) end
         UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.WS))
@@ -178,9 +176,9 @@ t.Nano_Mode = function()
         UI.TableHeadersRow()
 
         UI.TableNextRow()
-        UI.TableNextColumn() UI.Text(Col.Damage.Total(player_name, true))
-        UI.TableNextColumn() UI.Text(Col.Damage.Total(player_name))
-        UI.TableNextColumn() UI.Text(Col.Acc.Running(player_name))
+        UI.TableNextColumn() Col.Damage.Total(player_name, true)
+        UI.TableNextColumn() Col.Damage.Total(player_name)
+        UI.TableNextColumn() Col.Acc.Running(player_name)
 
         UI.EndTable()
     end
@@ -206,9 +204,9 @@ t.Mini_Mode = function()
                 player_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(player_name)
-                UI.TableNextColumn() UI.Text(Col.Damage.Total(player_name, true))
-                UI.TableNextColumn() UI.Text(Col.Damage.Total(player_name))
-                UI.TableNextColumn() UI.Text(Col.Acc.Running(player_name))
+                UI.TableNextColumn() Col.Damage.Total(player_name, true)
+                UI.TableNextColumn() Col.Damage.Total(player_name)
+                UI.TableNextColumn() Col.Acc.Running(player_name)
             end
         end
 

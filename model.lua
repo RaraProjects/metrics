@@ -91,7 +91,8 @@ m.Healing_Max = {
 }
 
 m.Settings = {
-	Running_Accuracy_Limit = 25
+	Running_Accuracy_Limit = 25,
+	Accuracy_Warning = 0.80
 }
 m.Settings.Default = {
 	Running_Accuracy_Limit = 25
@@ -1010,7 +1011,7 @@ end
 -- Returns the players accuracy for the last running accuracy limit amount of attempts.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string primary index for the Running_Accuracy_Data table
----@return table
+---@return table {hits, count}
 ------------------------------------------------------------------------------------------------------
 m.Get.Running_Accuracy = function(player_name)
 	-- This error can occur in mini mode when trying to load data before the player has been initialized. Not a big deal.
