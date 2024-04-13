@@ -163,6 +163,8 @@ ashita.events.register('command', 'command_cb', function (e)
             Window.Util.Toggle_Nano()
         elseif arg == "mini" then
             Window.Util.Toggle_Mini()
+        elseif arg == "full" then
+            Window.Util.Enable_Full()
         elseif arg == "test" and _Debug.Enabled then
             --_Debug.Unit.Tests.Avatar_Rage()
             -- _Debug.Message("Command: " .. tostring(A.Party.In_Party(command_args[3])))
