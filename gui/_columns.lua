@@ -19,15 +19,16 @@ c.Metric = Model.Enum.Metric
 ---@param player_name string
 ---@param damage_type string a trackable from the model.
 ---@param percent? boolean whether or not the damage should be raw or percent.
+---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Damage.By_Type = function(player_name, damage_type, percent)
+c.Damage.By_Type = function(player_name, damage_type, percent, justify)
     local focused_damage = Model.Get.Data(player_name, damage_type, c.Metric.TOTAL)
     if percent then
         local total_damage = c.Util.Total_Damage(player_name)
-        return c.String.Format_Percent(focused_damage, total_damage)
+        return c.String.Format_Percent(focused_damage, total_damage, justify)
     end
-    return c.String.Format_Number(focused_damage)
+    return c.String.Format_Number(focused_damage, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -48,15 +49,16 @@ end
 ---@param pet_name string the pet that we want the damage for.
 ---@param damage_type string a trackable from the model.
 ---@param percent? boolean whether or not the damage should be raw or percent.
+---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Damage.Pet_By_Type = function(player_name, pet_name, damage_type, percent)
+c.Damage.Pet_By_Type = function(player_name, pet_name, damage_type, percent, justify)
     local focused_damage = Model.Get.Pet_Data(player_name, pet_name, damage_type, c.Metric.TOTAL)
     if percent then
         local total_damage = Model.Get.Pet_Data(player_name, pet_name, c.Trackable.TOTAL, c.Metric.TOTAL)
-        return c.String.Format_Percent(focused_damage, total_damage)
+        return c.String.Format_Percent(focused_damage, total_damage, justify)
     end
-    return c.String.Format_Number(focused_damage)
+    return c.String.Format_Number(focused_damage, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -65,28 +67,30 @@ end
 ---@param player_name string
 ---@param percent? boolean whether or not the damage should be raw or percent.
 ---@param magic_only? boolean whether or not the denominator for percent should be total damage or just magic damage.
+---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Damage.Burst = function(player_name, percent, magic_only)
+c.Damage.Burst = function(player_name, percent, magic_only, justify)
     local focused_damage = Model.Get.Data(player_name, Model.Enum.Trackable.MAGIC, c.Metric.BURST_DAMAGE)
     if percent then
         local total_damage = c.Util.Total_Damage(player_name)
         if magic_only then
             total_damage = Model.Get.Data(player_name, c.Trackable.MAGIC, c.Metric.TOTAL)
         end
-        return c.String.Format_Percent(focused_damage, total_damage)
+        return c.String.Format_Percent(focused_damage, total_damage, justify)
     end
-    return c.String.Format_Number(focused_damage)
+    return c.String.Format_Number(focused_damage, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Grabs the overcure amount for the player.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Healing.Overcure = function(player_name)
-    return c.String.Format_Number(Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, c.Metric.OVERCURE))
+c.Healing.Overcure = function(player_name, justify)
+    return c.String.Format_Number(Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, c.Metric.OVERCURE), justify)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -94,15 +98,16 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param percent? boolean whether or not the damage should be raw or percent.
+---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Damage.Total = function(player_name, percent)
+c.Damage.Total = function(player_name, percent, justify)
     local grand_total = c.Util.Total_Damage(player_name)
     if percent then
         local party_damage = Model.Get.Total_Party_Damage()
-        return UI.Text(c.String.Format_Percent(grand_total, party_damage))
+        return UI.Text(c.String.Format_Percent(grand_total, party_damage, justify))
     end
-    return UI.Text(c.String.Format_Number(grand_total))
+    return UI.Text(c.String.Format_Number(grand_total, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -128,9 +133,10 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param acc_type string a trackable from the model.
+---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Acc.By_Type = function(player_name, acc_type)
+c.Acc.By_Type = function(player_name, acc_type, justify)
     local hits, attempts
     if acc_type == Model.Enum.Misc.COMBINED then
         local melee_hits = Model.Get.Data(player_name, c.Trackable.MELEE, c.Metric.HIT_COUNT)
@@ -148,7 +154,7 @@ c.Acc.By_Type = function(player_name, acc_type)
     local percent = c.String.Raw_Percent(hits, attempts)
     if percent <= Model.Settings.Accuracy_Warning then color = Window.Colors.RED end
 
-    return UI.TextColored(color, c.String.Format_Percent(hits, attempts))
+    return UI.TextColored(color, c.String.Format_Percent(hits, attempts, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -163,7 +169,7 @@ c.Acc.Running = function(player_name)
     local color = Window.Colors.WHITE
     local percent = c.String.Raw_Percent(accuracy[1], accuracy[2])
     if percent <= Model.Settings.Accuracy_Warning then color = Window.Colors.RED end
-    return UI.TextColored(color, c.String.Format_Percent(accuracy[1], accuracy[2]))
+    return UI.TextColored(color, c.String.Format_Percent(accuracy[1], accuracy[2], true))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -172,9 +178,10 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param damage_type string a trackable from the model.
+---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Crit.Rate = function(player_name, damage_type)
+c.Crit.Rate = function(player_name, damage_type, justify)
     local crits, attempts
     if damage_type == Model.Enum.Misc.COMBINED then
         local melee_crits     = Model.Get.Data(player_name, c.Trackable.MELEE, c.Metric.CRIT_COUNT)
@@ -187,7 +194,7 @@ c.Crit.Rate = function(player_name, damage_type)
         crits = Model.Get.Data(player_name, damage_type, c.Metric.CRIT_COUNT)
         attempts = Model.Get.Data(player_name, damage_type, c.Metric.COUNT)
     end
-    return c.String.Format_Percent(crits, attempts)
+    return c.String.Format_Percent(crits, attempts, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -197,9 +204,10 @@ end
 ---@param player_name string
 ---@param damage_type string
 ---@param percent? boolean whether or not the damage should be raw or percent.
+---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Crit.Damage = function(player_name, damage_type, percent)
+c.Crit.Damage = function(player_name, damage_type, percent, justify)
     local crit_damage
     if damage_type == Model.Enum.Misc.COMBINED then
         local melee_crits  = Model.Get.Data(player_name, c.Trackable.MELEE,  c.Metric.CRIT_DAMAGE)
@@ -211,10 +219,10 @@ c.Crit.Damage = function(player_name, damage_type, percent)
 
     if percent then
         local total_damage = c.Util.Total_Damage(player_name)
-        return c.String.Format_Percent(crit_damage, total_damage)
+        return c.String.Format_Percent(crit_damage, total_damage, justify)
     end
 
-    return c.String.Format_Number(crit_damage)
+    return c.String.Format_Number(crit_damage, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -222,13 +230,13 @@ end
 -- Grabs how many times an entity has died.
 -- Can't implement this until I get incoming packet 0x029 (Message) figured out.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@return string
+-- ---@param player_name string
+-- ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Deaths = function(player_name)
-    local death_count = Model.Get.Data(player_name, c.Trackable.DEATH, c.Metric.COUNT)
-    return c.String.Format_Number(death_count)
-end
+-- c.Deaths = function(player_name)
+--     local death_count = Model.Get.Data(player_name, c.Trackable.DEATH, c.Metric.COUNT)
+--     return c.String.Format_Number(death_count)
+-- end
 
 ------------------------------------------------------------------------------------------------------
 -- This is for cataloged actions.
@@ -421,12 +429,15 @@ end
 -- I floor the number to get rid of any decimals. Decimals were a problem with the average column.
 ------------------------------------------------------------------------------------------------------
 ---@param number number this should be an actual number and not a string.
+---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.String.Format_Number = function(number)
-    if Team.Settings.Condensed_Numbers then return c.String.Compact_Number(number) end
+c.String.Format_Number = function(number, justify)
+    local format = "%d"
+    if justify then format = "%6d" end
+    if Team.Settings.Condensed_Numbers then return c.String.Compact_Number(number, justify) end
     number = math.floor(number)
-    return string.format("%6d", number)
+    return string.format(format, number)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -434,13 +445,16 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param numerator number The numerator for the percent.
 ---@param denominator number The denominator for the percent.
+---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.String.Format_Percent = function(numerator, denominator)
-    if not denominator or denominator == 0 then return string.format("%5.1f", 0) end
+c.String.Format_Percent = function(numerator, denominator, justify)
+    local format = "%.1f"
+    if justify then format = "%5.1f" end
+    if not denominator or denominator == 0 then return string.format(format, 0) end
     local percent = (numerator / denominator) * 100
-    if percent == 0 then return string.format("%5.1f", 0) end
-    local percent_string = string.format("%5.1f", percent)
+    if percent == 0 then return string.format(format, 0) end
+    local percent_string = string.format(format, percent)
     return tostring(percent_string)
 end
 
@@ -461,9 +475,10 @@ end
 -- Mode examples: Compact = 2.5M; Regular = 2,500,000
 ------------------------------------------------------------------------------------------------------
 ---@param number number this should be an actual number and not a string.
+---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.String.Compact_Number = function(number)
+c.String.Compact_Number = function(number, justify)
     number = number or 0
 
     local display_number, suffix
@@ -485,36 +500,39 @@ c.String.Compact_Number = function(number)
         suffix = ""
     end
 
-    if number == 0 then return string.format("%" .. length .. "d", number) end
+    local format = "%d"
+    if justify then format = "%" .. length .. "d" end
 
-    return string.format("%" .. length .. "d", display_number) .. suffix
+    if number == 0 then return string.format(format, number) end
+
+    return string.format(format, display_number) .. suffix
 end
 
 ------------------------------------------------------------------------------------------------------
 -- NOT IN USE. I COULDN'T GET THIS TO WORK WITH RIGHT ALIGNMENT.
 -- Adds commas to large numbers for easier readability.
 ------------------------------------------------------------------------------------------------------
----@param number number the number to be formatted with commas.
----@return string
+-- ---@param number number the number to be formatted with commas.
+-- ---@return string
 ------------------------------------------------------------------------------------------------------
-c.String.Add_Comma = function(number)
-    -- Take the string apart
-    local str = tostring(number)
-    str = string.format("%6.0f", str)
-    local length = string.len(str)
-    local numbers = {}
-    for i = 1, length, 1 do numbers[i] = string.byte(str, i) end
+-- c.String.Add_Comma = function(number)
+--     -- Take the string apart
+--     local str = tostring(number)
+--     str = string.format("%6.0f", str)
+--     local length = string.len(str)
+--     local numbers = {}
+--     for i = 1, length, 1 do numbers[i] = string.byte(str, i) end
 
-    -- Rebuild adding a comma after every third number
-    local new_str = ""
-    local count = 0
-    for i = length, 1, -1 do
-        if count > 0 and (count % 3) == 0 then new_str = ","  ..  new_str end
-        new_str = string.char(numbers[i]) .. new_str
-        count = count + 1
-    end
+--     -- Rebuild adding a comma after every third number
+--     local new_str = ""
+--     local count = 0
+--     for i = length, 1, -1 do
+--         if count > 0 and (count % 3) == 0 then new_str = ","  ..  new_str end
+--         new_str = string.char(numbers[i]) .. new_str
+--         count = count + 1
+--     end
 
-    return new_str
-end
+--     return new_str
+-- end
 
 return c
