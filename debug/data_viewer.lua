@@ -13,6 +13,12 @@ _Debug.Data_View.Populate = function()
         end
         UI.TreePop()
     end
+    if UI.TreeNode("Party List") then
+        for player_name, party_number in pairs(A.Party.List) do
+            UI.Text(tostring(player_name) .. ": " .. tostring(party_number))
+        end
+        UI.TreePop()
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

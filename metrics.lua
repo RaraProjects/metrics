@@ -63,27 +63,31 @@ require("debug.unit_tests")
 Window.Initialize()
 Model.Initialize()
 _Globals.Initialized = true
+A.Party.Refresh()
 
 ------------------------------------------------------------------------------------------------------
 -- Subscribes to incoming packets.
+-- Party info doesn't seem to update right away with 0xC8 (200) and 0xDD (221) so can't update party directly from those.
 -- https://github.com/atom0s/XiPackets/tree/main/world/server/0x0028
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('packet_in', 'packet_in_cb', function(packet)
-    -- There was some duplicate packet checking here. I didn't quite understand it, and
-    -- as far ask I know I haven't run into duplicate packet issues. So I removed it.
-
     if not _Globals.Initialized then return nil end
 
     -- Start Zone
     if packet.id == 0xB then
         A.Util.Zoning(true)
 
-    -- 200 0x0C8 Alliance Update
-    -- 221 0x0DD Party Member Update
-
     -- End Zone
     elseif packet.id == 0xA then
         A.Util.Zoning(false)
+
+    -- 200 0xC8 Alliance Update
+    elseif packet.id == 0xC8 then
+        A.Party.Need_Refresh = true
+
+    -- 221 0xDD Party Member Update
+    elseif packet.id == 0xDD then
+        A.Party.Need_Refresh = true
 
     -- Action Packet
     elseif packet.id == 0x028 then
@@ -99,11 +103,13 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             return nil
         end
 
+        A.Party.Refresh()
+
         local owner_mob = A.Mob.Pet_Owner(actor_mob)
         local log_offense = false
 
         -- Process action if the actor is an affiliated pet or affiliated player.
-        if owner_mob or actor_mob.in_party or actor_mob.in_alliance then log_offense = true end
+        if owner_mob or A.Party.Is_Affiliate(actor_mob.name) then log_offense = true end
 
         if     (action.category ==  1) then Handler.Action.Melee(action, actor_mob, owner_mob, log_offense)
         elseif (action.category ==  2) then Handler.Action.Ranged(action, actor_mob, log_offense)
@@ -158,7 +164,8 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "mini" then
             Window.Util.Toggle_Mini()
         elseif arg == "test" and _Debug.Enabled then
-            _Debug.Unit.Tests.Avatar_Rage()
+            --_Debug.Unit.Tests.Avatar_Rage()
+            -- _Debug.Message("Command: " .. tostring(A.Party.In_Party(command_args[3])))
         end
     end
 end)

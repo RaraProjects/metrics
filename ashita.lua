@@ -7,6 +7,7 @@ a.Data = {}
 a.Chat = {}
 a.Party = {}
 a.Party.List = {}   -- Maintains who is currently in the party.
+a.Party.Need_Refresh = true
 a.Packets = {}
 a.Spell = {}
 a.WS = {}
@@ -160,8 +161,6 @@ a.Data.Party = function()
                 parties[party_number].leader = party[slot].index
             end
 
-            a.Party.List[party[slot].index] = party_number
-
         -- The party slot is not occupied.
         else
             if not parties[party_number].leader then
@@ -193,17 +192,19 @@ end
 ---@return nil|number
 -- ------------------------------------------------------------------------------------------------------
 a.Party.Refresh = function(player_name, node)
+    if not a.Party.Need_Refresh then return nil end
+
     local data = AshitaCore:GetMemoryManager():GetParty()
     if not data then return nil end
-    local party = {}
+
+    a.Party.List = {}
     local return_data = nil
+
     for slot = 0, 17 do
         -- Group the 18 members up into 3 parties.
         local party_number = math.ceil((slot + 1) / 6)
         if data:GetMemberIsActive(slot) == 1 then
-            party[slot] = {}
-            party[slot].index = data:GetMemberTargetIndex(slot)
-            a.Party.List[party[slot].index] = party_number
+            a.Party.List[data:GetMemberName(slot)] = party_number
 
             -- Might as well grab some data while looping through.
             if player_name then
@@ -220,28 +221,45 @@ a.Party.Refresh = function(player_name, node)
             end
         end
     end
+
+    a.Party.Need_Refresh = false
     return return_data
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Checks if a mob index is in the party or alliance.
 -- ------------------------------------------------------------------------------------------------------
----@param index number this is different than ID.
----@return table {party = bool, alliance = bool}
+---@param player_name string
+---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-a.Party.Is_Affiliate = function(index)
-    local party_number = a.Party.List[index]
-    local affiliation = {}
-    affiliation.party = false
-    affiliation.alliance = false
+a.Party.Is_Affiliate = function(player_name)
+    local party_number = a.Party.List[player_name]
+    if not party_number then return false end
+    return a.Party.In_Party(player_name) or a.Party.In_Alliance(player_name)
+end
 
-    if not party_number then return affiliation end
-    if party_number == 1 then
-        affiliation.party = true
-    elseif party_number <=3 then
-        affiliation.alliance = true
-    end
-    return affiliation
+-- ------------------------------------------------------------------------------------------------------
+-- Checks if a mob is in the party.
+-- ------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+a.Party.In_Party = function(player_name)
+    local party_number = a.Party.List[player_name]
+    if not party_number then return false end
+    return party_number == 1
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Checks if a mob is in the alliance.
+-- ------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+a.Party.In_Alliance = function(player_name)
+    local party_number = a.Party.List[player_name]
+    if not party_number then return false end
+    return party_number == 2 or party_number == 3
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -341,12 +359,6 @@ a.Mob.Data = function(id, convert_id)
     entity.pet_index = entity_manager:GetPetTargetIndex(index)  -- The index of the entity's pet. This should be blank for the pet.
     entity.claim_id = entity_manager:GetClaimStatus(index)      -- The server ID of the entity who has claim.
     entity.spawn_flags = entity_manager:GetSpawnFlags(index)    -- Player [525], Avatar/Jug Pet [258], Mob [16], Trust [4366]
-    -- entity.is_npc = entity_manager:GetSpawnFlags(index)
-
-    a.Party.Refresh()
-    local affiliation = a.Party.Is_Affiliate(index)
-    entity.in_party = affiliation.party
-    entity.in_alliance = affiliation.alliance
 
     return entity
 end
