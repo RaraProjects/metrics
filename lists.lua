@@ -182,6 +182,8 @@ l.Spell.Damaging = {
     [215] = {id = 215, en = "Flood II"},
     [501] = {id = 501, en = "Waterja"},
     -- Dark Elemental Magic
+    [230] = {id = 230, en = "Bio"},
+    [231] = {id = 231, en = "Bio II"},
     [245] = {id = 245, en = "Drain"},
     [246] = {id = 246, en = "Drain II"},
     [880] = {id = 880, en = "Drain III"},
