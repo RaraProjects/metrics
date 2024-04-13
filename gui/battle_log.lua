@@ -118,8 +118,8 @@ end
 ---@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
 bl.Util.Name = function(player_name)
-    local color = Window.Colors.White
-    if A.Mob.Is_Me(player_name) then color = Window.Colors.Green end
+    local color = Window.Colors.WHITE
+    if A.Mob.Is_Me(player_name) then color = Window.Colors.GREEN end
     return {Value = player_name, Color = color}
 end
 
@@ -138,17 +138,17 @@ bl.Util.Damage = function(damage, action_type)
     elseif action_type == Model.Enum.Trackable.MAGIC then
         threshold = bl.Thresholds.MAGIC
     elseif action_type == Handler.Enum.Flags.IGNORE then
-        return {Value = bl.Enum.Text.NA, Color = Window.Colors.White}
+        return {Value = bl.Enum.Text.NA, Color = Window.Colors.WHITE}
     end
     -- Generate damage string.
     if not damage then
-        return {Value = bl.Enum.Text.NA, Color = Window.Colors.Dim}
+        return {Value = bl.Enum.Text.NA, Color = Window.Colors.DIM}
     elseif damage == 0 then
-        return {Value = bl.Enum.Text.MISS, Color = Window.Colors.Red}
+        return {Value = bl.Enum.Text.MISS, Color = Window.Colors.RED}
     elseif damage >= threshold then
-        return {Value = Col.String.Format_Number(damage), Color = Window.Colors.Purple}
+        return {Value = Col.String.Format_Number(damage), Color = Window.Colors.PURPLE}
     end
-    return {Value = Col.String.Format_Number(damage), Color = Window.Colors.White}
+    return {Value = Col.String.Format_Number(damage), Color = Window.Colors.WHITE}
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -160,7 +160,7 @@ end
 ---@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
 bl.Util.Action = function(action_name, action_type, action_data)
-    local color = Window.Colors.White
+    local color = Window.Colors.WHITE
     if action_type and action_data then
         if action_type == Model.Enum.Trackable.MAGIC then
             local element = action_data.Element
