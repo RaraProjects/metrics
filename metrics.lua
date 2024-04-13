@@ -158,8 +158,7 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "mini" then
             Window.Util.Toggle_Mini()
         elseif arg == "test" and _Debug.Enabled then
-            --_Debug.Unit.Tests.Test()
-            -- UI.BeginTabItem(Window.Tabs.Names.FOCUS)
+            _Debug.Unit.Tests.Avatar_Rage()
         end
     end
 end)

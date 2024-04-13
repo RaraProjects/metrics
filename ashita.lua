@@ -405,7 +405,10 @@ a.Mob.Pet_Owner = function(pet_data)
     local owner
     for _, member in pairs(party) do
         if type(member) == 'table' and member.mob then
-            if member.mob.pet_index == pet_data.index then
+            -- May not always have a pet when running unit tests so need to short circuit here.
+            if _Debug.Enabled and _Debug.Unit.Active then
+                return _Debug.Unit.Mob.PLAYER
+            elseif member.mob.pet_index == pet_data.index then
                 owner = member.mob
             end
         end

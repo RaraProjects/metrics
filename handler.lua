@@ -729,10 +729,6 @@ p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, own
         pet_name = pet_name,
     }
 
-    -- Totals
-    Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.TOTAL, p.Metric.TOTAL)
-    Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.TOTAL_NO_SC, p.Metric.TOTAL)
-
     -- Specifics
     if owner_mob then
         Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.COUNT)
