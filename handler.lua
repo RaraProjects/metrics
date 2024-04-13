@@ -650,8 +650,11 @@ p.Action.Pet_Ability = function(action, actor_mob, log_offense)
     local avatar = false
 
     -- Handle offset for Blood Pacts. I don't know why they are all out of order.
-    if A.Util.Is_Avatar_Ability(ability_id) then
-        ability_data = Lists.Ability.Avatar[ability_id]
+    if Lists.Ability.Rage[ability_id] then
+        ability_data = Lists.Ability.Rage[ability_id]
+        avatar = true
+    elseif Lists.Ability.Ward[ability_id] then
+        ability_data = Lists.Ability.Ward[ability_id]
         avatar = true
     else
         ability_data = A.Ability.ID(ability_id + p.Enum.Offsets.PET)
@@ -732,9 +735,9 @@ p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, own
 
     -- Specifics
     if owner_mob then
-        Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
         Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.COUNT)
-        if Lists.Ability.Avatar[ability_id] then
+        if Lists.Ability.Rage[ability_id] then
+            Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
             Model.Update.Catalog_Damage(player_name, target_name, ability_type, damage, ability_name, owner_mob.name)
             if damage > 0 then
                 Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.HIT_COUNT)

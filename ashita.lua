@@ -231,6 +231,7 @@ a.Party.Is_Affiliate = function(index)
     local affiliation = {}
     affiliation.party = false
     affiliation.alliance = false
+
     if not party_number then return affiliation end
     if party_number == 1 then
         affiliation.party = true
@@ -529,17 +530,6 @@ end
 -- ------------------------------------------------------------------------------------------------------
 a.Chat.Message = function(message)
     print("METRICS: " .. message)
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Returns whether the given ID is associated with an avatar ability.
--- Avatar ability IDs are non-sequential and out of order so a special list is manually maintained.
--- ------------------------------------------------------------------------------------------------------
----@param id number ability ID.
----@return boolean
--- ------------------------------------------------------------------------------------------------------
-a.Util.Is_Avatar_Ability = function(id)
-    return (id >= 831 and id <= 893) or (id >= 906 and id <= 912) or (id >= 1904 and id <= 1911) or id == 1154
 end
 
 -- ------------------------------------------------------------------------------------------------------

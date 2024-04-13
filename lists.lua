@@ -256,78 +256,103 @@ l.Spell.Damaging = {
     [337] = {id = 337, en = "Suiton: San"},
 }
 
-l.Ability.Avatar = {
-    [831] = {id=528,en="Moonlit Charge",ja="ムーンリットチャージ",element=7,icon_id=341,mp_cost=17,prefix="/pet",range=2,recast_id=173,skillchain_a="Compression",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
-    [832] = {id=529,en="Crescent Fang",ja="クレセントファング",element=7,icon_id=341,mp_cost=19,prefix="/pet",range=2,recast_id=173,skillchain_a="Transfixion",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+l.Ability.Ward = {
+    -- Fenrir
     [833] = {id=530,en="Lunar Cry",ja="ルナークライ",element=7,icon_id=341,mp_cost=41,prefix="/pet",range=9,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
     [834] = {id=532,en="Ecliptic Growl",ja="上弦の唸り",duration=180,element=7,icon_id=341,mp_cost=46,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
     [835] = {id=531,en="Lunar Roar",ja="ルナーロア",element=7,icon_id=341,mp_cost=27,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
-    [836] = {id=534,en="Eclipse Bite",ja="エクリプスバイト",element=7,icon_id=341,mp_cost=109,prefix="/pet",range=2,recast_id=173,skillchain_a="Gravitation",skillchain_b="Scission",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [837] = {id=533,en="Ecliptic Howl",ja="下弦の咆哮",duration=180,element=7,icon_id=341,mp_cost=57,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
+    -- Ifrit
+    [844] = {id=548,en="Crimson Howl",ja="紅蓮の咆哮",duration=60,element=0,icon_id=342,mp_cost=84,prefix="/pet",range=12,recast_id=174,status=68,targets=1,tp_cost=0,type="BloodPactWard"},
+    -- Titan
+    [853] = {id=564,en="Earthen Ward",ja="大地の守り",duration=900,element=3,icon_id=343,mp_cost=92,prefix="/pet",range=12,recast_id=174,status=37,targets=1,tp_cost=0,type="BloodPactWard"},
+    -- Leviathan
+    [861] = {id=579,en="Spring Water",ja="湧水",element=5,icon_id=344,mp_cost=99,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
+    [862] = {id=580,en="Slowga",ja="スロウガ",element=5,icon_id=344,mp_cost=48,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
+    -- Garuda
+    [869] = {id=594,en="Whispering Wind",ja="風の囁き",element=2,icon_id=345,mp_cost=119,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
+    [870] = {id=595,en="Hastega",ja="ヘイスガ",duration=180,element=2,icon_id=345,mp_cost=129,prefix="/pet",range=12,recast_id=174,status=33,targets=1,tp_cost=0,type="BloodPactWard"},
+    [871] = {id=596,en="Aerial Armor",ja="真空の鎧",duration=900,element=2,icon_id=345,mp_cost=92,prefix="/pet",range=12,recast_id=174,status=36,targets=1,tp_cost=0,type="BloodPactWard"},
+    -- Shiva
+    [878] = {id=610,en="Frost Armor",ja="凍てつく鎧",duration=180,element=1,icon_id=346,mp_cost=63,prefix="/pet",range=12,recast_id=174,status=35,targets=1,tp_cost=0,type="BloodPactWard"},
+    [879] = {id=611,en="Sleepga",ja="スリプガ",element=1,icon_id=346,mp_cost=54,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
+    -- Ramuh
+    [887] = {id=626,en="Rolling Thunder",ja="雷鼓",duration=120,element=4,icon_id=347,mp_cost=52,prefix="/pet",range=12,recast_id=174,status=98,targets=1,tp_cost=0,type="BloodPactWard"},
+    [889] = {id=628,en="Lightning Armor",ja="雷電の鎧",duration=180,element=4,icon_id=347,mp_cost=91,prefix="/pet",range=12,recast_id=174,status=38,targets=1,tp_cost=0,type="BloodPactWard"},
+    -- Carbuncle
+    [906] = {id=512,en="Healing Ruby",ja="ルビーの癒し",element=6,icon_id=340,mp_cost=6,prefix="/pet",range=12,recast_id=174,targets=5,tp_cost=0,type="BloodPactWard"},
+    [908] = {id=514,en="Shining Ruby",ja="ルビーの輝き",duration=180,element=6,icon_id=340,mp_cost=44,prefix="/pet",range=12,recast_id=174,status=154,targets=1,tp_cost=0,type="BloodPactWard"},
+    [909] = {id=515,en="Glittering Ruby",ja="ルビーの煌き",element=6,icon_id=340,mp_cost=62,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
+    [911] = {id=517,en="Healing Ruby II",ja="ルビーの癒しII",element=6,icon_id=340,mp_cost=124,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
+    -- Diabolos
+    [1904] = {id=657,en="Somnolence",ja="ソムノレンス",element=7,icon_id=348,mp_cost=30,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
+    [1905] = {id=660,en="Noctoshield",ja="ノクトシールド",duration=180,element=7,icon_id=348,mp_cost=92,prefix="/pet",range=12,recast_id=174,status=116,targets=1,tp_cost=0,type="BloodPactWard"},
+    [1906] = {id=659,en="Ultimate Terror",ja="アルティメットテラー",element=7,icon_id=348,mp_cost=27,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
+    [1907] = {id=661,en="Dream Shroud",ja="ドリームシュラウド",duration=180,element=7,icon_id=348,mp_cost=121,prefix="/pet",range=12,recast_id=174,status=190,targets=1,tp_cost=0,type="BloodPactWard"},
+    [1908] = {id=658,en="Nightmare",ja="ナイトメア",element=7,icon_id=348,mp_cost=42,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
+}
+
+l.Ability.Rage = {
+    -- Fenrir
+    [831] = {id=528,en="Moonlit Charge",ja="ムーンリットチャージ",element=7,icon_id=341,mp_cost=17,prefix="/pet",range=2,recast_id=173,skillchain_a="Compression",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    [832] = {id=529,en="Crescent Fang",ja="クレセントファング",element=7,icon_id=341,mp_cost=19,prefix="/pet",range=2,recast_id=173,skillchain_a="Transfixion",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    [836] = {id=534,en="Eclipse Bite",ja="エクリプスバイト",element=7,icon_id=341,mp_cost=109,prefix="/pet",range=2,recast_id=173,skillchain_a="Gravitation",skillchain_b="Scission",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [838] = {id=536,en="Howling Moon",ja="ハウリングムーン",element=7,icon_id=341,mp_cost=0,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [839] = {id=839,en="UNK Avatar Ability 839"},
+    -- Fenrir
     [840] = {id=544,en="Punch",ja="パンチ",element=0,icon_id=342,mp_cost=9,prefix="/pet",range=2,recast_id=173,skillchain_a="Liquefaction",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [841] = {id=545,en="Fire II",ja="ファイアII",element=0,icon_id=342,mp_cost=24,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [842] = {id=546,en="Burning Strike",ja="バーニングストライク",element=0,icon_id=342,mp_cost=48,prefix="/pet",range=2,recast_id=173,skillchain_a="Impaction",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [843] = {id=547,en="Double Punch",ja="ダブルパンチ",element=0,icon_id=342,mp_cost=56,prefix="/pet",range=2,recast_id=173,skillchain_a="Compression",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
-    [844] = {id=548,en="Crimson Howl",ja="紅蓮の咆哮",duration=60,element=0,icon_id=342,mp_cost=84,prefix="/pet",range=12,recast_id=174,status=68,targets=1,tp_cost=0,type="BloodPactWard"},
     [845] = {id=549,en="Fire IV",ja="ファイアIV",element=0,icon_id=342,mp_cost=118,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [846] = {id=550,en="Flaming Crush",ja="フレイムクラッシュ",element=0,icon_id=342,mp_cost=164,prefix="/pet",range=2,recast_id=173,skillchain_a="Fusion",skillchain_b="Reverberation",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [847] = {id=847,en="UNK Avatar Ability 847"},
     [848] = {id=552,en="Inferno",ja="インフェルノ",element=0,icon_id=342,mp_cost=0,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    -- Titan
     [849] = {id=560,en="Rock Throw",ja="ロックスロー",element=3,icon_id=343,mp_cost=10,prefix="/pet",range=9,recast_id=173,skillchain_a="Scission",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [850] = {id=561,en="Stone II",ja="ストーンII",element=3,icon_id=343,mp_cost=24,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [851] = {id=562,en="Rock Buster",ja="ロックバスター",element=3,icon_id=343,mp_cost=39,prefix="/pet",range=2,recast_id=173,skillchain_a="Reverberation",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [852] = {id=563,en="Megalith Throw",ja="メガリススロー",element=3,icon_id=343,mp_cost=62,prefix="/pet",range=9,recast_id=173,skillchain_a="Induration",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
-    [853] = {id=564,en="Earthen Ward",ja="大地の守り",duration=900,element=3,icon_id=343,mp_cost=92,prefix="/pet",range=12,recast_id=174,status=37,targets=1,tp_cost=0,type="BloodPactWard"},
     [854] = {id=565,en="Stone IV",ja="ストーンIV",element=3,icon_id=343,mp_cost=118,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [855] = {id=566,en="Mountain Buster",ja="マウンテンバスター",element=3,icon_id=343,mp_cost=164,prefix="/pet",range=2,recast_id=173,skillchain_a="Gravitation",skillchain_b="Induration",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [856] = {id=856,en="UNK Avatar Ability 856"},
     [857] = {id=568,en="Earthen Fury",ja="アースフューリー",element=3,icon_id=343,mp_cost=0,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    -- Leviathan
     [858] = {id=576,en="Barracuda Dive",ja="バラクーダダイブ",element=5,icon_id=344,mp_cost=8,prefix="/pet",range=2,recast_id=173,skillchain_a="Reverberation",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [859] = {id=577,en="Water II",ja="ウォータII",element=5,icon_id=344,mp_cost=24,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [860] = {id=578,en="Tail Whip",ja="テールウィップ",element=5,icon_id=344,mp_cost=49,prefix="/pet",range=2,recast_id=173,skillchain_a="Detonation",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
-    [861] = {id=579,en="Spring Water",ja="湧水",element=5,icon_id=344,mp_cost=99,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
-    [862] = {id=580,en="Slowga",ja="スロウガ",element=5,icon_id=344,mp_cost=48,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
     [863] = {id=581,en="Water IV",ja="ウォータIV",element=5,icon_id=344,mp_cost=118,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [864] = {id=582,en="Spinning Dive",ja="スピニングダイブ",element=5,icon_id=344,mp_cost=164,prefix="/pet",range=2,recast_id=173,skillchain_a="Distortion",skillchain_b="Detonation",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [865] = {id=865,en="UNK Avatar Ability 865"},
     [866] = {id=584,en="Tidal Wave",ja="タイダルウェイブ",element=5,icon_id=344,mp_cost=0,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    -- Garuda
     [867] = {id=592,en="Claw",ja="クロー",element=2,icon_id=345,mp_cost=7,prefix="/pet",range=2,recast_id=173,skillchain_a="Detonation",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [868] = {id=593,en="Aero II",ja="エアロII",element=2,icon_id=345,mp_cost=24,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
-    [869] = {id=594,en="Whispering Wind",ja="風の囁き",element=2,icon_id=345,mp_cost=119,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
-    [870] = {id=595,en="Hastega",ja="ヘイスガ",duration=180,element=2,icon_id=345,mp_cost=129,prefix="/pet",range=12,recast_id=174,status=33,targets=1,tp_cost=0,type="BloodPactWard"},
-    [871] = {id=596,en="Aerial Armor",ja="真空の鎧",duration=900,element=2,icon_id=345,mp_cost=92,prefix="/pet",range=12,recast_id=174,status=36,targets=1,tp_cost=0,type="BloodPactWard"},
     [872] = {id=597,en="Aero IV",ja="エアロIV",element=2,icon_id=345,mp_cost=118,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [873] = {id=598,en="Predator Claws",ja="プレデタークロー",element=2,icon_id=345,mp_cost=164,prefix="/pet",range=2,recast_id=173,skillchain_a="Fragmentation",skillchain_b="Scission",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [874] = {id=874,en="UNK Avatar Ability 874"},
     [875] = {id=600,en="Aerial Blast",ja="エリアルブラスト",element=2,icon_id=345,mp_cost=0,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    -- Shiva
     [876] = {id=608,en="Axe Kick",ja="アクスキック",element=1,icon_id=346,mp_cost=10,prefix="/pet",range=2,recast_id=173,skillchain_a="Induration",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [877] = {id=609,en="Blizzard II",ja="ブリザドII",element=1,icon_id=346,mp_cost=24,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
-    [878] = {id=610,en="Frost Armor",ja="凍てつく鎧",duration=180,element=1,icon_id=346,mp_cost=63,prefix="/pet",range=12,recast_id=174,status=35,targets=1,tp_cost=0,type="BloodPactWard"},
-    [879] = {id=611,en="Sleepga",ja="スリプガ",element=1,icon_id=346,mp_cost=54,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
     [880] = {id=612,en="Double Slap",ja="ダブルスラップ",element=1,icon_id=346,mp_cost=96,prefix="/pet",range=2,recast_id=173,skillchain_a="Scission",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [881] = {id=613,en="Blizzard IV",ja="ブリザドIV",element=1,icon_id=346,mp_cost=118,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [882] = {id=614,en="Rush",ja="ラッシュ",element=1,icon_id=346,mp_cost=164,prefix="/pet",range=2,recast_id=173,skillchain_a="Distortion",skillchain_b="Scission",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [883] = {id=883,en="UNK Avatar Ability 883"},
     [884] = {id=616,en="Diamond Dust",ja="ダイヤモンドダスト",element=1,icon_id=346,mp_cost=0,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    -- Ramuh
     [885] = {id=624,en="Shock Strike",ja="ショックストライク",element=4,icon_id=347,mp_cost=6,prefix="/pet",range=2,recast_id=173,skillchain_a="Impaction",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [886] = {id=625,en="Thunder II",ja="サンダーII",element=4,icon_id=347,mp_cost=24,prefix="/pet",range=8,recast_id=173,targets=32,tp_cost=0,type="BloodPactRage"},
-    [887] = {id=626,en="Rolling Thunder",ja="雷鼓",duration=120,element=4,icon_id=347,mp_cost=52,prefix="/pet",range=12,recast_id=174,status=98,targets=1,tp_cost=0,type="BloodPactWard"},
     [888] = {id=627,en="Thunderspark",ja="サンダースパーク",element=4,icon_id=347,mp_cost=38,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
-    [889] = {id=628,en="Lightning Armor",ja="雷電の鎧",duration=180,element=4,icon_id=347,mp_cost=91,prefix="/pet",range=12,recast_id=174,status=38,targets=1,tp_cost=0,type="BloodPactWard"},
     [890] = {id=629,en="Thunder IV",ja="サンダーIV",element=4,icon_id=347,mp_cost=118,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [891] = {id=630,en="Chaotic Strike",ja="カオスストライク",element=4,icon_id=347,mp_cost=164,prefix="/pet",range=2,recast_id=173,skillchain_a="Fragmentation",skillchain_b="Transfixion",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [892] = {id=892,en="UNK Avatar Ability 892"},
     [893] = {id=632,en="Judgment Bolt",ja="ジャッジボルト",element=4,icon_id=347,mp_cost=0,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
-    --
-    [906] = {id=512,en="Healing Ruby",ja="ルビーの癒し",element=6,icon_id=340,mp_cost=6,prefix="/pet",range=12,recast_id=174,targets=5,tp_cost=0,type="BloodPactWard"},
+    -- Carbuncle
     [907] = {id=513,en="Poison Nails",ja="ポイズンネイル",element=6,icon_id=340,mp_cost=11,prefix="/pet",range=2,recast_id=173,skillchain_a="Transfixion",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
-    [908] = {id=514,en="Shining Ruby",ja="ルビーの輝き",duration=180,element=6,icon_id=340,mp_cost=44,prefix="/pet",range=12,recast_id=174,status=154,targets=1,tp_cost=0,type="BloodPactWard"},
-    [909] = {id=515,en="Glittering Ruby",ja="ルビーの煌き",element=6,icon_id=340,mp_cost=62,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
     [910] = {id=516,en="Meteorite",ja="プチメテオ",element=6,icon_id=340,mp_cost=108,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
-    [911] = {id=517,en="Healing Ruby II",ja="ルビーの癒しII",element=6,icon_id=340,mp_cost=124,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
     [912] = {id=518,en="Searing Light",ja="シアリングライト",element=6,icon_id=340,mp_cost=0,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    -- Cait Sith
     -- [519] = {id=519,en="Holy Mist",ja="ホーリーミスト",element=6,icon_id=340,mp_cost=152,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     -- [520] = {id=520,en="Soothing Ruby",ja="ルビーの安らぎ",element=6,icon_id=340,mp_cost=74,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
     -- [521] = {id=521,en="Regal Scratch",ja="リーガルスクラッチ",element=6,icon_id=351,mp_cost=5,prefix="/pet",range=2,recast_id=173,skillchain_a="Scission",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
@@ -337,13 +362,8 @@ l.Ability.Avatar = {
     -- [525] = {id=525,en="Raise II",ja="レイズII",element=6,icon_id=351,mp_cost=160,prefix="/pet",range=12,recast_id=174,targets=5,tp_cost=0,type="BloodPactWard"},
     -- [526] = {id=526,en="Reraise II",ja="リレイズII",duration=3600,element=6,icon_id=351,mp_cost=80,prefix="/pet",range=12,recast_id=174,status=113,targets=5,tp_cost=0,type="BloodPactWard"},
     -- [527] = {id=527,en="Altana's Favor",ja="アルタナフェーバー",duration=3600,element=6,icon_id=351,mp_cost=0,prefix="/pet",range=12,recast_id=174,status=113,targets=1,tp_cost=0,type="BloodPactWard"},
-    --
+    -- Diabolos
     [1154] = {id=656,en="Camisado",ja="カミサドー",element=7,icon_id=348,mp_cost=20,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
-    [1904] = {id=657,en="Somnolence",ja="ソムノレンス",element=7,icon_id=348,mp_cost=30,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
-    [1905] = {id=660,en="Noctoshield",ja="ノクトシールド",duration=180,element=7,icon_id=348,mp_cost=92,prefix="/pet",range=12,recast_id=174,status=116,targets=1,tp_cost=0,type="BloodPactWard"},
-    [1906] = {id=659,en="Ultimate Terror",ja="アルティメットテラー",element=7,icon_id=348,mp_cost=27,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
-    [1907] = {id=661,en="Dream Shroud",ja="ドリームシュラウド",duration=180,element=7,icon_id=348,mp_cost=121,prefix="/pet",range=12,recast_id=174,status=190,targets=1,tp_cost=0,type="BloodPactWard"},
-    [1908] = {id=658,en="Nightmare",ja="ナイトメア",element=7,icon_id=348,mp_cost=42,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
     [1909] = {id=892,en="UNK Avatar Ability 1909"},
     [1910] = {id=662,en="Nether Blast",ja="ネザーブラスト",element=7,icon_id=348,mp_cost=109,prefix="/pet",range=9,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [1911] = {id=664,en="Ruinous Omen",ja="ルイナスオーメン",element=7,icon_id=348,mp_cost=0,prefix="/pet",range=4,recast_id=173,targets=32,tp_cost=0,type="BloodPactRage"},
@@ -352,7 +372,9 @@ l.Ability.Avatar = {
     -- [667] = {id=667,en="Blindside",ja="ブラインドサイド",element=7,icon_id=348,mp_cost=147,prefix="/pet",range=8,recast_id=173,skillchain_a="Gravitation",skillchain_b="Transfixion",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     -- [668] = {id=668,en="Deconstruction",ja="ディコンストラクション",element=7,icon_id=23,mp_cost=0,prefix="/pet",range=12,recast_id=0,targets=32,tp_cost=0,type="BloodPactRage"},
     -- [669] = {id=669,en="Chronoshift",ja="クロノシフト",element=7,icon_id=23,mp_cost=0,prefix="/pet",range=0,recast_id=0,targets=32,tp_cost=0,type="BloodPactRage"},
+    -- Odin
     -- [670] = {id=670,en="Zantetsuken",ja="斬鉄剣",element=7,icon_id=349,mp_cost=0,prefix="/pet",range=8,recast_id=0,targets=32,tp_cost=0,type="BloodPactRage"},
+    -- Alexander
     -- [671] = {id=671,en="Perfect Defense",ja="絶対防御",element=7,icon_id=350,mp_cost=0,prefix="/pet",range=0,recast_id=0,targets=32,tp_cost=0,type="BloodPactRage"},
 }
 
