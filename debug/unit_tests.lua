@@ -116,7 +116,7 @@ _Debug.Unit.Tests.Avatar_Rage = function()
     local results = _Debug.Unit.Util.Avatar_Check(damage)
 
     for pass, test in pairs(results) do
-        if not pass then _Debug.Message("Test.Avatar_Rage: FAIL " .. tostring(test)) end
+        if not pass then _Debug.Error.Add("Test.Avatar_Rage: FAIL " .. tostring(test)) end
     end
 
     _Debug.Unit.Active = false

@@ -24,7 +24,7 @@ end
 ------------------------------------------------------------------------------------------------------
 f.Populate = function()
     Window.Widget.Player_Filter()
-    UI.SameLine()
+    -- UI.SameLine()
     Window.Widget.Mob_Filter()
     local player_name = Window.Util.Get_Player_Focus()
     if player_name == Window.Dropdown.Enum.NONE then return nil end
@@ -619,7 +619,7 @@ f.Display.Util.Buttons = function()
     if UI.Button("Expand all") then
         f.Display.Flags.Open_Action = 1
     end
-    UI.SameLine()
+    UI.SameLine() UI.Text(" ") UI.SameLine()
     if UI.Button("Collapse all") then
         f.Display.Flags.Open_Action = 0
     end

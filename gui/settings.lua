@@ -27,7 +27,7 @@ s.Section.Collapse = function()
     if UI.Button("Expand all") then
         s.Widget.Open_Action = 1
     end
-    UI.SameLine()
+    UI.SameLine() UI.Text(" ") UI.SameLine()
     if UI.Button("Collapse all") then
         s.Widget.Open_Action = 0
     end

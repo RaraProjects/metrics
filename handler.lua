@@ -29,7 +29,7 @@ p.Enum.Text = {
 -- ------------------------------------------------------------------------------------------------------
 ---@param action table action packet data.
 ---@param actor_mob table the mob data of the entity performing the action.
----@param owner_mob table (if pet) the mob data of the entity's owner.
+---@param owner_mob table|nil (if pet) the mob data of the entity's owner.
 ---@param log_offense boolean if this action should actually be logged.
 -- ------------------------------------------------------------------------------------------------------
 p.Action.Melee = function(action, actor_mob, owner_mob, log_offense)
