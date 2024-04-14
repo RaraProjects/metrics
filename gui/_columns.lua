@@ -154,7 +154,11 @@ c.Acc.By_Type = function(player_name, acc_type, justify)
 
     local color = Window.Colors.WHITE
     local percent = c.String.Raw_Percent(hits, attempts)
-    if percent <= Model.Settings.Accuracy_Warning then color = Window.Colors.RED end
+    if percent == 0 then
+        color = Window.Colors.DIM
+    elseif percent <= Model.Settings.Accuracy_Warning then
+        color = Window.Colors.RED
+    end
 
     return UI.TextColored(color, c.String.Format_Percent(hits, attempts, justify))
 end
