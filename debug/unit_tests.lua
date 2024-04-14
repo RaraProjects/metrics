@@ -51,7 +51,9 @@ _Debug.Unit.Mob.ENEMY = {
 -- Healing
 -- Curaga
 
-_Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_id, message_id)
+_Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_id, message_id, add_effect_param)
+    if not add_effect_param then add_effect_param = 0 end
+
     local action = {}
     action.param = action_id
     action.targets = {}
@@ -64,7 +66,7 @@ _Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation
     action_data.param = damage
     action_data.animation = animation_id
     action_data.message = message_id
-    action_data.add_effect_param = 0
+    action_data.add_effect_param = add_effect_param
 
     table.insert(target_data.actions, action_data)
     table.insert(action.targets, target_data)
@@ -80,21 +82,34 @@ _Debug.Unit.Tests.Melee = function()
     local action_id = 836 -- Eclipse Bite (not that it matters for this test)
 
     -- Regular Hit
-
-    -- Critical Hit
-    local action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.CRIT)
-    Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
+    local action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT)
     local melee_damage = Model.Get.Data(_Debug.Unit.Mob.PLAYER.name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.TOTAL)
 
+    -- Critical Hit
+    action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.CRIT)
+    Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
+    melee_damage = Model.Get.Data(_Debug.Unit.Mob.PLAYER.name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.TOTAL)
+
     -- Miss
+    action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MISS)
+    Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
 
     -- Enspell
+    action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT, 100)
+    Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
 
     -- Shadows
+    action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.SHADOWS)
+    Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
 
     -- Mob Heal
+    action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MOBHEAL373)
+    Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
 
     -- Pet Melee
+    local action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT)
+    Handler.Action.Melee(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
+
 
     _Debug.Message("Melee: " .. tostring(damage) .. " " .. tostring(melee_damage) .. " " .. tostring(damage == melee_damage))
 end
@@ -179,3 +194,46 @@ _Debug.Unit.Util.Avatar_Check = function(damage)
     return results
 end
 
+_Debug.Unit.Util.Melee_Check = function(damage)
+    local hit = {
+        Total = damage,
+        Acc = 100,
+        Mob_Heal = 0,
+        Enspell = 0,
+        Shadows = 0,
+        Main_Damage = damage,
+        Main_Acc = 100,
+        Off_Damage = 0,
+        Off_Acc = 0,
+        Kick_Damage = 0,
+        Kick_Acc = 0,
+    }
+
+    local crit = {
+        Total = damage * 2,
+        Acc = 100,
+        Mob_Heal = 0,
+        Enspell = 0,
+        Shadows = 0,
+        Main_Damage = damage,
+        Main_Acc = 100,
+        Off_Damage = 0,
+        Off_Acc = 0,
+        Kick_Damage = 0,
+        Kick_Acc = 0,
+    }
+
+    local player_name = _Debug.Unit.Mob.PLAYER.name
+
+    Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE)
+    Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE)
+    UI.Text(Col.String.Format_Number(mob_heal))
+    UI.Text(Col.String.Format_Number(enspell))
+    UI.Text(Col.String.Format_Number(shadows))
+    Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN)
+    Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN)
+    Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFH)
+    Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFH)
+    Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK)
+    Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK)
+end
