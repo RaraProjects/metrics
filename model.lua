@@ -146,6 +146,8 @@ m.Initialize = function()
 	Pet_Catalog_Damage_Race = {}
 	m.Enum.Misc.NONE = Window.Dropdown.Enum.NONE
 	m.Healing_Max = {}
+	Window.Dropdown.Player.Index = 1
+	Window.Dropdown.Mob.Index = 1
 	for spell, threshold in pairs(m.Enum.HEALING) do
 		m.Healing_Max[spell] = threshold
 	end

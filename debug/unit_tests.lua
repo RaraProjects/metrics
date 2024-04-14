@@ -6,7 +6,6 @@ _Debug.Unit.Tests = {}
 _Debug.Unit.Mob = {}
 _Debug.Unit.Active = false
 
-
 _Debug.Unit.Mob.PLAYER = {
     name = "Player",
     id = 1,
@@ -38,11 +37,19 @@ _Debug.Unit.Mob.ENEMY = {
     in_alliance = false,
 }
 
--- Create fake packets to represent actions.
--- Add checks to block game packets while unit tests are active.
--- Run the handler functions wit hthe fake packets.
--- The fake data should be visible on the screen and also have a numeric check for each test.
--- MAYBE: Need to edit the Ashita functions to use fake data instead of pulling from Ashita for the tests.
+-- Melee Attacks
+-- Pet Melee Attacks
+-- Ranged Attacks
+-- Avatar Rage Blood Pact
+-- Avatar Ward Blood Pact
+-- BST Ability
+-- Spell Cast
+-- Weaponskill
+-- Skillchain
+-- Spell Cast MB
+-- Spell Cast Ga
+-- Healing
+-- Curaga
 
 _Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_id, message_id)
     local action = {}
@@ -65,44 +72,35 @@ _Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation
     return action
 end
 
-
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Attacks.
+------------------------------------------------------------------------------------------------------
 _Debug.Unit.Tests.Melee = function()
     local damage = 200
-    local action_id = 836 -- Eclipse Bite
+    local action_id = 836 -- Eclipse Bite (not that it matters for this test)
 
+    -- Regular Hit
+
+    -- Critical Hit
     local action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.CRIT)
     Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
     local melee_damage = Model.Get.Data(_Debug.Unit.Mob.PLAYER.name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.TOTAL)
+
+    -- Miss
+
+    -- Enspell
+
+    -- Shadows
+
+    -- Mob Heal
+
+    -- Pet Melee
 
     _Debug.Message("Melee: " .. tostring(damage) .. " " .. tostring(melee_damage) .. " " .. tostring(damage == melee_damage))
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Test: Using Avatar Rage Blood Pact.
--- SUCCESS CONDITIONS:
--- Overall
--- 1. Grand Total       : Rage damage
--- 2. Raw Pet Damage    : Rage damage
--- 3. Total Pet Damage %: 100%
--- 4. Pet Melee Damage  : 0
--- 5. Pet Ranged Damage : 0
--- 6. Pet WS Damage     : 0
--- 7. Pet Ability Damage: Rage damage
--- Pet Specific
--- 1. Total Damage      : Rage damage
--- 2. Total Damage %    : 100%
--- 3. Melee Damage      : 0
--- 4. Ranged Damage     : 0
--- 5. Weaponskill Damage: 0
--- 6. Ability Damage    : 200
--- Catalog
--- 1. Pet Action Name   : Should exist
--- 2. Total Damage      : Rage damage
--- 3. Attempts          : 1
--- 4. Accuracy %        : 100%
--- 5. Average Damage    : Rage damage
--- 6. Minimum Damage    : Rage damage
--- 7. Maximum Damage    : Rage damage
 ------------------------------------------------------------------------------------------------------
 _Debug.Unit.Tests.Avatar_Rage = function()
     local damage = 100
