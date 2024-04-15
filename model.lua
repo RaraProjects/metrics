@@ -981,7 +981,7 @@ m.Util.Build_Index = function(actor_name, target_name)
 	end
 
 	-- This is used for the mob focus drop down. Only include unaffiliated non-players in this list.
-	if target_name ~= m.Enum.Index.DEBUG and not m.Data.Initialized_Mobs[target_name] and not m.Data.Initialized_Players[actor_name] then
+	if target_name ~= m.Enum.Index.DEBUG and not m.Data.Initialized_Mobs[target_name] then
 		m.Data.Initialized_Mobs[target_name] = true
 		table.insert(m.Data.Mob_List_Sorted, target_name)
 		table.sort(m.Data.Mob_List_Sorted)
