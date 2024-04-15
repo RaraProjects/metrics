@@ -5,26 +5,28 @@ bl.Display = {}
 bl.Util = {}
 
 bl.Flags = {
-    Melee   = false,
-    Ranged  = true,
-    WS      = true,
-    SC      = true,
-    Magic   = true,
-    Ability = true,
-    Pet     = true,
-    Healing = true,
-    Deaths  = true,
+    Timestamp = false,
+    Melee     = false,
+    Ranged    = true,
+    WS        = true,
+    SC        = true,
+    Magic     = true,
+    Ability   = true,
+    Pet       = true,
+    Healing   = true,
+    Deaths    = true,
 }
 bl.Flag_Defaults = {
-    Melee   = false,
-    Ranged  = true,
-    WS      = true,
-    SC      = true,
-    Magic   = true,
-    Ability = true,
-    Pet     = true,
-    Healing = true,
-    Deaths  = true,
+    Timestamp = false,
+    Melee     = false,
+    Ranged    = true,
+    WS        = true,
+    SC        = true,
+    Magic     = true,
+    Ability   = true,
+    Pet       = true,
+    Healing   = true,
+    Deaths    = true,
 }
 
 bl.Thresholds = {
@@ -79,7 +81,9 @@ end
 ------------------------------------------------------------------------------------------------------
 bl.Populate = function()
     local table_size = {0, bl.Settings.Size * 8}
-    if UI.BeginTable("Blog", 5, Window.Table.Flags.Scrollable, table_size) then
+    local columns = 4
+    if bl.Flags.Timestamp then columns = columns + 1 end
+    if UI.BeginTable("Blog", columns, Window.Table.Flags.Scrollable, table_size) then
         bl.Display.Headers()
         for _, entry in ipairs(bl.Log) do
             bl.Display.Rows(entry)
@@ -197,7 +201,7 @@ end
 ------------------------------------------------------------------------------------------------------
 bl.Display.Headers = function()
     local no_flags = Window.Columns.Flags.None
-    UI.TableSetupColumn("Time", no_flags)
+    if bl.Flags.Timestamp then UI.TableSetupColumn("Time", no_flags) end
     UI.TableSetupColumn("Name", no_flags)
     UI.TableSetupColumn("Damage", no_flags)
     UI.TableSetupColumn("Action", no_flags)
@@ -210,7 +214,7 @@ end
 ------------------------------------------------------------------------------------------------------
 bl.Display.Rows = function(entry)
     UI.TableNextRow()
-    UI.TableNextColumn() UI.Text(entry.Time)
+    if bl.Flags.Timestamp then UI.TableNextColumn() UI.Text(entry.Time) end
     UI.TableNextColumn() UI.TextColored(entry.Name.Color, entry.Name.Value)
     UI.TableNextColumn() UI.TextColored(entry.Damage.Color, entry.Damage.Value)
     UI.TableNextColumn() UI.TextColored(entry.Action.Color, entry.Action.Value)

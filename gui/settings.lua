@@ -184,7 +184,6 @@ s.Section.Focus = function()
             s.Widget.Healing("Cure V")
             UI.EndTable()
         end
-        
     end
 end
 
@@ -196,11 +195,18 @@ s.Section.Battle_Log = function()
     local width = Window.Columns.Widths.Settings
     s.Util.Check_Collapse()
     if UI.CollapsingHeader("Tab: Battle Log") then
+
+        UI.Text("Which columns should show in the battle log?")
+        if UI.Checkbox("Show Timestamps", {Blog.Flags.Timestamp}) then
+            Blog.Flags.Timestamp = not Blog.Flags.Timestamp
+        end
+
         UI.Text("Which actions should populate the battle log?")
         if UI.BeginTable("Battle Log", 3) then
             UI.TableSetupColumn("Col 1", col_flags, width)
             UI.TableSetupColumn("Col 2", col_flags, width)
             UI.TableSetupColumn("Col 3", col_flags, width)
+
             UI.TableNextColumn()
             if UI.Checkbox("Show Melee", {Blog.Flags.Melee}) then
                 Blog.Flags.Melee = not Blog.Flags.Melee
