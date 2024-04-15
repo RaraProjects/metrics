@@ -174,7 +174,13 @@ c.Acc.Running = function(player_name)
     local accuracy = Model.Get.Running_Accuracy(player_name)
     local color = Window.Colors.WHITE
     local percent = c.String.Raw_Percent(accuracy[1], accuracy[2])
-    if percent <= Model.Settings.Accuracy_Warning then color = Window.Colors.RED end
+
+    if percent == 0 then
+        color = Window.Colors.DIM
+    elseif percent <= Model.Settings.Accuracy_Warning then
+        color = Window.Colors.RED
+    end
+
     return UI.TextColored(color, c.String.Format_Percent(accuracy[1], accuracy[2], true))
 end
 
