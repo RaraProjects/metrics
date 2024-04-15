@@ -164,8 +164,8 @@ f.Display.Ranged = function(player_name)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable, true)
                 UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable)
-                UI.TableNextColumn() UI.Text(Col.Crit.Damage(player_name, trackable))
-                UI.TableNextColumn() UI.Text(Col.Crit.Damage(player_name, trackable, true))
+                UI.TableNextColumn() Col.Crit.Damage(player_name, trackable)
+                UI.TableNextColumn() Col.Crit.Damage(player_name, trackable, true)
                 UI.EndTable()
             end
         end
@@ -198,11 +198,11 @@ f.Display.Crits = function(player_name)
 
                 -- Data
                 UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(Col.Crit.Damage(player_name, 'combined'))
-                UI.TableNextColumn() UI.Text(Col.Crit.Damage(player_name, 'combined', true))
-                UI.TableNextColumn() UI.Text(Col.Crit.Rate(player_name, 'combined'))
-                UI.TableNextColumn() UI.Text(Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE))
-                UI.TableNextColumn() UI.Text(Col.Crit.Rate(player_name, Model.Enum.Trackable.RANGED))
+                UI.TableNextColumn() Col.Crit.Damage(player_name, 'combined')
+                UI.TableNextColumn() Col.Crit.Damage(player_name, 'combined', true)
+                UI.TableNextColumn() Col.Crit.Rate(player_name, 'combined')
+                UI.TableNextColumn() Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE)
+                UI.TableNextColumn() Col.Crit.Rate(player_name, Model.Enum.Trackable.RANGED)
                 UI.EndTable()
             end
         end
@@ -467,23 +467,23 @@ end
 f.Display.Util.Single_Row = function(player_name, action_name, focus_type)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(action_name)
-    UI.TableNextColumn() UI.Text(Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.TOTAL))
-    UI.TableNextColumn() UI.Text(Col.Single.Attempts(player_name, action_name, focus_type))
+    UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.TOTAL)
+    UI.TableNextColumn() Col.Single.Attempts(player_name, action_name, focus_type)
     if focus_type == Model.Enum.Trackable.MAGIC then
-        UI.TableNextColumn() UI.Text(Col.Single.Bursts(player_name, action_name))
+        UI.TableNextColumn() Col.Single.Bursts(player_name, action_name)
     elseif focus_type == Model.Enum.Trackable.HEALING then
-        UI.TableNextColumn() UI.Text(Col.Single.Overcure(player_name, action_name))
+        UI.TableNextColumn() Col.Single.Overcure(player_name, action_name)
     else
-        UI.TableNextColumn() UI.Text(Col.Single.Acc(player_name, action_name, focus_type))
+        UI.TableNextColumn() Col.Single.Acc(player_name, action_name, focus_type)
     end
-    UI.TableNextColumn() UI.Text(Col.Single.Average(player_name, action_name, focus_type))
+    UI.TableNextColumn() Col.Single.Average(player_name, action_name, focus_type)
     local min = Model.Get.Catalog(player_name, focus_type, action_name, Model.Enum.Metric.MIN)
     if min == 100000 then
-        UI.TableNextColumn() UI.Text(Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Misc.IGNORE))
+        UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Misc.IGNORE)
     else
-        UI.TableNextColumn() UI.Text(Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.MIN))
+        UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.MIN)
     end
-    UI.TableNextColumn() UI.Text(Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.MAX))
+    UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.MAX)
 end
 
 ------------------------------------------------------------------------------------------------------

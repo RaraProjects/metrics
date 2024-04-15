@@ -200,6 +200,7 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Crit.Rate = function(player_name, damage_type, justify)
     local crits, attempts
+    local color = Window.Colors.WHITE
     if damage_type == Model.Enum.Misc.COMBINED then
         local melee_crits     = Model.Get.Data(player_name, c.Trackable.MELEE, c.Metric.CRIT_COUNT)
         local melee_attempts  = Model.Get.Data(player_name, c.Trackable.MELEE, c.Metric.COUNT)
@@ -211,7 +212,10 @@ c.Crit.Rate = function(player_name, damage_type, justify)
         crits = Model.Get.Data(player_name, damage_type, c.Metric.CRIT_COUNT)
         attempts = Model.Get.Data(player_name, damage_type, c.Metric.COUNT)
     end
-    return c.String.Format_Percent(crits, attempts, justify)
+    if crits == 0 then
+        color = Window.Colors.DIM
+    end
+    return UI.TextColored(color, c.String.Format_Percent(crits, attempts, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -226,6 +230,7 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Crit.Damage = function(player_name, damage_type, percent, justify)
     local crit_damage
+    local color = Window.Colors.WHITE
     if damage_type == Model.Enum.Misc.COMBINED then
         local melee_crits  = Model.Get.Data(player_name, c.Trackable.MELEE,  c.Metric.CRIT_DAMAGE)
         local ranged_crits = Model.Get.Data(player_name, c.Trackable.RANGED, c.Metric.CRIT_DAMAGE)
@@ -233,13 +238,14 @@ c.Crit.Damage = function(player_name, damage_type, percent, justify)
     else
         crit_damage = Model.Get.Data(player_name, damage_type, c.Metric.CRIT_DAMAGE)
     end
-
+    if crit_damage == 0 then
+        color = Window.Colors.DIM
+    end
     if percent then
         local total_damage = c.Util.Total_Damage(player_name)
-        return c.String.Format_Percent(crit_damage, total_damage, justify)
+        return UI.TextColored(color, c.String.Format_Percent(crit_damage, total_damage, justify))
     end
-
-    return c.String.Format_Number(crit_damage, justify)
+    return UI.TextColored(color, c.String.Format_Number(crit_damage, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -274,12 +280,15 @@ c.Single.Damage = function(player_name, action_name, focus_type, metric, percent
         single_damage = Model.Get.Catalog(player_name, focus_type, action_name, metric)
     end
 
+    local color = Window.Colors.WHITE
+    if single_damage == 0 then color = Window.Colors.DIM end
+
     if percent then
         local total_damage = c.Util.Total_Damage(player_name)
-        return c.String.Format_Percent(single_damage, total_damage)
+        return UI.TextColored(color, c.String.Format_Percent(single_damage, total_damage))
     end
 
-    return c.String.Format_Number(single_damage)
+    return UI.TextColored(color, c.String.Format_Number(single_damage))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -322,7 +331,11 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Single.Attempts = function(player_name, action_name, focus_type)
     local single_attempts = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.COUNT)
-    return c.String.Format_Number(single_attempts)
+
+    local color = Window.Colors.WHITE
+    if single_attempts == 0 then color = Window.Colors.DIM end
+
+    return UI.TextColored(color, c.String.Format_Number(single_attempts))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -351,7 +364,9 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Single.Bursts = function(player_name, action_name)
     local burst_count = Model.Get.Catalog(player_name, Model.Enum.Trackable.MAGIC, action_name, c.Metric.BURST_COUNT)
-    return c.String.Format_Number(burst_count)
+    local color = Window.Colors.WHITE
+    if burst_count == 0 then color = Window.Colors.DIM end
+    return UI.TextColored(color, c.String.Format_Number(burst_count))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -364,7 +379,9 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Single.Overcure = function(player_name, action_name)
     local overcure = Model.Get.Catalog(player_name, Model.Enum.Trackable.HEALING, action_name, c.Metric.OVERCURE)
-    return c.String.Format_Number(overcure)
+    local color = Window.Colors.WHITE
+    if overcure == 0 then color = Window.Colors.DIM end
+    return UI.TextColored(color, c.String.Format_Number(overcure))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -379,7 +396,9 @@ end
 c.Single.Acc = function(player_name, action_name, focus_type)
     local single_hits = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.HIT_COUNT)
     local single_attempts = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.COUNT)
-    return c.String.Format_Percent(single_hits, single_attempts)
+    local color = Window.Colors.WHITE
+    if single_hits == 0 then color = Window.Colors.DIM end
+    return UI.TextColored(color, c.String.Format_Percent(single_hits, single_attempts))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -410,13 +429,15 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Single.Average = function(player_name, action_name, focus_type)
     local single_attempts = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.COUNT)
+    local color = Window.Colors.WHITE
     if single_attempts == 0 then
-        return c.String.Format_Number(0)
+        color = Window.Colors.DIM
+        return UI.TextColored(color, c.String.Format_Number(0))
     end
-
     local single_damage  = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.TOTAL)
     local single_average = single_damage / single_attempts
-    return c.String.Format_Number(single_average)
+    if single_damage == 0 then color = Window.Colors.DIM end
+    return UI.TextColored(color, c.String.Format_Number(single_average))
 end
 
 ------------------------------------------------------------------------------------------------------
