@@ -286,7 +286,7 @@ end
 ------------------------------------------------------------------------------------------------------
 s.Widget.Font_Size = function()
     local text_size = {[1] = Window.Window.Font_Scaling}
-    if UI.DragFloat("Font Size", text_size, 0.005, 0.1, 1, "%.3f", ImGuiSliderFlags_None) then
+    if UI.DragFloat("Font Size", text_size, 0.005, 0.1, 3, "%.3f", ImGuiSliderFlags_None) then
         Window.Window.Font_Scaling = text_size[1]
         Window.Util.Set_Font_Size()
     end
