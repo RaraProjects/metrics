@@ -31,6 +31,7 @@ H.TP.Action = function(action, actor_mob, log_offense)
 
             target_mob = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target_mob then target_mob = {name = Model.Enum.Index.DEBUG} end
+            if target_mob.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target_mob.name) end
 
             -- Check for skillchains
             sc_damage = H.TP.Skillchain_Parse(result, actor_mob, target_mob)

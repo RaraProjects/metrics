@@ -43,6 +43,7 @@ p.Action.Melee = function(action, actor_mob, owner_mob, log_offense)
 			result = action.targets[target_index].actions[action_index]
 			target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
 			if not target then target = {name = 'test'} end
+            if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
 			damage = damage + p.Handler.Melee(result, actor_mob.name, target.name, owner_mob)
 		end
 	end
@@ -251,6 +252,7 @@ p.Action.Ranged = function(act, actor_mob, log_offense)
             result = act.targets[target_index].actions[action_index]
             target = A.Mob.Get_Mob_By_ID(act.targets[target_index].id)
             if target then
+                if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
                 damage = damage + p.Handler.Ranged(result, actor_mob.name, target.name)
             end
         end
@@ -386,6 +388,7 @@ p.Action.Finish_Weaponskill = function(action, actor_mob, log_offense)
 
             target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
+            if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
 
             -- Check for skillchains
             sc_id = result.add_effect_message
@@ -455,6 +458,7 @@ p.Action.Finish_Monster_TP_Move = function(action, actor_mob, log_offense)
             result = action.targets[target_index].actions[action_index]
             target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
+            if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
 
             -- Puppet ranged attack
             if action_id == 1949 then
@@ -615,6 +619,7 @@ p.Action.Job_Ability = function(action, actor_mob, log_offense)
             result = action.targets[target_index].actions[action_index]
             target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
+            if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
             damage = damage + p.Handler.Ability(ability_data, result, actor_mob, target.name)
         end
     end
@@ -678,6 +683,7 @@ p.Action.Pet_Ability = function(action, actor_mob, log_offense)
             result = action.targets[target_index].actions[action_index]
             target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
+            if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
             damage = damage + p.Handler.Ability(ability_data, result, owner_mob, target.name, actor_mob)
         end
     end
@@ -785,6 +791,7 @@ p.Action.Finish_Spell_Casting = function(action, actor_mob, log_offense)
             result = action.targets[target_index].actions[action_index]
             target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = "test"} end
+            if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
 
             is_burst = result.message == 252
             new_damage = p.Handler.Spell_Damage(spell_data, result, actor_mob.name, target.name, is_burst)

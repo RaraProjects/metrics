@@ -1003,15 +1003,20 @@ m.Util.Build_Index = function(actor_name, target_name)
 		_Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil actor name passed in.")
 		return m.Enum.Index.DEBUG
 	end
+	return actor_name..":"..target_name
+end
 
-	-- This is used for the mob focus drop down. Only include unaffiliated non-players in this list.
+------------------------------------------------------------------------------------------------------
+-- Checks to see if a mob has been intiialized for the Mob Filter list.
+------------------------------------------------------------------------------------------------------
+---@param target_name string
+------------------------------------------------------------------------------------------------------
+m.Util.Check_Mob_List = function(target_name)
 	if target_name ~= m.Enum.Index.DEBUG and not m.Data.Initialized_Mobs[target_name] then
 		m.Data.Initialized_Mobs[target_name] = true
 		table.insert(m.Data.Mob_List_Sorted, target_name)
 		table.sort(m.Data.Mob_List_Sorted)
 	end
-
-	return actor_name..":"..target_name
 end
 
 ------------------------------------------------------------------------------------------------------

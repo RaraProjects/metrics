@@ -17,6 +17,7 @@ H.Ranged.Action = function(act, actor_mob, log_offense)
             result = act.targets[target_index].actions[action_index]
             target = A.Mob.Get_Mob_By_ID(act.targets[target_index].id)
             if target then
+                if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
                 damage = damage + H.Ranged.Parse(result, actor_mob.name, target.name)
             end
         end

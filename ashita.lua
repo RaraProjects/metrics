@@ -28,13 +28,14 @@ a.Enum.Mob = {
     ME       = "me",
     TARGET   = "t",
     PET      = "pet",
-    PLAYERTYPE = 0, -- Type
-    PETTYPE    = 2, -- Type
 }
 a.Enum.Spawn_Flags = {
-    MAINPLAYER = 525,
-    OTHERPLAYER = 13,
-    NPC = 2,
+    MAINPLAYER  = 525,
+    OTHERPLAYER = 1,
+    NPC         = 2,
+    MOB         = 16,
+    TRUST       = 4366,
+    PET         = 258,
 }
 a.Enum.Ability = {
     NORMAL        = 1,  -- Type: Normal Ability

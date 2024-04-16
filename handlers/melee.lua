@@ -17,7 +17,8 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 		for action_index, _ in pairs(target_value.actions) do
 			result = action.targets[target_index].actions[action_index]
 			target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-			if not target then target = {name = 'test'} end
+			if not target then target = {name = Model.Enum.Index.DEBUG} end
+            if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
 			damage = damage + H.Melee.Parse(result, actor_mob.name, target.name, owner_mob)
 		end
 	end
