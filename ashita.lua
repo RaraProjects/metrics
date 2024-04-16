@@ -192,7 +192,7 @@ end
 ---@return nil|number
 -- ------------------------------------------------------------------------------------------------------
 a.Party.Refresh = function(player_name, node)
-    if not a.Party.Need_Refresh then return nil end
+    if not a.Party.Need_Refresh and not player_name then return nil end
 
     local data = AshitaCore:GetMemoryManager():GetParty()
     if not data then return nil end
