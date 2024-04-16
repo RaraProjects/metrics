@@ -566,9 +566,6 @@ p.Handler.Weaponskill = function(metadata, player_name, target_name, ws_name, ws
     -- This handles both the pet and player case.
     Model.Update.Catalog_Damage(player_name, target_name, ws_type, damage, ws_name, pet_name)
 
-    -- Set a flag to make this section show up in the Focus menu.
-    Model.Update.Data(p.Mode.INC, 1, audits, ws_type, p.Metric.COUNT)
-
     return damage
 end
 

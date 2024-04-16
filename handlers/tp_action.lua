@@ -136,9 +136,6 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
     -- This handles both the pet and player case.
     Model.Update.Catalog_Damage(actor_mob.name, target_mob.name, audits.trackable, damage, ws_name, audits.pet_name)
 
-    -- Set a flag to make this section show up in the Focus menu.
-    Model.Update.Data(H.Mode.INC, 1, audits, audits.trackable, H.Metric.COUNT)
-
     return damage
 end
 
