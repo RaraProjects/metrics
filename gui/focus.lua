@@ -349,7 +349,7 @@ f.Display.Healing = function(player_name)
                 -- Data
                 UI.TableNextRow()
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
-                UI.TableNextColumn() UI.Text(Col.Healing.Overcure(player_name))
+                UI.TableNextColumn() Col.Healing.Overcure(player_name)
                 UI.EndTable()
             end
             f.Display.Single_Data(player_name, Model.Enum.Trackable.HEALING)

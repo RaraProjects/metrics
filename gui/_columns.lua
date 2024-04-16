@@ -93,7 +93,9 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 c.Healing.Overcure = function(player_name, justify)
-    return c.String.Format_Number(Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, c.Metric.OVERCURE), justify)
+    local overcure = Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, c.Metric.OVERCURE)
+    local color = c.String.Color_Zero(overcure)
+    return UI.TextColored(color, c.String.Format_Number(overcure, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
