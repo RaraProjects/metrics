@@ -888,6 +888,7 @@ m.Util.Pet_Catalog_Calc_Max = function(max, index, pet_name, trackable, action_n
 end
 
 ------------------------------------------------------------------------------------------------------
+-- DEPRECATED - When a party member leaves the denominator changes and makes peoples percent greater than 100%.
 -- Calculates total party / alliance damage for use in percentages.
 ------------------------------------------------------------------------------------------------------
 ---@return number
@@ -961,6 +962,27 @@ m.Get.Total_Party_Damage = function()
 	end
 
     return total_damage
+end
+
+------------------------------------------------------------------------------------------------------
+-- Calculates the total damage from everyone currently on the Team display.
+------------------------------------------------------------------------------------------------------
+---@return number
+------------------------------------------------------------------------------------------------------
+m.Get.Team_Damage = function()
+	local total = 0
+	m.Sort.Damage()
+	for rank, data in ipairs(m.Data.Total_Damage_Sorted) do
+		if rank <= Team.Settings.Rank_Cutoff then
+			local player_name = data[1]
+			if Team.Settings.Include_SC_Damage then
+				total = total + m.Get.Data(player_name, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
+			else
+				total = total + m.Get.Data(player_name, m.Enum.Trackable.TOTAL_NO_SC, m.Enum.Metric.TOTAL)
+			end
+		end
+	end
+	return total
 end
 
 ------------------------------------------------------------------------------------------------------

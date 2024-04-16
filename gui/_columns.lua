@@ -110,7 +110,7 @@ c.Damage.Total = function(player_name, percent, justify)
     if grand_total == 0 then color = Window.Colors.DIM end
 
     if percent then
-        local party_damage = Model.Get.Total_Party_Damage()
+        local party_damage = Model.Get.Team_Damage()
         return UI.TextColored(color, c.String.Format_Percent(grand_total, party_damage, justify))
     end
 
