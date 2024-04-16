@@ -547,6 +547,19 @@ c.String.Compact_Number = function(number, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Truncates a string if it is too long.
+------------------------------------------------------------------------------------------------------
+---@param string string
+---@param limit number
+---@return string
+------------------------------------------------------------------------------------------------------
+c.String.Truncate = function(string, limit)
+    local length = string.len(string)
+    if length <= limit then return string end
+    return string.sub(string, 1, limit) .. "."
+end
+
+------------------------------------------------------------------------------------------------------
 -- NOT IN USE. I COULDN'T GET THIS TO WORK WITH RIGHT ALIGNMENT.
 -- Adds commas to large numbers for easier readability.
 ------------------------------------------------------------------------------------------------------

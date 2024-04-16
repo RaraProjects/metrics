@@ -320,6 +320,6 @@ H.TP.Blog_Pet_Skill = function(owner_mob, actor_mob, action_id, damage, skill_na
     if Blog.Flags.Pet and owner_mob then
         local ignore = nil
         if not Lists.Ability.Monster_Damaging[action_id] then ignore = H.Enum.Flags.IGNORE end
-        Blog.Add(actor_mob.name .. " (" .. owner_mob.name .. ")", skill_name, damage, H.Enum.Text.BLANK, ignore)
+        Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", skill_name, damage, H.Enum.Text.BLANK, ignore)
     end
 end

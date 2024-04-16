@@ -512,7 +512,7 @@ p.Action.Finish_Monster_TP_Move = function(action, actor_mob, log_offense)
     if Blog.Flags.Pet and owner_mob then
         local ignore = nil
         if not Lists.Ability.Monster_Damaging[action_id] then ignore = p.Enum.Flags.IGNORE end
-        Blog.Add(actor_mob.name .. " (" .. owner_mob.name .. ")", ws_name, damage, p.Enum.Text.BLANK, ignore)
+        Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", ws_name, damage, p.Enum.Text.BLANK, ignore)
     end
 
     return true
@@ -690,7 +690,7 @@ p.Action.Pet_Ability = function(action, actor_mob, log_offense)
 
     if damage > 0 then
         Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.PET_ABILITY, p.Metric.HIT_COUNT)
-        if Blog.Flags.Pet then Blog.Add(owner_mob.name .. " (" .. actor_mob.name .. ")", ability_data.Name, damage) end
+        if Blog.Flags.Pet then Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", ability_data.Name, damage) end
     end
 
     return true

@@ -44,6 +44,7 @@ bl.Settings = {
     Size = 32,
     Length = 100,
     Damage_Highlighting = true,
+    Truncate_Length = 6,
 }
 
 bl.Enum = {}
