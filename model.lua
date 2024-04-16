@@ -58,13 +58,13 @@ m.Enum = {
 		SET = "set",
 	},
 	HEALING = {
-		["Cure"]       = 200,	-- 35
-		["Cure II"]    = 400, 	-- 102
-		["Cure III"]   = 800, 	-- 212
-		["Cure IV"]    = 1000,	-- 430
+		["Cure"]       = 50,	-- 35
+		["Cure II"]    = 150, 	-- 102
+		["Cure III"]   = 250, 	-- 212
+		["Cure IV"]    = 500,	-- 430
 		["Cure V"]     = 1300,
 		["Cure VI"]    = 1500,
-		["Curaga"]     = 200,	-- 102
+		["Curaga"]     = 150,	-- 102
 		["Curaga II"]  = 400,
 		["Curaga III"] = 800,
 		["Curaga IV"]  = 1000,
@@ -79,13 +79,13 @@ m.Enum.Pet_Single_Trackable = {
 
 -- Needed to prevent Divine Seal from messing up overcure.
 m.Healing_Max = {
-    ["Cure"]       = 200,
-    ["Cure II"]    = 400,
-    ["Cure III"]   = 800,
-    ["Cure IV"]    = 1000,
+    ["Cure"]       = 50,
+    ["Cure II"]    = 150,
+    ["Cure III"]   = 250,
+    ["Cure IV"]    = 500,
     ["Cure V"]     = 1300,
     ["Cure VI"]    = 1500,
-    ["Curaga"]     = 200,
+    ["Curaga"]     = 150,
     ["Curaga II"]  = 400,
     ["Curaga III"] = 800,
     ["Curaga IV"]  = 1000,
