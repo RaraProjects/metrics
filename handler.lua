@@ -645,6 +645,7 @@ p.Action.Pet_Ability = function(action, actor_mob, log_offense)
     local ability_id = action.param
     local ability_data
     local avatar = false
+    local trackable = p.Trackable.PET_ABILITY
 
     -- Handle offset for Blood Pacts. I don't know why they are all out of order.
     if Lists.Ability.Rage[ability_id] then
@@ -652,6 +653,7 @@ p.Action.Pet_Ability = function(action, actor_mob, log_offense)
         avatar = true
     elseif Lists.Ability.Ward[ability_id] then
         ability_data = Lists.Ability.Ward[ability_id]
+        if Lists.Ability.Avatar_Healing[ability_id] then trackable = p.Trackable.PET_HEAL end
         avatar = true
     else
         ability_data = A.Ability.ID(ability_id + p.Enum.Offsets.PET)
@@ -683,10 +685,13 @@ p.Action.Pet_Ability = function(action, actor_mob, log_offense)
     local audits = {
         player_name = owner_mob.name,
         target_name = target.name,
+        pet_name = actor_mob.name,
     }
 
+    Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, trackable, ability_data.Name, p.Metric.COUNT)
+
     if damage > 0 then
-        Model.Update.Data(p.Mode.INC, 1, audits, p.Trackable.PET_ABILITY, p.Metric.HIT_COUNT)
+        Model.Update.Data(p.Mode.INC, 1, audits, trackable, p.Metric.HIT_COUNT)
         if Blog.Flags.Pet then Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", ability_data.Name, damage) end
     end
 
@@ -728,9 +733,15 @@ p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, own
 
     -- Specifics
     if owner_mob then
-        Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.COUNT)
         if Lists.Ability.Rage[ability_id] then
             Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
+            Model.Update.Catalog_Damage(player_name, target_name, ability_type, damage, ability_name, owner_mob.name)
+            if damage > 0 then
+                Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.HIT_COUNT)
+            end
+        elseif Lists.Ability.Avatar_Healing[ability_id] then
+            ability_type = p.Trackable.PET_HEAL
+            Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.HEALING, p.Metric.TOTAL)
             Model.Update.Catalog_Damage(player_name, target_name, ability_type, damage, ability_name, owner_mob.name)
             if damage > 0 then
                 Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.HIT_COUNT)

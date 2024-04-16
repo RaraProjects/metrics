@@ -282,9 +282,9 @@ f.Display.Magic = function(player_name)
                 UI.TableNextRow()
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable, true)
-                UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name))
-                UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name, true))
-                UI.TableNextColumn() UI.Text(Col.Damage.Burst(player_name, true, true))
+                UI.TableNextColumn() Col.Damage.Burst(player_name)
+                UI.TableNextColumn() Col.Damage.Burst(player_name, true)
+                UI.TableNextColumn() Col.Damage.Burst(player_name, true, true)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ENSPELL)
                 UI.EndTable()
             end
@@ -512,12 +512,12 @@ f.Display.Pet_Single_Data = function(player_name)
                 UI.TableHeadersRow()
 
                 UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET))
-                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET, true))
-                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_MELEE))
-                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_RANGED))
-                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_WS))
-                UI.TableNextColumn() UI.Text(Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_ABILITY))
+                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET)
+                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET, true)
+                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_MELEE)
+                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_RANGED)
+                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_WS)
+                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_ABILITY)
                 UI.EndTable()
             end
 
@@ -563,19 +563,19 @@ end
 f.Display.Util.Pet_Single_Row = function(player_name, pet_name, action_name, trackable)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(action_name)
-    UI.TableNextColumn() UI.Text(Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, Model.Enum.Metric.TOTAL))
-    UI.TableNextColumn() UI.Text(Col.Single.Pet_Attempts(player_name, pet_name, action_name, trackable))
+    UI.TableNextColumn() Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, Model.Enum.Metric.TOTAL)
+    UI.TableNextColumn() Col.Single.Pet_Attempts(player_name, pet_name, action_name, trackable)
     UI.TableNextColumn() UI.Text(Col.Single.Pet_Acc(player_name, pet_name, action_name, trackable))
     UI.TableNextColumn() UI.Text(Col.Single.Pet_Average(player_name, pet_name, action_name, trackable))
 
     local min = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, Model.Enum.Metric.MIN)
     if min == f.Enum.OVERFLOW then
-        UI.TableNextColumn() UI.Text(Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, Model.Enum.Misc.IGNORE))
+        UI.TableNextColumn() Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, Model.Enum.Misc.IGNORE)
     else
-        UI.TableNextColumn() UI.Text(Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, Model.Enum.Metric.MIN))
+        UI.TableNextColumn() Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, Model.Enum.Metric.MIN)
     end
 
-    UI.TableNextColumn() UI.Text(Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, Model.Enum.Metric.MAX))
+    UI.TableNextColumn() Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, Model.Enum.Metric.MAX)
 end
 
 ------------------------------------------------------------------------------------------------------

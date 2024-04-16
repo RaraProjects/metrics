@@ -294,6 +294,16 @@ l.Ability.Ward = {
     [1908] = {id=658,en="Nightmare",ja="ナイトメア",element=7,icon_id=348,mp_cost=42,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
 }
 
+l.Ability.Avatar_Healing = {
+    -- Leviathan
+    [861] = {id=579,en="Spring Water",ja="湧水",element=5,icon_id=344,mp_cost=99,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
+    -- Garuda
+    [869] = {id=594,en="Whispering Wind",ja="風の囁き",element=2,icon_id=345,mp_cost=119,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
+    -- Carbuncle
+    [906] = {id=512,en="Healing Ruby",ja="ルビーの癒し",element=6,icon_id=340,mp_cost=6,prefix="/pet",range=12,recast_id=174,targets=5,tp_cost=0,type="BloodPactWard"},
+    [911] = {id=517,en="Healing Ruby II",ja="ルビーの癒しII",element=6,icon_id=340,mp_cost=124,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
+}
+
 l.Ability.Rage = {
     -- Fenrir
     [831] = {id=528,en="Moonlit Charge",ja="ムーンリットチャージ",element=7,icon_id=341,mp_cost=17,prefix="/pet",range=2,recast_id=173,skillchain_a="Compression",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},

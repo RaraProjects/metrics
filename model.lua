@@ -29,6 +29,7 @@ m.Enum = {
 		SC          = 'Skillchains',
 		ABILITY     = 'Abilities',
 		PET_ABILITY = 'Pet Ability',
+		PET_HEAL    = 'Pet Healing',
 		MAGIC       = 'Spells',
 		ENSPELL     = 'Enspell',
 		NUKE        = 'Nuke',
@@ -57,13 +58,13 @@ m.Enum = {
 		SET = "set",
 	},
 	HEALING = {
-		["Cure"]       = 200,
-		["Cure II"]    = 400,
-		["Cure III"]   = 800,
+		["Cure"]       = 200,	-- 35
+		["Cure II"]    = 400, 	-- 102
+		["Cure III"]   = 800, 	-- 212
 		["Cure IV"]    = 1000,	-- 430
 		["Cure V"]     = 1300,
 		["Cure VI"]    = 1500,
-		["Curaga"]     = 200,
+		["Curaga"]     = 200,	-- 102
 		["Curaga II"]  = 400,
 		["Curaga III"] = 800,
 		["Curaga IV"]  = 1000,
@@ -73,6 +74,7 @@ m.Enum = {
 m.Enum.Pet_Single_Trackable = {
 	PET_WS      = m.Enum.Trackable.PET_WS,
 	PET_ABILITY = m.Enum.Trackable.PET_ABILITY,
+	PET_HEAL    = m.Enum.Trackable.PET_HEAL,
 }
 
 -- Needed to prevent Divine Seal from messing up overcure.
@@ -385,7 +387,7 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
 
 	-- GRAND TOTAL ////////////////////////////////////////////////////////////////////////////////
 	-- There is a regular track and a "no skillchains" track.
-    if trackable ~= m.Enum.Trackable.HEALING then
+    if trackable ~= m.Enum.Trackable.HEALING and trackable ~= m.Enum.Trackable.PET_HEAL then
     	m.Update.Data(m.Enum.Mode.INC, damage, audits, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
 		if trackable ~= m.Enum.Trackable.SC then
 			m.Update.Data(m.Enum.Mode.INC, damage, audits, m.Enum.Trackable.TOTAL_NO_SC, m.Enum.Metric.TOTAL)
@@ -1149,9 +1151,6 @@ m.Util.Pet_Populate_Catalog_Damage_Table = function(player_name, pet_name)
 	for _, trackable in pairs(m.Enum.Pet_Single_Trackable) do
 		if m.Util.Pet_Catalog_Exists(trackable, player_name, pet_name) then
 			for action_name, _ in pairs(m.Data.Pet_Trackable[trackable][player_name][pet_name]) do
-				-- local value = m.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, m.Enum.Metric.TOTAL)
-				-- _Debug.Error.Add("Util.Pet_Populate_Catalog_Damage_Table: Inside Double Loop " .. tostring(action_name) .. " " .. tostring(trackable) .. " " .. tostring(player_name) .. " " .. tostring(pet_name) .. " " .. tostring(value))
-				-- table.insert(m.Data.Pet_Catalog_Damage_Race, {action_name, value, trackable})
 				table.insert(m.Data.Pet_Catalog_Damage_Race, {action_name, 999, trackable})
 			end
 		end
