@@ -61,6 +61,21 @@ l.Ability.Damaging = {
     [841] = {id = 841              , en = "Intervene"}
 }
 
+l.Ability.Wyvern_Breath = {
+    [900] = {id=900,en="Flame Breath",ja="フレイムブレス"},
+    [901] = {id=901,en="Frost Breath",ja="フロストブレス"},
+    [902] = {id=902,en="Gust Breath",ja="ガストブレス"},
+    [903] = {id=903,en="Sand Breath",ja="サンドブレス"},
+    [904] = {id=904,en="Lightning Breath",ja="ライトニングブレス"},
+    [905] = {id=905,en="Hydro Breath",ja="ハイドロブレス"},
+}
+
+l.Ability.Wyvern_Healing = {
+    [894] = {id=894,en="Healing Breath",ja="ヒールブレス"},
+    [895] = {id=895,en="Healing Breath II",ja="ヒールブレスII"},
+    [896] = {id=896,en="Healing Breath III",ja="ヒールブレスIII"},
+}
+
 l.Spell.Healing = {
     [1]   = {id = 1,   en = "Cure"},
     [2]   = {id = 2,   en = "Cure II"},

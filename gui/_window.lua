@@ -1,7 +1,7 @@
 local w = {}
 
 w.Window = {
-    Name = "Metrics",
+    Name = "Metrics (Beta)",
     Alpha = 0.85,
     Font_Scaling = 0.85,
     Style = 1,
@@ -10,7 +10,7 @@ w.Window = {
     Mini = false,
     Flags = bit.bor(
     ImGuiWindowFlags_AlwaysAutoResize,
-    ImGuiWindowFlags_NoSavedSettings,
+    --ImGuiWindowFlags_NoSavedSettings,
     ImGuiWindowFlags_NoFocusOnAppearing,
     ImGuiWindowFlags_NoNav
     ),

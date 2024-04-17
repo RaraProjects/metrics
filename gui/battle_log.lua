@@ -7,26 +7,26 @@ bl.Util = {}
 bl.Flags = {
     Timestamp = false,
     Melee     = false,
-    Ranged    = true,
+    Ranged    = false,
     WS        = true,
     SC        = true,
     Magic     = true,
     Ability   = true,
     Pet       = true,
     Healing   = true,
-    Deaths    = true,
+    Deaths    = false,
 }
 bl.Flag_Defaults = {
     Timestamp = false,
     Melee     = false,
-    Ranged    = true,
+    Ranged    = false,
     WS        = true,
     SC        = true,
     Magic     = true,
     Ability   = true,
     Pet       = true,
     Healing   = true,
-    Deaths    = true,
+    Deaths    = false,
 }
 
 bl.Thresholds = {
@@ -192,7 +192,7 @@ bl.Util.Notes = function(note, action_type)
     else
         -- TP for WS is the default case.
 ---@diagnostic disable-next-line: param-type-mismatch
-        if note then return "TP: " .. Col.String.Format_Number(note) end
+        if note then return "TP: " .. Col.String.Format_Number(note) .. " " end
     end
     return " "
 end
