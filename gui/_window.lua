@@ -34,6 +34,7 @@ w.Table.Flags = {
     None = bit.bor(ImGuiTableFlags_None),
     Resizable = bit.bor(ImGuiTableFlags_NoSavedSettings, ImGuiTableFlags_Resizable, ImGuiTableFlags_SizingStretchProp, ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
     Borders = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
+    Fixed_Borders = bit.bor(ImGuiTableFlags_SizingFixedFit, ImGuiTableFlags_Resizable, ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_NoHostExtendX),
     Team = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
     Scrollable = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_ScrollY)
 }
@@ -82,6 +83,7 @@ w.Dropdown.Player.Index = 1
 w.Dropdown.Mob = {}
 w.Dropdown.Mob.Focus = w.Dropdown.Enum.NONE
 w.Dropdown.Mob.Index = 1
+w.Dropdown.Width = 150
 
 -- Colors ////////////////////////
 w.Colors = {
@@ -145,7 +147,7 @@ w.Initialize = function()
     UI.PushStyleVar(ImGuiStyleVar_WindowPadding, {7, 3})
     UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
     UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
-    -- UI.PushStyleVar(ImGuiStyleVar_IndentSpacing, 0) -- Not sure if I like this on or off more.
+    UI.PushStyleVar(ImGuiStyleVar_IndentSpacing, 0) -- Not sure if I like this on or off more.
 
     -- Reset dropdown selections.
     w.Dropdown.Player.Focus = w.Dropdown.Enum.NONE
@@ -324,6 +326,7 @@ w.Widget.Mob_Filter = function()
     local list = Model.Get.Mob_List_Sorted()
     local flags = w.Dropdown.Flags
     if list[1] then
+        UI.SetNextItemWidth(w.Dropdown.Width)
         if UI.BeginCombo(w.Dropdown.Enum.MOB, list[w.Dropdown.Mob.Index], flags) then
             for n = 1, #list, 1 do
                 local is_selected = w.Dropdown.Mob.Index == n
@@ -351,6 +354,7 @@ w.Widget.Player_Filter = function()
     local list = Model.Get.Player_List_Sorted()
     local flags = w.Dropdown.Flags
     if list[1] then
+        UI.SetNextItemWidth(w.Dropdown.Width)
         if UI.BeginCombo(w.Dropdown.Enum.FOCUS, list[w.Dropdown.Player.Index], flags) then
             for n = 1, #list, 1 do
                 local is_selected = w.Dropdown.Player.Index == n

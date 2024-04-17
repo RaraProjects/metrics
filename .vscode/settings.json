@@ -41,6 +41,7 @@
         "ImGuiTableFlags_Sortable",
         "ImGuiTableColumnFlags_DefaultSort",
         "ImGuiTableFlags_ScrollY",
-        "ImGuiStyleVar_IndentSpacing"
+        "ImGuiStyleVar_IndentSpacing",
+        "ImGuiTableFlags_NoHostExtendX"
     ]
 }
