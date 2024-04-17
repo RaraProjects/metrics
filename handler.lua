@@ -662,6 +662,7 @@ p.Action.Pet_Ability = function(action, actor_mob, log_offense)
         avatar = true
     else
         ability_data = A.Ability.ID(ability_id + p.Enum.Offsets.PET)
+        if Lists.Ability.Wyvern_Healing[ability_id] then trackable = p.Trackable.PET_HEAL end
     end
 
     -- Need special data handling since pulling from multiple sources.
@@ -745,9 +746,15 @@ p.Handler.Ability = function(ability_data, metadata, actor_mob, target_name, own
             if damage > 0 then
                 Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.HIT_COUNT)
             end
-        elseif Lists.Ability.Avatar_Healing[ability_id] then
+        elseif Lists.Ability.Avatar_Healing[ability_id] or Lists.Ability.Wyvern_Healing[ability_id] then
             ability_type = p.Trackable.PET_HEAL
             Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.HEALING, p.Metric.TOTAL)
+            Model.Update.Catalog_Damage(player_name, target_name, ability_type, damage, ability_name, owner_mob.name)
+            if damage > 0 then
+                Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.HIT_COUNT)
+            end
+        elseif Lists.Ability.Wyvern_Breath[ability_id] then
+            Model.Update.Data(p.Mode.INC, damage, audits, p.Trackable.PET, p.Metric.TOTAL)
             Model.Update.Catalog_Damage(player_name, target_name, ability_type, damage, ability_name, owner_mob.name)
             if damage > 0 then
                 Model.Update.Catalog_Metric(p.Mode.INC, 1, audits, ability_type, ability_name, p.Metric.HIT_COUNT)
