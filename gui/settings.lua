@@ -58,10 +58,13 @@ end
 ------------------------------------------------------------------------------------------------------
 s.Section.Text_Commands = function()
     if UI.CollapsingHeader("Text Commands") then
-        UI.Text("Base command: /metrics")
+        UI.Text("Base command: /metrics or /met")
         UI.Text("Arguments:")
-        UI.BulletText("show -- toggles window visibility.")
-        UI.BulletText("mini -- toggles mini mode.")
+        UI.BulletText("show  / s -- toggles window visibility.")
+        UI.BulletText("mini  / m -- toggles mini mode.")
+        UI.BulletText("nano  / n -- toggles nano mode.")
+        UI.BulletText("full  / f -- toggles full mode.")
+        UI.BulletText("reset / r -- resets the parse data.")
     end
 end
 

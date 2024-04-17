@@ -31,6 +31,7 @@ f.Populate = function()
 
     f.Display.Util.Buttons() UI.SameLine()
     UI.Text(" Grand Total: ") UI.SameLine() Col.Damage.Total(player_name)
+    f.Display.Overall(player_name)
     f.Display.Melee(player_name)
     f.Display.Ranged(player_name)
     f.Display.Crits(player_name)
@@ -39,6 +40,43 @@ f.Populate = function()
     f.Display.Ability(player_name)
     f.Display.Healing(player_name)
     f.Display.Pet(player_name)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows a breakdown of overall player damage by type.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+f.Display.Overall = function(player_name)
+
+    local col_flags = Window.Columns.Flags.None
+    local table_flags = Window.Table.Flags.Borders
+    local width = Window.Columns.Widths.Percent
+    local columns = 6
+    if Team.Settings.Include_SC_Damage then columns = columns + 1 end
+
+    if UI.BeginTable("Overall", columns, table_flags) then
+        -- Headers
+        UI.TableSetupColumn("Melee", col_flags, width)
+        UI.TableSetupColumn("Ranged", col_flags, width)
+        UI.TableSetupColumn("WS", col_flags, width)
+        if Team.Settings.Include_SC_Damage then UI.TableSetupColumn("SC", col_flags, width) end
+        UI.TableSetupColumn("Magic", col_flags, width)
+        UI.TableSetupColumn("Ability", col_flags, width)
+        UI.TableSetupColumn("Pet", col_flags, width)
+        UI.TableHeadersRow()
+
+        -- Data
+        UI.TableNextRow()
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE, true)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.RANGED, true)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.WS, true)
+        if Team.Settings.Include_SC_Damage then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.SC, true) end
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC, true)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ABILITY, true)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET, true)
+        UI.EndTable()
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

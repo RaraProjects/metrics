@@ -159,16 +159,16 @@ ashita.events.register('command', 'command_cb', function (e)
             Window.Util.Toggle_Visibility()
         elseif arg == "debug" then
             _Debug.Toggle()
-        elseif arg == "nano" then
+        elseif arg == "nano" or "n" then
             Window.Util.Toggle_Nano()
-        elseif arg == "mini" then
+        elseif arg == "mini" or "m" then
             Window.Util.Toggle_Mini()
-        elseif arg == "reset" then
+        elseif arg == "reset" or "r" then
             Model.Initialize()
-        elseif arg == "full" then
+        elseif arg == "full" or "f" then
             Window.Util.Enable_Full()
         elseif arg == "test" and _Debug.Enabled then
-            --_Debug.Unit.Tests.Avatar_Rage()
+            -- _Debug.Unit.Tests.Avatar_Rage()
             -- _Debug.Message("Command: " .. tostring(A.Party.In_Party(command_args[3])))
         end
     end
