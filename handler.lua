@@ -699,7 +699,9 @@ p.Action.Pet_Ability = function(action, actor_mob, log_offense)
 
     if damage > 0 then
         Model.Update.Data(p.Mode.INC, 1, audits, trackable, p.Metric.HIT_COUNT)
-        if Blog.Flags.Pet then Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", ability_data.Name, damage) end
+        if Blog.Flags.Pet and (Lists.Ability.Rage[ability_id] or Lists.Ability.Wyvern_Breath[ability_id]) then
+            Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", ability_data.Name, damage) 
+        end
     end
 
     return true
