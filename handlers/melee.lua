@@ -29,6 +29,10 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Adds melee damage to the battle log.
 -- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table the mob data of the entity performing the action.
+---@param owner_mob table|nil (if pet) the mob data of the entity's owner.
+---@param damage number
+-- ------------------------------------------------------------------------------------------------------
 H.Melee.Blog = function(actor_mob, owner_mob, damage)
     if Blog.Flags.Melee then
         local blog_name = actor_mob.name
@@ -138,6 +142,9 @@ end
 -- Certain messages may come in with damage, but it's not actually damage.
 -- Need to set the damage to zero for these cases.
 ------------------------------------------------------------------------------------------------------
+---@param message_id number
+---@return boolean whether or not the damage from this should be treated as actual damage or not.
+------------------------------------------------------------------------------------------------------
 H.Melee.No_Damage_Messages = function(message_id)
     return message_id == A.Enum.Message.DODGE or
            message_id == A.Enum.Message.MISS or
@@ -147,6 +154,11 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Increment Grand Totals.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param melee_type_discrete string main-hand, off-hand, etc.
+---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Totals = function(audits, damage, melee_type_discrete, no_damage)
     if no_damage then damage = 0 end
@@ -159,6 +171,11 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Increment total pet damage.
 ------------------------------------------------------------------------------------------------------
+---@param owner_mob table|nil if the action was from a pet then this will hold the owner's mob.
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
+------------------------------------------------------------------------------------------------------
 H.Melee.Pet_Total = function(owner_mob, audits, damage, no_damage)
     if no_damage then damage = 0 end
     if owner_mob then
@@ -168,6 +185,15 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- The melee's animation to determine whether this is a regular melee of throwing melee.
+------------------------------------------------------------------------------------------------------
+---comment
+---@param animation_id number this determines if the melee is main-hand, off-hand, etc.
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param melee_type_broad string player melee or pet melee.
+---@param throwing boolean whether or not the animation is a NIN auto throwing attack.
+---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
+---@return boolean throwing whether or not the animation is a NIN auto throwing attack.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Animation = function(animation_id, audits, damage, melee_type_broad, throwing, no_damage)
     if no_damage then damage = 0 end
@@ -190,6 +216,13 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Handle the various metrics based on message.
 -- The range attacks here are specifically the NIN auto throwing attacks while engaged.
+-- https://github.com/Windower/Lua/wiki/Message-IDs
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param message_id number numberic identifier for system chat messages.
+---@param melee_type_broad string player melee or pet melee.
+---@param melee_type_discrete string main-hand, off-hand, etc.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_type_discrete)
     if message_id == A.Enum.Message.HIT then
@@ -222,6 +255,10 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Regular melee hit.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param melee_type_broad string player melee or pet melee.
+---@param melee_type_discrete string main-hand, off-hand, etc.
+------------------------------------------------------------------------------------------------------
 H.Melee.Hit = function(audits, melee_type_broad, melee_type_discrete)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
@@ -231,6 +268,9 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Regular melee miss.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param melee_type_broad string player melee or pet melee.
+------------------------------------------------------------------------------------------------------
 H.Melee.Miss = function(audits, melee_type_broad)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad, H.Metric.MISS_COUNT)
     Model.Update.Running_Accuracy(audits.player_name, false)
@@ -238,6 +278,11 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Regular melee critical hit.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param melee_type_broad string player melee or pet melee.
+---@param melee_type_discrete string main-hand, off-hand, etc.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Crit = function(audits, damage, melee_type_broad, melee_type_discrete)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
@@ -253,6 +298,10 @@ end
 -- Sometimes you just need to melee down through shadows. I don't think your accuracy should suffer.
 -- If you actually miss, only then should the accuracy suffer.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param melee_type_broad string player melee or pet melee.
+---@param melee_type_discrete string main-hand, off-hand, etc.
+------------------------------------------------------------------------------------------------------
 H.Melee.Shadows = function(audits, melee_type_broad, melee_type_discrete)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
@@ -263,6 +312,10 @@ end
 -- Regular melee evaded by Pefect Dodge.
 -- Remove the count so perfect dodge isn't penalized.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param melee_type_broad string player melee or pet melee.
+---@param melee_type_discrete string main-hand, off-hand, etc.
+------------------------------------------------------------------------------------------------------
 H.Melee.Dodge = function(audits, melee_type_broad, melee_type_discrete)
     Model.Update.Data(H.Mode.INC,     -1, audits, melee_type_broad,    H.Metric.COUNT)
     Model.Update.Data(H.Mode.INC,     -1, audits, melee_type_discrete, H.Metric.COUNT)
@@ -271,6 +324,11 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Healing the mob with a melee hit.
 -- Accuracy doesn't suffer because this isn't a miss. It just heals the mob.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param melee_type_broad string player melee or pet melee.
+---@param melee_type_discrete string main-hand, off-hand, etc.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Mob_Heal = function(audits, damage, melee_type_broad, melee_type_discrete)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
@@ -281,6 +339,8 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Throwing regular hit.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+------------------------------------------------------------------------------------------------------
 H.Melee.Range_Hit = function(audits)
     Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
     Model.Update.Running_Accuracy(audits.player_name, true)
@@ -288,6 +348,8 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Throwing square hit.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Square = function(audits)
     Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
@@ -297,6 +359,8 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Throwing truestrike hit.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+------------------------------------------------------------------------------------------------------
 H.Melee.Truestrike = function(audits)
     Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
     Model.Update.Running_Accuracy(audits.player_name, true)
@@ -305,6 +369,8 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Throwing miss.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+------------------------------------------------------------------------------------------------------
 H.Melee.Throw_Miss = function(audits)
     Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.MISS_COUNT)
     Model.Update.Running_Accuracy(audits.player_name, false)
@@ -312,6 +378,9 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Throwing critical hit.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
 ------------------------------------------------------------------------------------------------------
 H.Melee.Throw_Crit = function(audits, damage)
     Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
@@ -322,6 +391,12 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Minimum and maximum melee values.
+------------------------------------------------------------------------------------------------------
+---@param throwing boolean whether or not the animation is a NIN auto throwing attack.
+---@param damage number
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param melee_type_broad string player melee or pet melee.
+---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Min_Max = function(throwing, damage, audits, melee_type_broad, no_damage)
     if no_damage then damage = 0 end
@@ -337,6 +412,10 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Enspell damage.
 -- Element of the enspell is in add_effect_animation.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param enspell_damage number
+---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Enspell = function(audits, enspell_damage, no_damage)
     if no_damage then enspell_damage = 0 end
