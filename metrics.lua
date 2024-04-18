@@ -43,6 +43,10 @@ A = require("ashita")
 Model = require('model')
 Handler = require("handler")
 
+-- Handlers
+require("handlers._handler")
+require("handlers.melee")
+
 -- Windows
 Window = require("gui._window")
 Col = require('gui._columns')
@@ -111,7 +115,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         -- Process action if the actor is an affiliated pet or affiliated player.
         if owner_mob or A.Party.Is_Affiliate(actor_mob.name) then log_offense = true end
 
-        if     (action.category ==  1) then Handler.Action.Melee(action, actor_mob, owner_mob, log_offense)
+        if     (action.category ==  1) then H.Melee.Action(action, actor_mob, owner_mob, log_offense)
         elseif (action.category ==  2) then Handler.Action.Ranged(action, actor_mob, log_offense)
         elseif (action.category ==  3) then Handler.Action.Finish_Weaponskill(action, actor_mob, log_offense)
         elseif (action.category ==  4) then Handler.Action.Finish_Spell_Casting(action, actor_mob, log_offense)

@@ -3,8 +3,11 @@ _Debug.Unit.Action_Data = {}
 _Debug.Unit.Action_Data.Player = {}
 _Debug.Unit.Util = {}
 _Debug.Unit.Tests = {}
+_Debug.Unit.Tests.Melee = {}
 _Debug.Unit.Mob = {}
 _Debug.Unit.Active = false
+
+_Debug.Unit.Mob.Target_ID = 17254144
 
 _Debug.Unit.Mob.PLAYER = {
     name = "Player",
@@ -51,6 +54,35 @@ _Debug.Unit.Mob.ENEMY = {
 -- Healing
 -- Curaga
 
+------------------------------------------------------------------------------------------------------
+-- Poulates the Unit Test Window.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Populate = function()
+    if UI.BeginTable("Heals", 4, Window.Table.Flags.Borders) then
+        UI.TableNextRow()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Hit()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Crit()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Miss()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Enspell()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Shadows()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Mob_Heal()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Pet_Hit()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Pet_Crit()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Pet_Miss()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Shadows()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Mob_Heal()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Throwing_Hit()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Throwing_Miss()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Throwing_Square()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Throwing_Truestrike()
+        UI.TableNextColumn() _Debug.Unit.Tests.Melee.Throwing_Crit()
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Build the fake result table.
+------------------------------------------------------------------------------------------------------
 _Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_id, message_id, add_effect_param)
     if not add_effect_param then add_effect_param = 0 end
 
@@ -75,43 +107,259 @@ _Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation
 end
 
 ------------------------------------------------------------------------------------------------------
--- Test: Melee Attacks.
+-- Test: Melee Hit.
 ------------------------------------------------------------------------------------------------------
-_Debug.Unit.Tests.Melee = function()
-    local damage = 200
-    local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+_Debug.Unit.Tests.Melee.Hit = function()
+    local clicked = 0
+    if UI.Button("Melee Hit") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT)
+            H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
+        end
+    end
+end
 
-    -- Regular Hit
-    local action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT)
-    local melee_damage = Model.Get.Data(_Debug.Unit.Mob.PLAYER.name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.TOTAL)
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Crit.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Crit = function()
+    local clicked = 0
+    if UI.Button("Melee Crit") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.CRIT)
+            H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
+        end
+    end
+end
 
-    -- Critical Hit
-    action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.CRIT)
-    Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
-    melee_damage = Model.Get.Data(_Debug.Unit.Mob.PLAYER.name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.TOTAL)
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Miss.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Miss = function()
+    local clicked = 0
+    if UI.Button("Melee Miss") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MISS)
+            H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
+        end
+    end
+end
 
-    -- Miss
-    action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MISS)
-    Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Enspell.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Enspell = function()
+    local clicked = 0
+    if UI.Button("Melee Enspell") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT, 100)
+            H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
+        end
+    end
+end
 
-    -- Enspell
-    action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT, 100)
-    Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Shadows.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Shadows = function()
+    local clicked = 0
+    if UI.Button("Melee Shadows") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.SHADOWS)
+            H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
+        end
+    end
+end
 
-    -- Shadows
-    action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.SHADOWS)
-    Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Mob Heal.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Mob_Heal = function()
+    local clicked = 0
+    if UI.Button("Melee Mob Heal") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MOBHEAL373)
+            H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
+        end
+    end
+end
 
-    -- Mob Heal
-    action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MOBHEAL373)
-    Handler.Action.Melee(action, _Debug.Unit.Mob.PLAYER, nil, true)
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Pet Hit.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Pet_Hit = function()
+    local clicked = 0
+    if UI.Button("Melee Pet Hit") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT)
+            H.Melee.Action(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
+        end
+    end
+end
 
-    -- Pet Melee
-    local action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT)
-    Handler.Action.Melee(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Pet Crit.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Pet_Crit = function()
+    local clicked = 0
+    if UI.Button("Melee Pet Crit") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.CRIT)
+            H.Melee.Action(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
+        end
+    end
+end
 
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Pet Miss.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Pet_Miss = function()
+    local clicked = 0
+    if UI.Button("Melee Pet Miss") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MISS)
+            H.Melee.Action(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
+        end
+    end
+end
 
-    _Debug.Message("Melee: " .. tostring(damage) .. " " .. tostring(melee_damage) .. " " .. tostring(damage == melee_damage))
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Pet Shadows.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Pet_Shadows = function()
+    local clicked = 0
+    if UI.Button("Melee Pet Shadows") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.SHADOWS)
+            H.Melee.Action(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
+        end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Pet Mob Heal.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Pet_Mob_Heal = function()
+    local clicked = 0
+    if UI.Button("Melee Pet Mob Heal") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MOBHEAL373)
+            H.Melee.Action(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
+        end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Throwing Hit.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Throwing_Hit = function()
+    local clicked = 0
+    if UI.Button("Melee Throwing Hit") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.THROWING, A.Enum.Message.RANGEHIT)
+            H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
+        end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Throwing Square Hit.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Throwing_Square = function()
+    local clicked = 0
+    if UI.Button("Melee Throwing Square") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.THROWING, A.Enum.Message.SQUARE)
+            H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
+        end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Throwing Truestrike Hit.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Throwing_Truestrike = function()
+    local clicked = 0
+    if UI.Button("Melee Throwing True") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.THROWING, A.Enum.Message.TRUE)
+            H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
+        end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Throwing Miss.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Throwing_Miss = function()
+    local clicked = 0
+    if UI.Button("Melee Throwing Miss") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.THROWING, A.Enum.Message.MISS)
+            H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
+        end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Test: Melee Throwing Crit.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.Melee.Throwing_Crit = function()
+    local clicked = 0
+    if UI.Button("Melee Throwing Crit") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 836 -- Eclipse Bite (not that it matters for this test)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.THROWING, A.Enum.Message.RANGECRIT)
+            H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
+        end
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

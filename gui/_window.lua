@@ -212,9 +212,21 @@ w.Populate = function()
                             _Debug.Data_View.Populate()
                             UI.EndTabItem()
                         end
+                        if UI.BeginTabItem("Unit Tests") then
+                            _Debug.Unit.Populate()
+                            UI.EndTabItem()
+                        end
                     end
                     UI.EndTabBar()
                 end
+                UI.End()
+            end
+        end
+
+        if _Debug.Is_Enabled() then
+            if UI.Begin("Unit Tests", {w.Window.Visible}, w.Window.Flags) then
+                w.Window.Visible = -1
+                _Debug.Unit.Populate()
                 UI.End()
             end
         end

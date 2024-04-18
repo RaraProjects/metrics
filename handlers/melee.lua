@@ -88,25 +88,25 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     }
 
     -- No damage Messages
-    damage = H.Melee.No_Damage_Messages(message_id, damage)
+    local no_damage = H.Melee.No_Damage_Messages(message_id)
 
     -- Totals
-    H.Melee.Totals(audits, damage, melee_type_discrete)
+    H.Melee.Totals(audits, damage, melee_type_discrete, no_damage)
 
     -- Pet Totals
-    H.Melee.Pet_Total(owner_mob, audits, damage)
+    H.Melee.Pet_Total(owner_mob, audits, damage, no_damage)
 
     -- Melee or Throwing Totals and Counts
-    throwing = H.Melee.Animation(animation_id, audits, damage, melee_type_broad, throwing)
+    throwing = H.Melee.Animation(animation_id, audits, damage, melee_type_broad, throwing, no_damage)
 
     -- Min/Max
-    H.Melee.Min_Max(throwing, damage, audits, melee_type_broad)
+    H.Melee.Min_Max(throwing, damage, audits, melee_type_broad, no_damage)
 
     -- Enspell
     local enspell_damage = result.add_effect_param
-    if enspell_damage > 0 then H.Melee.Enspell(audits, enspell_damage) end
+    if enspell_damage > 0 then H.Melee.Enspell(audits, enspell_damage, no_damage) end
 
-    -- Accuracy and misc. traits.
+    -- Accuracy, crits, absorbed by shadows, etc.
     H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete)
 
     local spikes = result.spike_effect_effect
@@ -138,18 +138,18 @@ end
 -- Certain messages may come in with damage, but it's not actually damage.
 -- Need to set the damage to zero for these cases.
 ------------------------------------------------------------------------------------------------------
-H.Melee.No_Damage_Messages = function(message_id, damage)
-    if message_id == A.Enum.Message.DODGE or message_id == A.Enum.Message.MOBHEAL373
-    or message_id == A.Enum.Message.MISS or message_id == A.Enum.Message.SHADOWS then
-        return 0
-    end
-    return damage
+H.Melee.No_Damage_Messages = function(message_id)
+    return message_id == A.Enum.Message.DODGE or
+           message_id == A.Enum.Message.MISS or
+           message_id == A.Enum.Message.SHADOWS or
+           message_id == A.Enum.Message.MOBHEAL373
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Increment Grand Totals.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Totals = function(audits, damage, melee_type_discrete)
+H.Melee.Totals = function(audits, damage, melee_type_discrete, no_damage)
+    if no_damage then damage = 0 end
     Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.TOTAL, H.Metric.TOTAL)
     Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)
     Model.Update.Data(H.Mode.INC, damage, audits, melee_type_discrete, H.Metric.TOTAL)
@@ -159,7 +159,8 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Increment total pet damage.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Pet_Total = function(owner_mob, audits, damage)
+H.Melee.Pet_Total = function(owner_mob, audits, damage, no_damage)
+    if no_damage then damage = 0 end
     if owner_mob then
         Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
     end
@@ -168,7 +169,8 @@ end
 ------------------------------------------------------------------------------------------------------
 -- The melee's animation to determine whether this is a regular melee of throwing melee.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Animation = function(animation_id, audits, damage, melee_type_broad, throwing)
+H.Melee.Animation = function(animation_id, audits, damage, melee_type_broad, throwing, no_damage)
+    if no_damage then damage = 0 end
     -- Regular Melee
     if animation_id >= A.Enum.Animation.MELEE_MAIN and animation_id < A.Enum.Animation.THROWING then
         Model.Update.Data(H.Mode.INC, damage, audits, melee_type_broad, H.Metric.TOTAL)
@@ -187,28 +189,31 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Handle the various metrics based on message.
+-- The range attacks here are specifically the NIN auto throwing attacks while engaged.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_type_discrete)
     if message_id == A.Enum.Message.HIT then
         H.Melee.Hit(audits, melee_type_broad, melee_type_discrete)
-    elseif message_id == A.Enum.Message.MOBHEAL3 or message_id == A.Enum.Message.MOBHEAL373 then
-        H.Melee.Mob_Heal(audits, damage, melee_type_broad, melee_type_discrete)
     elseif message_id == A.Enum.Message.MISS then
         H.Melee.Miss(audits, melee_type_broad)
+    elseif message_id == A.Enum.Message.CRIT then
+        H.Melee.Crit(audits, damage, melee_type_broad, melee_type_discrete)
     elseif message_id == A.Enum.Message.SHADOWS then
         H.Melee.Shadows(audits, melee_type_broad, melee_type_discrete)
     elseif message_id == A.Enum.Message.DODGE then
         H.Melee.Dodge(audits, melee_type_broad, melee_type_discrete)
-    elseif message_id == A.Enum.Message.CRIT then
-        H.Melee.Crit(audits, damage, melee_type_broad, melee_type_discrete)
-    elseif message_id == A.Enum.Message.RANGECRIT then
-        H.Melee.Throw_Crit(audits, damage)
+    elseif message_id == A.Enum.Message.MOBHEAL3 or message_id == A.Enum.Message.MOBHEAL373 then
+        H.Melee.Mob_Heal(audits, damage, melee_type_broad, melee_type_discrete)
+    elseif message_id == A.Enum.Message.RANGEHIT then
+        H.Melee.Range_Hit(audits)
     elseif message_id == A.Enum.Message.RANGEMISS then
         H.Melee.Throw_Miss(audits)
     elseif message_id == A.Enum.Message.SQUARE then
         H.Melee.Square(audits)
     elseif message_id == A.Enum.Message.TRUE then
         H.Melee.Truestrike(audits)
+    elseif message_id == A.Enum.Message.RANGECRIT then
+        H.Melee.Throw_Crit(audits, damage)
     else
         _Debug.Error.Add("Handler.Melee: {" .. tostring(audits.player_name) .. "} Unhandled Melee Nuance " .. tostring(message_id))
     end
@@ -244,6 +249,9 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Regular melee absorbed by shadows.
+-- These are counted as hits in terms of accuracy.
+-- Sometimes you just need to melee down through shadows. I don't think your accuracy should suffer.
+-- If you actually miss, only then should the accuracy suffer.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Shadows = function(audits, melee_type_broad, melee_type_discrete)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
@@ -262,11 +270,20 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Healing the mob with a melee hit.
+-- Accuracy doesn't suffer because this isn't a miss. It just heals the mob.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Mob_Heal = function(audits, damage, melee_type_broad, melee_type_discrete)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
     Model.Update.Data(H.Mode.INC, damage, audits, melee_type_broad,    H.Metric.MOB_HEAL)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Throwing regular hit.
+------------------------------------------------------------------------------------------------------
+H.Melee.Range_Hit = function(audits)
+    Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
+    Model.Update.Running_Accuracy(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -306,7 +323,8 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Minimum and maximum melee values.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Min_Max = function(throwing, damage, audits, melee_type_broad)
+H.Melee.Min_Max = function(throwing, damage, audits, melee_type_broad, no_damage)
+    if no_damage then damage = 0 end
     if throwing then
         if damage > 0 and (damage < Model.Get.Data(audits.player_name, H.Trackable.RANGED, H.Metric.MIN)) then Model.Update.Data(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MIN) end
         if damage > Model.Get.Data(audits.player_name, H.Trackable.RANGED, H.Metric.MAX) then Model.Update.Data(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MAX) end
@@ -320,7 +338,8 @@ end
 -- Enspell damage.
 -- Element of the enspell is in add_effect_animation.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Enspell = function(audits, enspell_damage)
+H.Melee.Enspell = function(audits, enspell_damage, no_damage)
+    if no_damage then enspell_damage = 0 end
     Model.Update.Data(H.Mode.INC, enspell_damage, audits, H.Trackable.MAGIC,       H.Metric.TOTAL)
     Model.Update.Data(H.Mode.INC, enspell_damage, audits, H.Trackable.ENSPELL,     H.Metric.TOTAL)
     Model.Update.Data(H.Mode.INC, enspell_damage, audits, H.Trackable.TOTAL,       H.Metric.TOTAL)  -- It's an extra step to add additional enspell damage to total.
