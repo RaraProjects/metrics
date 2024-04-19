@@ -4,6 +4,7 @@ c.Damage = {}
 c.Healing = {}
 c.Acc = {}
 c.Crit = {}
+c.Kick = {}
 c.Single = {}
 c.String = {}
 c.Util = {}
@@ -244,6 +245,16 @@ c.Crit.Damage = function(player_name, damage_type, percent, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Shows an entity's kick rate.
+------------------------------------------------------------------------------------------------------
+c.Kick.Rate = function(player_name)
+    local kick_count = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE_KICK, Model.Enum.Metric.COUNT)
+    local melee_count = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.COUNT)
+    local color = c.String.Color_Zero(kick_count)
+    return UI.TextColored(color, c.String.Format_Percent(kick_count, melee_count))
+end
+
+------------------------------------------------------------------------------------------------------
 -- NOT IN USE
 -- Grabs how many times an entity has died.
 -- Can't implement this until I get incoming packet 0x029 (Message) figured out.
@@ -476,8 +487,7 @@ c.String.Format_Percent = function(numerator, denominator, justify)
     if not denominator or denominator == 0 then return string.format(format, 0) end
     local percent = (numerator / denominator) * 100
     if percent == 0 then return string.format(format, 0) end
-    local percent_string = string.format(format, percent)
-    return tostring(percent_string)
+    return string.format(format, percent)
 end
 
 ------------------------------------------------------------------------------------------------------

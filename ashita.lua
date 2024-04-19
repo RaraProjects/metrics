@@ -49,7 +49,7 @@ a.Enum.Animation = {
     MELEE_OFFHAND = 1,
     MELEE_KICK    = 2,
     MELEE_KICK2   = 3,
-    THROWING      = 4,
+    DAKEN         = 4,
 }
 a.Enum.Message = {
     HIT        = 1,

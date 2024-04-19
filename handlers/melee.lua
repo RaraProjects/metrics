@@ -131,7 +131,7 @@ H.Melee.Melee_Type = function(animation_id)
         return H.Trackable.MELEE_OFFH
     elseif animation_id == A.Enum.Animation.MELEE_KICK or animation_id == A.Enum.Animation.MELEE_KICK2 then
         return H.Trackable.MELEE_KICK
-    elseif animation_id == A.Enum.Animation.THROWING then
+    elseif animation_id == A.Enum.Animation.DAKEN then
         return H.Trackable.THROWING
     else
         return H.Trackable.DEFAULT
@@ -197,16 +197,13 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Melee.Animation = function(animation_id, audits, damage, melee_type_broad, throwing, no_damage)
     if no_damage then damage = 0 end
-    -- Regular Melee
-    if animation_id >= A.Enum.Animation.MELEE_MAIN and animation_id < A.Enum.Animation.THROWING then
+    if animation_id >= A.Enum.Animation.MELEE_MAIN and animation_id < A.Enum.Animation.DAKEN then
         Model.Update.Data(H.Mode.INC, damage, audits, melee_type_broad, H.Metric.TOTAL)
         Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad, H.Metric.COUNT)
-    -- Throwing
-    elseif animation_id == A.Enum.Animation.THROWING then
+    elseif animation_id == A.Enum.Animation.DAKEN then
         throwing = true
         Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.RANGED, H.Metric.TOTAL)
         Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.COUNT)
-    -- Unhandled Animation
     else
         _Debug.Error.Add("Handler.Melee: {" .. tostring(audits.player_name) .. "} Unhandled animation: " .. tostring(animation_id))
     end
@@ -238,15 +235,15 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
     elseif message_id == A.Enum.Message.MOBHEAL3 or message_id == A.Enum.Message.MOBHEAL373 then
         H.Melee.Mob_Heal(audits, damage, melee_type_broad, melee_type_discrete)
     elseif message_id == A.Enum.Message.RANGEHIT then
-        H.Melee.Range_Hit(audits)
+        H.Melee.Daken_Hit(audits)
     elseif message_id == A.Enum.Message.RANGEMISS then
-        H.Melee.Throw_Miss(audits)
+        H.Melee.Daken_Miss(audits)
     elseif message_id == A.Enum.Message.SQUARE then
-        H.Melee.Square(audits)
+        H.Melee.Daken_Square(audits)
     elseif message_id == A.Enum.Message.TRUE then
-        H.Melee.Truestrike(audits)
+        H.Melee.Daken_Truestrike(audits)
     elseif message_id == A.Enum.Message.RANGECRIT then
-        H.Melee.Throw_Crit(audits, damage)
+        H.Melee.Daken_Crit(audits, damage)
     else
         _Debug.Error.Add("Handler.Melee: {" .. tostring(audits.player_name) .. "} Unhandled Melee Nuance " .. tostring(message_id))
     end
@@ -337,52 +334,52 @@ H.Melee.Mob_Heal = function(audits, damage, melee_type_broad, melee_type_discret
 end
 
 ------------------------------------------------------------------------------------------------------
--- Throwing regular hit.
+-- Daken regular hit.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Range_Hit = function(audits)
+H.Melee.Daken_Hit = function(audits)
     Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
     Model.Update.Running_Accuracy(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Throwing square hit.
+-- Daken square hit.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Square = function(audits)
+H.Melee.Daken_Square = function(audits)
     Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
     Model.Update.Running_Accuracy(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Throwing truestrike hit.
+-- Daken truestrike hit.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Truestrike = function(audits)
+H.Melee.Daken_Truestrike = function(audits)
     Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
     Model.Update.Running_Accuracy(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Throwing miss.
+-- Daken miss.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Throw_Miss = function(audits)
+H.Melee.Daken_Miss = function(audits)
     Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.MISS_COUNT)
     Model.Update.Running_Accuracy(audits.player_name, false)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Throwing critical hit.
+-- Daken critical hit.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param damage number
 ------------------------------------------------------------------------------------------------------
-H.Melee.Throw_Crit = function(audits, damage)
+H.Melee.Daken_Crit = function(audits, damage)
     Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
     Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.CRIT_COUNT)
     Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.RANGED, H.Metric.CRIT_DAMAGE)

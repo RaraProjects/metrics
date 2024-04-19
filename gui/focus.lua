@@ -34,7 +34,6 @@ f.Populate = function()
     f.Display.Overall(player_name)
     f.Display.Melee(player_name)
     f.Display.Ranged(player_name)
-    f.Display.Crits(player_name)
     f.Display.WS_and_SC(player_name)
     f.Display.Magic(player_name)
     f.Display.Ability(player_name)
@@ -93,8 +92,6 @@ f.Display.Melee = function(player_name)
     local enspell = Model.Get.Data(player_name, Model.Enum.Trackable.ENSPELL, Model.Enum.Metric.TOTAL)
     local shadows = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.SHADOWS)
     local kick_damage = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE_KICK, Model.Enum.Metric.TOTAL)
-    local kick_count = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE_KICK, Model.Enum.Metric.COUNT)
-    local melee_count = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.COUNT)
 
     if melee_total > 0 then
         f.Display.Util.Check_Collapse()
@@ -137,16 +134,18 @@ f.Display.Melee = function(player_name)
 
             f.Display.Util.Check_Collapse()
             if UI.TreeNode("Melee Critical Hits") then
-                if UI.BeginTable("Melee Crits", 2, table_flags) then
+                if UI.BeginTable("Melee Crits", 3, table_flags) then
                     -- Headers
                     UI.TableSetupColumn("Damage", col_flags, width)
                     UI.TableSetupColumn("Damage %T", col_flags, width)
+                    UI.TableSetupColumn("Crit Rate", col_flags, width)
                     UI.TableHeadersRow()
 
                     -- Data
                     UI.TableNextRow()
                     UI.TableNextColumn() Col.Crit.Damage(player_name, Model.Enum.Trackable.MELEE)
                     UI.TableNextColumn() Col.Crit.Damage(player_name, Model.Enum.Trackable.MELEE, true)
+                    UI.TableNextColumn() Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE)
                     UI.EndTable()
                 end
                 UI.TreePop()
@@ -168,7 +167,7 @@ f.Display.Melee = function(player_name)
                         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK)
                         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK, true)
                         UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK)
-                        UI.TableNextColumn() Col.String.Format_Percent(kick_count, melee_count)
+                        UI.TableNextColumn() Col.Kick.Rate(player_name)
                         UI.EndTable()
                     end
                     UI.TreePop()
@@ -229,16 +228,18 @@ f.Display.Ranged = function(player_name)
 
             f.Display.Util.Check_Collapse()
             if UI.TreeNode("Ranged Critical Hits") then
-                if UI.BeginTable("Ranged Crits", 2, table_flags) then
+                if UI.BeginTable("Ranged Crits", 3, table_flags) then
                     -- Headers
                     UI.TableSetupColumn("Damage", col_flags, width)
                     UI.TableSetupColumn("Damage %T", col_flags, width)
+                    UI.TableSetupColumn("Crit. Rate %", col_flags, width)
                     UI.TableHeadersRow()
 
                     -- Data
                     UI.TableNextRow()
                     UI.TableNextColumn() Col.Crit.Damage(player_name, trackable)
                     UI.TableNextColumn() Col.Crit.Damage(player_name, trackable, true)
+                    UI.TableNextColumn() Col.Crit.Rate(player_name, trackable)
                     UI.EndTable()
                 end
                 UI.TreePop()
@@ -555,6 +556,11 @@ f.Display.Pet_Single_Data = function(player_name)
     local table_flags = Window.Table.Flags.Fixed_Borders
     local col_flags = Window.Columns.Flags.None
     local damage = Window.Columns.Widths.Standard
+
+    if not Model.Data.Initialized_Pets[player_name] then
+        _Debug.Error.Add("Display.Pet_Single_Data: Tried to loop through pets of unitialized player in the focus window.")
+        return nil
+    end
 
     for pet_name, _ in pairs(Model.Data.Initialized_Pets[player_name]) do
         -- I considered adding the total damage of the pet to the tree node title,

@@ -3,19 +3,19 @@ H.Ranged = {}
 ------------------------------------------------------------------------------------------------------
 -- Parse the ranged attack packet.
 ------------------------------------------------------------------------------------------------------
----@param act table action packet data.
+---@param action table action packet data.
 ---@param actor_mob table the mob data of the entity performing the action.
 ---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-H.Ranged.Action = function(act, actor_mob, log_offense)
+H.Ranged.Action = function(action, actor_mob, log_offense)
     if not log_offense then return end
     local result, target
     local damage = 0
 
-    for target_index, target_value in pairs(act.targets) do
+    for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
-            result = act.targets[target_index].actions[action_index]
-            target = A.Mob.Get_Mob_By_ID(act.targets[target_index].id)
+            result = action.targets[target_index].actions[action_index]
+            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if target then
                 if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
                 damage = damage + H.Ranged.Parse(result, actor_mob.name, target.name)
@@ -28,6 +28,9 @@ end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Adds ranged damage to the battle log.
+-- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table the mob data of the entity performing the action.
+---@param damage number
 -- ------------------------------------------------------------------------------------------------------
 H.Ranged.Blog = function(actor_mob, damage)
     if Blog.Flags.Ranged then
@@ -79,6 +82,10 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Increment Grand Totals.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param ranged_type string player ranged or melee ranged.
+------------------------------------------------------------------------------------------------------
 H.Ranged.Totals = function(audits, damage, ranged_type)
     Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.TOTAL,  H.Metric.TOTAL)
     Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)
@@ -88,6 +95,10 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Increment total pet damage.
 ------------------------------------------------------------------------------------------------------
+---@param owner_mob table|nil if the action was from a pet then this will hold the owner's mob.
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+------------------------------------------------------------------------------------------------------
 H.Ranged.Pet_Total = function(owner_mob, audits, damage)
     if owner_mob then
         Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
@@ -96,6 +107,11 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Handle the various metrics based on message.
+------------------------------------------------------------------------------------------------------
+---@param message_id number numberic identifier for system chat messages.
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Message = function(message_id, audits, damage, ranged_type)
     if message_id == A.Enum.Message.RANGEHIT then
@@ -109,16 +125,20 @@ H.Ranged.Message = function(message_id, audits, damage, ranged_type)
     elseif message_id == A.Enum.Message.RANGEPUP then
         H.Ranged.PUP_Hit(audits, damage, ranged_type)
     elseif message_id == A.Enum.Message.RANGEMISS then
-        return H.Ranged.Miss(audits, damage, ranged_type)
+        H.Ranged.Miss(audits, damage, ranged_type)
     elseif message_id == A.Enum.Message.SHADOWS then
-        return H.Ranged.Shadows(audits, damage, ranged_type)
+        H.Ranged.Shadows(audits, damage, ranged_type)
     else
-        _Debug.Error.Add("Handler.Ranged: {" .. tostring(audits.player_name) .. "} Unhandled Ranged Nuance " .. tostring(message_id))
+        _Debug.Error.Add("Handler.Ranged: {" .. tostring(audits.player_name) .. "} Unhandled Ranged Message: " .. tostring(message_id))
     end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Regular ranged hit.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Hit = function(audits, damage, ranged_type)
     Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
@@ -129,6 +149,10 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Regular ranged square hit.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param ranged_type string player ranged or melee ranged.
+------------------------------------------------------------------------------------------------------
 H.Ranged.Square = function(audits, damage, ranged_type)
     Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
     Model.Update.Data(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
@@ -138,6 +162,10 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Regular ranged truestrike hit.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param ranged_type string player ranged or melee ranged.
+------------------------------------------------------------------------------------------------------
 H.Ranged.Truestrike = function(audits, damage, ranged_type)
     Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
     Model.Update.Data(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
@@ -146,6 +174,10 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Regular ranged critical hit.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Crit = function(audits, damage, ranged_type)
     Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
@@ -158,6 +190,10 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Puppet ranged hit.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param ranged_type string player ranged or melee ranged.
+------------------------------------------------------------------------------------------------------
 H.Ranged.PUP_Hit = function(audits, damage, ranged_type)
     Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
     Model.Update.Data(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
@@ -166,6 +202,10 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Regular ranged miss.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Miss = function(audits, damage, ranged_type)
     Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.MISS_COUNT)
@@ -176,6 +216,10 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Regular ranged absorbed by shadows.
 ------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param ranged_type string player ranged or melee ranged.
+------------------------------------------------------------------------------------------------------
 H.Ranged.Shadows = function(audits, damage, ranged_type)
     Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
     Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.SHADOWS)
@@ -184,6 +228,10 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Minimum and maximum ranged values.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Min_Max = function(damage, audits, ranged_type)
     if damage > 0 and (damage < Model.Get.Data(audits.player_name, ranged_type, H.Metric.MIN)) then Model.Update.Data(H.Mode.SET, damage, audits, ranged_type, H.Metric.MIN) end

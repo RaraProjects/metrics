@@ -1,6 +1,14 @@
 _Debug = {}
 _Debug.Enabled = false
 
+require("debug.mob_viewer")
+require("debug.packet_viewer")
+require("debug.error_log")
+require("debug.data_viewer")
+require("debug.unit_tests")
+require("debug.unit_melee")
+require("debug.unit_ranged")
+
 ------------------------------------------------------------------------------------------------------
 -- Is debug mode enabled.
 ------------------------------------------------------------------------------------------------------

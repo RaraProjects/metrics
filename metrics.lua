@@ -46,6 +46,7 @@ Handler = require("handler")
 -- Handlers
 require("handlers._handler")
 require("handlers.melee")
+require("handlers.ranged")
 
 -- Windows
 Window = require("gui._window")
@@ -57,11 +58,6 @@ Settings = require("gui.settings")
 
 -- Debug
 require("debug.debug")
-require("debug.mob_viewer")
-require("debug.packet_viewer")
-require("debug.error_log")
-require("debug.data_viewer")
-require("debug.unit_tests")
 
 -- Initialization
 Window.Initialize()
@@ -116,7 +112,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         if owner_mob or A.Party.Is_Affiliate(actor_mob.name) then log_offense = true end
 
         if     (action.category ==  1) then H.Melee.Action(action, actor_mob, owner_mob, log_offense)
-        elseif (action.category ==  2) then Handler.Action.Ranged(action, actor_mob, log_offense)
+        elseif (action.category ==  2) then H.Ranged.Action(action, actor_mob, log_offense)
         elseif (action.category ==  3) then Handler.Action.Finish_Weaponskill(action, actor_mob, log_offense)
         elseif (action.category ==  4) then Handler.Action.Finish_Spell_Casting(action, actor_mob, log_offense)
         elseif (action.category ==  5) then -- Do nothing (Finish Item Use)
@@ -163,13 +159,13 @@ ashita.events.register('command', 'command_cb', function (e)
             Window.Util.Toggle_Visibility()
         elseif arg == "debug" then
             _Debug.Toggle()
-        elseif arg == "nano" or "n" then
+        elseif arg == "nano" or arg == "n" then
             Window.Util.Toggle_Nano()
-        elseif arg == "mini" or "m" then
+        elseif arg == "mini" or arg == "m" then
             Window.Util.Toggle_Mini()
-        elseif arg == "reset" or "r" then
+        elseif arg == "reset" or arg == "r" then
             Model.Initialize()
-        elseif arg == "full" or "f" then
+        elseif arg == "full" or arg == "f" then
             Window.Util.Enable_Full()
         elseif arg == "test" and _Debug.Enabled then
             -- _Debug.Unit.Tests.Avatar_Rage()
