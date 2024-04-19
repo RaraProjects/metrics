@@ -34,7 +34,7 @@ H.TP.Action = function(action, actor_mob, log_offense)
             if target_mob.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target_mob.name) end
 
             -- Check for skillchains
-            sc_damage = H.TP.Skillchain_Parse(result, actor_mob, target_mob)
+            sc_damage, sc_name = H.TP.Skillchain_Parse(result, actor_mob, target_mob)
 
             -- Need to calculate WS damage here to account for AOE weaponskills
             damage = damage + H.TP.Weaponskill_Parse(result, actor_mob, target_mob, ws_name, ws_id)
@@ -143,6 +143,10 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Get weaponskill data.
 -- ------------------------------------------------------------------------------------------------------
+---@param action table
+---@param actor_mob table
+---@return table|nil
+-- ------------------------------------------------------------------------------------------------------
 H.TP.WS_Data = function(action, actor_mob)
     local ws_data = A.WS.ID(action.param)
 	if not ws_data then
@@ -154,6 +158,10 @@ end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get pet skill data.
+-- ------------------------------------------------------------------------------------------------------
+---@param action_id number
+---@param actor_mob table
+---@return table
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Data = function(action_id, actor_mob)
     local skill_data = Pet_Skill[action_id]
@@ -169,6 +177,12 @@ end
 -- I'm differentiating them based on chat message, so this needs to be called in the result loop and not before.
 -- Specific case: Steal/Swift Blade, Atonement/Mug, Gale Axe/Jump, Spinning Axe/Super Jump
 -- ------------------------------------------------------------------------------------------------------
+---@param result table
+---@param ws_id number
+---@param action table
+---@param actor_mob table
+---@return boolean true: weaponskill was actually an ability
+-- ------------------------------------------------------------------------------------------------------
 H.TP.WS_Ability = function(result, ws_id, action, actor_mob)
     if Lists.WS.WS_Abilities[ws_id] then
         if result.message ~= 185 and result.message ~= 188 then
@@ -182,6 +196,9 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Increments weaponskill attempts.
 -- ------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param ws_name string
+-- ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Attempts = function(audits, ws_name)
     Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.WS, H.Metric.COUNT)
     Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.WS, ws_name, H.Metric.COUNT)
@@ -189,6 +206,9 @@ end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Increments weaponskill hits.
+-- ------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param ws_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Hit = function(audits, ws_name)
     Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.WS, H.Metric.HIT_COUNT)
@@ -198,12 +218,23 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Increments pet skill attempts.
 -- ------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param trackable string
+---@param skill_name string
+-- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Attempts = function(audits, trackable, skill_name)
     Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, skill_name, H.Metric.COUNT)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Some pet skills don't do direct damage and their effects come in as damage--must be ignored.
+-- ------------------------------------------------------------------------------------------------------
+---@param owner_mob table|nil
+---@param audits table
+---@param damage number
+---@param ws_id number
+---@param ws_name string
+---@return number
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Ignore = function(owner_mob, audits, damage, ws_id, ws_name)
     if owner_mob then
@@ -219,12 +250,21 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Increments pet skill hits.
 -- ------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param trackable string
+---@param skill_name string
+-- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Hit = function(audits, trackable, skill_name)
     Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, skill_name, H.Metric.HIT_COUNT)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Set audit information for pet skills.
+-- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table
+---@param owner_mob table|nil
+---@param target_mob table
+---@return table
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Audits = function(actor_mob, owner_mob, target_mob)
     -- Initialize on case where this is a trust or regular monster.
@@ -254,14 +294,20 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Check for skillchains.
 -- ------------------------------------------------------------------------------------------------------
+---@param result table
+---@param actor_mob table
+---@param target_mob table
+---@return number, string
+-- ------------------------------------------------------------------------------------------------------
 H.TP.Skillchain_Parse = function(result, actor_mob, target_mob)
     local sc_id = result.add_effect_message
     local sc_damage = 0
+    local sc_name = Model.Enum.Index.DEBUG
     if sc_id > 0 then
-        local sc_name    = Lists.WS.Skillchains[sc_id]
+        sc_name    = Lists.WS.Skillchains[sc_id]
         sc_damage  = sc_damage + H.TP.Skillchain_Damage(result, actor_mob.name, target_mob.name, sc_name)
     end
-    return sc_damage
+    return sc_damage, sc_name
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -274,7 +320,6 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.TP.Skillchain_Damage = function(result, player_name, target_name, sc_name)
-    _Debug.Packet.Add(player_name, target_name, "Skillchain", result)
     local damage = result.add_effect_param
     Model.Update.Catalog_Damage(player_name, target_name, H.Trackable.SC, damage, sc_name)
     return damage
@@ -283,7 +328,11 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Increments skillchain counts.
 -- ------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param sc_name string
+-- ------------------------------------------------------------------------------------------------------
 H.TP.Skillchain_Hit = function(audits, sc_name)
+    _Debug.Error.Add("TP.Skillchain_Hit: " .. tostring(sc_name))
     Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.COUNT)
     Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.COUNT)
     Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.HIT_COUNT)
@@ -293,6 +342,11 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Adds weaponskill damage to the battle log.
 -- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table
+---@param damage number
+---@param ws_data table
+---@param ws_name string
+-- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_WS = function(actor_mob, damage, ws_data, ws_name)
     if Blog.Flags.WS then
         Blog.Add(actor_mob.name, ws_name, damage, A.Party.Refresh(actor_mob.name, A.Enum.Mob.TP), H.Trackable.WS, ws_data)
@@ -301,6 +355,10 @@ end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Adds skillchain damage to the battle log.
+-- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table
+---@param sc_damage number
+---@param sc_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_SC = function(actor_mob, sc_damage, sc_name)
     if Blog.Flags.SC and sc_damage > 0 then
@@ -313,6 +371,12 @@ end
 -- The battle log is interesting here. Pets have abilities that have status effects but don't do any damage.
 -- The text needs a little massaging to avoid making it look like all the pet's status effect abilities missed.
 -- Additional abilities such as these may need to be added to monster ability filter.
+-- ------------------------------------------------------------------------------------------------------
+---@param owner_mob table
+---@param actor_mob table
+---@param action_id number
+---@param damage number
+---@param skill_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_Pet_Skill = function(owner_mob, actor_mob, action_id, damage, skill_name)
     if Blog.Flags.Pet and owner_mob then

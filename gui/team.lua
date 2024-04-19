@@ -145,7 +145,7 @@ t.Display.Rows = function(player_name)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE, false, true)
         if t.Display.Flags.Crit then UI.TableNextColumn() Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE, true) end
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.WS, false, true)
-        if t.Settings.Include_SC_Damage then UI.TableNextColumn() UI.Text(Col.Damage.By_Type(player_name, Model.Enum.Trackable.SC, false, true)) end
+        if t.Settings.Include_SC_Damage then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.SC, false, true) end
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.RANGED, false, true)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC, false, true)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ABILITY, false, true)

@@ -47,6 +47,7 @@ Handler = require("handler")
 require("handlers._handler")
 require("handlers.melee")
 require("handlers.ranged")
+require("handlers.tp_action")
 
 -- Windows
 Window = require("gui._window")

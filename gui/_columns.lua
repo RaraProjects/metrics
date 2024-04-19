@@ -424,13 +424,13 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 c.Single.Average = function(player_name, action_name, focus_type)
-    local single_attempts = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.COUNT)
-    local color = c.String.Color_Zero(single_attempts)
-    if single_attempts == 0 then
+    local single_hits = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.HIT_COUNT)
+    local color = c.String.Color_Zero(single_hits)
+    if single_hits == 0 then
         return UI.TextColored(color, c.String.Format_Number(0))
     end
     local single_damage  = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.TOTAL)
-    local single_average = single_damage / single_attempts
+    local single_average = single_damage / single_hits
     color = c.String.Color_Zero(single_damage)
     return UI.TextColored(color, c.String.Format_Number(single_average))
 end

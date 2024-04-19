@@ -60,6 +60,7 @@ a.Enum.Message = {
     DODGE      = 32,
     CRIT       = 67,
     RANGEPUP   = 185,
+    BURST      = 252,
     RANGEHIT   = 352,
     RANGECRIT  = 353,
     RANGEMISS  = 354,

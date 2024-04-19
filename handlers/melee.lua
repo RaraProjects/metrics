@@ -26,23 +26,6 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
     H.Melee.Blog(actor_mob, owner_mob, damage)
 end
 
--- ------------------------------------------------------------------------------------------------------
--- Adds melee damage to the battle log.
--- ------------------------------------------------------------------------------------------------------
----@param actor_mob table the mob data of the entity performing the action.
----@param owner_mob table|nil (if pet) the mob data of the entity's owner.
----@param damage number
--- ------------------------------------------------------------------------------------------------------
-H.Melee.Blog = function(actor_mob, owner_mob, damage)
-    if Blog.Flags.Melee then
-        local blog_name = actor_mob.name
-        if owner_mob then
-            blog_name = owner_mob.name .. " (" .. actor_mob.name .. ")"
-        end
-        Blog.Add(blog_name, Model.Enum.Trackable.MELEE, damage)
-    end
-end
-
 ------------------------------------------------------------------------------------------------------
 -- Set data for a melee action.
 -- NOTES:
@@ -116,6 +99,23 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     local spikes = result.spike_effect_effect
 
     return damage
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Adds melee damage to the battle log.
+-- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table the mob data of the entity performing the action.
+---@param owner_mob table|nil (if pet) the mob data of the entity's owner.
+---@param damage number
+-- ------------------------------------------------------------------------------------------------------
+H.Melee.Blog = function(actor_mob, owner_mob, damage)
+    if Blog.Flags.Melee then
+        local blog_name = actor_mob.name
+        if owner_mob then
+            blog_name = owner_mob.name .. " (" .. actor_mob.name .. ")"
+        end
+        Blog.Add(blog_name, Model.Enum.Trackable.MELEE, damage)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
