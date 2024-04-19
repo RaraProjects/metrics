@@ -99,6 +99,7 @@ _Debug.Unit.Populate = function()
         UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.WS_Miss()
         UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.SC_1000()
         UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.SC_2000()
+        UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.Pet_Hit()
         UI.EndTable()
     end
 end

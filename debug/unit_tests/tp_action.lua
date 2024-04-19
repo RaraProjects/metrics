@@ -83,3 +83,19 @@ _Debug.Unit.Tests.TP_Action.SC_2000 = function()
         end
     end
 end
+
+------------------------------------------------------------------------------------------------------
+-- Test: Pet TP Move Hit.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.TP_Action.Pet_Hit = function()
+    local clicked = 0
+    if UI.Button("Pet Hit") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 262   -- Sheep Charge
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage)
+            H.TP.Monster_Action(action, _Debug.Unit.Mob.PET, true)
+        end
+    end
+end

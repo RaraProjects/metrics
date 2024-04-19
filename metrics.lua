@@ -114,7 +114,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
 
         if     (action.category ==  1) then H.Melee.Action(action, actor_mob, owner_mob, log_offense)
         elseif (action.category ==  2) then H.Ranged.Action(action, actor_mob, log_offense)
-        elseif (action.category ==  3) then Handler.Action.Finish_Weaponskill(action, actor_mob, log_offense)
+        elseif (action.category ==  3) then H.TP.Action(action, actor_mob, log_offense)
         elseif (action.category ==  4) then Handler.Action.Finish_Spell_Casting(action, actor_mob, log_offense)
         elseif (action.category ==  5) then -- Do nothing (Finish Item Use)
         elseif (action.category ==  6) then Handler.Action.Job_Ability(action, actor_mob, log_offense)
