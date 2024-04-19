@@ -332,7 +332,6 @@ end
 ---@param sc_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Skillchain_Hit = function(audits, sc_name)
-    _Debug.Error.Add("TP.Skillchain_Hit: " .. tostring(sc_name))
     Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.COUNT)
     Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.COUNT)
     Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.HIT_COUNT)
