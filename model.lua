@@ -851,7 +851,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 m.Util.Pet_Catalog_Calc_Min = function(min, index, pet_name, trackable, action_name, metric)
-	if min <= m.Data.Parse[index][pet_name][trackable][m.Enum.Node.CATALOG][action_name][metric] then
+	if min > m.Data.Parse[index][pet_name][trackable][m.Enum.Node.CATALOG][action_name][metric] then
 		min =  m.Data.Parse[index][pet_name][trackable][m.Enum.Node.CATALOG][action_name][metric]
 	end
 	return min
