@@ -109,6 +109,16 @@ _Debug.Unit.Populate = function()
         UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.Pet_Hit_100()
         UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.Pet_Hit_200()
         UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.Pet_Miss()
+        --
+        UI.TableNextColumn() _Debug.Unit.Tests.Ability.Shield_Bash()
+        UI.TableNextColumn() _Debug.Unit.Tests.Ability.Jump_100()
+        UI.TableNextColumn() _Debug.Unit.Tests.Ability.Jump_200()
+        UI.TableNextColumn() _Debug.Unit.Tests.Ability.Jump_Miss()
+        --
+        UI.TableNextColumn() _Debug.Unit.Tests.Ability.Avatar_Rage()
+        UI.TableNextColumn() _Debug.Unit.Tests.Ability.Avatar_Ward()
+        UI.TableNextColumn() _Debug.Unit.Tests.Ability.Avatar_Healing_Ward()
+        UI.TableNextColumn() _Debug.Unit.Tests.Ability.Holy_Circle()
         UI.EndTable()
     end
 end

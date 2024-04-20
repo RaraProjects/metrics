@@ -6,6 +6,11 @@ H.Metric = Model.Enum.Metric
 
 H.Enum = {}
 
+H.Enum.Offsets = {
+    ABILITY = 512,
+    PET  = 512,
+}
+
 H.Enum.Text = {
     BLANK = "",
 }
