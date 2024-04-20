@@ -299,9 +299,9 @@ f.Display.WS_and_SC = function(player_name)
         if UI.CollapsingHeader("Weaponskill and Skillchain", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("WS and SC", 3, table_flags) then
                 -- Headers
-                UI.TableSetupColumn("WS\nDamage", col_flags, width)
-                UI.TableSetupColumn("WS\nAccuracy %", col_flags, width)
-                UI.TableSetupColumn("SC\nDamage", col_flags, width)
+                UI.TableSetupColumn("WS Damage", col_flags, width)
+                UI.TableSetupColumn("WS Acc. %", col_flags, width)
+                UI.TableSetupColumn("SC Damage", col_flags, width)
                 UI.TableHeadersRow()
 
                 -- Data
@@ -437,11 +437,11 @@ f.Display.Pet = function(player_name)
         if UI.CollapsingHeader("Pets", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Pets", 5, table_flags) then
                 -- Headers
-                UI.TableSetupColumn("\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Melee\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Ranged\nDamage", col_flags, damage)
-                UI.TableSetupColumn("WS\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Ability\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Damage", col_flags, damage)
+                UI.TableSetupColumn("Melee Damage", col_flags, damage)
+                UI.TableSetupColumn("Ranged Damage", col_flags, damage)
+                UI.TableSetupColumn("WS Damage", col_flags, damage)
+                UI.TableSetupColumn("Abil. Damage", col_flags, damage)
                 UI.TableHeadersRow()
 
                 -- Data
@@ -474,15 +474,15 @@ f.Display.Single_Data = function(player_name, focus_type)
     if not Model.Data.Trackable[focus_type] then return nil end
     if not Model.Data.Trackable[focus_type][player_name] then return nil end
 
-    local acc_string = "\nAccuracy %"
+    local acc_string = "Accuracy %"
     local damage_string = "Damage"
     local action_string = "Action"
     if focus_type == Model.Enum.Trackable.MAGIC then
         action_string = "Spell"
-        acc_string = "\nBursts"
+        acc_string = "Bursts"
     elseif focus_type == Model.Enum.Trackable.HEALING then
         action_string = "Spell"
-        acc_string = "\nOvercure"
+        acc_string = "Overcure"
         damage_string = "Healing"
     elseif focus_type == Model.Enum.Trackable.ABILITY or focus_type == Model.Enum.Trackable.PET_ABILITY or focus_type == Model.Enum.Trackable.PET_WS then
         action_string = "Ability"
@@ -495,13 +495,13 @@ f.Display.Single_Data = function(player_name, focus_type)
     f.Display.Util.Check_Collapse()
     if UI.TreeNode(focus_type) then
         if UI.BeginTable(focus_type, 7, table_flags) then
-            UI.TableSetupColumn("\n" .. action_string, col_flags, width)
-            UI.TableSetupColumn("Total\n" .. damage_string, col_flags, width)
-            UI.TableSetupColumn("\nAttempts", col_flags, width)
+            UI.TableSetupColumn(action_string, col_flags, width)
+            UI.TableSetupColumn("Total " .. damage_string, col_flags, width)
+            UI.TableSetupColumn("Attempts", col_flags, width)
             UI.TableSetupColumn(acc_string, col_flags, width)
-            UI.TableSetupColumn("Average\n" .. damage_string, col_flags, width)
-            UI.TableSetupColumn("Minimum\n" .. damage_string, col_flags, width)
-            UI.TableSetupColumn("Maximum\n" .. damage_string, col_flags, width)
+            UI.TableSetupColumn("Avg. " .. damage_string, col_flags, width)
+            UI.TableSetupColumn("Min. " .. damage_string, col_flags, width)
+            UI.TableSetupColumn("Max. " .. damage_string, col_flags, width)
             UI.TableHeadersRow()
 
             Model.Sort.Catalog_Damage(player_name, focus_type)
@@ -568,12 +568,12 @@ f.Display.Pet_Single_Data = function(player_name)
         f.Display.Util.Check_Collapse()
         if UI.TreeNode(pet_name) then
             if UI.BeginTable(pet_name, 6, table_flags) then
-                UI.TableSetupColumn("Total\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Total\nDamage %", col_flags, damage)
-                UI.TableSetupColumn("Melee\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Ranged\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Weaponskill\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Ability\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Total Damage", col_flags, damage)
+                UI.TableSetupColumn("Total Damage %", col_flags, damage)
+                UI.TableSetupColumn("Melee Damage", col_flags, damage)
+                UI.TableSetupColumn("Ranged Damage", col_flags, damage)
+                UI.TableSetupColumn("WS Damage", col_flags, damage)
+                UI.TableSetupColumn("Abil. Damage", col_flags, damage)
                 UI.TableHeadersRow()
 
                 UI.TableNextRow()
@@ -588,13 +588,13 @@ f.Display.Pet_Single_Data = function(player_name)
 
             if UI.BeginTable(pet_name.." single", 7, table_flags) then
                 -- Headers
-                UI.TableSetupColumn("Pet\nAction Name", col_flags, damage)
-                UI.TableSetupColumn("Total\nDamage", col_flags, damage)
-                UI.TableSetupColumn("\nAttempts", col_flags, damage)
-                UI.TableSetupColumn("\nAccuracy %", col_flags, damage)
-                UI.TableSetupColumn("Average\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Minimum\nDamage", col_flags, damage)
-                UI.TableSetupColumn("Maximum\nDamage", col_flags, damage)
+                UI.TableSetupColumn("Action Name", col_flags, damage)
+                UI.TableSetupColumn("Total Damage", col_flags, damage)
+                UI.TableSetupColumn("Attempts", col_flags, damage)
+                UI.TableSetupColumn("Accuracy %", col_flags, damage)
+                UI.TableSetupColumn("Avg. Damage", col_flags, damage)
+                UI.TableSetupColumn("Min. Damage", col_flags, damage)
+                UI.TableSetupColumn("Max. Damage", col_flags, damage)
                 UI.TableHeadersRow()
 
                 Model.Sort.Pet_Catalog_Damage(player_name, pet_name)

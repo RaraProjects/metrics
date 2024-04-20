@@ -4,7 +4,7 @@ _Debug.Unit.Action_Data.Player = {}
 _Debug.Unit.Util = {}
 _Debug.Unit.Tests = {}
 _Debug.Unit.Mob = {}
-_Debug.Unit.Active = false
+_Debug.Unit.Active = true
 
 _Debug.Unit.Mob.Target_ID = 17254144
 
@@ -64,22 +64,27 @@ _Debug.Unit.Populate = function()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Off_Hand_Hit()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Main_Miss()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Off_Hand_Miss()
+        ---
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Crit()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Enspell()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Shadows()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Mob_Heal()
+        ---
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Pet_Hit()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Pet_Crit()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Pet_Miss()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Shadows()
+        ---
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Mob_Heal()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Daken_Hit()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Daken_Miss()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Daken_Square()
+        ---
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Daken_Truestrike()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Daken_Crit()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Kick_Hit()
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Kick_Miss()
+        ---
         UI.TableNextColumn() _Debug.Unit.Tests.Melee.Kick_Crit()
         UI.TableNextColumn()
         UI.TableNextColumn()
@@ -89,6 +94,7 @@ _Debug.Unit.Populate = function()
         UI.TableNextColumn() _Debug.Unit.Tests.Ranged.Square()
         UI.TableNextColumn() _Debug.Unit.Tests.Ranged.Truestrike()
         UI.TableNextColumn() _Debug.Unit.Tests.Ranged.Miss()
+        ---
         UI.TableNextColumn() _Debug.Unit.Tests.Ranged.Crit()
         UI.TableNextColumn() _Debug.Unit.Tests.Ranged.PUP()
         UI.TableNextColumn() _Debug.Unit.Tests.Ranged.Shadows()
@@ -98,8 +104,11 @@ _Debug.Unit.Populate = function()
         UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.WS_Hit_2000()
         UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.WS_Miss()
         UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.SC_1000()
+        ---
         UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.SC_2000()
-        UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.Pet_Hit()
+        UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.Pet_Hit_100()
+        UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.Pet_Hit_200()
+        UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.Pet_Miss()
         UI.EndTable()
     end
 end

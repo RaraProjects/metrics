@@ -447,13 +447,13 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 c.Single.Pet_Average = function(player_name, pet_name, action_name, trackable)
-    local single_attempts = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.COUNT)
-    if single_attempts == 0 then
+    local single_hits = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.HIT_COUNT)
+    if single_hits == 0 then
         return c.String.Format_Number(0)
     end
 
     local single_damage  = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.TOTAL)
-    local single_average = single_damage / single_attempts
+    local single_average = single_damage / single_hits
     return c.String.Format_Number(single_average)
 end
 

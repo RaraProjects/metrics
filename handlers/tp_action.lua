@@ -128,6 +128,7 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
     -- A lot of pet abilities just land a status effect and it carries in a value as if it were damage.
     damage = H.TP.Pet_Skill_Ignore(owner_mob, audits, damage, ws_id, ws_name)
 
+    _Debug.Error.Add("TP.Weaponskill_Parse: " .. tostring(audits.player_name) .. " " .. tostring(audits.target_name) .. " " .. tostring(audits.pet_name) .. " " .. tostring(ws_name) .. " " .. tostring(damage))
     -- Ignore numbers on these.
     -- Energy Steal [21]
     -- Energy Drain [22]
@@ -135,7 +136,7 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
     -- Moonlight [164]
 
     -- This handles both the pet and player case.
-    Model.Update.Catalog_Damage(actor_mob.name, target_mob.name, audits.trackable, damage, ws_name, audits.pet_name)
+    Model.Update.Catalog_Damage(audits.player_name, audits.target_name, audits.trackable, damage, ws_name, audits.pet_name)
 
     return damage
 end
