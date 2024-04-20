@@ -7,7 +7,7 @@ H.Spell = {}
 ---@param actor_mob table the mob data of the entity performing the action.
 ---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-H.Spell.Finish_Casting = function(action, actor_mob, log_offense)
+H.Spell.Action = function(action, actor_mob, log_offense)
     if not log_offense then return nil end
 
     local result, target_mob, new_damage

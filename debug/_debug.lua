@@ -10,6 +10,7 @@ require("debug.unit_tests.melee")
 require("debug.unit_tests.ranged")
 require("debug.unit_tests.tp_action")
 require("debug.unit_tests.abilities")
+require("debug.unit_tests.spells")
 
 ------------------------------------------------------------------------------------------------------
 -- Is debug mode enabled.

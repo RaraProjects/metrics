@@ -49,6 +49,7 @@ require("handlers.melee")
 require("handlers.ranged")
 require("handlers.tp_action")
 require("handlers.abilities")
+require("handlers.spells")
 
 -- Windows
 Window = require("gui._window")
