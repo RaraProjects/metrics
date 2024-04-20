@@ -143,10 +143,12 @@ end
 ---@param player_name string
 ---@param acc_type string a trackable from the model.
 ---@param justify? boolean whether or not to right justify the text
+---@param count_type? string used for getting ranged square and truestrike rates.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Acc.By_Type = function(player_name, acc_type, justify)
+c.Acc.By_Type = function(player_name, acc_type, justify, count_type)
     local hits, attempts
+    if not count_type then count_type = c.Metric.HIT_COUNT end
     if acc_type == Model.Enum.Misc.COMBINED then
         local melee_hits = Model.Get.Data(player_name, c.Trackable.MELEE, c.Metric.HIT_COUNT)
         local melee_attempts = Model.Get.Data(player_name, c.Trackable.MELEE, c.Metric.COUNT)
@@ -155,7 +157,7 @@ c.Acc.By_Type = function(player_name, acc_type, justify)
         hits = melee_hits + ranged_hits
         attempts = melee_attempts + ranged_attempts
     else
-        hits = Model.Get.Data(player_name, acc_type, c.Metric.HIT_COUNT)
+        hits = Model.Get.Data(player_name, acc_type, count_type)
         attempts = Model.Get.Data(player_name, acc_type, c.Metric.COUNT)
     end
 

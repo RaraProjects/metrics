@@ -155,6 +155,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Square = function(audits, damage, ranged_type)
     Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
+    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.SQUARE_COUNT)
     Model.Update.Data(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
     Model.Update.Running_Accuracy(audits.player_name, true)
 end
@@ -168,6 +169,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Truestrike = function(audits, damage, ranged_type)
     Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
+    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.TRUE_COUNT)
     Model.Update.Data(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
     Model.Update.Running_Accuracy(audits.player_name, true)
 end

@@ -211,10 +211,12 @@ f.Display.Ranged = function(player_name)
     if ranged_total > 0 then
         f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Ranged", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Ranged", 3, table_flags) then
+            if UI.BeginTable("Ranged", 5, table_flags) then
                 -- Headers
                 UI.TableSetupColumn("Damage", col_flags, width)
                 UI.TableSetupColumn("Accuracy %", col_flags, width)
+                UI.TableSetupColumn("Square %", col_flags, width)
+                UI.TableSetupColumn("Truestrike %", col_flags, width)
                 UI.TableSetupColumn("Crit. Rate %", col_flags, width)
                 UI.TableHeadersRow()
 
@@ -222,6 +224,8 @@ f.Display.Ranged = function(player_name)
                 UI.TableNextRow()
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
                 UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable)
+                UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable, nil, Model.Enum.Metric.SQUARE_COUNT)
+                UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable, nil, Model.Enum.Metric.TRUE_COUNT)
                 UI.TableNextColumn() Col.Crit.Rate(player_name, trackable)
                 UI.EndTable()
             end
