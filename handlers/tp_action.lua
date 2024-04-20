@@ -128,7 +128,6 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
     -- A lot of pet abilities just land a status effect and it carries in a value as if it were damage.
     damage = H.TP.Pet_Skill_Ignore(owner_mob, audits, damage, ws_id, ws_name)
 
-    _Debug.Error.Add("TP.Weaponskill_Parse: " .. tostring(audits.player_name) .. " " .. tostring(audits.target_name) .. " " .. tostring(audits.pet_name) .. " " .. tostring(ws_name) .. " " .. tostring(damage))
     -- Ignore numbers on these.
     -- Energy Steal [21]
     -- Energy Drain [22]
@@ -151,7 +150,7 @@ end
 H.TP.WS_Data = function(action, actor_mob)
     local ws_data = A.WS.ID(action.param)
 	if not ws_data then
-        _Debug.Error.Add("Action.Finish_Weaponskill: {" .. tostring(actor_mob.name) .. "} used ws ID " .. tostring(action.param) .. " and it wasn't found.")
+        _Debug.Error.Add("TP.WS_Data: {" .. tostring(actor_mob.name) .. "} used ws ID " .. tostring(action.param) .. " and it wasn't found.")
         return nil
     end
     return ws_data
@@ -167,7 +166,7 @@ end
 H.TP.Pet_Skill_Data = function(action_id, actor_mob)
     local skill_data = Pet_Skill[action_id]
     if not skill_data then
-        _Debug.Error.Add("Action.Finish_Monster_TP_Move: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action_id) .. " unampped in Pet_Skill.")
+        _Debug.Error.Add("TP.Pet_Skill_Data: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action_id) .. " unampped in Pet_Skill.")
         skill_data = {id = action_id, en = "UNK Mon. Ability (" .. action_id .. ")"}
     end
     return skill_data
@@ -187,7 +186,7 @@ end
 H.TP.WS_Ability = function(result, ws_id, action, actor_mob)
     if Lists.WS.WS_Abilities[ws_id] then
         if result.message ~= 185 and result.message ~= 188 then
-            Handler.Action.Job_Ability(action, actor_mob, true)
+            H.Ability.Action(action, actor_mob, true)
             return true
         end
     end
@@ -240,7 +239,7 @@ end
 H.TP.Pet_Skill_Ignore = function(owner_mob, audits, damage, ws_id, ws_name)
     if owner_mob then
         if not Lists.Ability.Monster_Damaging[ws_id] then
-            _Debug.Error.Add("Handler.Weaponskill: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
+            _Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
             damage = 0
         end
         Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)

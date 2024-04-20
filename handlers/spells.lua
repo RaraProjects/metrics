@@ -70,7 +70,7 @@ H.Spell.Parse = function(spell_data, result, player_name, target_name, burst)
     end
 
     if not is_mapped then
-        _Debug.Error.Add("Handler.Spell_Damage: {" .. tostring(player_name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
+        _Debug.Error.Add("Spell.Parse: {" .. tostring(player_name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
     end
 
     return damage

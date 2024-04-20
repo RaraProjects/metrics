@@ -205,7 +205,7 @@ H.Melee.Animation = function(animation_id, audits, damage, melee_type_broad, thr
         Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.RANGED, H.Metric.TOTAL)
         Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.COUNT)
     else
-        _Debug.Error.Add("Handler.Melee: {" .. tostring(audits.player_name) .. "} Unhandled animation: " .. tostring(animation_id))
+        _Debug.Error.Add("Melee.Animation: {" .. tostring(audits.player_name) .. "} Unhandled animation: " .. tostring(animation_id))
     end
     return throwing
 end
@@ -245,7 +245,7 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
     elseif message_id == A.Enum.Message.RANGECRIT then
         H.Melee.Daken_Crit(audits, damage)
     else
-        _Debug.Error.Add("Handler.Melee: {" .. tostring(audits.player_name) .. "} Unhandled Melee Nuance " .. tostring(message_id))
+        _Debug.Error.Add("Melee.Message: {" .. tostring(audits.player_name) .. "} Unhandled Melee Nuance " .. tostring(message_id))
     end
 end
 

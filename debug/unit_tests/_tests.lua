@@ -151,26 +151,3 @@ _Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation
 
     return action
 end
-
-
-
-------------------------------------------------------------------------------------------------------
--- Test: Using Avatar Rage Blood Pact.
-------------------------------------------------------------------------------------------------------
-_Debug.Unit.Tests.Avatar_Rage = function()
-    local damage = 100
-    local action_id = 836 -- Eclipse Bite
-
-    _Debug.Unit.Active = true
-
-    local action = _Debug.Unit.Util.Build_Action(action_id, 17254144, damage)
-    Handler.Action.Pet_Ability(action, _Debug.Unit.Mob.PET, true)
-
-    local results = _Debug.Unit.Util.Avatar_Check(damage)
-
-    for pass, test in pairs(results) do
-        if not pass then _Debug.Error.Add("Test.Avatar_Rage: FAIL " .. tostring(test)) end
-    end
-
-    _Debug.Unit.Active = false
-end

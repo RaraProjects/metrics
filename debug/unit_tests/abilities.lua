@@ -27,7 +27,7 @@ _Debug.Unit.Tests.Ability.Jump_100 = function()
             local damage = 100
             local action_id = 66 -- Jump
             local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage)
-            H.Ability.Action(action, _Debug.Unit.Mob.PLAYER, true)
+            H.TP.Action(action, _Debug.Unit.Mob.PLAYER, true)
         end
     end
 end
@@ -43,7 +43,7 @@ _Debug.Unit.Tests.Ability.Jump_200 = function()
             local damage = 200
             local action_id = 66 -- Jump
             local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage)
-            H.Ability.Action(action, _Debug.Unit.Mob.PLAYER, true)
+            H.TP.Action(action, _Debug.Unit.Mob.PLAYER, true)
         end
     end
 end
@@ -59,7 +59,7 @@ _Debug.Unit.Tests.Ability.Jump_Miss = function()
             local damage = 0
             local action_id = 66 -- Jump
             local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage)
-            H.Ability.Action(action, _Debug.Unit.Mob.PLAYER, true)
+            H.TP.Action(action, _Debug.Unit.Mob.PLAYER, true)
         end
     end
 end
