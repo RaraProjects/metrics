@@ -128,11 +128,8 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
     -- A lot of pet abilities just land a status effect and it carries in a value as if it were damage.
     damage = H.TP.Pet_Skill_Ignore(owner_mob, audits, damage, ws_id, ws_name)
 
-    -- Ignore numbers on these.
-    -- Energy Steal [21]
-    -- Energy Drain [22]
-    -- Starlight [163]
-    -- Moonlight [164]
+    -- Some weaponskills drain MP instead of doing damage.
+    audits = H.TP.MP_Drain(audits, ws_id)
 
     -- This handles both the pet and player case.
     Model.Update.Catalog_Damage(audits.player_name, audits.target_name, audits.trackable, damage, ws_name, audits.pet_name)
@@ -256,6 +253,20 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Hit = function(audits, trackable, skill_name)
     Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, skill_name, H.Metric.HIT_COUNT)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Handle weaponskills that drain MP instead of doing damage.
+-- ------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param ws_id number
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+H.TP.MP_Drain = function(audits, ws_id)
+    if Lists.WS.MP_Drain[ws_id] then
+        audits.trackable = Model.Enum.Trackable.MP_DRAIN
+    end
+    return audits
 end
 
 -- ------------------------------------------------------------------------------------------------------

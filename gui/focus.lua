@@ -333,15 +333,17 @@ f.Display.Magic = function(player_name)
     local trackable = Model.Enum.Trackable.MAGIC
 
     local magic_total = Model.Get.Data(player_name, Model.Enum.Trackable.MAGIC, Model.Enum.Metric.TOTAL)
-    if magic_total > 0 then
+    local mp_drain = Model.Get.Data(player_name, Model.Enum.Trackable.MP_DRAIN, Model.Enum.Metric.TOTAL)
+    if magic_total > 0 or mp_drain > 0 then
         f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Magic", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Magic", 5, table_flags) then
+            if UI.BeginTable("Magic", 6, table_flags) then
                 -- Headers
                 UI.TableSetupColumn("Magic\nDamage", col_flags, width)
                 UI.TableSetupColumn("Burst\nDamage", col_flags, width)
                 UI.TableSetupColumn("Burst %\nTotal Damage", col_flags, width)
                 UI.TableSetupColumn("Burst %\nMagic Damage", col_flags, width)
+                UI.TableSetupColumn("\nMP Drain", col_flags, width)
                 UI.TableSetupColumn("\nEnspell", col_flags, width)
                 UI.TableHeadersRow()
 
@@ -351,6 +353,7 @@ f.Display.Magic = function(player_name)
                 UI.TableNextColumn() Col.Damage.Burst(player_name)
                 UI.TableNextColumn() Col.Damage.Burst(player_name, true)
                 UI.TableNextColumn() Col.Damage.Burst(player_name, true, true)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MP_DRAIN)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ENSPELL)
                 UI.EndTable()
             end

@@ -122,8 +122,18 @@ _Debug.Unit.Populate = function()
         --
         UI.TableNextColumn() _Debug.Unit.Tests.Ability.Holy_Circle()
         UI.TableNextColumn() _Debug.Unit.Tests.Spells.Hit()
-        UI.TableNextColumn()
-        UI.TableNextColumn()
+        UI.TableNextColumn() _Debug.Unit.Tests.Spells.Burst()
+        UI.TableNextColumn() _Debug.Unit.Tests.Spells.Cure_100()
+        ---
+        UI.TableNextColumn() _Debug.Unit.Tests.Spells.Cure_200()
+        UI.TableNextColumn() _Debug.Unit.Tests.Spells.Holy()
+        UI.TableNextColumn() _Debug.Unit.Tests.Spells.DoT_0()
+        UI.TableNextColumn() _Debug.Unit.Tests.Spells.DoT_1()
+        ---
+        UI.TableNextColumn() _Debug.Unit.Tests.Spells.Aspir()
+        UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.Energy_Steal()
+        UI.TableNextColumn() _Debug.Unit.Tests.Spells.Ga_Spell()
+        UI.TableNextColumn() _Debug.Unit.Tests.Spells.Curaga()
         UI.EndTable()
     end
 end
@@ -131,7 +141,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Build the fake result table.
 ------------------------------------------------------------------------------------------------------
-_Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_id, message_id, add_effect_param, add_effect_message)
+_Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_id, message_id, add_effect_param, add_effect_message, damage_two)
     if not add_effect_param then add_effect_param = 0 end
 
     local action = {}
@@ -139,6 +149,7 @@ _Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation
     action.targets = {}
 
     local target_data = {}
+    local target_data_two = {}
     target_data.id = target_id
     target_data.actions = {}
 
@@ -149,8 +160,17 @@ _Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation
     action_data.add_effect_param = add_effect_param
     action_data.add_effect_message = add_effect_message -- Skillchains
 
+    if damage_two then
+        target_data_two.id = target_id
+        target_data_two.actions = {}
+        local action_data_two = {}
+        action_data_two.param = damage_two
+        table.insert(target_data_two.actions, action_data_two)
+    end
+
     table.insert(target_data.actions, action_data)
     table.insert(action.targets, target_data)
+    if damage_two then table.insert(action.targets, target_data_two) end
 
     return action
 end

@@ -147,3 +147,19 @@ _Debug.Unit.Tests.TP_Action.Sheep_Song = function()
         end
     end
 end
+
+------------------------------------------------------------------------------------------------------
+-- Test: Energy Steal.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.TP_Action.Energy_Steal = function()
+    local clicked = 0
+    if UI.Button("Energy Steal") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 100
+            local action_id = 21   -- Energy Steal
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, nil, nil, nil, 0)
+            H.TP.Action(action, _Debug.Unit.Mob.PLAYER, true)
+        end
+    end
+end

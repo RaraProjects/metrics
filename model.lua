@@ -3,7 +3,8 @@ local m = {}
 m.Enum = {
 	Misc = {
 		IGNORE   = 'ignore',
-		COMBINED = 'combined'
+		COMBINED = 'combined',
+		MAX_DAMAGE = 100000,
 	},
 	Node   = {
 		CATALOG     = "catalog",
@@ -34,6 +35,7 @@ m.Enum = {
 		ENSPELL     = 'Enspell',
 		NUKE        = 'Nuke',
 		HEALING     = "Healing",
+		MP_DRAIN    = "MP Drain",
 		PET         = 'Pet',
 		DEATH       = 'Death',
 		DEFAULT     = 'Default',
@@ -282,7 +284,7 @@ m.Init.Catalog_Action = function(index, player_name, trackable, action_name, pet
 	end
 
 	-- Need to set minimum high manually to capture accurate minimums
-	m.Set.Catalog(100000, index, trackable, action_name, m.Enum.Metric.MIN)
+	m.Set.Catalog(m.Enum.Misc.MAX_DAMAGE, index, trackable, action_name, m.Enum.Metric.MIN)
 
 	-- Initialize tracking tables
 	if not m.Data.Trackable[trackable] then m.Data.Trackable[trackable] = {} end
@@ -311,7 +313,7 @@ m.Init.Pet_Catalog = function(index, player_name, trackable, action_name, pet_na
 		m.Set.Pet_Catalog(0, index, pet_name, trackable, action_name, metric)
 	end
 
-	m.Set.Pet_Catalog(100000, index, pet_name, trackable, action_name, m.Enum.Metric.MIN)
+	m.Set.Pet_Catalog(m.Enum.Misc.MAX_DAMAGE, index, pet_name, trackable, action_name, m.Enum.Metric.MIN)
 
 	-- Initialize tracking tables
 	if not m.Data.Pet_Trackable[trackable] then m.Data.Pet_Trackable[trackable] = {} end
@@ -387,7 +389,7 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
 
 	-- GRAND TOTAL ////////////////////////////////////////////////////////////////////////////////
 	-- There is a regular track and a "no skillchains" track.
-    if trackable ~= m.Enum.Trackable.HEALING and trackable ~= m.Enum.Trackable.PET_HEAL then
+    if trackable ~= m.Enum.Trackable.HEALING and trackable ~= m.Enum.Trackable.PET_HEAL and trackable ~= m.Enum.Trackable.MP_DRAIN then
     	m.Update.Data(m.Enum.Mode.INC, damage, audits, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
 		if trackable ~= m.Enum.Trackable.SC then
 			m.Update.Data(m.Enum.Mode.INC, damage, audits, m.Enum.Trackable.TOTAL_NO_SC, m.Enum.Metric.TOTAL)
@@ -417,12 +419,12 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
 	end
 
     if damage > 0 and damage < m.Get.Catalog(player_name, trackable, action_name, m.Enum.Metric.MIN) then
-    	m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MIN)
+		m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MIN)
     end
 
     if damage > m.Get.Catalog(player_name, trackable, action_name, m.Enum.Metric.MAX) then
     	-- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
-		if trackable == m.Enum.Trackable.HEALING and damage < Model.Healing_Max[action_name] then
+		if trackable == m.Enum.Trackable.HEALING and damage <= Model.Healing_Max[action_name] then
 			m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MAX)
 		elseif trackable ~= m.Enum.Trackable.HEALING then
 			m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MAX)
@@ -714,6 +716,7 @@ end
 ------------------------------------------------------------------------------------------------------
 m.Get.Catalog = function(player_name, trackable, action_name, metric)
 	local total = 0
+	if metric == m.Enum.Metric.MIN then total = m.Enum.Misc.MAX_DAMAGE end
 	local mob_focus = Window.Util.Get_Mob_Focus()
 	for index, _ in pairs(m.Data.Parse) do
 		if mob_focus == m.Enum.Misc.NONE then
@@ -742,6 +745,7 @@ end
 ------------------------------------------------------------------------------------------------------
 m.Get.Pet_Catalog = function(player_name, pet_name, trackable, action_name, metric)
 	local total = 0
+	if metric == m.Enum.Metric.MIN then total = m.Enum.Misc.MAX_DAMAGE end
 	local mob_focus = Window.Util.Get_Mob_Focus()
 	for index, _ in pairs(m.Data.Parse) do
 		if mob_focus == m.Enum.Misc.NONE then
@@ -829,7 +833,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 m.Util.Catalog_Calc_Min = function(min, index, trackable, action_name, metric)
-	if min <= m.Data.Parse[index][trackable][m.Enum.Node.CATALOG][action_name][metric] then
+	if min > m.Data.Parse[index][trackable][m.Enum.Node.CATALOG][action_name][metric] then
 		min =  m.Data.Parse[index][trackable][m.Enum.Node.CATALOG][action_name][metric]
 	end
 	return min

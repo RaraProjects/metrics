@@ -12,6 +12,7 @@ H.Spell.Action = function(action, actor_mob, log_offense)
 
     local result, target_mob, new_damage
     local damage = 0
+    local target_count = 0
     local spell_id = action.param
     local spell_data = A.Spell.ID(spell_id)
     if not spell_data then return nil end
@@ -30,13 +31,14 @@ H.Spell.Action = function(action, actor_mob, log_offense)
             new_damage = H.Spell.Parse(spell_data, result, actor_mob.name, target_mob.name, is_burst)
             if not new_damage then new_damage = 0 end
 
+            if new_damage > 0 then target_count = target_count + 1 end
             damage = damage + new_damage
         end
     end
 
     local audits = H.Spell.Audits(actor_mob, target_mob)
     H.Spell.Count(audits, spell_id, spell_name, is_burst)
-    H.Spell.Blog(actor_mob, spell_id, spell_data, spell_name, damage, is_burst)
+    H.Spell.Blog(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -69,6 +71,11 @@ H.Spell.Parse = function(spell_data, result, player_name, target_name, burst)
         is_mapped = true
     end
 
+    if Lists.Spell.MP_Drain[spell_id] then
+        H.Spell.MP_Drain(player_name, target_name, spell_name, damage, burst)
+        is_mapped = true
+    end
+
     if not is_mapped then
         _Debug.Error.Add("Spell.Parse: {" .. tostring(player_name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
     end
@@ -79,11 +86,20 @@ end
 ------------------------------------------------------------------------------------------------------
 -- 
 ------------------------------------------------------------------------------------------------------
-H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_burst)
-    if Lists.Spell.Damaging[spell_id] and Blog.Flags.Magic then
-        local burst_message = ""
-        if is_burst then burst_message = Blog.Enum.Text.MB end
-        Blog.Add(actor_mob.name, spell_name, damage, burst_message, Model.Enum.Trackable.MAGIC, spell_data)
+H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
+    if Lists.Spell.Damaging[spell_id] and not Lists.Spell.DoT[spell_id] and Blog.Flags.Magic then
+        local blog_note = ""
+        local space = ""
+        -- Show magic burst message.
+        if is_burst then
+            blog_note = Blog.Enum.Text.MB
+            space = " "
+        end
+        -- Show how many targets were hit on the ga-spell.
+        if Lists.Spell.AOE[spell_id] then
+            blog_note = blog_note .. space .. "Targets: " .. tostring(target_count)
+        end
+        Blog.Add(actor_mob.name, spell_name, damage, blog_note, Model.Enum.Trackable.MAGIC, spell_data)
     end
 end
 
@@ -95,14 +111,16 @@ H.Spell.Audits = function(actor_mob, target_mob)
 end
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Need the HIT_COUNT for average calculations in the catalog.
 ------------------------------------------------------------------------------------------------------
 H.Spell.Count = function(audits, spell_id, spell_name, is_burst)
     if Lists.Spell.Damaging[spell_id] then
         Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.MAGIC, spell_name, H.Metric.COUNT)
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.MAGIC, spell_name, H.Metric.HIT_COUNT)
     end
     if Lists.Spell.Healing[spell_id] then
         Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.HEALING, spell_name, H.Metric.COUNT)
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.HEALING, spell_name, H.Metric.HIT_COUNT)
     end
     if is_burst then Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.MAGIC, spell_name, H.Metric.BURST_COUNT) end
 end
@@ -123,4 +141,11 @@ H.Spell.Overcure = function(player_name, target_name, spell_name, damage, burst)
     }
     Model.Update.Data(H.Mode.INC, overcure, audits, H.Trackable.HEALING, H.Metric.OVERCURE)
     Model.Update.Catalog_Metric(H.Mode.INC, overcure, audits, H.Trackable.HEALING, spell_name, H.Metric.OVERCURE)
+end
+
+------------------------------------------------------------------------------------------------------
+-- 
+------------------------------------------------------------------------------------------------------
+H.Spell.MP_Drain = function(player_name, target_name, spell_name, damage, burst)
+    Model.Update.Catalog_Damage(player_name, target_name, H.Trackable.MP_DRAIN, damage, spell_name, nil, burst)
 end

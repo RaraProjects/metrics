@@ -29,6 +29,14 @@ l.WS.WS_Abilities = {
     [329]  = {id = 329,  english = "Intervene"},
 }
 
+l.WS.MP_Drain = {
+    [21]  = {id=21,en="Energy Steal",ja="エナジースティール",element=7,icon_id=596,prefix="/weaponskill",range=2,skill=2,skillchain_a="",skillchain_b="",skillchain_c="",targets=32},
+    [22]  = {id=22,en="Energy Drain",ja="エナジードレイン",element=7,icon_id=596,prefix="/weaponskill",range=2,skill=2,skillchain_a="",skillchain_b="",skillchain_c="",targets=32},
+    [163] = {id=163,en="Starlight",ja="スターライト",element=6,icon_id=628,prefix="/weaponskill",range=2,skill=11,skillchain_a="",skillchain_b="",skillchain_c="",targets=1},
+    [164] = {id=164,en="Moonlight",ja="ムーンライト",element=6,icon_id=628,prefix="/weaponskill",range=2,skill=11,skillchain_a="",skillchain_b="",skillchain_c="",targets=1},
+    [183] = {id=183,en="Spirit Taker",ja="スピリットテーカー",element=6,icon_id=631,prefix="/weaponskill",range=2,skill=12,skillchain_a="",skillchain_b="",skillchain_c="",targets=32},
+}
+
 l.WS.Skillchains = {
     [229] = 'DRG Jump Effect',
     [288] = 'Light',       [289] = 'Darkness', 
@@ -91,6 +99,99 @@ l.Spell.Healing = {
     [11]  = {id = 11,  en = "Curaga V"},
     [593] = {id = 593, en = "Magic Fruit"},
     [581] = {id = 581, en = "Healing Breeze"},
+}
+
+l.Spell.DoT = {
+    [23]  = {id=23,en="Dia",ja="ディア",cast_time=1,duration=60,element=6,icon_id=99,icon_id_nq=6,levels={[3]=3,[5]=1},mp_cost=7,prefix="/magic",range=12,recast=5,recast_id=23,requirements=0,skill=35,status=134,targets=32,type="WhiteMagic"},
+    [24]  = {id=24,en="Dia II",ja="ディアII",cast_time=1.5,duration=120,element=6,icon_id=100,icon_id_nq=6,levels={[3]=36,[5]=31},mp_cost=30,overwrites={23,230},prefix="/magic",range=12,recast=6,recast_id=24,requirements=0,skill=35,status=134,targets=32,type="WhiteMagic"},
+    [25]  = {id=25,en="Dia III",ja="ディアIII",cast_time=2,duration=180,element=6,icon_id=202,icon_id_nq=6,levels={[5]=75},mp_cost=45,overwrites={23,24,230,231},prefix="/magic",range=12,recast=7,recast_id=25,requirements=0,skill=35,status=134,targets=32,type="WhiteMagic"},
+    [26]  = {id=26,en="Dia IV",ja="ディアIV",cast_time=2.5,duration=90,element=6,icon_id=-1,icon_id_nq=6,levels={},mp_cost=164,overwrites={23,24,25,230,231,232},prefix="/magic",range=12,recast=8,recast_id=26,requirements=0,skill=35,status=134,targets=32,type="WhiteMagic"},
+    [27]  = {id=27,en="Dia V",ja="ディアV",cast_time=3,element=6,icon_id=-1,icon_id_nq=6,levels={},mp_cost=217,prefix="/magic",range=12,recast=9,recast_id=27,requirements=0,skill=35,targets=32,type="WhiteMagic"},
+    [33]  = {id=33,en="Diaga",ja="ディアガ",cast_time=1.5,element=6,icon_id=101,icon_id_nq=6,levels={[3]=18,[5]=15},mp_cost=12,prefix="/magic",range=12,recast=6,recast_id=33,requirements=0,skill=35,targets=32,type="WhiteMagic"},
+    [34]  = {id=34,en="Diaga II",ja="ディアガII",cast_time=1.75,element=6,icon_id=-1,icon_id_nq=6,levels={[3]=52,[5]=45},mp_cost=60,prefix="/magic",range=12,recast=6.25,recast_id=34,requirements=0,skill=35,targets=32,type="WhiteMagic",unlearnable=true},
+    [35]  = {id=35,en="Diaga III",ja="ディアガIII",cast_time=2,element=6,icon_id=-1,icon_id_nq=6,levels={[5]=75},mp_cost=120,prefix="/magic",range=12,recast=6.5,recast_id=35,requirements=0,skill=35,targets=32,type="WhiteMagic",unlearnable=true},
+    [36]  = {id=36,en="Diaga IV",ja="ディアガIV",cast_time=2.25,element=6,icon_id=-1,icon_id_nq=6,levels={},mp_cost=180,prefix="/magic",range=12,recast=6.75,recast_id=36,requirements=0,skill=35,targets=32,type="WhiteMagic"},
+    [37]  = {id=37,en="Diaga V",ja="ディアガV",cast_time=2.5,element=6,icon_id=-1,icon_id_nq=6,levels={},mp_cost=240,prefix="/magic",range=12,recast=7,recast_id=37,requirements=0,skill=35,targets=32,type="WhiteMagic"},
+    [220] = {id=220,en="Poison",ja="ポイズン",cast_time=1,duration=90,element=5,icon_id=223,icon_id_nq=13,levels={[4]=3,[5]=5,[8]=6},mp_cost=5,prefix="/magic",range=12,recast=5,recast_id=220,requirements=2,skill=35,status=3,targets=32,type="BlackMagic"},
+    [221] = {id=221,en="Poison II",ja="ポイズンII",cast_time=1,duration=120,element=5,icon_id=224,icon_id_nq=13,levels={[4]=43,[5]=46,[8]=46},mp_cost=38,overwrites={220,350,351,352},prefix="/magic",range=12,recast=5,recast_id=221,requirements=2,skill=35,status=3,targets=32,type="BlackMagic"},
+    [222] = {id=222,en="Poison III",ja="ポイズンIII",cast_time=1,element=5,icon_id=225,icon_id_nq=13,levels={},mp_cost=72,prefix="/magic",range=12,recast=5,recast_id=222,requirements=0,skill=35,targets=32,type="BlackMagic"},
+    [223] = {id=223,en="Poison IV",ja="ポイズンIV",cast_time=1,element=5,icon_id=226,icon_id_nq=13,levels={},mp_cost=106,prefix="/magic",range=12,recast=5,recast_id=223,requirements=0,skill=35,targets=32,type="BlackMagic"},
+    [224] = {id=224,en="Poison V",ja="ポイズンV",cast_time=1,element=5,icon_id=227,icon_id_nq=13,levels={},mp_cost=140,prefix="/magic",range=12,recast=5,recast_id=224,requirements=0,skill=35,targets=32,type="BlackMagic"},
+    [225] = {id=225,en="Poisonga",ja="ポイゾガ",cast_time=2,element=5,icon_id=228,icon_id_nq=13,levels={[4]=24,[8]=26},mp_cost=44,prefix="/magic",range=12,recast=10,recast_id=225,requirements=0,skill=35,targets=32,type="BlackMagic"},
+    [226] = {id=226,en="Poisonga II",ja="ポイゾガII",cast_time=2,element=5,icon_id=229,icon_id_nq=13,levels={[4]=64,[8]=66},mp_cost=112,prefix="/magic",range=12,recast=10,recast_id=226,requirements=0,skill=35,targets=32,type="BlackMagic",unlearnable=true},
+    [227] = {id=227,en="Poisonga III",ja="ポイゾガIII",cast_time=2,element=5,icon_id=230,icon_id_nq=13,levels={},mp_cost=180,prefix="/magic",range=12,recast=10,recast_id=227,requirements=0,skill=35,targets=32,type="BlackMagic"},
+    [228] = {id=228,en="Poisonga IV",ja="ポイゾガIV",cast_time=2,element=5,icon_id=231,icon_id_nq=13,levels={},mp_cost=248,prefix="/magic",range=12,recast=10,recast_id=228,requirements=0,skill=35,targets=32,type="BlackMagic"},
+    [229] = {id=229,en="Poisonga V",ja="ポイゾガV",cast_time=2,element=5,icon_id=232,icon_id_nq=13,levels={},mp_cost=314,prefix="/magic",range=12,recast=10,recast_id=229,requirements=0,skill=35,targets=32,type="BlackMagic"},
+    [230] = {id=230,en="Bio",ja="バイオ",cast_time=1.5,duration=60,element=7,icon_id=291,icon_id_nq=15,levels={[4]=10,[5]=10,[8]=15},mp_cost=15,overwrites={23},prefix="/magic",range=12,recast=5,recast_id=230,requirements=2,skill=37,status=135,targets=32,type="BlackMagic"},
+    [231] = {id=231,en="Bio II",ja="バイオII",cast_time=1.5,duration=120,element=7,icon_id=292,icon_id_nq=15,levels={[4]=35,[5]=36,[8]=40},mp_cost=36,overwrites={23,24,230},prefix="/magic",range=12,recast=5,recast_id=231,requirements=2,skill=37,status=135,targets=32,type="BlackMagic"},
+    [232] = {id=232,en="Bio III",ja="バイオIII",cast_time=1.5,duration=30,element=7,icon_id=293,icon_id_nq=15,levels={[5]=75},mp_cost=54,overwrites={23,24,25,230,231},prefix="/magic",range=12,recast=15,recast_id=232,requirements=0,skill=37,status=135,targets=32,type="BlackMagic"},
+    [233] = {id=233,en="Bio IV",ja="バイオIV",cast_time=1.5,element=7,icon_id=294,icon_id_nq=15,levels={},mp_cost=154,prefix="/magic",range=12,recast=5,recast_id=233,requirements=0,skill=37,targets=32,type="BlackMagic"},
+    [234] = {id=234,en="Bio V",ja="バイオV",cast_time=1.5,element=7,icon_id=295,icon_id_nq=15,levels={},mp_cost=197,prefix="/magic",range=12,recast=5,recast_id=234,requirements=0,skill=37,targets=32,type="BlackMagic"},
+    [235] = {id=235,en="Burn",ja="バーン",cast_time=2.5,duration=90,element=0,icon_id=304,icon_id_nq=8,levels={[4]=24},mp_cost=25,overwrites={236},prefix="/magic",range=12,recast=10,recast_id=235,requirements=0,skill=36,status=128,targets=32,type="BlackMagic"},
+    [236] = {id=236,en="Frost",ja="フロスト",cast_time=2.5,duration=90,element=1,icon_id=301,icon_id_nq=9,levels={[4]=22},mp_cost=25,overwrites={237},prefix="/magic",range=12,recast=10,recast_id=236,requirements=0,skill=36,status=129,targets=32,type="BlackMagic"},
+    [237] = {id=237,en="Choke",ja="チョーク",cast_time=2.5,duration=90,element=2,icon_id=303,icon_id_nq=10,levels={[4]=20},mp_cost=25,overwrites={238},prefix="/magic",range=12,recast=10,recast_id=237,requirements=0,skill=36,status=130,targets=32,type="BlackMagic"},
+    [238] = {id=238,en="Rasp",ja="ラスプ",cast_time=2.5,duration=90,element=3,icon_id=300,icon_id_nq=11,levels={[4]=18},mp_cost=25,overwrites={239},prefix="/magic",range=12,recast=10,recast_id=238,requirements=0,skill=36,status=131,targets=32,type="BlackMagic"},
+    [239] = {id=239,en="Shock",ja="ショック",cast_time=2.5,duration=90,element=4,icon_id=302,icon_id_nq=12,levels={[4]=16},mp_cost=25,overwrites={240},prefix="/magic",range=12,recast=10,recast_id=239,requirements=0,skill=36,status=132,targets=32,type="BlackMagic"},
+    [240] = {id=240,en="Drown",ja="ドラウン",cast_time=2.5,duration=90,element=5,icon_id=305,icon_id_nq=13,levels={[4]=27},mp_cost=25,overwrites={235},prefix="/magic",range=12,recast=10,recast_id=240,requirements=0,skill=36,status=133,targets=32,type="BlackMagic"},
+    [368] = {id=368,en="Foe Requiem",ja="魔物のレクイエム",cast_time=2,duration=60,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=7},mp_cost=0,prefix="/song",range=11,recast=24,recast_id=368,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
+    [369] = {id=369,en="Foe Requiem II",ja="魔物のレクイエムII",cast_time=2,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=17},mp_cost=0,overwrites={368},prefix="/song",range=11,recast=24,recast_id=369,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
+    [370] = {id=370,en="Foe Requiem III",ja="魔物のレクイエムIII",cast_time=2,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=37},mp_cost=0,overwrites={368,369},prefix="/song",range=11,recast=24,recast_id=370,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
+    [371] = {id=371,en="Foe Requiem IV",ja="魔物のレクイエムIV",cast_time=2,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=47},mp_cost=0,overwrites={368,369,370},prefix="/song",range=11,recast=24,recast_id=371,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
+    [372] = {id=372,en="Foe Requiem V",ja="魔物のレクイエムV",cast_time=2,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=57},mp_cost=0,overwrites={368,369,370,371},prefix="/song",range=11,recast=24,recast_id=372,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
+    [373] = {id=373,en="Foe Requiem VI",ja="魔物のレクイエムVI",cast_time=2,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=67},mp_cost=0,overwrites={368,369,370,371,372},prefix="/song",range=11,recast=24,recast_id=373,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
+    [374] = {id=374,en="Foe Requiem VII",ja="魔物のレクイエムVII",cast_time=2,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=76},mp_cost=0,overwrites={368,369,370,371,372,373},prefix="/song",range=11,recast=24,recast_id=374,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
+    [375] = {id=375,en="Foe Requiem VIII",ja="魔物のレクイエムVIII",cast_time=2,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={},mp_cost=0,overwrites={368,369,370,371,372,373,374},prefix="/song",range=11,recast=24,recast_id=375,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
+}
+
+l.Spell.MP_Drain = {
+    [247] = {id=247,en="Aspir",ja="アスピル",cast_time=3,element=7,icon_id=238,icon_id_nq=15,levels={[4]=25,[8]=20,[20]=36,[21]=30},mp_cost=10,prefix="/magic",range=12,recast=60,recast_id=247,requirements=2,skill=37,targets=32,type="BlackMagic"},
+    [248] = {id=248,en="Aspir II",ja="アスピルII",cast_time=3,element=7,icon_id=239,icon_id_nq=15,levels={[4]=83,[8]=78,[20]=97,[21]=90},mp_cost=5,prefix="/magic",range=12,recast=11,recast_id=248,requirements=2,skill=37,targets=32,type="BlackMagic"},
+    [881] = {id=881,en="Aspir III",ja="アスピルIII",cast_time=3,element=7,icon_id=657,icon_id_nq=15,levels={[4]=550,[21]=550},mp_cost=2,prefix="/magic",range=12,recast=26,recast_id=881,requirements=0,skill=37,targets=32,type="BlackMagic"},
+}
+
+l.Spell.AOE = {
+    [32]  = {id = 32,  en = "Banish V"},
+    [38]  = {id = 38,  en = "Banishga"},
+    [39]  = {id = 39,  en = "Banishga II"},
+    [40]  = {id = 40,  en = "Banishga III"},
+    [41]  = {id = 41,  en = "Banishga IV"},
+    [42]  = {id = 42,  en = "Banishga V"},
+    [174] = {id = 174, en = "Firaga"},
+    [175] = {id = 175, en = "Firaga II"},
+    [176] = {id = 176, en = "Firaga III"},
+    [177] = {id = 177, en = "Firaga IV"},
+    [178] = {id = 178, en = "Firaga V"},
+    [496] = {id = 496, en = "Firaja"},
+    [179] = {id = 179, en = "Blizzaga"},
+    [180] = {id = 180, en = "Blizzaga II"},
+    [181] = {id = 181, en = "Blizzaga III"},
+    [182] = {id = 182, en = "Blizzaga IV"},
+    [183] = {id = 183, en = "Blizzaga V"},
+    [497] = {id = 497, en = "Blizzaja"},
+    [184] = {id = 184, en = "Aeroga"},
+    [185] = {id = 185, en = "Aeroga II"},
+    [186] = {id = 186, en = "Aeroga III"},
+    [187] = {id = 187, en = "Aeroga IV"},
+    [188] = {id = 188, en = "Aeroga V"},
+    [498] = {id = 498, en = "Aeroja"},
+    [189] = {id = 189, en = "Stonega"},
+    [190] = {id = 190, en = "Stonega II"},
+    [191] = {id = 191, en = "Stonega III"},
+    [192] = {id = 192, en = "Stonega IV"},
+    [193] = {id = 193, en = "Stonega V"},
+    [499] = {id = 499, en = "Stoneja"},
+    [194] = {id = 194, en = "Thundaga"},
+    [195] = {id = 195, en = "Thundaga II"},
+    [196] = {id = 196, en = "Thundaga III"},
+    [197] = {id = 197, en = "Thundaga IV"},
+    [198] = {id = 198, en = "Thundaga V"},
+    [500] = {id = 500, en = "Thundaja"},
+    [199] = {id = 199, en = "Waterga"},
+    [200] = {id = 200, en = "Waterga II"},
+    [201] = {id = 201, en = "Waterga III"},
+    [202] = {id = 202, en = "Waterga IV"},
+    [203] = {id = 203, en = "Waterga V"},
+    [501] = {id = 501, en = "Waterja"},
 }
 
 l.Spell.Damaging = {
@@ -284,7 +385,7 @@ l.Ability.Ward = {
     [844] = {id=548,en="Crimson Howl",ja="紅蓮の咆哮",duration=60,element=0,icon_id=342,mp_cost=84,prefix="/pet",range=12,recast_id=174,status=68,targets=1,tp_cost=0,type="BloodPactWard"},
     -- Titan
     [853] = {id=564,en="Earthen Ward",ja="大地の守り",duration=900,element=3,icon_id=343,mp_cost=92,prefix="/pet",range=12,recast_id=174,status=37,targets=1,tp_cost=0,type="BloodPactWard"},
-    -- Leviathan
+    -- Leviathan (Spring Water is Refresh on Horizon)
     [861] = {id=579,en="Spring Water",ja="湧水",element=5,icon_id=344,mp_cost=99,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
     [862] = {id=580,en="Slowga",ja="スロウガ",element=5,icon_id=344,mp_cost=48,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
     -- Garuda
@@ -311,8 +412,6 @@ l.Ability.Ward = {
 }
 
 l.Ability.Avatar_Healing = {
-    -- Leviathan
-    [861] = {id=579,en="Spring Water",ja="湧水",element=5,icon_id=344,mp_cost=99,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
     -- Garuda
     [869] = {id=594,en="Whispering Wind",ja="風の囁き",element=2,icon_id=345,mp_cost=119,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
     -- Carbuncle
