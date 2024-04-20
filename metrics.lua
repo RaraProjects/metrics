@@ -124,7 +124,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         elseif (action.category ==  9) then -- Do nothing (Begin or Interrupt Item Usage)
         elseif (action.category == 11) then H.TP.Monster_Action(action, actor_mob, log_offense)
         elseif (action.category == 12) then -- Do nothing (Begin Ranged Attack)
-        elseif (action.category == 13) then Handler.Action.Pet_Ability(action, actor_mob, log_offense)
+        elseif (action.category == 13) then H.Ability.Pet_Action(action, actor_mob, log_offense)
         elseif (action.category == 14) then -- Do nothing (Unblinkable Job Ability)
         end
 

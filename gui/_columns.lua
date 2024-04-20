@@ -411,7 +411,8 @@ end
 c.Single.Pet_Acc = function(player_name, pet_name, action_name, trackable)
     local single_hits = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.HIT_COUNT)
     local single_attempts = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.COUNT)
-    return c.String.Format_Percent(single_hits, single_attempts)
+    local color = c.String.Color_Zero(single_hits)
+    return UI.TextColored(color, c.String.Format_Percent(single_hits, single_attempts))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -448,13 +449,14 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Single.Pet_Average = function(player_name, pet_name, action_name, trackable)
     local single_hits = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.HIT_COUNT)
+    local color = c.String.Color_Zero(single_hits)
     if single_hits == 0 then
-        return c.String.Format_Number(0)
+        return UI.TextColored(color, c.String.Format_Number(0))
     end
 
     local single_damage  = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.TOTAL)
     local single_average = single_damage / single_hits
-    return c.String.Format_Number(single_average)
+    return UI.TextColored(color, c.String.Format_Number(single_average))
 end
 
 ------------------------------------------------------------------------------------------------------

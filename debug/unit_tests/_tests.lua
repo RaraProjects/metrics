@@ -118,6 +118,8 @@ _Debug.Unit.Populate = function()
         UI.TableNextColumn() _Debug.Unit.Tests.Ability.Avatar_Rage()
         UI.TableNextColumn() _Debug.Unit.Tests.Ability.Avatar_Ward()
         UI.TableNextColumn() _Debug.Unit.Tests.Ability.Avatar_Healing_Ward()
+        UI.TableNextColumn() _Debug.Unit.Tests.TP_Action.Sheep_Song()
+        --
         UI.TableNextColumn() _Debug.Unit.Tests.Ability.Holy_Circle()
         UI.EndTable()
     end

@@ -131,3 +131,19 @@ _Debug.Unit.Tests.TP_Action.Pet_Miss = function()
         end
     end
 end
+
+------------------------------------------------------------------------------------------------------
+-- Test: Pet TP Move Hit.
+------------------------------------------------------------------------------------------------------
+_Debug.Unit.Tests.TP_Action.Sheep_Song = function()
+    local clicked = 0
+    if UI.Button("Sheep Song") then
+        clicked = 1
+        if clicked and 1 then
+            local damage = 0
+            local action_id = 264   -- Sheep Song
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage)
+            H.TP.Monster_Action(action, _Debug.Unit.Mob.PET, true)
+        end
+    end
+end

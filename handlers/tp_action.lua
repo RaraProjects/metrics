@@ -239,11 +239,11 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Ignore = function(owner_mob, audits, damage, ws_id, ws_name)
     if owner_mob then
-        Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
         if not Lists.Ability.Monster_Damaging[ws_id] then
             _Debug.Error.Add("Handler.Weaponskill: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
             damage = 0
         end
+        Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
     end
     return damage
 end

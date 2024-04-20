@@ -91,7 +91,7 @@ _Debug.Unit.Tests.Ability.Avatar_Rage = function()
             local damage = 100
             local action_id = 846 -- Flaming Crush
             local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage)
-            H.Ability.Pet_Action(action, _Debug.Unit.Mob.PLAYER, true)
+            H.Ability.Pet_Action(action, _Debug.Unit.Mob.PET, true)
         end
     end
 end
@@ -107,7 +107,7 @@ _Debug.Unit.Tests.Ability.Avatar_Ward = function()
             local damage = 100
             local action_id = 853 -- Earthen Ward
             local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage)
-            H.Ability.Pet_Action(action, _Debug.Unit.Mob.PLAYER, true)
+            H.Ability.Pet_Action(action, _Debug.Unit.Mob.PET, true)
         end
     end
 end
@@ -123,7 +123,7 @@ _Debug.Unit.Tests.Ability.Avatar_Healing_Ward = function()
             local damage = 100
             local action_id = 906 -- Healing Ruby
             local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage)
-            H.Ability.Pet_Action(action, _Debug.Unit.Mob.PLAYER, true)
+            H.Ability.Pet_Action(action, _Debug.Unit.Mob.PET, true)
         end
     end
 end

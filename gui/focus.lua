@@ -630,8 +630,8 @@ f.Display.Util.Pet_Single_Row = function(player_name, pet_name, action_name, tra
     UI.TableNextColumn() UI.Text(action_name)
     UI.TableNextColumn() Col.Single.Pet_Damage(player_name, pet_name, action_name, trackable, Model.Enum.Metric.TOTAL)
     UI.TableNextColumn() Col.Single.Pet_Attempts(player_name, pet_name, action_name, trackable)
-    UI.TableNextColumn() UI.Text(Col.Single.Pet_Acc(player_name, pet_name, action_name, trackable))
-    UI.TableNextColumn() UI.Text(Col.Single.Pet_Average(player_name, pet_name, action_name, trackable))
+    UI.TableNextColumn() Col.Single.Pet_Acc(player_name, pet_name, action_name, trackable)
+    UI.TableNextColumn() Col.Single.Pet_Average(player_name, pet_name, action_name, trackable)
 
     local min = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, Model.Enum.Metric.MIN)
     if min == f.Enum.OVERFLOW then
