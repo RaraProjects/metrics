@@ -59,7 +59,7 @@ Focus = require('gui.focus')
 Settings = require("gui.settings")
 
 -- Debug
-require("debug.debug")
+require("debug._debug")
 
 -- Initialization
 Window.Initialize()

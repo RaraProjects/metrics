@@ -1,10 +1,10 @@
 _Debug = {}
 _Debug.Enabled = false
 
-require("debug.mob_viewer")
-require("debug.packet_viewer")
-require("debug.error_log")
-require("debug.data_viewer")
+require("debug.screens.mob_viewer")
+require("debug.screens.packet_viewer")
+require("debug.screens.error_log")
+require("debug.screens.data_viewer")
 require("debug.unit_tests._tests")
 require("debug.unit_tests.melee")
 require("debug.unit_tests.ranged")
