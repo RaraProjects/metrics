@@ -41,7 +41,6 @@ Pet_Skill = require("resources.monster_skills")
 UI = require("imgui")
 A = require("ashita")
 Model = require('model')
-Handler = require("handler")
 
 -- Handlers
 require("handlers._handler")

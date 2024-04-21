@@ -64,6 +64,7 @@ s.Section.Text_Commands = function()
         UI.BulletText("mini  / m -- toggles mini mode.")
         UI.BulletText("nano  / n -- toggles nano mode.")
         UI.BulletText("full  / f -- toggles full mode.")
+        UI.BulletText("pet   / p -- toggles pet columns in Team.")
         UI.BulletText("reset / r -- resets the parse data.")
     end
 end

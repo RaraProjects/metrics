@@ -85,7 +85,15 @@ H.Spell.Parse = function(spell_data, result, player_name, target_name, burst)
 end
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Adds spell information to the battle log.
+------------------------------------------------------------------------------------------------------
+---@param actor_mob table
+---@param spell_id number
+---@param spell_data table
+---@param spell_name string
+---@param damage number
+---@param is_burst boolean true if this cast was a magic burst.
+---@param target_count number how many targets were hit by an AOE spell.
 ------------------------------------------------------------------------------------------------------
 H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
     if Lists.Spell.Damaging[spell_id] and not Lists.Spell.DoT[spell_id] and Blog.Flags.Magic then
@@ -105,7 +113,11 @@ H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_
 end
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Convenient function to build the audit table.
+------------------------------------------------------------------------------------------------------
+---@param actor_mob table
+---@param target_mob table
+---@return table
 ------------------------------------------------------------------------------------------------------
 H.Spell.Audits = function(actor_mob, target_mob)
     return {player_name = actor_mob.name, target_name = target_mob.name}
@@ -113,6 +125,13 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Need the HIT_COUNT for average calculations in the catalog.
+-- This also handles keeping track of how much MP has been spent on certain spells.
+------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param spell_id number
+---@param spell_name string
+---@param mp_cost number
+---@param is_burst boolean
 ------------------------------------------------------------------------------------------------------
 H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
     local trackable = H.Trackable.MAGIC
@@ -138,7 +157,14 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
 end
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- This calculates how much HP from healing didn't actually go to healing because the player
+-- wasn't missing enough health.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param target_name string
+---@param spell_name string
+---@param damage number
+---@param burst boolean
 ------------------------------------------------------------------------------------------------------
 H.Spell.Overcure = function(player_name, target_name, spell_name, damage, burst)
     Model.Update.Catalog_Damage(player_name, target_name, H.Trackable.HEALING, damage, spell_name, nil, burst)
@@ -156,7 +182,13 @@ H.Spell.Overcure = function(player_name, target_name, spell_name, damage, burst)
 end
 
 ------------------------------------------------------------------------------------------------------
--- 
+-- Handles spells that drain MP. The drain doesn't get used towards the damage total.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param target_name string
+---@param spell_name string
+---@param damage number
+---@param burst boolean
 ------------------------------------------------------------------------------------------------------
 H.Spell.MP_Drain = function(player_name, target_name, spell_name, damage, burst)
     Model.Update.Catalog_Damage(player_name, target_name, H.Trackable.MP_DRAIN, damage, spell_name, nil, burst)

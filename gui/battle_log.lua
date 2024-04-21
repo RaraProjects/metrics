@@ -53,6 +53,9 @@ bl.Enum.Text = {
     NA   = "---",
     MB   = "BURST!",
 }
+bl.Enum.Flags = {
+    IGNORE = "ignore",
+}
 
 -- FUTURE CONSIDERATIONS
 -- Highlight damage if the damage is higher than the average for that weaponskill.
@@ -142,7 +145,7 @@ bl.Util.Damage = function(damage, action_type)
         threshold = bl.Thresholds.WS
     elseif action_type == Model.Enum.Trackable.MAGIC then
         threshold = bl.Thresholds.MAGIC
-    elseif action_type == Handler.Enum.Flags.IGNORE then
+    elseif action_type == bl.Enum.Flags.IGNORE then
         return {Value = bl.Enum.Text.NA, Color = Window.Colors.WHITE}
     end
     -- Generate damage string.
@@ -184,7 +187,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 bl.Util.Notes = function(note, action_type)
-    if action_type == Model.Enum.Trackable.MAGIC or action_type == Handler.Enum.Flags.IGNORE then
+    if action_type == Model.Enum.Trackable.MAGIC or action_type == bl.Enum.Flags.IGNORE then
         return tostring(note)
     elseif type(note) == "string" then
         _Debug.Error.Add("Unhandled battle log note. Note: {" .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "}.")

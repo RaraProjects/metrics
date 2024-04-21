@@ -539,14 +539,14 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@param id number spell ID.
 ---@param data? table spell table if we already have it.
----@return string
+---@return number
 -- ------------------------------------------------------------------------------------------------------
 a.Spell.MP = function(id, data)
     local spell = data
     if not spell then
         spell = a.Spell.ID(id)
     end
-    if not spell then return "Error" end
+    if not spell then return 0 end
     return spell.ManaCost
 end
 
