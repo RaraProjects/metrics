@@ -86,7 +86,7 @@ t.Util.Calculate_Column_Flags = function()
         t.Display.Columns.Current = t.Display.Columns.Base
     else
         local added_columns = t.Display.Columns.Start
-        if t.Display.Flags.Pet then added_columns = added_columns + 4 end
+        if t.Display.Flags.Pet then added_columns = added_columns + 5 end
         if t.Display.Flags.Crit then added_columns = added_columns + 1 end
         if t.Settings.Include_SC_Damage then added_columns = added_columns + 1 end
         if t.Display.Flags.Healing then added_columns = added_columns + 1 end
@@ -120,6 +120,7 @@ t.Display.Headers = function()
         UI.TableSetupColumn("Magic", flags)
         UI.TableSetupColumn("JA", flags)
         if t.Display.Flags.Pet then
+            UI.TableSetupColumn("Pet Acc", flags)
             UI.TableSetupColumn("Pet Melee", flags)
             UI.TableSetupColumn("Pet WS", flags)
             UI.TableSetupColumn("Pet Ranged", flags)
@@ -150,6 +151,7 @@ t.Display.Rows = function(player_name)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.NUKE, false, true)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ABILITY, false, true)
         if t.Display.Flags.Pet then
+            UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
             UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE, false, true)
             UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS, false, true)
             UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED, false, true)
@@ -190,11 +192,18 @@ end
 t.Mini_Mode = function()
     local flags = Window.Columns.Flags.None
 
-    if UI.BeginTable("Team Mini", 4, Window.Table.Flags.Borders) then
+    local columns = 4
+    if Team.Display.Flags.Pet then columns = columns + 2 end
+
+    if UI.BeginTable("Team Mini", columns, Window.Table.Flags.Borders) then
         UI.TableSetupColumn("Name", flags)
         UI.TableSetupColumn("%T", flags)
         UI.TableSetupColumn("Total", flags)
         UI.TableSetupColumn("%A-" .. Model.Settings.Running_Accuracy_Limit, flags)
+        if Team.Display.Flags.Pet then
+            UI.TableSetupColumn("Pet D.", flags)
+            UI.TableSetupColumn("Pet A.", flags)
+        end
         UI.TableHeadersRow()
 
         local player_name = "Debug"
@@ -207,6 +216,10 @@ t.Mini_Mode = function()
                 UI.TableNextColumn() Col.Damage.Total(player_name, true, true)
                 UI.TableNextColumn() Col.Damage.Total(player_name, false, true)
                 UI.TableNextColumn() Col.Acc.Running(player_name)
+                if Team.Display.Flags.Pet then
+                    UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET)
+                    UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
+                end
             end
         end
 

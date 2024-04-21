@@ -259,7 +259,7 @@ end
 H.Melee.Hit = function(audits, melee_type_broad, melee_type_discrete)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
-    Model.Update.Running_Accuracy(audits.player_name, true)
+    if melee_type_broad ~= H.Trackable.PET_MELEE then Model.Update.Running_Accuracy(audits.player_name, true) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -270,7 +270,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Melee.Miss = function(audits, melee_type_broad)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad, H.Metric.MISS_COUNT)
-    Model.Update.Running_Accuracy(audits.player_name, false)
+    if melee_type_broad ~= H.Trackable.PET_MELEE then Model.Update.Running_Accuracy(audits.player_name, false) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -286,7 +286,7 @@ H.Melee.Crit = function(audits, damage, melee_type_broad, melee_type_discrete)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
     Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.CRIT_COUNT)
     Model.Update.Data(H.Mode.INC, damage, audits, melee_type_broad,    H.Metric.CRIT_DAMAGE)
-    Model.Update.Running_Accuracy(audits.player_name, true)
+    if melee_type_broad ~= H.Trackable.PET_MELEE then Model.Update.Running_Accuracy(audits.player_name, true) end
 end
 
 ------------------------------------------------------------------------------------------------------

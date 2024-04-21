@@ -53,13 +53,15 @@ end
 ---@param damage_type string a trackable from the model.
 ---@param percent? boolean whether or not the damage should be raw or percent.
 ---@param justify? boolean whether or not to right justify the text
+---@param all_total? boolean controls denominator for %; true = pet total; false = all total
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Damage.Pet_By_Type = function(player_name, pet_name, damage_type, percent, justify)
+c.Damage.Pet_By_Type = function(player_name, pet_name, damage_type, percent, justify, all_total)
     local focused_damage = Model.Get.Pet_Data(player_name, pet_name, damage_type, c.Metric.TOTAL)
     local color = c.String.Color_Zero(focused_damage)
     if percent then
-        local total_damage = Model.Get.Pet_Data(player_name, pet_name, c.Trackable.TOTAL, c.Metric.TOTAL)
+        local total_damage = Model.Get.Data(player_name, c.Trackable.PET, c.Metric.TOTAL)
+        if all_total then total_damage = Model.Get.Data(player_name, c.Trackable.TOTAL, c.Metric.TOTAL) end
         return UI.TextColored(color, c.String.Format_Percent(focused_damage, total_damage, justify))
     end
     return UI.TextColored(color, c.String.Format_Number(focused_damage, justify))
@@ -172,6 +174,33 @@ c.Acc.By_Type = function(player_name, acc_type, justify, count_type)
 
     return UI.TextColored(color, c.String.Format_Percent(hits, attempts, justify))
 end
+
+------------------------------------------------------------------------------------------------------
+-- Grabs the damage of a certain trackable that the entity's pet has done.
+------------------------------------------------------------------------------------------------------
+---@param player_name string the entity that owns the pet.
+---@param pet_name string the pet that we want the damage for.
+---@param acc_type string a trackable from the model.
+---@param justify? boolean whether or not to right justify the text
+---@param count_type? string used for getting ranged square and truestrike rates.
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Acc.Pet_By_Type = function(player_name, pet_name, acc_type, justify, count_type)
+    if not count_type then count_type = c.Metric.HIT_COUNT end
+    local hits = Model.Get.Pet_Data(player_name, pet_name, acc_type, count_type)
+    local attempts = Model.Get.Pet_Data(player_name, pet_name, acc_type, c.Metric.COUNT)
+
+    local color = Window.Colors.WHITE
+    local percent = c.String.Raw_Percent(hits, attempts)
+    if percent == 0 then
+        color = Window.Colors.DIM
+    elseif percent <= Model.Settings.Accuracy_Warning then
+        color = Window.Colors.RED
+    end
+
+    return UI.TextColored(color, c.String.Format_Percent(hits, attempts, justify))
+end
+
 
 ------------------------------------------------------------------------------------------------------
 -- Grabs an entity's accuracy for last {X} amount of attempts. Includes melee and ranged combined.

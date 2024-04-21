@@ -489,21 +489,33 @@ f.Display.Pet = function(player_name)
     if pet_total > 0 then
         f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Pets", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Pets", 6, table_flags) then
+            if UI.BeginTable("Pets Melee", 4, table_flags) then
                 -- Headers
-                UI.TableSetupColumn("Damage", col_flags, damage)
+                UI.TableSetupColumn("Total Damage", col_flags, damage)
                 UI.TableSetupColumn("Melee Damage", col_flags, damage)
+                UI.TableSetupColumn("Melee Accuracy", col_flags, damage)
                 UI.TableSetupColumn("Ranged Damage", col_flags, damage)
-                UI.TableSetupColumn("WS Damage", col_flags, damage)
-                UI.TableSetupColumn("Abil. Damage", col_flags, damage)
-                UI.TableSetupColumn("Healing", col_flags, damage)
+                --UI.TableSetupColumn("Ranged Accuracy", col_flags, damage)
                 UI.TableHeadersRow()
 
                 -- Data
                 UI.TableNextRow()
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE)
+                UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED)
+                UI.EndTable()
+            end
+            if UI.BeginTable("Pet Advanced", 3, table_flags) then
+                -- Headers
+                UI.TableSetupColumn("WS Damage", col_flags, damage)
+                UI.TableSetupColumn("Abil. Damage", col_flags, damage)
+                --UI.TableSetupColumn("Spell Damage", col_flags, damage)
+                UI.TableSetupColumn("Healing", col_flags, damage)
+                UI.TableHeadersRow()
+
+                -- Data
+                UI.TableNextRow()
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_HEAL)
@@ -715,21 +727,41 @@ f.Display.Pet_Single_Data = function(player_name)
         -- but the damage changing causes the node to recollapse automatically. Annoying.
         f.Display.Util.Check_Collapse()
         if UI.TreeNode(pet_name) then
-            if UI.BeginTable(pet_name, 7, table_flags) then
+            if UI.BeginTable(pet_name, 3, table_flags) then
                 UI.TableSetupColumn("Total Damage", col_flags, damage)
                 UI.TableSetupColumn("Total Damage %", col_flags, damage)
-                UI.TableSetupColumn("Melee Damage", col_flags, damage)
-                UI.TableSetupColumn("Ranged Damage", col_flags, damage)
-                UI.TableSetupColumn("WS Damage", col_flags, damage)
-                UI.TableSetupColumn("Abil. Damage", col_flags, damage)
-                UI.TableSetupColumn("Healing", col_flags, damage)
+                UI.TableSetupColumn("Pet Damage %", col_flags, damage)
                 UI.TableHeadersRow()
 
                 UI.TableNextRow()
                 UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET)
+                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET, true, nil, true)
                 UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET, true)
+                UI.EndTable()
+            end
+
+            if UI.BeginTable(pet_name, 3, table_flags) then
+                UI.TableSetupColumn("Melee Damage", col_flags, damage)
+                UI.TableSetupColumn("Melee Accuracy", col_flags, damage)
+                UI.TableSetupColumn("Ranged Damage", col_flags, damage)
+                --UI.TableSetupColumn("Ranged Accuracy", col_flags, damage)
+                UI.TableHeadersRow()
+
+                UI.TableNextRow()
                 UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_MELEE)
+                UI.TableNextColumn() Col.Acc.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
                 UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_RANGED)
+                UI.EndTable()
+            end
+
+            if UI.BeginTable(pet_name, 3, table_flags) then
+                UI.TableSetupColumn("WS Damage", col_flags, damage)
+                UI.TableSetupColumn("Abil. Damage", col_flags, damage)
+                --UI.TableSetupColumn("Spell Damage", col_flags, damage)
+                UI.TableSetupColumn("Healing", col_flags, damage)
+                UI.TableHeadersRow()
+
+                UI.TableNextRow()
                 UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_WS)
                 UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_ABILITY)
                 UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_HEAL)
