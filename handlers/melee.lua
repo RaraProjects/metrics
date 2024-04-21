@@ -52,8 +52,10 @@ end
 H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     _Debug.Packet.Add(player_name, target_name, "Melee", result)
     local animation_id = result.animation
+    local effect_animation_id = result.add_effect_animation
     local damage = result.param
     local message_id = result.message
+    local effect_message_id = result.add_effect_message
     local throwing = false
 
     local melee_type_broad = Model.Enum.Trackable.MELEE
@@ -90,8 +92,8 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     H.Melee.Min_Max(throwing, damage, audits, melee_type_broad, no_damage)
 
     -- Enspell
-    local enspell_damage = result.add_effect_param
-    if enspell_damage > 0 then H.Melee.Enspell(audits, enspell_damage, no_damage) end
+    local add_effect_damage = result.add_effect_param
+    if add_effect_damage > 0 then H.Melee.Additional_Effect(audits, add_effect_damage, effect_message_id, effect_animation_id, no_damage) end
 
     -- Accuracy, crits, absorbed by shadows, etc.
     H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete)
@@ -407,20 +409,34 @@ H.Melee.Min_Max = function(throwing, damage, audits, melee_type_broad, no_damage
 end
 
 ------------------------------------------------------------------------------------------------------
--- Enspell damage.
--- Element of the enspell is in add_effect_animation.
+-- Captures additional effects from melee.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param enspell_damage number
+---@param value number how much of the thing you did.
+---@param message_id number numberic identifier for system chat messages.
+---@param effect_animation_id number the element of the enspell.
 ---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Enspell = function(audits, enspell_damage, no_damage)
-    if no_damage then enspell_damage = 0 end
-    Model.Update.Data(H.Mode.INC, enspell_damage, audits, H.Trackable.MAGIC,       H.Metric.TOTAL)
-    Model.Update.Data(H.Mode.INC, enspell_damage, audits, H.Trackable.ENSPELL,     H.Metric.TOTAL)
-    Model.Update.Data(H.Mode.INC, enspell_damage, audits, H.Trackable.TOTAL,       H.Metric.TOTAL)  -- It's an extra step to add additional enspell damage to total.
-    Model.Update.Data(H.Mode.INC, enspell_damage, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)  -- It's an extra step to add additional enspell damage to total.
-    Model.Update.Data(H.Mode.INC,              1, audits, H.Trackable.MAGIC,       H.Metric.COUNT)
-    if enspell_damage < Model.Get.Data(audits.player_name, H.Trackable.MAGIC, H.Metric.MIN) then Model.Update.Data(H.Mode.SET, enspell_damage, audits, H.Trackable.MAGIC, H.Metric.MIN) end
-    if enspell_damage > Model.Get.Data(audits.player_name, H.Trackable.MAGIC, H.Metric.MAX) then Model.Update.Data(H.Mode.SET, enspell_damage, audits, H.Trackable.MAGIC, H.Metric.MAX) end
+H.Melee.Additional_Effect = function(audits, value, message_id, effect_animation_id, no_damage)
+    -- Only add additional damage to the damage totals.
+    if message_id == A.Enum.Message.ENSPELL then
+        if no_damage then value = 0 end
+        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.MAGIC,       H.Metric.TOTAL)
+        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.TOTAL,       H.Metric.TOTAL)       -- It's an extra step to add additional enspell damage to total.
+        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)       -- It's an extra step to add additional enspell damage to total.
+        Model.Update.Data(H.Mode.INC,     1, audits, H.Trackable.ENSPELL,     H.Metric.HIT_COUNT)
+        Model.Update.Data(H.Mode.INC,     1, audits, H.Trackable.MAGIC,       H.Metric.COUNT)       -- This may not actually drive anything.
+        if Lists.Spell.Enspell_Type[effect_animation_id] then
+            local enspell_name = Lists.Spell.Enspell_Type[effect_animation_id]
+            Model.Update.Catalog_Damage(audits.player_name, audits.target_name, H.Trackable.ENSPELL, value, enspell_name)
+            Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.COUNT)
+            Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.HIT_COUNT)
+        end
+    elseif message_id == A.Enum.Message.ENDRAIN then
+        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENDRAIN,     H.Metric.TOTAL)
+        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENDRAIN,     H.Metric.HIT_COUNT)
+    elseif message_id == A.Enum.Message.ENASPIR then
+        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.TOTAL)
+        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.HIT_COUNT)
+    end
 end

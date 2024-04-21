@@ -85,6 +85,19 @@ l.Ability.Wyvern_Healing = {
     [642] = {id=896,en="Healing Breath III",ja="ヒールブレスIII"},
 }
 
+l.Spell.Enspell_Type = {
+    [1] = "Enfire",
+    [2] = "Enblizzard",
+    [3] = "Enaero",
+    [4] = "Enstone",
+    [5] = "Enthunder",
+    [6] = "Enwater",
+    [7] = "Enlight",
+    [8] = "Endark",
+    [21] = "Endrain",
+    [22] = "Enaspir",
+}
+
 l.Spell.Healing = {
     [1]   = {id = 1,   en = "Cure"},
     [2]   = {id = 2,   en = "Cure II"},

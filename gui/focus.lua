@@ -87,10 +87,6 @@ f.Display.Melee = function(player_name)
     local width = Window.Columns.Widths.Standard
 
     local melee_total = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.TOTAL)
-    local mob_heal = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.MOB_HEAL)
-    local enspell = Model.Get.Data(player_name, Model.Enum.Trackable.ENSPELL, Model.Enum.Metric.TOTAL)
-    local shadows = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.SHADOWS)
-    local kick_damage = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE_KICK, Model.Enum.Metric.TOTAL)
 
     if melee_total > 0 then
         f.Display.Util.Check_Collapse()
@@ -150,6 +146,7 @@ f.Display.Melee = function(player_name)
                 UI.TreePop()
             end
 
+            local kick_damage = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE_KICK, Model.Enum.Metric.TOTAL)
             if kick_damage > 0 then
                 f.Display.Util.Check_Collapse()
                 if UI.TreeNode("Kick Attacks") then
@@ -173,23 +170,35 @@ f.Display.Melee = function(player_name)
                 end
             end
 
-            f.Display.Util.Check_Collapse()
-            if UI.TreeNode("Melee Miscellaneous") then
-                if UI.BeginTable("Melee Misc.", 3, table_flags) then
-                    -- Headers
-                    UI.TableSetupColumn("\nMob Heal", col_flags, width)
-                    UI.TableSetupColumn("(For Ref.)\nEnspell", col_flags, width)
-                    UI.TableSetupColumn("Absorbed by\nShadows", col_flags, width)
-                    UI.TableHeadersRow()
+            local mob_heal = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.MOB_HEAL)
+            local shadows  = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.SHADOWS)
+            local enspell  = Model.Get.Data(player_name, Model.Enum.Trackable.ENSPELL, Model.Enum.Metric.TOTAL)
+            local endrain  = Model.Get.Data(player_name, Model.Enum.Trackable.ENDRAIN, Model.Enum.Metric.TOTAL)
+            local enaspir  = Model.Get.Data(player_name, Model.Enum.Trackable.ENASPIR, Model.Enum.Metric.TOTAL)
 
-                    -- Data
-                    UI.TableNextRow()
-                    UI.TableNextColumn() UI.Text(Col.String.Format_Number(mob_heal))
-                    UI.TableNextColumn() UI.Text(Col.String.Format_Number(enspell))
-                    UI.TableNextColumn() UI.Text(Col.String.Format_Number(shadows))
-                    UI.EndTable()
+            if mob_heal > 0 or shadows > 0 or enspell > 0 or endrain > 0 or enaspir > 0 then
+                f.Display.Util.Check_Collapse()
+                if UI.TreeNode("Melee Miscellaneous") then
+                    if UI.BeginTable("Melee Misc.", 5, table_flags) then
+                        -- Headers
+                        UI.TableSetupColumn("\nMob Heal", col_flags, width)
+                        UI.TableSetupColumn("Absorbed by\nShadows", col_flags, width)
+                        UI.TableSetupColumn("\nEn-Spell", col_flags, width)
+                        UI.TableSetupColumn("\nEn-Drain", col_flags, width)
+                        UI.TableSetupColumn("\nEn-Aspir", col_flags, width)
+                        UI.TableHeadersRow()
+
+                        -- Data
+                        UI.TableNextRow()
+                        UI.TableNextColumn() UI.Text(Col.String.Format_Number(mob_heal))
+                        UI.TableNextColumn() UI.Text(Col.String.Format_Number(shadows))
+                        UI.TableNextColumn() UI.Text(Col.String.Format_Number(enspell))
+                        UI.TableNextColumn() UI.Text(Col.String.Format_Number(endrain))
+                        UI.TableNextColumn() UI.Text(Col.String.Format_Number(enaspir))
+                        UI.EndTable()
+                    end
+                    UI.TreePop()
                 end
-                UI.TreePop()
             end
         end
     end
@@ -338,9 +347,10 @@ f.Display.Magic = function(player_name)
     local nuke_total = Model.Get.Data(player_name, Model.Enum.Trackable.NUKE, Model.Enum.Metric.TOTAL)
     local mp_drain = Model.Get.Data(player_name, Model.Enum.Trackable.MP_DRAIN, Model.Enum.Metric.TOTAL)
     local healing_total = Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, Model.Enum.Metric.TOTAL)
+    local enspell_total = Model.Get.Data(player_name, Model.Enum.Trackable.ENSPELL, Model.Enum.Metric.TOTAL)
     local misc_count = Model.Get.Data(player_name, Model.Enum.Trackable.MAGIC, Model.Enum.Metric.COUNT)
 
-    if nuke_total > 0 or mp_drain > 0 or healing_total > 0 or misc_count > 0 then
+    if nuke_total > 0 or mp_drain > 0 or healing_total > 0 or enspell_total > 0 or misc_count > 0 then
         f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Magic", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Magic", 5, table_flags) then
@@ -431,6 +441,13 @@ f.Display.Magic = function(player_name)
                         UI.EndTable()
                     end
                     f.Display.Spell_Single(player_name, Model.Enum.Trackable.HEALING)
+                    UI.TreePop()
+                end
+            end
+
+            if enspell_total > 0 then
+                if UI.TreeNode("Enspell") then
+                    f.Display.Spell_Single(player_name, Model.Enum.Trackable.ENSPELL)
                     UI.TreePop()
                 end
             end
@@ -639,6 +656,7 @@ f.Display.Spell_Single = function(player_name, focus_type)
 
     local acc_string = "\nAcc. %"
     local damage_string = "Damage"
+    local attempt_string = "\nCasts"
     if focus_type == Model.Enum.Trackable.NUKE then
         acc_string = "\nBursts"
     elseif focus_type == Model.Enum.Trackable.HEALING then
@@ -646,6 +664,9 @@ f.Display.Spell_Single = function(player_name, focus_type)
         damage_string = "Healing"
     elseif focus_type == Model.Enum.Trackable.ENFEEBLE then
         acc_string = "\nResists"
+    elseif focus_type == Model.Enum.Trackable.ENSPELL then
+        attempt_string = "\nHits"
+        acc_string = "Melee\nUsage %"
     end
 
     f.Display.Util.Check_Collapse()
@@ -654,7 +675,7 @@ f.Display.Spell_Single = function(player_name, focus_type)
         UI.TableSetupColumn("\n" .. damage_string, col_flags, width)
         UI.TableSetupColumn("\nMP Used", col_flags, width)
         UI.TableSetupColumn(damage_string .. "\nper MP", col_flags, width)
-        UI.TableSetupColumn("\nCasts", col_flags, width)
+        UI.TableSetupColumn(attempt_string, col_flags, width)
         UI.TableSetupColumn(acc_string, col_flags, width)
         UI.TableSetupColumn("Average\n" .. damage_string, col_flags, width)
         UI.TableSetupColumn("Min.\n" .. damage_string, col_flags, width)
@@ -693,6 +714,8 @@ f.Display.Util.Spell_Single_Row = function(player_name, action_name, focus_type)
         UI.TableNextColumn() Col.Single.Bursts(player_name, action_name)
     elseif focus_type == Model.Enum.Trackable.HEALING then
         UI.TableNextColumn() Col.Single.Overcure(player_name, action_name)
+    elseif focus_type == Model.Enum.Trackable.ENSPELL then
+        UI.TableNextColumn() Col.Single.Enspell_Acc(player_name, action_name)
     else
         UI.TableNextColumn() Col.Single.Acc(player_name, action_name, focus_type)
     end

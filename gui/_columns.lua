@@ -377,7 +377,7 @@ end
 c.Single.Damage_Per_MP = function(player_name, action_name, focus_type)
     local single_damage = Model.Get.Catalog(player_name, focus_type, action_name, Model.Enum.Metric.TOTAL)
     local mp = Model.Get.Catalog(player_name, focus_type, action_name, Model.Enum.Metric.MP_SPENT)
-    local color = c.String.Color_Zero(single_damage)
+    local color = c.String.Color_Zero(mp)
     return UI.TextColored(color, string.format("%.1f", c.String.Raw_Percent(single_damage, mp)))
 end
 
@@ -516,6 +516,21 @@ c.Single.Pet_Acc = function(player_name, pet_name, action_name, trackable)
     local single_attempts = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.COUNT)
     local color = c.String.Color_Zero(single_hits)
     return UI.TextColored(color, c.String.Format_Percent(single_hits, single_attempts))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- Grabs the usage rate of specfic enspells.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name string
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Single.Enspell_Acc = function(player_name, action_name)
+    local procs = Model.Get.Catalog(player_name, c.Trackable.ENSPELL, action_name, c.Metric.HIT_COUNT)
+    local attempts = Model.Get.Data(player_name, c.Trackable.MELEE, c.Metric.COUNT)
+    local color = c.String.Color_Zero(procs)
+    return UI.TextColored(color, c.String.Format_Percent(procs, attempts))
 end
 
 ------------------------------------------------------------------------------------------------------
