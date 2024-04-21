@@ -173,9 +173,9 @@ ashita.events.register('command', 'command_cb', function (e)
             Model.Initialize()
         elseif arg == "full" or arg == "f" then
             Window.Util.Enable_Full()
-        elseif arg == "test" and _Debug.Enabled then
-            -- _Debug.Unit.Tests.Avatar_Rage()
-            -- _Debug.Message("Command: " .. tostring(A.Party.In_Party(command_args[3])))
+        elseif arg == "pet" or arg == "p" then
+            Team.Display.Flags.Pet = not Team.Display.Flags.Pet
+            Team.Util.Calculate_Column_Flags()
         end
     end
 end)
