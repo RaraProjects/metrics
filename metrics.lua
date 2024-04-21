@@ -65,7 +65,6 @@ require("debug._debug")
 -- Initialization
 Window.Initialize()
 Model.Initialize()
-_Globals.Initialized = true
 A.Party.Refresh()
 
 ------------------------------------------------------------------------------------------------------
@@ -143,6 +142,10 @@ end)
 -- https://github.com/ocornut/imgui/blob/master/imgui_tables.cpp
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('d3d_present', 'present_cb', function ()
+    if not _Globals.Initialized then
+        if not A.Data.Is_Logged_In() then return nil end
+        _Globals.Initialized = true
+    end
     if _Debug.Enabled then
         UI.ShowDemoWindow()
     end

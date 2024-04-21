@@ -18,6 +18,7 @@ H.Spell.Action = function(action, actor_mob, log_offense)
     if not spell_data then return nil end
 
     local spell_name = A.Spell.Name(spell_id, spell_data)
+    local mp_cost = A.Spell.MP(spell_id, spell_data)
     local is_burst = false
 
     for target_index, target_value in pairs(action.targets) do
@@ -37,7 +38,7 @@ H.Spell.Action = function(action, actor_mob, log_offense)
     end
 
     local audits = H.Spell.Audits(actor_mob, target_mob)
-    H.Spell.Count(audits, spell_id, spell_name, is_burst)
+    H.Spell.Count(audits, spell_id, spell_name, mp_cost, is_burst)
     H.Spell.Blog(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
 end
 
@@ -62,7 +63,7 @@ H.Spell.Parse = function(spell_data, result, player_name, target_name, burst)
     local damage = result.param or 0
 
     if Lists.Spell.Damaging[spell_id] then
-        Model.Update.Catalog_Damage(player_name, target_name, H.Trackable.MAGIC, damage, spell_name, nil, burst)
+        Model.Update.Catalog_Damage(player_name, target_name, H.Trackable.NUKE, damage, spell_name, nil, burst)
         is_mapped = true
     end
 
@@ -113,14 +114,25 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Need the HIT_COUNT for average calculations in the catalog.
 ------------------------------------------------------------------------------------------------------
-H.Spell.Count = function(audits, spell_id, spell_name, is_burst)
-    if Lists.Spell.Damaging[spell_id] then
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.MAGIC, spell_name, H.Metric.COUNT)
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.MAGIC, spell_name, H.Metric.HIT_COUNT)
-    end
+H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
+    local trackable = H.Trackable.MAGIC
+    -- Overall Mana Tracking
+    Model.Update.Data(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
+
     if Lists.Spell.Healing[spell_id] then
+        Model.Update.Data(H.Mode.INC, mp_cost, audits, H.Trackable.HEALING, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, H.Trackable.HEALING, spell_name, H.Metric.MP_SPENT)
         Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.HEALING, spell_name, H.Metric.COUNT)
         Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.HEALING, spell_name, H.Metric.HIT_COUNT)
+    elseif Lists.Spell.Damaging[spell_id] then
+        Model.Update.Data(H.Mode.INC, mp_cost, audits, H.Trackable.NUKE, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, H.Trackable.NUKE, spell_name, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.NUKE, spell_name, H.Metric.COUNT)
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.NUKE, spell_name, H.Metric.HIT_COUNT)
+    else
+        Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.MAGIC, H.Metric.COUNT)
+        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, H.Trackable.MAGIC, spell_name, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.MAGIC, spell_name, H.Metric.COUNT)
     end
     if is_burst then Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.MAGIC, spell_name, H.Metric.BURST_COUNT) end
 end

@@ -33,8 +33,9 @@ m.Enum = {
 		PET_HEAL    = 'Pet Healing',
 		MAGIC       = 'Spells',
 		ENSPELL     = 'Enspell',
-		NUKE        = 'Nuke',
-		HEALING     = "Healing",
+		NUKE        = 'Spells: Nuking',
+		HEALING     = "Spells: Healing",
+		ENFEEBLE    = "Spells: Enfeebling",
 		MP_DRAIN    = "MP Drain",
 		PET         = 'Pet',
 		DEATH       = 'Death',
@@ -55,7 +56,8 @@ m.Enum = {
 		MAX          = 'max',
 		BURST_COUNT  = 'burst count',
 		BURST_DAMAGE = 'burst damage',
-		OVERCURE     = 'overcure'
+		OVERCURE     = 'overcure',
+		MP_SPENT     = "MP Spent",
 	},
 	Mode = {
 		INC = "inc",
@@ -426,11 +428,10 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
 
     if damage > m.Get.Catalog(player_name, trackable, action_name, m.Enum.Metric.MAX) then
     	-- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
-		if trackable == m.Enum.Trackable.HEALING and damage <= Model.Healing_Max[action_name] then
-			m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MAX)
-		elseif trackable ~= m.Enum.Trackable.HEALING then
-			m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MAX)
+		if trackable == m.Enum.Trackable.HEALING then
+			if damage > Model.Healing_Max[action_name] then damage = Model.Healing_Max[action_name] end
 		end
+		m.Update.Catalog_Metric(m.Enum.Mode.SET, damage, audits, trackable, action_name, m.Enum.Metric.MAX)
     end
 end
 
@@ -658,6 +659,11 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 m.Get.Data = function(player_name, trackable, metric)
+	if not player_name then
+		_Debug.Error.Add("Get.Data: Nil player name. " .. tostring(trackable) .. " " .. tostring(metric))
+		return 0
+	end
+
 	local total = 0
 	local mob_focus = Window.Util.Get_Mob_Focus()
 	for index, _ in pairs(m.Data.Parse) do

@@ -5,6 +5,7 @@ c.Healing = {}
 c.Acc = {}
 c.Crit = {}
 c.Kick = {}
+c.Spell = {}
 c.Single = {}
 c.String = {}
 c.Util = {}
@@ -249,11 +250,50 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Shows an entity's kick rate.
 ------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
 c.Kick.Rate = function(player_name)
     local kick_count = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE_KICK, Model.Enum.Metric.COUNT)
     local melee_count = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.COUNT)
     local color = c.String.Color_Zero(kick_count)
     return UI.TextColored(color, c.String.Format_Percent(kick_count, melee_count))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows MP a player has used.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param magic_type string
+---@param justify? boolean whether or not to right justify the text
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Spell.MP = function(player_name, magic_type, justify)
+    if not magic_type then magic_type = Model.Enum.Trackable.MAGIC end
+    local mp = 0
+    if magic_type == "Other" then
+        local total = Model.Get.Data(player_name, Model.Enum.Trackable.MAGIC, Model.Enum.Metric.MP_SPENT)
+        local healing = Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, Model.Enum.Metric.MP_SPENT)
+        local nuke = Model.Get.Data(player_name, Model.Enum.Trackable.NUKE, Model.Enum.Metric.MP_SPENT)
+        mp = total - healing - nuke
+    else
+        mp = Model.Get.Data(player_name, magic_type, Model.Enum.Metric.MP_SPENT)
+    end
+    local color = c.String.Color_Zero(mp)
+    return UI.TextColored(color, c.String.Format_Number(mp, justify))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows many much MP is used per damage or healing done.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param magic_type string
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Spell.Unit_Per_MP = function(player_name, magic_type)
+    local mp = Model.Get.Data(player_name, magic_type, Model.Enum.Metric.MP_SPENT)
+    local unit = Model.Get.Data(player_name, magic_type, Model.Enum.Metric.TOTAL)
+    local color = c.String.Color_Zero(unit)
+    return UI.TextColored(color, string.format("%.1f", c.String.Raw_Percent(unit, mp)))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -287,12 +327,29 @@ c.Single.Damage = function(player_name, action_name, focus_type, metric, percent
     else
         single_damage = Model.Get.Catalog(player_name, focus_type, action_name, metric)
     end
+
     local color = c.String.Color_Zero(single_damage)
     if percent then
         local total_damage = c.Util.Total_Damage(player_name)
         return UI.TextColored(color, c.String.Format_Percent(single_damage, total_damage))
     end
     return UI.TextColored(color, c.String.Format_Number(single_damage))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- Grabs the total amount of damage a cataloged action has done for a given trackable and metric.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name string
+---@param focus_type string a trackable from the model.
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Single.Damage_Per_MP = function(player_name, action_name, focus_type)
+    local single_damage = Model.Get.Catalog(player_name, focus_type, action_name, Model.Enum.Metric.TOTAL)
+    local mp = Model.Get.Catalog(player_name, focus_type, action_name, Model.Enum.Metric.MP_SPENT)
+    local color = c.String.Color_Zero(single_damage)
+    return UI.TextColored(color, string.format("%.1f", c.String.Raw_Percent(single_damage, mp)))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -336,6 +393,21 @@ c.Single.Attempts = function(player_name, action_name, focus_type)
     local single_attempts = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.COUNT)
     local color = c.String.Color_Zero(single_attempts)
     return UI.TextColored(color, c.String.Format_Number(single_attempts))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- Returns how much total MP was used for a specific spell.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name string
+---@param focus_type string a trackable from the model.
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Single.MP_Used = function(player_name, action_name, focus_type)
+    local mp = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.MP_SPENT)
+    local color = c.String.Color_Zero(mp)
+    return UI.TextColored(color, c.String.Format_Number(mp))
 end
 
 ------------------------------------------------------------------------------------------------------

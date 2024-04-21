@@ -107,6 +107,24 @@ a.Data.Player_Entity = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Checks if the player is logged in so that the window doesn't show in character select.
+-- I grabbed this from HXUI.
+-- https://github.com/tirem/HXUI
+-- ------------------------------------------------------------------------------------------------------
+a.Data.Is_Logged_In = function()
+    local logged_in = false
+    local playerIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0)
+    if playerIndex ~= 0 then
+        local entity = AshitaCore:GetMemoryManager():GetEntity()
+        local flags = entity:GetRenderFlags0(playerIndex)
+        if bit.band(flags, 0x200) == 0x200 and bit.band(flags, 0x4000) == 0 then
+            logged_in = true
+        end
+    end
+    return logged_in
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Get player's target index.
 -- I grabbed and adjusted this snippet from HXUI and mobdb.
 -- https://github.com/tirem/HXUI
@@ -513,6 +531,23 @@ a.Spell.Name = function(id, data)
     end
     if not spell then return "Error" end
     return spell.Name[1]
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Get the MP cost of a spell.
+-- If we already have the spell data then we don't need to get it again.
+-- ------------------------------------------------------------------------------------------------------
+---@param id number spell ID.
+---@param data? table spell table if we already have it.
+---@return string
+-- ------------------------------------------------------------------------------------------------------
+a.Spell.MP = function(id, data)
+    local spell = data
+    if not spell then
+        spell = a.Spell.ID(id)
+    end
+    if not spell then return "Error" end
+    return spell.ManaCost
 end
 
 -- ------------------------------------------------------------------------------------------------------
