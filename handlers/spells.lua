@@ -61,6 +61,7 @@ H.Spell.Parse = function(spell_data, result, player_name, target_name, burst)
     local spell_name = A.Spell.Name(spell_id, spell_data)
     local is_mapped = false
     local damage = result.param or 0
+    local message_id = result.message
 
     if Lists.Spell.Damaging[spell_id] then
         Model.Update.Catalog_Damage(player_name, target_name, H.Trackable.NUKE, damage, spell_name, nil, burst)
@@ -74,6 +75,11 @@ H.Spell.Parse = function(spell_data, result, player_name, target_name, burst)
 
     if Lists.Spell.MP_Drain[spell_id] then
         H.Spell.MP_Drain(player_name, target_name, spell_name, damage, burst)
+        is_mapped = true
+    end
+
+    if Lists.Spell.Enfeebling[spell_id] then
+        H.Spell.Enfeebling(player_name, target_name, spell_name, message_id)
         is_mapped = true
     end
 
@@ -148,6 +154,10 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
         Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, H.Trackable.NUKE, spell_name, H.Metric.MP_SPENT)
         Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.NUKE, spell_name, H.Metric.COUNT)
         Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.NUKE, spell_name, H.Metric.HIT_COUNT)
+    elseif Lists.Spell.Enfeebling[spell_id] then
+        Model.Update.Data(H.Mode.INC, mp_cost, audits, H.Trackable.ENFEEBLE, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, H.Trackable.ENFEEBLE, spell_name, H.Metric.MP_SPENT)
+        -- Counts are handled in parse because we need the result message.
     else
         Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.MAGIC, H.Metric.COUNT)
         Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, H.Trackable.MAGIC, spell_name, H.Metric.MP_SPENT)
@@ -192,4 +202,24 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Spell.MP_Drain = function(player_name, target_name, spell_name, damage, burst)
     Model.Update.Catalog_Damage(player_name, target_name, H.Trackable.MP_DRAIN, damage, spell_name, nil, burst)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Handles resist rates of enfeebling spells.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param target_name string
+---@param spell_name string
+---@param message_id number defines what happened to the spell (resist, etc.)
+------------------------------------------------------------------------------------------------------
+H.Spell.Enfeebling = function(player_name, target_name, spell_name, message_id)
+    local audits = {
+        player_name = player_name,
+        target_name = target_name,
+    }
+    Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.ENFEEBLE, H.Metric.COUNT) -- Used to flag that data is availabel for show in Focus.
+    Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.ENFEEBLE, spell_name, H.Metric.COUNT)
+    if message_id == A.Enum.Message.ENF_LAND then
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.ENFEEBLE, spell_name, H.Metric.HIT_COUNT)
+    end
 end

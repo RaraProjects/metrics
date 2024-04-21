@@ -348,9 +348,10 @@ f.Display.Magic = function(player_name)
     local mp_drain = Model.Get.Data(player_name, Model.Enum.Trackable.MP_DRAIN, Model.Enum.Metric.TOTAL)
     local healing_total = Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, Model.Enum.Metric.TOTAL)
     local enspell_total = Model.Get.Data(player_name, Model.Enum.Trackable.ENSPELL, Model.Enum.Metric.TOTAL)
+    local enfeeble_count = Model.Get.Data(player_name, Model.Enum.Trackable.ENFEEBLE, Model.Enum.Metric.COUNT)
     local misc_count = Model.Get.Data(player_name, Model.Enum.Trackable.MAGIC, Model.Enum.Metric.COUNT)
 
-    if nuke_total > 0 or mp_drain > 0 or healing_total > 0 or enspell_total > 0 or misc_count > 0 then
+    if nuke_total > 0 or mp_drain > 0 or healing_total > 0 or enspell_total > 0 or enfeeble_count > 0 or misc_count > 0 then
         f.Display.Util.Check_Collapse()
         if UI.CollapsingHeader("Magic", ImGuiTreeNodeFlags_None) then
             if UI.BeginTable("Magic", 5, table_flags) then
@@ -417,6 +418,14 @@ f.Display.Magic = function(player_name)
                         UI.EndTable()
                     end
                     f.Display.Spell_Single(player_name, Model.Enum.Trackable.NUKE)
+                    UI.TreePop()
+                end
+            end
+
+            if enfeeble_count > 0 then
+                f.Display.Util.Check_Collapse()
+                if UI.TreeNode("Enfeebling") then
+                    f.Display.Spell_Single(player_name, Model.Enum.Trackable.ENFEEBLE)
                     UI.TreePop()
                 end
             end
@@ -663,7 +672,7 @@ f.Display.Spell_Single = function(player_name, focus_type)
         acc_string = "Over\nCure"
         damage_string = "Healing"
     elseif focus_type == Model.Enum.Trackable.ENFEEBLE then
-        acc_string = "\nResists"
+        acc_string = "Success\nRate"
     elseif focus_type == Model.Enum.Trackable.ENSPELL then
         attempt_string = "\nHits"
         acc_string = "Melee\nUsage %"

@@ -425,7 +425,7 @@ H.Melee.Additional_Effect = function(audits, value, message_id, effect_animation
         Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.TOTAL,       H.Metric.TOTAL)       -- It's an extra step to add additional enspell damage to total.
         Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)       -- It's an extra step to add additional enspell damage to total.
         Model.Update.Data(H.Mode.INC,     1, audits, H.Trackable.ENSPELL,     H.Metric.HIT_COUNT)
-        Model.Update.Data(H.Mode.INC,     1, audits, H.Trackable.MAGIC,       H.Metric.COUNT)       -- This may not actually drive anything.
+        Model.Update.Data(H.Mode.INC,     1, audits, H.Trackable.MAGIC,       H.Metric.COUNT)       -- Used to flag that data is availabel for show in Focus.
         if Lists.Spell.Enspell_Type[effect_animation_id] then
             local enspell_name = Lists.Spell.Enspell_Type[effect_animation_id]
             Model.Update.Catalog_Damage(audits.player_name, audits.target_name, H.Trackable.ENSPELL, value, enspell_name)

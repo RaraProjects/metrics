@@ -378,6 +378,7 @@ c.Single.Damage_Per_MP = function(player_name, action_name, focus_type)
     local single_damage = Model.Get.Catalog(player_name, focus_type, action_name, Model.Enum.Metric.TOTAL)
     local mp = Model.Get.Catalog(player_name, focus_type, action_name, Model.Enum.Metric.MP_SPENT)
     local color = c.String.Color_Zero(mp)
+    if single_damage == 0 or mp == 0 then color = Window.Colors.DIM end
     return UI.TextColored(color, string.format("%.1f", c.String.Raw_Percent(single_damage, mp)))
 end
 
