@@ -568,12 +568,12 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Single.Pet_Average = function(player_name, pet_name, action_name, trackable)
     local single_hits = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.HIT_COUNT)
+    local single_damage  = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.TOTAL)
     local color = c.String.Color_Zero(single_hits)
-    if single_hits == 0 then
+    if single_hits == 0 or single_damage == 0 then
+        color = Window.Colors.DIM
         return UI.TextColored(color, c.String.Format_Number(0))
     end
-
-    local single_damage  = Model.Get.Pet_Catalog(player_name, pet_name, trackable, action_name, c.Metric.TOTAL)
     local single_average = single_damage / single_hits
     return UI.TextColored(color, c.String.Format_Number(single_average))
 end

@@ -282,23 +282,18 @@ H.TP.Audits = function(actor_mob, owner_mob, target_mob)
     local player_name = actor_mob.name
     local pet_name = nil
     local trackable = H.Trackable.WS
-
     -- Case where this is a player's pet using an ability.
     if owner_mob then
         player_name = owner_mob.name
         pet_name = actor_mob.name
         trackable = H.Trackable.PET_WS
     end
-
-    -- Finalize pet skill data.
-    -- Have to do it outside of the loop to avoid counting attempts and hits multiple times.
     local audits = {
         player_name = player_name,
         target_name = target_mob.name,
         pet_name = pet_name,
         trackable = trackable
     }
-
     return audits
 end
 

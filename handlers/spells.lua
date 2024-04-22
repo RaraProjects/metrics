@@ -20,6 +20,7 @@ H.Spell.Action = function(action, actor_mob, log_offense)
     local spell_name = A.Spell.Name(spell_id, spell_data)
     local mp_cost = A.Spell.MP(spell_id, spell_data)
     local is_burst = false
+    local owner_mob = A.Mob.Pet_Owner(actor_mob)    -- Check if pet is casting the spell.
 
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
@@ -29,7 +30,7 @@ H.Spell.Action = function(action, actor_mob, log_offense)
             if target_mob.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target_mob.name) end
 
             is_burst = result.message == A.Enum.Message.BURST
-            new_damage = H.Spell.Parse(spell_data, result, actor_mob.name, target_mob.name, is_burst)
+            new_damage = H.Spell.Parse(spell_data, result, actor_mob, target_mob, owner_mob, is_burst)
             if not new_damage then new_damage = 0 end
 
             if new_damage > 0 then target_count = target_count + 1 end
@@ -37,7 +38,7 @@ H.Spell.Action = function(action, actor_mob, log_offense)
         end
     end
 
-    local audits = H.Spell.Audits(actor_mob, target_mob)
+    local audits = H.Spell.Audits(actor_mob, target_mob, owner_mob)
     H.Spell.Count(audits, spell_id, spell_name, mp_cost, is_burst)
     H.Spell.Blog(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
 end
@@ -48,13 +49,14 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param spell_data table the main packet; need it to get spell ID
 ---@param result table contains all the information for the action
----@param player_name string name of the player that did the action
----@param target_name string name of the target that received the action
+---@param actor_mob table
+---@param target_mob table
+---@param owner_mob table
 ---@param burst boolean true if this cast was a magic burst.
 ---@return number
 ------------------------------------------------------------------------------------------------------
-H.Spell.Parse = function(spell_data, result, player_name, target_name, burst)
-    _Debug.Packet.Add(player_name, target_name, "Spell", result)
+H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, burst)
+    _Debug.Packet.Add(actor_mob, target_mob, "Spell", result)
     if not spell_data then return 0 end
 
     local spell_id = spell_data.Index
@@ -62,29 +64,30 @@ H.Spell.Parse = function(spell_data, result, player_name, target_name, burst)
     local is_mapped = false
     local damage = result.param or 0
     local message_id = result.message
+    local audits = H.Spell.Audits(actor_mob, target_mob, owner_mob)
 
     if Lists.Spell.Damaging[spell_id] then
-        Model.Update.Catalog_Damage(player_name, target_name, H.Trackable.NUKE, damage, spell_name, nil, burst)
+        H.Spell.Nuke(audits, spell_name, damage, burst)
         is_mapped = true
     end
 
     if Lists.Spell.Healing[spell_id] then
-    	H.Spell.Overcure(player_name, target_name, spell_name, damage, burst)
+    	H.Spell.Overcure(audits, spell_name, damage, burst)
         is_mapped = true
     end
 
     if Lists.Spell.MP_Drain[spell_id] then
-        H.Spell.MP_Drain(player_name, target_name, spell_name, damage, burst)
+        H.Spell.MP_Drain(audits, spell_name, damage, burst)
         is_mapped = true
     end
 
     if Lists.Spell.Enfeebling[spell_id] then
-        H.Spell.Enfeebling(player_name, target_name, spell_name, message_id)
+        H.Spell.Enfeebling(audits, spell_name, message_id)
         is_mapped = true
     end
 
     if not is_mapped then
-        _Debug.Error.Add("Spell.Parse: {" .. tostring(player_name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
+        _Debug.Error.Add("Spell.Parse: {" .. tostring(actor_mob) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
     end
 
     return damage
@@ -123,10 +126,24 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param actor_mob table
 ---@param target_mob table
+---@param owner_mob? table this will not be nil if the actor is a pet.
 ---@return table
 ------------------------------------------------------------------------------------------------------
-H.Spell.Audits = function(actor_mob, target_mob)
-    return {player_name = actor_mob.name, target_name = target_mob.name}
+H.Spell.Audits = function(actor_mob, target_mob, owner_mob)
+    -- Initialize on case where this is a trust or regular monster.
+    local player_name = actor_mob.name
+    local pet_name = nil
+    -- Case where this is a player's pet using an ability.
+    if owner_mob then
+        player_name = owner_mob.name
+        pet_name = actor_mob.name
+    end
+    local audits = {
+        player_name = player_name,
+        target_name = target_mob.name,
+        pet_name = pet_name,
+    }
+    return audits
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -141,85 +158,109 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
     local trackable = H.Trackable.MAGIC
+    local is_pet = false
+    if audits.pet_name then
+        trackable = H.Trackable.PET_MAGIC
+        is_pet = true
+    end
     -- Overall Mana Tracking
     Model.Update.Data(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
 
     if Lists.Spell.Healing[spell_id] then
-        Model.Update.Data(H.Mode.INC, mp_cost, audits, H.Trackable.HEALING, H.Metric.MP_SPENT)
-        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, H.Trackable.HEALING, spell_name, H.Metric.MP_SPENT)
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.HEALING, spell_name, H.Metric.COUNT)
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.HEALING, spell_name, H.Metric.HIT_COUNT)
+        if is_pet then trackable = H.Trackable.PET_HEAL else trackable = H.Trackable.HEALING end
+        Model.Update.Data(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+
     elseif Lists.Spell.Damaging[spell_id] then
-        Model.Update.Data(H.Mode.INC, mp_cost, audits, H.Trackable.NUKE, H.Metric.MP_SPENT)
-        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, H.Trackable.NUKE, spell_name, H.Metric.MP_SPENT)
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.NUKE, spell_name, H.Metric.COUNT)
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.NUKE, spell_name, H.Metric.HIT_COUNT)
+        if is_pet then trackable = H.Trackable.PET_NUKE else trackable = H.Trackable.NUKE end
+        Model.Update.Data(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+
     elseif Lists.Spell.Enfeebling[spell_id] then
-        Model.Update.Data(H.Mode.INC, mp_cost, audits, H.Trackable.ENFEEBLE, H.Metric.MP_SPENT)
-        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, H.Trackable.ENFEEBLE, spell_name, H.Metric.MP_SPENT)
+        if is_pet then trackable = H.Trackable.PET_ENFEEBLING else trackable = H.Trackable.ENFEEBLE end
+        Model.Update.Data(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         -- Counts are handled in parse because we need the result message.
+
     else
-        Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.MAGIC, H.Metric.COUNT)
-        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, H.Trackable.MAGIC, spell_name, H.Metric.MP_SPENT)
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.MAGIC, spell_name, H.Metric.COUNT)
+        if is_pet then trackable = H.Trackable.PET_MAGIC else trackable = H.Trackable.MAGIC end
+        Model.Update.Data(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
+        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
     end
-    if is_burst then Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.MAGIC, spell_name, H.Metric.BURST_COUNT) end
+    if is_burst then Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.BURST_COUNT) end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Handles spells that damage enemies.
+------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param spell_name string
+---@param damage number
+---@param burst boolean
+------------------------------------------------------------------------------------------------------
+H.Spell.Nuke = function(audits, spell_name, damage, burst)
+    local trackable = H.Trackable.NUKE
+    if audits.pet_name then 
+        trackable = H.Trackable.PET_NUKE
+        Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
+    end
+    Model.Update.Catalog_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, audits.pet_name, burst)
 end
 
 ------------------------------------------------------------------------------------------------------
 -- This calculates how much HP from healing didn't actually go to healing because the player
 -- wasn't missing enough health.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param target_name string
+---@param audits table
 ---@param spell_name string
 ---@param damage number
 ---@param burst boolean
 ------------------------------------------------------------------------------------------------------
-H.Spell.Overcure = function(player_name, target_name, spell_name, damage, burst)
-    Model.Update.Catalog_Damage(player_name, target_name, H.Trackable.HEALING, damage, spell_name, nil, burst)
-    local spell_max = Model.Get.Catalog(player_name, H.Trackable.HEALING, spell_name, H.Metric.MAX)
+H.Spell.Overcure = function(audits, spell_name, damage, burst)
+    local trackable = H.Trackable.HEALING
+    if audits.pet_name then trackable = H.Trackable.PET_HEAL end
+    Model.Update.Catalog_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, nil, burst)
+    local spell_max = Model.Get.Catalog(audits.player_name, trackable, spell_name, H.Metric.MAX)
     local overcure = 0
     if spell_max > damage then
         overcure = spell_max - damage
     end
-    local audits = {
-        player_name = player_name,
-        target_name = target_name,
-    }
-    Model.Update.Data(H.Mode.INC, overcure, audits, H.Trackable.HEALING, H.Metric.OVERCURE)
-    Model.Update.Catalog_Metric(H.Mode.INC, overcure, audits, H.Trackable.HEALING, spell_name, H.Metric.OVERCURE)
+    Model.Update.Data(H.Mode.INC, overcure, audits, trackable, H.Metric.OVERCURE)
+    Model.Update.Catalog_Metric(H.Mode.INC, overcure, audits, trackable, spell_name, H.Metric.OVERCURE)
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Handles spells that drain MP. The drain doesn't get used towards the damage total.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param target_name string
+---@param audits table
 ---@param spell_name string
 ---@param damage number
 ---@param burst boolean
 ------------------------------------------------------------------------------------------------------
-H.Spell.MP_Drain = function(player_name, target_name, spell_name, damage, burst)
-    Model.Update.Catalog_Damage(player_name, target_name, H.Trackable.MP_DRAIN, damage, spell_name, nil, burst)
+H.Spell.MP_Drain = function(audits, spell_name, damage, burst)
+    local trackable = H.Trackable.MP_DRAIN
+    if audits.pet_name then trackable = H.Trackable.PET_MP_DRAIN end
+    Model.Update.Catalog_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, nil, burst)
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Handles resist rates of enfeebling spells.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param target_name string
+---@param audits table
 ---@param spell_name string
 ---@param message_id number defines what happened to the spell (resist, etc.)
 ------------------------------------------------------------------------------------------------------
-H.Spell.Enfeebling = function(player_name, target_name, spell_name, message_id)
-    local audits = {
-        player_name = player_name,
-        target_name = target_name,
-    }
-    Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.ENFEEBLE, H.Metric.COUNT) -- Used to flag that data is availabel for show in Focus.
-    Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.ENFEEBLE, spell_name, H.Metric.COUNT)
+H.Spell.Enfeebling = function(audits, spell_name, message_id)
+    local trackable = H.Trackable.ENFEEBLE
+    if audits.pet_name then trackable = H.Trackable.PET_ENFEEBLING end
+    Model.Update.Data(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT) -- Used to flag that data is availabel for show in Focus.
+    Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
     if message_id == A.Enum.Message.ENF_LAND then
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.ENFEEBLE, spell_name, H.Metric.HIT_COUNT)
+        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
     end
 end

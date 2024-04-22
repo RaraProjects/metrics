@@ -130,7 +130,7 @@ H.Melee.Melee_Type = function(animation_id)
     if animation_id == A.Enum.Animation.MELEE_MAIN then
         return H.Trackable.MELEE_MAIN
     elseif animation_id == A.Enum.Animation.MELEE_OFFHAND then
-        return H.Trackable.MELEE_OFFH
+        return H.Trackable.MELEE_OFFHAND
     elseif animation_id == A.Enum.Animation.MELEE_KICK or animation_id == A.Enum.Animation.MELEE_KICK2 then
         return H.Trackable.MELEE_KICK
     elseif animation_id == A.Enum.Animation.DAKEN then

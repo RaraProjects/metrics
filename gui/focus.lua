@@ -120,8 +120,8 @@ f.Display.Melee = function(player_name)
                     UI.TableNextRow()
                     UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN)
                     UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN)
-                    UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFH)
-                    UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFH)
+                    UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFHAND)
+                    UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFHAND)
                     UI.EndTable()
                 end
                 UI.TreePop()
@@ -532,11 +532,11 @@ f.Display.Pet = function(player_name)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED)
                 UI.EndTable()
             end
-            if UI.BeginTable("Pet Advanced", 3, table_flags) then
+            if UI.BeginTable("Pet Advanced", 4, table_flags) then
                 -- Headers
                 UI.TableSetupColumn("WS Damage", col_flags, damage)
                 UI.TableSetupColumn("Abil. Damage", col_flags, damage)
-                --UI.TableSetupColumn("Spell Damage", col_flags, damage)
+                UI.TableSetupColumn("Magic Damage", col_flags, damage)
                 UI.TableSetupColumn("Healing", col_flags, damage)
                 UI.TableHeadersRow()
 
@@ -544,6 +544,7 @@ f.Display.Pet = function(player_name)
                 UI.TableNextRow()
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_NUKE)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_HEAL)
                 UI.EndTable()
             end
@@ -786,16 +787,17 @@ f.Display.Pet_Single_Data = function(player_name)
                 UI.EndTable()
             end
 
-            if UI.BeginTable(pet_name, 3, table_flags) then
+            if UI.BeginTable(pet_name, 4, table_flags) then
                 UI.TableSetupColumn("WS Damage", col_flags, damage)
                 UI.TableSetupColumn("Abil. Damage", col_flags, damage)
-                --UI.TableSetupColumn("Spell Damage", col_flags, damage)
+                UI.TableSetupColumn("Magic Damage", col_flags, damage)
                 UI.TableSetupColumn("Healing", col_flags, damage)
                 UI.TableHeadersRow()
 
                 UI.TableNextRow()
                 UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_WS)
                 UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_ABILITY)
+                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_NUKE)
                 UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_HEAL)
                 UI.EndTable()
             end
