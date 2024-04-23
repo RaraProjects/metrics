@@ -38,6 +38,7 @@ Settings_File = require("settings")
 Lists     = require("lists")
 WS        = require("resources.weapon_skills")
 Pet_Skill = require("resources.monster_skills")
+Themes    = require("resources.themes")
 
 -- Modules
 UI    = require("imgui")
@@ -75,7 +76,6 @@ Metrics = T{
 Window.Initialize()
 Model.Initialize()
 A.Party.Refresh()
-
 
 ------------------------------------------------------------------------------------------------------
 -- Subscribes to incoming packets.
@@ -185,7 +185,6 @@ ashita.events.register('command', 'command_cb', function (e)
             Window.Util.Enable_Full()
         elseif arg == "pet" or arg == "p" then
             Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
-            Settings_File.save(Config.Enum.File.TEAM)
             Team.Util.Calculate_Column_Flags()
         end
     end
@@ -193,10 +192,12 @@ end)
 
 ------------------------------------------------------------------------------------------------------
 -- Save settings when the addon is unloaded.
--- Most settings are saved when they are changed. This is mainly for window position.
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('unload', 'unload_cb', function ()
-    Settings_File.save()
+    Settings_File.save(Config.Enum.File.MODEL)
+    Settings_File.save(Config.Enum.File.TEAM)
+    Settings_File.save(Config.Enum.File.BLOG)
+    Settings_File.save(Config.Enum.File.WINDOW)
 end)
 
 --[[

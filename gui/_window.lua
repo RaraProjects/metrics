@@ -19,7 +19,7 @@ w.Defaults = T{
     Alpha = 0.85,
     Font_Scaling = 0.85,
     Window_Scaling = 1,
-    Style = 1,
+    Style = 0,
     X_Pos = 100,
     Y_Pos = 100,
 }
@@ -216,10 +216,6 @@ w.Populate = function()
                             _Debug.Data_View.Populate()
                             UI.EndTabItem()
                         end
-                        if UI.BeginTabItem("Unit Tests") then
-                            _Debug.Unit.Populate()
-                            UI.EndTabItem()
-                        end
                     end
                     UI.EndTabBar()
                 end
@@ -227,7 +223,7 @@ w.Populate = function()
             end
         end
 
-        if _Debug.Is_Enabled() then
+        if _Debug.Is_Enabled() and _Debug.Unit.Active then
             if UI.Begin("Unit Tests", {w.Window.Visible}, w.Window.Flags) then
                 w.Window.Visible = -1
                 _Debug.Unit.Populate()
@@ -245,6 +241,11 @@ end
 ------------------------------------------------------------------------------------------------------
 w.Util.Set_Theme = function()
     UI.Text("Theme")
+    if UI.RadioButton("Default ", {Metrics.Window.Style}, 0) then
+        Metrics.Window.Style = 0
+        w.Util.Apply_Custom_Theme(Themes.Default)
+    end
+    UI.SameLine()
     if UI.RadioButton("Dark ", {Metrics.Window.Style}, 1) then
         Metrics.Window.Style = 1
         UI.StyleColorsDark()
@@ -258,6 +259,19 @@ w.Util.Set_Theme = function()
     if UI.RadioButton("Classic ", {Metrics.Window.Style}, 3) then
         Metrics.Window.Style = 3
         UI.StyleColorsClassic()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Applies a custom theme.
+------------------------------------------------------------------------------------------------------
+---@param theme table defined in resources.themes.
+------------------------------------------------------------------------------------------------------
+w.Util.Apply_Custom_Theme = function(theme)
+    for flag_name, flag_value in pairs(Themes.Elements) do
+        if theme[flag_name] then
+            UI.PushStyleColor(flag_value, theme[flag_name])
+        end
     end
 end
 

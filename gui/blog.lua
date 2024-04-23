@@ -63,7 +63,6 @@ bl.Reset_Settings = function()
     for index, _ in pairs(Metrics.Blog.Thresholds) do
         Metrics.Blog.Thresholds[index] = bl.Defaults.Thresholds[index]
     end
-    Settings_File.save(Config.Enum.File.BLOG)
 end
 
 ------------------------------------------------------------------------------------------------------
