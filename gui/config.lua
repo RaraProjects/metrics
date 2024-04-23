@@ -337,7 +337,7 @@ s.Widget.Window_Scale = function()
         Metrics.Window.Window_Scaling = window_scale[1]
         Window.Util.Set_Window_Scale()
     end
-    UI.SameLine() Window.Widget.HelpMarker("Font size.")
+    UI.SameLine() Window.Widget.HelpMarker("Adjust window element size.")
 end
 
 ------------------------------------------------------------------------------------------------------
