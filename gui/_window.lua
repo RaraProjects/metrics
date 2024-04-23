@@ -1,16 +1,13 @@
-local w = {}
+local w = T{}
 
 w.Window = {
     Name = "Metrics (Beta)",
-    Alpha = 0.85,
-    Font_Scaling = 0.85,
-    Style = 1,
     Visible = true,
     Nano = false,
     Mini = false,
     Flags = bit.bor(
     ImGuiWindowFlags_AlwaysAutoResize,
-    --ImGuiWindowFlags_NoSavedSettings,
+    ImGuiWindowFlags_NoSavedSettings,
     ImGuiWindowFlags_NoFocusOnAppearing,
     ImGuiWindowFlags_NoNav
     ),
@@ -18,11 +15,12 @@ w.Window = {
     -- Throttle_Level = 5, -- Probably need to stop data collection instead of preventing rendering.
 }
 
-w.Defaults = {}
-w.Defaults.Window = {
+w.Defaults = T{
     Alpha = 0.85,
     Font_Scaling = 0.85,
-    Style = 0,
+    Style = 1,
+    X_Pos = 100,
+    Y_Pos = 100,
 }
 
 w.Util = {}
@@ -137,12 +135,12 @@ w.Initialize = function()
     -- Adjust font size.
     local atlas = UI.GetIO().Fonts
     local font = atlas.Fonts[1]
-    font.Scale = w.Window.Font_Scaling
+    font.Scale = Metrics.Window.Font_Scaling
 
     -- Set color theme.
-    UI.StyleColorsDark()
+    w.Util.Set_Theme()
 
-    UI.PushStyleVar(ImGuiStyleVar_Alpha, w.Window.Alpha)
+    UI.PushStyleVar(ImGuiStyleVar_Alpha, Metrics.Window.Alpha)
     UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})
     UI.PushStyleVar(ImGuiStyleVar_WindowPadding, {7, 3})
     UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
@@ -160,8 +158,8 @@ end
 -- Resets visual settings in the window.
 ------------------------------------------------------------------------------------------------------
 w.Reset_Settings = function()
-    w.Window.Alpha = w.Defaults.Window.Alpha
-    w.Window.Font_Scaling = w.Defaults.Window.Font_Scaling
+    Metrics.Window.Alpha = w.Defaults.Alpha
+    Metrics.Window.Font_Scaling = w.Defaults.Font_Scaling
     w.Initialize()
 end
 
@@ -192,7 +190,7 @@ w.Populate = function()
                         UI.EndTabItem()
                     end
                     if UI.BeginTabItem(w.Tabs.Names.SETTINGS) then
-                        Settings.Populate()
+                        Config.Populate()
                         UI.EndTabItem()
                     end
                     if _Debug.Is_Enabled() then
@@ -231,6 +229,7 @@ w.Populate = function()
             end
         end
     end
+    Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -240,18 +239,18 @@ end
 ------------------------------------------------------------------------------------------------------
 w.Util.Set_Theme = function()
     UI.Text("Theme")
-    if UI.RadioButton("Dark ", {w.Window.Style}, 1) then
-        w.Window.Style = 1
+    if UI.RadioButton("Dark ", {Metrics.Window.Style}, 1) then
+        Metrics.Window.Style = 1
         UI.StyleColorsDark()
     end
     UI.SameLine()
-    if UI.RadioButton("Light ", {w.Window.Style}, 2) then
-        w.Window.Style = 2
+    if UI.RadioButton("Light ", {Metrics.Window.Style}, 2) then
+        Metrics.Window.Style = 2
         UI.StyleColorsLight()
     end
     UI.SameLine()
-    if UI.RadioButton("Classic ", {w.Window.Style}, 3) then
-        w.Window.Style = 3
+    if UI.RadioButton("Classic ", {Metrics.Window.Style}, 3) then
+        Metrics.Window.Style = 3
         UI.StyleColorsClassic()
     end
 end
@@ -260,7 +259,7 @@ end
 -- Sets the screen transparency.
 ------------------------------------------------------------------------------------------------------
 w.Util.Set_Alpha = function()
-    UI.PushStyleVar(ImGuiStyleVar_Alpha, w.Window.Alpha)
+    UI.PushStyleVar(ImGuiStyleVar_Alpha, Metrics.Window.Alpha)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -269,7 +268,7 @@ end
 w.Util.Set_Font_Size = function()
     local atlas = UI.GetIO().Fonts
     local font = atlas.Fonts[1]
-    font.Scale = w.Window.Font_Scaling
+    font.Scale = Metrics.Window.Font_Scaling
 end
 
 ------------------------------------------------------------------------------------------------------

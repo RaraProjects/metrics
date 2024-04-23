@@ -146,7 +146,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Blog = function(actor_mob, owner_mob, ability_data, ability_id, damage)
     if damage > 0 then
-        if Blog.Flags.Pet and (Lists.Ability.Rage[ability_id] or Lists.Ability.Wyvern_Breath[ability_id]) then
+        if Metrics.Blog.Flags.Pet and (Lists.Ability.Rage[ability_id] or Lists.Ability.Wyvern_Breath[ability_id]) then
             Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", ability_data.Name, damage) 
         end
     end

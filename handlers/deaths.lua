@@ -23,5 +23,5 @@ H.Death.Action = function(actor_id, target_id)
 
     Model.Update.Data(H.Mode.INC, 1, audits, H.Trackable.DEATH, H.Metric.COUNT)
 
-    if Blog.Flags.Deaths then Blog.Add(actor.name, "Death", 0) end
+    if Metrics.Blog.Flags.Deaths then Blog.Add(actor.name, "Death", 0) end
 end

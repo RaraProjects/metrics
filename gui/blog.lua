@@ -1,10 +1,11 @@
-local bl = {}
+local bl = T{}
 
 bl.Log = {}
 bl.Display = {}
 bl.Util = {}
 
-bl.Flags = {
+bl.Defaults = T{}
+bl.Defaults.Flags = T{
     Timestamp = false,
     Melee     = false,
     Ranged    = false,
@@ -16,25 +17,7 @@ bl.Flags = {
     Healing   = true,
     Deaths    = false,
 }
-bl.Flag_Defaults = {
-    Timestamp = false,
-    Melee     = false,
-    Ranged    = false,
-    WS        = true,
-    SC        = true,
-    Magic     = true,
-    Ability   = true,
-    Pet       = true,
-    Healing   = true,
-    Deaths    = false,
-}
-
-bl.Thresholds = {
-    WS    = 600,
-    MAGIC = 1000,
-    MAX   = 99999,
-}
-bl.Threshold_Defaults = {
+bl.Defaults.Thresholds = T{
     WS    = 600,
     MAGIC = 1000,
     MAX   = 99999,
@@ -43,7 +26,6 @@ bl.Threshold_Defaults = {
 bl.Settings = {
     Size = 32,
     Length = 100,
-    Damage_Highlighting = true,
     Truncate_Length = 6,
 }
 
@@ -55,6 +37,9 @@ bl.Enum.Text = {
 }
 bl.Enum.Flags = {
     IGNORE = "ignore",
+}
+bl.Enum.Thresholds = {
+    MAX   = 99999,
 }
 
 -- FUTURE CONSIDERATIONS
@@ -71,13 +56,14 @@ end
 -- Resets the battle log settings.
 ------------------------------------------------------------------------------------------------------
 bl.Reset_Settings = function()
-    bl.Settings.Damage_Highlighting = true
-    for index, _ in pairs(bl.Flags) do
-        bl.Flags[index] = bl.Flag_Defaults[index]
+    Metrics.Blog.Flags.Damage_Highlighting = true
+    for index, _ in pairs(Metrics.Blog.Flags) do
+        Metrics.Blog.Flags[index] = bl.Defaults.Flags[index]
     end
-    for index, _ in pairs(bl.Thresholds) do
-        bl.Thresholds[index] = bl.Threshold_Defaults[index]
+    for index, _ in pairs(Metrics.Blog.Thresholds) do
+        Metrics.Blog.Thresholds[index] = bl.Defaults.Thresholds[index]
     end
+    Settings_File.save(Config.Enum.File.BLOG)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -86,7 +72,7 @@ end
 bl.Populate = function()
     local table_size = {0, bl.Settings.Size * 8}
     local columns = 4
-    if bl.Flags.Timestamp then columns = columns + 1 end
+    if Metrics.Blog.Flags.Timestamp then columns = columns + 1 end
     if UI.BeginTable("Blog", columns, Window.Table.Flags.Scrollable, table_size) then
         bl.Display.Headers()
         for _, entry in ipairs(bl.Log) do
@@ -140,11 +126,11 @@ end
 ------------------------------------------------------------------------------------------------------
 bl.Util.Damage = function(damage, action_type)
     -- Change the color of the text if the damage is over a certain threshold.
-    local threshold = bl.Thresholds.MAX
+    local threshold = bl.Enum.Thresholds.MAX
     if action_type == Model.Enum.Trackable.WS then
-        threshold = bl.Thresholds.WS
+        threshold = Metrics.Blog.Thresholds.WS
     elseif action_type == Model.Enum.Trackable.MAGIC then
-        threshold = bl.Thresholds.MAGIC
+        threshold = Metrics.Blog.Thresholds.MAGIC
     elseif action_type == bl.Enum.Flags.IGNORE then
         return {Value = bl.Enum.Text.NA, Color = Window.Colors.WHITE}
     end
@@ -205,7 +191,7 @@ end
 ------------------------------------------------------------------------------------------------------
 bl.Display.Headers = function()
     local no_flags = Window.Columns.Flags.None
-    if bl.Flags.Timestamp then UI.TableSetupColumn("Time", no_flags) end
+    if Metrics.Blog.Flags.Timestamp then UI.TableSetupColumn("Time", no_flags) end
     UI.TableSetupColumn("Name", no_flags)
     UI.TableSetupColumn("Damage", no_flags)
     UI.TableSetupColumn("Action", no_flags)
@@ -218,7 +204,7 @@ end
 ------------------------------------------------------------------------------------------------------
 bl.Display.Rows = function(entry)
     UI.TableNextRow()
-    if bl.Flags.Timestamp then UI.TableNextColumn() UI.Text(entry.Time) end
+    if Metrics.Blog.Flags.Timestamp then UI.TableNextColumn() UI.Text(entry.Time) end
     UI.TableNextColumn() UI.TextColored(entry.Name.Color, entry.Name.Value)
     UI.TableNextColumn() UI.TextColored(entry.Damage.Color, entry.Damage.Value)
     UI.TableNextColumn() UI.TextColored(entry.Action.Color, entry.Action.Value)

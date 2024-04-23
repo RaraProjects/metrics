@@ -1,9 +1,8 @@
-local t = {}
+local t = T{}
 
 t.Display = {}
 t.Util = {}
 t.Display.Screen = {}
-t.Defaults = {}
 
 t.Display.Columns = {
     Base = 4,
@@ -12,21 +11,15 @@ t.Display.Columns = {
     Max = 18,
     Default = 10,
 }
-t.Defaults.Columns = {
-    Base = 4,
-    Current = 10,
-    Max = 18,
-    Default = 10,
+t.Display.Flags = {
+
+}
+t.Settings = {
+
 }
 
-t.Display.Flags = {
-    Total_Damage_Only = false,
-    Crit = false,
-    Pet = false,
-    Healing = false,
-    Deaths = false,
-}
-t.Defaults.Flags = {
+t.Defaults = T{}
+t.Defaults.Flags = T{
     Total_Damage_Only = false,
     Total_Acc = false,
     Crit = false,
@@ -34,13 +27,7 @@ t.Defaults.Flags = {
     Healing = false,
     Deaths = false,
 }
-
-t.Settings = {
-    Rank_Cutoff = 6,
-    Condensed_Numbers = false,
-    Include_SC_Damage = false
-}
-t.Defaults.Settings = {
+t.Defaults.Settings = T{
     Rank_Cutoff = 6,
     Condensed_Numbers = false,
     Include_SC_Damage = false
@@ -56,7 +43,7 @@ t.Populate = function()
         local player_name = "Debug"
         Model.Sort.Damage()
         for rank, data in ipairs(Model.Data.Total_Damage_Sorted) do
-            if rank <= t.Settings.Rank_Cutoff then
+            if rank <= Metrics.Team.Settings.Rank_Cutoff then
                 player_name = data[1]
                 t.Display.Rows(player_name)
             end
@@ -82,15 +69,15 @@ end
 -- Calculates how many columns should be shown on the Team table based on column visibility flags.
 ------------------------------------------------------------------------------------------------------
 t.Util.Calculate_Column_Flags = function()
-    if t.Display.Flags.Total_Damage_Only then
+    if Metrics.Team.Flags.Total_Damage_Only then
         t.Display.Columns.Current = t.Display.Columns.Base
     else
         local added_columns = t.Display.Columns.Start
-        if t.Display.Flags.Pet then added_columns = added_columns + 5 end
-        if t.Display.Flags.Crit then added_columns = added_columns + 1 end
-        if t.Settings.Include_SC_Damage then added_columns = added_columns + 1 end
-        if t.Display.Flags.Healing then added_columns = added_columns + 1 end
-        if t.Display.Flags.Deaths then added_columns = added_columns + 1 end
+        if Metrics.Team.Flags.Pet then added_columns = added_columns + 5 end
+        if Metrics.Team.Flags.Crit then added_columns = added_columns + 1 end
+        if Metrics.Team.Settings.Include_SC_Damage then added_columns = added_columns + 1 end
+        if Metrics.Team.Flags.Healing then added_columns = added_columns + 1 end
+        if Metrics.Team.Flags.Deaths then added_columns = added_columns + 1 end
 
         -- Apply new column count.
         t.Display.Columns.Current = t.Display.Columns.Base + added_columns
@@ -109,24 +96,24 @@ t.Display.Headers = function()
     UI.TableSetupColumn("Name", flags)
     UI.TableSetupColumn("%T", flags)
     UI.TableSetupColumn("Total", flags)
-    UI.TableSetupColumn("%A-" .. Model.Settings.Running_Accuracy_Limit, flags)
-    if not t.Display.Flags.Total_Damage_Only then
+    UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
+    if not Metrics.Team.Flags.Total_Damage_Only then
         UI.TableSetupColumn("%A-T", flags)
         UI.TableSetupColumn("Melee", flags)
-        if t.Display.Flags.Crit then UI.TableSetupColumn("Crit Rate", flags) end
+        if Metrics.Team.Flags.Crit then UI.TableSetupColumn("Crit Rate", flags) end
         UI.TableSetupColumn("WS", flags)
-        if t.Settings.Include_SC_Damage then UI.TableSetupColumn("SC", flags) end
+        if Metrics.Team.Settings.Include_SC_Damage then UI.TableSetupColumn("SC", flags) end
         UI.TableSetupColumn("Ranged", flags)
         UI.TableSetupColumn("Magic", flags)
         UI.TableSetupColumn("JA", flags)
-        if t.Display.Flags.Pet then
+        if Metrics.Team.Flags.Pet then
             UI.TableSetupColumn("Pet Acc", flags)
             UI.TableSetupColumn("Pet Melee", flags)
             UI.TableSetupColumn("Pet WS", flags)
             UI.TableSetupColumn("Pet Ranged", flags)
             UI.TableSetupColumn("Pet Ability", flags)
         end
-        if t.Display.Flags.Healing then UI.TableSetupColumn("Healing", flags) end
+        if Metrics.Team.Flags.Healing then UI.TableSetupColumn("Healing", flags) end
         --if t.Display.Flags.Deaths then UI.TableSetupColumn("Deaths", flags) end
     end
     UI.TableHeadersRow()
@@ -141,23 +128,23 @@ t.Display.Rows = function(player_name)
     UI.TableNextColumn() Col.Damage.Total(player_name, true, true)
     UI.TableNextColumn() Col.Damage.Total(player_name, false, true)
     UI.TableNextColumn() Col.Acc.Running(player_name)
-    if not t.Display.Flags.Total_Damage_Only then
+    if not Metrics.Team.Flags.Total_Damage_Only then
         UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Misc.COMBINED, true)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE, false, true)
-        if t.Display.Flags.Crit then UI.TableNextColumn() Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE, true) end
+        if Metrics.Team.Flags.Crit then UI.TableNextColumn() Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE, true) end
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.WS, false, true)
-        if t.Settings.Include_SC_Damage then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.SC, false, true) end
+        if Metrics.Team.Settings.Include_SC_Damage then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.SC, false, true) end
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.RANGED, false, true)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.NUKE, false, true)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ABILITY, false, true)
-        if t.Display.Flags.Pet then
+        if Metrics.Team.Flags.Pet then
             UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
             UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE, false, true)
             UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS, false, true)
             UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED, false, true)
             UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY, false, true)
         end
-        if t.Display.Flags.Healing then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.HEALING, false, true) end
+        if Metrics.Team.Flags.Healing then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.HEALING, false, true) end
         -- if t.Display.Flags.Deaths then UI.TableNextColumn() UI.Text(Col.Deaths(player_name)) end
     end
 end
@@ -174,7 +161,7 @@ t.Nano_Mode = function()
     if UI.BeginTable("Team Nano", 3, Window.Table.Flags.None) then
         UI.TableSetupColumn("%T", flags)
         UI.TableSetupColumn("Total", flags)
-        UI.TableSetupColumn("%A-" .. Model.Settings.Running_Accuracy_Limit, flags)
+        UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
@@ -193,14 +180,14 @@ t.Mini_Mode = function()
     local flags = Window.Columns.Flags.None
 
     local columns = 4
-    if Team.Display.Flags.Pet then columns = columns + 2 end
+    if Metrics.Team.Flags.Pet then columns = columns + 2 end
 
     if UI.BeginTable("Team Mini", columns, Window.Table.Flags.Borders) then
         UI.TableSetupColumn("Name", flags)
         UI.TableSetupColumn("%T", flags)
         UI.TableSetupColumn("Total", flags)
-        UI.TableSetupColumn("%A-" .. Model.Settings.Running_Accuracy_Limit, flags)
-        if Team.Display.Flags.Pet then
+        UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
+        if Metrics.Team.Flags.Pet then
             UI.TableSetupColumn("Pet D.", flags)
             UI.TableSetupColumn("Pet A.", flags)
         end
@@ -209,14 +196,14 @@ t.Mini_Mode = function()
         local player_name = "Debug"
         Model.Sort.Damage()
         for rank, data in ipairs(Model.Data.Total_Damage_Sorted) do
-            if rank <= t.Settings.Rank_Cutoff then
+            if rank <= Metrics.Team.Settings.Rank_Cutoff then
                 player_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(player_name)
                 UI.TableNextColumn() Col.Damage.Total(player_name, true, true)
                 UI.TableNextColumn() Col.Damage.Total(player_name, false, true)
                 UI.TableNextColumn() Col.Acc.Running(player_name)
-                if Team.Display.Flags.Pet then
+                if Metrics.Team.Flags.Pet then
                     UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET)
                     UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
                 end

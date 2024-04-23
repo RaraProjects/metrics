@@ -105,7 +105,7 @@ end
 ---@param target_count number how many targets were hit by an AOE spell.
 ------------------------------------------------------------------------------------------------------
 H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
-    if Lists.Spell.Damaging[spell_id] and not Lists.Spell.DoT[spell_id] and Blog.Flags.Magic then
+    if Lists.Spell.Damaging[spell_id] and not Lists.Spell.DoT[spell_id] and Metrics.Blog.Flags.Magic then
         local blog_note = ""
         local space = ""
         -- Show magic burst message.

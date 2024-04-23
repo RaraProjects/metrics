@@ -50,14 +50,14 @@ f.Display.Overall = function(player_name)
     local table_flags = Window.Table.Flags.Fixed_Borders
     local width = Window.Columns.Widths.Percent
     local columns = 6
-    if Team.Settings.Include_SC_Damage then columns = columns + 1 end
+    if Metrics.Team.Settings.Include_SC_Damage then columns = columns + 1 end
 
     if UI.BeginTable("Overall", columns, table_flags) then
         -- Headers
         UI.TableSetupColumn("Melee %", col_flags, width)
         UI.TableSetupColumn("Ranged %", col_flags, width)
         UI.TableSetupColumn("WS %", col_flags, width)
-        if Team.Settings.Include_SC_Damage then UI.TableSetupColumn("SC %", col_flags, width) end
+        if Metrics.Team.Settings.Include_SC_Damage then UI.TableSetupColumn("SC %", col_flags, width) end
         UI.TableSetupColumn("Magic %", col_flags, width)
         UI.TableSetupColumn("JA %", col_flags, width)
         UI.TableSetupColumn("Pet %", col_flags, width)
@@ -68,7 +68,7 @@ f.Display.Overall = function(player_name)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE, true)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.RANGED, true)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.WS, true)
-        if Team.Settings.Include_SC_Damage then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.SC, true) end
+        if Metrics.Team.Settings.Include_SC_Damage then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.SC, true) end
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC, true)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ABILITY, true)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET, true)

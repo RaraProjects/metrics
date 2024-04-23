@@ -1,6 +1,6 @@
 local m = {}
 
-m.Enum = {
+m.Enum = T{
 	Misc = {
 		IGNORE   = 'ignore',
 		COMBINED = 'combined',
@@ -109,10 +109,10 @@ m.Healing_Max = {
 }
 
 m.Settings = {
-	Running_Accuracy_Limit = 25,
 	Accuracy_Warning = 0.80
 }
-m.Settings.Default = {
+
+m.Defaults = T{
 	Running_Accuracy_Limit = 25
 }
 
@@ -997,9 +997,9 @@ m.Get.Team_Damage = function()
 	local total = 0
 	m.Sort.Damage()
 	for rank, data in ipairs(m.Data.Total_Damage_Sorted) do
-		if rank <= Team.Settings.Rank_Cutoff then
+		if rank <= Metrics.Team.Settings.Rank_Cutoff then
 			local player_name = data[1]
-			if Team.Settings.Include_SC_Damage then
+			if Metrics.Team.Settings.Include_SC_Damage then
 				total = total + m.Get.Data(player_name, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
 			else
 				total = total + m.Get.Data(player_name, m.Enum.Trackable.TOTAL_NO_SC, m.Enum.Metric.TOTAL)
@@ -1055,7 +1055,7 @@ m.Update.Running_Accuracy = function(player_name, hit)
 		return false
 	end
 	local max = #m.Data.Running_Accuracy[player_name]
-    if max >= m.Settings.Running_Accuracy_Limit then table.remove(m.Data.Running_Accuracy[player_name], m.Settings.Running_Accuracy_Limit) end
+    if max >= Metrics.Model.Running_Accuracy_Limit then table.remove(m.Data.Running_Accuracy[player_name], Metrics.Model.Running_Accuracy_Limit) end
 	table.insert(m.Data.Running_Accuracy[player_name], 1, hit)
 	return true
 end
@@ -1105,7 +1105,7 @@ m.Util.Populate_Total_Damage_Table = function()
 	m.Data.Total_Damage_Sorted = {}
 	local damage
 	for index, _ in pairs(m.Data.Initialized_Players) do
-		if Team.Settings.Include_SC_Damage then
+		if Metrics.Team.Settings.Include_SC_Damage then
 			damage = m.Get.Data(index, m.Enum.Trackable.TOTAL, m.Enum.Metric.TOTAL)
 		else
 			damage = m.Get.Data(index, m.Enum.Trackable.TOTAL_NO_SC, m.Enum.Metric.TOTAL)

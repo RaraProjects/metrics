@@ -130,7 +130,7 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Util.Total_Damage = function(player_name)
     if player_name then
-        if Team.Settings.Include_SC_Damage then
+        if Metrics.Team.Settings.Include_SC_Damage then
             return Model.Get.Data(player_name, c.Trackable.TOTAL, c.Metric.TOTAL)
         else
             return Model.Get.Data(player_name, c.Trackable.TOTAL_NO_SC, c.Metric.TOTAL)
@@ -589,7 +589,7 @@ end
 c.String.Format_Number = function(number, justify)
     local format = "%d"
     if justify then format = "%6d" end
-    if Team.Settings.Condensed_Numbers then return c.String.Compact_Number(number, justify) end
+    if Metrics.Team.Settings.Condensed_Numbers then return c.String.Compact_Number(number, justify) end
     number = math.floor(number)
     return string.format(format, number)
 end

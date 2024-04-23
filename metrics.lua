@@ -31,18 +31,20 @@ addon.version = "0.9.0"
 
 _Globals = {}
 _Globals.Initialized = false
+--require('common')
+Settings_File = require("settings")
 
 -- Resources
-Lists = require("lists")
-WS = require("resources.weapon_skills")
+Lists     = require("lists")
+WS        = require("resources.weapon_skills")
 Pet_Skill = require("resources.monster_skills")
 
 -- Modules
-UI = require("imgui")
-A = require("ashita")
+UI    = require("imgui")
+A     = require("ashita")
 Model = require('model')
 
--- Handlers
+-- Action Handlers
 require("handlers._handler")
 require("handlers.melee")
 require("handlers.ranged")
@@ -52,19 +54,28 @@ require("handlers.spells")
 
 -- Windows
 Window = require("gui._window")
-Col = require('gui._columns')
-Blog = require('gui.battle_log')
-Team = require('gui.team')
-Focus = require('gui.focus')
-Settings = require("gui.settings")
+Col    = require('gui._columns')
+Blog   = require('gui.blog')
+Team   = require('gui.team')
+Focus  = require('gui.focus')
+Config = require("gui.config")
 
 -- Debug
 require("debug._debug")
 
--- Initialization
+-- Initialize Settings
+Metrics = T{
+    Window = Settings_File.load(Window.Defaults, "window"),
+    Team   = Settings_File.load(Team.Defaults, "team"),
+    Blog   = Settings_File.load(Blog.Defaults, "blog"),
+    Model  = Settings_File.load(Model.Defaults, "model"),
+}
+
+-- Initialize Modules
 Window.Initialize()
 Model.Initialize()
 A.Party.Refresh()
+
 
 ------------------------------------------------------------------------------------------------------
 -- Subscribes to incoming packets.
@@ -173,10 +184,21 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "full" or arg == "f" then
             Window.Util.Enable_Full()
         elseif arg == "pet" or arg == "p" then
-            Team.Display.Flags.Pet = not Team.Display.Flags.Pet
+            Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
+            Settings_File.save(s.Enum.File.TEAM)
             Team.Util.Calculate_Column_Flags()
+        elseif arg == "test" then
+            Save_Settings()
         end
     end
+end)
+
+------------------------------------------------------------------------------------------------------
+-- Save settings when the addon is unloaded.
+-- Most settings are saved when they are changed. This is mainly for window position.
+------------------------------------------------------------------------------------------------------
+ashita.events.register('unload', 'unload_cb', function ()
+    Settings_File.save()
 end)
 
 --[[

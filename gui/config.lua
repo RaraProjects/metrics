@@ -5,6 +5,14 @@ s.Util = {}
 s.Widget = {}
 s.Widget.Open_Action = -1
 
+s.Enum = {}
+s.Enum.File = {
+    TEAM   = "team",
+    BLOG   = "blog",
+    WINDOW = "window",
+    MODEL  = "model",
+}
+
 ------------------------------------------------------------------------------------------------------
 -- Loads the settings data to the screen.
 ------------------------------------------------------------------------------------------------------
@@ -47,7 +55,7 @@ s.Section.Revert = function()
                 Team.Reset_Settings()
                 Focus.Reset_Settings()
                 Blog.Reset_Settings()
-                Model.Settings.Running_Accuracy_Limit = Model.Settings.Default.Running_Accuracy_Limit
+                Metrics.Model.Running_Accuracy_Limit = Model.Defaults.Running_Accuracy_Limit
             end
         end
     end
@@ -111,8 +119,9 @@ s.Section.Team = function()
             UI.TableSetupColumn("Col 3", col_flags, width)
 
             UI.TableNextColumn()
-            if UI.Checkbox("Total Damage Only", {Team.Display.Flags.Total_Damage_Only}) then
-                Team.Display.Flags.Total_Damage_Only = not Team.Display.Flags.Total_Damage_Only
+            if UI.Checkbox("Total Damage Only", {Metrics.Team.Flags.Total_Damage_Only}) then
+                Metrics.Team.Flags.Total_Damage_Only = not Metrics.Team.Flags.Total_Damage_Only
+                Settings_File.save(s.Enum.File.TEAM)
                 Team.Util.Calculate_Column_Flags()
             end
             UI.SameLine() Window.Widget.HelpMarker("Reduces the amount of columns on Team table to just "
@@ -121,26 +130,30 @@ s.Section.Team = function()
             UI.TableNextColumn()
             UI.TableNextColumn()
             UI.TableNextColumn()
-            if UI.Checkbox("Show Crits", {Team.Display.Flags.Crit}) then
-                Team.Display.Flags.Crit = not Team.Display.Flags.Crit
+            if UI.Checkbox("Show Crits", {Metrics.Team.Flags.Crit}) then
+                Metrics.Team.Flags.Crit = not Metrics.Team.Flags.Crit
+                Settings_File.save(s.Enum.File.TEAM)
                 Team.Util.Calculate_Column_Flags()
             end
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show Pets", {Team.Display.Flags.Pet}) then
-                Team.Display.Flags.Pet = not Team.Display.Flags.Pet
+            if UI.Checkbox("Show Pets", {Metrics.Team.Flags.Pet}) then
+                Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
+                Settings_File.save(s.Enum.File.TEAM)
                 Team.Util.Calculate_Column_Flags()
             end
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show Healing", {Team.Display.Flags.Healing}) then
-                Team.Display.Flags.Healing = not Team.Display.Flags.Healing
+            if UI.Checkbox("Show Healing", {Metrics.Team.Flags.Healing}) then
+                Metrics.Team.Flags.Healing = not Metrics.Team.Flags.Healing
+                Settings_File.save(s.Enum.File.TEAM)
                 Team.Util.Calculate_Column_Flags()
             end
 
-            UI.TableNextColumn()
-            -- if UI.Checkbox("Show Deaths", {Team.Display.Flags.Deaths}) then
-            --     Team.Display.Flags.Deaths = not Team.Display.Flags.Deaths
+            -- UI.TableNextColumn()
+            -- if UI.Checkbox("Show Deaths", {Metrics.Team.Flags.Deaths}) then
+            --     Metrics.Team.Flags.Deaths = not Metrics.Team.Flags.Deaths
+            --     Settings_File.save(s.Enum.File.TEAM)
             --     Team.Util.Calculate_Column_Flags()
             -- end
         UI.EndTable()
@@ -201,8 +214,9 @@ s.Section.Battle_Log = function()
     if UI.CollapsingHeader("Tab: Battle Log") then
 
         UI.Text("Which columns should show in the battle log?")
-        if UI.Checkbox("Show Timestamps", {Blog.Flags.Timestamp}) then
-            Blog.Flags.Timestamp = not Blog.Flags.Timestamp
+        if UI.Checkbox("Show Timestamps", {Metrics.Blog.Flags.Timestamp}) then
+            Metrics.Blog.Flags.Timestamp = not Metrics.Blog.Flags.Timestamp
+            Settings_File.save(s.Enum.File.BLOG)
         end
 
         UI.Text("Which actions should populate the battle log?")
@@ -212,48 +226,57 @@ s.Section.Battle_Log = function()
             UI.TableSetupColumn("Col 3", col_flags, width)
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show Melee", {Blog.Flags.Melee}) then
-                Blog.Flags.Melee = not Blog.Flags.Melee
+            if UI.Checkbox("Show Melee", {Metrics.Blog.Flags.Melee}) then
+                Metrics.Blog.Flags.Melee = not Metrics.Blog.Flags.Melee
+                Settings_File.save(s.Enum.File.BLOG)
             end
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show Ranged", {Blog.Flags.Ranged}) then
-                Blog.Flags.Ranged = not Blog.Flags.Ranged
+            if UI.Checkbox("Show Ranged", {Metrics.Blog.Flags.Ranged}) then
+                Metrics.Blog.Flags.Ranged = not Metrics.Blog.Flags.Ranged
+                Settings_File.save(s.Enum.File.BLOG)
             end
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show WS", {Blog.Flags.WS}) then
-                Blog.Flags.WS = not Blog.Flags.WS
+            if UI.Checkbox("Show WS", {Metrics.Blog.Flags.WS}) then
+                Metrics.Blog.Flags.WS = not Metrics.Blog.Flags.WS
+                Settings_File.save(s.Enum.File.BLOG)
             end
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show SC", {Blog.Flags.SC}) then
-                Blog.Flags.SC = not Blog.Flags.SC
+            if UI.Checkbox("Show SC", {Metrics.Blog.Flags.SC}) then
+                Metrics.Blog.Flags.SC = not Metrics.Blog.Flags.SC
+                Settings_File.save(s.Enum.File.BLOG)
             end
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show Magic", {Blog.Flags.Magic}) then
-                Blog.Flags.Magic = not Blog.Flags.Magic
+            if UI.Checkbox("Show Magic", {Metrics.Blog.Flags.Magic}) then
+                Metrics.Blog.Flags.Magic = not Metrics.Blog.Flags.Magic
+                Settings_File.save(s.Enum.File.BLOG)
             end
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show Ability", {Blog.Flags.Ability}) then
-                Blog.Flags.Ability = not Blog.Flags.Ability
+            if UI.Checkbox("Show Ability", {Metrics.Blog.Flags.Ability}) then
+                Metrics.Blog.Flags.Ability = not Metrics.Blog.Flags.Ability
+                Settings_File.save(s.Enum.File.BLOG)
             end
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show Pet", {Blog.Flags.Pet}) then
-                Blog.Flags.Pet = not Blog.Flags.Pet
+            if UI.Checkbox("Show Pet", {Metrics.Blog.Flags.Pet}) then
+                Metrics.Blog.Flags.Pet = not Metrics.Blog.Flags.Pet
+                Settings_File.save(s.Enum.File.BLOG)
             end
 
             UI.TableNextColumn()
-            if UI.Checkbox("Show Healing", {Blog.Flags.Healing}) then
-                Blog.Flags.Healing = not Blog.Flags.Healing
+            if UI.Checkbox("Show Healing", {Metrics.Blog.Flags.Healing}) then
+                Metrics.Blog.Flags.Healing = not Metrics.Blog.Flags.Healing
+                Settings_File.save(s.Enum.File.BLOG)
             end
 
-            UI.TableNextColumn()
-            -- if UI.Checkbox("Show Deaths", {Blog.Flags.Deaths}) then
-            --     Blog.Flags.Deaths = not Blog.Flags.Deaths
+            -- UI.TableNextColumn()
+            -- if UI.Checkbox("Show Deaths", {Metrics.Blog.Flags.Deaths}) then
+            --     Metrics.Blog.Flags.Deaths = not Metrics.Blog.Flags.Deaths
+            --     Settings_File.save(s.Enum.File.BLOG)
             -- end
             UI.EndTable()
         end
@@ -276,6 +299,7 @@ s.Section.Gui = function()
         Window.Util.Set_Theme()
         s.Widget.Alpha()
         s.Widget.Font_Size()
+        Settings_File.save(s.Enum.File.WINDOW)
     end
 end
 
@@ -283,9 +307,9 @@ end
 -- Sets screen alpha.
 ------------------------------------------------------------------------------------------------------
 s.Widget.Alpha = function()
-    local alpha = {[1] = Window.Window.Alpha}
+    local alpha = {[1] = Metrics.Window.Alpha}
     if UI.DragFloat("Window Transparency", alpha, 0.005, 0.1, 1, "%.3f", ImGuiSliderFlags_None) then
-        Window.Window.Alpha = alpha[1]
+        Metrics.Window.Alpha = alpha[1]
         Window.Util.Set_Alpha()
     end
     UI.SameLine() Window.Widget.HelpMarker("Window transparency.")
@@ -295,9 +319,9 @@ end
 -- Sets screen font size.
 ------------------------------------------------------------------------------------------------------
 s.Widget.Font_Size = function()
-    local text_size = {[1] = Window.Window.Font_Scaling}
+    local text_size = {[1] = Metrics.Window.Font_Scaling}
     if UI.DragFloat("Font Size", text_size, 0.005, 0.1, 3, "%.3f", ImGuiSliderFlags_None) then
-        Window.Window.Font_Scaling = text_size[1]
+        Metrics.Window.Font_Scaling = text_size[1]
         Window.Util.Set_Font_Size()
     end
     UI.SameLine() Window.Widget.HelpMarker("Font size.")
@@ -307,9 +331,10 @@ end
 -- Sets the running accuracy buffer limit.
 ------------------------------------------------------------------------------------------------------
 s.Widget.Acc_Limit = function()
-    local acc_limit = {[1] = Model.Settings.Running_Accuracy_Limit}
+    local acc_limit = {[1] = Metrics.Model.Running_Accuracy_Limit}
     if UI.DragInt("Running Accuracy Limit", acc_limit, 0.1, 10, 50, "%d", ImGuiSliderFlags_None) then
-        Model.Settings.Running_Accuracy_Limit = acc_limit[1]
+        Metrics.Model.Running_Accuracy_Limit = acc_limit[1]
+        Settings_File.save(s.Enum.File.MODEL)
         Model.Data.Running_Accuracy = {}
     end
     UI.SameLine() Window.Widget.HelpMarker("Running accuracy calculates based off of {X} many attack attempts.")
@@ -319,9 +344,10 @@ end
 -- Sets how many players can be shown on the Team screen.
 ------------------------------------------------------------------------------------------------------
 s.Widget.Player_Limit = function()
-    local cutoff = {[1] = Team.Settings.Rank_Cutoff}
+    local cutoff = {[1] = Metrics.Team.Settings.Rank_Cutoff}
     if UI.DragInt("Player Limit", cutoff, 0.1, 0, 18, "%d", ImGuiSliderFlags_None) then
-        Team.Settings.Rank_Cutoff = cutoff[1]
+        Metrics.Team.Settings.Rank_Cutoff = cutoff[1]
+        Settings_File.save(s.Enum.File.TEAM)
     end
     UI.SameLine() Window.Widget.HelpMarker("How many players are listed on the Team table.")
 end
@@ -330,8 +356,9 @@ end
 -- Toggles whether skillchain damage is included in damage displays.
 ------------------------------------------------------------------------------------------------------
 s.Widget.SC_Damage = function()
-    if UI.Checkbox("Include SC Damage", {Team.Settings.Include_SC_Damage}) then
-        Team.Settings.Include_SC_Damage = not Team.Settings.Include_SC_Damage
+    if UI.Checkbox("Include SC Damage", {Metrics.Team.Settings.Include_SC_Damage}) then
+        Metrics.Team.Settings.Include_SC_Damage = not Metrics.Team.Settings.Include_SC_Damage
+        Settings_File.save(s.Enum.File.TEAM)
         Team.Util.Calculate_Column_Flags()
     end
     UI.SameLine() Window.Widget.HelpMarker("The player that closes the skill chain gets the damage credit. "
@@ -345,8 +372,9 @@ end
 -- Toggles whether or not numbers are shown in condensed format or not.
 ------------------------------------------------------------------------------------------------------
 s.Widget.Condensed_Numbers = function()
-    if UI.Checkbox("Condensed Numbers", {Team.Settings.Condensed_Numbers}) then
-        Team.Settings.Condensed_Numbers = not Team.Settings.Condensed_Numbers
+    if UI.Checkbox("Condensed Numbers", {Metrics.Team.Settings.Condensed_Numbers}) then
+        Metrics.Team.Settings.Condensed_Numbers = not Metrics.Team.Settings.Condensed_Numbers
+        Settings_File.save(s.Enum.File.TEAM)
         Team.Util.Calculate_Column_Flags()
     end
     UI.SameLine() Window.Widget.HelpMarker("Condensed is 1.2K instead of 1,200.")
@@ -356,8 +384,9 @@ end
 -- Toggles whether damage highlighting takes place in the battle log.
 ------------------------------------------------------------------------------------------------------
 s.Widget.Damage_Highlighting = function()
-    if UI.Checkbox("Damage Highlighting", {Blog.Settings.Damage_Highlighting}) then
-        Blog.Settings.Damage_Highlighting = not Blog.Settings.Damage_Highlighting
+    if UI.Checkbox("Damage Highlighting", {Metrics.Blog.Flags.Damage_Highlighting}) then
+        Metrics.Blog.Flags.Damage_Highlighting = not Metrics.Blog.Flags.Damage_Highlighting
+        Settings_File.save(s.Enum.File.BLOG)
     end
     UI.SameLine() Window.Widget.HelpMarker("Damage over certain limits causes the text to highlight. "
                                     .. "It's a way for you to easily see if you or others are meeting your damage goals. "
@@ -368,9 +397,10 @@ end
 -- Set the battle log damage highlighting threshold for weaponskills.
 ------------------------------------------------------------------------------------------------------
 s.Widget.WS_Threshold = function()
-    local ws_threshold = {[1] = Blog.Thresholds.WS}
+    local ws_threshold = {[1] = Metrics.Blog.Thresholds.WS}
     if UI.DragInt("Weaponskill", ws_threshold, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
-        Blog.Thresholds.WS = ws_threshold[1]
+        Metrics.Blog.Thresholds.WS = ws_threshold[1]
+        Settings_File.save(s.Enum.File.BLOG)
     end
     UI.SameLine() Window.Widget.HelpMarker("Weaponskill damage over this amount will be highlighted "
                                     .. "in the battle log.")
@@ -380,9 +410,10 @@ end
 -- Set the battle log damage highlighting threshold for magic.
 ------------------------------------------------------------------------------------------------------
 s.Widget.Magic_Threshold = function()
-    local magic_threshold = {[1] = Blog.Thresholds.MAGIC}
+    local magic_threshold = {[1] = Metrics.Blog.Thresholds.MAGIC}
     if UI.DragInt("Spell", magic_threshold, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
-        Blog.Thresholds.MAGIC = magic_threshold[1]
+        Metrics.Blog.Thresholds.MAGIC = magic_threshold[1]
+        Settings_File.save(s.Enum.File.BLOG)
     end
     UI.SameLine() Window.Widget.HelpMarker("Magic damage over this amount will be highlighted "
                                     .. "in the battle log.")

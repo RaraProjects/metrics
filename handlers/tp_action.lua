@@ -353,7 +353,7 @@ end
 ---@param ws_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_WS = function(actor_mob, damage, ws_data, ws_name)
-    if Blog.Flags.WS then
+    if Metrics.Blog.Flags.WS then
         Blog.Add(actor_mob.name, ws_name, damage, A.Party.Refresh(actor_mob.name, A.Enum.Mob.TP), H.Trackable.WS, ws_data)
     end
 end
@@ -366,7 +366,7 @@ end
 ---@param sc_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_SC = function(actor_mob, sc_damage, sc_name)
-    if Blog.Flags.SC and sc_damage > 0 then
+    if Metrics.Blog.Flags.SC and sc_damage > 0 then
         Blog.Add(actor_mob.name, sc_name, sc_damage, nil, Model.Enum.Trackable.SC)
     end
 end
@@ -384,7 +384,7 @@ end
 ---@param skill_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_Pet_Skill = function(owner_mob, actor_mob, action_id, damage, skill_name)
-    if Blog.Flags.Pet and owner_mob then
+    if Metrics.Blog.Flags.Pet and owner_mob then
         local ignore = nil
         if not Lists.Ability.Monster_Damaging[action_id] then ignore = H.Enum.Flags.IGNORE end
         Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", skill_name, damage, H.Enum.Text.BLANK, ignore)
