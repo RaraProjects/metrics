@@ -299,6 +299,7 @@ s.Section.Gui = function()
         Window.Util.Set_Theme()
         s.Widget.Alpha()
         s.Widget.Font_Size()
+        s.Widget.Window_Scale()
         Settings_File.save(s.Enum.File.WINDOW)
     end
 end
@@ -323,6 +324,18 @@ s.Widget.Font_Size = function()
     if UI.DragFloat("Font Size", text_size, 0.005, 0.1, 3, "%.3f", ImGuiSliderFlags_None) then
         Metrics.Window.Font_Scaling = text_size[1]
         Window.Util.Set_Font_Size()
+    end
+    UI.SameLine() Window.Widget.HelpMarker("Font size.")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets window scaling.
+------------------------------------------------------------------------------------------------------
+s.Widget.Window_Scale = function()
+    local window_scale = {[1] = Metrics.Window.Window_Scaling}
+    if UI.DragFloat("Window Scaling", window_scale, 0.005, 0.1, 3, "%.3f", ImGuiSliderFlags_None) then
+        Metrics.Window.Window_Scaling = window_scale[1]
+        Window.Util.Set_Window_Scale()
     end
     UI.SameLine() Window.Widget.HelpMarker("Font size.")
 end

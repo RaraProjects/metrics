@@ -18,6 +18,7 @@ w.Window = {
 w.Defaults = T{
     Alpha = 0.85,
     Font_Scaling = 0.85,
+    Window_Scaling = 1,
     Style = 1,
     X_Pos = 100,
     Y_Pos = 100,
@@ -137,9 +138,13 @@ w.Initialize = function()
     local font = atlas.Fonts[1]
     font.Scale = Metrics.Window.Font_Scaling
 
+    -- Window Scaling
+    UI.SetWindowFontScale(Metrics.Window.Window_Scaling)
+
     -- Set color theme.
     w.Util.Set_Theme()
 
+    -- Style
     UI.PushStyleVar(ImGuiStyleVar_Alpha, Metrics.Window.Alpha)
     UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})
     UI.PushStyleVar(ImGuiStyleVar_WindowPadding, {7, 3})
@@ -160,6 +165,7 @@ end
 w.Reset_Settings = function()
     Metrics.Window.Alpha = w.Defaults.Alpha
     Metrics.Window.Font_Scaling = w.Defaults.Font_Scaling
+    Metrics.Window.Window_Scaling = w.Defaults.Window_Scaling
     w.Initialize()
 end
 
@@ -269,6 +275,13 @@ w.Util.Set_Font_Size = function()
     local atlas = UI.GetIO().Fonts
     local font = atlas.Fonts[1]
     font.Scale = Metrics.Window.Font_Scaling
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the window scaling.
+------------------------------------------------------------------------------------------------------
+w.Util.Set_Window_Scale = function()
+    UI.SetWindowFontScale(Metrics.Window.Window_Scaling)
 end
 
 ------------------------------------------------------------------------------------------------------

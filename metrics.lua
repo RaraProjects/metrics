@@ -185,10 +185,8 @@ ashita.events.register('command', 'command_cb', function (e)
             Window.Util.Enable_Full()
         elseif arg == "pet" or arg == "p" then
             Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
-            Settings_File.save(s.Enum.File.TEAM)
+            Settings_File.save(Config.Enum.File.TEAM)
             Team.Util.Calculate_Column_Flags()
-        elseif arg == "test" then
-            Save_Settings()
         end
     end
 end)
