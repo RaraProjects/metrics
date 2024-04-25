@@ -65,19 +65,7 @@ Config = require("gui.config")
 -- Debug
 require("debug._debug")
 
--- Initialize Settings
-Metrics = T{
-    Window = Settings_File.load(Window.Defaults, "window"),
-    Team   = Settings_File.load(Team.Defaults, "team"),
-    Blog   = Settings_File.load(Blog.Defaults, "blog"),
-    Model  = Settings_File.load(Model.Defaults, "model"),
-}
 
--- Initialize Modules
-Window.Initialize()
-Model.Initialize()
-Team.Initialize()
-A.Party.Refresh()
 
 ------------------------------------------------------------------------------------------------------
 -- Subscribes to incoming packets.
@@ -156,11 +144,28 @@ end)
 ashita.events.register('d3d_present', 'present_cb', function ()
     if not _Globals.Initialized then
         if not A.Data.Is_Logged_In() then return nil end
+
+        -- Initialize Settings
+        Metrics = T{
+            Window = Settings_File.load(Window.Defaults, "window"),
+            Team   = Settings_File.load(Team.Defaults, "team"),
+            Blog   = Settings_File.load(Blog.Defaults, "blog"),
+            Model  = Settings_File.load(Model.Defaults, "model"),
+        }
+
+        -- Initialize Modules
+        Window.Initialize()
+        Model.Initialize()
+        Team.Initialize()
+        A.Party.Refresh()
+
         _Globals.Initialized = true
     end
+
     if _Debug.Enabled then
         UI.ShowDemoWindow()
     end
+
     Window.Populate()
 end)
 

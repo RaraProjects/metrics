@@ -123,7 +123,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param focus_type string
----@param total boolean true: raw total damage; false: average damage
+---@param total? boolean true: raw total damage; false: average damage
 ------------------------------------------------------------------------------------------------------
 r.Publish.Catalog = function(player_name, focus_type, total)
     if not player_name then

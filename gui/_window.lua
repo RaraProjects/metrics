@@ -7,7 +7,7 @@ w.Window = {
     Mini = false,
     Flags = bit.bor(
     ImGuiWindowFlags_AlwaysAutoResize,
-    ImGuiWindowFlags_NoSavedSettings,
+    --ImGuiWindowFlags_NoSavedSettings,
     ImGuiWindowFlags_NoFocusOnAppearing,
     ImGuiWindowFlags_NoNav
     ),
@@ -184,10 +184,9 @@ w.Populate = function()
     if not A.States.Zoning and w.Window.Visible then
         if UI.Begin(w.Window.Name, {w.Window.Visible}, w.Window.Flags) then
             w.Window.Visible = -1
-            if w.Window.Nano then
-                Team.Nano_Mode()
-            elseif w.Window.Mini then
-                Team.Mini_Mode()
+            Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()
+            if w.Window.Nano then Team.Nano_Mode()
+            elseif w.Window.Mini then Team.Mini_Mode()
             else
                 if _Debug.Is_Enabled() then UI.Text("Error Count: " .. tostring(_Debug.Error.Util.Error_Count())) end
                 if UI.BeginTabBar(w.Tabs.Names.PARENT, w.Tabs.Flags) then
@@ -243,7 +242,6 @@ w.Populate = function()
             end
         end
     end
-    Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()
 end
 
 ------------------------------------------------------------------------------------------------------
