@@ -22,15 +22,18 @@ c.Metric = Model.Enum.Metric
 ---@param damage_type string a trackable from the model.
 ---@param percent? boolean whether or not the damage should be raw or percent.
 ---@param justify? boolean whether or not to right justify the text
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Damage.By_Type = function(player_name, damage_type, percent, justify)
+c.Damage.By_Type = function(player_name, damage_type, percent, justify, raw)
     local focused_damage = Model.Get.Data(player_name, damage_type, c.Metric.TOTAL)
     local color = c.String.Color_Zero(focused_damage)
     if percent then
         local total_damage = c.Util.Total_Damage(player_name)
+        if raw then return c.String.Format_Percent(focused_damage, total_damage) end
         return UI.TextColored(color, c.String.Format_Percent(focused_damage, total_damage, justify))
     end
+    if raw then return c.String.Format_Number(focused_damage) end
     return UI.TextColored(color, c.String.Format_Number(focused_damage, justify))
 end
 
@@ -108,17 +111,20 @@ end
 ---@param player_name string
 ---@param percent? boolean whether or not the damage should be raw or percent.
 ---@param justify? boolean whether or not to right justify the text
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Damage.Total = function(player_name, percent, justify)
+c.Damage.Total = function(player_name, percent, justify, raw)
     local grand_total = c.Util.Total_Damage(player_name)
     local color = c.String.Color_Zero(grand_total)
 
     if percent then
         local party_damage = Model.Get.Team_Damage()
+        if raw then return c.String.Format_Percent(grand_total, party_damage) end
         return UI.TextColored(color, c.String.Format_Percent(grand_total, party_damage, justify))
     end
 
+    if raw then return c.String.Format_Number(grand_total) end
     return UI.TextColored(color, c.String.Format_Number(grand_total, justify))
 end
 
@@ -147,9 +153,10 @@ end
 ---@param acc_type string a trackable from the model.
 ---@param justify? boolean whether or not to right justify the text
 ---@param count_type? string used for getting ranged square and truestrike rates.
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Acc.By_Type = function(player_name, acc_type, justify, count_type)
+c.Acc.By_Type = function(player_name, acc_type, justify, count_type, raw)
     local hits, attempts
     if not count_type then count_type = c.Metric.HIT_COUNT end
     if acc_type == Model.Enum.Misc.COMBINED then
@@ -172,11 +179,12 @@ c.Acc.By_Type = function(player_name, acc_type, justify, count_type)
         color = Window.Colors.RED
     end
 
+    if raw then return c.String.Format_Percent(hits, attempts) end
     return UI.TextColored(color, c.String.Format_Percent(hits, attempts, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
--- Grabs the damage of a certain trackable that the entity's pet has done.
+-- Grabs the accuracy of a certain trackable that the entity's pet has done.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string the entity that owns the pet.
 ---@param pet_name string the pet that we want the damage for.
@@ -347,9 +355,10 @@ end
 ---@param focus_type string a trackable from the model.
 ---@param metric string a metric from the model.
 ---@param percent? boolean whether or not the damage should be raw or percent.
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Single.Damage = function(player_name, action_name, focus_type, metric, percent)
+c.Single.Damage = function(player_name, action_name, focus_type, metric, percent, raw)
     local single_damage
     if metric == Model.Enum.Misc.IGNORE then
         single_damage = 0
@@ -360,8 +369,10 @@ c.Single.Damage = function(player_name, action_name, focus_type, metric, percent
     local color = c.String.Color_Zero(single_damage)
     if percent then
         local total_damage = c.Util.Total_Damage(player_name)
+        if raw then return c.String.Format_Percent(single_damage, total_damage) end
         return UI.TextColored(color, c.String.Format_Percent(single_damage, total_damage))
     end
+    if raw then return c.String.Format_Number(single_damage) end
     return UI.TextColored(color, c.String.Format_Number(single_damage))
 end
 
@@ -541,17 +552,20 @@ end
 ---@param player_name string
 ---@param action_name string
 ---@param focus_type string a trackable from the model.
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Single.Average = function(player_name, action_name, focus_type)
+c.Single.Average = function(player_name, action_name, focus_type, raw)
     local single_hits = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.HIT_COUNT)
     local color = c.String.Color_Zero(single_hits)
     if single_hits == 0 then
+        if raw then return c.String.Format_Number(0) end
         return UI.TextColored(color, c.String.Format_Number(0))
     end
     local single_damage  = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.TOTAL)
     local single_average = single_damage / single_hits
     color = c.String.Color_Zero(single_damage)
+    if raw then return c.String.Format_Number(single_average) end
     return UI.TextColored(color, c.String.Format_Number(single_average))
 end
 

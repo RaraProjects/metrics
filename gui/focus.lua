@@ -30,7 +30,7 @@ f.Populate = function()
     if player_name == Window.Dropdown.Enum.NONE then return nil end
 
     f.Display.Util.Buttons()
-    UI.Text(" Grand Total: ") UI.SameLine() Col.Damage.Total(player_name)
+    UI.Text(" Player Total: ") UI.SameLine() Col.Damage.Total(player_name)
     f.Display.Overall(player_name)
     f.Display.Melee(player_name)
     f.Display.Ranged(player_name)
@@ -342,7 +342,6 @@ f.Display.Magic = function(player_name)
     local col_flags = Window.Columns.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
     local width = Window.Columns.Widths.Standard
-    local trackable = Model.Enum.Trackable.MAGIC
 
     local nuke_total = Model.Get.Data(player_name, Model.Enum.Trackable.NUKE, Model.Enum.Metric.TOTAL)
     local mp_drain = Model.Get.Data(player_name, Model.Enum.Trackable.MP_DRAIN, Model.Enum.Metric.TOTAL)
@@ -365,7 +364,7 @@ f.Display.Magic = function(player_name)
 
                 -- Data
                 UI.TableNextRow()
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
+                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC)
                 UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.MAGIC)
                 UI.TableNextColumn() Col.Damage.Burst(player_name)
                 UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MP_DRAIN)
@@ -397,6 +396,7 @@ f.Display.Magic = function(player_name)
             if nuke_total > 0 then
                 f.Display.Util.Check_Collapse()
                 if UI.TreeNode("Nuking") then
+                    Report.Publish.Button(player_name, Model.Enum.Trackable.NUKE)
                     if UI.BeginTable("Nuking", 6, table_flags) then
                         -- Headers
                         UI.TableSetupColumn("Nuke\nDamage", col_flags, width)
@@ -433,6 +433,7 @@ f.Display.Magic = function(player_name)
             if healing_total > 0 then
                 f.Display.Util.Check_Collapse()
                 if UI.TreeNode("Healing") then
+                    Report.Publish.Button(player_name, Model.Enum.Trackable.HEALING)
                     if UI.BeginTable("Heals", 4, table_flags) then
                         -- Headers
                         UI.TableSetupColumn("Healed HP", col_flags, width)
@@ -443,7 +444,7 @@ f.Display.Magic = function(player_name)
 
                         -- Data
                         UI.TableNextRow()
-                        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
+                        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.HEALING)
                         UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.HEALING)
                         UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, Model.Enum.Trackable.HEALING)
                         UI.TableNextColumn() Col.Healing.Overcure(player_name)
@@ -456,6 +457,7 @@ f.Display.Magic = function(player_name)
 
             if enspell_total > 0 then
                 if UI.TreeNode("Enspell") then
+                    Report.Publish.Button(player_name, Model.Enum.Trackable.ENSPELL)
                     f.Display.Spell_Single(player_name, Model.Enum.Trackable.ENSPELL)
                     UI.TreePop()
                 end
@@ -592,6 +594,7 @@ f.Display.Single_Data = function(player_name, focus_type)
 
     f.Display.Util.Check_Collapse()
     if UI.TreeNode(focus_type) then
+        Report.Publish.Button(player_name, focus_type)
         if UI.BeginTable(focus_type, 7, table_flags) then
             UI.TableSetupColumn(action_string, col_flags, width)
             UI.TableSetupColumn("Total " .. damage_string, col_flags, width)
@@ -679,7 +682,6 @@ f.Display.Spell_Single = function(player_name, focus_type)
         acc_string = "Melee\nUsage %"
     end
 
-    f.Display.Util.Check_Collapse()
     if UI.BeginTable(focus_type, 9, table_flags) then
         UI.TableSetupColumn("\nSpell", col_flags, name_width)
         UI.TableSetupColumn("\n" .. damage_string, col_flags, width)

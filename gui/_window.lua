@@ -51,6 +51,13 @@ w.Columns.Widths = {
     Single = 40,
     Standard = 100,
     Settings = 175,
+    Report = 100,
+}
+
+-- Trees /////////////////////////
+w.Trees = {}
+w.Trees.Flags = {
+    SpanFullWidth = bit.bor(ImGuiTreeNodeFlags_SpanAvailWidth)
 }
 
 -- Tabs //////////////////////////
@@ -60,6 +67,7 @@ w.Tabs.Names = {
     TEAM      = "Team",
     FOCUS     = "Focus",
     BATTLELOG = "Battle Log",
+    REPORT    = "Report",
     SETTINGS  = "Settings",
     MOBVIEW   = "Mob Viewer",
     PACKETS   = "Packet Viewer",
@@ -193,6 +201,10 @@ w.Populate = function()
                     end
                     if UI.BeginTabItem(w.Tabs.Names.BATTLELOG) then
                         Blog.Populate()
+                        UI.EndTabItem()
+                    end
+                    if UI.BeginTabItem(w.Tabs.Names.REPORT) then
+                        Report.Populate()
                         UI.EndTabItem()
                     end
                     if UI.BeginTabItem(w.Tabs.Names.SETTINGS) then

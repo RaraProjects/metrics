@@ -29,6 +29,11 @@ a.Enum.Mob = {
     TARGET   = "t",
     PET      = "pet",
 }
+a.Enum.Chat = {
+    PARTY     = "/p",
+    LINKSHELL = "/l",
+    SAY       = "/s",
+}
 a.Enum.Spawn_Flags = {
     MAINPLAYER  = 525,
     OTHERPLAYER = 1,
@@ -583,12 +588,21 @@ a.Item.Get_Item_Level = function(item_name)
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Adds a message in game chat.
+-- Adds a message in game chat. Doesn't actually send anything to other people.
 -- ------------------------------------------------------------------------------------------------------
 ---@param message string
 -- ------------------------------------------------------------------------------------------------------
 a.Chat.Message = function(message)
     print("METRICS: " .. message)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Adds a message in game chat. This is meant to be viewed by other people.
+-- ------------------------------------------------------------------------------------------------------
+---@param message string
+-- ------------------------------------------------------------------------------------------------------
+a.Chat.Add_To_Chat = function(type, message)
+    AshitaCore:GetChatManager():QueueCommand(1, tostring(type) .. " " .. tostring(message))
 end
 
 -- ------------------------------------------------------------------------------------------------------

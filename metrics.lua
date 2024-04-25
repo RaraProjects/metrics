@@ -41,9 +41,10 @@ Pet_Skill = require("resources.monster_skills")
 Themes    = require("resources.themes")
 
 -- Modules
-UI    = require("imgui")
-A     = require("ashita")
-Model = require('model')
+UI     = require("imgui")
+A      = require("ashita")
+Model  = require("model")
+Report = require("report")
 
 -- Action Handlers
 require("handlers._handler")
@@ -75,6 +76,7 @@ Metrics = T{
 -- Initialize Modules
 Window.Initialize()
 Model.Initialize()
+Team.Initialize()
 A.Party.Refresh()
 
 ------------------------------------------------------------------------------------------------------
@@ -186,6 +188,16 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "pet" or arg == "p" then
             Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
             Team.Util.Calculate_Column_Flags()
+        elseif arg == "total" then
+            Report.Publish.Total_Damage()
+        elseif arg == "acc" then
+            Report.Publish.Accuracy()
+        elseif arg == "melee" then
+            Report.Publish.Damage_By_Type(Model.Enum.Trackable.MELEE)
+        elseif arg == "ws" then
+            Report.Publish.Damage_By_Type(Model.Enum.Trackable.WS)
+        elseif arg == "healing" then
+            Report.Publish.Damage_By_Type(Model.Enum.Trackable.HEALING)
         end
     end
 end)

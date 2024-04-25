@@ -205,9 +205,11 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Spell.Nuke = function(audits, spell_name, damage, burst)
     local trackable = H.Trackable.NUKE
-    if audits.pet_name then 
+    if audits.pet_name then
         trackable = H.Trackable.PET_NUKE
         Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
+    else
+        Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.MAGIC, H.Metric.TOTAL)
     end
     Model.Update.Catalog_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, audits.pet_name, burst)
 end

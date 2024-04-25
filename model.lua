@@ -26,7 +26,7 @@ m.Enum = T{
 		PET_RANGED         = 'Pet Ranged',
 		THROWING           = 'Throwing',
 		WS                 = 'Weaponskills',
-		PET_WS             = 'Pet Weaponskill',
+		PET_WS             = 'Pet Weaponskills',
 		SC                 = 'Skillchains',
 		ABILITY            = 'Abilities',
 		PET_ABILITY        = 'Pet Ability',
@@ -39,9 +39,9 @@ m.Enum = T{
 		ENSPELL            = 'Enspell',
 		ENDRAIN            = "Endrain",
 		ENASPIR            = "Enaspir",
-		NUKE               = 'Spells: Nuking',
-		HEALING            = "Spells: Healing",
-		ENFEEBLE           = "Spells: Enfeebling",
+		NUKE               = 'Nuking',
+		HEALING            = "Healing",
+		ENFEEBLE           = "Enfeebling",
 		MP_DRAIN           = "MP Drain",
 		PET                = 'Pet',
 		DEATH              = 'Death',
@@ -669,7 +669,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 m.Get.Data = function(player_name, trackable, metric)
-	if not player_name then
+	if not player_name or not trackable or not metric then
 		_Debug.Error.Add("Get.Data: Nil player name. " .. tostring(trackable) .. " " .. tostring(metric))
 		return 0
 	end
@@ -995,7 +995,7 @@ end
 ------------------------------------------------------------------------------------------------------
 m.Get.Team_Damage = function()
 	local total = 0
-	m.Sort.Damage()
+	m.Sort.Total_Damage()
 	for rank, data in ipairs(m.Data.Total_Damage_Sorted) do
 		if rank <= Metrics.Team.Settings.Rank_Cutoff then
 			local player_name = data[1]
@@ -1087,7 +1087,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sorting function for the sorting the total damage table.
 ------------------------------------------------------------------------------------------------------
-m.Sort.Damage = function()
+m.Sort.Total_Damage = function()
 	m.Util.Populate_Total_Damage_Table()
 	table.sort(m.Data.Total_Damage_Sorted, function (a, b)
 		local a_damage = a[2]
@@ -1112,6 +1112,28 @@ m.Util.Populate_Total_Damage_Table = function()
 		end
 		table.insert(m.Data.Total_Damage_Sorted, {index, damage})
 	end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sorts damage by a specific type of damage.
+------------------------------------------------------------------------------------------------------
+---@param trackable string
+---@return table
+------------------------------------------------------------------------------------------------------
+m.Sort.Damage_By_Type = function(trackable)
+	if not trackable then return {} end
+	local sorted_damage = {}
+	local damage
+	for player_name, _ in pairs(m.Data.Initialized_Players) do
+		damage = m.Get.Data(player_name, trackable, m.Enum.Metric.TOTAL)
+		table.insert(sorted_damage, {player_name, damage})
+	end
+	table.sort(sorted_damage, function (a, b)
+		local a_damage = a[2]
+		local b_damage = b[2]
+		return (a_damage > b_damage)
+	end)
+	return sorted_damage
 end
 
 ------------------------------------------------------------------------------------------------------

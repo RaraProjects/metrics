@@ -34,6 +34,13 @@ t.Defaults.Settings = T{
 }
 
 ------------------------------------------------------------------------------------------------------
+-- Initializes the Team screen.
+------------------------------------------------------------------------------------------------------
+t.Initialize = function()
+    t.Util.Calculate_Column_Flags()
+end
+
+------------------------------------------------------------------------------------------------------
 -- Loads the Team data to the screen.
 ------------------------------------------------------------------------------------------------------
 t.Populate = function()
@@ -41,7 +48,7 @@ t.Populate = function()
     if UI.BeginTable("Team", t.Display.Columns.Current, Window.Table.Flags.Team) then
         t.Display.Headers()
         local player_name = "Debug"
-        Model.Sort.Damage()
+        Model.Sort.Total_Damage()
         for rank, data in ipairs(Model.Data.Total_Damage_Sorted) do
             if rank <= Metrics.Team.Settings.Rank_Cutoff then
                 player_name = data[1]
@@ -135,7 +142,7 @@ t.Display.Rows = function(player_name)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.WS, false, true)
         if Metrics.Team.Settings.Include_SC_Damage then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.SC, false, true) end
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.RANGED, false, true)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.NUKE, false, true)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC, false, true)
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ABILITY, false, true)
         if Metrics.Team.Flags.Pet then
             UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
@@ -194,7 +201,7 @@ t.Mini_Mode = function()
         UI.TableHeadersRow()
 
         local player_name = "Debug"
-        Model.Sort.Damage()
+        Model.Sort.Total_Damage()
         for rank, data in ipairs(Model.Data.Total_Damage_Sorted) do
             if rank <= Metrics.Team.Settings.Rank_Cutoff then
                 player_name = data[1]
