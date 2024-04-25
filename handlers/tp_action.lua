@@ -235,7 +235,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Ignore = function(owner_mob, audits, damage, ws_id, ws_name)
     if owner_mob then
-        if not Lists.Ability.Monster_Damaging[ws_id] then
+        if not Lists.Ability.Pet_Damaging[ws_id] then
             _Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
             damage = 0
         end
@@ -386,7 +386,7 @@ end
 H.TP.Blog_Pet_Skill = function(owner_mob, actor_mob, action_id, damage, skill_name)
     if Metrics.Blog.Flags.Pet and owner_mob then
         local ignore = nil
-        if not Lists.Ability.Monster_Damaging[action_id] then ignore = H.Enum.Flags.IGNORE end
+        if not Lists.Ability.Pet_Damaging[action_id] then ignore = H.Enum.Flags.IGNORE end
         Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", skill_name, damage, H.Enum.Text.BLANK, ignore)
     end
 end

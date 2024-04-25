@@ -37,7 +37,7 @@ Settings_File = require("settings")
 -- Resources
 Lists     = require("lists")
 WS        = require("resources.weapon_skills")
-Pet_Skill = require("resources.monster_skills")
+Pet_Skill = require("resources.monster_abilities")
 Themes    = require("resources.themes")
 
 -- Modules
