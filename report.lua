@@ -2,7 +2,7 @@ local r = {}
 
 r.Publish = {}
 r.Data = {}
-r.Delay = 1.50
+r.Delay = 1.70
 
 -- The screen flickers when publishing to the chat. I think it has to do with the sleep after each line.
 -- The sleep is necessary because the chat can only accept inputs at a certain rate.
