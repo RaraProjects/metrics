@@ -29,10 +29,10 @@ f.Populate = function()
     local player_name = Window.Util.Get_Player_Focus()
     if player_name == Window.Dropdown.Enum.NONE then return nil end
 
-    -- f.Display.Util.Buttons()
+    UI.Separator()
     UI.Text(" Player Total: ") UI.SameLine() Col.Damage.Total(player_name)
-
     f.Display.Overall(player_name)
+    UI.Separator()
 
     if UI.BeginTabBar("Focus Tabs", Window.Tabs.Flags) then
         if UI.BeginTabItem("Melee") then
@@ -344,8 +344,7 @@ f.Display.Magic = function(player_name)
         UI.TableSetupColumn("Damage", col_flags, damage_width)
         UI.TableSetupColumn("Damage %", col_flags, percent_width)
         UI.TableSetupColumn("MP Used", col_flags, damage_width)
-        UI.TableSetupColumn("Dmg per MP", col_flags, 100)
-        UI.TableSetupColumn("Bursts", col_flags, percent_width)
+        UI.TableSetupColumn("Efficacy", col_flags, 100)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
@@ -645,7 +644,7 @@ f.Display.Spell_Single = function(player_name, focus_type)
         UI.TableSetupColumn(action, col_flags, name_width)
         UI.TableSetupColumn(damage_string, col_flags, width)
         UI.TableSetupColumn("MP Used", col_flags, width)
-        UI.TableSetupColumn("Dmg per MP", col_flags, width)
+        UI.TableSetupColumn("Efficacy", col_flags, width)
         UI.TableSetupColumn("Casts", col_flags, width)
         UI.TableSetupColumn(acc_string, col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
