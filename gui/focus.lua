@@ -29,15 +29,38 @@ f.Populate = function()
     local player_name = Window.Util.Get_Player_Focus()
     if player_name == Window.Dropdown.Enum.NONE then return nil end
 
-    f.Display.Util.Buttons()
+    -- f.Display.Util.Buttons()
     UI.Text(" Player Total: ") UI.SameLine() Col.Damage.Total(player_name)
+
     f.Display.Overall(player_name)
-    f.Display.Melee(player_name)
-    f.Display.Ranged(player_name)
-    f.Display.WS_and_SC(player_name)
-    f.Display.Magic(player_name)
-    f.Display.Ability(player_name)
-    f.Display.Pet(player_name)
+
+    if UI.BeginTabBar("Focus Tabs", Window.Tabs.Flags) then
+        if UI.BeginTabItem("Melee") then
+            f.Display.Melee(player_name)
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem("Ranged") then
+            f.Display.Ranged(player_name)
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem("Weaponskills") then
+            f.Display.WS_and_SC(player_name)
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem("Magic") then
+            f.Display.Magic(player_name)
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem("Abilities") then
+            f.Display.Ability(player_name)
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem("Pets") then
+            f.Display.Pet(player_name)
+            UI.EndTabItem()
+        end
+        UI.EndTabBar()
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -84,122 +107,110 @@ end
 f.Display.Melee = function(player_name)
     local col_flags = Window.Columns.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local width = Window.Columns.Widths.Standard
+    local name_width = Window.Columns.Widths.Standard
+    local damage_width = Window.Columns.Widths.Damage
+    local percent_width = Window.Columns.Widths.Percent
 
-    local melee_total = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.TOTAL)
+    local kick_damage = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE_KICK, Model.Enum.Metric.TOTAL)
+    local off_hand = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE_OFFHAND, Model.Enum.Metric.TOTAL)
 
-    if melee_total > 0 then
-        f.Display.Util.Check_Collapse()
-        if UI.CollapsingHeader("Melee", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Melee 1 ", 3, table_flags) then
-                -- Headers
-                UI.TableSetupColumn("Damage", col_flags, width)
-                UI.TableSetupColumn("Accuracy %", col_flags, width)
-                UI.TableSetupColumn("Crit. Rate %", col_flags, width)
-                UI.TableHeadersRow()
+    if UI.BeginTable("Melee Primary", 5, table_flags) then
+        UI.TableSetupColumn("Type", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, damage_width)
+        UI.TableSetupColumn("Damage %", col_flags, percent_width)
+        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
+        UI.TableSetupColumn("Rate", col_flags, percent_width)
+        UI.TableHeadersRow()
 
-                -- Data
+        -- Total
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Melee Total")
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE, true)
+        UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE)
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+
+        -- Main-Hand
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Main-Hand")
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN, true)
+        UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN)
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+
+        -- Off-Hand
+        if off_hand > 0 then
+        UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Off-Hand")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFHAND)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFHAND, true)
+            UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFHAND)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
+
+        -- Kick Attacks
+        if kick_damage > 0 then
+        UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Kick Attacks")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK, true)
+            UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK)
+            UI.TableNextColumn() Col.Kick.Rate(player_name)
+        end
+
+        -- Critical Hits
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Critical Hits")
+        UI.TableNextColumn() Col.Crit.Damage(player_name, Model.Enum.Trackable.MELEE)
+        UI.TableNextColumn() Col.Crit.Damage(player_name, Model.Enum.Trackable.MELEE, true)
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE)
+
+        UI.EndTable()
+    end
+
+    local mob_heal = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.MOB_HEAL)
+    local shadows  = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.SHADOWS)
+    local enspell  = Model.Get.Data(player_name, Model.Enum.Trackable.ENSPELL, Model.Enum.Metric.TOTAL)
+    local endrain  = Model.Get.Data(player_name, Model.Enum.Trackable.ENDRAIN, Model.Enum.Metric.TOTAL)
+    local enaspir  = Model.Get.Data(player_name, Model.Enum.Trackable.ENASPIR, Model.Enum.Metric.TOTAL)
+
+    if mob_heal > 0 or shadows > 0 or enspell > 0 or endrain > 0 or enaspir > 0 then
+        if UI.BeginTable("Melee Misc.", 2, table_flags) then
+            UI.TableSetupColumn("Type", col_flags, name_width)
+            UI.TableSetupColumn("Damage", col_flags, damage_width)
+            UI.TableHeadersRow()
+
+            if mob_heal > 0 then
                 UI.TableNextRow()
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE)
-                UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE)
-                UI.TableNextColumn() Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE)
-                UI.EndTable()
+                UI.TableNextColumn() UI.Text("Mob Heal")
+                UI.TableNextColumn() UI.Text(Col.String.Format_Number(mob_heal))
             end
 
-            f.Display.Util.Check_Collapse()
-            if UI.TreeNode("Main-Hand & Off-Hand") then
-                if UI.BeginTable("Melee 2", 4, table_flags) then
-                    -- Headers
-                    UI.TableSetupColumn("Main-Hand\nDamage", col_flags, width)
-                    UI.TableSetupColumn("Main-Hand\nAccuracy %", col_flags, width)
-                    UI.TableSetupColumn("Off-Hand\nDamage", col_flags, width)
-                    UI.TableSetupColumn("Off-Hand\nAccuracy %", col_flags, width)
-                    UI.TableHeadersRow()
-
-                    -- Data
-                    UI.TableNextRow()
-                    UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN)
-                    UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_MAIN)
-                    UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFHAND)
-                    UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_OFFHAND)
-                    UI.EndTable()
-                end
-                UI.TreePop()
+            if shadows > 0 then
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text("Shadows")
+                UI.TableNextColumn() UI.Text(Col.String.Format_Number(shadows))
             end
 
-            f.Display.Util.Check_Collapse()
-            if UI.TreeNode("Melee Critical Hits") then
-                if UI.BeginTable("Melee Crits", 3, table_flags) then
-                    -- Headers
-                    UI.TableSetupColumn("Damage", col_flags, width)
-                    UI.TableSetupColumn("Damage %T", col_flags, width)
-                    UI.TableSetupColumn("Crit Rate", col_flags, width)
-                    UI.TableHeadersRow()
-
-                    -- Data
-                    UI.TableNextRow()
-                    UI.TableNextColumn() Col.Crit.Damage(player_name, Model.Enum.Trackable.MELEE)
-                    UI.TableNextColumn() Col.Crit.Damage(player_name, Model.Enum.Trackable.MELEE, true)
-                    UI.TableNextColumn() Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE)
-                    UI.EndTable()
-                end
-                UI.TreePop()
+            if enspell > 0 then
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text("En-Spell")
+                UI.TableNextColumn() UI.Text(Col.String.Format_Number(enspell))
             end
 
-            local kick_damage = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE_KICK, Model.Enum.Metric.TOTAL)
-            if kick_damage > 0 then
-                f.Display.Util.Check_Collapse()
-                if UI.TreeNode("Kick Attacks") then
-                    if UI.BeginTable("Melee 3", 4, table_flags) then
-                        -- Headers
-                        UI.TableSetupColumn("Damage", col_flags, width)
-                        UI.TableSetupColumn("Damage %T", col_flags, width)
-                        UI.TableSetupColumn("Accuracy %", col_flags, width)
-                        UI.TableSetupColumn("Kick Rate %", col_flags, width)
-                        UI.TableHeadersRow()
-
-                        -- Data
-                        UI.TableNextRow()
-                        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK)
-                        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK, true)
-                        UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.MELEE_KICK)
-                        UI.TableNextColumn() Col.Kick.Rate(player_name)
-                        UI.EndTable()
-                    end
-                    UI.TreePop()
-                end
+            if endrain > 0 then
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text("En-Drain")
+                UI.TableNextColumn() UI.Text(Col.String.Format_Number(endrain))
             end
 
-            local mob_heal = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.MOB_HEAL)
-            local shadows  = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.SHADOWS)
-            local enspell  = Model.Get.Data(player_name, Model.Enum.Trackable.ENSPELL, Model.Enum.Metric.TOTAL)
-            local endrain  = Model.Get.Data(player_name, Model.Enum.Trackable.ENDRAIN, Model.Enum.Metric.TOTAL)
-            local enaspir  = Model.Get.Data(player_name, Model.Enum.Trackable.ENASPIR, Model.Enum.Metric.TOTAL)
-
-            if mob_heal > 0 or shadows > 0 or enspell > 0 or endrain > 0 or enaspir > 0 then
-                f.Display.Util.Check_Collapse()
-                if UI.TreeNode("Melee Miscellaneous") then
-                    if UI.BeginTable("Melee Misc.", 5, table_flags) then
-                        -- Headers
-                        UI.TableSetupColumn("\nMob Heal", col_flags, width)
-                        UI.TableSetupColumn("Absorbed by\nShadows", col_flags, width)
-                        UI.TableSetupColumn("\nEn-Spell", col_flags, width)
-                        UI.TableSetupColumn("\nEn-Drain", col_flags, width)
-                        UI.TableSetupColumn("\nEn-Aspir", col_flags, width)
-                        UI.TableHeadersRow()
-
-                        -- Data
-                        UI.TableNextRow()
-                        UI.TableNextColumn() UI.Text(Col.String.Format_Number(mob_heal))
-                        UI.TableNextColumn() UI.Text(Col.String.Format_Number(shadows))
-                        UI.TableNextColumn() UI.Text(Col.String.Format_Number(enspell))
-                        UI.TableNextColumn() UI.Text(Col.String.Format_Number(endrain))
-                        UI.TableNextColumn() UI.Text(Col.String.Format_Number(enaspir))
-                        UI.EndTable()
-                    end
-                    UI.TreePop()
-                end
+            if enaspir > 0 then
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text("En-Aspir")
+                UI.TableNextColumn() UI.Text(Col.String.Format_Number(enaspir))
             end
+            UI.EndTable()
         end
     end
 end
@@ -212,84 +223,48 @@ end
 f.Display.Ranged = function(player_name)
     local col_flags = Window.Columns.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local width = Window.Columns.Widths.Standard
+    local name_width = Window.Columns.Widths.Standard
+    local damage_width = Window.Columns.Widths.Damage
+    local percent_width = Window.Columns.Widths.Percent
     local trackable = Model.Enum.Trackable.RANGED
 
-    local ranged_total = Model.Get.Data(player_name, Model.Enum.Trackable.RANGED, Model.Enum.Metric.TOTAL)
-    if ranged_total > 0 then
-        f.Display.Util.Check_Collapse()
-        if UI.CollapsingHeader("Ranged", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Ranged", 5, table_flags) then
-                -- Headers
-                UI.TableSetupColumn("Damage", col_flags, width)
-                UI.TableSetupColumn("Accuracy %", col_flags, width)
-                UI.TableSetupColumn("Square %", col_flags, width)
-                UI.TableSetupColumn("Truestrike %", col_flags, width)
-                UI.TableSetupColumn("Crit. Rate %", col_flags, width)
-                UI.TableHeadersRow()
+    if UI.BeginTable("Ranged", 5, table_flags) then
+        UI.TableSetupColumn("Type", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, damage_width)
+        UI.TableSetupColumn("Damage %", col_flags, percent_width)
+        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
+        UI.TableSetupColumn("Rate", col_flags, percent_width)
+        UI.TableHeadersRow()
 
-                -- Data
-                UI.TableNextRow()
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
-                UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable)
-                UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable, nil, Model.Enum.Metric.SQUARE_COUNT)
-                UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable, nil, Model.Enum.Metric.TRUE_COUNT)
-                UI.TableNextColumn() Col.Crit.Rate(player_name, trackable)
-                UI.EndTable()
-            end
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Ranged Total")
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable, true)
+        UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable)
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
 
-            f.Display.Util.Check_Collapse()
-            if UI.TreeNode("Ranged Critical Hits") then
-                if UI.BeginTable("Ranged Crits", 3, table_flags) then
-                    -- Headers
-                    UI.TableSetupColumn("Damage", col_flags, width)
-                    UI.TableSetupColumn("Damage %T", col_flags, width)
-                    UI.TableSetupColumn("Crit. Rate %", col_flags, width)
-                    UI.TableHeadersRow()
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Square Hit")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable, nil, Model.Enum.Metric.SQUARE_COUNT)
 
-                    -- Data
-                    UI.TableNextRow()
-                    UI.TableNextColumn() Col.Crit.Damage(player_name, trackable)
-                    UI.TableNextColumn() Col.Crit.Damage(player_name, trackable, true)
-                    UI.TableNextColumn() Col.Crit.Rate(player_name, trackable)
-                    UI.EndTable()
-                end
-                UI.TreePop()
-            end
-        end
-    end
-end
 
-------------------------------------------------------------------------------------------------------
--- Loads data to the crits drop down inside the focus window.
-------------------------------------------------------------------------------------------------------
----@param player_name string
-------------------------------------------------------------------------------------------------------
-f.Display.Crits = function(player_name)
-    local col_flags = Window.Columns.Flags.None
-    local table_flags = Window.Table.Flags.Fixed_Borders
-    local width = Window.Columns.Widths.Standard
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Truestrike")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable, nil, Model.Enum.Metric.TRUE_COUNT)
 
-    local melee_crits = Model.Get.Data(player_name, Model.Enum.Trackable.MELEE, Model.Enum.Metric.CRIT_DAMAGE)
-    local ranged_crits = Model.Get.Data(player_name, Model.Enum.Trackable.RANGED, Model.Enum.Metric.CRIT_DAMAGE)
-    if melee_crits > 0 or ranged_crits > 0 then
-        f.Display.Util.Check_Collapse()
-        if UI.CollapsingHeader("Critical Hit Damage", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Crits", 3, table_flags) then
-                -- Headers
-                UI.TableSetupColumn("\nDamage", col_flags, width)
-                UI.TableSetupColumn("\nDamage %T", col_flags, width)
-                UI.TableSetupColumn("Total\nCrit Rate %", col_flags, width)
-                UI.TableHeadersRow()
-
-                -- Data
-                UI.TableNextRow()
-                UI.TableNextColumn() Col.Crit.Damage(player_name, 'combined')
-                UI.TableNextColumn() Col.Crit.Damage(player_name, 'combined', true)
-                UI.TableNextColumn() Col.Crit.Rate(player_name, 'combined')
-                UI.EndTable()
-            end
-        end
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Critical Hits")
+        UI.TableNextColumn() Col.Crit.Damage(player_name, trackable)
+        UI.TableNextColumn() Col.Crit.Damage(player_name, trackable, true)
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() Col.Crit.Rate(player_name, trackable)
+        UI.EndTable()
     end
 end
 
@@ -301,35 +276,43 @@ end
 f.Display.WS_and_SC = function(player_name)
     local col_flags = Window.Columns.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local width = Window.Columns.Widths.Standard
+    local name_width = Window.Columns.Widths.Standard
+    local damage_width = Window.Columns.Widths.Damage
+    local percent_width = Window.Columns.Widths.Percent
     local trackable_ws = Model.Enum.Trackable.WS
     local trackable_sc = Model.Enum.Trackable.SC
 
-    local ws_total = Model.Get.Data(player_name, Model.Enum.Trackable.WS, Model.Enum.Metric.COUNT)
-    if ws_total > 0 then
-        f.Display.Util.Check_Collapse()
-        if UI.CollapsingHeader("Weaponskill and Skillchain", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("WS and SC", 3, table_flags) then
-                -- Headers
-                UI.TableSetupColumn("WS Damage", col_flags, width)
-                UI.TableSetupColumn("WS Acc. %", col_flags, width)
-                UI.TableSetupColumn("SC Damage", col_flags, width)
-                UI.TableHeadersRow()
+    Report.Publish.Button(player_name, trackable_ws, "Publish Weaponskills")
+    UI.SameLine() UI.Text(" ") UI.SameLine()
+    Report.Publish.Button(player_name, trackable_sc, "Publish Skillchains")
 
-                -- Data
-                UI.TableNextRow()
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_ws)
-                UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable_ws)
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_sc)
-                UI.EndTable()
-            end
-            if Model.Data.Trackable[Model.Enum.Trackable.WS] and Model.Data.Trackable[Model.Enum.Trackable.WS][player_name] then
-                f.Display.Single_Data(player_name, Model.Enum.Trackable.WS)
-            end
-            if Model.Data.Trackable[Model.Enum.Trackable.SC] and Model.Data.Trackable[Model.Enum.Trackable.SC][player_name] then
-                f.Display.Single_Data(player_name, Model.Enum.Trackable.SC)
-            end
-        end
+    if UI.BeginTable("WS and SC", 4, table_flags) then
+        UI.TableSetupColumn("Type", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, damage_width)
+        UI.TableSetupColumn("Damage %", col_flags, percent_width)
+        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
+        UI.TableHeadersRow()
+
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Weaponskills")
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_ws)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_ws, true)
+        UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable_ws)
+
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Skillchains")
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_sc)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_sc, true)
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.EndTable()
+    end
+
+    if Model.Data.Trackable[Model.Enum.Trackable.WS] and Model.Data.Trackable[Model.Enum.Trackable.WS][player_name] then
+        f.Display.Single_Data(player_name, Model.Enum.Trackable.WS)
+    end
+
+    if Model.Data.Trackable[Model.Enum.Trackable.SC] and Model.Data.Trackable[Model.Enum.Trackable.SC][player_name] then
+        f.Display.Single_Data(player_name, Model.Enum.Trackable.SC)
     end
 end
 
@@ -341,7 +324,9 @@ end
 f.Display.Magic = function(player_name)
     local col_flags = Window.Columns.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local width = Window.Columns.Widths.Standard
+    local name_width = Window.Columns.Widths.Standard
+    local damage_width = Window.Columns.Widths.Damage
+    local percent_width = Window.Columns.Widths.Percent
 
     local nuke_total = Model.Get.Data(player_name, Model.Enum.Trackable.NUKE, Model.Enum.Metric.TOTAL)
     local mp_drain = Model.Get.Data(player_name, Model.Enum.Trackable.MP_DRAIN, Model.Enum.Metric.TOTAL)
@@ -350,127 +335,108 @@ f.Display.Magic = function(player_name)
     local enfeeble_count = Model.Get.Data(player_name, Model.Enum.Trackable.ENFEEBLE, Model.Enum.Metric.COUNT)
     local misc_count = Model.Get.Data(player_name, Model.Enum.Trackable.MAGIC, Model.Enum.Metric.COUNT)
 
-    if nuke_total > 0 or mp_drain > 0 or healing_total > 0 or enspell_total > 0 or enfeeble_count > 0 or misc_count > 0 then
-        f.Display.Util.Check_Collapse()
-        if UI.CollapsingHeader("Magic", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Magic", 5, table_flags) then
-                -- Headers
-                UI.TableSetupColumn("Magic Damage", col_flags, width)
-                UI.TableSetupColumn("MP Spent", col_flags, width)
-                UI.TableSetupColumn("Burst Damage", col_flags, width)
-                UI.TableSetupColumn("MP Drain", col_flags, width)
-                UI.TableSetupColumn("Enspell", col_flags, width)
-                UI.TableHeadersRow()
+    Report.Publish.Button(player_name, Model.Enum.Trackable.NUKE, "Publish Nuking")
+    UI.SameLine() UI.Text(" ") UI.SameLine()
+    Report.Publish.Button(player_name, Model.Enum.Trackable.HEALING, "Publish Healing")
 
-                -- Data
-                UI.TableNextRow()
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC)
-                UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.MAGIC)
-                UI.TableNextColumn() Col.Damage.Burst(player_name)
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MP_DRAIN)
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ENSPELL)
-                UI.EndTable()
-            end
+    if UI.BeginTable("Magic", 5, table_flags) then
+        UI.TableSetupColumn("Type", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, damage_width)
+        UI.TableSetupColumn("Damage %", col_flags, percent_width)
+        UI.TableSetupColumn("MP Used", col_flags, damage_width)
+        UI.TableSetupColumn("Dmg per MP", col_flags, 100)
+        UI.TableSetupColumn("Bursts", col_flags, percent_width)
+        UI.TableHeadersRow()
 
-            f.Display.Util.Check_Collapse()
-            if UI.TreeNode("MP Usage") then
-                if UI.BeginTable("MP Usage", 4, table_flags) then
-                    -- Headers
-                    UI.TableSetupColumn("Overall MP", col_flags, width)
-                    UI.TableSetupColumn("Nuke MP", col_flags, width)
-                    UI.TableSetupColumn("Healing MP", col_flags, width)
-                    UI.TableSetupColumn("Other MP", col_flags, width)
-                    UI.TableHeadersRow()
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Magic Total")
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC, true)
+        UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.MAGIC)
+        UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, Model.Enum.Trackable.MAGIC)
 
-                    -- Data
-                    UI.TableNextRow()
-                    UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.MAGIC)
-                    UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.NUKE)
-                    UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.HEALING)
-                    UI.TableNextColumn() Col.Spell.MP(player_name, "Other")
-                    UI.EndTable()
-                end
-                UI.TreePop()
-            end
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Nuking")
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.NUKE)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.NUKE, true)
+        UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.NUKE)
+        UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, Model.Enum.Trackable.NUKE)
 
-            if nuke_total > 0 then
-                f.Display.Util.Check_Collapse()
-                if UI.TreeNode("Nuking") then
-                    Report.Publish.Button(player_name, Model.Enum.Trackable.NUKE)
-                    if UI.BeginTable("Nuking", 6, table_flags) then
-                        -- Headers
-                        UI.TableSetupColumn("Nuke\nDamage", col_flags, width)
-                        UI.TableSetupColumn("Nuke\nMP Used", col_flags, width)
-                        UI.TableSetupColumn("Nuke\nDamage per MP", col_flags, width)
-                        UI.TableSetupColumn("Burst\nTotal Damage", col_flags, width)
-                        UI.TableSetupColumn("Burst\n% Total Damage", col_flags, width)
-                        UI.TableSetupColumn("Burst\n% Magic Damage", col_flags, width)
-                        UI.TableHeadersRow()
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Healing")
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.HEALING)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.HEALING, true)
+        UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.HEALING)
+        UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, Model.Enum.Trackable.HEALING)
 
-                        -- Data
-                        UI.TableNextRow()
-                        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.NUKE)
-                        UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.NUKE)
-                        UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, Model.Enum.Trackable.NUKE)
-                        UI.TableNextColumn() Col.Damage.Burst(player_name)
-                        UI.TableNextColumn() Col.Damage.Burst(player_name, true)
-                        UI.TableNextColumn() Col.Damage.Burst(player_name, true, true)
-                        UI.EndTable()
-                    end
-                    f.Display.Spell_Single(player_name, Model.Enum.Trackable.NUKE)
-                    UI.TreePop()
-                end
-            end
+        if mp_drain > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("MP Drain")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MP_DRAIN)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.MP_DRAIN)
+            UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, Model.Enum.Trackable.MP_DRAIN)
+        end
 
-            if enfeeble_count > 0 then
-                f.Display.Util.Check_Collapse()
-                if UI.TreeNode("Enfeebling") then
-                    f.Display.Spell_Single(player_name, Model.Enum.Trackable.ENFEEBLE)
-                    UI.TreePop()
-                end
-            end
+        if enspell_total > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Enspell")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ENSPELL)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ENSPELL, true)
+            UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.ENSPELL)
+            UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, Model.Enum.Trackable.ENSPELL)
+        end
 
-            if healing_total > 0 then
-                f.Display.Util.Check_Collapse()
-                if UI.TreeNode("Healing") then
-                    Report.Publish.Button(player_name, Model.Enum.Trackable.HEALING)
-                    if UI.BeginTable("Heals", 4, table_flags) then
-                        -- Headers
-                        UI.TableSetupColumn("Healed HP", col_flags, width)
-                        UI.TableSetupColumn("MP Used", col_flags, width)
-                        UI.TableSetupColumn("Healing per MP", col_flags, width)
-                        UI.TableSetupColumn("Overcure", col_flags, width)
-                        UI.TableHeadersRow()
+        if enfeeble_count > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Enfeebling")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.ENFEEBLE)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
 
-                        -- Data
-                        UI.TableNextRow()
-                        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.HEALING)
-                        UI.TableNextColumn() Col.Spell.MP(player_name, Model.Enum.Trackable.HEALING)
-                        UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, Model.Enum.Trackable.HEALING)
-                        UI.TableNextColumn() Col.Healing.Overcure(player_name)
-                        UI.EndTable()
-                    end
-                    f.Display.Spell_Single(player_name, Model.Enum.Trackable.HEALING)
-                    UI.TreePop()
-                end
-            end
+        if misc_count > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Other")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() Col.Spell.MP(player_name, "Other")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
+        UI.EndTable()
+    end
 
-            if enspell_total > 0 then
-                if UI.TreeNode("Enspell") then
-                    Report.Publish.Button(player_name, Model.Enum.Trackable.ENSPELL)
-                    f.Display.Spell_Single(player_name, Model.Enum.Trackable.ENSPELL)
-                    UI.TreePop()
-                end
-            end
+    if nuke_total > 0 then
+        if UI.BeginTable("Bursts", 3, table_flags) then
+            UI.TableSetupColumn("Burst Damage", col_flags, damage_width)
+            UI.TableSetupColumn("Damage %", col_flags, percent_width)
+            UI.TableSetupColumn("Magic %", col_flags, percent_width)
+            UI.TableHeadersRow()
 
-            if misc_count > 0 then
-                if UI.TreeNode("Misc Spells") then
-                    f.Display.Spell_Single(player_name, Model.Enum.Trackable.MAGIC)
-                    UI.TreePop()
-                end
-            end
+            UI.TableNextRow()
+            UI.TableNextColumn() Col.Damage.Burst(player_name)
+            UI.TableNextColumn() Col.Damage.Burst(player_name, true)
+            UI.TableNextColumn() Col.Damage.Burst(player_name, true, true)
+            UI.EndTable()
         end
     end
+
+    if healing_total > 0 then
+        if UI.BeginTable("Overcure", 1, table_flags) then
+            UI.TableSetupColumn("Overcure", col_flags, damage_width)
+            UI.TableHeadersRow()
+
+            UI.TableNextColumn() Col.Healing.Overcure(player_name)
+            UI.EndTable()
+        end
+    end
+
+    if nuke_total > 0 then f.Display.Spell_Single(player_name, Model.Enum.Trackable.NUKE) end
+    if healing_total > 0 then f.Display.Spell_Single(player_name, Model.Enum.Trackable.HEALING) end
+    if enfeeble_count > 0 then f.Display.Spell_Single(player_name, Model.Enum.Trackable.ENFEEBLE) end
+    if enspell_total > 0 then f.Display.Spell_Single(player_name, Model.Enum.Trackable.ENSPELL) end
+    if misc_count > 0 then f.Display.Spell_Single(player_name, Model.Enum.Trackable.MAGIC) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -481,25 +447,22 @@ end
 f.Display.Ability = function(player_name)
     local col_flags = Window.Columns.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local width = Window.Columns.Widths.Standard
+    local name_width = Window.Columns.Widths.Standard
     local trackable = Model.Enum.Trackable.ABILITY
 
     local ability_total = Model.Get.Data(player_name, Model.Enum.Trackable.ABILITY, Model.Enum.Metric.COUNT)
-    if ability_total > 0 then
-        f.Display.Util.Check_Collapse()
-        if UI.CollapsingHeader("Ability", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Ability", 1, table_flags) then
-                -- Headers
-                UI.TableSetupColumn("Damage", col_flags, width)
-                UI.TableHeadersRow()
 
-                -- Data
-                UI.TableNextRow()
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
-                UI.EndTable()
-            end
-            f.Display.Single_Data(player_name, Model.Enum.Trackable.ABILITY)
-        end
+    if UI.BeginTable("Ability", 1, table_flags) then
+        UI.TableSetupColumn("Ability Damage", col_flags, name_width)
+        UI.TableHeadersRow()
+
+        UI.TableNextRow()
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
+        UI.EndTable()
+    end
+
+    if ability_total > 0 then
+        f.Display.Single_Data(player_name, Model.Enum.Trackable.ABILITY)
     end
 end
 
@@ -514,44 +477,42 @@ f.Display.Pet = function(player_name)
     local damage = Window.Columns.Widths.Standard
 
     local pet_total = Model.Get.Data(player_name, Model.Enum.Trackable.PET, Model.Enum.Metric.TOTAL)
+
+    if UI.BeginTable("Pets Melee", 4, table_flags) then
+        UI.TableSetupColumn("Total Damage", col_flags, damage)
+        UI.TableSetupColumn("Melee Damage", col_flags, damage)
+        UI.TableSetupColumn("Melee Accuracy", col_flags, damage)
+        UI.TableSetupColumn("Ranged Damage", col_flags, damage)
+        --UI.TableSetupColumn("Ranged Accuracy", col_flags, damage)
+        UI.TableHeadersRow()
+
+        UI.TableNextRow()
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE)
+        UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED)
+        UI.EndTable()
+    end
+
+    if UI.BeginTable("Pet Advanced", 4, table_flags) then
+        -- Headers
+        UI.TableSetupColumn("WS Damage", col_flags, damage)
+        UI.TableSetupColumn("Abil. Damage", col_flags, damage)
+        UI.TableSetupColumn("Magic Damage", col_flags, damage)
+        UI.TableSetupColumn("Healing", col_flags, damage)
+        UI.TableHeadersRow()
+
+        -- Data
+        UI.TableNextRow()
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_NUKE)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_HEAL)
+        UI.EndTable()
+    end
+
     if pet_total > 0 then
-        f.Display.Util.Check_Collapse()
-        if UI.CollapsingHeader("Pets", ImGuiTreeNodeFlags_None) then
-            if UI.BeginTable("Pets Melee", 4, table_flags) then
-                -- Headers
-                UI.TableSetupColumn("Total Damage", col_flags, damage)
-                UI.TableSetupColumn("Melee Damage", col_flags, damage)
-                UI.TableSetupColumn("Melee Accuracy", col_flags, damage)
-                UI.TableSetupColumn("Ranged Damage", col_flags, damage)
-                --UI.TableSetupColumn("Ranged Accuracy", col_flags, damage)
-                UI.TableHeadersRow()
-
-                -- Data
-                UI.TableNextRow()
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET)
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE)
-                UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED)
-                UI.EndTable()
-            end
-            if UI.BeginTable("Pet Advanced", 4, table_flags) then
-                -- Headers
-                UI.TableSetupColumn("WS Damage", col_flags, damage)
-                UI.TableSetupColumn("Abil. Damage", col_flags, damage)
-                UI.TableSetupColumn("Magic Damage", col_flags, damage)
-                UI.TableSetupColumn("Healing", col_flags, damage)
-                UI.TableHeadersRow()
-
-                -- Data
-                UI.TableNextRow()
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS)
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY)
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_NUKE)
-                UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_HEAL)
-                UI.EndTable()
-            end
-            f.Display.Pet_Single_Data(player_name)
-        end
+        f.Display.Pet_Single_Data(player_name)
     end
 end
 
@@ -592,30 +553,23 @@ f.Display.Single_Data = function(player_name, focus_type)
         action_string = "Skillchain"
     end
 
-    f.Display.Util.Check_Collapse()
-    if UI.TreeNode(focus_type) then
-        Report.Publish.Button(player_name, focus_type)
-        if UI.BeginTable(focus_type, 7, table_flags) then
-            UI.TableSetupColumn(action_string, col_flags, width)
-            UI.TableSetupColumn("Total " .. damage_string, col_flags, width)
-            UI.TableSetupColumn(attempt_string, col_flags, width)
-            UI.TableSetupColumn(acc_string, col_flags, width)
-            UI.TableSetupColumn("Avg. " .. damage_string, col_flags, width)
-            UI.TableSetupColumn("Min. " .. damage_string, col_flags, width)
-            UI.TableSetupColumn("Max. " .. damage_string, col_flags, width)
-            UI.TableHeadersRow()
+    if UI.BeginTable(focus_type, 7, table_flags) then
+        UI.TableSetupColumn(action_string, col_flags, width)
+        UI.TableSetupColumn("Total " .. damage_string, col_flags, width)
+        UI.TableSetupColumn(attempt_string, col_flags, width)
+        UI.TableSetupColumn(acc_string, col_flags, width)
+        UI.TableSetupColumn("Avg. " .. damage_string, col_flags, width)
+        UI.TableSetupColumn("Min. " .. damage_string, col_flags, width)
+        UI.TableSetupColumn("Max. " .. damage_string, col_flags, width)
+        UI.TableHeadersRow()
 
-            Model.Sort.Catalog_Damage(player_name, focus_type)
-
-            -- Data
-            local action_name
-            for _, data in ipairs(Model.Data.Catalog_Damage_Race) do
-                action_name = data[1]
-                f.Display.Util.Single_Row(player_name, action_name, focus_type)
-            end
-            UI.EndTable()
+        Model.Sort.Catalog_Damage(player_name, focus_type)
+        local action_name
+        for _, data in ipairs(Model.Data.Catalog_Damage_Race) do
+            action_name = data[1]
+            f.Display.Util.Single_Row(player_name, action_name, focus_type)
         end
-        UI.TreePop()
+        UI.EndTable()
     end
 end
 
@@ -667,31 +621,36 @@ f.Display.Spell_Single = function(player_name, focus_type)
     if not Model.Data.Trackable[focus_type] then return nil end
     if not Model.Data.Trackable[focus_type][player_name] then return nil end
 
-    local acc_string = "\nAcc. %"
+    local acc_string = "Acc. %"
+    local action = "Spell"
     local damage_string = "Damage"
-    local attempt_string = "\nCasts"
     if focus_type == Model.Enum.Trackable.NUKE then
-        acc_string = "\nBursts"
+        action = "Nuke"
+        acc_string = "Bursts"
     elseif focus_type == Model.Enum.Trackable.HEALING then
-        acc_string = "Over\nCure"
+        action = "Heal"
+        acc_string = "Overcure"
         damage_string = "Healing"
     elseif focus_type == Model.Enum.Trackable.ENFEEBLE then
-        acc_string = "Success\nRate"
+        action = "Enfeeble"
+        acc_string = "Land Rate"
     elseif focus_type == Model.Enum.Trackable.ENSPELL then
-        attempt_string = "\nHits"
-        acc_string = "Melee\nUsage %"
+        action = "Enspell"
+        acc_string = "Hits"
+    elseif focus_type == Model.Enum.Trackable.MP_DRAIN then
+        action = "MP Drain"
     end
 
     if UI.BeginTable(focus_type, 9, table_flags) then
-        UI.TableSetupColumn("\nSpell", col_flags, name_width)
-        UI.TableSetupColumn("\n" .. damage_string, col_flags, width)
-        UI.TableSetupColumn("\nMP Used", col_flags, width)
-        UI.TableSetupColumn(damage_string .. "\nper MP", col_flags, width)
-        UI.TableSetupColumn(attempt_string, col_flags, width)
+        UI.TableSetupColumn(action, col_flags, name_width)
+        UI.TableSetupColumn(damage_string, col_flags, width)
+        UI.TableSetupColumn("MP Used", col_flags, width)
+        UI.TableSetupColumn("Dmg per MP", col_flags, width)
+        UI.TableSetupColumn("Casts", col_flags, width)
         UI.TableSetupColumn(acc_string, col_flags, width)
-        UI.TableSetupColumn("Average\n" .. damage_string, col_flags, width)
-        UI.TableSetupColumn("Min.\n" .. damage_string, col_flags, width)
-        UI.TableSetupColumn("Max.\n" .. damage_string, col_flags, width)
+        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("Min.", col_flags, width)
+        UI.TableSetupColumn("Max.", col_flags, width)
         UI.TableHeadersRow()
 
         Model.Sort.Catalog_Damage(player_name, focus_type)

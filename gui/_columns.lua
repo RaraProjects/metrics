@@ -311,7 +311,10 @@ c.Spell.MP = function(player_name, magic_type, justify)
         local total = Model.Get.Data(player_name, Model.Enum.Trackable.MAGIC, Model.Enum.Metric.MP_SPENT)
         local healing = Model.Get.Data(player_name, Model.Enum.Trackable.HEALING, Model.Enum.Metric.MP_SPENT)
         local nuke = Model.Get.Data(player_name, Model.Enum.Trackable.NUKE, Model.Enum.Metric.MP_SPENT)
-        mp = total - healing - nuke
+        local enfeeble = Model.Get.Data(player_name, Model.Enum.Trackable.ENFEEBLE, Model.Enum.Metric.MP_SPENT)
+        local enspell = Model.Get.Data(player_name, Model.Enum.Trackable.ENSPELL, Model.Enum.Metric.MP_SPENT)
+        local mp_drain = Model.Get.Data(player_name, Model.Enum.Trackable.MP_DRAIN, Model.Enum.Metric.MP_SPENT)
+        mp = total - healing - nuke - enfeeble - enspell - mp_drain
     else
         mp = Model.Get.Data(player_name, magic_type, Model.Enum.Metric.MP_SPENT)
     end
@@ -428,11 +431,13 @@ end
 ---@param player_name string
 ---@param action_name string
 ---@param focus_type string a trackable from the model.
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Single.Attempts = function(player_name, action_name, focus_type)
+c.Single.Attempts = function(player_name, action_name, focus_type, raw)
     local single_attempts = Model.Get.Catalog(player_name, focus_type, action_name, c.Metric.COUNT)
     local color = c.String.Color_Zero(single_attempts)
+    if raw then return c.String.Format_Number(single_attempts) end
     return UI.TextColored(color, c.String.Format_Number(single_attempts))
 end
 

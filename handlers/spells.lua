@@ -186,6 +186,16 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
         Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         -- Counts are handled in parse because we need the result message.
 
+    elseif Lists.Spell.Enspell[spell_id] then
+        trackable = H.Trackable.ENSPELL
+        Model.Update.Data(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
+
+    elseif Lists.Spell.MP_Drain[spell_id] then
+        trackable = H.Trackable.MP_DRAIN
+        Model.Update.Data(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
+        Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
+
     else
         if is_pet then trackable = H.Trackable.PET_MAGIC else trackable = H.Trackable.MAGIC end
         Model.Update.Data(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)

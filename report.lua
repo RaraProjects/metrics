@@ -2,7 +2,7 @@ local r = {}
 
 r.Publish = {}
 r.Data = {}
-r.Delay = 1.70
+r.Delay = 1.80
 
 -- The screen flickers when publishing to the chat. I think it has to do with the sleep after each line.
 -- The sleep is necessary because the chat can only accept inputs at a certain rate.
@@ -123,28 +123,26 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param focus_type string
----@param total? boolean true: raw total damage; false: average damage
 ------------------------------------------------------------------------------------------------------
-r.Publish.Catalog = function(player_name, focus_type, total)
+r.Publish.Catalog = function(player_name, focus_type)
     if not player_name then
         A.Chat.Add_To_Chat(A.Enum.Chat.PARTY, "Error") coroutine.sleep(r.Delay)
         return nil
     end
     if not focus_type then focus_type = Model.Enum.Trackable.WS end
-    local type = " (Avg)"
-    if total then type = "" end
-    A.Chat.Add_To_Chat(A.Enum.Chat.PARTY, tostring(focus_type) .. " for " .. tostring(player_name) .. type) coroutine.sleep(r.Delay)
+    A.Chat.Add_To_Chat(A.Enum.Chat.PARTY, tostring(focus_type) .. " for " .. tostring(player_name)) coroutine.sleep(r.Delay)
+    A.Chat.Add_To_Chat(A.Enum.Chat.PARTY, "Total | Count | Average | Min | Max") coroutine.sleep(r.Delay)
     local action_name
     Model.Sort.Catalog_Damage(player_name, focus_type)
-    local damage
     for _, data in ipairs(Model.Data.Catalog_Damage_Race) do
         action_name = data[1]
-        if total then
-            damage = Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.TOTAL, false, true)
-        else
-            damage = Col.Single.Average(player_name, action_name, focus_type, true)
-        end
-        local chat_string = tostring(action_name) .. ": " .. tostring(damage)
+        local total = Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.TOTAL, false, true)
+        local count = Col.Single.Attempts(player_name, action_name, focus_type, true)
+        local average = Col.Single.Average(player_name, action_name, focus_type, true)
+        local min = Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.MIN, false, true)
+        local max = Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.MAX, false, true)
+        local chat_string = tostring(action_name) .. ": " .. tostring(total) .. " | " .. tostring(count) .. " | " 
+                            .. tostring(average) .. " | " .. tostring(min) .. " | " .. tostring(max)
         A.Chat.Add_To_Chat(A.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
     end
 end
@@ -154,9 +152,11 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param focus_type string
+---@param caption? string
 ------------------------------------------------------------------------------------------------------
-r.Publish.Button = function(player_name, focus_type)
-    if UI.Button("Publish") then
+r.Publish.Button = function(player_name, focus_type, caption)
+    if not caption then caption = "Publish" end
+    if UI.Button(caption) then
         r.Publish.Catalog(player_name, focus_type)
     end
 end

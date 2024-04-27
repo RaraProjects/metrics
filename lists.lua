@@ -114,6 +114,17 @@ l.Spell.Healing = {
     [581] = {id = 581, en = "Healing Breeze"},
 }
 
+-- From spells.lua
+l.Spell.Enspell = {
+    [100] = {id=100,en="Enfire",ja="エンファイア",cast_time=3,duration=180,element=0,icon_id=172,icon_id_nq=0,levels={[5]=24},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=100,requirements=1,skill=34,status=94,targets=1,type="WhiteMagic"},
+    [101] = {id=101,en="Enblizzard",ja="エンブリザド",cast_time=3,duration=180,element=1,icon_id=173,icon_id_nq=1,levels={[5]=22},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=101,requirements=1,skill=34,status=95,targets=1,type="WhiteMagic"},
+    [102] = {id=102,en="Enaero",ja="エンエアロ",cast_time=3,duration=180,element=2,icon_id=174,icon_id_nq=2,levels={[5]=20},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=102,requirements=1,skill=34,status=96,targets=1,type="WhiteMagic"},
+    [103] = {id=103,en="Enstone",ja="エンストーン",cast_time=3,duration=180,element=3,icon_id=175,icon_id_nq=3,levels={[5]=18},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=103,requirements=1,skill=34,status=97,targets=1,type="WhiteMagic"},
+    [104] = {id=104,en="Enthunder",ja="エンサンダー",cast_time=3,duration=180,element=4,icon_id=176,icon_id_nq=4,levels={[5]=16},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=104,requirements=1,skill=34,status=98,targets=1,type="WhiteMagic"},
+    [105] = {id=105,en="Enwater",ja="エンウォータ",cast_time=3,duration=180,element=5,icon_id=177,icon_id_nq=5,levels={[5]=27},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=105,requirements=1,skill=34,status=99,targets=1,type="WhiteMagic"},
+}
+
+-- From spells.lua
 l.Spell.Enfeebling = {
     [56] = {id=56,en="Slow",ja="スロウ",cast_time=2,duration=180,element=3,icon_id=141,icon_id_nq=3,levels={[3]=13,[5]=13},mp_cost=15,prefix="/magic",range=12,recast=20,recast_id=56,requirements=0,skill=35,status=13,targets=32,type="WhiteMagic"},
     [58] = {id=58,en="Paralyze",ja="パライズ",cast_time=3,duration=120,element=1,icon_id=144,icon_id_nq=1,levels={[3]=4,[5]=6},mp_cost=6,prefix="/magic",range=12,recast=10,recast_id=58,requirements=0,skill=35,status=4,targets=32,type="WhiteMagic"},
