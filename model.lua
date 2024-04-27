@@ -767,7 +767,7 @@ end
 ------------------------------------------------------------------------------------------------------
 m.Get.Pet_Catalog = function(player_name, pet_name, trackable, action_name, metric)
 	if not player_name or not pet_name or not trackable or not action_name or not metric then
-		_Debug.Error.Add("Get.Catalog: player_name {" .. tostring(player_name) .. "} pet_name {" .. tostring(pet_name) .. "} trackable {" .. tostring(trackable) .. "} action_name {" .. tostring(action_name) .. "} metric {" .. tostring(metric))
+		_Debug.Error.Add("Get.Pet_Catalog: player_name {" .. tostring(player_name) .. "} pet_name {" .. tostring(pet_name) .. "} trackable {" .. tostring(trackable) .. "} action_name {" .. tostring(action_name) .. "} metric {" .. tostring(metric))
 		return 0
 	end
 	local total = 0
