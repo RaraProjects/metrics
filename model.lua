@@ -733,6 +733,10 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 m.Get.Catalog = function(player_name, trackable, action_name, metric)
+	if not player_name or not trackable or not action_name or not metric then
+		_Debug.Error.Add("Get.Catalog: player_name {" .. tostring(player_name) .. "} trackable {" .. tostring(trackable) .. "} action_name {" .. tostring(action_name) .. "} metric {" .. tostring(metric))
+		return 0
+	end
 	local total = 0
 	if metric == m.Enum.Metric.MIN then total = m.Enum.Misc.MAX_DAMAGE end
 	local mob_focus = Window.Util.Get_Mob_Focus()
@@ -762,6 +766,10 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 m.Get.Pet_Catalog = function(player_name, pet_name, trackable, action_name, metric)
+	if not player_name or not pet_name or not trackable or not action_name or not metric then
+		_Debug.Error.Add("Get.Catalog: player_name {" .. tostring(player_name) .. "} pet_name {" .. tostring(pet_name) .. "} trackable {" .. tostring(trackable) .. "} action_name {" .. tostring(action_name) .. "} metric {" .. tostring(metric))
+		return 0
+	end
 	local total = 0
 	if metric == m.Enum.Metric.MIN then total = m.Enum.Misc.MAX_DAMAGE end
 	local mob_focus = Window.Util.Get_Mob_Focus()
