@@ -80,7 +80,7 @@ w.Tabs.Flags = ImGuiTabBarFlags_None
 w.Dropdown = {}
 w.Dropdown.Enum = {
     MOB   = "Mob Filter",
-    FOCUS = "Focused Entity",
+    FOCUS = "Player",
     NONE  = "!NONE",
 }
 w.Dropdown.Flags = ImGuiComboFlags_None

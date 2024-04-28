@@ -473,45 +473,85 @@ end
 f.Display.Pet = function(player_name)
     local col_flags = Window.Columns.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local damage = Window.Columns.Widths.Standard
+    local name_width = Window.Columns.Widths.Standard
+    local damage_width = Window.Columns.Widths.Damage
+    local percent_width = Window.Columns.Widths.Percent
 
     local pet_total = Model.Get.Data(player_name, Model.Enum.Trackable.PET, Model.Enum.Metric.TOTAL)
 
     if UI.BeginTable("Pets Melee", 4, table_flags) then
-        UI.TableSetupColumn("Total Damage", col_flags, damage)
-        UI.TableSetupColumn("Melee Damage", col_flags, damage)
-        UI.TableSetupColumn("Melee Accuracy", col_flags, damage)
-        UI.TableSetupColumn("Ranged Damage", col_flags, damage)
-        --UI.TableSetupColumn("Ranged Accuracy", col_flags, damage)
+        UI.TableSetupColumn("Type", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, damage_width)
+        UI.TableSetupColumn("Damage %", col_flags, percent_width)
+        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
         UI.TableHeadersRow()
 
-        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE)
-        UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED)
-        UI.EndTable()
-    end
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
 
-    if UI.BeginTable("Pet Advanced", 4, table_flags) then
-        -- Headers
-        UI.TableSetupColumn("WS Damage", col_flags, damage)
-        UI.TableSetupColumn("Abil. Damage", col_flags, damage)
-        UI.TableSetupColumn("Magic Damage", col_flags, damage)
-        UI.TableSetupColumn("Healing", col_flags, damage)
-        UI.TableHeadersRow()
+        local melee = Model.Get.Data(player_name, Model.Enum.Trackable.PET_MELEE, Model.Enum.Metric.TOTAL)
+        if melee > 0 then
+            UI.TableNextColumn() UI.Text("Melee")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE, true)
+            UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
+        end
 
-        -- Data
-        UI.TableNextRow()
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_NUKE)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_HEAL)
+        local ranged = Model.Get.Data(player_name, Model.Enum.Trackable.PET_RANGED, Model.Enum.Metric.TOTAL)
+        if ranged > 0 then
+            UI.TableNextColumn() UI.Text("Ranged")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED, true)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
+
+        local nuke = Model.Get.Data(player_name, Model.Enum.Trackable.PET_NUKE, Model.Enum.Metric.TOTAL)
+        if nuke > 0 then
+            UI.TableNextColumn() UI.Text("Magic")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_NUKE)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_NUKE, true)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
+
+        local healing = Model.Get.Data(player_name, Model.Enum.Trackable.PET_HEAL, Model.Enum.Metric.TOTAL)
+        if healing > 0 then
+            UI.TableNextColumn() UI.Text("Healing")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_HEAL)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_HEAL, true)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
+
+        local ws = Model.Get.Data(player_name, Model.Enum.Trackable.PET_WS, Model.Enum.Metric.TOTAL)
+        if ws > 0 then
+            UI.TableNextColumn() UI.Text("Weaponskill")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS, true)
+            UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_WS)
+        end
+
+        local ability = Model.Get.Data(player_name, Model.Enum.Trackable.PET_ABILITY, Model.Enum.Metric.TOTAL)
+        if ability > 0 then
+            UI.TableNextColumn() UI.Text("Ability")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY, true)
+            UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY)
+        end
+
         UI.EndTable()
     end
 
     if pet_total > 0 then
-        f.Display.Pet_Single_Data(player_name)
+        if UI.BeginTabBar("Pet Tabs", Window.Tabs.Flags) then
+            for pet_name, _ in pairs(Model.Data.Initialized_Pets[player_name]) do
+                if UI.BeginTabItem(pet_name) then
+                    f.Display.Pet_Single_Data(player_name, pet_name)
+                    UI.EndTabItem()
+                end
+            end
+            UI.EndTabBar()
+        end
     end
 end
 
@@ -705,91 +745,118 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string owner of the pet.
 ------------------------------------------------------------------------------------------------------
-f.Display.Pet_Single_Data = function(player_name)
+f.Display.Pet_Single_Data = function(player_name, pet_name)
     local table_flags = Window.Table.Flags.Fixed_Borders
     local col_flags = Window.Columns.Flags.None
     local damage = Window.Columns.Widths.Standard
+    local name_width = Window.Columns.Widths.Standard
+    local damage_width = Window.Columns.Widths.Damage
+    local percent_width = Window.Columns.Widths.Percent
 
     if not Model.Data.Initialized_Pets[player_name] then
         _Debug.Error.Add("Display.Pet_Single_Data: Tried to loop through pets of unitialized player in the focus window.")
         return nil
     end
 
-    for pet_name, _ in pairs(Model.Data.Initialized_Pets[player_name]) do
-        -- I considered adding the total damage of the pet to the tree node title,
-        -- but the damage changing causes the node to recollapse automatically. Annoying.
-        f.Display.Util.Check_Collapse()
-        if UI.TreeNode(pet_name) then
-            if UI.BeginTable(pet_name, 3, table_flags) then
-                UI.TableSetupColumn("Total Damage", col_flags, damage)
-                UI.TableSetupColumn("Total Damage %", col_flags, damage)
-                UI.TableSetupColumn("Pet Damage %", col_flags, damage)
-                UI.TableHeadersRow()
+    if UI.BeginTable(pet_name, 5, table_flags) then
+        UI.TableSetupColumn("Type", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, damage_width)
+        UI.TableSetupColumn("Damage %", col_flags, percent_width)
+        UI.TableSetupColumn("Pet %", col_flags, percent_width)
+        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
+        UI.TableHeadersRow()
 
-                UI.TableNextRow()
-                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET)
-                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET, true, nil, true)
-                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET, true)
-                UI.EndTable()
-            end
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Total")
+        UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET)
+        UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET, true, nil, true)
+        UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET, true)
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
 
-            if UI.BeginTable(pet_name, 3, table_flags) then
-                UI.TableSetupColumn("Melee Damage", col_flags, damage)
-                UI.TableSetupColumn("Melee Accuracy", col_flags, damage)
-                UI.TableSetupColumn("Ranged Damage", col_flags, damage)
-                --UI.TableSetupColumn("Ranged Accuracy", col_flags, damage)
-                UI.TableHeadersRow()
-
-                UI.TableNextRow()
-                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_MELEE)
-                UI.TableNextColumn() Col.Acc.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
-                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_RANGED)
-                UI.EndTable()
-            end
-
-            if UI.BeginTable(pet_name, 4, table_flags) then
-                UI.TableSetupColumn("WS Damage", col_flags, damage)
-                UI.TableSetupColumn("Abil. Damage", col_flags, damage)
-                UI.TableSetupColumn("Magic Damage", col_flags, damage)
-                UI.TableSetupColumn("Healing", col_flags, damage)
-                UI.TableHeadersRow()
-
-                UI.TableNextRow()
-                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_WS)
-                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_ABILITY)
-                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_NUKE)
-                UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_HEAL)
-                UI.EndTable()
-            end
-
-            if UI.BeginTable(pet_name.." single", 7, table_flags) then
-                -- Headers
-                UI.TableSetupColumn("Action Name", col_flags, damage)
-                UI.TableSetupColumn("Total Damage", col_flags, damage)
-                UI.TableSetupColumn("Attempts", col_flags, damage)
-                UI.TableSetupColumn("Accuracy %", col_flags, damage)
-                UI.TableSetupColumn("Avg. Damage", col_flags, damage)
-                UI.TableSetupColumn("Min. Damage", col_flags, damage)
-                UI.TableSetupColumn("Max. Damage", col_flags, damage)
-                UI.TableHeadersRow()
-
-                Model.Sort.Pet_Catalog_Damage(player_name, pet_name)
-
-                -- Data
-                local has_data = false
-                for _, data in ipairs(Model.Data.Pet_Catalog_Damage_Race) do
-                    has_data = true
-                    local action_name = data[1]
-                    local trackable = data[3]
-                    f.Display.Util.Pet_Single_Row(player_name, pet_name, action_name, trackable)
-                end
-                if not has_data then
-                    f.Display.Util.Pet_Blank_Row()
-                end
-                UI.EndTable()
-            end
-            UI.TreePop()
+        local pet_melee = Model.Get.Pet_Data(player_name, pet_name, Model.Enum.Trackable.PET_RANGED, Model.Enum.Metric.TOTAL)
+        if pet_melee > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Melee")
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET, true, nil, true)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET, true)
+            UI.TableNextColumn() Col.Acc.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
         end
+
+        local pet_ranged = Model.Get.Pet_Data(player_name, pet_name, Model.Enum.Trackable.PET_RANGED, Model.Enum.Metric.TOTAL)
+        if pet_ranged > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Ranged")
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_RANGED)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_RANGED, true, nil, true)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_RANGED, true)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
+
+        local pet_ws = Model.Get.Pet_Data(player_name, pet_name, Model.Enum.Trackable.PET_WS, Model.Enum.Metric.TOTAL)
+        if pet_ws > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Weaponskill")
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_WS)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_WS, true, nil, true)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_WS, true)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
+
+        local pet_ability = Model.Get.Pet_Data(player_name, pet_name, Model.Enum.Trackable.PET_ABILITY, Model.Enum.Metric.TOTAL)
+        if pet_ability > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Ability")
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_ABILITY)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_ABILITY, true, nil, true)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_ABILITY, true)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
+
+        local pet_magic = Model.Get.Pet_Data(player_name, pet_name, Model.Enum.Trackable.PET_NUKE, Model.Enum.Metric.TOTAL)
+        if pet_magic > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Magic")
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_NUKE)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_NUKE, true, nil, true)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_NUKE, true)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
+
+        local pet_healing = Model.Get.Pet_Data(player_name, pet_name, Model.Enum.Trackable.PET_HEAL, Model.Enum.Metric.TOTAL)
+        if pet_healing > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Healing")
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_HEAL)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_HEAL, true, nil, true)
+            UI.TableNextColumn() Col.Damage.Pet_By_Type(player_name, pet_name, Model.Enum.Trackable.PET_HEAL, true)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
+        UI.EndTable()
+    end
+
+    if UI.BeginTable(pet_name.." single", 7, table_flags) then
+        UI.TableSetupColumn("Action Name", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, damage_width)
+        UI.TableSetupColumn("Attempts", col_flags, percent_width)
+        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
+        UI.TableSetupColumn("Average", col_flags, damage_width)
+        UI.TableSetupColumn("Min.", col_flags, damage_width)
+        UI.TableSetupColumn("Max.", col_flags, damage_width)
+        UI.TableHeadersRow()
+
+        local has_data = false
+        Model.Sort.Pet_Catalog_Damage(player_name, pet_name)
+        for _, data in ipairs(Model.Data.Pet_Catalog_Damage_Race) do
+            has_data = true
+            local action_name = data[1]
+            local trackable = data[3]
+            f.Display.Util.Pet_Single_Row(player_name, pet_name, action_name, trackable)
+        end
+        if not has_data then
+            f.Display.Util.Pet_Blank_Row()
+        end
+        UI.EndTable()
     end
 end
 
