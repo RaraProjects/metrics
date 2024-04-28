@@ -60,6 +60,14 @@ r.Populate = function()
         end
         UI.EndTable()
     end
+
+    local mobs_defeated = 0
+    UI.Text("Monsters Defeated")
+    for mob_name, count in pairs(Model.Data.Defeated_Mobs) do
+        UI.BulletText(mob_name .. ": " .. tostring(count))
+        mobs_defeated = mobs_defeated + 1
+    end
+    if mobs_defeated == 0 then UI.BulletText("None") end
 end
 
 ------------------------------------------------------------------------------------------------------

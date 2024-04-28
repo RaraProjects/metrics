@@ -16,6 +16,7 @@ bl.Defaults.Flags = T{
     Pet       = true,
     Healing   = true,
     Deaths    = false,
+    Mob_Death = true,
 }
 bl.Defaults.Thresholds = T{
     WS    = 600,
@@ -174,11 +175,13 @@ end
 bl.Util.Notes = function(note, action_type)
     if action_type == Model.Enum.Trackable.MAGIC or action_type == Model.Enum.Trackable.HEALING or action_type == bl.Enum.Flags.IGNORE then
         return tostring(note)
+    elseif action_type == "Died" then
+        return "by " .. tostring(note)
     elseif type(note) == "string" then
         _Debug.Error.Add("Unhandled battle log note. Note: {" .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "}.")
         return " "
     else
-        -- TP for WS is the default case.
+    -- TP for WS is the default case.
 ---@diagnostic disable-next-line: param-type-mismatch
         if note then return "TP: " .. Col.String.Format_Number(note) .. " " end
     end

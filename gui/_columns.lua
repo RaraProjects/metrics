@@ -337,17 +337,16 @@ c.Spell.Unit_Per_MP = function(player_name, magic_type)
 end
 
 ------------------------------------------------------------------------------------------------------
--- NOT IN USE
 -- Grabs how many times an entity has died.
--- Can't implement this until I get incoming packet 0x029 (Message) figured out.
 ------------------------------------------------------------------------------------------------------
--- ---@param player_name string
--- ---@return string
+---@param player_name string
+---@return string
 ------------------------------------------------------------------------------------------------------
--- c.Deaths = function(player_name)
---     local death_count = Model.Get.Data(player_name, c.Trackable.DEATH, c.Metric.COUNT)
---     return c.String.Format_Number(death_count)
--- end
+c.Deaths = function(player_name)
+    local death_count = Model.Get.Data(player_name, c.Trackable.DEATH, c.Metric.COUNT)
+    local color = c.String.Color_Zero(death_count)
+    return UI.TextColored(color, c.String.Format_Number(death_count))
+end
 
 ------------------------------------------------------------------------------------------------------
 -- This is for cataloged actions.

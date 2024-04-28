@@ -50,7 +50,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.Melee.Parse = function(result, player_name, target_name, owner_mob)
-    _Debug.Packet.Add(player_name, target_name, "Melee", result)
+    _Debug.Packet.Add_Action(player_name, target_name, "Melee", result)
     local animation_id = result.animation
     local effect_animation_id = result.add_effect_animation
     local damage = result.param

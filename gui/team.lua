@@ -126,7 +126,7 @@ t.Display.Headers = function()
             UI.TableSetupColumn("Pet Ability", flags)
         end
         if Metrics.Team.Flags.Healing then UI.TableSetupColumn("Healing", flags) end
-        --if t.Display.Flags.Deaths then UI.TableSetupColumn("Deaths", flags) end
+        if Metrics.Team.Flags.Deaths then UI.TableSetupColumn("Deaths", flags) end
     end
     UI.TableHeadersRow()
 end
@@ -157,7 +157,7 @@ t.Display.Rows = function(player_name)
             UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY, false, true)
         end
         if Metrics.Team.Flags.Healing then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.HEALING, false, true) end
-        -- if t.Display.Flags.Deaths then UI.TableNextColumn() UI.Text(Col.Deaths(player_name)) end
+        if Metrics.Team.Flags.Deaths then UI.TableNextColumn() Col.Deaths(player_name) end
     end
 end
 

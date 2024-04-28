@@ -121,7 +121,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
-    _Debug.Packet.Add(actor_mob, target_mob, "Weaponskill", result)
+    _Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Weaponskill", result)
     local damage = result.param
     local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
 

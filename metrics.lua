@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "0.9.5"
+addon.version = "0.9.6"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -53,6 +53,7 @@ require("handlers.ranged")
 require("handlers.tp_action")
 require("handlers.abilities")
 require("handlers.spells")
+require("handlers.deaths")
 
 -- Windows
 Window = require("gui._window")
@@ -128,10 +129,35 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         elseif (action.category == 14) then -- Do nothing (Unblinkable Job Ability)
         end
 
-    -- Can't implement death functionality until I can get this figured out.
+    -- Action Messages
     elseif packet.id == 0x029 then
-        -- _Debug.Error.Add("Packet Event: 0x029.")
-        -- A.Packets.Build_Message(packet)
+        local data = A.Packets.Build_Message(packet.data)
+        if not data then return nil end
+        if _Debug.Is_Enabled() then _Debug.Packet.Add_Message(data) end
+
+        -- Killing a mob.
+        if data.message == A.Enum.Message.MOB_KILL then
+            local actor_mob = A.Mob.Get_Mob_By_Index(data.actor_index)
+            if A.Party.Is_Affiliate(actor_mob.name) then
+                local target_mob = A.Mob.Get_Mob_By_Index(data.target_index)
+                Model.Update.Defeated_Mob(target_mob.name)
+                if Metrics.Blog.Flags.Mob_Death then Blog.Add(target_mob.name, "Died") end
+            end
+        
+        -- Being defeated by a mob.
+        elseif data.message == A.Enum.Message.DEATH_FALL or data.message == A.Enum.Message.DEATH then
+            local target_mob = A.Mob.Get_Mob_By_Index(data.target_index)
+            if A.Party.Is_Affiliate(target_mob.name) then
+                local actor_mob = A.Mob.Get_Mob_By_Index(data.actor_index)
+                H.Death.Action(actor_mob, target_mob)
+            end
+        end
+
+    -- Item obtained by someone.
+    elseif packet.id == 0x0D3 then
+        -- local data = A.Packets.Item_Message(packet.data)
+        -- if not data then return nil end
+        -- if _Debug.Is_Enabled() then _Debug.Packet.Add_Item(data) end
     end
 end)
 
@@ -221,31 +247,4 @@ ashita.events.register('unload', 'unload_cb', function ()
     Settings_File.save(Config.Enum.File.BLOG)
     Settings_File.save(Config.Enum.File.WINDOW)
 end)
-
---[[
-    DESCRIPTION:    Detect loss of buffs.
-]] 
--- windower.register_event('action message',
--- function (actor_id, target_id, actor_index, target_index, message_id, param_1, param_2, param_3)
-
---     local target = windower.ffxi.get_mob_by_id(target_id)
---     if (not target) then return end
-
---     -- Effect wears off
---     if (message_id == 206) then
---         if (target.in_party or target.in_alliance) then
---             if Important_Buffs[param_1] then
---                 --add_message(target.name, '-'..important_buffs[param_1].name, ' ', c_orange)
---             end
---         end
-
---     elseif (message_id == 97) then
---         Player_Death(actor_id, target_id)
-
---     else
---         --Add_Message_To_Chat('W', 'action message^parse', 'Action Message: '..tostring(message_id))
-
---     end
-
--- end)
 

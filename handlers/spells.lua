@@ -56,7 +56,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, burst)
-    _Debug.Packet.Add(actor_mob, target_mob, "Spell", result)
+    _Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Spell", result)
     if not spell_data then return 0 end
 
     local spell_id = spell_data.Index

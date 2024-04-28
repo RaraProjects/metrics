@@ -169,12 +169,11 @@ s.Section.Team = function()
             Team.Util.Calculate_Column_Flags()
         end
 
-        -- UI.TableNextColumn()
-        -- if UI.Checkbox("Show Deaths", {Metrics.Team.Flags.Deaths}) then
-        --     Metrics.Team.Flags.Deaths = not Metrics.Team.Flags.Deaths
-        --     Settings_File.save(s.Enum.File.TEAM)
-        --     Team.Util.Calculate_Column_Flags()
-        -- end
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Deaths", {Metrics.Team.Flags.Deaths}) then
+            Metrics.Team.Flags.Deaths = not Metrics.Team.Flags.Deaths
+            Team.Util.Calculate_Column_Flags()
+        end
         UI.EndTable()
     end
 
@@ -275,10 +274,16 @@ s.Section.Battle_Log = function()
             Metrics.Blog.Flags.Healing = not Metrics.Blog.Flags.Healing
         end
 
-        -- UI.TableNextColumn()
-        -- if UI.Checkbox("Show Deaths", {Metrics.Blog.Flags.Deaths}) then
-        --     Metrics.Blog.Flags.Deaths = not Metrics.Blog.Flags.Deaths
-        -- end
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Deaths", {Metrics.Blog.Flags.Deaths}) then
+            Metrics.Blog.Flags.Deaths = not Metrics.Blog.Flags.Deaths
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Mob Deaths", {Metrics.Blog.Flags.Mob_Death}) then
+            Metrics.Blog.Flags.Mob_Death = not Metrics.Blog.Flags.Mob_Death
+        end
+
         UI.EndTable()
     end
 

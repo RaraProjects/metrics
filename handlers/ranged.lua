@@ -48,7 +48,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Parse = function(result, player_name, target_name, owner_mob)
-    _Debug.Packet.Add(player_name, target_name, "Ranged", result)
+    _Debug.Packet.Add_Action(player_name, target_name, "Ranged", result)
     local damage = result.param
     local message_id = result.message
 

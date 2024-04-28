@@ -36,3 +36,36 @@ end
 _Debug.Message = function(message)
     if _Debug.Enabled then print("METRICS DEBUG: " .. message) end
 end
+
+------------------------------------------------------------------------------------------------------
+-- Poplates the debug screen to show debug tools.
+------------------------------------------------------------------------------------------------------
+_Debug.Populate = function()
+    if UI.BeginTabBar("Debug Tabs", Window.Tabs.Flags) then
+        if UI.BeginTabItem(Window.Tabs.Names.MOBVIEW) then
+            _Debug.Mob.Populate(A.Mob.Get_Mob_By_Target(A.Enum.Mob.TARGET))
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem(Window.Tabs.Names.ACTIONS) then
+            _Debug.Packet.Populate_Action()
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem(Window.Tabs.Names.MESSAGES) then
+            _Debug.Packet.Populate_Message()
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem(Window.Tabs.Names.ITEMS) then
+            _Debug.Packet.Populate_Item()
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem(Window.Tabs.Names.ERRORS) then
+            _Debug.Error.Populate()
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem(Window.Tabs.Names.DATAVIEW) then
+            _Debug.Data_View.Populate()
+            UI.EndTabItem()
+        end
+        UI.EndTabBar()
+    end
+end

@@ -87,7 +87,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_mob)
-    _Debug.Packet.Add(actor_mob.name, target_name, "Ability", result)
+    _Debug.Packet.Add_Action(actor_mob.name, target_name, "Ability", result)
     local player_name = actor_mob.name
     local ability_id = ability_data.Id
     local ability_name = ability_data.Name

@@ -130,6 +130,7 @@ m.Data = {
 	Total_Damage_Sorted  = {},	-- Ranks players based on relative total damage done
 	Catalog_Damage_Race = {},	-- Ranks weaponskills, skillchains, abilities, etc.
 	Pet_Catalog_Damage_Race = {},
+	Defeated_Mobs = {},
 }
 
 -- Initialize for mob selection drop down.
@@ -161,6 +162,7 @@ m.Initialize = function()
 	m.Data.Running_Accuracy = {}
 	m.Data.Total_Damage_Sorted  = {}
 	m.Data.Catalog_Damage_Race = {}
+	m.Data.Defeated_Mobs = {}
 	Pet_Catalog_Damage_Race = {}
 	m.Enum.Misc.NONE = Window.Dropdown.Enum.NONE
 	m.Healing_Max = {}
@@ -1245,6 +1247,16 @@ m.Util.Pet_Catalog_Exists = function(trackable, player_name, pet_name)
 	if not m.Data.Pet_Trackable[trackable][player_name] then return false end
 	if not m.Data.Pet_Trackable[trackable][player_name][pet_name] then return false end
 	return true
+end
+
+------------------------------------------------------------------------------------------------------
+-- Keeps track of how many mobs have been defeated.
+------------------------------------------------------------------------------------------------------
+---@param mob_name string
+------------------------------------------------------------------------------------------------------
+m.Update.Defeated_Mob = function(mob_name)
+	if not m.Data.Defeated_Mobs[mob_name] then m.Data.Defeated_Mobs[mob_name] = 0 end
+	m.Data.Defeated_Mobs[mob_name] = m.Data.Defeated_Mobs[mob_name] + 1
 end
 
 return m

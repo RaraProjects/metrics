@@ -70,8 +70,11 @@ w.Tabs.Names = {
     BATTLELOG = "Battle Log",
     REPORT    = "Report",
     SETTINGS  = "Settings",
+    DEBUG     = "Debug",
     MOBVIEW   = "Mob Viewer",
-    PACKETS   = "Packet Viewer",
+    ACTIONS   = "Action Packet",
+    MESSAGES  = "Message Packet",
+    ITEMS     = "Item Packet",
     ERRORS    = "Error Log",
     DATAVIEW  = "Data Viewer",
 }
@@ -212,20 +215,8 @@ w.Populate = function()
                         UI.EndTabItem()
                     end
                     if _Debug.Is_Enabled() then
-                        if UI.BeginTabItem(w.Tabs.Names.MOBVIEW) then
-                            _Debug.Mob.Populate(A.Mob.Get_Mob_By_Target(A.Enum.Mob.TARGET))
-                            UI.EndTabItem()
-                        end
-                        if UI.BeginTabItem(w.Tabs.Names.PACKETS) then
-                            _Debug.Packet.Populate()
-                            UI.EndTabItem()
-                        end
-                        if UI.BeginTabItem(w.Tabs.Names.ERRORS) then
-                            _Debug.Error.Populate()
-                            UI.EndTabItem()
-                        end
-                        if UI.BeginTabItem(w.Tabs.Names.DATAVIEW) then
-                            _Debug.Data_View.Populate()
+                        if UI.BeginTabItem(w.Tabs.Names.DEBUG) then
+                            _Debug.Populate()
                             UI.EndTabItem()
                         end
                     end

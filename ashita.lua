@@ -1,4 +1,5 @@
 local parser = require('packets._parser') -- from atom0s
+local breader = require('packets._bitreader') -- from atom0s
 Chat = require("chat")
 
 local a = {}
@@ -59,11 +60,14 @@ a.Enum.Animation = {
 a.Enum.Message = {
     HIT        = 1,
     MOBHEAL3   = 3,
+    MOB_KILL   = 6,
     MOBHEAL373 = 373,
     MISS       = 15,
+    DEATH_FALL = 20,
     SHADOWS    = 31,
     DODGE      = 32,
     CRIT       = 67,
+    DEATH      = 97,
     ENDRAIN    = 161,
     ENASPIR    = 162,
     RANGEPUP   = 185,
@@ -712,21 +716,33 @@ end
 -- Handles parsing messages out of incoming packet 0x029.
 -- ------------------------------------------------------------------------------------------------------
 ---@param data table parsed packet data
----@return nil
+---@return table
 -- ------------------------------------------------------------------------------------------------------
 a.Packets.Build_Message = function(data)
-    -- player = windower.ffxi.get_player()
-    local p = parser.parse(data)
-    if not p then return nil end
-    local player_id    = p['Actor'] 
-    local target_id    = p['Target']
-    local param_1      = p['Param 1']
-    local param_2      = p['Param 2']
-    local target_index = p['Target Index']
-    local message_id   = p['Message']
-    _Debug.Error.Add("Packets.Build_Message: " .. tostring(message_id))
-    -- local message      = res.action_messages[message_id][language]
-    -- windower.add_to_chat(c_chat, tostring(player_id))
+    local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+    local parsed_data = {}
+    parsed_data.actor = reader:read(32)
+    parsed_data.target = reader:read(32)
+    parsed_data.param1 = reader:read(32)
+    parsed_data.param2 = reader:read(32)
+    parsed_data.actor_index = reader:read(16)
+    parsed_data.target_index = reader:read(16)
+    parsed_data.message = reader:read(16)
+    parsed_data.unknown = reader:read(16)
+    return parsed_data
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- NOT IMPLEMENTED
+-- Handles parsing messages out of incoming packet 0x029.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+a.Packets.Item_Message = function(data)
+    return {}
 end
 
 return a
