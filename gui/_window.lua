@@ -9,7 +9,8 @@ w.Window = {
     ImGuiWindowFlags_AlwaysAutoResize,
     --ImGuiWindowFlags_NoSavedSettings,
     ImGuiWindowFlags_NoFocusOnAppearing,
-    ImGuiWindowFlags_NoNav
+    ImGuiWindowFlags_NoNav,
+    ImGuiWindowFlags_NoTitleBar
     ),
     -- Throttle_Count = 0, -- I tried throttling the window, but I couldn't stop it from flickering.
     -- Throttle_Level = 5, -- Probably need to stop data collection instead of preventing rendering.
@@ -393,6 +394,20 @@ w.Widget.Mob_Filter = function()
             UI.EndCombo()
         end
     end
+    w.Widget.Mob_Filter_Help_Text()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows the help text for the mob filter.
+------------------------------------------------------------------------------------------------------
+w.Widget.Mob_Filter_Help_Text = function()
+    UI.SameLine() Window.Widget.HelpMarker("You can filter to show only data for actions taken against mobs with a specific name.\n"
+                                        .. "Notes:\n"
+                                        .. "1. The filter may not be for individual mobs. It is for mobs with that name collectively.\n"
+                                        .. "2. If the mob has a unique name (like an NM) then the data will be mob specific.\n"
+                                        .. "3. The filter only affects actions taken against mobs with that name.\n"
+                                        .. "4. The filter does not work for healing because those actions are taken on other players.\n"
+                                        .. "5. The filter does not work for abilities that are used on yourself or other players.\n")
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -421,6 +436,14 @@ w.Widget.Player_Filter = function()
             UI.EndCombo()
         end
     end
+    w.Widget.Player_Filter_Help_Text()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows the help text for the player filter.
+------------------------------------------------------------------------------------------------------
+w.Widget.Player_Filter_Help_Text = function()
+    UI.SameLine() Window.Widget.HelpMarker("Pick a player that you would like to see more detailed stats for.\n")
 end
 
 return w

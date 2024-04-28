@@ -96,7 +96,8 @@
         "ImGuiCol_NavWindowingHighlight",
         "ImGuiCol_NavWindowingDimBg",
         "ImGuiCol_ModalWindowDimBg",
-        "ImGuiTreeNodeFlags_SpanAvailWidth"
+        "ImGuiTreeNodeFlags_SpanAvailWidth",
+        "ImGuiWindowFlags_NoTitleBar"
     ],
     "Lua.diagnostics.disable": [
         "undefined-field"

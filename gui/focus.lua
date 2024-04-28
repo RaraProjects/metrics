@@ -344,7 +344,7 @@ f.Display.Magic = function(player_name)
         UI.TableSetupColumn("Damage", col_flags, damage_width)
         UI.TableSetupColumn("Damage %", col_flags, percent_width)
         UI.TableSetupColumn("MP Used", col_flags, damage_width)
-        UI.TableSetupColumn("Efficacy", col_flags, 100)
+        UI.TableSetupColumn("Efficacy", col_flags, percent_width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
@@ -408,7 +408,7 @@ f.Display.Magic = function(player_name)
 
     if nuke_total > 0 then
         if UI.BeginTable("Bursts", 3, table_flags) then
-            UI.TableSetupColumn("Burst Damage", col_flags, damage_width)
+            UI.TableSetupColumn("Burst Damage", col_flags, name_width)
             UI.TableSetupColumn("Damage %", col_flags, percent_width)
             UI.TableSetupColumn("Magic %", col_flags, percent_width)
             UI.TableHeadersRow()

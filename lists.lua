@@ -249,7 +249,11 @@ l.Spell.MP_Drain = {
 }
 
 l.Spell.AOE = {
-    [32]  = {id = 32,  en = "Banish V"},
+    [7]   = {id = 7,   en = "Curaga"},
+    [8]   = {id = 8,   en = "Curaga II"},
+    [9]   = {id = 9,   en = "Curaga III"},
+    [10]  = {id = 10,  en = "Curaga IV"},
+    [11]  = {id = 11,  en = "Curaga V"},
     [38]  = {id = 38,  en = "Banishga"},
     [39]  = {id = 39,  en = "Banishga II"},
     [40]  = {id = 40,  en = "Banishga III"},

@@ -172,7 +172,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 bl.Util.Notes = function(note, action_type)
-    if action_type == Model.Enum.Trackable.MAGIC or action_type == bl.Enum.Flags.IGNORE then
+    if action_type == Model.Enum.Trackable.MAGIC or action_type == Model.Enum.Trackable.HEALING or action_type == bl.Enum.Flags.IGNORE then
         return tostring(note)
     elseif type(note) == "string" then
         _Debug.Error.Add("Unhandled battle log note. Note: {" .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "}.")

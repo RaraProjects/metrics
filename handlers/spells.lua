@@ -33,7 +33,7 @@ H.Spell.Action = function(action, actor_mob, log_offense)
             new_damage = H.Spell.Parse(spell_data, result, actor_mob, target_mob, owner_mob, is_burst)
             if not new_damage then new_damage = 0 end
 
-            if new_damage > 0 then target_count = target_count + 1 end
+            target_count = target_count + 1
             damage = damage + new_damage
         end
     end
@@ -105,9 +105,9 @@ end
 ---@param target_count number how many targets were hit by an AOE spell.
 ------------------------------------------------------------------------------------------------------
 H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
+    local blog_note = ""
+    local space = ""
     if Lists.Spell.Damaging[spell_id] and not Lists.Spell.DoT[spell_id] and Metrics.Blog.Flags.Magic then
-        local blog_note = ""
-        local space = ""
         -- Show magic burst message.
         if is_burst then
             blog_note = Blog.Enum.Text.MB
@@ -118,6 +118,12 @@ H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_
             blog_note = blog_note .. space .. "Targets: " .. tostring(target_count)
         end
         Blog.Add(actor_mob.name, spell_name, damage, blog_note, Model.Enum.Trackable.MAGIC, spell_data)
+    end
+    if Lists.Spell.Healing[spell_id] and Metrics.Blog.Flags.Healing then
+        if Lists.Spell.AOE[spell_id] then
+            blog_note = blog_note .. space .. "Targets: " .. tostring(target_count)
+        end
+        Blog.Add(actor_mob.name, spell_name, damage, blog_note, Model.Enum.Trackable.HEALING, spell_data)
     end
 end
 
@@ -202,7 +208,7 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
         Model.Update.Catalog_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
     end
-    if is_burst then Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.BURST_COUNT) end
+    if is_burst then Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.MAGIC, spell_name, H.Metric.BURST_COUNT) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -272,7 +278,7 @@ H.Spell.Enfeebling = function(audits, spell_name, message_id)
     if audits.pet_name then trackable = H.Trackable.PET_ENFEEBLING end
     Model.Update.Data(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT) -- Used to flag that data is availabel for show in Focus.
     Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
-    if message_id == A.Enum.Message.ENF_LAND then
+    if message_id == A.Enum.Message.ENF_LAND or message_id == A.Enum.Message.ENF_BURST then
         Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
     end
 end

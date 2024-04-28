@@ -28,6 +28,7 @@ t.Defaults.Flags = T{
     Deaths = false,
 }
 t.Defaults.Settings = T{
+    Show_Clock = true,
     Rank_Cutoff = 6,
     Condensed_Numbers = false,
     Include_SC_Damage = false
@@ -44,7 +45,11 @@ end
 -- Loads the Team data to the screen.
 ------------------------------------------------------------------------------------------------------
 t.Populate = function()
-    Window.Widget.Mob_Filter()
+    Window.Widget.Mob_Filter() 
+    if Metrics.Team.Settings.Show_Clock then
+        if not Metrics.Team.Flags.Total_Damage_Only then UI.SameLine() UI.Text(" ") UI.SameLine() end
+        UI.Text("Duration: " .. tostring(Timers.Check("Metrics")))
+    end
     if UI.BeginTable("Team", t.Display.Columns.Current, Window.Table.Flags.Team) then
         t.Display.Headers()
         local player_name = "Debug"

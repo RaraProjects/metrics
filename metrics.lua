@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "0.9.4"
+addon.version = "0.9.5"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -44,6 +44,7 @@ UI     = require("imgui")
 A      = require("ashita")
 Model  = require("model")
 Report = require("report")
+Timers = require("timers")
 
 -- Action Handlers
 require("handlers._handler")
@@ -158,6 +159,9 @@ ashita.events.register('d3d_present', 'present_cb', function ()
         Team.Initialize()
         A.Party.Refresh()
 
+        -- Start the clock.
+        Timers.Start("Metrics")
+
         _Globals.Initialized = true
     end
 
@@ -192,6 +196,8 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "pet" or arg == "p" then
             Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
             Team.Util.Calculate_Column_Flags()
+        elseif arg == "clock" or arg == "c" then
+            Metrics.Team.Settings.Show_Clock = not Metrics.Team.Settings.Show_Clock
         elseif arg == "total" then
             Report.Publish.Total_Damage()
         elseif arg == "acc" then

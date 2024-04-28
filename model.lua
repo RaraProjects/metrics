@@ -170,6 +170,7 @@ m.Initialize = function()
 		m.Healing_Max[spell] = threshold
 	end
 	Blog.Reset_Log()
+	Timers.Start("Metrics")
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -412,8 +413,8 @@ m.Update.Catalog_Damage = function(player_name, mob_name, trackable, damage, act
 
     -- TRACKABLE TOTAL, MIN, and MAX //////////////////////////////////////////////////////////////
     m.Update.Data(m.Enum.Mode.INC, damage, audits, trackable, m.Enum.Metric.TOTAL)
-	if trackable == m.Enum.Trackable.MAGIC and burst then
-		m.Update.Data(m.Enum.Mode.INC, damage, audits, trackable, m.Enum.Metric.BURST_DAMAGE)
+	if burst then
+		m.Update.Data(m.Enum.Mode.INC, damage, audits, m.Enum.Trackable.MAGIC, m.Enum.Metric.BURST_DAMAGE)
 	end
 
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
@@ -1164,18 +1165,16 @@ m.Sort.Catalog_Damage = function(player_name, focus_type)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Sorting function for the sorted cataloged damage table.
+-- Checks if the player has any cataloged data for the specified focus type.
+-- Can use this to check if there is anything to publish via report before attempting to do so.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string name of the player that did the cataloged action
----@param pet_name string
+---@param focus_type string the trackable that is of interest.
+---@return boolean
 ------------------------------------------------------------------------------------------------------
-m.Sort.Pet_Catalog_Damage = function(player_name, pet_name)
-	m.Util.Pet_Populate_Catalog_Damage_Table(player_name, pet_name)
-	table.sort(m.Data.Pet_Catalog_Damage_Race, function (a, b)
-		local a_damage = a[2]
-		local b_damage = b[2]
-		return (a_damage > b_damage)
-	end)
+m.Util.Has_Catalog_Data = function(player_name, focus_type)
+	if not m.Data.Trackable[focus_type] or not m.Data.Trackable[focus_type][player_name] then return false end
+	return true
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -1197,6 +1196,21 @@ m.Util.Populate_Catalog_Damage_Table = function(player_name, focus_type)
 	for action_name, _ in pairs(m.Data.Trackable[focus_type][player_name]) do
 		table.insert(m.Data.Catalog_Damage_Race, {action_name, m.Get.Catalog(player_name, focus_type, action_name, m.Enum.Metric.TOTAL)})
 	end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sorting function for the sorted cataloged damage table.
+------------------------------------------------------------------------------------------------------
+---@param player_name string name of the player that did the cataloged action
+---@param pet_name string
+------------------------------------------------------------------------------------------------------
+m.Sort.Pet_Catalog_Damage = function(player_name, pet_name)
+	m.Util.Pet_Populate_Catalog_Damage_Table(player_name, pet_name)
+	table.sort(m.Data.Pet_Catalog_Damage_Race, function (a, b)
+		local a_damage = a[2]
+		local b_damage = b[2]
+		return (a_damage > b_damage)
+	end)
 end
 
 ------------------------------------------------------------------------------------------------------

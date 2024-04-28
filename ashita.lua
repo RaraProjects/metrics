@@ -70,6 +70,7 @@ a.Enum.Message = {
     ENSPELL    = 229,
     ENF_LAND   = 236,
     BURST      = 252,
+    ENF_BURST  = 271,
     RANGEHIT   = 352,
     RANGECRIT  = 353,
     RANGEMISS  = 354,

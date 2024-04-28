@@ -49,7 +49,7 @@ H.TP.Action = function(action, actor_mob, log_offense)
     }
     H.TP.Weaponskill_Attempts(audits, ws_name)
     if damage > 0 then H.TP.Weaponskill_Hit(audits, ws_name) end
-    if sc_damage > 0 then H.TP.Skillchain_Hit(audits, sc_name) end
+    if sc_name ~= Model.Enum.Index.DEBUG then H.TP.Skillchain_Hit(audits, sc_name) end
 
     -- Update the battle log.
     H.TP.Blog_WS(actor_mob, damage, ws_data, ws_name)

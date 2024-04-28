@@ -25,7 +25,7 @@ r.Populate = function()
             return nil
         end
         UI.TableNextColumn()
-        if UI.Button("Accuracy") then
+        if UI.Button("Accuracy    ") then
             r.Publish.Accuracy()
             return nil
         end
@@ -33,7 +33,7 @@ r.Populate = function()
         UI.TableNextColumn()
         --
         UI.TableNextColumn()
-        if UI.Button("Melee") then
+        if UI.Button("Melee       ") then
             r.Publish.Damage_By_Type(Model.Enum.Trackable.MELEE)
             return nil
         end
@@ -43,18 +43,18 @@ r.Populate = function()
             return nil
         end
         UI.TableNextColumn()
-        if UI.Button("Magic") then
+        if UI.Button("Magic       ") then
             r.Publish.Damage_By_Type(Model.Enum.Trackable.MAGIC)
             return nil
         end
         UI.TableNextColumn()
-        if UI.Button("Pet") then
+        if UI.Button("Pet         ") then
             r.Publish.Damage_By_Type(Model.Enum.Trackable.PET)
             return nil
         end
         --
         UI.TableNextColumn()
-        if UI.Button("Healing") then
+        if UI.Button("Healing     ") then
             r.Publish.Damage_By_Type(Model.Enum.Trackable.HEALING)
             return nil
         end
@@ -126,10 +126,15 @@ end
 ------------------------------------------------------------------------------------------------------
 r.Publish.Catalog = function(player_name, focus_type)
     if not player_name then
-        A.Chat.Add_To_Chat(A.Enum.Chat.PARTY, "Error") coroutine.sleep(r.Delay)
+        A.Chat.Message("There was an error trying to publish: No player name provided.")
         return nil
     end
     if not focus_type then focus_type = Model.Enum.Trackable.WS end
+    if not Model.Util.Has_Catalog_Data(player_name, focus_type) then
+        A.Chat.Message(tostring(player_name) .. " doesn't have " .. tostring(focus_type) .. " data to publish.")
+        return nil
+    end
+
     A.Chat.Add_To_Chat(A.Enum.Chat.PARTY, tostring(focus_type) .. " for " .. tostring(player_name)) coroutine.sleep(r.Delay)
     A.Chat.Add_To_Chat(A.Enum.Chat.PARTY, "Total | Count | Average | Min | Max") coroutine.sleep(r.Delay)
     local action_name
