@@ -85,6 +85,7 @@ end
 -- Shows text commands the user can use.
 ------------------------------------------------------------------------------------------------------
 s.Section.Text_Commands = function()
+    UI.Text("Version: " .. tostring(addon.version))
     UI.Text("Base command: /metrics or /met")
     UI.Text("Arguments:")
     UI.BulletText("show  / s -- toggles window visibility.")
