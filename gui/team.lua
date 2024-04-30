@@ -166,7 +166,7 @@ end
 ------------------------------------------------------------------------------------------------------
 t.Nano_Mode = function()
     local flags = Window.Columns.Flags.None
-    local player = A.Mob.Get_Mob_By_Target(A.Enum.Mob.ME)
+    local player = Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
     if not player then return nil end
     local player_name = player.name
 

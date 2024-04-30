@@ -29,9 +29,9 @@ H.TP.Action = function(action, actor_mob, log_offense)
             -- Abilities marked as weaponskills
             if H.TP.WS_Ability(result, ws_id, action, actor_mob) then return nil end
 
-            target_mob = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target_mob then target_mob = {name = Model.Enum.Index.DEBUG} end
-            if target_mob.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target_mob.name) end
+            if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target_mob.name) end
 
             -- Check for skillchains
             sc_damage, sc_name = H.TP.Skillchain_Parse(result, actor_mob, target_mob)
@@ -67,7 +67,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.TP.Monster_Action = function(action, actor_mob, log_offense)
     if not log_offense then return false end
-    local owner_mob = A.Mob.Pet_Owner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
+    local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
 
     local skill_data = H.TP.Pet_Skill_Data(action.param, actor_mob)
     if not skill_data then return nil end
@@ -80,7 +80,7 @@ H.TP.Monster_Action = function(action, actor_mob, log_offense)
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
-            target_mob = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target_mob then target_mob = {name = Model.Enum.Index.DEBUG} end
 
             -- Puppet ranged attack
@@ -145,7 +145,7 @@ end
 ---@return table|nil
 -- ------------------------------------------------------------------------------------------------------
 H.TP.WS_Data = function(action, actor_mob)
-    local ws_data = A.WS.ID(action.param)
+    local ws_data = Ashita.WS.Get_By_ID(action.param)
 	if not ws_data then
         _Debug.Error.Add("TP.WS_Data: {" .. tostring(actor_mob.name) .. "} used ws ID " .. tostring(action.param) .. " and it wasn't found.")
         return nil
@@ -354,7 +354,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_WS = function(actor_mob, damage, ws_data, ws_name)
     if Metrics.Blog.Flags.WS then
-        Blog.Add(actor_mob.name, ws_name, damage, A.Party.Refresh(actor_mob.name, A.Enum.Mob.TP), H.Trackable.WS, ws_data)
+        Blog.Add(actor_mob.name, ws_name, damage, Ashita.Party.Refresh(actor_mob.name, Ashita.Enum.Player_Attributes.TP), H.Trackable.WS, ws_data)
     end
 end
 

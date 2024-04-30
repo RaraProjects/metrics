@@ -929,7 +929,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 m.Get.Total_Party_Damage = function()
-    local party = A.Data.Party()
+    local party = Ashita.Party.Get()
 	if not party or not party.party1_count then
 		_Debug.Error.Add("Get.Total_Party_Damage: Received nil party data from Ashita.")
 		return -1
@@ -942,7 +942,7 @@ m.Get.Total_Party_Damage = function()
     local pt3_count = party.party3_count - 1
 
     -- Party 1
-	local starting_slot = A.Party.Start_Slot(1)
+	local starting_slot = Ashita.Party.Start_Slot(1)
     for slot = starting_slot, pt1_count, 1 do
 		player = party[slot]
         if not player then
@@ -960,7 +960,7 @@ m.Get.Total_Party_Damage = function()
 
     -- Party 2
 	if pt2_count > 0 then
-		starting_slot = A.Party.Start_Slot(2)
+		starting_slot = Ashita.Party.Start_Slot(2)
 		for slot = starting_slot, pt2_count + starting_slot, 1 do
 			player = party[slot]
 			if not player then
@@ -979,7 +979,7 @@ m.Get.Total_Party_Damage = function()
 
     -- Party 3
 	if pt2_count > 0 then
-		starting_slot = A.Party.Start_Slot(3)
+		starting_slot = Ashita.Party.Start_Slot(3)
 		for slot = starting_slot, pt3_count + starting_slot, 1 do
 			player = party[slot]
 			if not player then

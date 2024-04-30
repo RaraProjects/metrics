@@ -41,10 +41,12 @@ Themes    = require("resources.themes")
 
 -- Modules
 UI     = require("imgui")
-A      = require("ashita")
 Model  = require("model")
 Report = require("report")
 Timers = require("timers")
+
+-- Ashita Helpers
+require("ashita._ashita")
 
 -- Action Handlers
 require("handlers._handler")
@@ -78,41 +80,41 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
 
     -- Start Zone
     if packet.id == 0xB then
-        A.Util.Zoning(true)
+        Ashita.Player.Zoning(true)
 
     -- End Zone
     elseif packet.id == 0xA then
-        A.Util.Zoning(false)
+        Ashita.Player.Zoning(false)
 
     -- 200 0xC8 Alliance Update
     elseif packet.id == 0xC8 then
-        A.Party.Need_Refresh = true
+        Ashita.Party.Need_Refresh = true
 
     -- 221 0xDD Party Member Update
     elseif packet.id == 0xDD then
-        A.Party.Need_Refresh = true
+        Ashita.Party.Need_Refresh = true
 
     -- Action Packet
     elseif packet.id == 0x028 then
-        local action = A.Packets.Build_Action(packet.data)
+        local action = Ashita.Packets.Build_Action(packet.data)
         if not action then
             _Debug.Error.Add("Packet Event: action was nil from Packets.Build_Action")
             return nil
         end
 
-        local actor_mob = A.Mob.Get_Mob_By_ID(action.actor_id)
+        local actor_mob = Ashita.Mob.Get_Mob_By_ID(action.actor_id)
         if not actor_mob then
             _Debug.Error.Add("Packet Event: actor_mob was nil from Mob.Get_Mob_By_ID")
             return nil
         end
 
-        A.Party.Refresh()
+        Ashita.Party.Refresh()
 
-        local owner_mob = A.Mob.Pet_Owner(actor_mob)
+        local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)
         local log_offense = false
 
         -- Process action if the actor is an affiliated pet or affiliated player.
-        if owner_mob or A.Party.Is_Affiliate(actor_mob.name) then log_offense = true end
+        if owner_mob or Ashita.Party.Is_Affiliate(actor_mob.name) then log_offense = true end
 
         if     (action.category ==  1) then H.Melee.Action(action, actor_mob, owner_mob, log_offense)
         elseif (action.category ==  2) then H.Ranged.Action(action, actor_mob, log_offense)
@@ -131,33 +133,31 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
 
     -- Action Messages
     elseif packet.id == 0x029 then
-        local data = A.Packets.Build_Message(packet.data)
+        local data = Ashita.Packets.Build_Message(packet.data)
         if not data then return nil end
         if _Debug.Is_Enabled() then _Debug.Packet.Add_Message(data) end
 
         -- Killing a mob.
-        if data.message == A.Enum.Message.MOB_KILL then
-            local actor_mob = A.Mob.Get_Mob_By_Index(data.actor_index)
-            if A.Party.Is_Affiliate(actor_mob.name) then
-                local target_mob = A.Mob.Get_Mob_By_Index(data.target_index)
+        if data.message == Ashita.Enum.Message.MOB_KILL then
+            local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.actor_index)
+            if Ashita.Party.Is_Affiliate(actor_mob.name) then
+                local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
                 Model.Update.Defeated_Mob(target_mob.name)
                 if Metrics.Blog.Flags.Mob_Death then Blog.Add(target_mob.name, "Died") end
             end
-        
+
         -- Being defeated by a mob.
-        elseif data.message == A.Enum.Message.DEATH_FALL or data.message == A.Enum.Message.DEATH then
-            local target_mob = A.Mob.Get_Mob_By_Index(data.target_index)
-            if A.Party.Is_Affiliate(target_mob.name) then
-                local actor_mob = A.Mob.Get_Mob_By_Index(data.actor_index)
+        elseif data.message == Ashita.Enum.Message.DEATH_FALL or data.message == Ashita.Enum.Message.DEATH then
+            local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
+            if Ashita.Party.Is_Affiliate(target_mob.name) then
+                local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.actor_index)
                 H.Death.Action(actor_mob, target_mob)
             end
         end
 
     -- Item obtained by someone.
     elseif packet.id == 0x0D3 then
-        -- local data = A.Packets.Item_Message(packet.data)
-        -- if not data then return nil end
-        -- if _Debug.Is_Enabled() then _Debug.Packet.Add_Item(data) end
+        -- Not implemented.
     end
 end)
 
@@ -169,7 +169,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('d3d_present', 'present_cb', function ()
     if not _Globals.Initialized then
-        if not A.Data.Is_Logged_In() then return nil end
+        if not Ashita.Player.Is_Logged_In() then return nil end
 
         -- Initialize Settings
         Metrics = T{
@@ -183,7 +183,7 @@ ashita.events.register('d3d_present', 'present_cb', function ()
         Window.Initialize()
         Model.Initialize()
         Team.Initialize()
-        A.Party.Refresh()
+        Ashita.Party.Refresh()
 
         -- Start the clock.
         Timers.Start("Metrics")

@@ -15,9 +15,9 @@ H.Ranged.Action = function(action, actor_mob, log_offense)
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
-            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if target then
-                if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
+                if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
                 damage = damage + H.Ranged.Parse(result, actor_mob.name, target.name)
             end
         end
@@ -114,19 +114,19 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Message = function(message_id, audits, damage, ranged_type)
-    if message_id == A.Enum.Message.RANGEHIT then
+    if message_id == Ashita.Enum.Message.RANGEHIT then
         H.Ranged.Hit(audits, damage, ranged_type)
-    elseif message_id == A.Enum.Message.SQUARE then
+    elseif message_id == Ashita.Enum.Message.SQUARE then
         H.Ranged.Square(audits, damage, ranged_type)
-    elseif message_id == A.Enum.Message.TRUE then
+    elseif message_id == Ashita.Enum.Message.TRUE then
         H.Ranged.Truestrike(audits, damage, ranged_type)
-    elseif message_id == A.Enum.Message.RANGECRIT then
+    elseif message_id == Ashita.Enum.Message.RANGECRIT then
         H.Ranged.Crit(audits, damage, ranged_type)
-    elseif message_id == A.Enum.Message.RANGEPUP then
+    elseif message_id == Ashita.Enum.Message.RANGEPUP then
         H.Ranged.PUP_Hit(audits, damage, ranged_type)
-    elseif message_id == A.Enum.Message.RANGEMISS then
+    elseif message_id == Ashita.Enum.Message.RANGEMISS then
         H.Ranged.Miss(audits, damage, ranged_type)
-    elseif message_id == A.Enum.Message.SHADOWS then
+    elseif message_id == Ashita.Enum.Message.SHADOWS then
         H.Ranged.Shadows(audits, damage, ranged_type)
     else
         _Debug.Error.Add("Ranged.Message: {" .. tostring(audits.player_name) .. "} Unhandled Ranged Message: " .. tostring(message_id))

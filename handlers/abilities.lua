@@ -12,7 +12,7 @@ H.Ability.Action = function(action, actor_mob, log_offense)
 
 	-- Need to provide an offset to get to the abilities. Otherwise I get WS information.
 	local ability_id = action.param + H.Enum.Offsets.ABILITY
-    local ability_data = A.Ability.ID(ability_id)
+    local ability_data = Ashita.Ability.Get_By_ID(ability_id)
     ability_data = H.Ability.Player_Missing_Ability_Check(ability_data, ability_id, actor_mob)
 
     local result, target_mob
@@ -20,9 +20,9 @@ H.Ability.Action = function(action, actor_mob, log_offense)
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
-            target_mob = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target_mob then target_mob = {name = Model.Enum.Index.DEBUG} end
-            if target_mob.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target_mob.name) end
+            if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target_mob.name) end
             damage = damage + H.Ability.Parse(ability_data, result, actor_mob, target_mob.name)
         end
     end
@@ -43,7 +43,7 @@ H.Ability.Pet_Action = function(action, actor_mob, log_offense)
     if not log_offense then return nil end
 
     -- Check to see if the pet belongs to anyone in the party.
-    local owner_mob = A.Mob.Pet_Owner(actor_mob)
+    local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)
     if not owner_mob then return nil end
 
     local ability_id = action.param
@@ -62,9 +62,9 @@ H.Ability.Pet_Action = function(action, actor_mob, log_offense)
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
-            target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
-            if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
+            if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
             damage = damage + H.Ability.Parse(ability_data, result, owner_mob, target.name, actor_mob)
         end
     end
@@ -165,7 +165,7 @@ H.Ability.Player_Missing_Ability_Check = function(ability_data, ability_id, acto
         _Debug.Error.Add("Ability.Player_Missing_Ability_Check: {" .. tostring(actor_mob.name) .. "} Data on ability ID " .. tostring(ability_id) .. " is unavailable.")
         ability_data = {Id = ability_id, Name = "UNK Ability (" .. ability_id .. ")"}
     else
-        ability_data = {Id = ability_id, Name = A.Ability.Name(ability_id, ability_data)}
+        ability_data = {Id = ability_id, Name = Ashita.Ability.Name(ability_id, ability_data)}
     end
     return ability_data
 end
@@ -203,7 +203,7 @@ H.Ability.Pet_Ability_Mapping = function(ability_id, trackable)
         if Lists.Ability.Avatar_Healing[ability_id] then trackable = H.Trackable.PET_HEAL end
         avatar = true
     else
-        ability_data = A.Ability.ID(ability_id + H.Enum.Offsets.PET)
+        ability_data = Ashita.Ability.Get_By_ID(ability_id + H.Enum.Offsets.PET)
         if Lists.Ability.Wyvern_Healing[ability_id] then trackable = H.Trackable.PET_HEAL end
     end
     return ability_data, avatar, trackable
@@ -227,7 +227,7 @@ H.Ability.Pet_Ability_Rectify = function(ability_data, ability_id, avatar, actor
         if avatar then
             ability_data = {Id = ability_id, Name = ability_data.en}
         else
-            ability_data = {Id = ability_id, Name = A.Ability.Name(ability_id, ability_data)}
+            ability_data = {Id = ability_id, Name = Ashita.Ability.Name(ability_id, ability_data)}
         end
     end
     return ability_data

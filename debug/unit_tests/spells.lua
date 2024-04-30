@@ -26,7 +26,7 @@ _Debug.Unit.Tests.Spells.Burst = function()
         if clicked and 1 then
             local damage = 200
             local action_id = 145   -- Fire II
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, nil, A.Enum.Message.BURST)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, nil, Ashita.Enum.Message.BURST)
             H.Spell.Action(action, _Debug.Unit.Mob.PLAYER, true)
         end
     end

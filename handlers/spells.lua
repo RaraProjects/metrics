@@ -14,22 +14,22 @@ H.Spell.Action = function(action, actor_mob, log_offense)
     local damage = 0
     local target_count = 0
     local spell_id = action.param
-    local spell_data = A.Spell.ID(spell_id)
+    local spell_data = Ashita.Spell.Get_By_ID(spell_id)
     if not spell_data then return nil end
 
-    local spell_name = A.Spell.Name(spell_id, spell_data)
-    local mp_cost = A.Spell.MP(spell_id, spell_data)
+    local spell_name = Ashita.Spell.Name(spell_id, spell_data)
+    local mp_cost = Ashita.Spell.MP(spell_id, spell_data)
     local is_burst = false
-    local owner_mob = A.Mob.Pet_Owner(actor_mob)    -- Check if pet is casting the spell.
+    local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)    -- Check if pet is casting the spell.
 
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
-            target_mob = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target_mob then target_mob = {name = Model.Enum.Index.DEBUG} end
-            if target_mob.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target_mob.name) end
+            if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target_mob.name) end
 
-            is_burst = result.message == A.Enum.Message.BURST
+            is_burst = result.message == Ashita.Enum.Message.BURST
             new_damage = H.Spell.Parse(spell_data, result, actor_mob, target_mob, owner_mob, is_burst)
             if not new_damage then new_damage = 0 end
 
@@ -60,7 +60,7 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
     if not spell_data then return 0 end
 
     local spell_id = spell_data.Index
-    local spell_name = A.Spell.Name(spell_id, spell_data)
+    local spell_name = Ashita.Spell.Name(spell_id, spell_data)
     local is_mapped = false
     local damage = result.param or 0
     local message_id = result.message
@@ -278,7 +278,7 @@ H.Spell.Enfeebling = function(audits, spell_name, message_id)
     if audits.pet_name then trackable = H.Trackable.PET_ENFEEBLING end
     Model.Update.Data(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT) -- Used to flag that data is availabel for show in Focus.
     Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
-    if message_id == A.Enum.Message.ENF_LAND or message_id == A.Enum.Message.ENF_BURST then
+    if message_id == Ashita.Enum.Message.ENF_LAND or message_id == Ashita.Enum.Message.ENF_BURST then
         Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
     end
 end

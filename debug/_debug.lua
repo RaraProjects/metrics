@@ -43,7 +43,7 @@ end
 _Debug.Populate = function()
     if UI.BeginTabBar("Debug Tabs", Window.Tabs.Flags) then
         if UI.BeginTabItem(Window.Tabs.Names.MOBVIEW) then
-            _Debug.Mob.Populate(A.Mob.Get_Mob_By_Target(A.Enum.Mob.TARGET))
+            _Debug.Mob.Populate(Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.TARGET))
             UI.EndTabItem()
         end
         if UI.BeginTabItem(Window.Tabs.Names.ACTIONS) then

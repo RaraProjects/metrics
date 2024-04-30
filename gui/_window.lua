@@ -185,7 +185,7 @@ end
 -- Populate the data in the monitor window.
 ------------------------------------------------------------------------------------------------------
 w.Populate = function()
-    if not A.States.Zoning and w.Window.Visible then
+    if not Ashita.States.Zoning and w.Window.Visible then
         if UI.Begin(w.Window.Name, {w.Window.Visible}, w.Window.Flags) then
             w.Window.Visible = -1
             Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()

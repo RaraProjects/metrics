@@ -14,7 +14,7 @@ _Debug.Data_View.Populate = function()
         UI.TreePop()
     end
     if UI.TreeNode("Party List") then
-        for player_name, party_number in pairs(A.Party.List) do
+        for player_name, party_number in pairs(Ashita.Party.List) do
             UI.Text(tostring(player_name) .. ": " .. tostring(party_number))
         end
         UI.TreePop()

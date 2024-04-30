@@ -113,7 +113,7 @@ end
 ------------------------------------------------------------------------------------------------------
 bl.Util.Name = function(player_name)
     local color = Window.Colors.WHITE
-    if A.Mob.Is_Me(player_name) then color = Window.Colors.GREEN end
+    if Ashita.Mob.Is_Me(player_name) then color = Window.Colors.GREEN end
     return {Value = player_name, Color = color}
 end
 

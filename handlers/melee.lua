@@ -16,9 +16,9 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 	for target_index, target_value in pairs(action.targets) do
 		for action_index, _ in pairs(target_value.actions) do
 			result = action.targets[target_index].actions[action_index]
-			target = A.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+			target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
 			if not target then target = {name = Model.Enum.Index.DEBUG} end
-            if target.spawn_flags == A.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
+            if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
 			damage = damage + H.Melee.Parse(result, actor_mob.name, target.name, owner_mob)
 		end
 	end
@@ -127,13 +127,13 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 H.Melee.Melee_Type = function(animation_id)
-    if animation_id == A.Enum.Animation.MELEE_MAIN then
+    if animation_id == Ashita.Enum.Animation.MELEE_MAIN then
         return H.Trackable.MELEE_MAIN
-    elseif animation_id == A.Enum.Animation.MELEE_OFFHAND then
+    elseif animation_id == Ashita.Enum.Animation.MELEE_OFFHAND then
         return H.Trackable.MELEE_OFFHAND
-    elseif animation_id == A.Enum.Animation.MELEE_KICK or animation_id == A.Enum.Animation.MELEE_KICK2 then
+    elseif animation_id == Ashita.Enum.Animation.MELEE_KICK or animation_id == Ashita.Enum.Animation.MELEE_KICK2 then
         return H.Trackable.MELEE_KICK
-    elseif animation_id == A.Enum.Animation.DAKEN then
+    elseif animation_id == Ashita.Enum.Animation.DAKEN then
         return H.Trackable.THROWING
     else
         return H.Trackable.DEFAULT
@@ -148,10 +148,10 @@ end
 ---@return boolean whether or not the damage from this should be treated as actual damage or not.
 ------------------------------------------------------------------------------------------------------
 H.Melee.No_Damage_Messages = function(message_id)
-    return message_id == A.Enum.Message.DODGE or
-           message_id == A.Enum.Message.MISS or
-           message_id == A.Enum.Message.SHADOWS or
-           message_id == A.Enum.Message.MOBHEAL373
+    return message_id == Ashita.Enum.Message.DODGE or
+           message_id == Ashita.Enum.Message.MISS or
+           message_id == Ashita.Enum.Message.SHADOWS or
+           message_id == Ashita.Enum.Message.MOBHEAL373
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -199,10 +199,10 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Melee.Animation = function(animation_id, audits, damage, melee_type_broad, throwing, no_damage)
     if no_damage then damage = 0 end
-    if animation_id >= A.Enum.Animation.MELEE_MAIN and animation_id < A.Enum.Animation.DAKEN then
+    if animation_id >= Ashita.Enum.Animation.MELEE_MAIN and animation_id < Ashita.Enum.Animation.DAKEN then
         Model.Update.Data(H.Mode.INC, damage, audits, melee_type_broad, H.Metric.TOTAL)
         Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad, H.Metric.COUNT)
-    elseif animation_id == A.Enum.Animation.DAKEN then
+    elseif animation_id == Ashita.Enum.Animation.DAKEN then
         throwing = true
         Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.RANGED, H.Metric.TOTAL)
         Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.COUNT)
@@ -224,27 +224,27 @@ end
 ---@param melee_type_discrete string main-hand, off-hand, etc.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_type_discrete)
-    if message_id == A.Enum.Message.HIT then
+    if message_id == Ashita.Enum.Message.HIT then
         H.Melee.Hit(audits, melee_type_broad, melee_type_discrete)
-    elseif message_id == A.Enum.Message.MISS then
+    elseif message_id == Ashita.Enum.Message.MISS then
         H.Melee.Miss(audits, melee_type_broad)
-    elseif message_id == A.Enum.Message.CRIT then
+    elseif message_id == Ashita.Enum.Message.CRIT then
         H.Melee.Crit(audits, damage, melee_type_broad, melee_type_discrete)
-    elseif message_id == A.Enum.Message.SHADOWS then
+    elseif message_id == Ashita.Enum.Message.SHADOWS then
         H.Melee.Shadows(audits, melee_type_broad, melee_type_discrete)
-    elseif message_id == A.Enum.Message.DODGE then
+    elseif message_id == Ashita.Enum.Message.DODGE then
         H.Melee.Dodge(audits, melee_type_broad, melee_type_discrete)
-    elseif message_id == A.Enum.Message.MOBHEAL3 or message_id == A.Enum.Message.MOBHEAL373 then
+    elseif message_id == Ashita.Enum.Message.MOBHEAL3 or message_id == Ashita.Enum.Message.MOBHEAL373 then
         H.Melee.Mob_Heal(audits, damage, melee_type_broad, melee_type_discrete)
-    elseif message_id == A.Enum.Message.RANGEHIT then
+    elseif message_id == Ashita.Enum.Message.RANGEHIT then
         H.Melee.Daken_Hit(audits)
-    elseif message_id == A.Enum.Message.RANGEMISS then
+    elseif message_id == Ashita.Enum.Message.RANGEMISS then
         H.Melee.Daken_Miss(audits)
-    elseif message_id == A.Enum.Message.SQUARE then
+    elseif message_id == Ashita.Enum.Message.SQUARE then
         H.Melee.Daken_Square(audits)
-    elseif message_id == A.Enum.Message.TRUE then
+    elseif message_id == Ashita.Enum.Message.TRUE then
         H.Melee.Daken_Truestrike(audits)
-    elseif message_id == A.Enum.Message.RANGECRIT then
+    elseif message_id == Ashita.Enum.Message.RANGECRIT then
         H.Melee.Daken_Crit(audits, damage)
     else
         _Debug.Error.Add("Melee.Message: {" .. tostring(audits.player_name) .. "} Unhandled Melee Nuance " .. tostring(message_id))
@@ -419,7 +419,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Melee.Additional_Effect = function(audits, value, message_id, effect_animation_id, no_damage)
     -- Only add additional damage to the damage totals.
-    if message_id == A.Enum.Message.ENSPELL then
+    if message_id == Ashita.Enum.Message.ENSPELL then
         if no_damage then value = 0 end
         Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.MAGIC,       H.Metric.TOTAL)
         Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.TOTAL,       H.Metric.TOTAL)       -- It's an extra step to add additional enspell damage to total.
@@ -432,10 +432,10 @@ H.Melee.Additional_Effect = function(audits, value, message_id, effect_animation
             Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.COUNT)
             Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.HIT_COUNT)
         end
-    elseif message_id == A.Enum.Message.ENDRAIN then
+    elseif message_id == Ashita.Enum.Message.ENDRAIN then
         Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENDRAIN,     H.Metric.TOTAL)
         Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENDRAIN,     H.Metric.HIT_COUNT)
-    elseif message_id == A.Enum.Message.ENASPIR then
+    elseif message_id == Ashita.Enum.Message.ENASPIR then
         Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.TOTAL)
         Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.HIT_COUNT)
     end

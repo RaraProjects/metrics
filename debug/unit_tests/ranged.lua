@@ -9,7 +9,7 @@ _Debug.Unit.Tests.Ranged.Hit = function()
         clicked = 1
         if clicked and 1 then
             local damage = 100
-            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, A.Enum.Message.RANGEHIT)
+            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, Ashita.Enum.Message.RANGEHIT)
             H.Ranged.Action(action, _Debug.Unit.Mob.PLAYER, true)
         end
     end
@@ -24,7 +24,7 @@ _Debug.Unit.Tests.Ranged.Square = function()
         clicked = 1
         if clicked and 1 then
             local damage = 100
-            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, A.Enum.Message.SQUARE)
+            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, Ashita.Enum.Message.SQUARE)
             H.Ranged.Action(action, _Debug.Unit.Mob.PLAYER, true)
         end
     end
@@ -39,7 +39,7 @@ _Debug.Unit.Tests.Ranged.Truestrike = function()
         clicked = 1
         if clicked and 1 then
             local damage = 100
-            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, A.Enum.Message.TRUE)
+            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, Ashita.Enum.Message.TRUE)
             H.Ranged.Action(action, _Debug.Unit.Mob.PLAYER, true)
         end
     end
@@ -54,7 +54,7 @@ _Debug.Unit.Tests.Ranged.Miss = function()
         clicked = 1
         if clicked and 1 then
             local damage = 0
-            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, A.Enum.Message.RANGEMISS)
+            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, Ashita.Enum.Message.RANGEMISS)
             H.Ranged.Action(action, _Debug.Unit.Mob.PLAYER, true)
         end
     end
@@ -69,7 +69,7 @@ _Debug.Unit.Tests.Ranged.Crit = function()
         clicked = 1
         if clicked and 1 then
             local damage = 100
-            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, A.Enum.Message.RANGECRIT)
+            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, Ashita.Enum.Message.RANGECRIT)
             H.Ranged.Action(action, _Debug.Unit.Mob.PLAYER, true)
         end
     end
@@ -84,7 +84,7 @@ _Debug.Unit.Tests.Ranged.PUP = function()
         clicked = 1
         if clicked and 1 then
             local damage = 100
-            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, A.Enum.Message.RANGEPUP)
+            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, Ashita.Enum.Message.RANGEPUP)
             H.Ranged.Action(action, _Debug.Unit.Mob.PLAYER, true)
         end
     end
@@ -99,7 +99,7 @@ _Debug.Unit.Tests.Ranged.Shadows = function()
         clicked = 1
         if clicked and 1 then
             local damage = 100
-            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, A.Enum.Message.SHADOWS)
+            local action = _Debug.Unit.Util.Build_Action(nil, _Debug.Unit.Mob.Target_ID, damage, nil, Ashita.Enum.Message.SHADOWS)
             H.Ranged.Action(action, _Debug.Unit.Mob.PLAYER, true)
         end
     end

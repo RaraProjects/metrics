@@ -10,7 +10,7 @@ _Debug.Unit.Tests.Melee.Main_Hit = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, Ashita.Enum.Message.HIT)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -26,7 +26,7 @@ _Debug.Unit.Tests.Melee.Off_Hand_Hit = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_OFFHAND, A.Enum.Message.HIT)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_OFFHAND, Ashita.Enum.Message.HIT)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -42,7 +42,7 @@ _Debug.Unit.Tests.Melee.Main_Miss = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MISS)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, Ashita.Enum.Message.MISS)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -58,7 +58,7 @@ _Debug.Unit.Tests.Melee.Off_Hand_Miss = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_OFFHAND, A.Enum.Message.MISS)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_OFFHAND, Ashita.Enum.Message.MISS)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -74,7 +74,7 @@ _Debug.Unit.Tests.Melee.Crit = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.CRIT)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, Ashita.Enum.Message.CRIT)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -90,7 +90,7 @@ _Debug.Unit.Tests.Melee.Enspell = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT, 100)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, Ashita.Enum.Message.HIT, 100)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -106,7 +106,7 @@ _Debug.Unit.Tests.Melee.Shadows = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.SHADOWS)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, Ashita.Enum.Message.SHADOWS)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -122,7 +122,7 @@ _Debug.Unit.Tests.Melee.Mob_Heal = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MOBHEAL373)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, Ashita.Enum.Message.MOBHEAL373)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -138,7 +138,7 @@ _Debug.Unit.Tests.Melee.Pet_Hit = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.HIT)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, Ashita.Enum.Message.HIT)
             H.Melee.Action(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
         end
     end
@@ -154,7 +154,7 @@ _Debug.Unit.Tests.Melee.Pet_Crit = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.CRIT)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, Ashita.Enum.Message.CRIT)
             H.Melee.Action(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
         end
     end
@@ -170,7 +170,7 @@ _Debug.Unit.Tests.Melee.Pet_Miss = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MISS)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, Ashita.Enum.Message.MISS)
             H.Melee.Action(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
         end
     end
@@ -186,7 +186,7 @@ _Debug.Unit.Tests.Melee.Pet_Shadows = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.SHADOWS)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, Ashita.Enum.Message.SHADOWS)
             H.Melee.Action(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
         end
     end
@@ -202,7 +202,7 @@ _Debug.Unit.Tests.Melee.Pet_Mob_Heal = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_MAIN, A.Enum.Message.MOBHEAL373)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, Ashita.Enum.Message.MOBHEAL373)
             H.Melee.Action(action, _Debug.Unit.Mob.PET, _Debug.Unit.Mob.PLAYER, true)
         end
     end
@@ -218,7 +218,7 @@ _Debug.Unit.Tests.Melee.Daken_Hit = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.DAKEN, A.Enum.Message.RANGEHIT)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, Ashita.Enum.Message.RANGEHIT)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -234,7 +234,7 @@ _Debug.Unit.Tests.Melee.Daken_Square = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.DAKEN, A.Enum.Message.SQUARE)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, Ashita.Enum.Message.SQUARE)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -250,7 +250,7 @@ _Debug.Unit.Tests.Melee.Daken_Truestrike = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.DAKEN, A.Enum.Message.TRUE)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, Ashita.Enum.Message.TRUE)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -266,7 +266,7 @@ _Debug.Unit.Tests.Melee.Daken_Miss = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.DAKEN, A.Enum.Message.MISS)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, Ashita.Enum.Message.MISS)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -282,7 +282,7 @@ _Debug.Unit.Tests.Melee.Daken_Crit = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.DAKEN, A.Enum.Message.RANGECRIT)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, Ashita.Enum.Message.RANGECRIT)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -298,7 +298,7 @@ _Debug.Unit.Tests.Melee.Kick_Hit = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_KICK, A.Enum.Message.HIT)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, Ashita.Enum.Message.HIT)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -314,7 +314,7 @@ _Debug.Unit.Tests.Melee.Kick_Miss = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_KICK, A.Enum.Message.MISS)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, Ashita.Enum.Message.MISS)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
@@ -330,7 +330,7 @@ _Debug.Unit.Tests.Melee.Kick_Crit = function()
         if clicked and 1 then
             local damage = 100
             local action_id = 836 -- Eclipse Bite (not that it matters for this test)
-            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, A.Enum.Animation.MELEE_KICK, A.Enum.Message.CRIT)
+            local action = _Debug.Unit.Util.Build_Action(action_id, _Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, Ashita.Enum.Message.CRIT)
             H.Melee.Action(action, _Debug.Unit.Mob.PLAYER, nil, true)
         end
     end
