@@ -87,7 +87,7 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
     end
 
     if not is_mapped then
-        _Debug.Error.Add("Spell.Parse: {" .. tostring(actor_mob) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
+        _Debug.Error.Add("Spell.Parse: {" .. tostring(actor_mob.name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
     end
 
     return damage
