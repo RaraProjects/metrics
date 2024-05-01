@@ -1,24 +1,24 @@
 Ashita.Enum = T{}
 
 
-Ashita.Enum.Chat = {
+Ashita.Enum.Chat = T{
     PARTY     = "/p",
     LINKSHELL = "/l",
     SAY       = "/s",
 }
 
-Ashita.Enum.Player_Attributes = {
+Ashita.Enum.Player_Attributes = T{
     TP       = "TP",
     ISZONING = "IsZoning",
 }
 
-Ashita.Enum.Targets = {
+Ashita.Enum.Targets = T{
     ME       = "me",
     TARGET   = "t",
     PET      = "pet",
 }
 
-Ashita.Enum.Spawn_Flags = {
+Ashita.Enum.Spawn_Flags = T{
     MAINPLAYER  = 525,
     OTHERPLAYER = 1,
     NPC         = 2,
@@ -27,7 +27,7 @@ Ashita.Enum.Spawn_Flags = {
     PET         = 258,
 }
 
-Ashita.Enum.Ability = {
+Ashita.Enum.Ability = T{
     NORMAL        = 1,  -- Type: Normal Ability
     PETLOGISTICS  = 2,  -- Type: Fight, Heel, Stay, etc.
     BLOODPACTRAGE = 6,  -- Type: 
@@ -36,7 +36,7 @@ Ashita.Enum.Ability = {
 }
 
 -- Animation IDs from incoming packet 0x028 (Action Packet).
-Ashita.Enum.Animation = {
+Ashita.Enum.Animation = T{
     MELEE_MAIN    = 0,
     MELEE_OFFHAND = 1,
     MELEE_KICK    = 2,
@@ -45,7 +45,7 @@ Ashita.Enum.Animation = {
 }
 
 -- Message IDs from incoming packet 0x029 (Action Message).
-Ashita.Enum.Message = {
+Ashita.Enum.Message = T{
     HIT        = 1,
     MOBHEAL3   = 3,
     MOB_KILL   = 6,
