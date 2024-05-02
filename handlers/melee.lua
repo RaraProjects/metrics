@@ -17,8 +17,8 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 		for action_index, _ in pairs(target_value.actions) do
 			result = action.targets[target_index].actions[action_index]
 			target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-			if not target then target = {name = Model.Enum.Index.DEBUG} end
-            if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
+			if not target then target = {name = DB.Enum.Values.DEBUG} end
+            if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target.name) end
 			damage = damage + H.Melee.Parse(result, actor_mob.name, target.name, owner_mob)
 		end
 	end
@@ -58,14 +58,14 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     local effect_message_id = result.add_effect_message
     local throwing = false
 
-    local melee_type_broad = Model.Enum.Trackable.MELEE
+    local melee_type_broad = DB.Enum.Trackable.MELEE
     local melee_type_discrete = H.Melee.Melee_Type(animation_id)
 
     -- Need special handling for pets
     local pet_name
     if owner_mob then
-        melee_type_broad = Model.Enum.Trackable.PET_MELEE
-        melee_type_discrete = Model.Enum.Trackable.PET_MELEE_DISCRETE
+        melee_type_broad = DB.Enum.Trackable.PET_MELEE
+        melee_type_discrete = DB.Enum.Trackable.PET_MELEE_DISCRETE
         pet_name = player_name
         player_name = owner_mob.name
     end
@@ -116,7 +116,7 @@ H.Melee.Blog = function(actor_mob, owner_mob, damage)
         if owner_mob then
             blog_name = owner_mob.name .. " (" .. actor_mob.name .. ")"
         end
-        Blog.Add(blog_name, Model.Enum.Trackable.MELEE, damage)
+        Blog.Add(blog_name, DB.Enum.Trackable.MELEE, damage)
     end
 end
 
@@ -164,10 +164,10 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Melee.Totals = function(audits, damage, melee_type_discrete, no_damage)
     if no_damage then damage = 0 end
-    Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.TOTAL, H.Metric.TOTAL)
-    Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)
-    Model.Update.Data(H.Mode.INC, damage, audits, melee_type_discrete, H.Metric.TOTAL)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.TOTAL, H.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC, damage, audits, melee_type_discrete, H.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.COUNT)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -181,7 +181,7 @@ end
 H.Melee.Pet_Total = function(owner_mob, audits, damage, no_damage)
     if no_damage then damage = 0 end
     if owner_mob then
-        Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
     end
 end
 
@@ -200,12 +200,12 @@ end
 H.Melee.Animation = function(animation_id, audits, damage, melee_type_broad, throwing, no_damage)
     if no_damage then damage = 0 end
     if animation_id >= Ashita.Enum.Animation.MELEE_MAIN and animation_id < Ashita.Enum.Animation.DAKEN then
-        Model.Update.Data(H.Mode.INC, damage, audits, melee_type_broad, H.Metric.TOTAL)
-        Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, damage, audits, melee_type_broad, H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC,      1, audits, melee_type_broad, H.Metric.COUNT)
     elseif animation_id == Ashita.Enum.Animation.DAKEN then
         throwing = true
-        Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.RANGED, H.Metric.TOTAL)
-        Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.RANGED, H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.COUNT)
     else
         _Debug.Error.Add("Melee.Animation: {" .. tostring(audits.player_name) .. "} Unhandled animation: " .. tostring(animation_id))
     end
@@ -259,9 +259,9 @@ end
 ---@param melee_type_discrete string main-hand, off-hand, etc.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Hit = function(audits, melee_type_broad, melee_type_discrete)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
-    if melee_type_broad ~= H.Trackable.PET_MELEE then Model.Update.Running_Accuracy(audits.player_name, true) end
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
+    if melee_type_broad ~= H.Trackable.PET_MELEE then DB.Accuracy.Update(audits.player_name, true) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -271,8 +271,8 @@ end
 ---@param melee_type_broad string player melee or pet melee.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Miss = function(audits, melee_type_broad)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad, H.Metric.MISS_COUNT)
-    if melee_type_broad ~= H.Trackable.PET_MELEE then Model.Update.Running_Accuracy(audits.player_name, false) end
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_broad, H.Metric.MISS_COUNT)
+    if melee_type_broad ~= H.Trackable.PET_MELEE then DB.Accuracy.Update(audits.player_name, false) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -284,11 +284,11 @@ end
 ---@param melee_type_discrete string main-hand, off-hand, etc.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Crit = function(audits, damage, melee_type_broad, melee_type_discrete)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.CRIT_COUNT)
-    Model.Update.Data(H.Mode.INC, damage, audits, melee_type_broad,    H.Metric.CRIT_DAMAGE)
-    if melee_type_broad ~= H.Trackable.PET_MELEE then Model.Update.Running_Accuracy(audits.player_name, true) end
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.CRIT_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, melee_type_broad,    H.Metric.CRIT_DAMAGE)
+    if melee_type_broad ~= H.Trackable.PET_MELEE then DB.Accuracy.Update(audits.player_name, true) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -302,9 +302,9 @@ end
 ---@param melee_type_discrete string main-hand, off-hand, etc.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Shadows = function(audits, melee_type_broad, melee_type_discrete)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.SHADOWS)
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.SHADOWS)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -316,8 +316,8 @@ end
 ---@param melee_type_discrete string main-hand, off-hand, etc.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Dodge = function(audits, melee_type_broad, melee_type_discrete)
-    Model.Update.Data(H.Mode.INC,     -1, audits, melee_type_broad,    H.Metric.COUNT)
-    Model.Update.Data(H.Mode.INC,     -1, audits, melee_type_discrete, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC,     -1, audits, melee_type_broad,    H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC,     -1, audits, melee_type_discrete, H.Metric.COUNT)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -330,9 +330,9 @@ end
 ---@param melee_type_discrete string main-hand, off-hand, etc.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Mob_Heal = function(audits, damage, melee_type_broad, melee_type_discrete)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC, damage, audits, melee_type_broad,    H.Metric.MOB_HEAL)
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_broad,    H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, melee_type_discrete, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, melee_type_broad,    H.Metric.MOB_HEAL)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -341,8 +341,8 @@ end
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Daken_Hit = function(audits)
-    Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
-    Model.Update.Running_Accuracy(audits.player_name, true)
+    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
+    DB.Accuracy.Update(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -351,8 +351,8 @@ end
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Daken_Square = function(audits)
-    Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
-    Model.Update.Running_Accuracy(audits.player_name, true)
+    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
+    DB.Accuracy.Update(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -361,8 +361,8 @@ end
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Daken_Truestrike = function(audits)
-    Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
-    Model.Update.Running_Accuracy(audits.player_name, true)
+    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
+    DB.Accuracy.Update(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -371,8 +371,8 @@ end
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Daken_Miss = function(audits)
-    Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.MISS_COUNT)
-    Model.Update.Running_Accuracy(audits.player_name, false)
+    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.MISS_COUNT)
+    DB.Accuracy.Update(audits.player_name, false)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -382,10 +382,10 @@ end
 ---@param damage number
 ------------------------------------------------------------------------------------------------------
 H.Melee.Daken_Crit = function(audits, damage)
-    Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.CRIT_COUNT)
-    Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.RANGED, H.Metric.CRIT_DAMAGE)
-    Model.Update.Running_Accuracy(audits.player_name, true)
+    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.CRIT_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.RANGED, H.Metric.CRIT_DAMAGE)
+    DB.Accuracy.Update(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -400,11 +400,11 @@ end
 H.Melee.Min_Max = function(throwing, damage, audits, melee_type_broad, no_damage)
     if no_damage then damage = 0 end
     if throwing then
-        if damage > 0 and (damage < Model.Get.Data(audits.player_name, H.Trackable.RANGED, H.Metric.MIN)) then Model.Update.Data(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MIN) end
-        if damage > Model.Get.Data(audits.player_name, H.Trackable.RANGED, H.Metric.MAX) then Model.Update.Data(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MAX) end
+        if damage > 0 and (damage < DB.Data.Get(audits.player_name, H.Trackable.RANGED, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MIN) end
+        if damage > DB.Data.Get(audits.player_name, H.Trackable.RANGED, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MAX) end
     else
-        if damage > 0 and (damage < Model.Get.Data(audits.player_name, melee_type_broad, H.Metric.MIN)) then Model.Update.Data(H.Mode.SET, damage, audits, melee_type_broad, H.Metric.MIN) end
-        if damage > Model.Get.Data(audits.player_name, melee_type_broad, H.Metric.MAX) then Model.Update.Data(H.Mode.SET, damage, audits, melee_type_broad, H.Metric.MAX) end
+        if damage > 0 and (damage < DB.Data.Get(audits.player_name, melee_type_broad, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_broad, H.Metric.MIN) end
+        if damage > DB.Data.Get(audits.player_name, melee_type_broad, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_broad, H.Metric.MAX) end
     end
 end
 
@@ -421,22 +421,22 @@ H.Melee.Additional_Effect = function(audits, value, message_id, effect_animation
     -- Only add additional damage to the damage totals.
     if message_id == Ashita.Enum.Message.ENSPELL then
         if no_damage then value = 0 end
-        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.MAGIC,       H.Metric.TOTAL)
-        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.TOTAL,       H.Metric.TOTAL)       -- It's an extra step to add additional enspell damage to total.
-        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)       -- It's an extra step to add additional enspell damage to total.
-        Model.Update.Data(H.Mode.INC,     1, audits, H.Trackable.ENSPELL,     H.Metric.HIT_COUNT)
-        Model.Update.Data(H.Mode.INC,     1, audits, H.Trackable.MAGIC,       H.Metric.COUNT)       -- Used to flag that data is availabel for show in Focus.
+        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.MAGIC,       H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.TOTAL,       H.Metric.TOTAL)       -- It's an extra step to add additional enspell damage to total.
+        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)       -- It's an extra step to add additional enspell damage to total.
+        DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.ENSPELL,     H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.MAGIC,       H.Metric.COUNT)       -- Used to flag that data is availabel for show in Focus.
         if Lists.Spell.Enspell_Type[effect_animation_id] then
             local enspell_name = Lists.Spell.Enspell_Type[effect_animation_id]
-            Model.Update.Catalog_Damage(audits.player_name, audits.target_name, H.Trackable.ENSPELL, value, enspell_name)
-            Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.COUNT)
-            Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.HIT_COUNT)
+            DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.ENSPELL, value, enspell_name)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.COUNT)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.HIT_COUNT)
         end
     elseif message_id == Ashita.Enum.Message.ENDRAIN then
-        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENDRAIN,     H.Metric.TOTAL)
-        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENDRAIN,     H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.ENDRAIN,     H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.ENDRAIN,     H.Metric.HIT_COUNT)
     elseif message_id == Ashita.Enum.Message.ENASPIR then
-        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.TOTAL)
-        Model.Update.Data(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.HIT_COUNT)
     end
 end

@@ -21,8 +21,8 @@ H.Ability.Action = function(action, actor_mob, log_offense)
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if not target_mob then target_mob = {name = Model.Enum.Index.DEBUG} end
-            if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target_mob.name) end
+            if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
+            if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target_mob.name) end
             damage = damage + H.Ability.Parse(ability_data, result, actor_mob, target_mob.name)
         end
     end
@@ -64,7 +64,7 @@ H.Ability.Pet_Action = function(action, actor_mob, log_offense)
             result = action.targets[target_index].actions[action_index]
             target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target then target = {name = 'test'} end
-            if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
+            if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target.name) end
             damage = damage + H.Ability.Parse(ability_data, result, owner_mob, target.name, actor_mob)
         end
     end
@@ -118,7 +118,7 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
     end
 
     -- Set a flag to make this section show up in the Focus menu.
-    Model.Update.Data(H.Mode.INC, 1, audits, ability_type, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, ability_type, H.Metric.COUNT)
 
     return damage
 end
@@ -179,7 +179,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data)
     local audits = H.Ability.Audits(actor_mob.name, target_mob.name)
-    Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, H.Trackable.ABILITY, ability_data.Name, H.Metric.COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ABILITY, ability_data.Name, H.Metric.COUNT)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -245,9 +245,9 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Count = function(actor_mob, owner_mob, target_mob, ability_data, trackable, damage)
     local audits = H.Ability.Audits(owner_mob.name, target_mob.name, actor_mob.name)
-    Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, trackable, ability_data.Name, H.Metric.COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, ability_data.Name, H.Metric.COUNT)
     if damage > 0 then
-        Model.Update.Data(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
     end
 end
 
@@ -261,10 +261,10 @@ end
 ---@param ability_name string
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Rage = function(audits, owner_mob, damage, ability_type, ability_name)
-    Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
-    Model.Update.Catalog_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
+    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
     if damage > 0 then
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT)
     end
 end
 
@@ -279,10 +279,10 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Healing = function(audits, owner_mob, damage, ability_name)
     local ability_type = H.Trackable.PET_HEAL
-    Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.HEALING, H.Metric.TOTAL)
-    Model.Update.Catalog_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.HEALING, H.Metric.TOTAL)
+    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
     if damage > 0 then
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT)
     end
     return ability_type
 end
@@ -297,10 +297,10 @@ end
 ---@param ability_name string
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Breath = function(audits, owner_mob, damage, ability_type, ability_name)
-    Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
-    Model.Update.Catalog_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
+    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
     if damage > 0 then
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT)
     end
 end
 
@@ -314,7 +314,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Damaging_Player_Ability = function(audits, damage, ability_type, ability_name)
     if damage > 0 then
-        Model.Update.Catalog_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name)
-        Model.Update.Catalog_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT)
     end
 end

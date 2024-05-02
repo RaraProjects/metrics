@@ -363,7 +363,7 @@ end
 -- Creates a dropdown menu to show only damage done to a certain mob.
 ------------------------------------------------------------------------------------------------------
 w.Widget.Mob_Filter = function()
-    local list = Model.Get.Mob_List_Sorted()
+    local list = DB.Lists.Get.Mob()
     local flags = w.Dropdown.Flags
     if list[1] then
         UI.SetNextItemWidth(w.Dropdown.Width)
@@ -405,7 +405,7 @@ end
 -- Creates a dropdown menu to show only damage done by a certain entity.
 ------------------------------------------------------------------------------------------------------
 w.Widget.Player_Filter = function()
-    local list = Model.Get.Player_List_Sorted()
+    local list = DB.Lists.Get.Players()
     local flags = w.Dropdown.Flags
     if list[1] then
         UI.SetNextItemWidth(w.Dropdown.Width)

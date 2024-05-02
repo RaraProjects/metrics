@@ -41,7 +41,6 @@ Themes    = require("resources.themes")
 
 -- Modules
 UI     = require("imgui")
-Model  = require("model")
 require("database._database")
 Report = require("report")
 Timers = require("timers")
@@ -141,7 +140,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.actor_index)
             if Ashita.Party.Is_Affiliate(actor_mob.name) then
                 local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
-                Model.Update.Defeated_Mob(target_mob.name)
+                DB.Defeated_Mob(target_mob.name)
                 if Metrics.Blog.Flags.Mob_Death then Blog.Add(target_mob.name, "Died") end
             end
 
@@ -172,15 +171,14 @@ ashita.events.register('d3d_present', 'present_cb', function ()
 
         -- Initialize Settings
         Metrics = T{
-            Window = Settings_File.load(Window.Defaults, "window"),
-            Team   = Settings_File.load(Team.Defaults, "team"),
-            Blog   = Settings_File.load(Blog.Defaults, "blog"),
-            Model  = Settings_File.load(Model.Defaults, "model"),
+            Window = Settings_File.load(Window.Defaults, Config.Enum.File.WINDOW),
+            Team   = Settings_File.load(Team.Defaults, Config.Enum.File.TEAM),
+            Blog   = Settings_File.load(Blog.Defaults, Config.Enum.File.BLOG),
+            Model  = Settings_File.load(DB.Defaults, Config.Enum.File.DATABASE),
         }
 
         -- Initialize Modules
         Window.Initialize()
-        Model.Initialize()
         DB.Initialize()
         Team.Initialize()
         Ashita.Party.Refresh()
@@ -216,8 +214,7 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "mini" or arg == "m" then
             Window.Util.Toggle_Mini()
         elseif arg == "reset" or arg == "r" then
-            Model.Initialize()
-            DB.Initialize() 
+            DB.Initialize()
         elseif arg == "full" or arg == "f" then
             Window.Util.Enable_Full()
         elseif arg == "pet" or arg == "p" then
@@ -230,11 +227,11 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "acc" then
             Report.Publish.Accuracy()
         elseif arg == "melee" then
-            Report.Publish.Damage_By_Type(Model.Enum.Trackable.MELEE)
+            Report.Publish.Damage_By_Type(DB.Enum.Trackable.MELEE)
         elseif arg == "ws" then
-            Report.Publish.Damage_By_Type(Model.Enum.Trackable.WS)
+            Report.Publish.Damage_By_Type(DB.Enum.Trackable.WS)
         elseif arg == "healing" then
-            Report.Publish.Damage_By_Type(Model.Enum.Trackable.HEALING)
+            Report.Publish.Damage_By_Type(DB.Enum.Trackable.HEALING)
         end
     end
 end)
@@ -243,7 +240,7 @@ end)
 -- Save settings when the addon is unloaded.
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('unload', 'unload_cb', function ()
-    Settings_File.save(Config.Enum.File.MODEL)
+    Settings_File.save(Config.Enum.File.DATABASE)
     Settings_File.save(Config.Enum.File.TEAM)
     Settings_File.save(Config.Enum.File.BLOG)
     Settings_File.save(Config.Enum.File.WINDOW)

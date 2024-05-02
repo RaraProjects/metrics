@@ -10,7 +10,7 @@ s.Enum.File = {
     TEAM   = "team",
     BLOG   = "blog",
     WINDOW = "window",
-    MODEL  = "model",
+    DATABASE  = "database",
 }
 
 ------------------------------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ s.Section.Revert = function()
             Team.Reset_Settings()
             Focus.Reset_Settings()
             Blog.Reset_Settings()
-            Metrics.Model.Running_Accuracy_Limit = Model.Defaults.Running_Accuracy_Limit
+            Metrics.Model.Running_Accuracy_Limit = DB.Defaults.Running_Accuracy_Limit
         end
     end
 end
@@ -349,7 +349,7 @@ s.Widget.Acc_Limit = function()
     local acc_limit = {[1] = Metrics.Model.Running_Accuracy_Limit}
     if UI.DragInt("Running Accuracy Limit", acc_limit, 0.1, 10, 50, "%d", ImGuiSliderFlags_None) then
         Metrics.Model.Running_Accuracy_Limit = acc_limit[1]
-        Model.Data.Running_Accuracy = {}
+        DB.Tracking.Running_Accuracy = {}
     end
     UI.SameLine() Window.Widget.HelpMarker("Running accuracy calculates based off of {X} many attack attempts.")
 end
@@ -431,9 +431,9 @@ end
 -- Set the healing threshold defaults to prevent overcure with Divine Seal.
 ------------------------------------------------------------------------------------------------------
 s.Widget.Healing = function(spell)
-    local healing_threshold = {[1] = Model.Healing_Max[spell]}
+    local healing_threshold = {[1] = DB.Healing_Max[spell]}
     if UI.DragInt(spell, healing_threshold, 1, 0, 3000, "%d", ImGuiSliderFlags_None) then
-        Model.Healing_Max[spell] = healing_threshold[1]
+        DB.Healing_Max[spell] = healing_threshold[1]
     end
 end
 

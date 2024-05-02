@@ -110,7 +110,7 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
     if damage > DB.Catalog.Get(player_name, trackable, action_name, DB.Enum.Metric.MAX) then
     	-- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
 		if trackable == DB.Enum.Trackable.HEALING then
-			if damage > Model.Healing_Max[action_name] then damage = Model.Healing_Max[action_name] end
+			if damage > DB.Healing_Max[action_name] then damage = DB.Healing_Max[action_name] end
 		end
 		DB.Catalog.Update_Metric(DB.Enum.Mode.SET, damage, audits, trackable, action_name, DB.Enum.Metric.MAX)
     end

@@ -17,7 +17,7 @@ H.Ranged.Action = function(action, actor_mob, log_offense)
             result = action.targets[target_index].actions[action_index]
             target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if target then
-                if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then Model.Util.Check_Mob_List(target.name) end
+                if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target.name) end
                 damage = damage + H.Ranged.Parse(result, actor_mob.name, target.name)
             end
         end
@@ -87,9 +87,9 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Totals = function(audits, damage, ranged_type)
-    Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.TOTAL,  H.Metric.TOTAL)
-    Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.TOTAL,  H.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.COUNT)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Pet_Total = function(owner_mob, audits, damage)
     if owner_mob then
-        Model.Update.Data(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
     end
 end
 
@@ -141,9 +141,9 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Hit = function(audits, damage, ranged_type)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
-    Model.Update.Running_Accuracy(audits.player_name, true)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
+    DB.Accuracy.Update(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -154,10 +154,10 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Square = function(audits, damage, ranged_type)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.SQUARE_COUNT)
-    Model.Update.Data(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
-    Model.Update.Running_Accuracy(audits.player_name, true)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.SQUARE_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
+    DB.Accuracy.Update(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -168,10 +168,10 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Truestrike = function(audits, damage, ranged_type)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.TRUE_COUNT)
-    Model.Update.Data(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
-    Model.Update.Running_Accuracy(audits.player_name, true)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.TRUE_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
+    DB.Accuracy.Update(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -182,11 +182,11 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Crit = function(audits, damage, ranged_type)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.CRIT_COUNT)
-    Model.Update.Data(H.Mode.INC, damage, audits, ranged_type, H.Metric.CRIT_DAMAGE)
-    Model.Update.Data(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
-    Model.Update.Running_Accuracy(audits.player_name, true)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.CRIT_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, H.Metric.CRIT_DAMAGE)
+    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
+    DB.Accuracy.Update(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -197,9 +197,9 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.PUP_Hit = function(audits, damage, ranged_type)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
-    Model.Update.Running_Accuracy(audits.player_name, true)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
+    DB.Accuracy.Update(audits.player_name, true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -210,8 +210,8 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Miss = function(audits, damage, ranged_type)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.MISS_COUNT)
-    Model.Update.Running_Accuracy(audits.player_name, false)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.MISS_COUNT)
+    DB.Accuracy.Update(audits.player_name, false)
     return damage
 end
 
@@ -223,8 +223,8 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Shadows = function(audits, damage, ranged_type)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
-    Model.Update.Data(H.Mode.INC,      1, audits, ranged_type, H.Metric.SHADOWS)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.SHADOWS)
     return damage
 end
 
@@ -236,6 +236,6 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Min_Max = function(damage, audits, ranged_type)
-    if damage > 0 and (damage < Model.Get.Data(audits.player_name, ranged_type, H.Metric.MIN)) then Model.Update.Data(H.Mode.SET, damage, audits, ranged_type, H.Metric.MIN) end
-    if damage > Model.Get.Data(audits.player_name, ranged_type, H.Metric.MAX) then Model.Update.Data(H.Mode.SET, damage, audits, ranged_type, H.Metric.MAX) end
+    if damage > 0 and (damage < DB.Data.Get(audits.player_name, ranged_type, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, ranged_type, H.Metric.MIN) end
+    if damage > DB.Data.Get(audits.player_name, ranged_type, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, ranged_type, H.Metric.MAX) end
 end

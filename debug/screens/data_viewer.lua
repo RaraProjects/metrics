@@ -5,7 +5,7 @@ _Debug.Data_View = {}
 ------------------------------------------------------------------------------------------------------
 _Debug.Data_View.Populate = function()
     if UI.TreeNode("Model.Data") then
-        for index, value in pairs(Model.Data) do
+        for index, value in pairs(DB.Parse) do
             if UI.TreeNode(tostring(index)) then
                 _Debug.Data_View.Node(value)
                 UI.TreePop()

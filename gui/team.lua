@@ -53,8 +53,8 @@ t.Populate = function()
     if UI.BeginTable("Team", t.Display.Columns.Current, Window.Table.Flags.Team) then
         t.Display.Headers()
         local player_name = "Debug"
-        Model.Sort.Total_Damage()
-        for rank, data in ipairs(Model.Data.Total_Damage_Sorted) do
+        DB.Lists.Sort.Total_Damage()
+        for rank, data in ipairs(DB.Sorted.Total_Damage) do
             if rank <= Metrics.Team.Settings.Rank_Cutoff then
                 player_name = data[1]
                 t.Display.Rows(player_name)
@@ -141,22 +141,22 @@ t.Display.Rows = function(player_name)
     UI.TableNextColumn() Col.Damage.Total(player_name, false, true)
     UI.TableNextColumn() Col.Acc.Running(player_name)
     if not Metrics.Team.Flags.Total_Damage_Only then
-        UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Misc.COMBINED, true)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MELEE, false, true)
-        if Metrics.Team.Flags.Crit then UI.TableNextColumn() Col.Crit.Rate(player_name, Model.Enum.Trackable.MELEE, true) end
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.WS, false, true)
-        if Metrics.Team.Settings.Include_SC_Damage then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.SC, false, true) end
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.RANGED, false, true)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.MAGIC, false, true)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.ABILITY, false, true)
+        UI.TableNextColumn() Col.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, true)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, false, true)
+        if Metrics.Team.Flags.Crit then UI.TableNextColumn() Col.Crit.Rate(player_name, DB.Enum.Trackable.MELEE, true) end
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.WS, false, true)
+        if Metrics.Team.Settings.Include_SC_Damage then UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.SC, false, true) end
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, false, true)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, false, true)
+        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY, false, true)
         if Metrics.Team.Flags.Pet then
-            UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_MELEE, false, true)
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_WS, false, true)
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_RANGED, false, true)
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET_ABILITY, false, true)
+            UI.TableNextColumn() Col.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.PET_MELEE, false, true)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.PET_WS, false, true)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.PET_RANGED, false, true)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY, false, true)
         end
-        if Metrics.Team.Flags.Healing then UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.HEALING, false, true) end
+        if Metrics.Team.Flags.Healing then UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.HEALING, false, true) end
         if Metrics.Team.Flags.Deaths then UI.TableNextColumn() Col.Deaths(player_name) end
     end
 end
@@ -206,8 +206,8 @@ t.Mini_Mode = function()
         UI.TableHeadersRow()
 
         local player_name = "Debug"
-        Model.Sort.Total_Damage()
-        for rank, data in ipairs(Model.Data.Total_Damage_Sorted) do
+        DB.Lists.Sort.Total_Damage()
+        for rank, data in ipairs(DB.Sorted.Total_Damage) do
             if rank <= Metrics.Team.Settings.Rank_Cutoff then
                 player_name = data[1]
                 UI.TableNextRow()
@@ -216,8 +216,8 @@ t.Mini_Mode = function()
                 UI.TableNextColumn() Col.Damage.Total(player_name, false, true)
                 UI.TableNextColumn() Col.Acc.Running(player_name)
                 if Metrics.Team.Flags.Pet then
-                    UI.TableNextColumn() Col.Damage.By_Type(player_name, Model.Enum.Trackable.PET)
-                    UI.TableNextColumn() Col.Acc.By_Type(player_name, Model.Enum.Trackable.PET_MELEE_DISCRETE)
+                    UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.PET)
+                    UI.TableNextColumn() Col.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
                 end
             end
         end

@@ -34,28 +34,28 @@ r.Populate = function()
         --
         UI.TableNextColumn()
         if UI.Button("Melee       ") then
-            r.Publish.Damage_By_Type(Model.Enum.Trackable.MELEE)
+            r.Publish.Damage_By_Type(DB.Enum.Trackable.MELEE)
             return nil
         end
         UI.TableNextColumn()
         if UI.Button("Weaponskills") then
-            r.Publish.Damage_By_Type(Model.Enum.Trackable.WS)
+            r.Publish.Damage_By_Type(DB.Enum.Trackable.WS)
             return nil
         end
         UI.TableNextColumn()
         if UI.Button("Magic       ") then
-            r.Publish.Damage_By_Type(Model.Enum.Trackable.MAGIC)
+            r.Publish.Damage_By_Type(DB.Enum.Trackable.MAGIC)
             return nil
         end
         UI.TableNextColumn()
         if UI.Button("Pet         ") then
-            r.Publish.Damage_By_Type(Model.Enum.Trackable.PET)
+            r.Publish.Damage_By_Type(DB.Enum.Trackable.PET)
             return nil
         end
         --
         UI.TableNextColumn()
         if UI.Button("Healing     ") then
-            r.Publish.Damage_By_Type(Model.Enum.Trackable.HEALING)
+            r.Publish.Damage_By_Type(DB.Enum.Trackable.HEALING)
             return nil
         end
         UI.EndTable()
@@ -63,7 +63,7 @@ r.Populate = function()
 
     local mobs_defeated = 0
     UI.Text("Monsters Defeated")
-    for mob_name, count in pairs(Model.Data.Defeated_Mobs) do
+    for mob_name, count in pairs(DB.Tracking.Defeated_Mobs) do
         UI.BulletText(mob_name .. ": " .. tostring(count))
         mobs_defeated = mobs_defeated + 1
     end
@@ -75,8 +75,8 @@ end
 ------------------------------------------------------------------------------------------------------
 r.Publish.Total_Damage = function()
     Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total Damage") coroutine.sleep(r.Delay)
-    Model.Sort.Total_Damage()
-    for rank, data in ipairs(Model.Data.Total_Damage_Sorted) do
+    DB.Lists.Sort.Total_Damage()
+    for rank, data in ipairs(DB.Sorted.Total_Damage) do
         if rank <= Metrics.Team.Settings.Rank_Cutoff then
             local player_name = data[1]
             local player_total = Col.Damage.Total(player_name, false, false, true)
@@ -92,11 +92,11 @@ end
 ------------------------------------------------------------------------------------------------------
 r.Publish.Accuracy = function()
     Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total Accuracy") coroutine.sleep(r.Delay)
-    Model.Sort.Total_Damage()
-    for rank, data in ipairs(Model.Data.Total_Damage_Sorted) do
+    DB.Lists.Sort.Total_Damage()
+    for rank, data in ipairs(DB.Sorted.Total_Damage) do
         if rank <= Metrics.Team.Settings.Rank_Cutoff then
             local player_name = data[1]
-            local player_acc = Col.Acc.By_Type(player_name, Model.Enum.Misc.COMBINED, false, nil, true)
+            local player_acc = Col.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, false, nil, true)
             local chat_string = tostring(player_name) .. ": " .. tostring(player_acc) .. "%"
             Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
         end
@@ -114,7 +114,7 @@ r.Publish.Damage_By_Type = function(trackable)
         return nil
     end
     Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total " .. tostring(trackable)) coroutine.sleep(r.Delay)
-    local sorted_damage = Model.Sort.Damage_By_Type(trackable)
+    local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
     for rank, data in ipairs(sorted_damage) do
         if rank <= Metrics.Team.Settings.Rank_Cutoff then
             local player_name = data[1]
@@ -137,8 +137,8 @@ r.Publish.Catalog = function(player_name, focus_type)
         Ashita.Chat.Message("There was an error trying to publish: No player name provided.")
         return nil
     end
-    if not focus_type then focus_type = Model.Enum.Trackable.WS end
-    if not Model.Util.Has_Catalog_Data(player_name, focus_type) then
+    if not focus_type then focus_type = DB.Enum.Trackable.WS end
+    if not DB.Lists.Check.Catalog_Exists(player_name, focus_type) then
         Ashita.Chat.Message(tostring(player_name) .. " doesn't have " .. tostring(focus_type) .. " data to publish.")
         return nil
     end
@@ -146,14 +146,14 @@ r.Publish.Catalog = function(player_name, focus_type)
     Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, tostring(focus_type) .. " for " .. tostring(player_name)) coroutine.sleep(r.Delay)
     Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total | Count | Average | Min | Max") coroutine.sleep(r.Delay)
     local action_name
-    Model.Sort.Catalog_Damage(player_name, focus_type)
-    for _, data in ipairs(Model.Data.Catalog_Damage_Race) do
+    DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+    for _, data in ipairs(DB.Sorted.Catalog_Damage) do
         action_name = data[1]
-        local total = Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.TOTAL, false, true)
+        local total = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL, false, true)
         local count = Col.Single.Attempts(player_name, action_name, focus_type, true)
         local average = Col.Single.Average(player_name, action_name, focus_type, true)
-        local min = Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.MIN, false, true)
-        local max = Col.Single.Damage(player_name, action_name, focus_type, Model.Enum.Metric.MAX, false, true)
+        local min = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN, false, true)
+        local max = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX, false, true)
         local chat_string = tostring(action_name) .. ": " .. tostring(total) .. " | " .. tostring(count) .. " | " 
                             .. tostring(average) .. " | " .. tostring(min) .. " | " .. tostring(max)
         Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)

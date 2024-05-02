@@ -127,9 +127,9 @@ end
 bl.Util.Damage = function(damage, action_type)
     -- Change the color of the text if the damage is over a certain threshold.
     local threshold = bl.Enum.Thresholds.MAX
-    if action_type == Model.Enum.Trackable.WS then
+    if action_type == DB.Enum.Trackable.WS then
         threshold = Metrics.Blog.Thresholds.WS
-    elseif action_type == Model.Enum.Trackable.MAGIC then
+    elseif action_type == DB.Enum.Trackable.MAGIC then
         threshold = Metrics.Blog.Thresholds.MAGIC
     elseif action_type == bl.Enum.Flags.IGNORE then
         return {Value = bl.Enum.Text.NA, Color = Window.Colors.WHITE}
@@ -156,7 +156,7 @@ end
 bl.Util.Action = function(action_name, action_type, action_data)
     local color = Window.Colors.WHITE
     if action_type and action_data then
-        if action_type == Model.Enum.Trackable.MAGIC then
+        if action_type == DB.Enum.Trackable.MAGIC then
             local element = action_data.Element
             color = Window.Colors.Elements[element]
         end
@@ -173,7 +173,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 bl.Util.Notes = function(note, action_type)
-    if action_type == Model.Enum.Trackable.MAGIC or action_type == Model.Enum.Trackable.HEALING or action_type == bl.Enum.Flags.IGNORE then
+    if action_type == DB.Enum.Trackable.MAGIC or action_type == DB.Enum.Trackable.HEALING or action_type == bl.Enum.Flags.IGNORE then
         return tostring(note)
     elseif action_type == "Died" then
         return "by " .. tostring(note)

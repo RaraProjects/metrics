@@ -14,6 +14,14 @@ DB.Tracking.Initialized_Mobs = T{}      -- [mob_name]
 DB.Tracking.Running_Accuracy = T{}
 DB.Tracking.Defeated_Mobs = T{}
 
+DB.Settings = T{}
+DB.Settings.Accuracy_Warning = 0.80
+
+-- These are used for user saved settings.
+DB.Defaults = T{
+	Running_Accuracy_Limit = 25
+}
+
 require("database._enum")
 require("database.accuracy")
 require("database.catalog")

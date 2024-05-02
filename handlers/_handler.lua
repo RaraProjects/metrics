@@ -1,8 +1,8 @@
 H = {}
 
-H.Mode = Model.Enum.Mode
-H.Trackable = Model.Enum.Trackable
-H.Metric = Model.Enum.Metric
+H.Mode = DB.Enum.Mode
+H.Trackable = DB.Enum.Trackable
+H.Metric = DB.Enum.Metric
 
 H.Enum = {}
 

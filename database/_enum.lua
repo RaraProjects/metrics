@@ -73,6 +73,8 @@ DB.Enum.Values = T{
     CATALOG     = "catalog",
 	PET_CATALOG = "pet_catalog",
     DEBUG       = "Debug",
+    IGNORE      = 'ignore',
+	COMBINED    = 'combined',
     MAX_DAMAGE  = 100000,
 }
 
