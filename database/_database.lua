@@ -14,12 +14,13 @@ DB.Tracking.Initialized_Mobs = T{}      -- [mob_name]
 DB.Tracking.Running_Accuracy = T{}
 DB.Tracking.Defeated_Mobs = T{}
 
-require("database.data")
-require("database.pet_data")
-require("database.catalog")
-require("database.pet_catalog")
+require("database._enum")
 require("database.accuracy")
+require("database.catalog")
+require("database.data")
 require("database.lists")
+require("database.pet_catalog")
+require("database.pet_data")
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the parsing data and clears the battle log.

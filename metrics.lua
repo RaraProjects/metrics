@@ -42,6 +42,7 @@ Themes    = require("resources.themes")
 -- Modules
 UI     = require("imgui")
 Model  = require("model")
+require("database._database")
 Report = require("report")
 Timers = require("timers")
 
@@ -67,8 +68,6 @@ Config = require("gui.config")
 
 -- Debug
 require("debug._debug")
-
-
 
 ------------------------------------------------------------------------------------------------------
 -- Subscribes to incoming packets.
@@ -182,6 +181,7 @@ ashita.events.register('d3d_present', 'present_cb', function ()
         -- Initialize Modules
         Window.Initialize()
         Model.Initialize()
+        DB.Initialize()
         Team.Initialize()
         Ashita.Party.Refresh()
 
@@ -217,6 +217,7 @@ ashita.events.register('command', 'command_cb', function (e)
             Window.Util.Toggle_Mini()
         elseif arg == "reset" or arg == "r" then
             Model.Initialize()
+            DB.Initialize() 
         elseif arg == "full" or arg == "f" then
             Window.Util.Enable_Full()
         elseif arg == "pet" or arg == "p" then
