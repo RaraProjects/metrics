@@ -217,21 +217,28 @@ ashita.events.register('command', 'command_cb', function (e)
             DB.Initialize()
         elseif arg == "full" or arg == "f" then
             Window.Util.Enable_Full()
-        elseif arg == "pet" or arg == "p" then
+        elseif (arg == "pet" or arg == "p") and (Window.Tabs.Active == Window.Tabs.Names.TEAM or Window.Window.Mini) then
             Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
             Team.Util.Calculate_Column_Flags()
         elseif arg == "clock" or arg == "c" then
             Metrics.Team.Settings.Show_Clock = not Metrics.Team.Settings.Show_Clock
-        elseif arg == "total" then
-            Report.Publish.Total_Damage()
-        elseif arg == "acc" then
-            Report.Publish.Accuracy()
-        elseif arg == "melee" then
-            Report.Publish.Damage_By_Type(DB.Enum.Trackable.MELEE)
-        elseif arg == "ws" then
-            Report.Publish.Damage_By_Type(DB.Enum.Trackable.WS)
-        elseif arg == "healing" then
-            Report.Publish.Damage_By_Type(DB.Enum.Trackable.HEALING)
+
+        -- General reports.
+        elseif arg == "report" or arg == "rep" then
+            local report_type = command_args[3]
+            if report_type == "total" then
+                Report.Publish.Total_Damage()
+            elseif report_type == "acc" then
+                Report.Publish.Accuracy()
+            elseif report_type == "melee" then
+                Report.Publish.Damage_By_Type(DB.Enum.Trackable.MELEE)
+            elseif report_type == "ws" then
+                Report.Publish.Damage_By_Type(DB.Enum.Trackable.WS)
+            elseif report_type == "healing" then
+                Report.Publish.Damage_By_Type(DB.Enum.Trackable.HEALING)
+            end
+
+        -- Primary tab switching.
         elseif arg == "team" or arg == "parse" then
             Window.Tabs.Switch[Window.Tabs.Names.TEAM] = ImGuiTabItemFlags_SetSelected
         elseif arg == "focus" then
@@ -242,12 +249,28 @@ ashita.events.register('command', 'command_cb', function (e)
             Window.Tabs.Switch[Window.Tabs.Names.REPORT] = ImGuiTabItemFlags_SetSelected
         elseif arg == "settings" or arg == "set" or arg == "config" then
             Window.Tabs.Switch[Window.Tabs.Names.SETTINGS] = ImGuiTabItemFlags_SetSelected
+
+        -- Player selection
         elseif arg == "player" or arg == "pl" then
             local player_string = command_args[3]
             _Debug.Error.Add("Metrics Command: " .. tostring(arg) .. " " .. tostring(command_args[3]))
             if player_string then
                 Window.Util.Player_Switch(player_string)
             end
+
+        -- Focus tab switching.
+        elseif arg == "melee" then
+            Focus.Tabs.Switch[Focus.Tabs.Names.MELEE] = ImGuiTabItemFlags_SetSelected
+        elseif arg == "ranged" then
+            Focus.Tabs.Switch[Focus.Tabs.Names.RANGED] = ImGuiTabItemFlags_SetSelected
+        elseif arg == "ws" or arg == "weaponskill" then
+            Focus.Tabs.Switch[Focus.Tabs.Names.WS] = ImGuiTabItemFlags_SetSelected
+        elseif arg == "magic" then
+            Focus.Tabs.Switch[Focus.Tabs.Names.MAGIC] = ImGuiTabItemFlags_SetSelected
+        elseif arg == "ability" or arg == "abil" then
+            Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES] = ImGuiTabItemFlags_SetSelected
+        elseif (arg == "pet" or arg == "p") and Window.Tabs.Active == Window.Tabs.Names.FOCUS then
+            Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = ImGuiTabItemFlags_SetSelected
         end
     end
 end)

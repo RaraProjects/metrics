@@ -80,10 +80,10 @@ w.Tabs.Names = {
 }
 w.Tabs.Flags = ImGuiTabBarFlags_None
 w.Tabs.Switch = {
-    ["Team"] = nil,
-    ["Focus"] = nil,
-    ["Blog"] = nil,
-    ["Report"] = nil,
+    [w.Tabs.Names.TEAM]      = nil,
+    [w.Tabs.Names.FOCUS]     = nil,
+    [w.Tabs.Names.BATTLELOG] = nil,
+    [w.Tabs.Names.REPORT]    = nil,
 }
 w.Tabs.Active = nil
 
@@ -200,7 +200,6 @@ w.Populate = function()
             elseif w.Window.Mini then Team.Mini_Mode()
             else
                 if _Debug.Is_Enabled() then UI.Text("Error Count: " .. tostring(_Debug.Error.Util.Error_Count())) end
-                UI.Text(tostring(w.Tabs.Active))
                 if UI.BeginTabBar(w.Tabs.Names.PARENT, w.Tabs.Flags) then
                     if UI.BeginTabItem(w.Tabs.Names.TEAM, false, w.Tabs.Switch[w.Tabs.Names.TEAM]) then
                         w.Tabs.Switch[w.Tabs.Names.TEAM] = nil

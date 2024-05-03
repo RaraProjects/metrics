@@ -6,6 +6,24 @@ f.Display.Flags = {
     Open_Action = -1,
 }
 
+f.Tabs = {}
+f.Tabs.Names = {
+    MELEE     = "Melee",
+    RANGED    = "Ranged",
+    WS        = "Weaponskills",
+    MAGIC     = "Magic",
+    ABILITIES = "Abilities",
+    PETS      = "Pets",
+}
+f.Tabs.Switch = {
+    [f.Tabs.Names.MELEE]     = nil,
+    [f.Tabs.Names.RANGED]    = nil,
+    [f.Tabs.Names.WS]        = nil,
+    [f.Tabs.Names.MAGIC]     = nil,
+    [f.Tabs.Names.ABILITIES] = nil,
+    [f.Tabs.Names.PETS]      = nil,
+}
+
 f.Enum = {
     OVERFLOW = 100000,
 }
@@ -35,27 +53,33 @@ f.Populate = function()
     UI.Separator()
 
     if UI.BeginTabBar("Focus Tabs", Window.Tabs.Flags) then
-        if UI.BeginTabItem("Melee") then
+        if UI.BeginTabItem("Melee", false, f.Tabs.Switch[f.Tabs.Names.MELEE]) then
+            f.Tabs.Switch[f.Tabs.Names.MELEE] = nil
             f.Display.Melee(player_name)
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Ranged") then
+        if UI.BeginTabItem("Ranged", false, f.Tabs.Switch[f.Tabs.Names.RANGED]) then
+            f.Tabs.Switch[f.Tabs.Names.RANGED] = nil
             f.Display.Ranged(player_name)
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Weaponskills") then
+        if UI.BeginTabItem("Weaponskills", false, f.Tabs.Switch[f.Tabs.Names.WS]) then
+            f.Tabs.Switch[f.Tabs.Names.WS] = nil
             f.Display.WS_and_SC(player_name)
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Magic") then
+        if UI.BeginTabItem("Magic", false, f.Tabs.Switch[f.Tabs.Names.MAGIC]) then
+            f.Tabs.Switch[f.Tabs.Names.MAGIC] = nil
             f.Display.Magic(player_name)
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Abilities") then
+        if UI.BeginTabItem("Abilities", false, f.Tabs.Switch[f.Tabs.Names.ABILITIES]) then
+            f.Tabs.Switch[f.Tabs.Names.ABILITIES] = nil
             f.Display.Ability(player_name)
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Pets") then
+        if UI.BeginTabItem("Pets", false, f.Tabs.Switch[f.Tabs.Names.PETS]) then
+            f.Tabs.Switch[f.Tabs.Names.PETS] = nil
             f.Display.Pet(player_name)
             UI.EndTabItem()
         end
