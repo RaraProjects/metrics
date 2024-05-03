@@ -100,7 +100,8 @@
         "ImGuiWindowFlags_NoTitleBar",
         "breader",
         "switch",
-        "GetEntity"
+        "GetEntity",
+        "ImGuiTabItemFlags_SetSelected"
     ],
     "Lua.diagnostics.disable": [
         "undefined-field"

@@ -79,6 +79,13 @@ w.Tabs.Names = {
     DATAVIEW  = "Data Viewer",
 }
 w.Tabs.Flags = ImGuiTabBarFlags_None
+w.Tabs.Switch = {
+    ["Team"] = nil,
+    ["Focus"] = nil,
+    ["Blog"] = nil,
+    ["Report"] = nil,
+}
+w.Tabs.Active = nil
 
 -- Dropdowns /////////////////////
 w.Dropdown = {}
@@ -193,24 +200,35 @@ w.Populate = function()
             elseif w.Window.Mini then Team.Mini_Mode()
             else
                 if _Debug.Is_Enabled() then UI.Text("Error Count: " .. tostring(_Debug.Error.Util.Error_Count())) end
+                UI.Text(tostring(w.Tabs.Active))
                 if UI.BeginTabBar(w.Tabs.Names.PARENT, w.Tabs.Flags) then
-                    if UI.BeginTabItem(w.Tabs.Names.TEAM) then
+                    if UI.BeginTabItem(w.Tabs.Names.TEAM, false, w.Tabs.Switch[w.Tabs.Names.TEAM]) then
+                        w.Tabs.Switch[w.Tabs.Names.TEAM] = nil
+                        w.Tabs.Active = w.Tabs.Names.TEAM
                         Team.Populate()
                         UI.EndTabItem()
                     end
-                    if UI.BeginTabItem(w.Tabs.Names.FOCUS) then
+                    if UI.BeginTabItem(w.Tabs.Names.FOCUS, false, w.Tabs.Switch[w.Tabs.Names.FOCUS]) then
+                        w.Tabs.Switch[w.Tabs.Names.FOCUS] = nil
+                        w.Tabs.Active = w.Tabs.Names.FOCUS
                         Focus.Populate()
                         UI.EndTabItem()
                     end
-                    if UI.BeginTabItem(w.Tabs.Names.BATTLELOG) then
+                    if UI.BeginTabItem(w.Tabs.Names.BATTLELOG, false, w.Tabs.Switch[w.Tabs.Names.BATTLELOG]) then
+                        w.Tabs.Switch[w.Tabs.Names.BATTLELOG] = nil
+                        w.Tabs.Active = w.Tabs.Names.BATTLELOG
                         Blog.Populate()
                         UI.EndTabItem()
                     end
-                    if UI.BeginTabItem(w.Tabs.Names.REPORT) then
+                    if UI.BeginTabItem(w.Tabs.Names.REPORT, false, w.Tabs.Switch[w.Tabs.Names.REPORT]) then
+                        w.Tabs.Switch[w.Tabs.Names.REPORT] = nil
+                        w.Tabs.Active = w.Tabs.Names.REPORT
                         Report.Populate()
                         UI.EndTabItem()
                     end
-                    if UI.BeginTabItem(w.Tabs.Names.SETTINGS) then
+                    if UI.BeginTabItem(w.Tabs.Names.SETTINGS, false, w.Tabs.Switch[w.Tabs.Names.SETTINGS]) then
+                        w.Tabs.Switch[w.Tabs.Names.SETTINGS] = nil
+                        w.Tabs.Active = w.Tabs.Names.SETTINGS
                         Config.Populate()
                         UI.EndTabItem()
                     end
@@ -435,6 +453,23 @@ end
 ------------------------------------------------------------------------------------------------------
 w.Widget.Player_Filter_Help_Text = function()
     UI.SameLine() Window.Widget.HelpMarker("Pick a player that you would like to see more detailed stats for.\n")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Switches to a player in the player filter based on partial matching.
+------------------------------------------------------------------------------------------------------
+w.Util.Player_Switch = function(player_string)
+    local list = DB.Lists.Get.Players()
+    local found = false
+    for n, player_name in pairs(list) do
+        if not found then
+            if string.find(string.lower(player_name), player_string) then
+                w.Dropdown.Player.Index = n
+                w.Dropdown.Player.Focus = list[n]
+                found = true
+            end
+        end
+    end
 end
 
 return w

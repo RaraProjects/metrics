@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "0.9.7"
+addon.version = "0.9.8"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -232,6 +232,22 @@ ashita.events.register('command', 'command_cb', function (e)
             Report.Publish.Damage_By_Type(DB.Enum.Trackable.WS)
         elseif arg == "healing" then
             Report.Publish.Damage_By_Type(DB.Enum.Trackable.HEALING)
+        elseif arg == "team" or arg == "parse" then
+            Window.Tabs.Switch[Window.Tabs.Names.TEAM] = ImGuiTabItemFlags_SetSelected
+        elseif arg == "focus" then
+            Window.Tabs.Switch[Window.Tabs.Names.FOCUS] = ImGuiTabItemFlags_SetSelected
+        elseif arg == "log" or arg == "bl" then
+            Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG] = ImGuiTabItemFlags_SetSelected
+        elseif arg == "report" or arg == "rep" then
+            Window.Tabs.Switch[Window.Tabs.Names.REPORT] = ImGuiTabItemFlags_SetSelected
+        elseif arg == "settings" or arg == "set" or arg == "config" then
+            Window.Tabs.Switch[Window.Tabs.Names.SETTINGS] = ImGuiTabItemFlags_SetSelected
+        elseif arg == "player" or arg == "pl" then
+            local player_string = command_args[3]
+            _Debug.Error.Add("Metrics Command: " .. tostring(arg) .. " " .. tostring(command_args[3]))
+            if player_string then
+                Window.Util.Player_Switch(player_string)
+            end
         end
     end
 end)
