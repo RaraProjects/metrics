@@ -14,6 +14,12 @@ This screen resembles your typical parser.
 7. A mob filter allows you to pick a mob and only see the damage that everyone did to that specific mob. The filter acts on mob name and not individual mobs. So, if you set it to "Pugil" you will see the damage that all players in the parse did to any mob named "Pugil" even if that was several individual mobs.
 
 **Focus**<br>
+
+![xiloader_r9KdfKXDZz](https://github.com/RaraProjects/metrics/assets/72292212/ca7f54c1-d7d0-46d3-9d21-4e2358e9c7d5)<br>
+Sample data for the Melee tab.
+
+
+**Focus**<br>
 Set your attention to a specific player in the parser--including yourself--and then drill down into the various aspects of your actions such as Melee, Weaponskills, Skillchains, Magic, Abilities, Pets, etc.
 <br><br>Melee
 1. Total damage, accuracy, crit rate.
