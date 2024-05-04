@@ -298,18 +298,18 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 f.Display.WS_and_SC = function(player_name)
+    -- GUI configuration
     local col_flags = Window.Columns.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
     local name_width = Window.Columns.Widths.Standard
     local damage_width = Window.Columns.Widths.Damage
     local percent_width = Window.Columns.Widths.Percent
+
+    -- Data setup
     local trackable_ws = DB.Enum.Trackable.WS
     local trackable_sc = DB.Enum.Trackable.SC
 
-    Report.Publish.Button(player_name, trackable_ws, "Publish Weaponskills")
-    UI.SameLine() UI.Text(" ") UI.SameLine()
-    Report.Publish.Button(player_name, trackable_sc, "Publish Skillchains")
-
+    -- Basic stats
     if UI.BeginTable("WS and SC", 4, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, damage_width)
@@ -331,12 +331,26 @@ f.Display.WS_and_SC = function(player_name)
         UI.EndTable()
     end
 
+    -- Cataloged data
+    local show_ws_publish = false
+    local show_sc_publish = false
     if DB.Tracking.Trackable[DB.Enum.Trackable.WS] and DB.Tracking.Trackable[DB.Enum.Trackable.WS][player_name] then
         f.Display.Single_Data(player_name, DB.Enum.Trackable.WS)
+        show_ws_publish = true
     end
 
     if DB.Tracking.Trackable[DB.Enum.Trackable.SC] and DB.Tracking.Trackable[DB.Enum.Trackable.SC][player_name] then
         f.Display.Single_Data(player_name, DB.Enum.Trackable.SC)
+        show_sc_publish = true
+    end
+
+    -- Publish buttons
+    if show_ws_publish then
+        Report.Publish.Button(player_name, trackable_ws, "Publish Weaponskills")
+    end
+    if show_sc_publish then
+        UI.SameLine() UI.Text(" ") UI.SameLine()
+        Report.Publish.Button(player_name, trackable_sc, "Publish Skillchains")
     end
 end
 
@@ -346,12 +360,14 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 f.Display.Magic = function(player_name)
+    -- GUI configuration
     local col_flags = Window.Columns.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
     local name_width = Window.Columns.Widths.Standard
     local damage_width = Window.Columns.Widths.Damage
     local percent_width = Window.Columns.Widths.Percent
 
+    -- Data setup
     local nuke_total = DB.Data.Get(player_name, DB.Enum.Trackable.NUKE, DB.Enum.Metric.TOTAL)
     local mp_drain = DB.Data.Get(player_name, DB.Enum.Trackable.MP_DRAIN, DB.Enum.Metric.TOTAL)
     local healing_total = DB.Data.Get(player_name, DB.Enum.Trackable.HEALING, DB.Enum.Metric.TOTAL)
@@ -359,10 +375,7 @@ f.Display.Magic = function(player_name)
     local enfeeble_count = DB.Data.Get(player_name, DB.Enum.Trackable.ENFEEBLE, DB.Enum.Metric.COUNT)
     local misc_count = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC, DB.Enum.Metric.COUNT)
 
-    Report.Publish.Button(player_name, DB.Enum.Trackable.NUKE, "Publish Nuking")
-    UI.SameLine() UI.Text(" ") UI.SameLine()
-    Report.Publish.Button(player_name, DB.Enum.Trackable.HEALING, "Publish Healing")
-
+    -- Basic stats
     if UI.BeginTable("Magic", 5, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, damage_width)
@@ -430,6 +443,7 @@ f.Display.Magic = function(player_name)
         UI.EndTable()
     end
 
+    -- Magic bursts
     if nuke_total > 0 then
         if UI.BeginTable("Bursts", 3, table_flags) then
             UI.TableSetupColumn("Burst Damage", col_flags, name_width)
@@ -445,6 +459,7 @@ f.Display.Magic = function(player_name)
         end
     end
 
+    -- Healing
     if healing_total > 0 then
         if UI.BeginTable("Overcure", 1, table_flags) then
             UI.TableSetupColumn("Overcure", col_flags, damage_width)
@@ -455,11 +470,21 @@ f.Display.Magic = function(player_name)
         end
     end
 
+    -- Cataloged data
     if nuke_total > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.NUKE) end
     if healing_total > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.HEALING) end
     if enfeeble_count > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.ENFEEBLE) end
     if enspell_total > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.ENSPELL) end
     if misc_count > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.MAGIC) end
+
+    -- Publish buttons
+    if nuke_total > 0 then
+        Report.Publish.Button(player_name, DB.Enum.Trackable.NUKE, "Publish Nuking")
+    end
+    if healing_total > 0 then
+        UI.SameLine() UI.Text(" ") UI.SameLine()
+        Report.Publish.Button(player_name, DB.Enum.Trackable.HEALING, "Publish Healing")
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

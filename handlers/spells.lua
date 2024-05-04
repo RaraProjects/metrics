@@ -185,6 +185,7 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+        if is_burst then DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.BURST_COUNT) end
 
     elseif Lists.Spell.Enfeebling[spell_id] then
         if is_pet then trackable = H.Trackable.PET_ENFEEBLING else trackable = H.Trackable.ENFEEBLE end
@@ -208,7 +209,6 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
     end
-    if is_burst then DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.MAGIC, spell_name, H.Metric.BURST_COUNT) end
 end
 
 ------------------------------------------------------------------------------------------------------

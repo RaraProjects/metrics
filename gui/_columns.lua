@@ -481,7 +481,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 c.Single.Bursts = function(player_name, action_name)
-    local burst_count = DB.Catalog.Get(player_name, c.Trackable.MAGIC, action_name, c.Metric.BURST_COUNT)
+    local burst_count = DB.Catalog.Get(player_name, c.Trackable.NUKE, action_name, c.Metric.BURST_COUNT)
     local color = c.String.Color_Zero(burst_count)
     return UI.TextColored(color, c.String.Format_Number(burst_count))
 end

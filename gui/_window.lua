@@ -123,7 +123,7 @@ w.Colors = {
     WIND     = {0.0, 1.0, 0.0, 1.0},
     EARTH    = {0.7, 0.5, 0.0, 1.0},
     THUNDER  = {0.7, 0.2, 1.0, 1.0},
-    WATER    = {0.3, 0.3, 1.0, 1.0},
+    WATER    = {0.3, 0.5, 0.8, 1.0},
 }
 w.Colors.Elements = {
     [0] = w.Colors.FIRE,
