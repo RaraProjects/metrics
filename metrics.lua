@@ -284,4 +284,3 @@ ashita.events.register('unload', 'unload_cb', function ()
     Settings_File.save(Config.Enum.File.BLOG)
     Settings_File.save(Config.Enum.File.WINDOW)
 end)
-

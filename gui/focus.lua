@@ -381,7 +381,7 @@ f.Display.Magic = function(player_name)
         UI.TableSetupColumn("Damage", col_flags, damage_width)
         UI.TableSetupColumn("Damage %", col_flags, percent_width)
         UI.TableSetupColumn("MP Used", col_flags, damage_width)
-        UI.TableSetupColumn("Efficacy", col_flags, percent_width)
+        UI.TableSetupColumn("Efficacy", col_flags, damage_width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()

@@ -7,7 +7,7 @@ w.Window = {
     Mini = false,
     Flags = bit.bor(
     ImGuiWindowFlags_AlwaysAutoResize,
-    --ImGuiWindowFlags_NoSavedSettings,
+    ImGuiWindowFlags_NoSavedSettings,
     ImGuiWindowFlags_NoFocusOnAppearing,
     ImGuiWindowFlags_NoNav,
     ImGuiWindowFlags_NoTitleBar
@@ -18,8 +18,8 @@ w.Window = {
 
 w.Defaults = T{
     Alpha = 0.85,
-    Font_Scaling = 0.85,
-    Window_Scaling = 1,
+    Font_Scaling = 1.0,
+    Window_Scaling = 1.0,
     Style = 0,
     X_Pos = 100,
     Y_Pos = 100,
@@ -169,13 +169,17 @@ w.Initialize = function()
     UI.PushStyleVar(ImGuiStyleVar_WindowPadding, {7, 3})
     UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
     UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
-    UI.PushStyleVar(ImGuiStyleVar_IndentSpacing, 0) -- Not sure if I like this on or off more.
+
+    -- Position
+    UI.SetNextWindowPos({Metrics.Window.X_Pos, Metrics.Window.Y_Pos}, ImGuiCond_Always)
 
     -- Reset dropdown selections.
     w.Dropdown.Player.Focus = w.Dropdown.Enum.NONE
     w.Dropdown.Player.Index = 1
     w.Dropdown.Mob.Focus = w.Dropdown.Enum.NONE
     w.Dropdown.Mob.Index = 1
+
+    w.Populate()
 end
 
 ------------------------------------------------------------------------------------------------------
