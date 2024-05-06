@@ -302,7 +302,6 @@ s.Section.Gui = function()
     UI.Text("*** These settings will affect all ImGui-based addon visuals. ***")
     Window.Util.Set_Theme()
     s.Widget.Alpha()
-    s.Widget.Font_Size()
     s.Widget.Window_Scale()
 end
 
@@ -313,21 +312,8 @@ s.Widget.Alpha = function()
     local alpha = {[1] = Metrics.Window.Alpha}
     if UI.DragFloat("Window Transparency", alpha, 0.005, 0.1, 1, "%.3f", ImGuiSliderFlags_None) then
         Metrics.Window.Alpha = alpha[1]
-        Window.Util.Set_Alpha()
     end
     UI.SameLine() Window.Widget.HelpMarker("Window transparency.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Sets screen font size.
-------------------------------------------------------------------------------------------------------
-s.Widget.Font_Size = function()
-    local text_size = {[1] = Metrics.Window.Font_Scaling}
-    if UI.DragFloat("Font Size", text_size, 0.005, 0.1, 3, "%.3f", ImGuiSliderFlags_None) then
-        Metrics.Window.Font_Scaling = text_size[1]
-        Window.Util.Set_Font_Size()
-    end
-    UI.SameLine() Window.Widget.HelpMarker("Font size.")
 end
 
 ------------------------------------------------------------------------------------------------------

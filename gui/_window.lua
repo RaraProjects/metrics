@@ -18,7 +18,6 @@ w.Window = {
 
 w.Defaults = T{
     Alpha = 0.85,
-    Font_Scaling = 1.0,
     Window_Scaling = 1.0,
     Style = 0,
     X_Pos = 100,
@@ -152,23 +151,11 @@ w.Colors.Avatars = {
 -- https://skia.googlesource.com/external/github.com/ocornut/imgui/+/v1.51/imgui_demo.cpp
 ------------------------------------------------------------------------------------------------------
 w.Initialize = function()
-    -- Adjust font size.
-    local atlas = UI.GetIO().Fonts
-    local font = atlas.Fonts[1]
-    font.Scale = Metrics.Window.Font_Scaling
-
     -- Window Scaling
     UI.SetWindowFontScale(Metrics.Window.Window_Scaling)
 
     -- Set color theme.
     w.Util.Set_Theme()
-
-    -- Style
-    UI.PushStyleVar(ImGuiStyleVar_Alpha, Metrics.Window.Alpha)
-    UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})
-    UI.PushStyleVar(ImGuiStyleVar_WindowPadding, {7, 3})
-    UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
-    UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
 
     -- Position
     UI.SetNextWindowPos({Metrics.Window.X_Pos, Metrics.Window.Y_Pos}, ImGuiCond_Always)
@@ -187,7 +174,6 @@ end
 ------------------------------------------------------------------------------------------------------
 w.Reset_Settings = function()
     Metrics.Window.Alpha = w.Defaults.Alpha
-    Metrics.Window.Font_Scaling = w.Defaults.Font_Scaling
     Metrics.Window.Window_Scaling = w.Defaults.Window_Scaling
     w.Initialize()
 end
@@ -197,6 +183,13 @@ end
 ------------------------------------------------------------------------------------------------------
 w.Populate = function()
     if not Ashita.States.Zoning and w.Window.Visible then
+
+        UI.PushStyleVar(ImGuiStyleVar_Alpha, Metrics.Window.Alpha)
+        UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})
+        UI.PushStyleVar(ImGuiStyleVar_WindowPadding, {7, 3})
+        UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
+        UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
+
         if UI.Begin(w.Window.Name, {w.Window.Visible}, w.Window.Flags) then
             w.Window.Visible = -1
             Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()
@@ -254,6 +247,8 @@ w.Populate = function()
                 UI.End()
             end
         end
+
+        UI.PopStyleVar(5)
     end
 end
 
@@ -296,22 +291,6 @@ w.Util.Apply_Custom_Theme = function(theme)
             UI.PushStyleColor(flag_value, theme[flag_name])
         end
     end
-end
-
-------------------------------------------------------------------------------------------------------
--- Sets the screen transparency.
-------------------------------------------------------------------------------------------------------
-w.Util.Set_Alpha = function()
-    UI.PushStyleVar(ImGuiStyleVar_Alpha, Metrics.Window.Alpha)
-end
-
-------------------------------------------------------------------------------------------------------
--- Sets the screen font size.
-------------------------------------------------------------------------------------------------------
-w.Util.Set_Font_Size = function()
-    local atlas = UI.GetIO().Fonts
-    local font = atlas.Fonts[1]
-    font.Scale = Metrics.Window.Font_Scaling
 end
 
 ------------------------------------------------------------------------------------------------------
