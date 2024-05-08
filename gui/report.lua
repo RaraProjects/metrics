@@ -168,7 +168,7 @@ r.Publish.Damage_By_Type = function(trackable)
         if rank <= Metrics.Team.Settings.Rank_Cutoff then
             local player_name = data[1]
             local player_damage = Col.Damage.By_Type(player_name, trackable, false, nil, true)
-            local player_percent = Col.Damage.By_Type(player_name, trackable, true, nil, true)
+            local player_percent = Col.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)
             local chat_string = tostring(player_name) .. ": " .. tostring(player_damage) .. " (" .. tostring(player_percent) .. "%)"
             Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
         end

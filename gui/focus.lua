@@ -141,8 +141,8 @@ f.Display.Melee = function(player_name)
     if UI.BeginTable("Melee Primary", 5, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Damage %", col_flags, percent_width)
-        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
+        UI.TableSetupColumn("Damage %", col_flags, damage_width)
+        UI.TableSetupColumn("Accuracy", col_flags, damage_width)
         UI.TableSetupColumn("Rate", col_flags, percent_width)
         UI.TableHeadersRow()
 
@@ -255,8 +255,8 @@ f.Display.Ranged = function(player_name)
     if UI.BeginTable("Ranged", 5, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Damage %", col_flags, percent_width)
-        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
+        UI.TableSetupColumn("Damage %", col_flags, damage_width)
+        UI.TableSetupColumn("Accuracy", col_flags, damage_width)
         UI.TableSetupColumn("Rate", col_flags, percent_width)
         UI.TableHeadersRow()
 
@@ -313,8 +313,8 @@ f.Display.WS_and_SC = function(player_name)
     if UI.BeginTable("WS and SC", 4, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Damage %", col_flags, percent_width)
-        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
+        UI.TableSetupColumn("Damage %", col_flags, damage_width)
+        UI.TableSetupColumn("Accuracy", col_flags, damage_width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
@@ -531,8 +531,8 @@ f.Display.Pet = function(player_name)
     if UI.BeginTable("Pets Melee", 4, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Damage %", col_flags, percent_width)
-        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
+        UI.TableSetupColumn("Damage %", col_flags, damage_width)
+        UI.TableSetupColumn("Accuracy", col_flags, damage_width)
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Total")

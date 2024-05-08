@@ -81,6 +81,23 @@ DB.Team_Damage = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Calculates the total damage by type from everyone currently on the Team display.
+------------------------------------------------------------------------------------------------------
+---@return number
+------------------------------------------------------------------------------------------------------
+DB.Team_Damage_By_Type = function(damage_type)
+	local total = 0
+	DB.Lists.Sort.Total_Damage()
+	for rank, data in ipairs(DB.Sorted.Total_Damage) do
+		if rank <= Metrics.Team.Settings.Rank_Cutoff then
+			local player_name = data[1]
+			total = total + DB.Data.Get(player_name, damage_type, DB.Enum.Metric.TOTAL)
+		end
+	end
+	return total
+end
+
+------------------------------------------------------------------------------------------------------
 -- Keeps track of how many mobs have been defeated.
 ------------------------------------------------------------------------------------------------------
 ---@param mob_name string

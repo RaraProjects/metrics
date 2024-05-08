@@ -129,6 +129,23 @@ c.Damage.Total = function(player_name, percent, justify, raw)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Grabs the total damage percentage that the entity has done.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param damage_type string a trackable from the model.
+---@param justify? boolean whether or not to right justify the text
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Damage.Percent_Total_By_Type = function(player_name, damage_type, justify, raw)
+    local total = DB.Data.Get(player_name, c.Trackable.HEALING, c.Metric.TOTAL)
+    local color = c.String.Color_Zero(total)
+    local team_damage = DB.Team_Damage_By_Type(damage_type)
+    if raw then return c.String.Format_Percent(total, team_damage) end
+    return UI.TextColored(color, c.String.Format_Percent(total, team_damage, justify))
+end
+
+------------------------------------------------------------------------------------------------------
 -- Grabs the total damage that the entity has done.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
