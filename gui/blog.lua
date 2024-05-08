@@ -17,17 +17,20 @@ bl.Defaults.Flags = T{
     Healing   = true,
     Deaths    = false,
     Mob_Death = true,
+    Show_Length = false,
 }
 bl.Defaults.Thresholds = T{
     WS    = 600,
     MAGIC = 1000,
     MAX   = 99999,
 }
+bl.Defaults.Visible_Length = 8
 
 bl.Settings = {
     Size = 32,
     Length = 100,
     Truncate_Length = 6,
+    Visible_Length = 8,
 }
 
 bl.Enum = {}
@@ -70,9 +73,28 @@ end
 -- Loads the battle log data to the screen.
 ------------------------------------------------------------------------------------------------------
 bl.Populate = function()
-    local table_size = {0, bl.Settings.Size * 8}
+    local table_size = {0, bl.Settings.Size * Metrics.Blog.Visible_Length}
     local columns = 4
     if Metrics.Blog.Flags.Timestamp then columns = columns + 1 end
+
+    -- Resize Options
+    if UI.SmallButton("Set Display Length") then
+        Metrics.Blog.Flags.Show_Length = not Metrics.Blog.Flags.Show_Length
+    end
+    if Metrics.Blog.Flags.Show_Length then
+        UI.Separator()
+        if UI.Button("Default") then
+            Metrics.Blog.Visible_Length = bl.Settings.Visible_Length
+        end
+        UI.SameLine() UI.Text(" ") UI.SameLine()
+        local length = {[1] = Metrics.Blog.Visible_Length}
+        UI.SetNextItemWidth(50)
+        if UI.DragInt("Length", length, 0.1, bl.Settings.Visible_Length, 50, "%d", ImGuiSliderFlags_None) then
+            Metrics.Blog.Visible_Length = length[1]
+        end
+    end
+
+    -- Content
     if UI.BeginTable("Blog", columns, Window.Table.Flags.Scrollable, table_size) then
         bl.Display.Headers()
         for _, entry in ipairs(bl.Log) do

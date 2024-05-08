@@ -6,14 +6,11 @@ w.Window = {
     Nano = false,
     Mini = false,
     Flags = bit.bor(
-    ImGuiWindowFlags_AlwaysAutoResize,
-    ImGuiWindowFlags_NoSavedSettings,
-    ImGuiWindowFlags_NoFocusOnAppearing,
-    ImGuiWindowFlags_NoNav,
-    ImGuiWindowFlags_NoTitleBar
+        ImGuiWindowFlags_AlwaysAutoResize,  -- This prevents manual resizing, but without it things look messed up.
+        ImGuiWindowFlags_NoSavedSettings,
+        ImGuiWindowFlags_NoFocusOnAppearing,
+        ImGuiWindowFlags_NoNav
     ),
-    -- Throttle_Count = 0, -- I tried throttling the window, but I couldn't stop it from flickering.
-    -- Throttle_Level = 5, -- Probably need to stop data collection instead of preventing rendering.
 }
 
 w.Defaults = T{
@@ -22,6 +19,7 @@ w.Defaults = T{
     Style = 0,
     X_Pos = 100,
     Y_Pos = 100,
+    Show_Title = false,
 }
 
 w.Util = {}
@@ -175,6 +173,7 @@ end
 w.Reset_Settings = function()
     Metrics.Window.Alpha = w.Defaults.Alpha
     Metrics.Window.Window_Scaling = w.Defaults.Window_Scaling
+    Metrics.Window.Show_Title = w.Defaults.Show_Title
     w.Initialize()
 end
 
@@ -190,7 +189,12 @@ w.Populate = function()
         UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
         UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
 
-        if UI.Begin(w.Window.Name, {w.Window.Visible}, w.Window.Flags) then
+        local window_flags = w.Window.Flags
+        if not Metrics.Window.Show_Title then
+            window_flags = bit.bor(window_flags, ImGuiWindowFlags_NoTitleBar)
+        end
+
+        if UI.Begin(w.Window.Name, {w.Window.Visible}, window_flags) then
             w.Window.Visible = -1
             Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()
             if w.Window.Nano then Team.Nano_Mode()
@@ -258,7 +262,7 @@ end
 -- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
 ------------------------------------------------------------------------------------------------------
 w.Util.Set_Theme = function()
-    UI.Text("Theme")
+    UI.Text("Theme (will affect other ImGui based addons)")
     if UI.RadioButton("Default ", {Metrics.Window.Style}, 0) then
         Metrics.Window.Style = 0
         w.Util.Apply_Custom_Theme(Themes.Default)

@@ -299,7 +299,9 @@ end
 -- Shows settings that affect the GUI.
 ------------------------------------------------------------------------------------------------------
 s.Section.Gui = function()
-    UI.Text("*** These settings will affect all ImGui-based addon visuals. ***")
+    if UI.Checkbox("Show Title Bar", {Metrics.Window.Show_Title}) then
+        Metrics.Window.Show_Title = not Metrics.Window.Show_Title
+    end
     Window.Util.Set_Theme()
     s.Widget.Alpha()
     s.Widget.Window_Scale()
