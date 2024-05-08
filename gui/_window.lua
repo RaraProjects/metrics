@@ -35,7 +35,7 @@ w.Table.Flags = {
     Borders = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
     Fixed_Borders = bit.bor(ImGuiTableFlags_SizingFixedFit, ImGuiTableFlags_Resizable, ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_NoHostExtendX),
     Team = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
-    Scrollable = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_ScrollY)
+    Scrollable = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_ScrollY),
 }
 
 -- Columns ///////////////////////

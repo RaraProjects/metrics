@@ -1,7 +1,8 @@
-local r = {}
+local r = T{}
 
-r.Publish = {}
-r.Data = {}
+r.Section = T{}
+r.Publish = T{}
+r.Data = T{}
 r.Delay = 1.80
 
 -- The screen flickers when publishing to the chat. I think it has to do with the sleep after each line.
@@ -11,12 +12,25 @@ r.Delay = 1.80
 -- Creates some buttons to publish various party metrics to chat.
 ------------------------------------------------------------------------------------------------------
 r.Populate = function()
+    r.Section.Chat_Reports()
+    UI.Separator()
+    -- r.Section.File()
+    -- UI.Separator()
+    r.Section.Monsters_Defeated()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Builds the chat report section.
+------------------------------------------------------------------------------------------------------
+r.Section.Chat_Reports = function()
     local col_flags = Window.Columns.Flags.None
     local width = Window.Columns.Widths.Report
-    if UI.BeginTable("Reports", 4, Window.Table.Flags.Team) then
+    UI.Text("Chat Reports")
+    if UI.BeginTable("Chat Reports", 4, Window.Table.Flags.None) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
+        UI.TableSetupColumn("Col 4", col_flags, width)
 
         UI.TableNextRow()
         UI.TableNextColumn()
@@ -60,9 +74,44 @@ r.Populate = function()
         end
         UI.EndTable()
     end
+end
 
-    local mobs_defeated = 0
+------------------------------------------------------------------------------------------------------
+-- Builds the file section.
+------------------------------------------------------------------------------------------------------
+r.Section.File = function()
+    local col_flags = Window.Columns.Flags.None
+    local width = Window.Columns.Widths.Report
+    UI.Text("Create CSV File")
+    UI.Text("Files can be found in: /config/Metrics/")
+    if UI.BeginTable("Save File", 4, Window.Table.Flags.None) then
+        UI.TableSetupColumn("Col 1", col_flags, width)
+        UI.TableSetupColumn("Col 2", col_flags, width)
+        UI.TableSetupColumn("Col 3", col_flags, width)
+        UI.TableSetupColumn("Col 3", col_flags, width)
+
+        UI.TableNextRow()
+        UI.TableNextColumn()
+        if UI.Button("Database    ") then
+            File.Save_Data()
+            File.Save_Catalog()
+            return nil
+        end
+        UI.TableNextColumn()
+        if UI.Button("Battle Log  ") then
+            File.Save_Battlelog()
+            return nil
+        end
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Builds the monsters defeated section.
+------------------------------------------------------------------------------------------------------
+r.Section.Monsters_Defeated = function()
     UI.Text("Monsters Defeated")
+    local mobs_defeated = 0
     for mob_name, count in pairs(DB.Tracking.Defeated_Mobs) do
         UI.BulletText(mob_name .. ": " .. tostring(count))
         mobs_defeated = mobs_defeated + 1

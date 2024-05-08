@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "0.9.9"
+addon.version = "0.9.10"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -42,7 +42,7 @@ Themes    = require("resources.themes")
 -- Modules
 UI     = require("imgui")
 require("database._database")
-Report = require("report")
+require("file")
 Timers = require("timers")
 
 -- Ashita Helpers
@@ -63,6 +63,7 @@ Col    = require('gui._columns')
 Blog   = require('gui.blog')
 Team   = require('gui.team')
 Focus  = require('gui.focus')
+Report = require("gui.report")
 Config = require("gui.config")
 
 -- Debug
