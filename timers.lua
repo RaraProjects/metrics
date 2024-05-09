@@ -1,6 +1,11 @@
-local timers = {}
+local timers = T{}
 
-timers.Timers = {}
+timers.Timers = T{}
+
+timers.Enum = T{}
+timers.Enum.Names = T{
+    PARSE = "Metrics"
+}
 
 -- --------------------------------------------------------------------------
 -- Start the timer.
@@ -10,9 +15,13 @@ timers.Timers = {}
 timers.Start = function(name)
     if not name then name = "Default" end
     if not timers.Timers[name] then
-        timers.Timers[name] = {}
+        timers.Timers[name] = T{
+            Start = os.time(),
+            Duration = 0,
+        }
     end
     timers.Timers[name].Start = os.time()
+    timers.Timers[name].Paused = false
 end
 
 -- --------------------------------------------------------------------------
@@ -20,10 +29,23 @@ end
 -- --------------------------------------------------------------------------
 ---@param name string name of the timer to check.
 -- --------------------------------------------------------------------------
-timers.End = function(name)
+timers.Pause = function(name)
     if timers.Timers[name] then
+        local new_duration = os.time() - timers.Timers[name].Start
         timers.Timers[name].Start = nil
+        timers.Timers[name].Paused = true
+        timers.Timers[name].Duration = timers.Timers[name].Duration + new_duration
     end
+end
+
+-- --------------------------------------------------------------------------
+-- Resets the timer.
+-- --------------------------------------------------------------------------
+---@param name string name of the timer to check.
+-- --------------------------------------------------------------------------
+timers.Reset = function(name)
+    timers.Timers[name] = nil
+    timers.Start(name)
 end
 
 -- --------------------------------------------------------------------------
@@ -35,13 +57,16 @@ end
 -- --------------------------------------------------------------------------
 timers.Check = function(name, countdown)
     if timers.Timers[name] then
-        local start = timers.Timers[name].Start
-        local now = os.time()
-        local duration = now - start
+        local duration = timers.Timers[name].Duration
+        if not timers.Timers[name].Paused then
+            local start = timers.Timers[name].Start
+            local now = os.time()
+            duration = duration + (now - start)
+        end
         if countdown then
             return timers.Format((countdown * 60) - duration)
         else
-            return timers.Format(now - start)
+            return timers.Format(duration)
         end
     end
     return timers.Format()

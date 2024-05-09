@@ -11,12 +11,10 @@ t.Display.Columns = {
     Max = 18,
     Default = 10,
 }
-t.Display.Flags = {
+t.Display.Flags = T{}
 
-}
-t.Settings = {
-
-}
+t.Settings = T{}
+t.Widget = T{}
 
 t.Defaults = T{}
 t.Defaults.Flags = T{
@@ -48,7 +46,7 @@ t.Populate = function()
     Window.Widget.Mob_Filter() 
     if Metrics.Team.Settings.Show_Clock then
         if not Metrics.Team.Flags.Total_Damage_Only then UI.SameLine() UI.Text(" ") UI.SameLine() end
-        UI.Text("Duration: " .. tostring(Timers.Check("Metrics")))
+        UI.Text("Duration: " .. tostring(Timers.Check("Metrics"))) -- UI.SameLine() UI.Text(" ") UI.SameLine() t.Widget.Pause()
     end
     if UI.BeginTable("Team", t.Display.Columns.Current, Window.Table.Flags.Team) then
         t.Display.Headers()
@@ -223,6 +221,23 @@ t.Mini_Mode = function()
         end
 
         UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Pauses the parse timer.
+------------------------------------------------------------------------------------------------------
+t.Widget.Pause = function()
+    if Timers.Timers[Timers.Enum.Names.PARSE] then
+        if Timers.Timers[Timers.Enum.Names.PARSE].Paused then
+            if UI.SmallButton("Unpause") then
+                Timers.Start(Timers.Enum.Names.PARSE)
+            end
+        else
+            if UI.SmallButton("Pause") then
+                Timers.Pause(Timers.Enum.Names.PARSE)
+            end
+        end
     end
 end
 

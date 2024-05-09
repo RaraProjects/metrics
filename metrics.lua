@@ -185,7 +185,7 @@ ashita.events.register('d3d_present', 'present_cb', function ()
         Ashita.Party.Refresh()
 
         -- Start the clock.
-        Timers.Start("Metrics")
+        Timers.Start(Timers.Enum.Names.PARSE)
 
         _Globals.Initialized = true
     end

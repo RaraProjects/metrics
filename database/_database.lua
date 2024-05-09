@@ -56,7 +56,7 @@ DB.Initialize = function()
 		DB.Healing_Max[spell] = threshold
 	end
 	Blog.Reset_Log()
-	Timers.Start("Metrics")
+	Timers.Reset(Timers.Enum.Names.PARSE)
 end
 
 ------------------------------------------------------------------------------------------------------
