@@ -512,6 +512,11 @@ f.Display.Ability = function(player_name)
     if ability_total > 0 then
         f.Display.Single_Data(player_name, DB.Enum.Trackable.ABILITY)
     end
+
+    -- Publish buttons
+    if ability_total > 0 then
+        Report.Publish.Button(player_name, DB.Enum.Trackable.ABILITY, "Publish Abilities")
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
