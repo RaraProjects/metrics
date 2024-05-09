@@ -180,6 +180,7 @@ ashita.events.register('d3d_present', 'present_cb', function ()
             Team   = Settings_File.load(Team.Defaults, Config.Enum.File.TEAM),
             Blog   = Settings_File.load(Blog.Defaults, Config.Enum.File.BLOG),
             Model  = Settings_File.load(DB.Defaults, Config.Enum.File.DATABASE),
+            Report = Settings_File.load(Report.Defaults, Config.Enum.File.REPORT),
         }
 
         -- Initialize Modules
@@ -290,4 +291,5 @@ ashita.events.register('unload', 'unload_cb', function ()
     Settings_File.save(Config.Enum.File.TEAM)
     Settings_File.save(Config.Enum.File.BLOG)
     Settings_File.save(Config.Enum.File.WINDOW)
+    Settings_File.save(Config.Enum.File.REPORT)
 end)

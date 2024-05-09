@@ -11,7 +11,10 @@ s.Enum.File = {
     BLOG   = "blog",
     WINDOW = "window",
     DATABASE  = "database",
+    REPORT = "report",
 }
+
+s.Slider_Width = 100
 
 ------------------------------------------------------------------------------------------------------
 -- Loads the settings data to the screen.
@@ -36,6 +39,10 @@ s.Populate = function()
         end
         if UI.BeginTabItem("Battle Log", Window.Tabs.Flags) then
             s.Section.Battle_Log()
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem("Report", Window.Tabs.Flags) then
+            s.Section.Report()
             UI.EndTabItem()
         end
         if UI.BeginTabItem("GUI", Window.Tabs.Flags) then
@@ -293,6 +300,17 @@ s.Section.Battle_Log = function()
     UI.Text("Use Ctrl+Click on the component to set the number directly." )
     s.Widget.WS_Threshold()
     s.Widget.Magic_Threshold()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows settings that affect the Report tab.
+------------------------------------------------------------------------------------------------------
+s.Section.Report = function()
+    local damage_threshold = {[1] = Metrics.Report.Damage_Threshold}
+    UI.Text("This does not affect the Publish button on the focus tab.")
+    if UI.DragInt("Chat Report % Threshold", damage_threshold, 0.1, 0, 50, "%d", ImGuiSliderFlags_None) then
+        Metrics.Report.Damage_Threshold = damage_threshold[1]
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

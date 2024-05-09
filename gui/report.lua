@@ -5,6 +5,12 @@ r.Publish = T{}
 r.Data = T{}
 r.Delay = 1.80
 
+r.Defaults = T{
+    Damage_Threshold = 5,   -- Controls what damage percent is needed for showing up in a cross-player chat report.
+}
+
+r.Lock = false  -- Stops multiple reports from being pushed to chat at the same time.
+
 -- The screen flickers when publishing to the chat. I think it has to do with the sleep after each line.
 -- The sleep is necessary because the chat can only accept inputs at a certain rate.
 
@@ -128,16 +134,27 @@ end
 -- Sends a report of total damage to game chat.
 ------------------------------------------------------------------------------------------------------
 r.Publish.Total_Damage = function()
-    Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total Damage") coroutine.sleep(r.Delay)
-    DB.Lists.Sort.Total_Damage()
-    for rank, data in ipairs(DB.Sorted.Total_Damage) do
-        if rank <= Metrics.Team.Settings.Rank_Cutoff then
-            local player_name = data[1]
-            local player_total = Col.Damage.Total(player_name, false, false, true)
-            local player_percent = Col.Damage.Total(player_name, true, false, true)
-            local chat_string = tostring(player_name) .. ": " .. tostring(player_total) .. " (" .. tostring(player_percent) .. "%)"
-            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+    if not r.Lock then
+        r.Lock = true
+        local found = false
+        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total Damage") coroutine.sleep(r.Delay)
+        DB.Lists.Sort.Total_Damage()
+        for rank, data in ipairs(DB.Sorted.Total_Damage) do
+            if rank <= Metrics.Team.Settings.Rank_Cutoff then
+                local player_name = data[1]
+                local player_total = Col.Damage.Total(player_name, false, false, true)
+                local player_percent = Col.Damage.Total(player_name, true, false, true)
+                if tonumber(player_percent) >= Metrics.Report.Damage_Threshold then
+                    local chat_string = tostring(player_name) .. ": " .. tostring(player_total) .. " (" .. tostring(player_percent) .. "%)"
+                    Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+                    found = true
+                end
+            end
         end
+        if not found then
+            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Nothing to report.") coroutine.sleep(r.Delay)
+        end
+        r.Lock = false
     end
 end
 
@@ -145,15 +162,24 @@ end
 -- Sends a report of total accuracy to game chat.
 ------------------------------------------------------------------------------------------------------
 r.Publish.Accuracy = function()
-    Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total Accuracy") coroutine.sleep(r.Delay)
-    DB.Lists.Sort.Total_Damage()
-    for rank, data in ipairs(DB.Sorted.Total_Damage) do
-        if rank <= Metrics.Team.Settings.Rank_Cutoff then
-            local player_name = data[1]
-            local player_acc = Col.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, false, nil, true)
-            local chat_string = tostring(player_name) .. ": " .. tostring(player_acc) .. "%"
-            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+    if not r.Lock then
+        r.Lock = true
+        local found = false
+        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total Accuracy") coroutine.sleep(r.Delay)
+        DB.Lists.Sort.Total_Damage()
+        for rank, data in ipairs(DB.Sorted.Total_Damage) do
+            if rank <= Metrics.Team.Settings.Rank_Cutoff then
+                local player_name = data[1]
+                local player_acc = Col.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, false, nil, true)
+                local chat_string = tostring(player_name) .. ": " .. tostring(player_acc) .. "%"
+                Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+                found = true
+            end
         end
+        if not found then
+            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Nothing to report.") coroutine.sleep(r.Delay)
+        end
+        r.Lock = false
     end
 end
 
@@ -167,16 +193,28 @@ r.Publish.Damage_By_Type = function(trackable)
         Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Error") coroutine.sleep(r.Delay)
         return nil
     end
-    Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total " .. tostring(trackable)) coroutine.sleep(r.Delay)
-    local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
-    for rank, data in ipairs(sorted_damage) do
-        if rank <= Metrics.Team.Settings.Rank_Cutoff then
-            local player_name = data[1]
-            local player_damage = Col.Damage.By_Type(player_name, trackable, false, nil, true)
-            local player_percent = Col.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)
-            local chat_string = tostring(player_name) .. ": " .. tostring(player_damage) .. " (" .. tostring(player_percent) .. "%)"
-            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+
+    if not r.Lock then
+        r.Lock = true
+        local found = false
+        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total " .. tostring(trackable)) coroutine.sleep(r.Delay)
+        local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
+        for rank, data in ipairs(sorted_damage) do
+            if rank <= Metrics.Team.Settings.Rank_Cutoff then
+                local player_name = data[1]
+                local player_damage = Col.Damage.By_Type(player_name, trackable, false, nil, true)
+                local player_percent = Col.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)
+                if tonumber(player_percent) >= Metrics.Report.Damage_Threshold then
+                    local chat_string = tostring(player_name) .. ": " .. tostring(player_damage) .. " (" .. tostring(player_percent) .. "%)"
+                    Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+                    found = true
+                end
+            end
         end
+        if not found then
+            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Nothing to report.") coroutine.sleep(r.Delay)
+        end
+        r.Lock = false
     end
 end
 
@@ -197,20 +235,29 @@ r.Publish.Catalog = function(player_name, focus_type)
         return nil
     end
 
-    Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, tostring(focus_type) .. " for " .. tostring(player_name)) coroutine.sleep(r.Delay)
-    Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total | Count | Average | Min | Max") coroutine.sleep(r.Delay)
-    local action_name
-    DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
-    for _, data in ipairs(DB.Sorted.Catalog_Damage) do
-        action_name = data[1]
-        local total = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL, false, true)
-        local count = Col.Single.Attempts(player_name, action_name, focus_type, true)
-        local average = Col.Single.Average(player_name, action_name, focus_type, true)
-        local min = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN, false, true)
-        local max = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX, false, true)
-        local chat_string = tostring(action_name) .. ": " .. tostring(total) .. " | " .. tostring(count) .. " | " 
-                            .. tostring(average) .. " | " .. tostring(min) .. " | " .. tostring(max)
-        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+    if not r.Lock then
+        r.Lock = true
+        local found = false
+        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, tostring(focus_type) .. " for " .. tostring(player_name)) coroutine.sleep(r.Delay)
+        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total | Count | Average | Min | Max") coroutine.sleep(r.Delay)
+        local action_name
+        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            action_name = data[1]
+            local total = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL, false, true)
+            local count = Col.Single.Attempts(player_name, action_name, focus_type, true)
+            local average = Col.Single.Average(player_name, action_name, focus_type, true)
+            local min = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN, false, true)
+            local max = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX, false, true)
+            local chat_string = tostring(action_name) .. ": " .. tostring(total) .. " | " .. tostring(count) .. " | " 
+                                .. tostring(average) .. " | " .. tostring(min) .. " | " .. tostring(max)
+            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+            found = true
+        end
+        if not found then
+            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Nothing to report.") coroutine.sleep(r.Delay)
+        end
+        r.Lock = false
     end
 end
 
