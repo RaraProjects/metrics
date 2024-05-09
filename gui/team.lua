@@ -19,6 +19,7 @@ t.Widget = T{}
 t.Defaults = T{}
 t.Defaults.Flags = T{
     Total_Damage_Only = false,
+    Show_Clock = true,
     Total_Acc = false,
     Crit = false,
     Pet = false,
@@ -26,7 +27,6 @@ t.Defaults.Flags = T{
     Deaths = false,
 }
 t.Defaults.Settings = T{
-    Show_Clock = true,
     Rank_Cutoff = 6,
     Condensed_Numbers = false,
     Include_SC_Damage = false
@@ -46,7 +46,9 @@ t.Populate = function()
     Window.Widget.Mob_Filter() 
     if Metrics.Team.Settings.Show_Clock then
         if not Metrics.Team.Flags.Total_Damage_Only then UI.SameLine() UI.Text(" ") UI.SameLine() end
-        UI.Text("Duration: " .. tostring(Timers.Check("Metrics"))) -- UI.SameLine() UI.Text(" ") UI.SameLine() t.Widget.Pause()
+        local pause_string = ""
+        if Timers.Is_Paused(Timers.Enum.Names.PARSE) then pause_string = " (paused)" end
+        UI.Text("Duration: " .. tostring(Timers.Check("Metrics"))) UI.SameLine() UI.Text(pause_string)
     end
     if UI.BeginTable("Team", t.Display.Columns.Current, Window.Table.Flags.Team) then
         t.Display.Headers()

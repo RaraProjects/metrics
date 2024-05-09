@@ -18,17 +18,22 @@ File.Save_Data = function()
     ---@diagnostic disable-next-line: undefined-field
     local file = io.open(('%s/%s'):fmt(path, filename), "w")
     if file ~= nil then
+        -- Headers
         file:write(tostring("Actor") .. File.Delimter .. tostring("Target") .. File.Delimter .. tostring("Trackable") .. File.Delimter
                 .. tostring("Metric") .. File.Delimter .. tostring("Value") .. "\n")
+        -- Data
         for index, trackable_data in pairs(DB.Parse) do
             for trackable, metric_data in pairs(trackable_data) do
                 for metric, data in pairs(metric_data) do
-                    if not metric or not data then
-                        _Debug.Error.Add("File.Save_Data: Nil data: Metric: " .. tostring(metric) .. " Data: " .. tostring(data))
-                    elseif metric ~= DB.Enum.Values.CATALOG and data > 0 then
-                        local player_target = index:gsub(":", File.Delimter)
-                        file:write(tostring(player_target) .. File.Delimter .. tostring(trackable) .. File.Delimter
-                                .. tostring(metric) .. File.Delimter .. tostring(data) .. "\n")
+                    -- If data is a table then that means we grabbed a pet node (most likely). Skip those for now. Move pet data into its own table.
+                    if type(data) ~= "table" and type(data) ~= "string" then
+                        if not metric or not data then
+                            _Debug.Error.Add("File.Save_Data: Nil data: Metric: " .. tostring(metric) .. " Data: " .. tostring(data))
+                        elseif metric ~= DB.Enum.Values.CATALOG and data > 0 then
+                            local player_target = index:gsub(":", File.Delimter)
+                            file:write(tostring(player_target) .. File.Delimter .. tostring(trackable) .. File.Delimter
+                                    .. tostring(metric) .. File.Delimter .. tostring(data) .. "\n")
+                        end
                     end
                 end
             end

@@ -14,8 +14,8 @@ r.Delay = 1.80
 r.Populate = function()
     r.Section.Chat_Reports()
     UI.Separator()
-    -- r.Section.File()
-    -- UI.Separator()
+    r.Section.File()
+    UI.Separator()
     r.Section.Monsters_Defeated()
 end
 

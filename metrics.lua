@@ -113,7 +113,11 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         local log_offense = false
 
         -- Process action if the actor is an affiliated pet or affiliated player.
-        if owner_mob or Ashita.Party.Is_Affiliate(actor_mob.name) then log_offense = true end
+        if owner_mob or Ashita.Party.Is_Affiliate(actor_mob.name) then
+            log_offense = true
+            Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
+            Timers.Unpause(Timers.Enum.Names.PARSE)
+        end
 
         if     (action.category ==  1) then H.Melee.Action(action, actor_mob, owner_mob, log_offense)
         elseif (action.category ==  2) then H.Ranged.Action(action, actor_mob, log_offense)
@@ -186,6 +190,7 @@ ashita.events.register('d3d_present', 'present_cb', function ()
 
         -- Start the clock.
         Timers.Start(Timers.Enum.Names.PARSE)
+        Timers.Start(Timers.Enum.Names.AUTOPAUSE)
 
         _Globals.Initialized = true
     end
@@ -195,6 +200,7 @@ ashita.events.register('d3d_present', 'present_cb', function ()
     end
 
     Window.Populate()
+    Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
 end)
 
 ------------------------------------------------------------------------------------------------------
