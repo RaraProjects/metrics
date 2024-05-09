@@ -49,7 +49,7 @@ w.Columns.Widths = {
     Single = 40,
     Standard = 100,
     Settings = 175,
-    Report = 100,
+    Report = 110,
 }
 
 -- Trees /////////////////////////

@@ -68,7 +68,12 @@ r.Section.Chat_Reports = function()
         end
         --
         UI.TableNextColumn()
-        if UI.Button("Healing     ") then
+        if UI.Button("Abilities   ") then
+            r.Publish.Damage_By_Type(DB.Enum.Trackable.ABILITY)
+            return nil
+        end
+        UI.TableNextColumn()
+        if UI.Button("Healing      ") then
             r.Publish.Damage_By_Type(DB.Enum.Trackable.HEALING)
             return nil
         end

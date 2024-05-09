@@ -138,7 +138,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 c.Damage.Percent_Total_By_Type = function(player_name, damage_type, justify, raw)
-    local total = DB.Data.Get(player_name, c.Trackable.HEALING, c.Metric.TOTAL)
+    local total = DB.Data.Get(player_name, damage_type, c.Metric.TOTAL)
     local color = c.String.Color_Zero(total)
     local team_damage = DB.Team_Damage_By_Type(damage_type)
     if raw then return c.String.Format_Percent(total, team_damage) end
