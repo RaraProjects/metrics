@@ -142,7 +142,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             if Ashita.Party.Is_Affiliate(actor_mob.name) then
                 local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
                 DB.Defeated_Mob(target_mob.name)
-                if Metrics.Blog.Flags.Mob_Death then Blog.Add(target_mob.name, "Died") end
+                if Metrics.Blog.Flags.Mob_Death then Blog.Add(target_mob.name, Blog.Enum.Text.MOB_DEATH) end
             end
 
         -- Being defeated by a mob.

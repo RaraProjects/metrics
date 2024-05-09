@@ -16,5 +16,5 @@ H.Death.Action = function(actor_mob, target_mob)
 
     DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEATH, H.Metric.COUNT)
 
-    if Metrics.Blog.Flags.Deaths then Blog.Add(target_mob.name, "Died", nil, actor_mob.name, "Died") end
+    if Metrics.Blog.Flags.Deaths then Blog.Add(target_mob.name, Blog.Enum.Text.PLAYER_DEATH, nil, actor_mob.name, DB.Enum.Trackable.DEATH) end
 end

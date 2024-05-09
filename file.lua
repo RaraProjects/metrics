@@ -102,8 +102,8 @@ File.Save_Battlelog = function()
                 _Debug.Error.Add("File.Save_Battlelog: Nil data: Time " .. tostring(time) .. " Name: " .. tostring(name.Value)
                               .. " Damage: " .. tostring(damage.Value) .. " Action: " .. tostring(action.Value) .. " Note: " .. tostring(note))
             else
-                file:write(tostring(time) .. File.Delimter .. tostring(name.Value) .. File.Delimter
-                        .. tostring(damage.Value) .. File.Delimter .. tostring(action.Value) .. File.Delimter .. tostring(note) .. "\n")
+                file:write(tostring(time.Value) .. File.Delimter .. tostring(name.Value) .. File.Delimter
+                        .. tostring(damage.Value) .. File.Delimter .. tostring(action.Value) .. File.Delimter .. tostring(note.Value) .. "\n")
             end
         end
         file:close()

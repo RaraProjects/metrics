@@ -38,6 +38,8 @@ bl.Enum.Text = {
     MISS = "MISS!",
     NA   = "---",
     MB   = "BURST!",
+    MOB_DEATH = "Defeated",
+    PLAYER_DEATH = "Died",
 }
 bl.Enum.Flags = {
     IGNORE = "ignore",
@@ -118,12 +120,16 @@ bl.Add = function(player_name, action_name, damage, note, action_type, action_da
     -- If the blog is at max length then we will need to remove the last element
     if #bl.Log >= bl.Settings.Length then table.remove(bl.Log, bl.Settings.Length) end
     local entry = {
-        Time   = os.date("%X"),
+        Time   = {Value = os.date("%X"), Color = Window.Colors.WHITE},
         Name   = bl.Util.Name(player_name),
         Damage = bl.Util.Damage(damage, action_type),
         Action = bl.Util.Action(action_name, action_type, action_data),
         Note   = bl.Util.Notes(note, action_type)
     }
+    -- Gray out mob deaths for better visual parsing of the battle.
+    if action_name == bl.Enum.Text.MOB_DEATH then
+        bl.Util.Set_Row_Color(entry, Window.Colors.DIM)
+    end
     table.insert(bl.Log, 1, entry)
 end
 
@@ -192,22 +198,49 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param note? string|number how much TP was used by the weaponskill
 ---@param action_type? string a trackable from the data model.
----@return string
+---@return table
 ------------------------------------------------------------------------------------------------------
 bl.Util.Notes = function(note, action_type)
+    local color = Window.Colors.WHITE
+    local final_note = {Value = " ", Color = color}
+
+    -- A note should be passed in with these actions. Just use that.
     if action_type == DB.Enum.Trackable.MAGIC or action_type == DB.Enum.Trackable.HEALING or action_type == bl.Enum.Flags.IGNORE then
-        return tostring(note)
-    elseif action_type == "Died" then
-        return "by " .. tostring(note)
+        final_note.Value = tostring(note)
+
+    -- If the player died then show who kill them.
+    elseif action_type == DB.Enum.Trackable.DEATH then
+        final_note.Value = "by " .. tostring(note)
+
+    -- We passed in a note, but didn't handle it above.
     elseif type(note) == "string" then
         _Debug.Error.Add("Unhandled battle log note. Note: {" .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "}.")
-        return " "
+        final_note.Value = " "
+
+    -- The default case is showing the user's TP for a weaponskill.
     else
     -- TP for WS is the default case.
----@diagnostic disable-next-line: param-type-mismatch
-        if note then return "TP: " .. Col.String.Format_Number(note) .. " " end
+    ---@diagnostic disable-next-line: param-type-mismatch
+        if note then final_note.Value = "TP: " .. Col.String.Format_Number(note) .. " " end
     end
-    return " "
+
+    return final_note
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the color of an entire battle log row.
+------------------------------------------------------------------------------------------------------
+---@param row_data table
+---@return table
+------------------------------------------------------------------------------------------------------
+bl.Util.Set_Row_Color = function(row_data, color)
+    if not row_data then return row_data end
+    row_data.Time.Color   = color
+    row_data.Name.Color   = color
+    row_data.Damage.Color = color
+    row_data.Action.Color = color
+    row_data.Note.Color   = color
+    return row_data
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -228,11 +261,11 @@ end
 ------------------------------------------------------------------------------------------------------
 bl.Display.Rows = function(entry)
     UI.TableNextRow()
-    if Metrics.Blog.Flags.Timestamp then UI.TableNextColumn() UI.Text(entry.Time) end
+    if Metrics.Blog.Flags.Timestamp then UI.TableNextColumn() UI.Text(entry.Time.Value) end
     UI.TableNextColumn() UI.TextColored(entry.Name.Color, entry.Name.Value)
     UI.TableNextColumn() UI.TextColored(entry.Damage.Color, entry.Damage.Value)
     UI.TableNextColumn() UI.TextColored(entry.Action.Color, entry.Action.Value)
-    UI.TableNextColumn() UI.Text(tostring(entry.Note))
+    UI.TableNextColumn() UI.Text(tostring(entry.Note.Value))
 end
 
 return bl
