@@ -48,7 +48,7 @@ t.Populate = function()
         if not Metrics.Team.Flags.Total_Damage_Only then UI.SameLine() UI.Text(" ") UI.SameLine() end
         local pause_string = ""
         if Timers.Is_Paused(Timers.Enum.Names.PARSE) then pause_string = " (paused)" end
-        UI.Text("Duration: " .. tostring(Timers.Check("Metrics"))) UI.SameLine() UI.Text(pause_string)
+        UI.Text("Duration: " .. tostring(Timers.Check("Metrics"))) UI.SameLine() UI.Text(pause_string) t.Widget.Timer_Duration_Help_Text()
     end
     if UI.BeginTable("Team", t.Display.Columns.Current, Window.Table.Flags.Team) then
         t.Display.Headers()
@@ -241,6 +241,17 @@ t.Widget.Pause = function()
             end
         end
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows the help text for the player filter.
+------------------------------------------------------------------------------------------------------
+t.Widget.Timer_Duration_Help_Text = function()
+    UI.SameLine() Window.Widget.HelpMarker("The duration timer will auto-pause after " .. tostring(Timers.Tresholds.AUTOPAUSE)
+                                        .. " seconds of no actions. The timer will auto restart after someone affiliated with you "
+                                        .. "(in your party or alliance) takes an action. Data collection does NOT stop while "
+                                        .. "paused! The duration and auto-pause is to help you see how long your group has actually "
+                                        .. "been active and to help with possible DPS calculations in the future. \n")
 end
 
 return t
