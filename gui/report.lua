@@ -248,6 +248,7 @@ r.Publish.Catalog = function(player_name, focus_type)
             local count = Col.Single.Attempts(player_name, action_name, focus_type, true)
             local average = Col.Single.Average(player_name, action_name, focus_type, true)
             local min = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN, false, true)
+            if min == "100000" then min = "0" end
             local max = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX, false, true)
             local chat_string = tostring(action_name) .. ": " .. tostring(total) .. " | " .. tostring(count) .. " | " 
                                 .. tostring(average) .. " | " .. tostring(min) .. " | " .. tostring(max)
