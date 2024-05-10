@@ -320,7 +320,7 @@ s.Section.Gui = function()
     if UI.Checkbox("Show Title Bar", {Metrics.Window.Show_Title}) then
         Metrics.Window.Show_Title = not Metrics.Window.Show_Title
     end
-    Window.Util.Set_Theme()
+    Window.Util.Choose_Theme()
     s.Widget.Alpha()
     s.Widget.Window_Scale()
 end
@@ -343,6 +343,7 @@ s.Widget.Window_Scale = function()
     local window_scale = {[1] = Metrics.Window.Window_Scaling}
     if UI.DragFloat("Window Scaling", window_scale, 0.005, 0.1, 3, "%.3f", ImGuiSliderFlags_None) then
         Metrics.Window.Window_Scaling = window_scale[1]
+        Window.Scaling_Set = false
         Window.Util.Set_Window_Scale()
     end
     UI.SameLine() Window.Widget.HelpMarker("Adjust window element size.")

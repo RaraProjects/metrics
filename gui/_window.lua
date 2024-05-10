@@ -22,6 +22,9 @@ w.Defaults = T{
     Show_Title = false,
 }
 
+w.Scaling_Set = false
+w.Theme_Set = false
+
 w.Util = {}
 w.Widget = {}
 
@@ -149,12 +152,6 @@ w.Colors.Avatars = {
 -- https://skia.googlesource.com/external/github.com/ocornut/imgui/+/v1.51/imgui_demo.cpp
 ------------------------------------------------------------------------------------------------------
 w.Initialize = function()
-    -- Window Scaling
-    UI.SetWindowFontScale(Metrics.Window.Window_Scaling)
-
-    -- Set color theme.
-    w.Util.Set_Theme()
-
     -- Position
     UI.SetNextWindowPos({Metrics.Window.X_Pos, Metrics.Window.Y_Pos}, ImGuiCond_Always)
 
@@ -197,6 +194,9 @@ w.Populate = function()
         if UI.Begin(w.Window.Name, {w.Window.Visible}, window_flags) then
             w.Window.Visible = -1
             Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()
+            w.Util.Set_Window_Scale()
+            w.Util.Set_Theme()
+
             if w.Window.Nano then Team.Nano_Mode()
             elseif w.Window.Mini then Team.Mini_Mode()
             else
@@ -261,26 +261,49 @@ end
 -- Modeled from the ImGui demo.
 -- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
 ------------------------------------------------------------------------------------------------------
-w.Util.Set_Theme = function()
+w.Util.Choose_Theme = function()
     UI.Text("Theme (will affect other ImGui based addons)")
     if UI.RadioButton("Default ", {Metrics.Window.Style}, 0) then
         Metrics.Window.Style = 0
-        w.Util.Apply_Custom_Theme(Themes.Default)
+        w.Theme_Set = false
     end
     UI.SameLine()
     if UI.RadioButton("Dark ", {Metrics.Window.Style}, 1) then
         Metrics.Window.Style = 1
-        UI.StyleColorsDark()
+        w.Theme_Set = false
     end
     UI.SameLine()
     if UI.RadioButton("Light ", {Metrics.Window.Style}, 2) then
         Metrics.Window.Style = 2
-        UI.StyleColorsLight()
+        w.Theme_Set = false
     end
     UI.SameLine()
     if UI.RadioButton("Classic ", {Metrics.Window.Style}, 3) then
         Metrics.Window.Style = 3
-        UI.StyleColorsClassic()
+        w.Theme_Set = false
+    end
+    w.Util.Set_Theme()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Change the window themes.
+-- Modeled from the ImGui demo.
+-- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
+------------------------------------------------------------------------------------------------------
+w.Util.Set_Theme = function()
+    if not w.Theme_Set then
+        if Metrics.Window.Style == 0 then
+            w.Util.Apply_Custom_Theme(Themes.Default)
+        elseif Metrics.Window.Style == 1 then
+            UI.StyleColorsDark()
+        elseif Metrics.Window.Style == 2 then
+            UI.StyleColorsLight()
+        elseif Metrics.Window.Style == 3 then
+            UI.StyleColorsClassic()
+        else
+            w.Util.Apply_Custom_Theme(Themes.Default)
+        end
+        w.Theme_Set = true
     end
 end
 
@@ -301,7 +324,10 @@ end
 -- Sets the window scaling.
 ------------------------------------------------------------------------------------------------------
 w.Util.Set_Window_Scale = function()
-    UI.SetWindowFontScale(Metrics.Window.Window_Scaling)
+    if not w.Scaling_Set then
+        UI.SetWindowFontScale(Metrics.Window.Window_Scaling)
+        w.Scaling_Set = true
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
