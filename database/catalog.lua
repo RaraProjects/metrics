@@ -20,12 +20,13 @@ DB.Catalog.Init = function(index, player_name, trackable, action_name, pet_name)
 		return false
 	end
 
-	DB.Data.Init(index, player_name, pet_name)
+	DB.Data.Init(index, player_name)
+	if pet_name then DB.Pet_Data.Init(index, player_name, pet_name) end
 
 	-- Don't want to overwrite action_name node if it is already built out
 	if DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name] then
 		if pet_name then
-			if DB.Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name] then return false end
+			if DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name] then return false end
 			DB.Pet_Catalog.Init(index, player_name, trackable, action_name, pet_name)
 			return true
 		end

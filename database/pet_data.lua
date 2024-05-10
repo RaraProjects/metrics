@@ -11,13 +11,20 @@ DB.Pet_Data = T{}
 ---@param pet_name string used for maintaining various pet indexed tables.
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Data.Init = function(index, player_name, pet_name)
-	if DB.Parse[index][pet_name] then return nil end
-	DB.Parse[index][pet_name] = {}
+	if not index or not pet_name then
+		_Debug.Error.Add("Pet_Data.Init: {" .. tostring(player_name) .. " {" .. tostring(pet_name) .. "} nil index passed in." )
+		return false
+	end
+
+	if not DB.Pet_Parse[index] then DB.Pet_Parse[index] = {} end
+	if DB.Pet_Parse[index][pet_name] then return false end
+
+	DB.Pet_Parse[index][pet_name] = {}
 
 	-- Initialize data nodes
 	for _, trackable in pairs(DB.Enum.Trackable) do
-		DB.Parse[index][pet_name][trackable] = {}
-		DB.Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG] = {}
+		DB.Pet_Parse[index][pet_name][trackable] = {}
+		DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG] = {}
 		for _, metric in pairs(DB.Enum.Metric) do
 			DB.Pet_Data.Set(0, index, pet_name, trackable, metric)
 		end
@@ -47,7 +54,7 @@ DB.Pet_Data.Set = function(value, index, pet_name, trackable, metric)
 		_Debug.Error.Add("Set.Pet_Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
 		return false
 	end
-	DB.Parse[index][pet_name][trackable][metric] = value
+	DB.Pet_Parse[index][pet_name][trackable][metric] = value
 	return true
 end
 
@@ -66,7 +73,7 @@ DB.Pet_Data.Inc = function(value, index, pet_name, trackable, metric)
 		_Debug.Error.Add("Inc.Pet_Data: {" .. tostring(index) .. "} {" .. tostring(pet_name) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
 		return false
 	end
-	DB.Parse[index][pet_name][trackable][metric] = DB.Parse[index][pet_name][trackable][metric] + value
+	DB.Pet_Parse[index][pet_name][trackable][metric] = DB.Pet_Parse[index][pet_name][trackable][metric] + value
 	return true
 end
 
@@ -84,17 +91,17 @@ end
 DB.Pet_Data.Get = function(player_name, pet_name, trackable, metric)
 	local total = 0
 	local mob_focus = Window.Util.Get_Mob_Focus()
-	for index, _ in pairs(DB.Parse) do
+	for index, _ in pairs(DB.Pet_Parse) do
 		if mob_focus == Window.Dropdown.Enum.NONE then
 			if string.find(index, player_name .. ":") then
-				if DB.Parse[index][pet_name] then
-					total = total + DB.Parse[index][pet_name][trackable][metric]
+				if DB.Pet_Parse[index][pet_name] then
+					total = total + DB.Pet_Parse[index][pet_name][trackable][metric]
 				end
 			end
 		else
 			if string.find(index, player_name .. ":" .. mob_focus) then
-				if DB.Parse[index][pet_name] then
-					total = total + DB.Parse[index][pet_name][trackable][metric]
+				if DB.Pet_Parse[index][pet_name] then
+					total = total + DB.Pet_Parse[index][pet_name][trackable][metric]
 				end
 			end
 		end

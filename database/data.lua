@@ -8,30 +8,19 @@ DB.Data = T{}
 ------------------------------------------------------------------------------------------------------
 ---@param index string "actor_name:target_name"
 ---@param player_name? string used for maintaining various player indexed tables. In the case of pets this will be the owner.
----@param pet_name? string used for maintaining various pet indexed tables.
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Data.Init = function(index, player_name, pet_name)
+DB.Data.Init = function(index, player_name)
 	if not index then
-		_Debug.Error.Add("Data.Init: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil index passed in." )
+		_Debug.Error.Add("Data.Init: {" .. tostring(player_name) .. "} nil index passed in." )
 		return false
 	end
 
 	-- Check to see if the nodes have already been initialized for the player and the pet.
-	if DB.Parse[index] then
-		if pet_name then
-			if DB.Parse[index][pet_name] then return false end
-			DB.Pet_Data.Init(index, player_name, pet_name)
-			return true
-		end
-		return false
-	end
+	if DB.Parse[index] then return false end
 
 	-- Initialize primary node.
-	if not DB.Parse[index] then DB.Parse[index] = {} end
-
-	-- If the player has a pet then intialize those nodes as well.
-	if pet_name then DB.Pet_Data.Init(index, player_name, pet_name) end
+	DB.Parse[index] = {}
 
 	-- Initialize data nodes
 	for _, trackable in pairs(DB.Enum.Trackable) do
@@ -68,7 +57,8 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	local target_name = audits.target_name
 	local pet_name = audits.pet_name
 	local index = DB.Data.Build_Index(player_name, target_name)
-	DB.Data.Init(index, player_name, pet_name)
+	DB.Data.Init(index, player_name)
+	if pet_name then DB.Pet_Data.Init(index, player_name, pet_name) end
 
 	if mode == DB.Enum.Mode.INC then
 		DB.Data.Inc(value, index, trackable, metric)

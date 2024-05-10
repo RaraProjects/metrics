@@ -3,6 +3,8 @@ DB = T{}
 -- Primary Database
 DB.Parse = T{}                          -- [index][trackable][metric]
                                         -- [index][trackable][m.Enum.Node.CATALOG][action_name][metric]
+DB.Pet_Parse = T{}						-- [index][pet][trackable][metric]
+										-- [index][pet][trackable][m.Enum.Node.CATALOG][action_name][metric]
 
 -- Secondary Tracking Tables
 DB.Tracking = T{}

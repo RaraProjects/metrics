@@ -1,8 +1,8 @@
 File = T{}
 
 File.Addend_Path = "config\\Metrics"
-File.Delimter = ","
-File.Pattern  = "([^" .. File.Delimter .. "]+)"
+File.Delimiter = ","
+File.Pattern  = "([^" .. File.Delimiter .. "]+)"
 
 -- ------------------------------------------------------------------------------------------------------
 -- Write to file for the basic data.
@@ -19,20 +19,29 @@ File.Save_Data = function()
     local file = io.open(('%s/%s'):fmt(path, filename), "w")
     if file ~= nil then
         -- Headers
-        file:write(tostring("Actor") .. File.Delimter .. tostring("Target") .. File.Delimter .. tostring("Trackable") .. File.Delimter
-                .. tostring("Metric") .. File.Delimter .. tostring("Value") .. "\n")
-        -- Data
+        file:write(tostring("Actor") .. File.Delimiter .. tostring("Target") .. File.Delimiter .. tostring("Pet") .. File.Delimiter
+                .. tostring("Trackable") .. File.Delimiter .. tostring("Metric") .. File.Delimiter .. tostring("Value") .. "\n")
+        -- Player Data
         for index, trackable_data in pairs(DB.Parse) do
             for trackable, metric_data in pairs(trackable_data) do
                 for metric, data in pairs(metric_data) do
-                    -- If data is a table then that means we grabbed a pet node (most likely). Skip those for now. Move pet data into its own table.
-                    if type(data) ~= "table" and type(data) ~= "string" then
-                        if not metric or not data then
-                            _Debug.Error.Add("File.Save_Data: Nil data: Metric: " .. tostring(metric) .. " Data: " .. tostring(data))
-                        elseif metric ~= DB.Enum.Values.CATALOG and data > 0 then
-                            local player_target = index:gsub(":", File.Delimter)
-                            file:write(tostring(player_target) .. File.Delimter .. tostring(trackable) .. File.Delimter
-                                    .. tostring(metric) .. File.Delimter .. tostring(data) .. "\n")
+                    if metric ~= DB.Enum.Values.CATALOG and data > 0 then
+                        local player_target = index:gsub(":", File.Delimiter)
+                        file:write(tostring(player_target) .. File.Delimiter .. File.Delimiter .. tostring(trackable) .. File.Delimiter
+                                .. tostring(metric) .. File.Delimiter .. tostring(data) .. "\n")
+                    end
+                end
+            end
+        end
+        -- Pet Data
+        for index, pet_data in pairs(DB.Pet_Parse) do
+            for pet_name, trackable_data in pairs(pet_data) do
+                for trackable, metric_data in pairs(trackable_data) do
+                    for metric, data in pairs(metric_data) do
+                        if metric ~= DB.Enum.Values.CATALOG and data > 0 then
+                            local player_target = index:gsub(":", File.Delimiter)
+                            file:write(tostring(player_target) .. File.Delimiter .. tostring(pet_name) .. File.Delimiter
+                                    .. tostring(trackable) .. File.Delimiter .. tostring(metric) .. File.Delimiter .. tostring(data) .. "\n")
                         end
                     end
                 end
@@ -56,8 +65,11 @@ File.Save_Catalog = function()
     ---@diagnostic disable-next-line: undefined-field
     local file = io.open(('%s/%s'):fmt(path, filename), "w")
     if file ~= nil then
-        file:write(tostring("Actor") .. File.Delimter .. tostring("Target") .. File.Delimter .. tostring("Trackable") .. File.Delimter
-                .. tostring("Action") .. File.Delimter .. tostring("Metric") .. File.Delimter .. tostring("Value") .. "\n")
+        -- Headers
+        file:write(tostring("Actor") .. File.Delimiter .. tostring("Target") .. File.Delimiter .. tostring("Pet") .. File.Delimiter
+                .. tostring("Trackable") .. File.Delimiter .. tostring("Action") .. File.Delimiter .. tostring("Metric") .. File.Delimiter 
+                .. tostring("Value") .. "\n")
+        -- Player Data
         for index, trackable_data in pairs(DB.Parse) do
             for trackable, metric_data in pairs(trackable_data) do
                 for catalog_metric, catalog_data in pairs(metric_data) do
@@ -67,9 +79,34 @@ File.Save_Catalog = function()
                                 if not metric or not data then
                                     _Debug.Error.Add("File.Save_Catalog: Nil data: Metric: " .. tostring(metric) .. " Data: " .. tostring(data))
                                 elseif data > 0 then
-                                    local player_target = index:gsub(":", File.Delimter)
-                                    file:write(tostring(player_target) .. File.Delimter .. tostring(trackable) .. File.Delimter
-                                        .. tostring(action_name) .. File.Delimter .. tostring(metric) .. File.Delimter .. tostring(data) .. "\n")
+                                    if data == 100000 and metric == DB.Enum.Metric.MIN then data = 0 end
+                                    local player_target = index:gsub(":", File.Delimiter)
+                                    file:write(tostring(player_target) .. File.Delimiter .. File.Delimiter .. tostring(trackable) .. File.Delimiter
+                                        .. tostring(action_name) .. File.Delimiter .. tostring(metric) .. File.Delimiter .. tostring(data) .. "\n")
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        -- Pet Data
+        for index, pet_data in pairs(DB.Pet_Parse) do
+            for pet_name, trackable_data in pairs(pet_data) do
+                for trackable, metric_data in pairs(trackable_data) do
+                    for catalog_metric, catalog_data in pairs(metric_data) do
+                        if catalog_metric == DB.Enum.Values.CATALOG then
+                            for action_name, action_data in pairs(catalog_data) do
+                                for metric, data in pairs(action_data) do
+                                    if not metric or not data then
+                                        _Debug.Error.Add("File.Save_Catalog: Nil data: Metric: " .. tostring(metric) .. " Data: " .. tostring(data))
+                                    elseif data > 0 then
+                                        if data == 100000 and metric == DB.Enum.Metric.MIN then data = 0 end
+                                        local player_target = index:gsub(":", File.Delimiter)
+                                        file:write(tostring(player_target) .. File.Delimiter .. tostring(pet_name) .. File.Delimiter
+                                                .. tostring(trackable) .. File.Delimiter .. tostring(action_name) .. File.Delimiter
+                                                .. tostring(metric) .. File.Delimiter .. tostring(data) .. "\n")
+                                    end
                                 end
                             end
                         end
@@ -95,8 +132,8 @@ File.Save_Battlelog = function()
     ---@diagnostic disable-next-line: undefined-field
     local file = io.open(('%s/%s'):fmt(path, filename), "w")
     if file ~= nil then
-        file:write(tostring("Time") .. File.Delimter .. tostring("Name") .. File.Delimter
-                .. tostring("Damage") .. File.Delimter .. tostring("Action") .. File.Delimter .. tostring("Note") .. "\n")
+        file:write(tostring("Time") .. File.Delimiter .. tostring("Name") .. File.Delimiter
+                .. tostring("Damage") .. File.Delimiter .. tostring("Action") .. File.Delimiter .. tostring("Note") .. "\n")
         for _, data in pairs(Blog.Log) do
             local time = data.Time
             local name = data.Name
@@ -107,8 +144,8 @@ File.Save_Battlelog = function()
                 _Debug.Error.Add("File.Save_Battlelog: Nil data: Time " .. tostring(time) .. " Name: " .. tostring(name.Value)
                               .. " Damage: " .. tostring(damage.Value) .. " Action: " .. tostring(action.Value) .. " Note: " .. tostring(note))
             else
-                file:write(tostring(time.Value) .. File.Delimter .. tostring(name.Value) .. File.Delimter
-                        .. tostring(damage.Value) .. File.Delimter .. tostring(action.Value) .. File.Delimter .. tostring(note.Value) .. "\n")
+                file:write(tostring(time.Value) .. File.Delimiter .. tostring(name.Value) .. File.Delimiter
+                        .. tostring(damage.Value) .. File.Delimiter .. tostring(action.Value) .. File.Delimiter .. tostring(note.Value) .. "\n")
             end
         end
         file:close()
