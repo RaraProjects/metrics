@@ -116,3 +116,21 @@ end
 Ashita.Packets.Item_Message = function(data)
     return {}
 end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Gets the action packet target.
+-- Used to see if the target is an affiliate to drive defensive stats.
+-- ------------------------------------------------------------------------------------------------------
+---@param action table
+---@return table|nil
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.Get_Action_Target = function(action)
+	for target_index, target_value in pairs(action.targets) do
+		for action_index, _ in pairs(target_value.actions) do
+			local result = action.targets[target_index].actions[action_index]
+			local target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            return target_mob
+		end
+	end
+	return nil
+end

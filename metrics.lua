@@ -50,12 +50,6 @@ require("ashita._ashita")
 
 -- Action Handlers
 require("handlers._handler")
-require("handlers.melee")
-require("handlers.ranged")
-require("handlers.tp_action")
-require("handlers.abilities")
-require("handlers.spells")
-require("handlers.deaths")
 
 -- Windows
 Window = require("gui._window")
@@ -106,20 +100,35 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             _Debug.Error.Add("Packet Event: actor_mob was nil from Mob.Get_Mob_By_ID")
             return nil
         end
+        local target_mob = Ashita.Packets.Get_Action_Target(action)
+        if not target_mob then
+            _Debug.Error.Add("Packet Event: target_mob was nil from Mob.Get_Mob_By_ID")
+            return nil
+        end
 
         Ashita.Party.Refresh()
 
         local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)
         local log_offense = false
+        local log_defense = false
 
         -- Process action if the actor is an affiliated pet or affiliated player.
         if owner_mob or Ashita.Party.Is_Affiliate(actor_mob.name) then
             log_offense = true
             Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
             Timers.Unpause(Timers.Enum.Names.PARSE)
+        elseif Ashita.Mob.Pet_Owner(target_mob) or Ashita.Party.Is_Affiliate(target_mob.name) then
+            log_defense = true
+            Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
+            Timers.Unpause(Timers.Enum.Names.PARSE)
         end
 
-        if     (action.category ==  1) then H.Melee.Action(action, actor_mob, owner_mob, log_offense)
+        if     (action.category ==  1) then
+            if log_offense then
+                H.Melee.Action(action, actor_mob, owner_mob, log_offense)
+            elseif log_defense then
+                -- H.Melee_Def.Action(action, actor_mob, owner_mob, log_defense)
+            end
         elseif (action.category ==  2) then H.Ranged.Action(action, actor_mob, log_offense)
         elseif (action.category ==  3) then H.TP.Action(action, actor_mob, log_offense)
         elseif (action.category ==  4) then H.Spell.Action(action, actor_mob, log_offense)

@@ -18,3 +18,11 @@ H.Enum.Offsets = {
 H.Enum.Text = {
     BLANK = "",
 }
+
+require("handlers.melee")
+require("handlers.melee_def")
+require("handlers.ranged")
+require("handlers.tp_action")
+require("handlers.abilities")
+require("handlers.spells")
+require("handlers.deaths")

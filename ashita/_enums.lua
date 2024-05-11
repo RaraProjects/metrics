@@ -44,6 +44,11 @@ Ashita.Enum.Animation = T{
     DAKEN         = 4,
 }
 
+Ashita.Enum.Reaction = T{
+    GUARD        = 2,
+    SHIELD_BLOCK = 4,
+}
+
 -- Message IDs from incoming packet 0x029 (Action Message).
 Ashita.Enum.Message = T{
     HIT        = 1,
