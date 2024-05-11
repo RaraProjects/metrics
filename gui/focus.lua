@@ -482,7 +482,7 @@ f.Display.Magic = function(player_name)
         Report.Publish.Button(player_name, DB.Enum.Trackable.NUKE, "Publish Nuking")
     end
     if healing_total > 0 then
-        UI.SameLine() UI.Text(" ") UI.SameLine()
+        if nuke_total > 0 then UI.SameLine() UI.Text(" ") UI.SameLine() end
         Report.Publish.Button(player_name, DB.Enum.Trackable.HEALING, "Publish Healing")
     end
 end
