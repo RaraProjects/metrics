@@ -1,10 +1,10 @@
 Ashita.Enum = T{}
 
-
 Ashita.Enum.Chat = T{
-    PARTY     = "/p",
-    LINKSHELL = "/l",
-    SAY       = "/s",
+    PARTY      = 1,
+    LINKSHELL  = 2,
+    LINKSHELL2 = 3,
+    SAY        = 4,
 }
 
 Ashita.Enum.Player_Attributes = T{

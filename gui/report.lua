@@ -10,6 +10,8 @@ r.Defaults = T{
 }
 
 r.Lock = false  -- Stops multiple reports from being pushed to chat at the same time.
+r.Publish.Chat_Index = 1
+r.Publish.Chat_Mode = Ashita.Enum.Chat.PARTY
 
 -- The screen flickers when publishing to the chat. I think it has to do with the sleep after each line.
 -- The sleep is necessary because the chat can only accept inputs at a certain rate.
@@ -32,6 +34,7 @@ r.Section.Chat_Reports = function()
     local col_flags = Window.Columns.Flags.None
     local width = Window.Columns.Widths.Report
     UI.Text("Chat Reports")
+    r.Dropdown()
     if UI.BeginTable("Chat Reports", 4, Window.Table.Flags.None) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
@@ -137,7 +140,7 @@ r.Publish.Total_Damage = function()
     if not r.Lock then
         r.Lock = true
         local found = false
-        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total Damage") coroutine.sleep(r.Delay)
+        Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, "Total Damage") coroutine.sleep(r.Delay)
         DB.Lists.Sort.Total_Damage()
         for rank, data in ipairs(DB.Sorted.Total_Damage) do
             if rank <= Metrics.Team.Settings.Rank_Cutoff then
@@ -146,13 +149,13 @@ r.Publish.Total_Damage = function()
                 local player_percent = Col.Damage.Total(player_name, true, false, true)
                 if tonumber(player_percent) >= Metrics.Report.Damage_Threshold then
                     local chat_string = tostring(player_name) .. ": " .. tostring(player_total) .. " (" .. tostring(player_percent) .. "%)"
-                    Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+                    Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, chat_string) coroutine.sleep(r.Delay)
                     found = true
                 end
             end
         end
         if not found then
-            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Nothing to report.") coroutine.sleep(r.Delay)
+            Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(r.Delay)
         end
         r.Lock = false
     end
@@ -165,19 +168,19 @@ r.Publish.Accuracy = function()
     if not r.Lock then
         r.Lock = true
         local found = false
-        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total Accuracy") coroutine.sleep(r.Delay)
+        Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, "Total Accuracy") coroutine.sleep(r.Delay)
         DB.Lists.Sort.Total_Damage()
         for rank, data in ipairs(DB.Sorted.Total_Damage) do
             if rank <= Metrics.Team.Settings.Rank_Cutoff then
                 local player_name = data[1]
                 local player_acc = Col.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, false, nil, true)
                 local chat_string = tostring(player_name) .. ": " .. tostring(player_acc) .. "%"
-                Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+                Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, chat_string) coroutine.sleep(r.Delay)
                 found = true
             end
         end
         if not found then
-            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Nothing to report.") coroutine.sleep(r.Delay)
+            Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(r.Delay)
         end
         r.Lock = false
     end
@@ -190,14 +193,14 @@ end
 ------------------------------------------------------------------------------------------------------
 r.Publish.Damage_By_Type = function(trackable)
     if not trackable then
-        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Error") coroutine.sleep(r.Delay)
+        Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, "Error") coroutine.sleep(r.Delay)
         return nil
     end
 
     if not r.Lock then
         r.Lock = true
         local found = false
-        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total " .. tostring(trackable)) coroutine.sleep(r.Delay)
+        Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, "Total " .. tostring(trackable)) coroutine.sleep(r.Delay)
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         for rank, data in ipairs(sorted_damage) do
             if rank <= Metrics.Team.Settings.Rank_Cutoff then
@@ -206,13 +209,13 @@ r.Publish.Damage_By_Type = function(trackable)
                 local player_percent = Col.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)
                 if tonumber(player_percent) >= Metrics.Report.Damage_Threshold then
                     local chat_string = tostring(player_name) .. ": " .. tostring(player_damage) .. " (" .. tostring(player_percent) .. "%)"
-                    Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+                    Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, chat_string) coroutine.sleep(r.Delay)
                     found = true
                 end
             end
         end
         if not found then
-            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Nothing to report.") coroutine.sleep(r.Delay)
+            Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(r.Delay)
         end
         r.Lock = false
     end
@@ -238,8 +241,8 @@ r.Publish.Catalog = function(player_name, focus_type)
     if not r.Lock then
         r.Lock = true
         local found = false
-        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, tostring(focus_type) .. " for " .. tostring(player_name)) coroutine.sleep(r.Delay)
-        Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Total | Count | Average | Min | Max") coroutine.sleep(r.Delay)
+        Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, tostring(focus_type) .. " for " .. tostring(player_name)) coroutine.sleep(r.Delay)
+        Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, "Total | Count | Average | Min | Max") coroutine.sleep(r.Delay)
         local action_name
         DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         for _, data in ipairs(DB.Sorted.Catalog_Damage) do
@@ -252,11 +255,11 @@ r.Publish.Catalog = function(player_name, focus_type)
             local max = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX, false, true)
             local chat_string = tostring(action_name) .. ": " .. tostring(total) .. " | " .. tostring(count) .. " | " 
                                 .. tostring(average) .. " | " .. tostring(min) .. " | " .. tostring(max)
-            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, chat_string) coroutine.sleep(r.Delay)
+            Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, chat_string) coroutine.sleep(r.Delay)
             found = true
         end
         if not found then
-            Ashita.Chat.Add_To_Chat(Ashita.Enum.Chat.PARTY, "Nothing to report.") coroutine.sleep(r.Delay)
+            Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(r.Delay)
         end
         r.Lock = false
     end
@@ -273,6 +276,34 @@ r.Publish.Button = function(player_name, focus_type, caption)
     if not caption then caption = "Publish" end
     if UI.Button(caption) then
         r.Publish.Catalog(player_name, focus_type)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Creates a dropdown menu to show only damage done by a certain entity.
+------------------------------------------------------------------------------------------------------
+r.Dropdown = function()
+    local list = Ashita.Chat.Modes
+    local flags = Window.Dropdown.Flags
+    if list[1] then
+        UI.SetNextItemWidth(Ashita.Chat.Selection.Width)
+        if UI.BeginCombo(Ashita.Chat.Selection.Title, list[r.Publish.Chat_Index].Name, flags) then
+            for n = 1, #list, 1 do
+                local is_selected = Ashita.Chat.Selection.Index == n
+                if UI.Selectable(list[n].Name, is_selected) then
+                    r.Publish.Chat_Index = n
+                    r.Publish.Chat_Mode = list[n]
+                end
+                if is_selected then
+                    UI.SetItemDefaultFocus()
+                end
+            end
+            UI.EndCombo()
+        end
+    else
+        if UI.BeginCombo(Ashita.Chat.Selection.Title, Ashita.Enum.Chat.PARTY, flags) then
+            UI.EndCombo()
+        end
     end
 end
 

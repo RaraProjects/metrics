@@ -1,5 +1,17 @@
 Ashita.Chat = T{}
 
+Ashita.Chat.Selection = T{
+    Title = "Chat Mode",
+    Width = 150,
+}
+
+Ashita.Chat.Modes = {
+    [1] = {Name = "Party", Prefix = "/p"},
+    [2] = {Name = "Linkshell 1", Prefix = "/l"},
+    [3] = {Name = "Linkshell 2", Prefix = "/l2"},
+    [4] = {Name = "Say", Prefix = "/s"},
+}
+
 -- ------------------------------------------------------------------------------------------------------
 -- Adds a message in game chat. Doesn't actually send anything to other people.
 -- ------------------------------------------------------------------------------------------------------
