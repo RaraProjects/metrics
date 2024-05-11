@@ -23,9 +23,26 @@ DB.Pet_Catalog.Init = function(index, player_name, trackable, action_name, pet_n
 	DB.Pet_Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Enum.Metric.MIN)
 
 	-- Initialize tracking tables
+	DB.Pet_Catalog.Init_Tracking(trackable, player_name, pet_name)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Initializes a pet trackable.
+------------------------------------------------------------------------------------------------------
+---@param trackable string a tracked item from the trackable list.
+---@param player_name string
+---@param pet_name string
+---@return boolean true: successful initialization; false: error
+------------------------------------------------------------------------------------------------------
+DB.Pet_Catalog.Init_Tracking = function(trackable, player_name, pet_name)
+	if not trackable or not player_name or not pet_name then
+		_Debug.Error.Add("Pet_Catalog.Init_Tracking:  Passed nil Trackable " .. tostring(trackable) .. " Player Name " .. tostring(player_name) .. " " .. tostring(pet_name))
+		return false
+	end
 	if not DB.Tracking.Pet_Trackable[trackable] then DB.Tracking.Pet_Trackable[trackable] = {} end
 	if not DB.Tracking.Pet_Trackable[trackable][player_name] then DB.Tracking.Pet_Trackable[trackable][player_name] = {} end
 	if not DB.Tracking.Pet_Trackable[trackable][player_name][pet_name] then DB.Tracking.Pet_Trackable[trackable][player_name][pet_name] = {} end
+	return true
 end
 
 ------------------------------------------------------------------------------------------------------
