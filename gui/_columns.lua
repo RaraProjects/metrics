@@ -561,9 +561,8 @@ end
 ------------------------------------------------------------------------------------------------------
 c.Single.Enspell_Acc = function(player_name, action_name)
     local procs = DB.Catalog.Get(player_name, c.Trackable.ENSPELL, action_name, c.Metric.HIT_COUNT)
-    local attempts = DB.Data.Get(player_name, c.Trackable.MELEE, c.Metric.COUNT)
     local color = c.String.Color_Zero(procs)
-    return UI.TextColored(color, c.String.Format_Percent(procs, attempts))
+    return UI.TextColored(color, c.String.Format_Number(procs))
 end
 
 ------------------------------------------------------------------------------------------------------

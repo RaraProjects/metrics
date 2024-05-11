@@ -371,7 +371,7 @@ f.Display.Magic = function(player_name)
     local nuke_total = DB.Data.Get(player_name, DB.Enum.Trackable.NUKE, DB.Enum.Metric.TOTAL)
     local mp_drain = DB.Data.Get(player_name, DB.Enum.Trackable.MP_DRAIN, DB.Enum.Metric.TOTAL)
     local healing_total = DB.Data.Get(player_name, DB.Enum.Trackable.HEALING, DB.Enum.Metric.TOTAL)
-    local enspell_total = DB.Data.Get(player_name, DB.Enum.Trackable.ENSPELL, DB.Enum.Metric.TOTAL)
+    local enspell_count = DB.Data.Get(player_name, DB.Enum.Trackable.ENSPELL, DB.Enum.Metric.COUNT)
     local enfeeble_count = DB.Data.Get(player_name, DB.Enum.Trackable.ENFEEBLE, DB.Enum.Metric.COUNT)
     local misc_count = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC, DB.Enum.Metric.COUNT)
 
@@ -414,7 +414,7 @@ f.Display.Magic = function(player_name)
             UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.MP_DRAIN)
         end
 
-        if enspell_total > 0 then
+        if enspell_count > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Enspell")
             UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.ENSPELL)
@@ -474,7 +474,7 @@ f.Display.Magic = function(player_name)
     if nuke_total > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.NUKE) end
     if healing_total > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.HEALING) end
     if enfeeble_count > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.ENFEEBLE) end
-    if enspell_total > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.ENSPELL) end
+    if enspell_count > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.ENSPELL) end
     if misc_count > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.MAGIC) end
 
     -- Publish buttons

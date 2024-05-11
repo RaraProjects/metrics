@@ -429,7 +429,6 @@ H.Melee.Additional_Effect = function(audits, value, message_id, effect_animation
         if Lists.Spell.Enspell_Type[effect_animation_id] then
             local enspell_name = Lists.Spell.Enspell_Type[effect_animation_id]
             DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.ENSPELL, value, enspell_name)
-            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.COUNT)
             DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.HIT_COUNT)
         end
     elseif message_id == Ashita.Enum.Message.ENDRAIN then

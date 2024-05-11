@@ -195,8 +195,10 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
 
     elseif Lists.Spell.Enspell[spell_id] then
         trackable = H.Trackable.ENSPELL
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
 
     elseif Lists.Spell.MP_Drain[spell_id] then
         trackable = H.Trackable.MP_DRAIN
