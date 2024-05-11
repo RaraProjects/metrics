@@ -11,7 +11,7 @@ r.Defaults = T{
 
 r.Lock = false  -- Stops multiple reports from being pushed to chat at the same time.
 r.Publish.Chat_Index = 1
-r.Publish.Chat_Mode = Ashita.Enum.Chat.PARTY
+r.Publish.Chat_Mode = Ashita.Chat.Modes[1] -- Party
 
 -- The screen flickers when publishing to the chat. I think it has to do with the sleep after each line.
 -- The sleep is necessary because the chat can only accept inputs at a certain rate.
@@ -200,7 +200,9 @@ r.Publish.Damage_By_Type = function(trackable)
     if not r.Lock then
         r.Lock = true
         local found = false
-        Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, "Total " .. tostring(trackable)) coroutine.sleep(r.Delay)
+        local suffix = " Damage"
+        if trackable == DB.Enum.Trackable.HEALING then suffix = "" end
+        Ashita.Chat.Add_To_Chat(r.Publish.Chat_Mode.Prefix, "Total " .. tostring(trackable) .. tostring(suffix)) coroutine.sleep(r.Delay)
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         for rank, data in ipairs(sorted_damage) do
             if rank <= Metrics.Team.Settings.Rank_Cutoff then
