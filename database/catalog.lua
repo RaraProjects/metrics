@@ -159,6 +159,8 @@ DB.Catalog.Update_Metric = function(mode, value, audits, trackable, action_name,
 	-- This is used for the focus window
 	DB.Tracking.Trackable[trackable][player_name][action_name] = true
 	if pet_name then
+		local initialized = DB.Pet_Catalog.Init_Tracking(trackable, player_name, pet_name)
+		if not initialized then return false end
 		DB.Tracking.Pet_Trackable[trackable][player_name][pet_name][action_name] = true
 	end
 
