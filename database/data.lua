@@ -36,6 +36,7 @@ DB.Data.Init = function(index, player_name)
 		DB.Tracking.Initialized_Players[player_name] = true
 		DB.Lists.Sort.Players()
 		DB.Tracking.Running_Accuracy[player_name] = T{}
+		DB.Tracking.Running_Damage[player_name] = 0
 	end
 
 	return true
@@ -60,6 +61,7 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	DB.Data.Init(index, player_name)
 	if pet_name then DB.Pet_Data.Init(index, player_name, pet_name) end
 
+	-- Peform the operation.
 	if mode == DB.Enum.Mode.INC then
 		DB.Data.Inc(value, index, trackable, metric)
 		if pet_name then
@@ -70,6 +72,11 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 		if pet_name then
 			DB.Pet_Data.Set(value, index, pet_name, trackable, metric)
 		end
+	end
+
+	-- Increment the running damage count for DPS if this is a total damage increase.
+	if mode == DB.Enum.Mode.INC and trackable == DB.Enum.Trackable.TOTAL and metric == DB.Enum.Metric.TOTAL then
+		DB.DPS.Inc_Buffer(player_name, value)
 	end
 end
 

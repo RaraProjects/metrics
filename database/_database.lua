@@ -13,8 +13,9 @@ DB.Tracking.Pet_Trackable = T{}         -- [trackable][player_name][pet_name]
 DB.Tracking.Initialized_Players = T{}   -- [player_name]
 DB.Tracking.Initialized_Pets = T{}      -- [player_name][pet_name]
 DB.Tracking.Initialized_Mobs = T{}      -- [mob_name]
-DB.Tracking.Running_Accuracy = T{}
-DB.Tracking.Defeated_Mobs = T{}
+DB.Tracking.Running_Accuracy = T{}		-- [player_name]
+DB.Tracking.Running_Damage = T{}		-- [player_name]
+DB.Tracking.Defeated_Mobs = T{}			-- [mob_name]
 
 DB.Settings = T{}
 DB.Settings.Accuracy_Warning = 0.80
@@ -26,6 +27,7 @@ DB.Defaults = T{
 
 require("database._enum")
 require("database.accuracy")
+require("database.dps")
 require("database.catalog")
 require("database.data")
 require("database.lists")

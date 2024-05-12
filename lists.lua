@@ -737,6 +737,10 @@ l.Ability.Pet_Damaging = {
     [461] = {id=461,en="Regeneration",ja="リジェネレーション"},
     [462] = {id=462,en="Maelstrom",ja="メイルシュトロム"},
     [463] = {id=463,en="Whirlwind",ja="旋風"},
+    -- Skeleton
+    [478] = {id=478,en="Hell Slash",ja="ヘルスラッシュ"},
+    [484] = {id=484,en="Black Cloud",ja="ブラッククラウド"},
+    [485] = {id=485,en="Blood Saber",ja="ブラッドセイバー"},
     -- Coeurl
     [480] = {id=480,en="Petrifactive Breath",ja="石の吐息"},
     [482] = {id=482,en="Pounce",ja="パウンス"},

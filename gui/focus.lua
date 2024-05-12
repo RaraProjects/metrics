@@ -676,21 +676,23 @@ f.Display.Defense = function(player_name)
         UI.TableSetupColumn("Damage %", col_flags, damage_width)
         UI.TableHeadersRow()
 
-        UI.TableNextColumn() UI.Text("Crit. Hits")
+        UI.TableNextColumn() UI.Text("Crits")
         UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DEF_CRIT)
         UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_CRIT)
 
-        UI.TableNextColumn() UI.Text("Pet")
-        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET)
-        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        local pet = DB.Data.Get(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET, DB.Enum.Metric.TOTAL)
+        if pet > 0 then
+            UI.TableNextColumn() UI.Text("Pet")
+            UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
 
-        UI.TableNextColumn() UI.Text("Spikes")
-        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.INCOMING_SPIKE_DMG)
-        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-
-        UI.TableNextColumn() UI.Text("Healing")
-        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        local spikes = DB.Data.Get(player_name, DB.Enum.Trackable.INCOMING_SPIKE_DMG, DB.Enum.Metric.TOTAL)
+        if spikes > 0 then
+            UI.TableNextColumn() UI.Text("Spikes")
+            UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.INCOMING_SPIKE_DMG)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
 
         UI.EndTable()
     end
@@ -701,29 +703,53 @@ f.Display.Defense = function(player_name)
         UI.TableSetupColumn("Rate (%)", col_flags, damage_width)
         UI.TableHeadersRow()
 
-        UI.TableNextColumn() UI.Text("Evasion")
-        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_EVASION)
+        local evade = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_EVASION, DB.Enum.Metric.HIT_COUNT)
+        if evade > 0 then
+            UI.TableNextColumn() UI.Text("Evasion")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_EVASION)
+        end
 
-        UI.TableNextColumn() UI.Text("Parry")
-        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_PARRY)
+        local parry = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_PARRY, DB.Enum.Metric.HIT_COUNT)
+        if parry > 0 then
+            UI.TableNextColumn() UI.Text("Parry")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_PARRY)
+        end
 
-        UI.TableNextColumn() UI.Text("Shadows")
-        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_SHADOWS)
+        local shadows = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_SHADOWS, DB.Enum.Metric.HIT_COUNT)
+        if shadows > 0 then
+            UI.TableNextColumn() UI.Text("Shadows")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_SHADOWS)
+        end
 
-        UI.TableNextColumn() UI.Text("Counter")
-        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
-        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
+        local counter = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.HIT_COUNT)
+        if counter > 0 then
+            UI.TableNextColumn() UI.Text("Counter")
+            UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
+            UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
+        end
 
-        UI.TableNextColumn() UI.Text("Guard")
-        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_GUARD)
+        local guard = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_GUARD, DB.Enum.Metric.HIT_COUNT)
+        if guard > 0 then
+            UI.TableNextColumn() UI.Text("Guard")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_GUARD)
+        end
 
-        UI.TableNextColumn() UI.Text("Shield Block")
-        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_BLOCK)
+        local shield = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_BLOCK, DB.Enum.Metric.HIT_COUNT)
+        if shield > 0 then
+            UI.TableNextColumn() UI.Text("Shield Block")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_BLOCK)
+        end
+
+        if (evade + parry + shadows + counter + guard + shield) == 0 then
+            UI.TableNextColumn() UI.Text("None Yet")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        end
 
         UI.EndTable()
     end

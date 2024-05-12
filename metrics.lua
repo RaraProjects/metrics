@@ -64,6 +64,48 @@ Config = require("gui.config")
 require("debug._debug")
 
 ------------------------------------------------------------------------------------------------------
+-- Subscribe to screen rendering. Use this to drive things over time.
+-- https://github.com/ocornut/imgui
+-- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
+-- https://github.com/ocornut/imgui/blob/master/imgui_tables.cpp
+------------------------------------------------------------------------------------------------------
+ashita.events.register('d3d_present', 'present_cb', function ()
+    if not _Globals.Initialized then
+        if not Ashita.Player.Is_Logged_In() then return nil end
+
+        -- Initialize Settings
+        Metrics = T{
+            Window = Settings_File.load(Window.Defaults, Config.Enum.File.WINDOW),
+            Team   = Settings_File.load(Team.Defaults, Config.Enum.File.TEAM),
+            Blog   = Settings_File.load(Blog.Defaults, Config.Enum.File.BLOG),
+            Model  = Settings_File.load(DB.Defaults, Config.Enum.File.DATABASE),
+            Report = Settings_File.load(Report.Defaults, Config.Enum.File.REPORT),
+        }
+
+        -- Initialize Modules
+        Window.Initialize()
+        DB.Initialize()
+        Team.Initialize()
+        Ashita.Party.Refresh()
+
+        -- Start the clock.
+        Timers.Start(Timers.Enum.Names.PARSE)
+        Timers.Start(Timers.Enum.Names.AUTOPAUSE)
+        Timers.Start(Timers.Enum.Names.DPS)
+
+        _Globals.Initialized = true
+    end
+
+    if _Debug.Enabled then
+        UI.ShowDemoWindow()
+    end
+
+    Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
+    Timers.Cycle(Timers.Enum.Names.DPS)
+    Window.Populate()
+end)
+
+------------------------------------------------------------------------------------------------------
 -- Subscribes to incoming packets.
 -- Party info doesn't seem to update right away with 0xC8 (200) and 0xDD (221) so can't update party directly from those.
 -- https://github.com/atom0s/XiPackets/tree/main/world/server/0x0028
@@ -173,46 +215,6 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0x0D3 then
         -- Not implemented.
     end
-end)
-
-------------------------------------------------------------------------------------------------------
--- Subscribe to screen rendering. Use this to drive things over time.
--- https://github.com/ocornut/imgui
--- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
--- https://github.com/ocornut/imgui/blob/master/imgui_tables.cpp
-------------------------------------------------------------------------------------------------------
-ashita.events.register('d3d_present', 'present_cb', function ()
-    if not _Globals.Initialized then
-        if not Ashita.Player.Is_Logged_In() then return nil end
-
-        -- Initialize Settings
-        Metrics = T{
-            Window = Settings_File.load(Window.Defaults, Config.Enum.File.WINDOW),
-            Team   = Settings_File.load(Team.Defaults, Config.Enum.File.TEAM),
-            Blog   = Settings_File.load(Blog.Defaults, Config.Enum.File.BLOG),
-            Model  = Settings_File.load(DB.Defaults, Config.Enum.File.DATABASE),
-            Report = Settings_File.load(Report.Defaults, Config.Enum.File.REPORT),
-        }
-
-        -- Initialize Modules
-        Window.Initialize()
-        DB.Initialize()
-        Team.Initialize()
-        Ashita.Party.Refresh()
-
-        -- Start the clock.
-        Timers.Start(Timers.Enum.Names.PARSE)
-        Timers.Start(Timers.Enum.Names.AUTOPAUSE)
-
-        _Globals.Initialized = true
-    end
-
-    if _Debug.Enabled then
-        UI.ShowDemoWindow()
-    end
-
-    Window.Populate()
-    Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
 end)
 
 ------------------------------------------------------------------------------------------------------

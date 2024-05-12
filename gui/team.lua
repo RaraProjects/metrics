@@ -5,7 +5,7 @@ t.Util = {}
 t.Display.Screen = {}
 
 t.Display.Columns = {
-    Base = 4,
+    Base = 5,
     Current = 10,
     Start = 6,
     Max = 18,
@@ -106,6 +106,7 @@ end
 t.Display.Headers = function()
     local flags = Window.Columns.Flags.None
     UI.TableSetupColumn("Name", flags)
+    UI.TableSetupColumn("DPS", flags)
     UI.TableSetupColumn("%T", flags)
     UI.TableSetupColumn("Total", flags)
     UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
@@ -137,6 +138,7 @@ end
 t.Display.Rows = function(player_name)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(player_name)
+    UI.TableNextColumn() Col.Damage.DPS(player_name, true)
     UI.TableNextColumn() Col.Damage.Total(player_name, true, true)
     UI.TableNextColumn() Col.Damage.Total(player_name, false, true)
     UI.TableNextColumn() Col.Acc.Running(player_name)
@@ -170,13 +172,15 @@ t.Nano_Mode = function()
     if not player then return nil end
     local player_name = player.name
 
-    if UI.BeginTable("Team Nano", 3, Window.Table.Flags.None) then
+    if UI.BeginTable("Team Nano", 4, Window.Table.Flags.None) then
+        UI.TableSetupColumn("DPS", flags)
         UI.TableSetupColumn("%T", flags)
         UI.TableSetupColumn("Total", flags)
         UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
+        UI.TableNextColumn() Col.Damage.DPS(player_name, true)
         UI.TableNextColumn() Col.Damage.Total(player_name, true, true)
         UI.TableNextColumn() Col.Damage.Total(player_name, false, true)
         UI.TableNextColumn() Col.Acc.Running(player_name)
@@ -191,11 +195,12 @@ end
 t.Mini_Mode = function()
     local flags = Window.Columns.Flags.None
 
-    local columns = 4
+    local columns = 5
     if Metrics.Team.Flags.Pet then columns = columns + 2 end
 
     if UI.BeginTable("Team Mini", columns, Window.Table.Flags.Borders) then
         UI.TableSetupColumn("Name", flags)
+        UI.TableSetupColumn("DPS", flags)
         UI.TableSetupColumn("%T", flags)
         UI.TableSetupColumn("Total", flags)
         UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
@@ -212,6 +217,7 @@ t.Mini_Mode = function()
                 player_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(player_name)
+                UI.TableNextColumn() Col.Damage.DPS(player_name, true)
                 UI.TableNextColumn() Col.Damage.Total(player_name, true, true)
                 UI.TableNextColumn() Col.Damage.Total(player_name, false, true)
                 UI.TableNextColumn() Col.Acc.Running(player_name)

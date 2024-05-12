@@ -147,6 +147,18 @@ c.Damage.Percent_Total_By_Type = function(player_name, damage_type, justify, raw
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Grabs the total running damage for the player.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param justify? boolean whether or not to right justify the text
+------------------------------------------------------------------------------------------------------
+c.Damage.DPS = function(player_name, justify)
+    local dps = DB.DPS.Get_DPS(player_name)
+    local color = c.String.Color_Zero(dps)
+    return UI.TextColored(color, c.String.Format_Number(dps, justify))
+end
+
+------------------------------------------------------------------------------------------------------
 -- Grabs the total damage that the entity has done.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string

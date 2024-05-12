@@ -7,6 +7,7 @@ timers.Enum.Names = T{
     PARSE = "Metrics",
     AUTOPAUSE = "Auto-Pause",
     AUTOSAVE = "Auto-Save",
+    DPS = "DPS",
 }
 
 timers.Tresholds = T{
@@ -128,6 +129,11 @@ timers.Cycle = function(name)
     if name == Timers.Enum.Names.AUTOPAUSE then
         if duration > timers.Tresholds.AUTOPAUSE then
             timers.Pause(timers.Enum.Names.PARSE)
+        end
+    elseif name == Timers.Enum.Names.DPS then
+        if duration > DB.DPS.Snapshot_Time then
+            DB.DPS.Create_Snapshot()
+            timers.Reset(Timers.Enum.Names.DPS)
         end
     end
 end
