@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "05.11.24"
+addon.version = "05/12/24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -109,6 +109,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         Ashita.Party.Refresh()
 
         local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)
+        local target_owner_mob = Ashita.Mob.Pet_Owner(target_mob)
         local log_offense = false
         local log_defense = false
 
@@ -117,27 +118,28 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             log_offense = true
             Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
             Timers.Unpause(Timers.Enum.Names.PARSE)
-        elseif Ashita.Mob.Pet_Owner(target_mob) or Ashita.Party.Is_Affiliate(target_mob.name) then
+        elseif target_owner_mob or Ashita.Party.Is_Affiliate(target_mob.name) then
             log_defense = true
             Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
             Timers.Unpause(Timers.Enum.Names.PARSE)
         end
 
-        if     (action.category ==  1) then
-            if log_offense then
-                H.Melee.Action(action, actor_mob, owner_mob, log_offense)
-            elseif log_defense then
-                -- H.Melee_Def.Action(action, actor_mob, owner_mob, log_defense)
-            end
+        if (action.category ==  1) then
+            if log_offense then H.Melee.Action(action, actor_mob, owner_mob, log_offense)
+            elseif log_defense then H.Melee_Def.Action(action, actor_mob, target_owner_mob, log_defense) end
         elseif (action.category ==  2) then H.Ranged.Action(action, actor_mob, log_offense)
         elseif (action.category ==  3) then H.TP.Action(action, actor_mob, log_offense)
-        elseif (action.category ==  4) then H.Spell.Action(action, actor_mob, log_offense)
+        elseif (action.category ==  4) then
+            if log_offense then H.Spell.Action(action, actor_mob, log_offense)
+            elseif log_defense then H.Spell_Def.Action(action, actor_mob, target_owner_mob, log_defense) end
         elseif (action.category ==  5) then -- Do nothing (Finish Item Use)
         elseif (action.category ==  6) then H.Ability.Action(action, actor_mob, log_offense)
         elseif (action.category ==  7) then -- Do nothing (Begin WS)
         elseif (action.category ==  8) then -- Do nothing (Begin Spellcasting)
         elseif (action.category ==  9) then -- Do nothing (Begin or Interrupt Item Usage)
-        elseif (action.category == 11) then H.TP.Monster_Action(action, actor_mob, log_offense)
+        elseif (action.category == 11) then 
+            if log_offense then H.TP.Monster_Action(action, actor_mob, log_offense)
+            elseif log_defense then H.TP_Def.Monster_Action(action, actor_mob, owner_mob, log_defense) end
         elseif (action.category == 12) then -- Do nothing (Begin Ranged Attack)
         elseif (action.category == 13) then H.Ability.Pet_Action(action, actor_mob, log_offense)
         elseif (action.category == 14) then -- Do nothing (Unblinkable Job Ability)

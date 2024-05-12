@@ -125,6 +125,14 @@ l.Spell.Enspell = {
 }
 
 -- From spells.lua
+l.Spell.Spikes = {
+    [249] = {id=249,en="Blaze Spikes",ja="ブレイズスパイク",cast_time=3,duration=180,element=0,icon_id=307,icon_id_nq=8,levels={[4]=10,[5]=20,[20]=30,[22]=45},mp_cost=8,prefix="/magic",range=0,recast=10,recast_id=249,requirements=0,skill=34,status=34,targets=1,type="BlackMagic"},
+    [250] = {id=250,en="Ice Spikes",ja="アイススパイク",cast_time=3,duration=180,element=1,icon_id=308,icon_id_nq=9,levels={[4]=20,[5]=40,[20]=50,[22]=65},mp_cost=16,prefix="/magic",range=0,recast=10,recast_id=250,requirements=0,skill=34,status=35,targets=1,type="BlackMagic"},
+    [251] = {id=251,en="Shock Spikes",ja="ショックスパイク",cast_time=3,duration=180,element=4,icon_id=306,icon_id_nq=12,levels={[4]=30,[5]=60,[20]=70,[22]=85},mp_cost=24,prefix="/magic",range=0,recast=10,recast_id=251,requirements=0,skill=34,status=38,targets=1,type="BlackMagic"},
+    [277] = {id=277,en="Dread Spikes",ja="ドレッドスパイク",cast_time=3,duration=180,element=7,icon_id=309,icon_id_nq=15,levels={[8]=71},mp_cost=78,prefix="/magic",range=0,recast=52,recast_id=277,requirements=0,skill=37,status=173,targets=1,type="BlackMagic"},
+}
+
+-- From spells.lua
 l.Spell.Enfeebling = {
     [56] = {id=56,en="Slow",ja="スロウ",cast_time=2,duration=180,element=3,icon_id=141,icon_id_nq=3,levels={[3]=13,[5]=13},mp_cost=15,prefix="/magic",range=12,recast=20,recast_id=56,requirements=0,skill=35,status=13,targets=32,type="WhiteMagic"},
     [58] = {id=58,en="Paralyze",ja="パライズ",cast_time=3,duration=120,element=1,icon_id=144,icon_id_nq=1,levels={[3]=4,[5]=6},mp_cost=6,prefix="/magic",range=12,recast=10,recast_id=58,requirements=0,skill=35,status=4,targets=32,type="WhiteMagic"},

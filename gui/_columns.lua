@@ -1,6 +1,7 @@
 local c = {}
 
 c.Damage = {}
+c.Defense = {}
 c.Healing = {}
 c.Acc = {}
 c.Crit = {}
@@ -556,11 +557,12 @@ end
 -- Grabs the usage rate of specfic enspells.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param focus_type string a trackable from the model.
 ---@param action_name string
 ---@return string
 ------------------------------------------------------------------------------------------------------
-c.Single.Enspell_Acc = function(player_name, action_name)
-    local procs = DB.Catalog.Get(player_name, c.Trackable.ENSPELL, action_name, c.Metric.HIT_COUNT)
+c.Single.Hit_Count = function(player_name, focus_type, action_name)
+    local procs = DB.Catalog.Get(player_name, focus_type, action_name, c.Metric.HIT_COUNT)
     local color = c.String.Color_Zero(procs)
     return UI.TextColored(color, c.String.Format_Number(procs))
 end
@@ -610,6 +612,45 @@ c.Single.Pet_Average = function(player_name, pet_name, action_name, trackable)
     end
     local single_average = single_damage / single_hits
     return UI.TextColored(color, c.String.Format_Number(single_average))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Grabs the damage of a certain trackable that the entity has taken.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param damage_type string a trackable from the model.
+---@param percent? boolean whether or not the damage should be raw or percent.
+---@param justify? boolean whether or not to right justify the text
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Defense.Damage_Taken_By_Type = function(player_name, damage_type, percent, justify, raw)
+    local total = DB.Data.Get(player_name, damage_type, c.Metric.TOTAL)
+    local color = c.String.Color_Zero(total)
+    if percent then
+        local total_damage = DB.Data.Get(player_name, c.Trackable.DAMAGE_TAKEN_TOTAL, c.Metric.TOTAL)
+        if raw then return c.String.Format_Percent(total, total_damage) end
+        return UI.TextColored(color, c.String.Format_Percent(total, total_damage, justify))
+    end
+    if raw then return c.String.Format_Number(total) end
+    return UI.TextColored(color, c.String.Format_Number(total, justify))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Grabs the proc rate of certain defensive actions.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param damage_type string a trackable from the model.
+---@param justify? boolean whether or not to right justify the text
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
+---@return string
+------------------------------------------------------------------------------------------------------
+c.Defense.Proc_Rate_By_Type = function(player_name, damage_type, justify, raw)
+    local proc_count = DB.Data.Get(player_name, damage_type, c.Metric.HIT_COUNT)
+    local color = c.String.Color_Zero(proc_count)
+    local attack_count = DB.Data.Get(player_name, damage_type, c.Metric.COUNT)
+    if raw then return c.String.Format_Percent(proc_count, attack_count) end
+    return UI.TextColored(color, c.String.Format_Percent(proc_count, attack_count, justify))
 end
 
 ------------------------------------------------------------------------------------------------------

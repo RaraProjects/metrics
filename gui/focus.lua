@@ -83,6 +83,10 @@ f.Populate = function()
             f.Display.Pet(player_name)
             UI.EndTabItem()
         end
+        if UI.BeginTabItem("Defense", false) then
+            f.Display.Defense(player_name)
+            UI.EndTabItem()
+        end
         UI.EndTabBar()
     end
 end
@@ -135,8 +139,9 @@ f.Display.Melee = function(player_name)
     local damage_width = Window.Columns.Widths.Damage
     local percent_width = Window.Columns.Widths.Percent
 
-    local kick_damage = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.TOTAL)
     local off_hand = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.TOTAL)
+    local kick_damage = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.TOTAL)
+    local counter_damage = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.TOTAL)
 
     if UI.BeginTable("Melee Primary", 5, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
@@ -164,7 +169,7 @@ f.Display.Melee = function(player_name)
 
         -- Off-Hand
         if off_hand > 0 then
-        UI.TableNextRow()
+            UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Off-Hand")
             UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE_OFFHAND)
             UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE_OFFHAND, true)
@@ -174,7 +179,7 @@ f.Display.Melee = function(player_name)
 
         -- Kick Attacks
         if kick_damage > 0 then
-        UI.TableNextRow()
+            UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Kick Attacks")
             UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE_KICK)
             UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE_KICK, true)
@@ -182,9 +187,19 @@ f.Display.Melee = function(player_name)
             UI.TableNextColumn() Col.Kick.Rate(player_name)
         end
 
+        -- Counter
+        if counter_damage > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Counter")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER, true)
+            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
+        end
+
         -- Critical Hits
         UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Critical Hits")
+        UI.TableNextColumn() UI.Text("Crits")
         UI.TableNextColumn() Col.Crit.Damage(player_name, DB.Enum.Trackable.MELEE)
         UI.TableNextColumn() Col.Crit.Damage(player_name, DB.Enum.Trackable.MELEE, true)
         UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
@@ -373,6 +388,7 @@ f.Display.Magic = function(player_name)
     local healing_total = DB.Data.Get(player_name, DB.Enum.Trackable.HEALING, DB.Enum.Metric.TOTAL)
     local enspell_count = DB.Data.Get(player_name, DB.Enum.Trackable.ENSPELL, DB.Enum.Metric.COUNT)
     local enfeeble_count = DB.Data.Get(player_name, DB.Enum.Trackable.ENFEEBLE, DB.Enum.Metric.COUNT)
+    local spike_damage = DB.Data.Get(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG, DB.Enum.Metric.TOTAL)
     local misc_count = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC, DB.Enum.Metric.COUNT)
 
     -- Basic stats
@@ -421,6 +437,14 @@ f.Display.Magic = function(player_name)
             UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.ENSPELL, true)
             UI.TableNextColumn() Col.Spell.MP(player_name, DB.Enum.Trackable.ENSPELL)
             UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.ENSPELL)
+        end
+
+        if spike_damage > 0 then
+            UI.TableNextColumn() UI.Text("Spikes")
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
+            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG, true)
+            UI.TableNextColumn() Col.Spell.MP(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
+            UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
         end
 
         if enfeeble_count > 0 then
@@ -475,6 +499,7 @@ f.Display.Magic = function(player_name)
     if healing_total > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.HEALING) end
     if enfeeble_count > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.ENFEEBLE) end
     if enspell_count > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.ENSPELL) end
+    if spike_damage > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG) end
     if misc_count > 0 then f.Display.Spell_Single(player_name, DB.Enum.Trackable.MAGIC) end
 
     -- Publish buttons
@@ -610,6 +635,101 @@ f.Display.Pet = function(player_name)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Loads data to the defense drop down inside the focus window.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+f.Display.Defense = function(player_name)
+    local col_flags = Window.Columns.Flags.None
+    local table_flags = Window.Table.Flags.Fixed_Borders
+    local name_width = Window.Columns.Widths.Standard
+    local damage_width = Window.Columns.Widths.Damage
+
+    if UI.BeginTable("Damage Taken", 3, table_flags) then
+        UI.TableSetupColumn("Damage Taken", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, damage_width)
+        UI.TableSetupColumn("Damage %", col_flags, damage_width)
+        UI.TableHeadersRow()
+
+        UI.TableNextColumn() UI.Text("Total")
+        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL)
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+
+        UI.TableNextColumn() UI.Text("Melee")
+        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN)
+        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN, true)
+
+        UI.TableNextColumn() UI.Text("Magic")
+        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
+        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN, true)
+
+        UI.TableNextColumn() UI.Text("Mob TP")
+        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
+        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN, true)
+
+        UI.EndTable()
+    end
+
+    if UI.BeginTable("Other Damage", 3, table_flags) then
+        UI.TableSetupColumn("Misc. Defense", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, damage_width)
+        UI.TableSetupColumn("Damage %", col_flags, damage_width)
+        UI.TableHeadersRow()
+
+        UI.TableNextColumn() UI.Text("Crit. Hits")
+        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DEF_CRIT)
+        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_CRIT)
+
+        UI.TableNextColumn() UI.Text("Pet")
+        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET)
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+
+        UI.TableNextColumn() UI.Text("Spikes")
+        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.INCOMING_SPIKE_DMG)
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+
+        UI.TableNextColumn() UI.Text("Healing")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+
+        UI.EndTable()
+    end
+
+    if UI.BeginTable("Defense", 3, table_flags) then
+        UI.TableSetupColumn("Mitigation", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, damage_width)
+        UI.TableSetupColumn("Rate (%)", col_flags, damage_width)
+        UI.TableHeadersRow()
+
+        UI.TableNextColumn() UI.Text("Evasion")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_EVASION)
+
+        UI.TableNextColumn() UI.Text("Parry")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_PARRY)
+
+        UI.TableNextColumn() UI.Text("Shadows")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_SHADOWS)
+
+        UI.TableNextColumn() UI.Text("Counter")
+        UI.TableNextColumn() Col.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
+        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
+
+        UI.TableNextColumn() UI.Text("Guard")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_GUARD)
+
+        UI.TableNextColumn() UI.Text("Shield Block")
+        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() Col.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_BLOCK)
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Sets up the table for a trackable drop down inside the focus window.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
@@ -730,6 +850,9 @@ f.Display.Spell_Single = function(player_name, focus_type)
     elseif focus_type == DB.Enum.Trackable.ENSPELL then
         action = "Enspell"
         acc_string = "Hits"
+    elseif focus_type == DB.Enum.Trackable.OUTGOING_SPIKE_DMG then
+        action = "Spikes"
+        acc_string = "Procs"
     elseif focus_type == DB.Enum.Trackable.MP_DRAIN then
         action = "MP Drain"
     end
@@ -779,7 +902,9 @@ f.Display.Util.Spell_Single_Row = function(player_name, action_name, focus_type)
     elseif focus_type == DB.Enum.Trackable.HEALING then
         UI.TableNextColumn() Col.Single.Overcure(player_name, action_name)
     elseif focus_type == DB.Enum.Trackable.ENSPELL then
-        UI.TableNextColumn() Col.Single.Enspell_Acc(player_name, action_name)
+        UI.TableNextColumn() Col.Single.Hit_Count(player_name, DB.Enum.Trackable.ENSPELL, action_name)
+    elseif focus_type == DB.Enum.Trackable.OUTGOING_SPIKE_DMG then
+        UI.TableNextColumn() Col.Single.Hit_Count(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG, action_name)
     else
         UI.TableNextColumn() Col.Single.Acc(player_name, action_name, focus_type)
     end

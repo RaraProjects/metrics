@@ -9,7 +9,7 @@ H.Melee = {}
 ---@param log_offense boolean if this action should actually be logged.
 -- ------------------------------------------------------------------------------------------------------
 H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
-	if not log_offense then return end
+	if not log_offense then return nil end
 	local result, target
 	local damage = 0
 
@@ -98,7 +98,8 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     -- Accuracy, crits, absorbed by shadows, etc.
     H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete)
 
-    local spikes = result.spike_effect_effect
+    -- Spike damage
+    H.Melee.Spikes(audits, result)
 
     return damage
 end
@@ -188,7 +189,6 @@ end
 ------------------------------------------------------------------------------------------------------
 -- The melee's animation to determine whether this is a regular melee of throwing melee.
 ------------------------------------------------------------------------------------------------------
----comment
 ---@param animation_id number this determines if the melee is main-hand, off-hand, etc.
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param damage number
@@ -437,5 +437,24 @@ H.Melee.Additional_Effect = function(audits, value, message_id, effect_animation
     elseif message_id == Ashita.Enum.Message.ENASPIR then
         DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.TOTAL)
         DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.HIT_COUNT)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Detects how much damage the player took from the spike damage.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param result table action data
+------------------------------------------------------------------------------------------------------
+H.Melee.Spikes = function(audits, result)
+    local spike_effect = result.has_spike_effect
+    if spike_effect and not audits.pet_name then
+        local damage = result.spike_effect_param
+        local spike_message = result.spike_effect_message
+        if spike_message == Ashita.Enum.Message.SPIKE_DMG then
+            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.SPELL_DMG_TAKEN, H.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.INCOMING_SPIKE_DMG, H.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, 1     , audits, H.Trackable.INCOMING_SPIKE_DMG, H.Metric.HIT_COUNT)
+        end
     end
 end

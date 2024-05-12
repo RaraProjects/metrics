@@ -49,6 +49,12 @@ Ashita.Enum.Reaction = T{
     SHIELD_BLOCK = 4,
 }
 
+Ashita.Enum.Spike_Animation = T{
+    BLAZE = 1,
+    ICE   = 2,
+    SHOCK = 5,
+}
+
 -- Message IDs from incoming packet 0x029 (Action Message).
 Ashita.Enum.Message = T{
     HIT        = 1,
@@ -59,7 +65,10 @@ Ashita.Enum.Message = T{
     DEATH_FALL = 20,
     SHADOWS    = 31,
     DODGE      = 32,
+    COUNTER    = 33,
+    SPIKE_DMG  = 44,
     CRIT       = 67,
+    PARRY      = 70,
     DEATH      = 97,
     ENDRAIN    = 161,
     ENASPIR    = 162,
