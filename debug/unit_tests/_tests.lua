@@ -4,7 +4,7 @@ _Debug.Unit.Action_Data.Player = {}
 _Debug.Unit.Util = {}
 _Debug.Unit.Tests = {}
 _Debug.Unit.Mob = {}
-_Debug.Unit.Active = false
+_Debug.Unit.Active = true
 
 _Debug.Unit.Mob.Target_ID = 17254144
 

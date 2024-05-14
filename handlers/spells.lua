@@ -66,22 +66,22 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
     local message_id = result.message
     local audits = H.Spell.Audits(actor_mob, target_mob, owner_mob)
 
-    if Lists.Spell.Damaging[spell_id] then
+    if Res.Spells.Get_Damaging(spell_id) then
         H.Spell.Nuke(audits, spell_name, damage, burst)
         is_mapped = true
     end
 
-    if Lists.Spell.Healing[spell_id] then
+    if Res.Spells.Get_Healing(spell_id) then
     	H.Spell.Overcure(audits, spell_name, damage, burst)
         is_mapped = true
     end
 
-    if Lists.Spell.MP_Drain[spell_id] then
+    if Res.Spells.Get_MP_Drain(spell_id) then
         H.Spell.MP_Drain(audits, spell_name, damage, burst)
         is_mapped = true
     end
 
-    if Lists.Spell.Enfeebling[spell_id] then
+    if Res.Spells.Get_Enfeeble(spell_id) then
         H.Spell.Enfeebling(audits, spell_name, message_id)
         is_mapped = true
     end
@@ -107,20 +107,20 @@ end
 H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
     local blog_note = ""
     local space = ""
-    if Lists.Spell.Damaging[spell_id] and not Lists.Spell.DoT[spell_id] and Metrics.Blog.Flags.Magic then
+    if Res.Spells.Get_Damaging(spell_id) and not Res.Spells.Get_DoT(spell_id) and Metrics.Blog.Flags.Magic then
         -- Show magic burst message.
         if is_burst then
             blog_note = Blog.Enum.Text.MB
             space = " "
         end
         -- Show how many targets were hit on the ga-spell.
-        if Lists.Spell.AOE[spell_id] then
+        if Res.Spells.Get_AOE(spell_id) then
             blog_note = blog_note .. space .. "Targets: " .. tostring(target_count)
         end
         Blog.Add(actor_mob.name, spell_name, damage, blog_note, DB.Enum.Trackable.MAGIC, spell_data)
     end
-    if Lists.Spell.Healing[spell_id] and Metrics.Blog.Flags.Healing then
-        if Lists.Spell.AOE[spell_id] then
+    if Res.Spells.Get_Healing(spell_id) and Metrics.Blog.Flags.Healing then
+        if Res.Spells.Get_AOE(spell_id) then
             blog_note = blog_note .. space .. "Targets: " .. tostring(target_count)
         end
         Blog.Add(actor_mob.name, spell_name, damage, blog_note, DB.Enum.Trackable.HEALING, spell_data)
@@ -172,14 +172,14 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
     -- Overall Mana Tracking
     DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
 
-    if Lists.Spell.Healing[spell_id] then
+    if Res.Spells.Get_Healing(spell_id) then
         if is_pet then trackable = H.Trackable.PET_HEAL else trackable = H.Trackable.HEALING end
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
 
-    elseif Lists.Spell.Damaging[spell_id] then
+    elseif Res.Spells.Get_Damaging(spell_id) then
         if is_pet then trackable = H.Trackable.PET_NUKE else trackable = H.Trackable.NUKE end
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
@@ -187,27 +187,27 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
         if is_burst then DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.BURST_COUNT) end
 
-    elseif Lists.Spell.Enfeebling[spell_id] then
+    elseif Res.Spells.Get_Enfeeble(spell_id) then
         if is_pet then trackable = H.Trackable.PET_ENFEEBLING else trackable = H.Trackable.ENFEEBLE end
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         -- Counts are handled in parse because we need the result message.
 
-    elseif Lists.Spell.Enspell[spell_id] then
+    elseif Res.Spells.Get_Enspell(spell_id) then
         trackable = H.Trackable.ENSPELL
         DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
 
-    elseif Lists.Spell.Spikes[spell_id] then
+    elseif Res.Spells.Get_Spikes(spell_id) then
         trackable = H.Trackable.OUTGOING_SPIKE_DMG
         DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
 
-    elseif Lists.Spell.MP_Drain[spell_id] then
+    elseif Res.Spells.Get_MP_Drain(spell_id) then
         trackable = H.Trackable.MP_DRAIN
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)

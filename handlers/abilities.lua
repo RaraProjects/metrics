@@ -104,15 +104,15 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
 
     -- Specifics
     if owner_mob then
-        if Lists.Ability.Rage[ability_id] then
+        if Res.Avatar.Get_Rage(ability_id) then
             H.Ability.Pet_Rage(audits, owner_mob, damage, ability_type, ability_name)
-        elseif Lists.Ability.Avatar_Healing[ability_id] or Lists.Ability.Wyvern_Healing[ability_id] then
+        elseif Res.Avatar.Get_Healing(ability_id) or Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then
             ability_type = H.Ability.Pet_Healing(audits, owner_mob, damage, ability_name)
-        elseif Lists.Ability.Wyvern_Breath[ability_id] then
+        elseif Res.Pets.Get_Damaging_Wyvern_Breath(ability_id) then
             H.Ability.Pet_Breath(audits, owner_mob, damage, ability_type, ability_name)
         end
     else
-        if Lists.Ability.Damaging[ability_id] then
+        if Res.Abilities.Get_Damaging(ability_id) then
             H.Ability.Damaging_Player_Ability(audits, damage, ability_type, ability_name)
         end
     end
@@ -146,8 +146,8 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Blog = function(actor_mob, owner_mob, ability_data, ability_id, damage)
     if damage > 0 then
-        if Metrics.Blog.Flags.Pet and (Lists.Ability.Rage[ability_id] or Lists.Ability.Wyvern_Breath[ability_id]) then
-            Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", ability_data.Name, damage) 
+        if Metrics.Blog.Flags.Pet and (Res.Avatar.Get_Rage(ability_id) or Res.Pets.Get_Damaging_Wyvern_Breath(ability_id)) then
+            Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", ability_data.Name, damage)
         end
     end
 end
@@ -195,16 +195,16 @@ end
 H.Ability.Pet_Ability_Mapping = function(ability_id, trackable)
     local ability_data = {}
     local avatar = false
-    if Lists.Ability.Rage[ability_id] then
-        ability_data = Lists.Ability.Rage[ability_id]
+    if Res.Avatar.Get_Rage(ability_id) then
+        ability_data = Res.Avatar.Get_Rage(ability_id)
         avatar = true
-    elseif Lists.Ability.Ward[ability_id] then
-        ability_data = Lists.Ability.Ward[ability_id]
-        if Lists.Ability.Avatar_Healing[ability_id] then trackable = H.Trackable.PET_HEAL end
+    elseif Res.Avatar.Get_Ward(ability_id) then
+        ability_data = Res.Avatar.Get_Ward(ability_id)
+        if Res.Avatar.Get_Healing(ability_id) then trackable = H.Trackable.PET_HEAL end
         avatar = true
     else
         ability_data = Ashita.Ability.Get_By_ID(ability_id + H.Enum.Offsets.PET)
-        if Lists.Ability.Wyvern_Healing[ability_id] then trackable = H.Trackable.PET_HEAL end
+        if Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then trackable = H.Trackable.PET_HEAL end
     end
     return ability_data, avatar, trackable
 end

@@ -34,10 +34,7 @@ _Globals.Initialized = false
 Settings_File = require("settings")
 
 -- Resources
-Lists     = require("lists")
-WS        = require("resources.weapon_skills")
-Pet_Skill = require("resources.monster_abilities")
-Themes    = require("resources.themes")
+require("resources._resource")
 
 -- Modules
 UI     = require("imgui")
@@ -54,11 +51,11 @@ require("handlers._handler")
 -- Windows
 Window = require("gui._window")
 Col    = require('gui._columns')
-Blog   = require('gui.blog')
-Team   = require('gui.team')
-Focus  = require('gui.focus')
-Report = require("gui.report")
-Config = require("gui.config")
+Config = require("tabs.settings.config")
+require("tabs.parse._parse")
+require("tabs.focus._focus")
+require("tabs.battle_log._battle_log")
+require("tabs.report._report")
 
 -- Debug
 require("debug._debug")
@@ -76,16 +73,16 @@ ashita.events.register('d3d_present', 'present_cb', function ()
         -- Initialize Settings
         Metrics = T{
             Window = Settings_File.load(Window.Defaults, Config.Enum.File.WINDOW),
-            Team   = Settings_File.load(Team.Defaults, Config.Enum.File.TEAM),
-            Blog   = Settings_File.load(Blog.Defaults, Config.Enum.File.BLOG),
+            Team   = Settings_File.load(Parse.Config.Defaults, Config.Enum.File.PARSE),
+            Blog   = Settings_File.load(Blog.Config.Defaults, Config.Enum.File.BLOG),
             Model  = Settings_File.load(DB.Defaults, Config.Enum.File.DATABASE),
-            Report = Settings_File.load(Report.Defaults, Config.Enum.File.REPORT),
+            Report = Settings_File.load(Report.Config.Defaults, Config.Enum.File.REPORT),
         }
 
         -- Initialize Modules
         Window.Initialize()
         DB.Initialize()
-        Team.Initialize()
+        Parse.Initialize()
         Ashita.Party.Refresh()
 
         -- Start the clock.
@@ -240,7 +237,7 @@ ashita.events.register('command', 'command_cb', function (e)
             Window.Util.Enable_Full()
         elseif (arg == "pet" or arg == "p") and (Window.Tabs.Active == Window.Tabs.Names.TEAM or Window.Window.Mini) then
             Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
-            Team.Util.Calculate_Column_Flags()
+            Parse.Util.Calculate_Column_Flags()
         elseif arg == "clock" or arg == "c" then
             Metrics.Team.Settings.Show_Clock = not Metrics.Team.Settings.Show_Clock
 
@@ -248,15 +245,15 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "report" or arg == "rep" then
             local report_type = command_args[3]
             if report_type == "total" then
-                Report.Publish.Total_Damage()
+                Report.Publishing.Total_Damage()
             elseif report_type == "acc" then
-                Report.Publish.Accuracy()
+                Report.Publishing.Accuracy()
             elseif report_type == "melee" then
-                Report.Publish.Damage_By_Type(DB.Enum.Trackable.MELEE)
+                Report.Publishing.Damage_By_Type(DB.Enum.Trackable.MELEE)
             elseif report_type == "ws" then
-                Report.Publish.Damage_By_Type(DB.Enum.Trackable.WS)
+                Report.Publishing.Damage_By_Type(DB.Enum.Trackable.WS)
             elseif report_type == "healing" then
-                Report.Publish.Damage_By_Type(DB.Enum.Trackable.HEALING)
+                Report.Publishing.Damage_By_Type(DB.Enum.Trackable.HEALING)
             end
 
         -- Primary tab switching.
@@ -301,7 +298,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('unload', 'unload_cb', function ()
     Settings_File.save(Config.Enum.File.DATABASE)
-    Settings_File.save(Config.Enum.File.TEAM)
+    Settings_File.save(Config.Enum.File.PARSE)
     Settings_File.save(Config.Enum.File.BLOG)
     Settings_File.save(Config.Enum.File.WINDOW)
     Settings_File.save(Config.Enum.File.REPORT)

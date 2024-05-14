@@ -55,17 +55,17 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     local damage = result.param or 0
     local audits = H.Spell_Def.Audits(actor_mob, target_mob, owner_mob)
 
-    if Lists.Spell.Damaging[spell_id] then
+    if Res.Spells.Get_Damaging(spell_id) then
         H.Spell_Def.Nuke(audits, damage)
         is_mapped = true
     end
 
-    if Lists.Spell.MP_Drain[spell_id] then
+    if Res.Spells.Get_MP_Drain(spell_id) then
         H.Spell_Def.MP_Drain(audits, damage)
         is_mapped = true
     end
 
-    if Lists.Spell.Enfeebling[spell_id] then
+    if Res.Spells.Get_Enfeeble(spell_id) then
         H.Spell_Def.Enfeebling(audits)
         is_mapped = true
     end

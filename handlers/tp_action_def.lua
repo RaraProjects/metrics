@@ -102,7 +102,7 @@ end
 ---@return number
 -- ------------------------------------------------------------------------------------------------------
 H.TP_Def.Ignore_Damage = function(damage, ws_id, ws_name)
-    if not Lists.Ability.Pet_Damaging[ws_id] then
+    if not Res.Monster.Get_Damaging_Ability(ws_id) then
         _Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
         damage = 0
     end

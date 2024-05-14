@@ -1,91 +1,16 @@
-local l = {}
+Res.Spells = T{}
 
-l.WS = {}
-l.Ability = {}
-l.Spell = {}
-
--- weapon_skills.lua is missing some nodes
-l.WS.Missing_WS = {
-    [260]  = {id = 260,  english = "Spirit Jump"},
-    [293]  = {id = 293,  english = "Soul Jump"},
-    [329]  = {id = 329,  english = "Intervene"},
-    [3502] = {id = 3502, english = "Nott"}
+-- Based off of spells.lua from Windower.
+Res.Spells.Enspell = T{
+    [100] = {id=100,en="Enfire",ja="エンファイア",cast_time=3,duration=180,element=0,icon_id=172,icon_id_nq=0,levels={[5]=24},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=100,requirements=1,skill=34,status=94,targets=1,type="WhiteMagic"},
+    [101] = {id=101,en="Enblizzard",ja="エンブリザド",cast_time=3,duration=180,element=1,icon_id=173,icon_id_nq=1,levels={[5]=22},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=101,requirements=1,skill=34,status=95,targets=1,type="WhiteMagic"},
+    [102] = {id=102,en="Enaero",ja="エンエアロ",cast_time=3,duration=180,element=2,icon_id=174,icon_id_nq=2,levels={[5]=20},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=102,requirements=1,skill=34,status=96,targets=1,type="WhiteMagic"},
+    [103] = {id=103,en="Enstone",ja="エンストーン",cast_time=3,duration=180,element=3,icon_id=175,icon_id_nq=3,levels={[5]=18},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=103,requirements=1,skill=34,status=97,targets=1,type="WhiteMagic"},
+    [104] = {id=104,en="Enthunder",ja="エンサンダー",cast_time=3,duration=180,element=4,icon_id=176,icon_id_nq=4,levels={[5]=16},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=104,requirements=1,skill=34,status=98,targets=1,type="WhiteMagic"},
+    [105] = {id=105,en="Enwater",ja="エンウォータ",cast_time=3,duration=180,element=5,icon_id=177,icon_id_nq=5,levels={[5]=27},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=105,requirements=1,skill=34,status=99,targets=1,type="WhiteMagic"},
 }
 
--- Capture abilities that come in through the WS packet.
-l.WS.WS_Abilities = {
-    [26]   = {id = 26,   english = "Eagle Eye Shot"},
-    [41]   = {id = 41,   english = "Steal"},
-    [45]   = {id = 45,   english = "Mug"},
-    [46]   = {id = 46,   english = "Shield Bash"},
-    [57]   = {id = 57,   english = "Shadowbind"},
-    [66]   = {id = 66,   english = "Jump"},
-    [67]   = {id = 67,   english = "High Jump"},
-    [68]   = {id = 68,   english = "Super Jump"},
-    [77]   = {id = 77,   english = "Weapon Bash"},
-    [228]  = {id = 228,  english = "Despoil"},
-    [260]  = {id = 260,  english = "Spirit Jump"},
-    [293]  = {id = 293,  english = "Soul Jump"},
-    [329]  = {id = 329,  english = "Intervene"},
-}
-
-l.WS.MP_Drain = {
-    [21]  = {id=21,en="Energy Steal",ja="エナジースティール",element=7,icon_id=596,prefix="/weaponskill",range=2,skill=2,skillchain_a="",skillchain_b="",skillchain_c="",targets=32},
-    [22]  = {id=22,en="Energy Drain",ja="エナジードレイン",element=7,icon_id=596,prefix="/weaponskill",range=2,skill=2,skillchain_a="",skillchain_b="",skillchain_c="",targets=32},
-    [163] = {id=163,en="Starlight",ja="スターライト",element=6,icon_id=628,prefix="/weaponskill",range=2,skill=11,skillchain_a="",skillchain_b="",skillchain_c="",targets=1},
-    [164] = {id=164,en="Moonlight",ja="ムーンライト",element=6,icon_id=628,prefix="/weaponskill",range=2,skill=11,skillchain_a="",skillchain_b="",skillchain_c="",targets=1},
-    [183] = {id=183,en="Spirit Taker",ja="スピリットテーカー",element=6,icon_id=631,prefix="/weaponskill",range=2,skill=12,skillchain_a="",skillchain_b="",skillchain_c="",targets=32},
-}
-
-l.WS.Skillchains = {
-    [229] = 'DRG Jump Effect',
-    [288] = 'Light',       [289] = 'Darkness', 
-    [290] = 'Gravitation', [291] = 'Fragmentation', [292] = 'Distortion', [293] = 'Fusion',
-    [294] = 'Compression', [295] = 'Liquefaction',  [296] = 'Induration', [297] = 'Reverberation', 
-    [298] = 'Transfixion', [299] = 'Scission',      [300] = 'Detonation', [301] = 'Impaction',
-    [385] = 'Light',       [386] = 'Darkness',
-    [767] = 'Radiance',    [768] = 'Umbra'
-}
-
-l.Ability.Damaging = {
-    [538] = {id = 538, old_id = 26,  en = "Eagle Eye Shot"},
-    [540] = {id = 540, old_id = 28,  en = "Mijin Gakure"},
-    [558] = {id = 558, old_id = 46,  en = "Shield Bash"},
-    [578] = {id = 578, old_id = 66,  en = "Jump"},
-    [579] = {id = 579, old_id = 67,  en = "High Jump"},
-    [580] = {id = 579, old_id = 68,  en = "Super Jump"},
-    [589] = {id = 589, old_id = 77,  en = "Weapon Bash"},
-    [594] = {id = 594, old_id = 82,  en = "Chi Blast"},
-    [637] = {id = 637, old_id = 125, en = "Fire Shot"},
-    [638] = {id = 638, old_id = 126, en = "Ice Shot"},
-    [639] = {id = 639, old_id = 127, en = "Wind Shot"},
-    [640] = {id = 640, old_id = 128, en = "Earth Shot"},
-    [641] = {id = 641, old_id = 129, en = "Thunder Shot"},
-    [642] = {id = 642, old_id = 130, en = "Water Shot"},
-    -- [643] = {id = 643, old_id = 131, en = "Light Shot"}, -- Doesn't actually do any damage.
-    -- [644] = {id = 644, old_id = 132, en = "Dark Shot"},  -- Doesn't actually do any damage.
-    [772] = {id = 772, old_id = 260, en = "Spirit Jump"},
-    [805] = {id = 805, old_id = 293, en = "Soul Jump"},
-    [841] = {id = 841              , en = "Intervene"}
-}
-
-l.Ability.Wyvern_Breath = {
-    [646] = {id=900,en="Flame Breath",ja="フレイムブレス"},
-    [647] = {id=901,en="Frost Breath",ja="フロストブレス"},
-    [648] = {id=902,en="Gust Breath",ja="ガストブレス"},
-    [649] = {id=903,en="Sand Breath",ja="サンドブレス"},
-    [650] = {id=904,en="Lightning Breath",ja="ライトニングブレス"},
-    [651] = {id=905,en="Hydro Breath",ja="ハイドロブレス"},
-}
-
-l.Ability.Wyvern_Healing = {
-    [639] = {id=639,en="Healing Breath IV"},
-    [640] = {id=894,en="Healing Breath",ja="ヒールブレス"},
-    [641] = {id=895,en="Healing Breath II",ja="ヒールブレスII"},
-    [642] = {id=896,en="Healing Breath III",ja="ヒールブレスIII"},
-}
-
-l.Spell.Enspell_Type = {
+Res.Spells.Enspell_Type = T{
     [1] = "Enfire",
     [2] = "Enblizzard",
     [3] = "Enaero",
@@ -98,7 +23,8 @@ l.Spell.Enspell_Type = {
     [22] = "Enaspir",
 }
 
-l.Spell.Healing = {
+-- Based off of spells.lua from Windower.
+Res.Spells.Healing = T{
     [1]   = {id = 1,   en = "Cure"},
     [2]   = {id = 2,   en = "Cure II"},
     [3]   = {id = 3,   en = "Cure III"},
@@ -114,26 +40,16 @@ l.Spell.Healing = {
     [581] = {id = 581, en = "Healing Breeze"},
 }
 
--- From spells.lua
-l.Spell.Enspell = {
-    [100] = {id=100,en="Enfire",ja="エンファイア",cast_time=3,duration=180,element=0,icon_id=172,icon_id_nq=0,levels={[5]=24},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=100,requirements=1,skill=34,status=94,targets=1,type="WhiteMagic"},
-    [101] = {id=101,en="Enblizzard",ja="エンブリザド",cast_time=3,duration=180,element=1,icon_id=173,icon_id_nq=1,levels={[5]=22},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=101,requirements=1,skill=34,status=95,targets=1,type="WhiteMagic"},
-    [102] = {id=102,en="Enaero",ja="エンエアロ",cast_time=3,duration=180,element=2,icon_id=174,icon_id_nq=2,levels={[5]=20},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=102,requirements=1,skill=34,status=96,targets=1,type="WhiteMagic"},
-    [103] = {id=103,en="Enstone",ja="エンストーン",cast_time=3,duration=180,element=3,icon_id=175,icon_id_nq=3,levels={[5]=18},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=103,requirements=1,skill=34,status=97,targets=1,type="WhiteMagic"},
-    [104] = {id=104,en="Enthunder",ja="エンサンダー",cast_time=3,duration=180,element=4,icon_id=176,icon_id_nq=4,levels={[5]=16},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=104,requirements=1,skill=34,status=98,targets=1,type="WhiteMagic"},
-    [105] = {id=105,en="Enwater",ja="エンウォータ",cast_time=3,duration=180,element=5,icon_id=177,icon_id_nq=5,levels={[5]=27},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=105,requirements=1,skill=34,status=99,targets=1,type="WhiteMagic"},
-}
-
--- From spells.lua
-l.Spell.Spikes = {
+-- Based off of spells.lua from Windower.
+Res.Spells.Spikes = T{
     [249] = {id=249,en="Blaze Spikes",ja="ブレイズスパイク",cast_time=3,duration=180,element=0,icon_id=307,icon_id_nq=8,levels={[4]=10,[5]=20,[20]=30,[22]=45},mp_cost=8,prefix="/magic",range=0,recast=10,recast_id=249,requirements=0,skill=34,status=34,targets=1,type="BlackMagic"},
     [250] = {id=250,en="Ice Spikes",ja="アイススパイク",cast_time=3,duration=180,element=1,icon_id=308,icon_id_nq=9,levels={[4]=20,[5]=40,[20]=50,[22]=65},mp_cost=16,prefix="/magic",range=0,recast=10,recast_id=250,requirements=0,skill=34,status=35,targets=1,type="BlackMagic"},
     [251] = {id=251,en="Shock Spikes",ja="ショックスパイク",cast_time=3,duration=180,element=4,icon_id=306,icon_id_nq=12,levels={[4]=30,[5]=60,[20]=70,[22]=85},mp_cost=24,prefix="/magic",range=0,recast=10,recast_id=251,requirements=0,skill=34,status=38,targets=1,type="BlackMagic"},
     [277] = {id=277,en="Dread Spikes",ja="ドレッドスパイク",cast_time=3,duration=180,element=7,icon_id=309,icon_id_nq=15,levels={[8]=71},mp_cost=78,prefix="/magic",range=0,recast=52,recast_id=277,requirements=0,skill=37,status=173,targets=1,type="BlackMagic"},
 }
 
--- From spells.lua
-l.Spell.Enfeebling = {
+-- Based off of spells.lua from Windower.
+Res.Spells.Enfeebling = T{
     [56] = {id=56,en="Slow",ja="スロウ",cast_time=2,duration=180,element=3,icon_id=141,icon_id_nq=3,levels={[3]=13,[5]=13},mp_cost=15,prefix="/magic",range=12,recast=20,recast_id=56,requirements=0,skill=35,status=13,targets=32,type="WhiteMagic"},
     [58] = {id=58,en="Paralyze",ja="パライズ",cast_time=3,duration=120,element=1,icon_id=144,icon_id_nq=1,levels={[3]=4,[5]=6},mp_cost=6,prefix="/magic",range=12,recast=10,recast_id=58,requirements=0,skill=35,status=4,targets=32,type="WhiteMagic"},
     [59] = {id=59,en="Silence",ja="サイレス",cast_time=3,duration=120,element=2,icon_id=146,icon_id_nq=2,levels={[3]=15,[5]=18},mp_cost=16,prefix="/magic",range=12,recast=10,recast_id=59,requirements=0,skill=35,status=6,targets=32,type="WhiteMagic"},
@@ -197,7 +113,8 @@ l.Spell.Enfeebling = {
     [508] = {id=508,en="Yurin: Ichi",ja="幽林の術:壱",cast_time=4,element=7,icon_id=-1,icon_id_nq=31,levels={[13]=83},mp_cost=0,prefix="/ninjutsu",range=11,recast=30,recast_id=508,requirements=0,skill=39,status=168,targets=32,type="Ninjutsu"},
 }
 
-l.Spell.DoT = {
+-- Based off of spells.lua from Windower.
+Res.Spells.DoT = T{
     [23]  = {id=23,en="Dia",ja="ディア",cast_time=1,duration=60,element=6,icon_id=99,icon_id_nq=6,levels={[3]=3,[5]=1},mp_cost=7,prefix="/magic",range=12,recast=5,recast_id=23,requirements=0,skill=35,status=134,targets=32,type="WhiteMagic"},
     [24]  = {id=24,en="Dia II",ja="ディアII",cast_time=1.5,duration=120,element=6,icon_id=100,icon_id_nq=6,levels={[3]=36,[5]=31},mp_cost=30,overwrites={23,230},prefix="/magic",range=12,recast=6,recast_id=24,requirements=0,skill=35,status=134,targets=32,type="WhiteMagic"},
     [25]  = {id=25,en="Dia III",ja="ディアIII",cast_time=2,duration=180,element=6,icon_id=202,icon_id_nq=6,levels={[5]=75},mp_cost=45,overwrites={23,24,230,231},prefix="/magic",range=12,recast=7,recast_id=25,requirements=0,skill=35,status=134,targets=32,type="WhiteMagic"},
@@ -250,13 +167,15 @@ l.Spell.DoT = {
     [375] = {id=375,en="Foe Requiem VIII",ja="魔物のレクイエムVIII",cast_time=2,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={},mp_cost=0,overwrites={368,369,370,371,372,373,374},prefix="/song",range=11,recast=24,recast_id=375,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
 }
 
-l.Spell.MP_Drain = {
+-- Based off of spells.lua from Windower.
+Res.Spells.MP_Drain = T{
     [247] = {id=247,en="Aspir",ja="アスピル",cast_time=3,element=7,icon_id=238,icon_id_nq=15,levels={[4]=25,[8]=20,[20]=36,[21]=30},mp_cost=10,prefix="/magic",range=12,recast=60,recast_id=247,requirements=2,skill=37,targets=32,type="BlackMagic"},
     [248] = {id=248,en="Aspir II",ja="アスピルII",cast_time=3,element=7,icon_id=239,icon_id_nq=15,levels={[4]=83,[8]=78,[20]=97,[21]=90},mp_cost=5,prefix="/magic",range=12,recast=11,recast_id=248,requirements=2,skill=37,targets=32,type="BlackMagic"},
     [881] = {id=881,en="Aspir III",ja="アスピルIII",cast_time=3,element=7,icon_id=657,icon_id_nq=15,levels={[4]=550,[21]=550},mp_cost=2,prefix="/magic",range=12,recast=26,recast_id=881,requirements=0,skill=37,targets=32,type="BlackMagic"},
 }
 
-l.Spell.AOE = {
+-- Based off of spells.lua from Windower.
+Res.Spells.AOE = T{
     [7]   = {id = 7,   en = "Curaga"},
     [8]   = {id = 8,   en = "Curaga II"},
     [9]   = {id = 9,   en = "Curaga III"},
@@ -305,7 +224,8 @@ l.Spell.AOE = {
     [501] = {id = 501, en = "Waterja"},
 }
 
-l.Spell.Damaging = {
+-- Based off of spells.lua from Windower.
+Res.Spells.Damaging = T{
     -- Light Elemental Magic
     [21]  = {id = 21,  en = "Holy"},
     [22]  = {id = 22,  en = "Holy II"},
@@ -485,321 +405,3 @@ l.Spell.Damaging = {
     [336] = {id = 336, en = "Suiton: Ni"},
     [337] = {id = 337, en = "Suiton: San"},
 }
-
-l.Ability.Ward = {
-    -- Fenrir
-    [833] = {id=833,en="Lunar Cry",ja="ルナークライ"},
-    [834] = {id=834,en="Ecliptic Growl",ja="上弦の唸り"},
-    [835] = {id=835,en="Lunar Roar",ja="ルナーロア"},
-    [837] = {id=837,en="Ecliptic Howl",ja="下弦の咆哮"},
-    -- Ifrit
-    [844] = {id=844,en="Crimson Roar",ja="紅蓮の咆哮"},
-    -- Titan
-    [853] = {id=853,en="Earthen Ward",ja="大地の守り"},
-    -- Leviathan (Spring Water is Refresh on Horizon)
-    [861] = {id=861,en="Spring Water",ja="湧水"},
-    [862] = {id=862,en="Slowga",ja="スロウガ"},
-    -- Garuda
-    [869] = {id=869,en="Whispering Wind",ja="風の囁き"},
-    [870] = {id=870,en="Hastega",ja="ヘイスガ"},
-    [871] = {id=871,en="Aerial Armor",ja="真空の鎧"},
-    -- Shiva
-    [878] = {id=878,en="Frost Armor",ja="凍てつく鎧"},
-    [879] = {id=879,en="Sleepga",ja="スリプガ"},
-    -- Ramuh
-    [887] = {id=887,en="Rolling Thunder",ja="雷鼓"},
-    [889] = {id=889,en="Lightning Armor",ja="雷電の鎧"},
-    -- Carbuncle
-    [906] = {id=906,en="Healing Ruby",ja="ルビーの癒し"},
-    [908] = {id=908,en="Shining Ruby",ja="ルビーの輝き"},
-    [909] = {id=909,en="Glittering Ruby",ja="ルビーの煌き"},
-    [911] = {id=911,en="Healing Ruby II",ja="ルビーの癒しII"},
-    -- Diabolos
-    [1904] = {id=1904,en="Somnolence",ja="ソムノレンス"},
-    [1905] = {id=1905,en="Noctoshield",ja="ノクトシールド"},
-    [1906] = {id=1906,en="Ultimate Terror",ja="アルティメットテラー"},
-    [1907] = {id=1907,en="Dream Shroud",ja="ドリームシュラウド"},
-    [1908] = {id=1908,en="Nightmare",ja="ナイトメア"},
-}
-
-l.Ability.Avatar_Healing = {
-    -- Garuda
-    [869] = {id=869,en="Whispering Wind",ja="風の囁き"},
-    -- Carbuncle
-    [906] = {id=906,en="Healing Ruby",ja="ルビーの癒し"},
-    [911] = {id=911,en="Healing Ruby II",ja="ルビーの癒しII"},
-}
-
-l.Ability.Rage = {
-    -- Fenrir
-    [831] = {id=831,en="Moonlit Charge",ja="ムーンリットチャージ"},
-    [832] = {id=832,en="Crescent Fang",ja="クレセントファング"},
-    [836] = {id=836,en="Eclipse Bite",ja="エクリプスバイト"},
-    [838] = {id=838,en="Howling Moon",ja="（ハウリングムーン）",skillchain_a="Darkness",skillchain_b="Distortion",skillchain_c=""},
-    [839] = {id=839,en="Howling Moon",ja="ハウリングムーン",skillchain_a="Darkness",skillchain_b="Distortion",skillchain_c=""},
-    -- Ifrit
-    [840] = {id=840,en="Punch",ja="パンチ"},
-    [841] = {id=841,en="Fire II",ja="ファイアII"},
-    [842] = {id=842,en="Burning Strike",ja="バーニングストライク"},
-    [843] = {id=843,en="Double Punch",ja="ダブルパンチ"},
-    [845] = {id=845,en="Fire IV",ja="ファイアIV"},
-    [846] = {id=846,en="Flaming Crush",ja="フレイムクラッシュ"},
-    [847] = {id=847,en="Meteor Strike",ja="メテオストライク"},
-    [848] = {id=848,en="Inferno",ja="インフェルノ"},
-    -- Titan
-    [849] = {id=849,en="Rock Throw",ja="ロックスロー"},
-    [850] = {id=850,en="Stone II",ja="ストーンII"},
-    [851] = {id=851,en="Rock Buster",ja="ロックバスター"},
-    [852] = {id=852,en="Megalith Throw",ja="メガリススロー"},
-    [854] = {id=854,en="Stone IV",ja="ストーンIV"},
-    [855] = {id=855,en="Mountain Buster",ja="マウンテンバスター"},
-    [856] = {id=856,en="Geocrush",ja="ジオクラッシュ"},
-    [857] = {id=857,en="Earthen Fury",ja="アースフューリー"},
-    -- Leviathan
-    [858] = {id=858,en="Barracuda Dive",ja="バラクーダダイブ"},
-    [859] = {id=859,en="Water II",ja="ウォータII"},
-    [860] = {id=860,en="Tail Whip",ja="テールウィップ"},
-    [863] = {id=863,en="Water IV",ja="ウォータIV"},
-    [864] = {id=864,en="Spinning Dive",ja="スピニングダイブ"},
-    [865] = {id=865,en="Grand Fall",ja="グランドフォール"},
-    [866] = {id=866,en="Tidal Wave",ja="タイダルウェイブ"},
-    -- Garuda
-    [867] = {id=867,en="Claw",ja="クロー"},
-    [868] = {id=868,en="Aero II",ja="エアロII"},
-    [872] = {id=872,en="Aero IV",ja="エアロIV"},
-    [873] = {id=873,en="Predator Claws",ja="プレデタークロー"},
-    [874] = {id=874,en="Wind Blade",ja="ウインドブレード"},
-    [875] = {id=875,en="Aerial Blast",ja="エリアルブラスト"},
-    -- Shiva
-    [876] = {id=876,en="Axe Kick",ja="アクスキック"},
-    [877] = {id=877,en="Blizzard II",ja="ブリザドII"},
-    [880] = {id=880,en="Double Slap",ja="ダブルスラップ"},
-    [881] = {id=881,en="Blizzard IV",ja="ブリザドIV"},
-    [882] = {id=882,en="Rush",ja="ラッシュ"},
-    [883] = {id=883,en="Heavenly Strike",ja="ヘヴンリーストライク"},
-    [884] = {id=884,en="Diamond Dust",ja="ダイヤモンドダスト"},
-    -- Ramuh
-    [885] = {id=885,en="Shock Strike",ja="ショックストライク"},
-    [886] = {id=886,en="Thunder II",ja="サンダーII"},
-    [888] = {id=888,en="Thunderspark",ja="サンダースパーク"},
-    [890] = {id=890,en="Thunder IV",ja="サンダーIV"},
-    [891] = {id=891,en="Chaotic Strike",ja="カオスストライク"},
-    [892] = {id=892,en="Thunderstorm",ja="サンダーストーム"},
-    [893] = {id=893,en="Judgment Bolt",ja="ジャッジボルト"},
-    -- Carbuncle
-    [907] = {id=907,en="Poison Nails",ja="ポイズンネイル"},
-    [910] = {id=910,en="Meteorite",ja="プチメテオ"},
-    [912] = {id=912,en="Searing Light",ja="シアリングライト"},
-    -- Diabolos
-    [1903] = {id=1903,en="Camisado",ja="カミサドー"},
-    [1909] = {id=1909,en="Cacodemonia",ja="カコデモニア"},
-    [1910] = {id=1910,en="Nether Blast",ja="ネザーブラスト"},
-    [1911] = {id=1911,en="Ruinous Omen",ja="ルイナスオーメン"},
-    [3554] = {id=3554,en="Night Terror",ja="ナイトテラー"},
-    [3555] = {id=3555,en="Ruinous Omen",ja="ルイナスオーメン"},
-}
-
--- Derived from monster_abilities.lua
-l.Ability.Pet_Damaging = {
-    -- Rabbit
-    [257] = {id=257,en="Foot Kick",ja="フットキック"},
-    [258] = {id=258,en="Dust Cloud",ja="土煙"},
-    [259] = {id=259,en="Whirl Claws",ja="爪旋風脚"},
-    -- Sheep
-    [260] = {id=260,en="Lamb Chop",ja="頭突き"},
-    [262] = {id=262,en="Sheep Charge",ja="シープチャージ"},
-    -- Ram
-    [266] = {id=266,en="Ram Charge",ja="ラムチャージ"},
-    [267] = {id=267,en="Rumble",ja="地鳴り"},
-    [268] = {id=268,en="Great Bleat",ja="大咆哮"},
-    [269] = {id=269,en="Petribreath",ja="ペトロブレス"},
-    -- Tiger
-    [271] = {id=271,en="Razor Fang",ja="レイザーファング"},
-    [273] = {id=273,en="Claw Cyclone",ja="クローサイクロン"},
-    -- Sheep
-    [274] = {id=274,en="Sheep Charge",ja="シープチャージ"},
-    -- Antlion
-    [275] = {id=275,en="Sandblast",ja="サンドブラスト"},
-    [276] = {id=276,en="Sandpit",ja="サンドピット"},
-    [277] = {id=277,en="Venom Spray",ja="ベノムスプレー"},
-    [279] = {id=279,en="Mandibular Bite",ja="マンディビュラバイト"},
-    -- Dhalmel
-    [281] = {id=281,en="Stomping",ja="ストンピング"},
-    -- Opo-opo
-    [288] = {id=288,en="Vicious Claw",ja="ビシャスクロー"},
-    [289] = {id=289,en="Stone Throw",ja="投石"},
-    [290] = {id=290,en="Spinning Claw",ja="スピニングクロー"},
-    [291] = {id=291,en="Claw Storm",ja="クローストーム"},
-    [294] = {id=294,en="Eye Scratch",ja="アイスクラッチ"},
-    -- Treant
-    [296] = {id=296,en="Drill Branch",ja="ドリルブランチ"},
-    [297] = {id=297,en="Pinecone Bomb",ja="まつぼっくり爆弾"},
-    [298] = {id=298,en="Leafstorm",ja="リーフストーム"},
-    [299] = {id=299,en="Entangle",ja="エンタングル"},
-    -- Mandragora
-    [300] = {id=300,en="Head Butt",ja="ヘッドバット"},
-    [302] = {id=302,en="Wild Oats",ja="種まき"},
-    [305] = {id=305,en="Leaf Dagger",ja="リーフダガー"},
-    -- Funguar
-    [308] = {id=308,en="Frogkick",ja="フロッグキック"},
-    [310] = {id=310,en="Queasyshroom",ja="マヨイタケ"},
-    [311] = {id=311,en="Numbshroom",ja="シビレタケ"},
-    [312] = {id=312,en="Shakeshroom",ja="オドリタケ"},
-    [314] = {id=314,en="Silence Gas",ja="サイレスガス"},
-    [315] = {id=315,en="Dark Spore",ja="ダークスポア"},
-    -- Morbol
-    [316] = {id=316,en="Impale",ja="くしざし"},
-    [317] = {id=317,en="Vampiric Lash",ja="吸血ムチ"},
-    [318] = {id=318,en="Somersault",ja="サマーソルト"},
-    [319] = {id=319,en="Bad Breath",ja="臭い息"},
-    [320] = {id=320,en="Sweet Breath",ja="甘い息"},
-    -- Cactuar
-    [321] = {id=321,en="Needleshot",ja="ニードルショット"},
-    [322] = {id=322,en="1,000 Needles",ja="針千本"},
-    -- Bee
-    [334] = {id=334,en="Sharp Sting",ja="シャープスティング"},
-    [336] = {id=336,en="Final Sting",ja="ファイナルスピア"},
-    -- Beetle
-    [338] = {id=338,en="Power Attack",ja="パワーアタック"},
-    [340] = {id=340,en="Rhino Attack",ja="ライノアタック"},
-    -- Crawler
-    [345] = {id=345,en="Poison Breath",ja="ポイズンブレス"},
-    -- Scorpion
-    [348] = {id=348,en="Numbing Breath",ja="ナムブレス"},
-    [349] = {id=349,en="Cold Breath",ja="コールドブレス"},
-    [350] = {id=350,en="Mandible Bite",ja="マンディブルバイト"},
-    [351] = {id=351,en="Poison Sting",ja="ポイズンスティング"},
-    [353] = {id=353,en="Death Scissors",ja="デスシザース"},
-    [354] = {id=354,en="Wild Rage",ja="大暴れ"},
-    [355] = {id=355,en="Earth Pounder",ja="アースパウンダー"},
-    [356] = {id=356,en="Sharp Strike",ja="シャープストライク"},
-    -- Diremite
-    [362] = {id=362,en="Double Claw",ja="ダブルクロー"},
-    [363] = {id=363,en="Grapple",ja="グラップル"},
-    [365] = {id=365,en="Spinning Top",ja="スピニングトップ"},
-    -- Lizard
-    [366] = {id=366,en="Tail Blow",ja="テイルブロー"},
-    [367] = {id=367,en="Fireball",ja="ファイアボール"},
-    [368] = {id=368,en="Blockhead",ja="ブロックヘッド"},
-    [369] = {id=369,en="Brain Crush",ja="ブレインクラッシュ"},
-    [371] = {id=371,en="Plaguebreath",ja="プレイグブレス"},
-    -- Raptor
-    [374] = {id=374,en="Ripper Fang",ja="リッパーファング"},
-    [376] = {id=376,en="Foul Breath",ja="ファウルブレス"},
-    [377] = {id=377,en="Frost Breath",ja="フロストブレス"},
-    [378] = {id=378,en="Thunderbolt",ja="サンダーボルト"},
-    [379] = {id=379,en="Chomp Rush",ja="噛みつきラッシュ"},
-    [380] = {id=380,en="Scythe Tail",ja="サイズテール"},
-    -- Bugard
-    [382] = {id=382,en="Tail Roll",ja="テールロール"},
-    [383] = {id=383,en="Tusk",ja="タスク"},
-    [385] = {id=385,en="Bone Crunch",ja="ボーンクランチ"},
-    -- Bat
-    [394] = {id=394,en="Blood Drain",ja="吸血"},
-    -- Triple Bat
-    [395] = {id=395,en="Jet Stream",ja="ジェットストリーム"},
-    -- Greater Bird
-    [399] = {id=399,en="Blind Vortex",ja="ブラインヴォルテクス"},
-    [400] = {id=400,en="Giga Scream",ja="ギガスクリーム"},
-    [401] = {id=401,en="Dread Dive",ja="ドレッドダイヴ"},
-    [403] = {id=403,en="Stormwind",ja="ストームウィンド"},
-    -- Cockatrice
-    [406] = {id=406,en="Hammer Beak",ja="ハンマービーク"},
-    [407] = {id=407,en="Poison Pick",ja="ポイズンピック"},
-    -- Leech
-    [414] = {id=414,en="Suction",ja="吸着"},
-    [415] = {id=415,en="Acid Mist",ja="アシッドミスト"},
-    [416] = {id=416,en="Sand Breath",ja="サンドブレス"},
-    [417] = {id=417,en="Drainkiss",ja="ドレインキッス"},
-    [423] = {id=423,en="Brain Drain",ja="ブレインドレイン"},
-    -- Worm
-    [424] = {id=424,en="Full-force Blow",ja="渾身の一撃"},
-    [425] = {id=425,en="Gastric Bomb",ja="消化液弾"},
-    [426] = {id=426,en="Sandspin",ja="土竜巻"},
-    [427] = {id=427,en="Tremors",ja="震動"},
-    -- Slime
-    [431] = {id=431,en="Fluid Spread",ja="フルイドスプレッド"},
-    [432] = {id=432,en="Fluid Toss",ja="フルイドスルー"},
-    [433] = {id=433,en="Digest",ja="消化"},
-    -- Hecteyes
-    [437] = {id=437,en="Death Ray",ja="デスレイ"},
-    -- Crab
-    [442] = {id=442,en="Bubble Shower",ja="バブルシャワー"},
-    [444] = {id=444,en="Big Scissors",ja="ビッグシザー"},
-    -- Pugil
-    [450] = {id=450,en="Aqua Ball",ja="アクアボール"},
-    [451] = {id=451,en="Splash Breath",ja="スプラッシュブレス"},
-    [452] = {id=452,en="Screwdriver",ja="スクリュードライバー"},
-    -- Sea Monk
-    [456] = {id=456,en="Tentacle",ja="触手"},
-    [458] = {id=458,en="Ink Jet",ja="インクジェット"},
-    [460] = {id=460,en="Cross Attack",ja="クロスアタック"},
-    [461] = {id=461,en="Regeneration",ja="リジェネレーション"},
-    [462] = {id=462,en="Maelstrom",ja="メイルシュトロム"},
-    [463] = {id=463,en="Whirlwind",ja="旋風"},
-    -- Skeleton
-    [478] = {id=478,en="Hell Slash",ja="ヘルスラッシュ"},
-    [484] = {id=484,en="Black Cloud",ja="ブラッククラウド"},
-    [485] = {id=485,en="Blood Saber",ja="ブラッドセイバー"},
-    -- Coeurl
-    [480] = {id=480,en="Petrifactive Breath",ja="石の吐息"},
-    [482] = {id=482,en="Pounce",ja="パウンス"},
-    [483] = {id=483,en="Charged Whisker",ja="チャージドホイスカー"},
-    -- Buffalo
-    [493] = {id=493,en="Rampant Gnaw",ja="ランパントナウ"},
-    [494] = {id=494,en="Big Horn",ja="ビッグホーン"},
-    [495] = {id=495,en="Snort",ja="スノート"},
-    -- Uragnite
-    [504] = {id=504,en="Gas Shell",ja="ガスシェル"},
-    [507] = {id=507,en="Painful Whip",ja="ペインフルウィップ"},
-    -- Eft
-    [518] = {id=518,en="Nimble Snap",ja="ニンブルスナップ"},
-    [519] = {id=519,en="Cyclotail",ja="サイクロテール"},
-    -- Hippogryph
-    [576] = {id=576,en="Back Heel",ja="バックヒール"},
-    [579] = {id=579,en="Choke Breath",ja="チョークブレス"},
-    -- Goobbue
-    [581] = {id=581,en="Blow",ja="ブロー"},
-    [583] = {id=583,en="Beatdown",ja="ビートダウン"},
-    [584] = {id=584,en="Uppercut",ja="アッパーカット"},
-    -- Lesser Bird
-    [622] = {id=622,en="Helldive",ja="ヘルダイブ"},
-    [623] = {id=623,en="Wing Cutter",ja="ウィングカッター"},
-    -- Behemoth
-    [628] = {id=628,en="Wild Horn",ja="ワイルドホーン"},
-    [629] = {id=629,en="Thunderbolt",ja="サンダーボルト"},
-    [631] = {id=631,en="Shock Wave",ja="衝撃波"},
-    [634] = {id=634,en="Meteor",ja="メテオ"},
-    -- Damselfly
-    [659] = {id=659,en="Cursed Sphere",ja="カースドスフィア"},
-    [660] = {id=660,en="Venom",ja="毒液"},
-    -- Snow Rabbit
-    [661] = {id=661,en="Snow Cloud",ja="雪煙"},
-    -- Sapling
-    [685] = {id=685,en="Sprout Spin",ja="スプラウトスピン"},
-    [686] = {id=686,en="Slumber Powder",ja="グーグーパウダー"},
-    [687] = {id=687,en="Sprout Smack",ja="スプラウトスマック"},
-    -- Spider
-    [810] = {id=810,en="Sickle Slash",ja="シックルスラッシュ"},
-    [811] = {id=811,en="Acid Spray",ja="アシッドスプレー"},
-    -- Wamouracampa
-    [1816] = {id=1816,en="Vitriolic Spray",ja="ヴィットリアリクスプレー"},
-    [1817] = {id=1817,en="Thermal Pulse",ja="サーマルパルス"},
-    [1818] = {id=1818,en="Cannonball",ja="キャノンボール"},
-    -- Ladybug
-    [2178] = {id=2178,en="Sudden Lunge",ja="サドンランジ"},
-    [2181] = {id=2181,en="Spiral Spin",ja="スパイラルスピン"},
-    [2182] = {id=2182,en="Spiral Burst",ja="スパイラルバースト"},
-    -- Slug
-    [2183] = {id=2183,en="Fuscous Ooze",ja="ファスカスウーズ"},
-    [2184] = {id=2184,en="Purulent Ooze",ja="ピュルラントウーズ"},
-    [2185] = {id=2185,en="Corrosive Ooze",ja="コローシブウーズ"},
-    -- Lynx
-    [2209] = {id=2209,en="Blink of Peril",ja="ブリンクオブペリル"},
-    -- Chapuli 
-    [2946] = {id=2946,en="Sensilla Blades",ja="センシラブレード"},
-    [2947] = {id=2947,en="Tegmina Buffet",ja="テグミナバフェット"},
-    [2948] = {id=2948,en="Sanguinary Slash",ja="サングインスラッシュ"},
-}
-
-return l

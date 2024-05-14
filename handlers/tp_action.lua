@@ -161,7 +161,7 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Data = function(action_id, actor_mob)
-    local skill_data = Pet_Skill[action_id]
+    local skill_data = Res.Monster.Get_Full_List(action_id)
     if not skill_data then
         _Debug.Error.Add("TP.Pet_Skill_Data: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action_id) .. " unampped in Pet_Skill.")
         skill_data = {id = action_id, en = "UNK Mon. Ability (" .. action_id .. ")"}
@@ -181,7 +181,7 @@ end
 ---@return boolean true: weaponskill was actually an ability
 -- ------------------------------------------------------------------------------------------------------
 H.TP.WS_Ability = function(result, ws_id, action, actor_mob)
-    if Lists.WS.WS_Abilities[ws_id] then
+    if Res.WS.Get_Ability(ws_id) then
         if result.message ~= 185 and result.message ~= 188 then
             H.Ability.Action(action, actor_mob, true)
             return true
@@ -235,7 +235,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Ignore = function(owner_mob, audits, damage, ws_id, ws_name)
     if owner_mob then
-        if not Lists.Ability.Pet_Damaging[ws_id] then
+        if not Res.Monster.Get_Damaging_Ability(ws_id) then
             _Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
             damage = 0
         end
@@ -263,7 +263,7 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 H.TP.MP_Drain = function(audits, ws_id)
-    if Lists.WS.MP_Drain[ws_id] then
+    if Res.WS.Get_MP_Drain(ws_id) then
         audits.trackable = DB.Enum.Trackable.MP_DRAIN
     end
     return audits
@@ -310,7 +310,7 @@ H.TP.Skillchain_Parse = function(result, actor_mob, target_mob)
     local sc_damage = 0
     local sc_name = DB.Enum.Values.DEBUG
     if sc_id > 0 then
-        sc_name    = Lists.WS.Skillchains[sc_id]
+        sc_name    = Res.WS.Get_Skillchain(sc_id)
         sc_damage  = sc_damage + H.TP.Skillchain_Damage(result, actor_mob.name, target_mob.name, sc_name)
     end
     return sc_damage, sc_name
@@ -386,7 +386,7 @@ end
 H.TP.Blog_Pet_Skill = function(owner_mob, actor_mob, action_id, damage, skill_name)
     if Metrics.Blog.Flags.Pet and owner_mob then
         local ignore = nil
-        if not Lists.Ability.Pet_Damaging[action_id] then ignore = H.Enum.Flags.IGNORE end
+        if not Res.Monster.Get_Damaging_Ability(action_id) then ignore = H.Enum.Flags.IGNORE end
         Blog.Add(owner_mob.name .. " (" .. Col.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", skill_name, damage, H.Enum.Text.BLANK, ignore)
     end
 end

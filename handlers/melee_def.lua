@@ -73,11 +73,7 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
         if not action_taken then action_taken = H.Melee_Def.Block(audits, damage, reaction_id) end
 
         H.Melee_Def.Crit(audits, damage, message_id)
-
-        -- Spike Damage
         H.Melee_Def.Spikes(audits, result)
-        -- MELEE_SPIKE_DT     = "Spike Damage Taken",
-        -- Crits taken
     end
 
     return damage

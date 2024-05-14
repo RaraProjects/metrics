@@ -197,18 +197,20 @@ w.Populate = function()
             w.Util.Set_Window_Scale()
             w.Util.Set_Theme()
 
-            if w.Window.Nano then Team.Nano_Mode()
-            elseif w.Window.Mini then Team.Mini_Mode()
+            if w.Window.Nano then
+                Parse.Nano.Populate()
+            elseif w.Window.Mini then
+                Parse.Mini.Populate()
             else
                 if _Debug.Is_Enabled() then UI.Text("Error Count: " .. tostring(_Debug.Error.Util.Error_Count())) end
                 if UI.BeginTabBar(w.Tabs.Names.PARENT, w.Tabs.Flags) then
-                    if UI.BeginTabItem(w.Tabs.Names.TEAM, false, w.Tabs.Switch[w.Tabs.Names.TEAM]) then
+                    if UI.BeginTabItem(Parse.Tab_Name, false, w.Tabs.Switch[w.Tabs.Names.TEAM]) then
                         w.Tabs.Switch[w.Tabs.Names.TEAM] = nil
                         w.Tabs.Active = w.Tabs.Names.TEAM
-                        Team.Populate()
+                        Parse.Full.Populate()
                         UI.EndTabItem()
                     end
-                    if UI.BeginTabItem(w.Tabs.Names.FOCUS, false, w.Tabs.Switch[w.Tabs.Names.FOCUS]) then
+                    if UI.BeginTabItem(Focus.Tab_Name, false, w.Tabs.Switch[w.Tabs.Names.FOCUS]) then
                         w.Tabs.Switch[w.Tabs.Names.FOCUS] = nil
                         w.Tabs.Active = w.Tabs.Names.FOCUS
                         Focus.Populate()

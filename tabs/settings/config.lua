@@ -3,11 +3,10 @@ local s = {}
 s.Section = {}
 s.Util = {}
 s.Widget = {}
-s.Widget.Open_Action = -1
 
 s.Enum = {}
 s.Enum.File = {
-    TEAM   = "team",
+    PARSE  = "parse",
     BLOG   = "blog",
     WINDOW = "window",
     DATABASE  = "database",
@@ -29,8 +28,8 @@ s.Populate = function()
             s.Section.Overall()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Team", Window.Tabs.Flags) then
-            s.Section.Team()
+        if UI.BeginTabItem("Parse", Window.Tabs.Flags) then
+            Parse.Config.Display()
             UI.EndTabItem()
         end
         if UI.BeginTabItem("Focus", Window.Tabs.Flags) then
@@ -38,11 +37,11 @@ s.Populate = function()
             UI.EndTabItem()
         end
         if UI.BeginTabItem("Battle Log", Window.Tabs.Flags) then
-            s.Section.Battle_Log()
+            Blog.Config.Display()
             UI.EndTabItem()
         end
         if UI.BeginTabItem("Report", Window.Tabs.Flags) then
-            s.Section.Report()
+            Report.Config.Display()
             UI.EndTabItem()
         end
         if UI.BeginTabItem("GUI", Window.Tabs.Flags) then
@@ -58,20 +57,6 @@ s.Populate = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Collapse setting buttons.
-------------------------------------------------------------------------------------------------------
-s.Section.Collapse = function()
-    s.Widget.Open_Action = -1
-    if UI.Button("Expand all") then
-        s.Widget.Open_Action = 1
-    end
-    UI.SameLine() UI.Text(" ") UI.SameLine()
-    if UI.Button("Collapse all") then
-        s.Widget.Open_Action = 0
-    end
-end
-
-------------------------------------------------------------------------------------------------------
 -- Revert and collapse setting buttons.
 ------------------------------------------------------------------------------------------------------
 s.Section.Revert = function()
@@ -80,9 +65,9 @@ s.Section.Revert = function()
         clicked = 1
         if clicked and 1 then
             Window.Reset_Settings()
-            Team.Reset_Settings()
+            Parse.Config.Reset()
             Focus.Reset_Settings()
-            Blog.Reset_Settings()
+            Blog.Config.Reset()
             Metrics.Model.Running_Accuracy_Limit = DB.Defaults.Running_Accuracy_Limit
         end
     end
@@ -133,64 +118,6 @@ s.Section.Overall = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Shows settings that affect the Team screen.
-------------------------------------------------------------------------------------------------------
-s.Section.Team = function()
-    local col_flags = Window.Columns.Flags.None
-    local width = Window.Columns.Widths.Settings
-    UI.Text("Which extra columns should show in the Team tab?")
-    if UI.BeginTable("Team", 3) then
-        UI.TableSetupColumn("Col 1", col_flags, width)
-        UI.TableSetupColumn("Col 2", col_flags, width)
-        UI.TableSetupColumn("Col 3", col_flags, width)
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Total Damage Only", {Metrics.Team.Flags.Total_Damage_Only}) then
-            Metrics.Team.Flags.Total_Damage_Only = not Metrics.Team.Flags.Total_Damage_Only
-            Team.Util.Calculate_Column_Flags()
-        end
-        UI.SameLine() Window.Widget.HelpMarker("Reduces the amount of columns on Team table to just "
-                                                .."the most essential: Name, %T, Total, and Running Accuracy.")
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Run Time", {Metrics.Team.Settings.Show_Clock}) then
-            Metrics.Team.Settings.Show_Clock = not Metrics.Team.Settings.Show_Clock
-        end
-        UI.SameLine() Window.Widget.HelpMarker("Show a timer of how long the parse has been running on the Team tab.")
-        UI.TableNextColumn()
-        ---
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Crits", {Metrics.Team.Flags.Crit}) then
-            Metrics.Team.Flags.Crit = not Metrics.Team.Flags.Crit
-            Team.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Pets", {Metrics.Team.Flags.Pet}) then
-            Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
-            Team.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Healing", {Metrics.Team.Flags.Healing}) then
-            Metrics.Team.Flags.Healing = not Metrics.Team.Flags.Healing
-            Team.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Deaths", {Metrics.Team.Flags.Deaths}) then
-            Metrics.Team.Flags.Deaths = not Metrics.Team.Flags.Deaths
-            Team.Util.Calculate_Column_Flags()
-        end
-        UI.EndTable()
-    end
-
-    UI.Text("Use Ctrl+Click on the component to set the number directly.")
-    s.Widget.Player_Limit()
-    s.Widget.Acc_Limit()
-end
-
-------------------------------------------------------------------------------------------------------
 -- Shows settings that affect the Focus screen.
 ------------------------------------------------------------------------------------------------------
 s.Section.Focus = function()
@@ -225,93 +152,6 @@ s.Section.Focus = function()
     end
 end
 
-------------------------------------------------------------------------------------------------------
--- Shows settings that affect the Battle Log screen.
-------------------------------------------------------------------------------------------------------
-s.Section.Battle_Log = function()
-    local col_flags = Window.Columns.Flags.None
-    local width = Window.Columns.Widths.Settings
-    UI.Text("Which columns should show in the battle log?")
-    if UI.Checkbox("Show Timestamps", {Metrics.Blog.Flags.Timestamp}) then
-        Metrics.Blog.Flags.Timestamp = not Metrics.Blog.Flags.Timestamp
-    end
-
-    UI.Text("Which actions should populate the battle log?")
-    if UI.BeginTable("Battle Log", 3) then
-        UI.TableSetupColumn("Col 1", col_flags, width)
-        UI.TableSetupColumn("Col 2", col_flags, width)
-        UI.TableSetupColumn("Col 3", col_flags, width)
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Melee", {Metrics.Blog.Flags.Melee}) then
-            Metrics.Blog.Flags.Melee = not Metrics.Blog.Flags.Melee
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Ranged", {Metrics.Blog.Flags.Ranged}) then
-            Metrics.Blog.Flags.Ranged = not Metrics.Blog.Flags.Ranged
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show WS", {Metrics.Blog.Flags.WS}) then
-            Metrics.Blog.Flags.WS = not Metrics.Blog.Flags.WS
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show SC", {Metrics.Blog.Flags.SC}) then
-            Metrics.Blog.Flags.SC = not Metrics.Blog.Flags.SC
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Magic", {Metrics.Blog.Flags.Magic}) then
-            Metrics.Blog.Flags.Magic = not Metrics.Blog.Flags.Magic
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Ability", {Metrics.Blog.Flags.Ability}) then
-            Metrics.Blog.Flags.Ability = not Metrics.Blog.Flags.Ability
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Pet", {Metrics.Blog.Flags.Pet}) then
-            Metrics.Blog.Flags.Pet = not Metrics.Blog.Flags.Pet
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Healing", {Metrics.Blog.Flags.Healing}) then
-            Metrics.Blog.Flags.Healing = not Metrics.Blog.Flags.Healing
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Deaths", {Metrics.Blog.Flags.Deaths}) then
-            Metrics.Blog.Flags.Deaths = not Metrics.Blog.Flags.Deaths
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Mob Deaths", {Metrics.Blog.Flags.Mob_Death}) then
-            Metrics.Blog.Flags.Mob_Death = not Metrics.Blog.Flags.Mob_Death
-        end
-
-        UI.EndTable()
-    end
-
-    UI.Text("Should especially high damage be highlited in the battle log?")
-    s.Widget.Damage_Highlighting()
-    UI.Text("Use Ctrl+Click on the component to set the number directly." )
-    s.Widget.WS_Threshold()
-    s.Widget.Magic_Threshold()
-end
-
-------------------------------------------------------------------------------------------------------
--- Shows settings that affect the Report tab.
-------------------------------------------------------------------------------------------------------
-s.Section.Report = function()
-    local damage_threshold = {[1] = Metrics.Report.Damage_Threshold}
-    UI.Text("This does not affect the Publish button on the focus tab.")
-    if UI.DragInt("Chat Report % Threshold", damage_threshold, 0.1, 0, 50, "%d", ImGuiSliderFlags_None) then
-        Metrics.Report.Damage_Threshold = damage_threshold[1]
-    end
-end
 
 ------------------------------------------------------------------------------------------------------
 -- Shows settings that affect the GUI.
@@ -378,7 +218,7 @@ end
 s.Widget.SC_Damage = function()
     if UI.Checkbox("Include SC Damage", {Metrics.Team.Settings.Include_SC_Damage}) then
         Metrics.Team.Settings.Include_SC_Damage = not Metrics.Team.Settings.Include_SC_Damage
-        Team.Util.Calculate_Column_Flags()
+        Parse.Util.Calculate_Column_Flags()
     end
     UI.SameLine() Window.Widget.HelpMarker("The player that closes the skill chain gets the damage credit. "
                                     .. "You can choose to exclude skillchain damage from the parse display. "
@@ -393,46 +233,11 @@ end
 s.Widget.Condensed_Numbers = function()
     if UI.Checkbox("Condensed Numbers", {Metrics.Team.Settings.Condensed_Numbers}) then
         Metrics.Team.Settings.Condensed_Numbers = not Metrics.Team.Settings.Condensed_Numbers
-        Team.Util.Calculate_Column_Flags()
+        Parse.Util.Calculate_Column_Flags()
     end
     UI.SameLine() Window.Widget.HelpMarker("Condensed is 1.2K instead of 1,200.")
 end
 
-------------------------------------------------------------------------------------------------------
--- Toggles whether damage highlighting takes place in the battle log.
-------------------------------------------------------------------------------------------------------
-s.Widget.Damage_Highlighting = function()
-    if UI.Checkbox("Damage Highlighting", {Metrics.Blog.Flags.Damage_Highlighting}) then
-        Metrics.Blog.Flags.Damage_Highlighting = not Metrics.Blog.Flags.Damage_Highlighting
-    end
-    UI.SameLine() Window.Widget.HelpMarker("Damage over certain limits causes the text to highlight. "
-                                    .. "It's a way for you to easily see if you or others are meeting your damage goals. "
-                                    .. "Set the bar high and strive to win.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Set the battle log damage highlighting threshold for weaponskills.
-------------------------------------------------------------------------------------------------------
-s.Widget.WS_Threshold = function()
-    local ws_threshold = {[1] = Metrics.Blog.Thresholds.WS}
-    if UI.DragInt("Weaponskill", ws_threshold, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
-        Metrics.Blog.Thresholds.WS = ws_threshold[1]
-    end
-    UI.SameLine() Window.Widget.HelpMarker("Weaponskill damage over this amount will be highlighted "
-                                    .. "in the battle log.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Set the battle log damage highlighting threshold for magic.
-------------------------------------------------------------------------------------------------------
-s.Widget.Magic_Threshold = function()
-    local magic_threshold = {[1] = Metrics.Blog.Thresholds.MAGIC}
-    if UI.DragInt("Spell", magic_threshold, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
-        Metrics.Blog.Thresholds.MAGIC = magic_threshold[1]
-    end
-    UI.SameLine() Window.Widget.HelpMarker("Magic damage over this amount will be highlighted "
-                                    .. "in the battle log.")
-end
 
 ------------------------------------------------------------------------------------------------------
 -- Set the healing threshold defaults to prevent overcure with Divine Seal.
@@ -442,13 +247,6 @@ s.Widget.Healing = function(spell)
     if UI.DragInt(spell, healing_threshold, 1, 0, 3000, "%d", ImGuiSliderFlags_None) then
         DB.Healing_Max[spell] = healing_threshold[1]
     end
-end
-
-------------------------------------------------------------------------------------------------------
--- Works in conjunction with collapse all or expand all.
-------------------------------------------------------------------------------------------------------
-s.Util.Check_Collapse = function()
-    if s.Widget.Open_Action ~= -1 then UI.SetNextItemOpen(s.Widget.Open_Action ~= 0) end
 end
 
 return s

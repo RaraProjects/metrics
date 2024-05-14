@@ -10,7 +10,7 @@ Ashita.WS = T{}
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Ashita.WS.Get_By_ID = function(id)
-    local ws = WS[id]
-    if not ws then ws = Lists.WS.Missing_WS[id] end
+    local ws = Res.WS.Get_Full_List(id)
+    if not ws then ws = Res.WS.Get_Missing(id) end
     return ws
 end
