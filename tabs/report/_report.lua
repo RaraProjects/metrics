@@ -11,11 +11,10 @@ require("tabs.report.widgets")
 -- Creates some buttons to publish various party metrics to chat.
 ------------------------------------------------------------------------------------------------------
 Report.Populate = function()
-    Report.Section.Chat_Reports()
-    UI.Separator()
-    Report.Section.File()
-    UI.Separator()
-    Report.Section.Monsters_Defeated()
+    Report.Widgets.Settings_Button()
+    UI.Separator() Report.Section.Chat_Reports()
+    UI.Separator() Report.Section.File()
+    UI.Separator() Report.Section.Monsters_Defeated()
 end
 
 ------------------------------------------------------------------------------------------------------

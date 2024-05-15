@@ -106,10 +106,10 @@ DB.Enum.HEALING = T{
     ["Cure V"]     = 1300,
     ["Cure VI"]    = 1500,
     ["Curaga"]     = 150,	-- 102
-    ["Curaga II"]  = 400,	-- 213
-    ["Curaga III"] = 800,
-    ["Curaga IV"]  = 1000,
-    ["Curaga V"]   = 1300,
+    ["Curaga II"]  = 300,	-- 213
+    ["Curaga III"] = 400,
+    ["Curaga IV"]  = 500,
+    ["Curaga V"]   = 800,
 }
 
 DB.Healing_Max = T{
@@ -120,8 +120,8 @@ DB.Healing_Max = T{
     ["Cure V"]     = 1300,
     ["Cure VI"]    = 1500,
     ["Curaga"]     = 150,
-    ["Curaga II"]  = 400,
-    ["Curaga III"] = 800,
-    ["Curaga IV"]  = 1000,
-    ["Curaga V"]   = 1300,
+    ["Curaga II"]  = 300,
+    ["Curaga III"] = 400,
+    ["Curaga IV"]  = 500,
+    ["Curaga V"]   = 800,
 }

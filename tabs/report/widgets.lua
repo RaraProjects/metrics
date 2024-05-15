@@ -1,6 +1,18 @@
 Report.Widgets = T{}
 
 ------------------------------------------------------------------------------------------------------
+-- Toggles the settings showing for the battle log.
+------------------------------------------------------------------------------------------------------
+Report.Widgets.Settings_Button = function()
+    if UI.SmallButton("Settings") then
+        Report.Config.Show_Settings = not Report.Config.Show_Settings
+    end
+    if Report.Config.Show_Settings then
+        Report.Config.Display()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Creates a button to publish certain cataloged actions to the screen.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string

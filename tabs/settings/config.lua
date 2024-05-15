@@ -20,30 +20,14 @@ s.Slider_Width = 100
 ------------------------------------------------------------------------------------------------------
 s.Populate = function()
     local tab_flags = Window.Tabs.Flags
-    
+
     if UI.BeginTabBar("Focus Tabs", tab_flags) then
         if UI.BeginTabItem("Help", tab_flags) then
             s.Section.Text_Commands()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Overall", tab_flags) then
-            s.Section.Overall()
-            UI.EndTabItem()
-        end
-        if UI.BeginTabItem("Parse", tab_flags) then
-            Parse.Config.Display()
-            UI.EndTabItem()
-        end
         if UI.BeginTabItem("Focus", tab_flags) then
             s.Section.Focus()
-            UI.EndTabItem()
-        end
-        if UI.BeginTabItem("Battle Log", tab_flags) then
-            Blog.Config.Display()
-            UI.EndTabItem()
-        end
-        if UI.BeginTabItem("Report", tab_flags) then
-            Report.Config.Display()
             UI.EndTabItem()
         end
         if UI.BeginTabItem("GUI", tab_flags) then
@@ -93,30 +77,6 @@ s.Section.Text_Commands = function()
     UI.BulletText("acc       -- publishes total accuracy for group.")
     UI.BulletText("melee     -- publishes melee damage for group.")
     UI.BulletText("healing   -- publishes healing done for group.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Shows settings that affect multiple components.
-------------------------------------------------------------------------------------------------------
-s.Section.Overall = function()
-    local col_flags = Column.Flags.None
-    local width = Column.Widths.Settings
-    if UI.BeginTable("Overall", 3) then
-        UI.TableSetupColumn("Col 1", col_flags, width)
-        UI.TableSetupColumn("Col 2", col_flags, width)
-        UI.TableSetupColumn("Col 3", col_flags, width)
-
-        UI.TableNextColumn()
-        s.Widget.Condensed_Numbers()
-
-        UI.TableNextColumn()
-        s.Widget.SC_Damage()
-
-        UI.TableNextColumn()
-        -- Nothing
-
-        UI.EndTable()
-    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -202,44 +162,6 @@ s.Widget.Acc_Limit = function()
     end
     UI.SameLine() Window.Widgets.HelpMarker("Running accuracy calculates based off of {X} many attack attempts.")
 end
-
-------------------------------------------------------------------------------------------------------
--- Sets how many players can be shown on the Team screen.
-------------------------------------------------------------------------------------------------------
-s.Widget.Player_Limit = function()
-    local cutoff = {[1] = Metrics.Team.Settings.Rank_Cutoff}
-    if UI.DragInt("Player Limit", cutoff, 0.1, 0, 18, "%d", ImGuiSliderFlags_None) then
-        Metrics.Team.Settings.Rank_Cutoff = cutoff[1]
-    end
-    UI.SameLine() Window.Widgets.HelpMarker("How many players are listed on the Team table.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Toggles whether skillchain damage is included in damage displays.
-------------------------------------------------------------------------------------------------------
-s.Widget.SC_Damage = function()
-    if UI.Checkbox("Include SC Damage", {Metrics.Team.Settings.Include_SC_Damage}) then
-        Metrics.Team.Settings.Include_SC_Damage = not Metrics.Team.Settings.Include_SC_Damage
-        Parse.Util.Calculate_Column_Flags()
-    end
-    UI.SameLine() Window.Widgets.HelpMarker("The player that closes the skill chain gets the damage credit. "
-                                    .. "You can choose to exclude skillchain damage from the parse display. "
-                                    .. "You won't lose any data by toggling this. There is a track where "
-                                    .. "skillchains are included and one where they aren't. This just toggles "
-                                    .. "between the two.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Toggles whether or not numbers are shown in condensed format or not.
-------------------------------------------------------------------------------------------------------
-s.Widget.Condensed_Numbers = function()
-    if UI.Checkbox("Condensed Numbers", {Metrics.Team.Settings.Condensed_Numbers}) then
-        Metrics.Team.Settings.Condensed_Numbers = not Metrics.Team.Settings.Condensed_Numbers
-        Parse.Util.Calculate_Column_Flags()
-    end
-    UI.SameLine() Window.Widgets.HelpMarker("Condensed is 1.2K instead of 1,200.")
-end
-
 
 ------------------------------------------------------------------------------------------------------
 -- Set the healing threshold defaults to prevent overcure with Divine Seal.

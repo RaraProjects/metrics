@@ -6,13 +6,10 @@ Parse.Full.Name = "Parse"
 ------------------------------------------------------------------------------------------------------
 Parse.Full.Populate = function()
     DB.Widgets.Mob_Filter()
-
-    -- Duration Timer
-    if Metrics.Team.Settings.Show_Clock then
-        if not Metrics.Team.Flags.Total_Damage_Only then UI.SameLine() UI.Text(" ") UI.SameLine() end
-        local pause_string = ""
-        if Timers.Is_Paused(Timers.Enum.Names.PARSE) then pause_string = " (paused)" end
-        UI.Text("Duration: " .. tostring(Timers.Check("Metrics"))) UI.SameLine() UI.Text(pause_string) Parse.Widgets.Timer_Duration_Help_Text()
+    Parse.Widgets.Settings_Button()
+    Parse.Widgets.Clock()
+    if Parse.Config.Show_Settings then
+        Parse.Config.Display()
     end
 
     -- Main Body

@@ -37,3 +37,15 @@ Blog.Widgets.Magic_Threshold = function()
     UI.SameLine() Window.Widgets.HelpMarker("Magic damage over this amount will be highlighted "
                                     .. "in the battle log.")
 end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the settings showing for the battle log.
+------------------------------------------------------------------------------------------------------
+Blog.Widgets.Settings_Button = function()
+    if UI.SmallButton("Settings") then
+        Blog.Config.Show_Settings = not Blog.Config.Show_Settings
+    end
+    if Blog.Config.Show_Settings then
+        Blog.Config.Display()
+    end
+end

@@ -39,21 +39,7 @@ Blog.Populate = function()
     if Metrics.Blog.Flags.Timestamp then columns = columns + 1 end
 
     -- Resize Options
-    if UI.SmallButton("Set Display Length") then
-        Metrics.Blog.Flags.Show_Length = not Metrics.Blog.Flags.Show_Length
-    end
-    if Metrics.Blog.Flags.Show_Length then
-        UI.Separator()
-        if UI.Button("Default") then
-            Metrics.Blog.Visible_Length = Blog.Settings.Visible_Length
-        end
-        UI.SameLine() UI.Text(" ") UI.SameLine()
-        local length = {[1] = Metrics.Blog.Visible_Length}
-        UI.SetNextItemWidth(50)
-        if UI.DragInt("Length", length, 0.1, Blog.Settings.Visible_Length, 50, "%d", ImGuiSliderFlags_None) then
-            Metrics.Blog.Visible_Length = length[1]
-        end
-    end
+    Blog.Widgets.Settings_Button()
 
     -- Content
     if UI.BeginTable("Blog", columns, Window.Table.Flags.Scrollable, table_size) then

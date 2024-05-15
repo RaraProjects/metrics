@@ -17,6 +17,7 @@ Parse.Config.Defaults.Settings = T{
     Include_SC_Damage = false
 }
 
+Parse.Config.Show_Settings = false
 Parse.Config.Column_Flags = Column.Flags.None
 Parse.Config.Column_Width = Column.Widths.Settings
 Parse.Config.Slider_Width = 100
@@ -38,9 +39,10 @@ end
 -- Shows settings that affect the Parse screens.
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Display = function()
-    Parse.Config.General()
-    Parse.Config.Column_Selection()
-    Parse.Config.Sliders()
+    UI.Separator() Parse.Config.General()
+    UI.Separator() Parse.Config.Column_Selection()
+    UI.Separator() Parse.Config.Sliders()
+    UI.Separator()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -56,8 +58,9 @@ Parse.Config.General = function()
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
+        -- Row 1
         UI.TableNextColumn()
-        if UI.Checkbox("Concise Mode", {Metrics.Team.Flags.Total_Damage_Only}) then
+        if UI.Checkbox("Less Columns", {Metrics.Team.Flags.Total_Damage_Only}) then
             Metrics.Team.Flags.Total_Damage_Only = not Metrics.Team.Flags.Total_Damage_Only
             Parse.Util.Calculate_Column_Flags()
         end
@@ -68,8 +71,13 @@ Parse.Config.General = function()
         if UI.Checkbox("Run Time", {Metrics.Team.Settings.Show_Clock}) then
             Metrics.Team.Settings.Show_Clock = not Metrics.Team.Settings.Show_Clock
         end
-        UI.SameLine() Window.Widgets.HelpMarker("Show a timer of how long the parse has been running on the Parse tab.")
+        UI.SameLine() Window.Widgets.HelpMarker("Show a timer of how long action has been taking place.")
         UI.TableNextColumn()
+        Parse.Widgets.SC_Damage()
+
+        -- Row 2
+        UI.TableNextColumn()
+        Parse.Widgets.Condensed_Numbers()
 
         UI.EndTable()
     end

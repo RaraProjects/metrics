@@ -13,7 +13,6 @@ Blog.Config.Defaults.Flags = T{
     Healing   = true,
     Deaths    = false,
     Mob_Death = true,
-    Show_Length = false,
 }
 Blog.Config.Defaults.Thresholds = T{
     WS    = 600,
@@ -29,6 +28,7 @@ Blog.Settings = {
     Visible_Length = 8,
 }
 
+Blog.Config.Show_Settings = false
 Blog.Config.Slider_Width = 100
 
 ------------------------------------------------------------------------------------------------------
@@ -48,9 +48,11 @@ end
 -- Shows settings that affect the Battle Log screen.
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Display = function()
-    Blog.Config.General_Settings()
-    if Metrics.Blog.Flags.Damage_Highlighting then Blog.Config.Damage_Sliders() end
+    UI.Separator() Blog.Config.General_Settings()
+    UI.Separator() if Metrics.Blog.Flags.Damage_Highlighting then Blog.Config.Damage_Sliders() UI.Separator() end
     Blog.Config.Column_Settings()
+    UI.Separator() Blog.Config.Length()
+    UI.Separator()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -162,5 +164,20 @@ Blog.Config.Damage_Sliders = function()
         UI.TableNextColumn()
 
         UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows blog length settings that affect the Battle Log screen.
+------------------------------------------------------------------------------------------------------
+Blog.Config.Length = function()
+    if UI.Button("Default") then
+        Metrics.Blog.Visible_Length = Blog.Settings.Visible_Length
+    end
+    UI.SameLine() UI.Text(" ") UI.SameLine()
+    local length = {[1] = Metrics.Blog.Visible_Length}
+    UI.SetNextItemWidth(50)
+    if UI.DragInt("Length", length, 0.1, Blog.Settings.Visible_Length, 50, "%d", ImGuiSliderFlags_None) then
+        Metrics.Blog.Visible_Length = length[1]
     end
 end
