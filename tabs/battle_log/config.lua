@@ -57,8 +57,8 @@ end
 -- Shows general settings that affect the Battle Log screen.
 ------------------------------------------------------------------------------------------------------
 Blog.Config.General_Settings = function()
-    local col_flags = Window.Columns.Flags.None
-    local width = Window.Columns.Widths.Settings
+    local col_flags = Column.Flags.None
+    local width = Column.Widths.Settings
 
     UI.Text("Which actions should populate the battle log?")
     if UI.BeginTable("Battle Log", 3) then
@@ -84,8 +84,8 @@ end
 -- Shows column settings that affect the Battle Log screen.
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Column_Settings = function()
-    local col_flags = Window.Columns.Flags.None
-    local width = Window.Columns.Widths.Settings
+    local col_flags = Column.Flags.None
+    local width = Column.Widths.Settings
 
     UI.Text("Which actions should populate the battle log?")
     if UI.BeginTable("Battle Log", 3) then
@@ -149,7 +149,7 @@ end
 -- Shows general settings that affect the Battle Log screen.
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Damage_Sliders = function()
-    local col_flags = Window.Columns.Flags.None
+    local col_flags = Column.Flags.None
     local width = 220
 
     UI.Text("Use Ctrl+Click on the component to set the number directly." )

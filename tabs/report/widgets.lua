@@ -19,7 +19,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Report.Widgets.Chat_Mode = function()
     local list = Ashita.Chat.Modes
-    local flags = Window.Dropdown.Flags
+    local flags = DB.Widgets.Dropdown.Flags
     if list[1] then
         UI.SetNextItemWidth(Ashita.Chat.Selection.Width)
         if UI.BeginCombo(Ashita.Chat.Selection.Title, list[Report.Publishing.Chat_Index].Name, flags) then

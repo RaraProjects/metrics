@@ -21,7 +21,7 @@ end
 -- Shows the help text for the player filter.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Timer_Duration_Help_Text = function()
-    UI.SameLine() Window.Widget.HelpMarker("The duration timer will auto-pause after " .. tostring(Timers.Tresholds.AUTOPAUSE)
+    UI.SameLine() Window.Widgets.HelpMarker("The duration timer will auto-pause after " .. tostring(Timers.Tresholds.AUTOPAUSE)
                                         .. " seconds of no actions. The timer will auto restart after someone affiliated with you "
                                         .. "(in your party or alliance) takes an action. Data collection does NOT stop while "
                                         .. "paused! The duration and auto-pause is to help you see how long your group has actually "
@@ -38,7 +38,7 @@ Parse.Widgets.Acc_Limit = function()
         Metrics.Model.Running_Accuracy_Limit = acc_limit[1]
         DB.Tracking.Running_Accuracy = {}
     end
-    UI.SameLine() Window.Widget.HelpMarker("Running accuracy calculates based off of {X} many attack attempts.")
+    UI.SameLine() Window.Widgets.HelpMarker("Running accuracy calculates based off of {X} many attack attempts.")
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -50,5 +50,5 @@ Parse.Widgets.Player_Limit = function()
     if UI.DragInt("Player Limit", cutoff, 0.1, 0, 18, "%d", ImGuiSliderFlags_None) then
         Metrics.Team.Settings.Rank_Cutoff = cutoff[1]
     end
-    UI.SameLine() Window.Widget.HelpMarker("How many players are listed on the Team table.")
+    UI.SameLine() Window.Widgets.HelpMarker("How many players are listed on the Team table.")
 end

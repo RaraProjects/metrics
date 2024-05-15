@@ -20,8 +20,8 @@ Report.Publishing.Total_Damage = function()
         for rank, data in ipairs(DB.Sorted.Total_Damage) do
             if rank <= Metrics.Team.Settings.Rank_Cutoff then
                 local player_name = data[1]
-                local player_total = Col.Damage.Total(player_name, false, false, true)
-                local player_percent = Col.Damage.Total(player_name, true, false, true)
+                local player_total = Column.Damage.Total(player_name, false, false, true)
+                local player_percent = Column.Damage.Total(player_name, true, false, true)
                 if tonumber(player_percent) >= Metrics.Report.Damage_Threshold then
                     local chat_string = tostring(player_name) .. ": " .. tostring(player_total) .. " (" .. tostring(player_percent) .. "%)"
                     Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
@@ -48,7 +48,7 @@ Report.Publishing.Accuracy = function()
         for rank, data in ipairs(DB.Sorted.Total_Damage) do
             if rank <= Metrics.Team.Settings.Rank_Cutoff then
                 local player_name = data[1]
-                local player_acc = Col.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, false, nil, true)
+                local player_acc = Column.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, false, nil, true)
                 local chat_string = tostring(player_name) .. ": " .. tostring(player_acc) .. "%"
                 Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
                 found = true
@@ -82,8 +82,8 @@ Report.Publishing.Damage_By_Type = function(trackable)
         for rank, data in ipairs(sorted_damage) do
             if rank <= Metrics.Team.Settings.Rank_Cutoff then
                 local player_name = data[1]
-                local player_damage = Col.Damage.By_Type(player_name, trackable, false, nil, true)
-                local player_percent = Col.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)
+                local player_damage = Column.Damage.By_Type(player_name, trackable, false, nil, true)
+                local player_percent = Column.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)
                 if tonumber(player_percent) >= Metrics.Report.Damage_Threshold then
                     local chat_string = tostring(player_name) .. ": " .. tostring(player_damage) .. " (" .. tostring(player_percent) .. "%)"
                     Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
@@ -124,12 +124,12 @@ Report.Publishing.Catalog = function(player_name, focus_type)
         DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         for _, data in ipairs(DB.Sorted.Catalog_Damage) do
             action_name = data[1]
-            local total = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL, false, true)
-            local count = Col.Single.Attempts(player_name, action_name, focus_type, true)
-            local average = Col.Single.Average(player_name, action_name, focus_type, true)
-            local min = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN, false, true)
+            local total = Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL, false, true)
+            local count = Column.Single.Attempts(player_name, action_name, focus_type, true)
+            local average = Column.Single.Average(player_name, action_name, focus_type, true)
+            local min = Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN, false, true)
             if min == "100000" then min = "0" end
-            local max = Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX, false, true)
+            local max = Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX, false, true)
             local chat_string = tostring(action_name) .. ": " .. tostring(total) .. " | " .. tostring(count) .. " | " 
                                 .. tostring(average) .. " | " .. tostring(min) .. " | " .. tostring(max)
             Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)

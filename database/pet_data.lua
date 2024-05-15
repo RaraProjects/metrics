@@ -90,9 +90,9 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Data.Get = function(player_name, pet_name, trackable, metric)
 	local total = 0
-	local mob_focus = Window.Util.Get_Mob_Focus()
+	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	for index, _ in pairs(DB.Pet_Parse) do
-		if mob_focus == Window.Dropdown.Enum.NONE then
+		if mob_focus == DB.Widgets.Dropdown.Enum.NONE then
 			if string.find(index, player_name .. ":") then
 				if DB.Pet_Parse[index][pet_name] then
 					total = total + DB.Pet_Parse[index][pet_name][trackable][metric]

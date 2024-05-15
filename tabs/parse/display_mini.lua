@@ -1,6 +1,7 @@
 Parse.Mini = T{}
 
-Parse.Mini.Column_Flags = Window.Columns.Flags.None
+Parse.Mini.Active = false
+Parse.Mini.Column_Flags = Column.Flags.None
 
 ------------------------------------------------------------------------------------------------------
 -- Loads shows just the Team tab with just the player.
@@ -50,12 +51,27 @@ end
 Parse.Mini.Rows = function(player_name)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(player_name)
-    UI.TableNextColumn() Col.Damage.DPS(player_name, true)
-    UI.TableNextColumn() Col.Damage.Total(player_name, true, true)
-    UI.TableNextColumn() Col.Damage.Total(player_name, false, true)
-    UI.TableNextColumn() Col.Acc.Running(player_name)
+    UI.TableNextColumn() Column.Damage.DPS(player_name, true)
+    UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
+    UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
+    UI.TableNextColumn() Column.Acc.Running(player_name)
     if Metrics.Team.Flags.Pet then
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.PET)
-        UI.TableNextColumn() Col.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET)
+        UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns whether mini mode is enabled.
+------------------------------------------------------------------------------------------------------
+Parse.Mini.Is_Enabled = function()
+    return Parse.Mini.Active
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles mini mode.
+------------------------------------------------------------------------------------------------------
+Parse.Mini.Toggle = function()
+    Parse.Mini.Active = not Parse.Mini.Active
+    if Parse.Mini.Active then Parse.Nano.Active = false end
 end

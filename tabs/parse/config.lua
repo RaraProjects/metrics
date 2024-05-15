@@ -17,8 +17,8 @@ Parse.Config.Defaults.Settings = T{
     Include_SC_Damage = false
 }
 
-Parse.Config.Column_Flags = Window.Columns.Flags.None
-Parse.Config.Column_Width = Window.Columns.Widths.Settings
+Parse.Config.Column_Flags = Column.Flags.None
+Parse.Config.Column_Width = Column.Widths.Settings
 Parse.Config.Slider_Width = 100
 
 ------------------------------------------------------------------------------------------------------
@@ -61,14 +61,14 @@ Parse.Config.General = function()
             Metrics.Team.Flags.Total_Damage_Only = not Metrics.Team.Flags.Total_Damage_Only
             Parse.Util.Calculate_Column_Flags()
         end
-        UI.SameLine() Window.Widget.HelpMarker("Reduces the amount of columns on Parse table to just "
+        UI.SameLine() Window.Widgets.HelpMarker("Reduces the amount of columns on Parse table to just "
                                                 .."the most essential: Name, %T, Total, and Running Accuracy.")
 
         UI.TableNextColumn()
         if UI.Checkbox("Run Time", {Metrics.Team.Settings.Show_Clock}) then
             Metrics.Team.Settings.Show_Clock = not Metrics.Team.Settings.Show_Clock
         end
-        UI.SameLine() Window.Widget.HelpMarker("Show a timer of how long the parse has been running on the Parse tab.")
+        UI.SameLine() Window.Widgets.HelpMarker("Show a timer of how long the parse has been running on the Parse tab.")
         UI.TableNextColumn()
 
         UI.EndTable()

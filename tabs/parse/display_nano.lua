@@ -1,10 +1,12 @@
 Parse.Nano = T{}
 
+Parse.Nano.Active = false
+
 ------------------------------------------------------------------------------------------------------
 -- Loads shows just the Team tab with just the player.
 ------------------------------------------------------------------------------------------------------
 Parse.Nano.Populate = function()
-    local flags = Window.Columns.Flags.None
+    local flags = Column.Flags.None
     local player = Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
     if not player then return nil end
     local player_name = player.name
@@ -17,11 +19,26 @@ Parse.Nano.Populate = function()
         UI.TableHeadersRow()
 
         UI.TableNextRow()
-        UI.TableNextColumn() Col.Damage.DPS(player_name, true)
-        UI.TableNextColumn() Col.Damage.Total(player_name, true, true)
-        UI.TableNextColumn() Col.Damage.Total(player_name, false, true)
-        UI.TableNextColumn() Col.Acc.Running(player_name)
+        UI.TableNextColumn() Column.Damage.DPS(player_name, true)
+        UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
+        UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
+        UI.TableNextColumn() Column.Acc.Running(player_name)
 
         UI.EndTable()
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns whether nano mode is enabled.
+------------------------------------------------------------------------------------------------------
+Parse.Nano.Is_Enabled = function()
+    return Parse.Nano.Active
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles nano mode.
+------------------------------------------------------------------------------------------------------
+Parse.Nano.Toggle = function()
+    Parse.Nano.Active = not Parse.Nano.Active
+    if Parse.Nano.Active then Parse.Mini.Active = false end
 end

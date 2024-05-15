@@ -22,8 +22,8 @@ end
 -- Builds the chat report section.
 ------------------------------------------------------------------------------------------------------
 Report.Section.Chat_Reports = function()
-    local col_flags = Window.Columns.Flags.None
-    local width = Window.Columns.Widths.Report
+    local col_flags = Column.Flags.None
+    local width = Column.Widths.Report
     UI.Text("Chat Reports")
     Report.Widgets.Chat_Mode()
     if UI.BeginTable("Chat Reports", 4, Window.Table.Flags.None) then
@@ -85,8 +85,8 @@ end
 -- Builds the file section.
 ------------------------------------------------------------------------------------------------------
 Report.Section.File = function()
-    local col_flags = Window.Columns.Flags.None
-    local width = Window.Columns.Widths.Report
+    local col_flags = Column.Flags.None
+    local width = Column.Widths.Report
     UI.Text("Create CSV File")
     UI.Text("Files can be found in: /config/Metrics/")
     if UI.BeginTable("Save File", 4, Window.Table.Flags.None) then

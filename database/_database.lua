@@ -33,6 +33,7 @@ require("database.data")
 require("database.lists")
 require("database.pet_catalog")
 require("database.pet_data")
+require("database.widgets")
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the parsing data and clears the battle log.
@@ -44,18 +45,20 @@ DB.Initialize = function()
 	DB.Tracking.Pet_Trackable = T{}
 	DB.Tracking.Initialized_Players = T{}
     DB.Tracking.Initialized_Pets = T{}
-    DB.Tracking.Initialized_Mobs = T{[Window.Dropdown.Enum.NONE] = true}
+    DB.Tracking.Initialized_Mobs = T{[DB.Widgets.Dropdown.Enum.NONE] = true}
     DB.Tracking.Running_Accuracy = T{}
     DB.Tracking.Defeated_Mobs = T{}
 
-	DB.Sorted.Players = T{[1] = Window.Dropdown.Enum.NONE}
-	DB.Sorted.Mobs = T{[1] = Window.Dropdown.Enum.NONE}
+	DB.Sorted.Players = T{[1] = DB.Widgets.Dropdown.Enum.NONE}
+	DB.Sorted.Mobs = T{[1] = DB.Widgets.Dropdown.Enum.NONE}
 	DB.Sorted.Total_Damage = T{}
 	DB.Sorted.Catalog_Damage = T{}
 
 	DB.Healing_Max = {}
-	Window.Dropdown.Player.Index = 1
-	Window.Dropdown.Mob.Index = 1
+	DB.Widgets.Dropdown.Player.Focus = DB.Widgets.Dropdown.Enum.NONE
+	DB.Widgets.Dropdown.Player.Index = 1
+	DB.Widgets.Dropdown.Mob.Focus = DB.Widgets.Dropdown.Enum.NONE
+	DB.Widgets.Dropdown.Mob.Index = 1
 	for spell, threshold in pairs(DB.Enum.HEALING) do
 		DB.Healing_Max[spell] = threshold
 	end

@@ -6,9 +6,9 @@ Focus.Abilities = T{}
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Abilities.Display = function(player_name)
-    local col_flags = Window.Columns.Flags.None
+    local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local name_width = Window.Columns.Widths.Standard
+    local name_width = Column.Widths.Standard
     local trackable = DB.Enum.Trackable.ABILITY
 
     local ability_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY, DB.Enum.Metric.COUNT)
@@ -18,7 +18,7 @@ Focus.Abilities.Display = function(player_name)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
         UI.EndTable()
     end
 

@@ -7,11 +7,11 @@ Focus.WS = T{}
 ------------------------------------------------------------------------------------------------------
 Focus.WS.Display = function(player_name)
     -- GUI configuration
-    local col_flags = Window.Columns.Flags.None
+    local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local name_width = Window.Columns.Widths.Standard
-    local damage_width = Window.Columns.Widths.Damage
-    local percent_width = Window.Columns.Widths.Percent
+    local name_width = Column.Widths.Standard
+    local damage_width = Column.Widths.Damage
+    local percent_width = Column.Widths.Percent
 
     -- Data setup
     local trackable_ws = DB.Enum.Trackable.WS
@@ -27,15 +27,15 @@ Focus.WS.Display = function(player_name)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Weaponskills")
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_ws)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_ws, true)
-        UI.TableNextColumn() Col.Acc.By_Type(player_name, trackable_ws)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable_ws)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable_ws, true)
+        UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable_ws)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Skillchains")
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_sc)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, trackable_sc, true)
-        UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable_sc)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable_sc, true)
+        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         UI.EndTable()
     end
 

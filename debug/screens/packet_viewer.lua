@@ -52,7 +52,7 @@ end
 -- Handles setting up the headers for the packet viewer.
 ------------------------------------------------------------------------------------------------------
 _Debug.Packet.Action_Headers = function()
-    local flags = Window.Columns.Flags.None
+    local flags = Column.Flags.None
     UI.TableSetupColumn("\nTime", flags)
     UI.TableSetupColumn("\nEntity", flags)
     UI.TableSetupColumn("\nTarget", flags)
@@ -141,7 +141,7 @@ end
 -- Handles setting up the headers for the packet viewer.
 ------------------------------------------------------------------------------------------------------
 _Debug.Packet.Message_Headers = function()
-    local flags = Window.Columns.Flags.None
+    local flags = Column.Flags.None
     UI.TableSetupColumn("Time", flags)
     UI.TableSetupColumn("Message ID", flags)
     UI.TableSetupColumn("Actor Name", flags)
@@ -206,7 +206,7 @@ end
 -- Handles setting up the headers for the packet viewer.
 ------------------------------------------------------------------------------------------------------
 _Debug.Packet.Item_Headers = function()
-    local flags = Window.Columns.Flags.None
+    local flags = Column.Flags.None
     UI.TableSetupColumn("Time", flags)
     UI.TableSetupColumn("Highest Lotter", flags)
     UI.TableSetupColumn("Current Lotter", flags)

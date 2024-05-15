@@ -6,6 +6,7 @@ require("resources.spells_curated")
 require("resources.avatars")
 require("resources.abilities")
 require("resources.pets")
+require("resources.colors")
 
 Res.WS.Full_List = require("resources.weapon_skills")
 Res.Monster.Full_List = require("resources.monster_abilities")
@@ -229,4 +230,14 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Res.WS.Get_Skillchain = function(action_id)
     return Res.WS.Skillchains[action_id]
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Gets an elemental color.
+-- ------------------------------------------------------------------------------------------------------
+---@param element_id integer
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Colors.Get_Element = function(element_id)
+    return Res.Colors.Elements[element_id]
 end

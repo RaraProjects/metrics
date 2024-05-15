@@ -7,8 +7,8 @@ Blog.Columns = T{}
 ---@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Name = function(player_name)
-    local color = Window.Colors.WHITE
-    if Ashita.Mob.Is_Me(player_name) then color = Window.Colors.GREEN end
+    local color = Res.Colors.Basic.WHITE
+    if Ashita.Mob.Is_Me(player_name) then color = Res.Colors.Basic.GREEN end
     return {Value = player_name, Color = color}
 end
 
@@ -27,17 +27,17 @@ Blog.Columns.Damage = function(damage, action_type)
     elseif action_type == DB.Enum.Trackable.MAGIC then
         threshold = Metrics.Blog.Thresholds.MAGIC
     elseif action_type == Blog.Enum.Flags.IGNORE then
-        return {Value = Blog.Enum.Text.NA, Color = Window.Colors.WHITE}
+        return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.WHITE}
     end
     -- Generate damage string.
     if not damage then
-        return {Value = Blog.Enum.Text.NA, Color = Window.Colors.DIM}
+        return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
     elseif damage == 0 then
-        return {Value = Blog.Enum.Text.MISS, Color = Window.Colors.RED}
+        return {Value = Blog.Enum.Text.MISS, Color = Res.Colors.Basic.RED}
     elseif damage >= threshold then
-        return {Value = Col.String.Format_Number(damage), Color = Window.Colors.PURPLE}
+        return {Value = Column.String.Format_Number(damage), Color = Res.Colors.Basic.PURPLE}
     end
-    return {Value = Col.String.Format_Number(damage), Color = Window.Colors.WHITE}
+    return {Value = Column.String.Format_Number(damage), Color = Res.Colors.Basic.WHITE}
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -49,11 +49,11 @@ end
 ---@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Action = function(action_name, action_type, action_data)
-    local color = Window.Colors.WHITE
+    local color = Res.Colors.Basic.WHITE
     if action_type and action_data then
         if action_type == DB.Enum.Trackable.MAGIC then
             local element = action_data.Element
-            color = Window.Colors.Elements[element]
+            color = Res.Colors.Get_Element(element)
         end
     end
     return {Value = action_name, Color = color}
@@ -68,7 +68,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Notes = function(note, action_type)
-    local color = Window.Colors.WHITE
+    local color = Res.Colors.Basic.WHITE
     local final_note = {Value = " ", Color = color}
 
     -- A note should be passed in with these actions. Just use that.
@@ -88,7 +88,7 @@ Blog.Columns.Notes = function(note, action_type)
     else
     -- TP for WS is the default case.
     ---@diagnostic disable-next-line: param-type-mismatch
-        if note then final_note.Value = "TP: " .. Col.String.Format_Number(note) .. " " end
+        if note then final_note.Value = "TP: " .. Column.String.Format_Number(note) .. " " end
     end
 
     return final_note

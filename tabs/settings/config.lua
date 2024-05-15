@@ -19,36 +19,38 @@ s.Slider_Width = 100
 -- Loads the settings data to the screen.
 ------------------------------------------------------------------------------------------------------
 s.Populate = function()
-    if UI.BeginTabBar("Focus Tabs", Window.Tabs.Flags) then
-        if UI.BeginTabItem("Help", Window.Tabs.Flags) then
+    local tab_flags = Window.Tabs.Flags
+    
+    if UI.BeginTabBar("Focus Tabs", tab_flags) then
+        if UI.BeginTabItem("Help", tab_flags) then
             s.Section.Text_Commands()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Overall", Window.Tabs.Flags) then
+        if UI.BeginTabItem("Overall", tab_flags) then
             s.Section.Overall()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Parse", Window.Tabs.Flags) then
+        if UI.BeginTabItem("Parse", tab_flags) then
             Parse.Config.Display()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Focus", Window.Tabs.Flags) then
+        if UI.BeginTabItem("Focus", tab_flags) then
             s.Section.Focus()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Battle Log", Window.Tabs.Flags) then
+        if UI.BeginTabItem("Battle Log", tab_flags) then
             Blog.Config.Display()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Report", Window.Tabs.Flags) then
+        if UI.BeginTabItem("Report", tab_flags) then
             Report.Config.Display()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("GUI", Window.Tabs.Flags) then
+        if UI.BeginTabItem("GUI", tab_flags) then
             s.Section.Gui()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem("Revert", Window.Tabs.Flags) then
+        if UI.BeginTabItem("Revert", tab_flags) then
             s.Section.Revert()
             UI.EndTabItem()
         end
@@ -97,8 +99,8 @@ end
 -- Shows settings that affect multiple components.
 ------------------------------------------------------------------------------------------------------
 s.Section.Overall = function()
-    local col_flags = Window.Columns.Flags.None
-    local width = Window.Columns.Widths.Settings
+    local col_flags = Column.Flags.None
+    local width = Column.Widths.Settings
     if UI.BeginTable("Overall", 3) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
@@ -121,7 +123,7 @@ end
 -- Shows settings that affect the Focus screen.
 ------------------------------------------------------------------------------------------------------
 s.Section.Focus = function()
-    local col_flags = Window.Columns.Flags.None
+    local col_flags = Column.Flags.None
     UI.Text("Set max healing thresholds for overcure.")
     UI.BulletText("Otherwise Divine Seal will mess up the calculations.")
     UI.BulletText("Set each value to be about your max healing for each spell.")
@@ -160,7 +162,7 @@ s.Section.Gui = function()
     if UI.Checkbox("Show Title Bar", {Metrics.Window.Show_Title}) then
         Metrics.Window.Show_Title = not Metrics.Window.Show_Title
     end
-    Window.Util.Choose_Theme()
+    Window.Theme.Choose()
     s.Widget.Alpha()
     s.Widget.Window_Scale()
 end
@@ -173,7 +175,7 @@ s.Widget.Alpha = function()
     if UI.DragFloat("Window Transparency", alpha, 0.005, 0.1, 1, "%.3f", ImGuiSliderFlags_None) then
         Metrics.Window.Alpha = alpha[1]
     end
-    UI.SameLine() Window.Widget.HelpMarker("Window transparency.")
+    UI.SameLine() Window.Widgets.HelpMarker("Window transparency.")
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -184,9 +186,9 @@ s.Widget.Window_Scale = function()
     if UI.DragFloat("Window Scaling", window_scale, 0.005, 0.1, 3, "%.3f", ImGuiSliderFlags_None) then
         Metrics.Window.Window_Scaling = window_scale[1]
         Window.Scaling_Set = false
-        Window.Util.Set_Window_Scale()
+        Window.Set_Window_Scale()
     end
-    UI.SameLine() Window.Widget.HelpMarker("Adjust window element size.")
+    UI.SameLine() Window.Widgets.HelpMarker("Adjust window element size.")
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -198,7 +200,7 @@ s.Widget.Acc_Limit = function()
         Metrics.Model.Running_Accuracy_Limit = acc_limit[1]
         DB.Tracking.Running_Accuracy = {}
     end
-    UI.SameLine() Window.Widget.HelpMarker("Running accuracy calculates based off of {X} many attack attempts.")
+    UI.SameLine() Window.Widgets.HelpMarker("Running accuracy calculates based off of {X} many attack attempts.")
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -209,7 +211,7 @@ s.Widget.Player_Limit = function()
     if UI.DragInt("Player Limit", cutoff, 0.1, 0, 18, "%d", ImGuiSliderFlags_None) then
         Metrics.Team.Settings.Rank_Cutoff = cutoff[1]
     end
-    UI.SameLine() Window.Widget.HelpMarker("How many players are listed on the Team table.")
+    UI.SameLine() Window.Widgets.HelpMarker("How many players are listed on the Team table.")
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -220,7 +222,7 @@ s.Widget.SC_Damage = function()
         Metrics.Team.Settings.Include_SC_Damage = not Metrics.Team.Settings.Include_SC_Damage
         Parse.Util.Calculate_Column_Flags()
     end
-    UI.SameLine() Window.Widget.HelpMarker("The player that closes the skill chain gets the damage credit. "
+    UI.SameLine() Window.Widgets.HelpMarker("The player that closes the skill chain gets the damage credit. "
                                     .. "You can choose to exclude skillchain damage from the parse display. "
                                     .. "You won't lose any data by toggling this. There is a track where "
                                     .. "skillchains are included and one where they aren't. This just toggles "
@@ -235,7 +237,7 @@ s.Widget.Condensed_Numbers = function()
         Metrics.Team.Settings.Condensed_Numbers = not Metrics.Team.Settings.Condensed_Numbers
         Parse.Util.Calculate_Column_Flags()
     end
-    UI.SameLine() Window.Widget.HelpMarker("Condensed is 1.2K instead of 1,200.")
+    UI.SameLine() Window.Widgets.HelpMarker("Condensed is 1.2K instead of 1,200.")
 end
 
 

@@ -5,7 +5,7 @@ Parse.Full.Name = "Parse"
 -- Loads the Team data to the screen.
 ------------------------------------------------------------------------------------------------------
 Parse.Full.Populate = function()
-    Window.Widget.Mob_Filter()
+    DB.Widgets.Mob_Filter()
 
     -- Duration Timer
     if Metrics.Team.Settings.Show_Clock then
@@ -36,7 +36,7 @@ end
 -- Sets up the headers for the Team table.
 ------------------------------------------------------------------------------------------------------
 Parse.Full.Headers = function()
-    local flags = Window.Columns.Flags.None
+    local flags = Column.Flags.None
     UI.TableSetupColumn("Name", flags)
     UI.TableSetupColumn("DPS", flags)
     UI.TableSetupColumn("%T", flags)
@@ -70,27 +70,35 @@ end
 Parse.Full.Rows = function(player_name)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(player_name)
-    UI.TableNextColumn() Col.Damage.DPS(player_name, true)
-    UI.TableNextColumn() Col.Damage.Total(player_name, true, true)
-    UI.TableNextColumn() Col.Damage.Total(player_name, false, true)
-    UI.TableNextColumn() Col.Acc.Running(player_name)
+    UI.TableNextColumn() Column.Damage.DPS(player_name, true)
+    UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
+    UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
+    UI.TableNextColumn() Column.Acc.Running(player_name)
     if not Metrics.Team.Flags.Total_Damage_Only then
-        UI.TableNextColumn() Col.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, true)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, false, true)
-        if Metrics.Team.Flags.Crit then UI.TableNextColumn() Col.Crit.Rate(player_name, DB.Enum.Trackable.MELEE, true) end
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.WS, false, true)
-        if Metrics.Team.Settings.Include_SC_Damage then UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.SC, false, true) end
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, false, true)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, false, true)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY, false, true)
+        UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, false, true)
+        if Metrics.Team.Flags.Crit then UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Trackable.MELEE, true) end
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.WS, false, true)
+        if Metrics.Team.Settings.Include_SC_Damage then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.SC, false, true) end
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, false, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, false, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY, false, true)
         if Metrics.Team.Flags.Pet then
-            UI.TableNextColumn() Col.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.PET_MELEE, false, true)
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.PET_WS, false, true)
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.PET_RANGED, false, true)
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY, false, true)
+            UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_MELEE, false, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_WS, false, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_RANGED, false, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY, false, true)
         end
-        if Metrics.Team.Flags.Healing then UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.HEALING, false, true) end
-        if Metrics.Team.Flags.Deaths then UI.TableNextColumn() Col.Deaths(player_name) end
+        if Metrics.Team.Flags.Healing then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.HEALING, false, true) end
+        if Metrics.Team.Flags.Deaths then UI.TableNextColumn() Column.Proc.Deaths(player_name) end
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles full mode.
+------------------------------------------------------------------------------------------------------
+Parse.Full.Enable = function()
+    Parse.Mini.Active = false
+    Parse.Nano.Active = false
 end

@@ -33,7 +33,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Sort.Players = function()
 	local name_sort = {}
-	table.insert(name_sort, Window.Dropdown.Enum.NONE)
+	table.insert(name_sort, DB.Widgets.Dropdown.Enum.NONE)
 	for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
 		table.insert(name_sort, player_name)
 	end

@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "05/12/24.00"
+addon.version = "05/14/24.02"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -37,7 +37,7 @@ Settings_File = require("settings")
 require("resources._resource")
 
 -- Modules
-UI     = require("imgui")
+UI = require("imgui")
 require("database._database")
 require("file")
 Timers = require("timers")
@@ -49,9 +49,9 @@ require("ashita._ashita")
 require("handlers._handler")
 
 -- Windows
-Window = require("gui._window")
-Col    = require('gui._columns')
 Config = require("tabs.settings.config")
+require("gui.window._window")
+require("gui.columns._column")
 require("tabs.parse._parse")
 require("tabs.focus._focus")
 require("tabs.battle_log._battle_log")
@@ -224,18 +224,18 @@ ashita.events.register('command', 'command_cb', function (e)
     if table.contains({"/metrics"}, command_args[1]) or table.contains({"/met"}, command_args[1]) then
         local arg = command_args[2]
         if arg == "show" or arg == "s" or arg == "vis" then
-            Window.Util.Toggle_Visibility()
+            Window.Toggle_Visibility()
         elseif arg == "debug" then
             _Debug.Toggle()
         elseif arg == "nano" or arg == "n" then
-            Window.Util.Toggle_Nano()
+            Parse.Nano.Toggle()
         elseif arg == "mini" or arg == "m" then
-            Window.Util.Toggle_Mini()
+            Parse.Mini.Toggle()
         elseif arg == "reset" or arg == "r" then
             DB.Initialize()
         elseif arg == "full" or arg == "f" then
-            Window.Util.Enable_Full()
-        elseif (arg == "pet" or arg == "p") and (Window.Tabs.Active == Window.Tabs.Names.TEAM or Window.Window.Mini) then
+            Parse.Full.Enable()
+        elseif (arg == "pet" or arg == "p") and (Window.Tabs.Active == Window.Tabs.Names.TEAM or Parse.Mini.Is_Enabled()) then
             Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
             Parse.Util.Calculate_Column_Flags()
         elseif arg == "clock" or arg == "c" then
@@ -273,7 +273,7 @@ ashita.events.register('command', 'command_cb', function (e)
             local player_string = command_args[3]
             _Debug.Error.Add("Metrics Command: " .. tostring(arg) .. " " .. tostring(command_args[3]))
             if player_string then
-                Window.Util.Player_Switch(player_string)
+                DB.Widgets.Util.Player_Switch(player_string)
             end
 
         -- Focus tab switching.

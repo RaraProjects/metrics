@@ -7,11 +7,11 @@ Focus.Magic = T{}
 ------------------------------------------------------------------------------------------------------
 Focus.Magic.Display = function(player_name)
     -- GUI configuration
-    local col_flags = Window.Columns.Flags.None
+    local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local name_width = Window.Columns.Widths.Standard
-    local damage_width = Window.Columns.Widths.Damage
-    local percent_width = Window.Columns.Widths.Percent
+    local name_width = Column.Widths.Standard
+    local damage_width = Column.Widths.Damage
+    local percent_width = Column.Widths.Percent
 
     -- Data setup
     local nuke_total = DB.Data.Get(player_name, DB.Enum.Trackable.NUKE, DB.Enum.Metric.TOTAL)
@@ -33,67 +33,67 @@ Focus.Magic.Display = function(player_name)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Magic Total")
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, true)
-        UI.TableNextColumn() Col.Spell.MP(player_name, DB.Enum.Trackable.MAGIC)
-        UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.MAGIC)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, true)
+        UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.MAGIC)
+        UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.MAGIC)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Nuking")
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.NUKE)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.NUKE, true)
-        UI.TableNextColumn() Col.Spell.MP(player_name, DB.Enum.Trackable.NUKE)
-        UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.NUKE)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.NUKE)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.NUKE, true)
+        UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.NUKE)
+        UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.NUKE)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Healing")
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.HEALING)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.HEALING, true)
-        UI.TableNextColumn() Col.Spell.MP(player_name, DB.Enum.Trackable.HEALING)
-        UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.HEALING)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.HEALING)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.HEALING, true)
+        UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.HEALING)
+        UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.HEALING)
 
         if mp_drain > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("MP Drain")
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MP_DRAIN)
-            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-            UI.TableNextColumn() Col.Spell.MP(player_name, DB.Enum.Trackable.MP_DRAIN)
-            UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.MP_DRAIN)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MP_DRAIN)
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.MP_DRAIN)
+            UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.MP_DRAIN)
         end
 
         if enspell_count > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Enspell")
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.ENSPELL)
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.ENSPELL, true)
-            UI.TableNextColumn() Col.Spell.MP(player_name, DB.Enum.Trackable.ENSPELL)
-            UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.ENSPELL)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENSPELL)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENSPELL, true)
+            UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.ENSPELL)
+            UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.ENSPELL)
         end
 
         if spike_damage > 0 then
             UI.TableNextColumn() UI.Text("Spikes")
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
-            UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG, true)
-            UI.TableNextColumn() Col.Spell.MP(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
-            UI.TableNextColumn() Col.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG, true)
+            UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
+            UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
         end
 
         if enfeeble_count > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Enfeebling")
-            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-            UI.TableNextColumn() Col.Spell.MP(player_name, DB.Enum.Trackable.ENFEEBLE)
-            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.ENFEEBLE)
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 
         if misc_count > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Other")
-            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
-            UI.TableNextColumn() Col.Spell.MP(player_name, "Other")
-            UI.TableNextColumn() UI.TextColored(Window.Colors.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() Column.Spell.MP(player_name, "Other")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
         UI.EndTable()
     end
@@ -107,9 +107,9 @@ Focus.Magic.Display = function(player_name)
             UI.TableHeadersRow()
 
             UI.TableNextRow()
-            UI.TableNextColumn() Col.Damage.Burst(player_name)
-            UI.TableNextColumn() Col.Damage.Burst(player_name, true)
-            UI.TableNextColumn() Col.Damage.Burst(player_name, true, true)
+            UI.TableNextColumn() Column.Damage.Burst(player_name)
+            UI.TableNextColumn() Column.Damage.Burst(player_name, true)
+            UI.TableNextColumn() Column.Damage.Burst(player_name, true, true)
             UI.EndTable()
         end
     end
@@ -120,7 +120,7 @@ Focus.Magic.Display = function(player_name)
             UI.TableSetupColumn("Overcure", col_flags, damage_width)
             UI.TableHeadersRow()
 
-            UI.TableNextColumn() Col.Healing.Overcure(player_name)
+            UI.TableNextColumn() Column.Healing.Overcure(player_name)
             UI.EndTable()
         end
     end
@@ -151,8 +151,8 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Magic.Single = function(player_name, focus_type)
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local col_flags = Window.Columns.Flags.None
-    local name_width = Window.Columns.Widths.Standard
+    local col_flags = Column.Flags.None
+    local name_width = Column.Widths.Standard
     local width = 65
 
     -- Error Protection
@@ -216,30 +216,30 @@ end
 Focus.Magic.Single_Row = function(player_name, action_name, focus_type)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(action_name)
-    UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
-    UI.TableNextColumn() Col.Single.MP_Used(player_name, action_name, focus_type)
-    UI.TableNextColumn() Col.Single.Damage_Per_MP(player_name, action_name, focus_type)
-    UI.TableNextColumn() Col.Single.Attempts(player_name, action_name, focus_type)
+    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
+    UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, focus_type)
+    UI.TableNextColumn() Column.Single.Damage_Per_MP(player_name, action_name, focus_type)
+    UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
 
     -- Accuracy changes between what the trackable is. Accuracy for spells isn't useful.
     if focus_type == DB.Enum.Trackable.NUKE then
-        UI.TableNextColumn() Col.Single.Bursts(player_name, action_name)
+        UI.TableNextColumn() Column.Single.Bursts(player_name, action_name)
     elseif focus_type == DB.Enum.Trackable.HEALING then
-        UI.TableNextColumn() Col.Single.Overcure(player_name, action_name)
+        UI.TableNextColumn() Column.Single.Overcure(player_name, action_name)
     elseif focus_type == DB.Enum.Trackable.ENSPELL then
-        UI.TableNextColumn() Col.Single.Hit_Count(player_name, DB.Enum.Trackable.ENSPELL, action_name)
+        UI.TableNextColumn() Column.Single.Hit_Count(player_name, DB.Enum.Trackable.ENSPELL, action_name)
     elseif focus_type == DB.Enum.Trackable.OUTGOING_SPIKE_DMG then
-        UI.TableNextColumn() Col.Single.Hit_Count(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG, action_name)
+        UI.TableNextColumn() Column.Single.Hit_Count(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG, action_name)
     else
-        UI.TableNextColumn() Col.Single.Acc(player_name, action_name, focus_type)
+        UI.TableNextColumn() Column.Single.Acc(player_name, action_name, focus_type)
     end
 
-    UI.TableNextColumn() Col.Single.Average(player_name, action_name, focus_type)
+    UI.TableNextColumn() Column.Single.Average(player_name, action_name, focus_type)
     local min = DB.Catalog.Get(player_name, focus_type, action_name, DB.Enum.Metric.MIN)
     if min == 100000 then
-        UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Values.IGNORE)
+        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Values.IGNORE)
     else
-        UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN)
+        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN)
     end
-    UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX)
+    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX)
 end

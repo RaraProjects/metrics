@@ -9,8 +9,8 @@ Focus.Catalog = T{}
 Focus.Catalog.Single = function(player_name, focus_type)
     if not focus_type then return nil end
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local col_flags = Window.Columns.Flags.None
-    local width = Window.Columns.Widths.Standard
+    local col_flags = Column.Flags.None
+    local width = Column.Widths.Standard
 
     -- Error Protection
     if not DB.Tracking.Trackable[focus_type] then return nil end
@@ -67,24 +67,24 @@ end
 Focus.Catalog.Single_Row = function(player_name, action_name, focus_type)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(action_name)
-    UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
-    UI.TableNextColumn() Col.Single.Attempts(player_name, action_name, focus_type)
+    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
+    UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
 
     -- Accuracy changes between what the trackable is. Accuracy for spells isn't useful.
     if focus_type == DB.Enum.Trackable.NUKE then
-        UI.TableNextColumn() Col.Single.Bursts(player_name, action_name)
+        UI.TableNextColumn() Column.Single.Bursts(player_name, action_name)
     elseif focus_type == DB.Enum.Trackable.HEALING then
-        UI.TableNextColumn() Col.Single.Overcure(player_name, action_name)
+        UI.TableNextColumn() Column.Single.Overcure(player_name, action_name)
     else
-        UI.TableNextColumn() Col.Single.Acc(player_name, action_name, focus_type)
+        UI.TableNextColumn() Column.Single.Acc(player_name, action_name, focus_type)
     end
 
-    UI.TableNextColumn() Col.Single.Average(player_name, action_name, focus_type)
+    UI.TableNextColumn() Column.Single.Average(player_name, action_name, focus_type)
     local min = DB.Catalog.Get(player_name, focus_type, action_name, DB.Enum.Metric.MIN)
     if min == 100000 then
-        UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Values.IGNORE)
+        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Values.IGNORE)
     else
-        UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN)
+        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN)
     end
-    UI.TableNextColumn() Col.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX)
+    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX)
 end

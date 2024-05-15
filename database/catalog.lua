@@ -229,9 +229,9 @@ DB.Catalog.Get = function(player_name, trackable, action_name, metric)
 	end
 	local total = 0
 	if metric == DB.Enum.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
-	local mob_focus = Window.Util.Get_Mob_Focus()
+	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	for index, _ in pairs(DB.Parse) do
-		if mob_focus == Window.Dropdown.Enum.NONE then
+		if mob_focus == DB.Widgets.Dropdown.Enum.NONE then
 			if string.find(index, player_name) then
 				total = DB.Catalog.Calculate(total, index, trackable, action_name, metric)
 			end

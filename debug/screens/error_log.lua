@@ -48,7 +48,7 @@ end
 -- Handles setting up the headers for the error log.
 ------------------------------------------------------------------------------------------------------
 _Debug.Error.Headers = function()
-    local flags = Window.Columns.Flags.None
+    local flags = Column.Flags.None
     UI.TableSetupColumn("Count", flags)
     UI.TableSetupColumn("Error", flags)
     UI.TableHeadersRow()

@@ -79,7 +79,7 @@ Blog.Add = function(player_name, action_name, damage, note, action_type, action_
     -- If the blog is at max length then we will need to remove the last element
     if #Blog.Log >= Blog.Settings.Length then table.remove(Blog.Log, Blog.Settings.Length) end
     local entry = {
-        Time   = {Value = os.date("%X"), Color = Window.Colors.WHITE},
+        Time   = {Value = os.date("%X"), Color = Res.Colors.Basic.WHITE},
         Name   = Blog.Columns.Name(player_name),
         Damage = Blog.Columns.Damage(damage, action_type),
         Action = Blog.Columns.Action(action_name, action_type, action_data),
@@ -87,7 +87,7 @@ Blog.Add = function(player_name, action_name, damage, note, action_type, action_
     }
     -- Gray out mob deaths for better visual parsing of the battle.
     if action_name == Blog.Enum.Text.MOB_DEATH then
-        Blog.Util.Set_Row_Color(entry, Window.Colors.DIM)
+        Blog.Util.Set_Row_Color(entry, Res.Colors.Basic.DIM)
     end
     table.insert(Blog.Log, 1, entry)
 end
@@ -112,7 +112,7 @@ end
 -- Build the header component of the battle log table.
 ------------------------------------------------------------------------------------------------------
 Blog.Display.Headers = function()
-    local no_flags = Window.Columns.Flags.None
+    local no_flags = Column.Flags.None
     if Metrics.Blog.Flags.Timestamp then UI.TableSetupColumn("Time", no_flags) end
     UI.TableSetupColumn("Name", no_flags)
     UI.TableSetupColumn("Damage", no_flags)

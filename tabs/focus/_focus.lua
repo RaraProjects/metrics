@@ -45,14 +45,14 @@ end
 -- Loads the focus data to the screen.
 ------------------------------------------------------------------------------------------------------
 Focus.Populate = function()
-    Window.Widget.Player_Filter()
+    DB.Widgets.Player_Filter()
     UI.SameLine() UI.Text("  ") UI.SameLine()
-    Window.Widget.Mob_Filter()
-    local player_name = Window.Util.Get_Player_Focus()
-    if player_name == Window.Dropdown.Enum.NONE then return nil end
+    DB.Widgets.Mob_Filter()
+    local player_name = DB.Widgets.Util.Get_Player_Focus()
+    if player_name == DB.Widgets.Dropdown.Enum.NONE then return nil end
 
     UI.Separator()
-    UI.Text(" Player Total: ") UI.SameLine() Col.Damage.Total(player_name)
+    UI.Text(" Player Total: ") UI.SameLine() Column.Damage.Total(player_name)
     Focus.Overall(player_name)
     UI.Separator()
 
@@ -102,9 +102,9 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Overall = function(player_name)
-    local col_flags = Window.Columns.Flags.None
+    local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local width = Window.Columns.Widths.Percent
+    local width = Column.Widths.Percent
     local columns = 6
     if Metrics.Team.Settings.Include_SC_Damage then columns = columns + 1 end
 
@@ -121,13 +121,13 @@ Focus.Overall = function(player_name)
 
         -- Data
         UI.TableNextRow()
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, true)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, true)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.WS, true)
-        if Metrics.Team.Settings.Include_SC_Damage then UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.SC, true) end
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, true)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY, true)
-        UI.TableNextColumn() Col.Damage.By_Type(player_name, DB.Enum.Trackable.PET, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.WS, true)
+        if Metrics.Team.Settings.Include_SC_Damage then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.SC, true) end
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET, true)
         UI.EndTable()
     end
 end
@@ -139,15 +139,15 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Graph = function(player_name)
-    local total = Col.Util.Total_Damage(player_name)
+    local total = Column.Damage.Raw_Total_Player_Damage(player_name)
     if total <= 0 then return nil end
-    local melee = Col.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.MELEE) / total
-    local ranged = Col.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.RANGED) / total
-    local ws = Col.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.WS) / total
-    local sc = Col.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.SC) / total
-    local magic = Col.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.MAGIC) / total
-    local ability = Col.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.ABILITY) / total
-    local pet = Col.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.PET) / total
+    local melee = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.MELEE) / total
+    local ranged = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.RANGED) / total
+    local ws = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.WS) / total
+    local sc = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.SC) / total
+    local magic = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.MAGIC) / total
+    local ability = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.ABILITY) / total
+    local pet = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.PET) / total
     local graph_data = {melee, ranged, ws, sc, magic, ability, pet}
     UI.PlotHistogram("Damage Distribution", graph_data, #graph_data, 0, nil, 0, nil, {0, 30})
 end
