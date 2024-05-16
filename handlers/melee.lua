@@ -12,6 +12,8 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 	if not log_offense then return nil end
 	local result, target
 	local damage = 0
+    local details = T{}
+    local mult_attack = T{}
 
 	for target_index, target_value in pairs(action.targets) do
 		for action_index, _ in pairs(target_value.actions) do
@@ -19,9 +21,35 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 			target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
 			if not target then target = {name = DB.Enum.Values.DEBUG} end
             if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target.name) end
-			damage = damage + H.Melee.Parse(result, actor_mob.name, target.name, owner_mob)
+			details = H.Melee.Parse(result, actor_mob.name, target.name, owner_mob)
+
+            if details and details.damage then damage = damage + details.damage end
+            if details and details.type then
+                if not mult_attack[details.type] then mult_attack[details.type] = 0 end
+                mult_attack[details.type] = mult_attack[details.type] + 1
+            end
 		end
 	end
+
+    if details and details.audits then
+        for type, number in pairs(mult_attack) do
+            local metric = nil
+            if number == 1 then metric = DB.Enum.Metric.MULT_ATK_1 end
+            if number == 2 then metric = DB.Enum.Metric.MULT_ATK_2 end
+            if number == 3 then metric = DB.Enum.Metric.MULT_ATK_3 end
+            if number == 4 then metric = DB.Enum.Metric.MULT_ATK_4 end
+            if number == 5 then metric = DB.Enum.Metric.MULT_ATK_5 end
+            if number == 6 then metric = DB.Enum.Metric.MULT_ATK_6 end
+            if number == 7 then metric = DB.Enum.Metric.MULT_ATK_7 end
+            if number == 8 then metric = DB.Enum.Metric.MULT_ATK_8 end
+            if metric then
+                if not DB.Tracking.Multi_Attack[details.audits.player_name] then DB.Tracking.Multi_Attack[details.audits.player_name] = T{} end
+                DB.Tracking.Multi_Attack[details.audits.player_name][metric] = true
+                DB.Data.Update(H.Mode.INC, 1, details.audits, type, metric)
+                DB.Data.Update(H.Mode.INC, 1, details.audits, type, DB.Enum.Metric.ROUNDS)
+            end
+        end
+    end
 
     H.Melee.Blog(actor_mob, owner_mob, damage)
 end
@@ -47,7 +75,7 @@ end
 ---@param player_name string name of the player that did the action.
 ---@param target_name string name of the target that received the action.
 ---@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
----@return number
+---@return table
 ------------------------------------------------------------------------------------------------------
 H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     _Debug.Packet.Add_Action(player_name, target_name, "Melee", result)
@@ -101,7 +129,7 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     -- Spike damage
     H.Melee.Spikes(audits, result)
 
-    return damage
+    return {damage = damage, type = melee_type_discrete, audits = audits}
 end
 
 -- ------------------------------------------------------------------------------------------------------

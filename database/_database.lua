@@ -15,6 +15,7 @@ DB.Tracking.Initialized_Pets = T{}      -- [player_name][pet_name]
 DB.Tracking.Initialized_Mobs = T{}      -- [mob_name]
 DB.Tracking.Running_Accuracy = T{}		-- [player_name]
 DB.Tracking.Running_Damage = T{}		-- [player_name]
+DB.Tracking.Multi_Attack = T{}			-- [player_name][multi-rank]
 DB.Tracking.Defeated_Mobs = T{}			-- [mob_name]
 
 DB.Settings = T{}
@@ -47,6 +48,8 @@ DB.Initialize = function()
     DB.Tracking.Initialized_Pets = T{}
     DB.Tracking.Initialized_Mobs = T{[DB.Widgets.Dropdown.Enum.NONE] = true}
     DB.Tracking.Running_Accuracy = T{}
+	DB.Tracking.Running_Damage = T{}
+	DB.Tracking.Multi_Attack = T{}
     DB.Tracking.Defeated_Mobs = T{}
 
 	DB.Sorted.Players = T{[1] = DB.Widgets.Dropdown.Enum.NONE}

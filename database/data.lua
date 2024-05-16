@@ -37,6 +37,7 @@ DB.Data.Init = function(index, player_name)
 		DB.Lists.Sort.Players()
 		DB.Tracking.Running_Accuracy[player_name] = T{}
 		DB.Tracking.Running_Damage[player_name] = 0
+		DB.Tracking.Multi_Attack[player_name] = T{}
 	end
 
 	return true

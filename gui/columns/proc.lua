@@ -76,3 +76,17 @@ Column.Proc.Deaths = function(player_name)
     local color = Column.String.Color_Zero(death_count)
     return UI.TextColored(color, Column.String.Format_Number(death_count))
 end
+
+------------------------------------------------------------------------------------------------------
+-- Grabs the multi attack rate for a specific melee type.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param melee_type string main-hand, off-hand, etc.
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Proc.Multi_Attack = function(player_name, melee_type, multi_attack_metric)
+    local multi_attack = DB.Data.Get(player_name, melee_type, multi_attack_metric)
+    local attack_rounds = DB.Data.Get(player_name, melee_type, Column.Metric.ROUNDS)
+    local color = Column.String.Color_Zero(multi_attack)
+    return UI.TextColored(color, Column.String.Format_Percent(multi_attack, attack_rounds))
+end
