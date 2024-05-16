@@ -60,3 +60,10 @@ end
 Ashita.Player.Zoning = function(zoning)
     Ashita.States.Zoning = zoning
 end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Get the player's mob structure.
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.My_Mob = function()
+    return Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
+end

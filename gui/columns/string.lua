@@ -11,7 +11,7 @@ Column.String = T{}
 Column.String.Format_Number = function(number, justify)
     local format = "%d"
     if justify then format = "%6d" end
-    if Metrics.Team.Settings.Condensed_Numbers then return Column.String.Compact_Number(number, justify) end
+    if Parse.Config.Condensed_Numbers() then return Column.String.Compact_Number(number, justify) end
     number = math.floor(number)
     return string.format(format, number)
 end

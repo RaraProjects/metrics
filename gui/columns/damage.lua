@@ -137,7 +137,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Raw_Total_Player_Damage = function(player_name)
     if player_name then
-        if Metrics.Team.Settings.Include_SC_Damage then
+        if Parse.Config.Include_SC_Damage() then
             return DB.Data.Get(player_name, Column.Trackable.TOTAL, Column.Metric.TOTAL)
         else
             return DB.Data.Get(player_name, Column.Trackable.TOTAL_NO_SC, Column.Metric.TOTAL)

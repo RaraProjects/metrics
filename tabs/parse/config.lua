@@ -1,20 +1,24 @@
 Parse.Config = T{}
 
 -- Default settings are saved to file.
-Parse.Config.Defaults = T{}
-Parse.Config.Defaults.Flags = T{
-    Total_Damage_Only = false,
+Parse.Config.Defaults = T{
     Show_Clock = true,
+    Show_DPS_Graph = false,
+    Include_SC_Damage = false,
+    Condensed_Numbers = false,
+    Basic_Columns_Only = false,
+    Rank_Cutoff = 6,
+    DPS_Graph_Height = 50,
     Total_Acc = false,
+    Melee = true,
+    Weaponskill = true,
+    Ranged = false,
+    Magic = true,
+    Ability = false,
     Crit = false,
     Pet = false,
     Healing = false,
     Deaths = false,
-}
-Parse.Config.Defaults.Settings = T{
-    Rank_Cutoff = 6,
-    Condensed_Numbers = false,
-    Include_SC_Damage = false
 }
 
 Parse.Config.Show_Settings = false
@@ -22,15 +26,15 @@ Parse.Config.Column_Flags = Column.Flags.None
 Parse.Config.Column_Width = Column.Widths.Settings
 Parse.Config.Slider_Width = 100
 
+Parse.Config.DPS_Graph_Window_Flags = bit.bor(ImGuiWindowFlags_NoTitleBar, ImGuiWindowFlags_NoBackground,
+                                              ImGuiWindowFlags_NoFocusOnAppearing, ImGuiWindowFlags_AlwaysAutoResize)
+
 ------------------------------------------------------------------------------------------------------
 -- Resets the Parse window to default settings.
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Reset = function()
-    for setting, value in pairs(Parse.Config.Defaults.Settings) do
-        Metrics.Team.Settings[setting] = value
-    end
-    for flag, value in pairs(Parse.Config.Defaults.Flags) do
-        Metrics.Team.Flags[flag] = value
+    for setting, value in pairs(Parse.Config.Defaults) do
+        Metrics.Parse[setting] = value
     end
     Parse.Util.Calculate_Column_Flags()
 end
@@ -60,24 +64,18 @@ Parse.Config.General = function()
 
         -- Row 1
         UI.TableNextColumn()
-        if UI.Checkbox("Less Columns", {Metrics.Team.Flags.Total_Damage_Only}) then
-            Metrics.Team.Flags.Total_Damage_Only = not Metrics.Team.Flags.Total_Damage_Only
-            Parse.Util.Calculate_Column_Flags()
-        end
-        UI.SameLine() Window.Widgets.HelpMarker("Reduces the amount of columns on Parse table to just "
-                                                .."the most essential: Name, %T, Total, and Running Accuracy.")
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Run Time", {Metrics.Team.Settings.Show_Clock}) then
-            Metrics.Team.Settings.Show_Clock = not Metrics.Team.Settings.Show_Clock
+        if UI.Checkbox("Run Time", {Metrics.Parse.Show_Clock}) then
+            Metrics.Parse.Show_Clock = not Metrics.Parse.Show_Clock
         end
         UI.SameLine() Window.Widgets.HelpMarker("Show a timer of how long action has been taking place.")
         UI.TableNextColumn()
-        Parse.Widgets.SC_Damage()
+        if UI.Checkbox("Show DPS Graph", {Metrics.Parse.Show_DPS_Graph}) then
+            Metrics.Parse.Show_DPS_Graph = not Metrics.Parse.Show_DPS_Graph
+        end
+        UI.TableNextColumn() Parse.Widgets.Condensed_Numbers()
 
         -- Row 2
-        UI.TableNextColumn()
-        Parse.Widgets.Condensed_Numbers()
+        UI.TableNextColumn() Parse.Widgets.SC_Damage()
 
         UI.EndTable()
     end
@@ -96,27 +94,92 @@ Parse.Config.Column_Selection = function()
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
+        -- Row 0
+        UI.TableNextColumn()
+        if UI.Checkbox("Basic Only", {Metrics.Parse.Basic_Columns_Only}) then
+            Metrics.Parse.Basic_Columns_Only = not Metrics.Parse.Basic_Columns_Only
+            Metrics.Parse.Total_Acc = false
+            Metrics.Parse.Melee = false
+            Metrics.Parse.Crit = false
+            Metrics.Parse.Weaponskill = false
+            Metrics.Parse.Ranged = false
+            Metrics.Parse.Magic = false
+            Metrics.Parse.Ability = false
+            Metrics.Parse.Pet = false
+            Metrics.Parse.Healing = false
+            Metrics.Parse.Deaths = false
+            Parse.Util.Calculate_Column_Flags()
+        end
+        UI.SameLine() Window.Widgets.HelpMarker("Reduces the amount of columns on Parse table to just "
+                                                .."the most essential: Name, %T, Total, and Running Accuracy.")
+        UI.TableNextColumn()
+        UI.TableNextColumn()
+
         -- Row 1
         UI.TableNextColumn()
-        if UI.Checkbox("Show Crits", {Metrics.Team.Flags.Crit}) then
-            Metrics.Team.Flags.Crit = not Metrics.Team.Flags.Crit
+        if UI.Checkbox("Show Total Acc.", {Metrics.Parse.Total_Acc}) then
+            Metrics.Parse.Total_Acc = not Metrics.Parse.Total_Acc
+            Metrics.Parse.Basic_Columns_Only = false
             Parse.Util.Calculate_Column_Flags()
         end
         UI.TableNextColumn()
-        if UI.Checkbox("Show Pets", {Metrics.Team.Flags.Pet}) then
-            Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
+        if UI.Checkbox("Show Melee", {Metrics.Parse.Melee}) then
+            Metrics.Parse.Melee = not Metrics.Parse.Melee
+            Metrics.Parse.Basic_Columns_Only = false
             Parse.Util.Calculate_Column_Flags()
         end
         UI.TableNextColumn()
-        if UI.Checkbox("Show Healing", {Metrics.Team.Flags.Healing}) then
-            Metrics.Team.Flags.Healing = not Metrics.Team.Flags.Healing
+        if UI.Checkbox("Show Crits", {Metrics.Parse.Crit}) then
+            Metrics.Parse.Crit = not Metrics.Parse.Crit
+            Metrics.Parse.Basic_Columns_Only = false
             Parse.Util.Calculate_Column_Flags()
         end
 
         -- Row 2
         UI.TableNextColumn()
-        if UI.Checkbox("Show Deaths", {Metrics.Team.Flags.Deaths}) then
-            Metrics.Team.Flags.Deaths = not Metrics.Team.Flags.Deaths
+        if UI.Checkbox("Show Weaponskill", {Metrics.Parse.Weaponskill}) then
+            Metrics.Parse.Weaponskill = not Metrics.Parse.Weaponskill
+            Metrics.Parse.Basic_Columns_Only = false
+            Parse.Util.Calculate_Column_Flags()
+        end
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Ranged", {Metrics.Parse.Ranged}) then
+            Metrics.Parse.Ranged = not Metrics.Parse.Ranged
+            Metrics.Parse.Basic_Columns_Only = false
+            Parse.Util.Calculate_Column_Flags()
+        end
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Magic", {Metrics.Parse.Magic}) then
+            Metrics.Parse.Magic = not Metrics.Parse.Magic
+            Metrics.Parse.Basic_Columns_Only = false
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        -- Row 3
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Abilities", {Metrics.Parse.Ability}) then
+            Metrics.Parse.Ability = not Metrics.Parse.Ability
+            Metrics.Parse.Basic_Columns_Only = false
+            Parse.Util.Calculate_Column_Flags()
+        end
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Pets", {Metrics.Parse.Pet}) then
+            Metrics.Parse.Pet = not Metrics.Parse.Pet
+            Metrics.Parse.Basic_Columns_Only = false
+            Parse.Util.Calculate_Column_Flags()
+        end
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Healing", {Metrics.Parse.Healing}) then
+            Metrics.Parse.Healing = not Metrics.Parse.Healing
+            Metrics.Parse.Basic_Columns_Only = false
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        -- Row 4
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Deaths", {Metrics.Parse.Deaths}) then
+            Metrics.Parse.Deaths = not Metrics.Parse.Deaths
+            Metrics.Parse.Basic_Columns_Only = false
             Parse.Util.Calculate_Column_Flags()
         end
 
@@ -131,4 +194,47 @@ Parse.Config.Sliders = function()
     UI.Text("Use Ctrl+Click on the component to set the number directly.")
     Parse.Widgets.Player_Limit()
     Parse.Widgets.Acc_Limit()
+    if Metrics.Parse.Show_DPS_Graph then Parse.Widgets.DPS_Graph_Height() end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns whether or not the DPS graph window should show.
+------------------------------------------------------------------------------------------------------
+Parse.Config.Show_DPS_Graph = function()
+    return Metrics.Parse.Show_DPS_Graph
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns whether or not Skillchain damage is being taken into account.
+------------------------------------------------------------------------------------------------------
+Parse.Config.Include_SC_Damage = function()
+    return Metrics.Parse.Include_SC_Damage
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns what number of players should show on the Parse window.
+------------------------------------------------------------------------------------------------------
+Parse.Config.Rank_Cutoff = function()
+    return Metrics.Parse.Rank_Cutoff
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns whether to show condensed numbers or not.
+------------------------------------------------------------------------------------------------------
+Parse.Config.Condensed_Numbers = function()
+    return Metrics.Parse.Condensed_Numbers
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles pet column flags.
+------------------------------------------------------------------------------------------------------
+Parse.Config.Toggle_Pet = function()
+    Metrics.Parse.Pet = not Metrics.Parse.Pet
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the clock.
+------------------------------------------------------------------------------------------------------
+Parse.Config.Toggle_Clock = function()
+    Metrics.Parse.Show_Clock = not Metrics.Parse.Show_Clock
 end

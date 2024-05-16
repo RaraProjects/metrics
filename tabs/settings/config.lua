@@ -1,19 +1,17 @@
 local s = {}
 
 s.Section = {}
-s.Util = {}
 s.Widget = {}
 
 s.Enum = {}
 s.Enum.File = {
-    PARSE  = "parse",
-    BLOG   = "blog",
-    WINDOW = "window",
-    DATABASE  = "database",
-    REPORT = "report",
+    PARSE    = "parse",
+    FOCUS    = "focus",
+    BLOG     = "blog",
+    WINDOW   = "window",
+    DATABASE = "database",
+    REPORT   = "report",
 }
-
-s.Slider_Width = 100
 
 ------------------------------------------------------------------------------------------------------
 -- Loads the settings data to the screen.
@@ -31,12 +29,18 @@ s.Populate = function()
             UI.EndTabItem()
         end
         if UI.BeginTabItem("GUI", tab_flags) then
-            s.Section.Gui()
+            Window.Config.Display()
             UI.EndTabItem()
         end
         if UI.BeginTabItem("Revert", tab_flags) then
             s.Section.Revert()
             UI.EndTabItem()
+        end
+        if _Debug.Is_Enabled() then
+            if UI.BeginTabItem("Debug", tab_flags) then
+                _Debug.Config.Display()
+                UI.EndTabItem()
+            end
         end
         UI.EndTabBar()
     end
@@ -50,10 +54,11 @@ s.Section.Revert = function()
     if UI.Button("Revert to Default Settings") then
         clicked = 1
         if clicked and 1 then
-            Window.Reset_Settings()
+            Window.Config.Reset()
             Parse.Config.Reset()
             Focus.Reset_Settings()
             Blog.Config.Reset()
+            Report.Config.Reset()
             Metrics.Model.Running_Accuracy_Limit = DB.Defaults.Running_Accuracy_Limit
         end
     end
@@ -88,79 +93,23 @@ s.Section.Focus = function()
     UI.BulletText("Otherwise Divine Seal will mess up the calculations.")
     UI.BulletText("Set each value to be about your max healing for each spell.")
     UI.BulletText("Values can also be a little more--just below Divine Seal values.")
-    UI.BulletText("Curagas should amount healed per person--not in total.")
+    UI.BulletText("Curagas should be amount healed per person--not in total.")
+
     if UI.BeginTable("Battle Log", 2) then
         UI.TableSetupColumn("Col 1", col_flags)
         UI.TableSetupColumn("Col 2", col_flags)
-        UI.TableNextColumn()
-        s.Widget.Healing("Cure")
-        UI.TableNextColumn()
-        s.Widget.Healing("Curaga")
-        UI.TableNextColumn()
-        s.Widget.Healing("Cure II")
-        UI.TableNextColumn()
-        s.Widget.Healing("Curaga II")
-        UI.TableNextColumn()
-        s.Widget.Healing("Cure III")
-        UI.TableNextColumn()
-        s.Widget.Healing("Curaga III")
-        UI.TableNextColumn()
-        s.Widget.Healing("Cure IV")
-        UI.TableNextColumn()
-        s.Widget.Healing("Curaga IV")
-        UI.TableNextColumn()
-        s.Widget.Healing("Cure V")
+
+        UI.TableNextColumn() s.Widget.Healing("Cure")
+        UI.TableNextColumn() s.Widget.Healing("Curaga")
+        UI.TableNextColumn() s.Widget.Healing("Cure II")
+        UI.TableNextColumn() s.Widget.Healing("Curaga II")
+        UI.TableNextColumn() s.Widget.Healing("Cure III")
+        UI.TableNextColumn() s.Widget.Healing("Curaga III")
+        UI.TableNextColumn() s.Widget.Healing("Cure IV")
+        UI.TableNextColumn() s.Widget.Healing("Curaga IV")
+        UI.TableNextColumn() s.Widget.Healing("Cure V")
         UI.EndTable()
     end
-end
-
-
-------------------------------------------------------------------------------------------------------
--- Shows settings that affect the GUI.
-------------------------------------------------------------------------------------------------------
-s.Section.Gui = function()
-    if UI.Checkbox("Show Title Bar", {Metrics.Window.Show_Title}) then
-        Metrics.Window.Show_Title = not Metrics.Window.Show_Title
-    end
-    Window.Theme.Choose()
-    s.Widget.Alpha()
-    s.Widget.Window_Scale()
-end
-
-------------------------------------------------------------------------------------------------------
--- Sets screen alpha.
-------------------------------------------------------------------------------------------------------
-s.Widget.Alpha = function()
-    local alpha = {[1] = Metrics.Window.Alpha}
-    if UI.DragFloat("Window Transparency", alpha, 0.005, 0.1, 1, "%.3f", ImGuiSliderFlags_None) then
-        Metrics.Window.Alpha = alpha[1]
-    end
-    UI.SameLine() Window.Widgets.HelpMarker("Window transparency.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Sets window scaling.
-------------------------------------------------------------------------------------------------------
-s.Widget.Window_Scale = function()
-    local window_scale = {[1] = Metrics.Window.Window_Scaling}
-    if UI.DragFloat("Window Scaling", window_scale, 0.005, 0.1, 3, "%.3f", ImGuiSliderFlags_None) then
-        Metrics.Window.Window_Scaling = window_scale[1]
-        Window.Scaling_Set = false
-        Window.Set_Window_Scale()
-    end
-    UI.SameLine() Window.Widgets.HelpMarker("Adjust window element size.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Sets the running accuracy buffer limit.
-------------------------------------------------------------------------------------------------------
-s.Widget.Acc_Limit = function()
-    local acc_limit = {[1] = Metrics.Model.Running_Accuracy_Limit}
-    if UI.DragInt("Running Accuracy Limit", acc_limit, 0.1, 10, 50, "%d", ImGuiSliderFlags_None) then
-        Metrics.Model.Running_Accuracy_Limit = acc_limit[1]
-        DB.Tracking.Running_Accuracy = {}
-    end
-    UI.SameLine() Window.Widgets.HelpMarker("Running accuracy calculates based off of {X} many attack attempts.")
 end
 
 ------------------------------------------------------------------------------------------------------

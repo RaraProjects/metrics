@@ -23,7 +23,7 @@ Window.Tabs = {}
 Window.Tabs.Flags = ImGuiTabBarFlags_None
 Window.Tabs.Names = {
     PARENT    = "Tabs",
-    TEAM      = "Team",
+    PARSE     = "Parse",
     FOCUS     = "Focus",
     BATTLELOG = "Battle Log",
     REPORT    = "Report",
@@ -37,7 +37,7 @@ Window.Tabs.Names = {
     DATAVIEW  = "Data Viewer",
 }
 Window.Tabs.Switch = {
-    [Window.Tabs.Names.TEAM]      = nil,
+    [Window.Tabs.Names.PARSE]      = nil,
     [Window.Tabs.Names.FOCUS]     = nil,
     [Window.Tabs.Names.BATTLELOG] = nil,
     [Window.Tabs.Names.REPORT]    = nil,
@@ -56,6 +56,7 @@ Window.Table.Flags = {
 
 require("gui.window.themes")
 require("gui.window.widgets")
+require("gui.window.config")
 
 ------------------------------------------------------------------------------------------------------
 -- Found the font scaling code here:
@@ -96,9 +97,9 @@ Window.Populate = function()
             else
                 if _Debug.Is_Enabled() then UI.Text("Error Count: " .. tostring(_Debug.Error.Util.Error_Count())) end
                 if UI.BeginTabBar(Window.Tabs.Names.PARENT, Window.Tabs.Flags) then
-                    if UI.BeginTabItem(Parse.Tab_Name, false, Window.Tabs.Switch[Window.Tabs.Names.TEAM]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.TEAM] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.TEAM
+                    if UI.BeginTabItem(Parse.Tab_Name, false, Window.Tabs.Switch[Window.Tabs.Names.PARSE]) then
+                        Window.Tabs.Switch[Window.Tabs.Names.PARSE] = nil
+                        Window.Tabs.Active = Window.Tabs.Names.PARSE
                         Parse.Full.Populate()
                         UI.EndTabItem()
                     end
@@ -138,7 +139,17 @@ Window.Populate = function()
             end
         end
 
-        if _Debug.Is_Enabled() and _Debug.Unit.Active then
+        local player = Ashita.Player.My_Mob()
+        if player and Parse.Config.Show_DPS_Graph() then
+            if UI.Begin("DPS Graph", {Window.Visible}, Parse.Config.DPS_Graph_Window_Flags) then
+                Window.Visible = -1
+                UI.Text("Click this to Drag")
+                Parse.Widgets.DPS_Graph(player.name)
+                UI.End()
+            end
+        end
+
+        if _Debug.Is_Enabled() and _Debug.Config.Show_Unit_Tests then
             if UI.Begin("Unit Tests", {Window.Visible}, Window.Flags) then
                 Window.Visible = -1
                 _Debug.Unit.Populate()
@@ -148,16 +159,6 @@ Window.Populate = function()
 
         UI.PopStyleVar(5)
     end
-end
-
-------------------------------------------------------------------------------------------------------
--- Resets visual settings in the window.
-------------------------------------------------------------------------------------------------------
-Window.Reset_Settings = function()
-    Metrics.Window.Alpha = Window.Defaults.Alpha
-    Metrics.Window.Window_Scaling = Window.Defaults.Window_Scaling
-    Metrics.Window.Show_Title = Window.Defaults.Show_Title
-    Window.Initialize()
 end
 
 ------------------------------------------------------------------------------------------------------

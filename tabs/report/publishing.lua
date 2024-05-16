@@ -18,7 +18,7 @@ Report.Publishing.Total_Damage = function()
         Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Total Damage") coroutine.sleep(Report.Publishing.Delay)
         DB.Lists.Sort.Total_Damage()
         for rank, data in ipairs(DB.Sorted.Total_Damage) do
-            if rank <= Metrics.Team.Settings.Rank_Cutoff then
+            if rank <= Parse.Config.Rank_Cutoff() then
                 local player_name = data[1]
                 local player_total = Column.Damage.Total(player_name, false, false, true)
                 local player_percent = Column.Damage.Total(player_name, true, false, true)
@@ -46,7 +46,7 @@ Report.Publishing.Accuracy = function()
         Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Total Accuracy") coroutine.sleep(Report.Publishing.Delay)
         DB.Lists.Sort.Total_Damage()
         for rank, data in ipairs(DB.Sorted.Total_Damage) do
-            if rank <= Metrics.Team.Settings.Rank_Cutoff then
+            if rank <= Parse.Config.Rank_Cutoff() then
                 local player_name = data[1]
                 local player_acc = Column.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, false, nil, true)
                 local chat_string = tostring(player_name) .. ": " .. tostring(player_acc) .. "%"
@@ -80,7 +80,7 @@ Report.Publishing.Damage_By_Type = function(trackable)
         Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Total " .. tostring(trackable) .. tostring(suffix)) coroutine.sleep(Report.Publishing.Delay)
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         for rank, data in ipairs(sorted_damage) do
-            if rank <= Metrics.Team.Settings.Rank_Cutoff then
+            if rank <= Parse.Config.Rank_Cutoff() then
                 local player_name = data[1]
                 local player_damage = Column.Damage.By_Type(player_name, trackable, false, nil, true)
                 local player_percent = Column.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)

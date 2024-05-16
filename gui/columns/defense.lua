@@ -38,3 +38,27 @@ Column.Defense.Proc_Rate_By_Type = function(player_name, damage_type, justify, r
     if raw then return Column.String.Format_Percent(proc_count, attack_count) end
     return UI.TextColored(color, Column.String.Format_Percent(proc_count, attack_count, justify))
 end
+
+------------------------------------------------------------------------------------------------------
+-- Gets raw hit or proc count.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param damage_type string a trackable from the model.
+------------------------------------------------------------------------------------------------------
+Column.Defense.Proc_Count = function(player_name, damage_type)
+    local proc_count = DB.Data.Get(player_name, damage_type, Column.Metric.HIT_COUNT)
+    local color = Column.String.Color_Zero(proc_count)
+    return UI.TextColored(color, Column.String.Format_Number(proc_count))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Gets raw count for a metric.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param damage_type string a trackable from the model.
+------------------------------------------------------------------------------------------------------
+Column.Defense.Total_Count = function(player_name, damage_type)
+    local count = DB.Data.Get(player_name, damage_type, Column.Metric.COUNT)
+    local color = Column.String.Color_Zero(count)
+    return UI.TextColored(color, Column.String.Format_Number(count))
+end

@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "05/14/24.03"
+addon.version = "05/15/24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -73,7 +73,8 @@ ashita.events.register('d3d_present', 'present_cb', function ()
         -- Initialize Settings
         Metrics = T{
             Window = Settings_File.load(Window.Defaults, Config.Enum.File.WINDOW),
-            Team   = Settings_File.load(Parse.Config.Defaults, Config.Enum.File.PARSE),
+            Parse  = Settings_File.load(Parse.Config.Defaults, Config.Enum.File.PARSE),
+            Focus  = Settings_File.load(Focus.Config.Defaults, Config.Enum.File.FOCUS),
             Blog   = Settings_File.load(Blog.Config.Defaults, Config.Enum.File.BLOG),
             Model  = Settings_File.load(DB.Defaults, Config.Enum.File.DATABASE),
             Report = Settings_File.load(Report.Config.Defaults, Config.Enum.File.REPORT),
@@ -93,7 +94,7 @@ ashita.events.register('d3d_present', 'present_cb', function ()
         _Globals.Initialized = true
     end
 
-    if _Debug.Enabled then
+    if _Debug.Is_Enabled() and _Debug.Config.Show_Demo then
         UI.ShowDemoWindow()
     end
 
@@ -235,11 +236,11 @@ ashita.events.register('command', 'command_cb', function (e)
             DB.Initialize()
         elseif arg == "full" or arg == "f" then
             Parse.Full.Enable()
-        elseif (arg == "pet" or arg == "p") and (Window.Tabs.Active == Window.Tabs.Names.TEAM or Parse.Mini.Is_Enabled()) then
-            Metrics.Team.Flags.Pet = not Metrics.Team.Flags.Pet
+        elseif (arg == "pet" or arg == "p") and (Window.Tabs.Active == Window.Tabs.Names.PARSE or Parse.Mini.Is_Enabled()) then
+            Parse.Config.Toggle_Pet()
             Parse.Util.Calculate_Column_Flags()
         elseif arg == "clock" or arg == "c" then
-            Metrics.Team.Settings.Show_Clock = not Metrics.Team.Settings.Show_Clock
+            Parse.Config.Toggle_Clock()
 
         -- General reports.
         elseif arg == "report" or arg == "rep" then
@@ -258,7 +259,7 @@ ashita.events.register('command', 'command_cb', function (e)
 
         -- Primary tab switching.
         elseif arg == "team" or arg == "parse" then
-            Window.Tabs.Switch[Window.Tabs.Names.TEAM] = ImGuiTabItemFlags_SetSelected
+            Window.Tabs.Switch[Window.Tabs.Names.PARSE] = ImGuiTabItemFlags_SetSelected
         elseif arg == "focus" then
             Window.Tabs.Switch[Window.Tabs.Names.FOCUS] = ImGuiTabItemFlags_SetSelected
         elseif arg == "log" or arg == "bl" then

@@ -1,6 +1,7 @@
 Parse.Nano = T{}
 
 Parse.Nano.Active = false
+Parse.Nano.Table_Flags = bit.bor(ImGuiTableFlags_Borders)
 
 ------------------------------------------------------------------------------------------------------
 -- Loads shows just the Team tab with just the player.
@@ -11,7 +12,7 @@ Parse.Nano.Populate = function()
     if not player then return nil end
     local player_name = player.name
 
-    if UI.BeginTable("Team Nano", 4, Window.Table.Flags.None) then
+    if UI.BeginTable("Team Nano", 4, Parse.Nano.Table_Flags) then
         UI.TableSetupColumn("DPS", flags)
         UI.TableSetupColumn("%T", flags)
         UI.TableSetupColumn("Total", flags)

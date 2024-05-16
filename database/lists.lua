@@ -118,7 +118,7 @@ DB.Lists.Populate.Total_Damage = function()
 	DB.Sorted.Total_Damage = {}
 	local damage
 	for index, _ in pairs(DB.Tracking.Initialized_Players) do
-		if Metrics.Team.Settings.Include_SC_Damage then
+		if Parse.Config.Include_SC_Damage() then
 			damage = DB.Data.Get(index, DB.Enum.Trackable.TOTAL, DB.Enum.Metric.TOTAL)
 		else
 			damage = DB.Data.Get(index, DB.Enum.Trackable.TOTAL_NO_SC, DB.Enum.Metric.TOTAL)

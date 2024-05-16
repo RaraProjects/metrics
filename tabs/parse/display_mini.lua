@@ -2,21 +2,21 @@ Parse.Mini = T{}
 
 Parse.Mini.Active = false
 Parse.Mini.Column_Flags = Column.Flags.None
+Parse.Mini.Table_Flags = bit.bor(ImGuiTableFlags_Borders)
 
 ------------------------------------------------------------------------------------------------------
 -- Loads shows just the Team tab with just the player.
 ------------------------------------------------------------------------------------------------------
 Parse.Mini.Populate = function()
     local columns = 5
-    if Metrics.Team.Flags.Pet then columns = columns + 2 end
-
-    if UI.BeginTable("Team Mini", columns, Window.Table.Flags.Borders) then
+    if Metrics.Parse.Pet then columns = columns + 2 end
+    if UI.BeginTable("Team Mini", columns, Parse.Mini.Table_Flags) then
         Parse.Mini.Headers()
 
         local player_name = "Debug"
         DB.Lists.Sort.Total_Damage()
         for rank, data in ipairs(DB.Sorted.Total_Damage) do
-            if rank <= Metrics.Team.Settings.Rank_Cutoff then
+            if rank <= Parse.Config.Rank_Cutoff() then
                 player_name = data[1]
                 Parse.Mini.Rows(player_name)
             end
@@ -31,12 +31,13 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Mini.Headers = function()
     local flags = Parse.Mini.Column_Flags
+
     UI.TableSetupColumn("Name", flags)
     UI.TableSetupColumn("DPS", flags)
     UI.TableSetupColumn("%T", flags)
     UI.TableSetupColumn("Total", flags)
     UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
-    if Metrics.Team.Flags.Pet then
+    if Metrics.Parse.Pet then
         UI.TableSetupColumn("Pet D.", flags)
         UI.TableSetupColumn("Pet A.", flags)
     end
@@ -55,7 +56,7 @@ Parse.Mini.Rows = function(player_name)
     UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
     UI.TableNextColumn() Column.Acc.Running(player_name)
-    if Metrics.Team.Flags.Pet then
+    if Metrics.Parse.Pet then
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
     end

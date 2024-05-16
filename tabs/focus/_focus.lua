@@ -23,6 +23,7 @@ Focus.Tabs.Switch = {
 }
 
 -- Load dependencies
+require("tabs.focus.config")
 require("tabs.focus.melee")
 require("tabs.focus.ranged")
 require("tabs.focus.weaponskills")
@@ -48,6 +49,10 @@ Focus.Populate = function()
     DB.Widgets.Player_Filter()
     UI.SameLine() UI.Text("  ") UI.SameLine()
     DB.Widgets.Mob_Filter()
+
+    Focus.Config.Settings_Button()
+    if Focus.Config.Show_Settings then Focus.Config.Display() end
+
     local player_name = DB.Widgets.Util.Get_Player_Focus()
     if player_name == DB.Widgets.Dropdown.Enum.NONE then return nil end
 
@@ -62,31 +67,45 @@ Focus.Populate = function()
             Focus.Melee.Display(player_name)
             UI.EndTabItem()
         end
-        if UI.BeginTabItem(Focus.Tabs.Names.RANGED, false, Focus.Tabs.Switch[Focus.Tabs.Names.RANGED]) then
-            Focus.Tabs.Switch[Focus.Tabs.Names.RANGED] = nil
-            Focus.Ranged.Display(player_name)
-            UI.EndTabItem()
+
+        if DB.Data.Get(player_name, DB.Enum.Trackable.RANGED, DB.Enum.Metric.COUNT) > 0 then
+            if UI.BeginTabItem(Focus.Tabs.Names.RANGED, false, Focus.Tabs.Switch[Focus.Tabs.Names.RANGED]) then
+                Focus.Tabs.Switch[Focus.Tabs.Names.RANGED] = nil
+                Focus.Ranged.Display(player_name)
+                UI.EndTabItem()
+            end
         end
-        if UI.BeginTabItem(Focus.Tabs.Names.WS, false, Focus.Tabs.Switch[Focus.Tabs.Names.WS]) then
-            Focus.Tabs.Switch[Focus.Tabs.Names.WS] = nil
-            Focus.WS.Display(player_name)
-            UI.EndTabItem()
+
+        if DB.Data.Get(player_name, DB.Enum.Trackable.WS, DB.Enum.Metric.TOTAL) > 0 then
+            if UI.BeginTabItem(Focus.Tabs.Names.WS, false, Focus.Tabs.Switch[Focus.Tabs.Names.WS]) then
+                Focus.Tabs.Switch[Focus.Tabs.Names.WS] = nil
+                Focus.WS.Display(player_name)
+                UI.EndTabItem()
+            end
         end
+
         if UI.BeginTabItem(Focus.Tabs.Names.MAGIC, false, Focus.Tabs.Switch[Focus.Tabs.Names.MAGIC]) then
             Focus.Tabs.Switch[Focus.Tabs.Names.MAGIC] = nil
             Focus.Magic.Display(player_name)
             UI.EndTabItem()
         end
-        if UI.BeginTabItem(Focus.Tabs.Names.ABILITIES, false, Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES]) then
-            Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES] = nil
-            Focus.Abilities.Display(player_name)
-            UI.EndTabItem()
+
+        if DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY, DB.Enum.Metric.COUNT) > 0 then
+            if UI.BeginTabItem(Focus.Tabs.Names.ABILITIES, false, Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES]) then
+                Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES] = nil
+                Focus.Abilities.Display(player_name)
+                UI.EndTabItem()
+            end
         end
-        if UI.BeginTabItem(Focus.Tabs.Names.PETS, false, Focus.Tabs.Switch[Focus.Tabs.Names.PETS]) then
-            Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = nil
-            Focus.Pets.Display(player_name)
-            UI.EndTabItem()
+
+        if DB.Data.Get(player_name, DB.Enum.Trackable.PET, DB.Enum.Metric.TOTAL) > 0 then
+            if UI.BeginTabItem(Focus.Tabs.Names.PETS, false, Focus.Tabs.Switch[Focus.Tabs.Names.PETS]) then
+                Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = nil
+                Focus.Pets.Display(player_name)
+                UI.EndTabItem()
+            end
         end
+
         if UI.BeginTabItem(Focus.Tabs.Names.DEFENSE, false, Focus.Tabs.Switch[Focus.Tabs.Names.DEFENSE]) then
             Focus.Tabs.Switch[Focus.Tabs.Names.DEFENSE] = nil
             Focus.Defense.Display(player_name)
@@ -106,14 +125,14 @@ Focus.Overall = function(player_name)
     local table_flags = Window.Table.Flags.Fixed_Borders
     local width = Column.Widths.Percent
     local columns = 6
-    if Metrics.Team.Settings.Include_SC_Damage then columns = columns + 1 end
+    if Parse.Config.Include_SC_Damage() then columns = columns + 1 end
 
     if UI.BeginTable("Overall", columns, table_flags) then
         -- Headers
         UI.TableSetupColumn("Melee %", col_flags, width)
         UI.TableSetupColumn("Ranged %", col_flags, width)
         UI.TableSetupColumn("WS %", col_flags, width)
-        if Metrics.Team.Settings.Include_SC_Damage then UI.TableSetupColumn("SC %", col_flags, width) end
+        if Parse.Config.Include_SC_Damage() then UI.TableSetupColumn("SC %", col_flags, width) end
         UI.TableSetupColumn("Magic %", col_flags, width)
         UI.TableSetupColumn("JA %", col_flags, width)
         UI.TableSetupColumn("Pet %", col_flags, width)
@@ -124,7 +143,7 @@ Focus.Overall = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, true)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, true)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.WS, true)
-        if Metrics.Team.Settings.Include_SC_Damage then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.SC, true) end
+        if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.SC, true) end
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, true)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY, true)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET, true)

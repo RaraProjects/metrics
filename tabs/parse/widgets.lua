@@ -4,7 +4,7 @@ Parse.Widgets = T{}
 -- Shows the parse duration clock.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Clock = function()
-    if Metrics.Team.Settings.Show_Clock then
+    if Metrics.Parse.Show_Clock then
         UI.SameLine() UI.Text(" ") UI.SameLine()
         local pause_string = ""
         if Timers.Is_Paused(Timers.Enum.Names.PARSE) then pause_string = " (paused)" end
@@ -42,8 +42,8 @@ end
 -- Toggles whether skillchain damage is included in damage displays.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.SC_Damage = function()
-    if UI.Checkbox("Include SC Damage", {Metrics.Team.Settings.Include_SC_Damage}) then
-        Metrics.Team.Settings.Include_SC_Damage = not Metrics.Team.Settings.Include_SC_Damage
+    if UI.Checkbox("Include SC Damage", {Metrics.Parse.Include_SC_Damage}) then
+        Metrics.Parse.Include_SC_Damage = not Metrics.Parse.Include_SC_Damage
         Parse.Util.Calculate_Column_Flags()
     end
     UI.SameLine() Window.Widgets.HelpMarker("The player that closes the skill chain gets the damage credit. "
@@ -57,8 +57,8 @@ end
 -- Toggles whether or not numbers are shown in condensed format or not.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Condensed_Numbers = function()
-    if UI.Checkbox("Short Numbers", {Metrics.Team.Settings.Condensed_Numbers}) then
-        Metrics.Team.Settings.Condensed_Numbers = not Metrics.Team.Settings.Condensed_Numbers
+    if UI.Checkbox("Short Numbers", {Metrics.Parse.Condensed_Numbers}) then
+        Metrics.Parse.Condensed_Numbers = not Metrics.Parse.Condensed_Numbers
         Parse.Util.Calculate_Column_Flags()
     end
     UI.SameLine() Window.Widgets.HelpMarker("1.2K instead of 1,200.")
@@ -82,11 +82,22 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Player_Limit = function()
     UI.SetNextItemWidth(Parse.Config.Slider_Width)
-    local cutoff = {[1] = Metrics.Team.Settings.Rank_Cutoff}
+    local cutoff = {[1] = Metrics.Parse.Rank_Cutoff}
     if UI.DragInt("Player Limit", cutoff, 0.1, 0, 18, "%d", ImGuiSliderFlags_None) then
-        Metrics.Team.Settings.Rank_Cutoff = cutoff[1]
+        Metrics.Parse.Rank_Cutoff = cutoff[1]
     end
     UI.SameLine() Window.Widgets.HelpMarker("How many players are listed on the Team table.")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the height of the DPS graph.
+------------------------------------------------------------------------------------------------------
+Parse.Widgets.DPS_Graph_Height = function()
+    UI.SetNextItemWidth(Parse.Config.Slider_Width)
+    local height = {[1] = Metrics.Parse.DPS_Graph_Height}
+    if UI.DragInt("DPS Graph Height", height, 0.1, 25, 100, "%d", ImGuiSliderFlags_None) then
+        Metrics.Parse.DPS_Graph_Height = height[1]
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -98,4 +109,16 @@ Parse.Widgets.Timer_Duration_Help_Text = function()
                                         .. "(in your party or alliance) takes an action. Data collection does NOT stop while "
                                         .. "paused! The duration and auto-pause is to help you see how long your group has actually "
                                         .. "been active and to help with possible DPS calculations in the future. \n")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows a graph of a player's DPS.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Parse.Widgets.DPS_Graph = function(player_name)
+    if Metrics.Parse.Show_DPS_Graph then
+        local data = DB.DPS.Get_DPS_Graph(player_name)
+        UI.PlotLines("DPS", data, #data, 8, nil, 0, nil, {Parse.Full.Width.Base, Metrics.Parse.DPS_Graph_Height})
+    end
 end

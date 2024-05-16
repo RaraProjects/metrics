@@ -8,6 +8,15 @@ Report.Config.Show_Settings = false
 Report.Config.Slider_Width = 100
 
 ------------------------------------------------------------------------------------------------------
+-- Resets report settings.
+------------------------------------------------------------------------------------------------------
+Report.Config.Reset = function()
+    for setting, value in pairs(Report.Config.Defaults) do
+        Metrics.Report[setting] = value
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Shows settings that affect the Report tab.
 ------------------------------------------------------------------------------------------------------
 Report.Config.Display = function()

@@ -5,6 +5,9 @@ DB.DPS.Snapshots = T{}          -- [player_name][snapshot index]
 DB.DPS.Snapshot_Time = 3		-- Seconds between each snapshot
 DB.DPS.Snapshot_Count = 3		-- Max number of snapshots
 
+DB.DPS.DPS_Graph = T{}
+DB.DPS.DPS_Graph_Length = 10
+
 -----------------------------------------------------------------------------------------------------
 -- Increments DPS buffer.
 ------------------------------------------------------------------------------------------------------
@@ -39,16 +42,28 @@ end
 -- Takes a snapshot of all the DPS buffers.
 ------------------------------------------------------------------------------------------------------
 DB.DPS.Create_Snapshot = function()
+    -- Create the Snapshots
     for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
         if not DB.DPS.Snapshots[player_name] then DB.DPS.Snapshots[player_name] = T{} end
+        if not DB.DPS.DPS_Graph[player_name] then DB.DPS.DPS_Graph[player_name] = T{} end
         local buffer_damage = DB.DPS.Get_Buffer(player_name)
+
+        -- Raw DPS
         table.insert(DB.DPS.Snapshots[player_name], 1, buffer_damage)
         if #DB.DPS.Snapshots[player_name] > DB.DPS.Snapshot_Count then
             table.remove(DB.DPS.Snapshots[player_name], DB.DPS.Snapshot_Count + 1)
         end
+
+        -- Graph DPS
+        table.insert(DB.DPS.DPS_Graph[player_name], 1, buffer_damage)
+        if #DB.DPS.DPS_Graph[player_name] > DB.DPS.DPS_Graph_Length then
+            table.remove(DB.DPS.DPS_Graph[player_name], DB.DPS.DPS_Graph_Length + 1)
+        end
+
         DB.DPS.Clear_Buffer(player_name)
     end
 
+    -- Average out the snapshots to create DPS
     for player_name, snapshots in pairs(DB.DPS.Snapshots) do
         local total_damage = 0
         local string = ""
@@ -61,12 +76,24 @@ DB.DPS.Create_Snapshot = function()
     end
 end
 
------------------------------------------------------------------------------------------------------
--- Get a player's DPS
+------------------------------------------------------------------------------------------------------
+-- Get a player's DPS.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 DB.DPS.Get_DPS = function(player_name)
     if not DB.DPS.DPS[player_name] then return 0 end
     return DB.DPS.DPS[player_name]
+end
+
+------------------------------------------------------------------------------------------------------
+-- Get a player's DPS for the graph.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+DB.DPS.Get_DPS_Graph = function(player_name)
+    if DB.DPS.DPS_Graph[player_name] then
+        return DB.DPS.DPS_Graph[player_name]
+    end
+    return {0}
 end

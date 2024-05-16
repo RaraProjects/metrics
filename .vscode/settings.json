@@ -101,7 +101,8 @@
         "breader",
         "switch",
         "GetEntity",
-        "ImGuiTabItemFlags_SetSelected"
+        "ImGuiTabItemFlags_SetSelected",
+        "ImGuiWindowFlags_NoBackground"
     ],
     "Lua.diagnostics.disable": [
         "undefined-field"
