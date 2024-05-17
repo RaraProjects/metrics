@@ -6,6 +6,20 @@ Focus.Defense = T{}
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Defense.Display = function(player_name)
+    Focus.Defense.Damage_Taken(player_name)
+    Focus.Defense.Other_Damage(player_name)
+    Focus.Defense.Mitigation(player_name)
+    Focus.Defense.Single(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
+    Focus.Defense.Single(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
+    if Metrics.Focus.Show_Misc_Spells then Focus.Defense.Single(player_name, DB.Enum.Trackable.DEF_NO_DMG_SPELLS) end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows damage taken breakdown.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Defense.Damage_Taken = function(player_name)
     local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
     local name_width = Column.Widths.Standard
@@ -35,6 +49,18 @@ Focus.Defense.Display = function(player_name)
 
         UI.EndTable()
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows miscellaneous damage breakdown.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Defense.Other_Damage = function(player_name)
+    local col_flags = Column.Flags.None
+    local table_flags = Window.Table.Flags.Fixed_Borders
+    local name_width = Column.Widths.Standard
+    local damage_width = Column.Widths.Damage
 
     if UI.BeginTable("Other Damage", 3, table_flags) then
         UI.TableSetupColumn("Misc. Defense", col_flags, name_width)
@@ -62,10 +88,21 @@ Focus.Defense.Display = function(player_name)
 
         UI.EndTable()
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows miscellaneous damage breakdown.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Defense.Mitigation = function(player_name)
+    local col_flags = Column.Flags.None
+    local table_flags = Window.Table.Flags.Fixed_Borders
+    local name_width = Column.Widths.Standard
+    local damage_width = Column.Widths.Damage
 
     local columns = 3
     if Metrics.Focus.Show_Mitigation_Details then columns = 5 end
-
     if UI.BeginTable("Defense", columns, table_flags) then
         UI.TableSetupColumn("Mitigation", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, damage_width)
@@ -154,4 +191,69 @@ Focus.Defense.Display = function(player_name)
 
         UI.EndTable()
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets up the table for a trackable drop down inside the focus window.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param focus_type string a trackable from the data model.
+------------------------------------------------------------------------------------------------------
+Focus.Defense.Single = function(player_name, focus_type)
+    if not focus_type then return nil end
+    local table_flags = Window.Table.Flags.Fixed_Borders
+    local col_flags = Column.Flags.None
+    local name_width = Column.Widths.Standard
+    local short_width = Column.Widths.Percent
+    local damage_width = Column.Widths.Damage
+
+    -- Error Protection
+    if not DB.Tracking.Trackable[focus_type] then return nil end
+    if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
+
+    local action_string = "TP Move"
+    if focus_type == DB.Enum.Trackable.SPELL_DMG_TAKEN or focus_type == DB.Enum.Trackable.DEF_NO_DMG_SPELLS then
+        action_string = "Spell"
+    end
+
+    if UI.BeginTable(focus_type, 6, table_flags) then
+        UI.TableSetupColumn(action_string, col_flags, name_width)
+        UI.TableSetupColumn("Tries", col_flags, short_width)
+        UI.TableSetupColumn("Total", col_flags, damage_width)
+        UI.TableSetupColumn("Average", col_flags, damage_width)
+        UI.TableSetupColumn("Minimum", col_flags, damage_width)
+        UI.TableSetupColumn("Maximum", col_flags, damage_width)
+        UI.TableHeadersRow()
+
+        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local action_name
+        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            action_name = data[1]
+            Focus.Defense.Single_Row(player_name, action_name, focus_type)
+        end
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Loads data to a row for a trackable drop down inside the focus window.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name string
+---@param focus_type string a trackable from the data model.
+------------------------------------------------------------------------------------------------------
+Focus.Defense.Single_Row = function(player_name, action_name, focus_type)
+    UI.TableNextRow()
+    UI.TableNextColumn() UI.Text(action_name)
+    UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
+    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
+
+    UI.TableNextColumn() Column.Single.Average(player_name, action_name, focus_type)
+    local min = DB.Catalog.Get(player_name, focus_type, action_name, DB.Enum.Metric.MIN)
+    if min == 100000 then
+        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Values.IGNORE)
+    else
+        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN)
+    end
+    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX)
 end

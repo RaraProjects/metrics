@@ -30,6 +30,10 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
         end
     end
 
+    local audits = H.TP_Def.Audits(actor_mob, owner_mob, target_mob)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, audits.trackable, skill_name, H.Metric.COUNT)
+    if damage > 0 then DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, audits.trackable, skill_name, H.Metric.HIT_COUNT) end
+
     return true
 end
 
@@ -57,7 +61,7 @@ H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws
     audits = H.TP.MP_Drain(audits, ws_id)
 
     if not owner_mob then DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, H.Metric.TOTAL) end
-    DB.Data.Update(H.Mode.INC, damage, audits, audits.trackable, H.Metric.TOTAL)
+    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, audits.trackable, damage, ws_name, audits.pet_name)
 
     return damage
 end

@@ -17,6 +17,7 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
     local spell_id = action.param
     local spell_data = Ashita.Spell.Get_By_ID(spell_id)
     if not spell_data then return nil end
+    local spell_name = Ashita.Spell.Name(spell_id, spell_data)
 
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
@@ -31,6 +32,15 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
             target_count = target_count + 1
             damage = damage + new_damage
         end
+    end
+
+    local audits = H.Spell_Def.Audits(actor_mob, target_mob, owner_mob)
+    if Res.Spells.Get_Damaging(spell_id) then
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.HIT_COUNT)
+    else
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.HIT_COUNT)
     end
 end
 
@@ -56,7 +66,7 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     local audits = H.Spell_Def.Audits(actor_mob, target_mob, owner_mob)
 
     if Res.Spells.Get_Damaging(spell_id) then
-        H.Spell_Def.Nuke(audits, damage)
+        H.Spell_Def.Nuke(audits, damage, spell_name)
         is_mapped = true
     end
 
@@ -110,13 +120,14 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param audits table
 ---@param damage number
+---@param spell_name string
 ------------------------------------------------------------------------------------------------------
-H.Spell_Def.Nuke = function(audits, damage)
+H.Spell_Def.Nuke = function(audits, damage, spell_name)
     if audits.pet_name then
         DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.SPELL_PET_DMG_TAKEN, H.Metric.TOTAL)
     else
         DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, H.Metric.TOTAL)
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.SPELL_DMG_TAKEN, H.Metric.TOTAL)
+        DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.SPELL_DMG_TAKEN, damage, spell_name, audits.pet_name)
     end
 end
 

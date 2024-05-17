@@ -131,7 +131,7 @@ Focus.Magic.Display = function(player_name)
     if enfeeble_count > 0 then Focus.Magic.Single(player_name, DB.Enum.Trackable.ENFEEBLE) end
     if enspell_count > 0 then Focus.Magic.Single(player_name, DB.Enum.Trackable.ENSPELL) end
     if spike_damage > 0 then Focus.Magic.Single(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG) end
-    if misc_count > 0 then Focus.Magic.Single(player_name, DB.Enum.Trackable.MAGIC) end
+    if misc_count > 0 and Metrics.Focus.Show_Misc_Spells then Focus.Magic.Single(player_name, DB.Enum.Trackable.MAGIC) end
 
     -- Publish buttons
     if nuke_total > 0 then

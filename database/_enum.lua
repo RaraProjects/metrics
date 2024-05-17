@@ -51,6 +51,7 @@ DB.Enum.Trackable = T{
     INCOMING_SPIKE_DMG  = "Incoming Spike Damage",
     SPELL_DMG_TAKEN     = "Spell Damage Taken",
     SPELL_PET_DMG_TAKEN = "Spell Pet Damage Taken",
+    DEF_NO_DMG_SPELLS   = "No Damage Spells",
     DEF_MP_DRAIN        = "Player MP Drained",
     DEF_ENFEEBLE        = "Player Enfeebled",
     -- SPELL_ENF_RESIST   = "Enfeeble Resist"

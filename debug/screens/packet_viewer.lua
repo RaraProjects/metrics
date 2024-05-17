@@ -5,6 +5,19 @@ _Debug.Packet.Item_Log = {}
 _Debug.Packet.Limit = 100
 _Debug.Packet.Size = 32
 
+_Debug.Packet.Actions = T{
+    MELEE = true,
+    MELEE_DEF = true,
+    RANGED = true,
+    RANGED_DEF = true,
+    SPELL = true,
+    SPELL_DEF = true,
+    TP = true,
+    TP_DEF = true,
+    ABILITY = true,
+}
+
+
 ------------------------------------------------------------------------------------------------------
 -- Resets the packet viewer.
 ------------------------------------------------------------------------------------------------------

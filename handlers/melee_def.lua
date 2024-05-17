@@ -38,6 +38,8 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
     local damage = result.param
     local reaction_id = result.reaction
     local message_id = result.message
+    local effect_message_id = result.add_effect_message
+    local effect_animation_id = result.add_effect_animation
 
     -- Need special handling for pets
     local pet_name = nil
@@ -74,6 +76,10 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
 
         H.Melee_Def.Crit(audits, damage, message_id)
         H.Melee_Def.Spikes(audits, result)
+
+        -- Enspell
+        local add_effect_damage = result.add_effect_param
+        if add_effect_damage > 0 then H.Melee_Def.Additional_Effect(audits, add_effect_damage, effect_animation_id, effect_message_id, no_damage) end
     end
 
     return damage
@@ -282,4 +288,27 @@ H.Melee_Def.No_Damage_Messages = function(message_id)
            message_id == Ashita.Enum.Message.MISS or
            message_id == Ashita.Enum.Message.SHADOWS or
            message_id == Ashita.Enum.Message.MOBHEAL373
+end
+
+------------------------------------------------------------------------------------------------------
+-- Captures additional effects from melee.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param value number how much of the thing you did.
+---@param animation_id number determines which element the enspell is.
+---@param message_id number numberic identifier for system chat messages.
+---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
+------------------------------------------------------------------------------------------------------
+H.Melee_Def.Additional_Effect = function(audits, value, animation_id, message_id, no_damage)
+    -- Only add additional damage to the damage totals.
+    if message_id == Ashita.Enum.Message.ENSPELL then
+        if no_damage then value = 0 end
+        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, H.Metric.TOTAL)
+        if Res.Spells.Get_Enspell_Type(animation_id) then
+            local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
+            DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.SPELL_DMG_TAKEN, value, enspell_name)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, enspell_name, H.Metric.COUNT)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, enspell_name, H.Metric.HIT_COUNT)
+        end
+    end
 end
