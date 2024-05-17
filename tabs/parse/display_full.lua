@@ -15,6 +15,9 @@ Parse.Full.Populate = function()
     Parse.Widgets.Clock()
     if Parse.Config.Show_Settings then Parse.Config.Display() end
 
+    local player = Ashita.Player.My_Mob()
+    if not player then return nil end
+
     -- Main Body
     if UI.BeginTable(Parse.Full.Name, Parse.Columns.Current, Parse.Full.Table_Flags) then
         Parse.Full.Headers()
@@ -25,6 +28,8 @@ Parse.Full.Populate = function()
             if rank <= Parse.Config.Rank_Cutoff() then
                 player_name = data[1]
                 Parse.Full.Rows(player_name)
+            elseif data[1] == player.name then
+                Parse.Full.Rows(player.name)
             end
         end
 

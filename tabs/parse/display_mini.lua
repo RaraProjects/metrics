@@ -13,12 +13,17 @@ Parse.Mini.Populate = function()
     if UI.BeginTable("Team Mini", columns, Parse.Mini.Table_Flags) then
         Parse.Mini.Headers()
 
+        local player = Ashita.Player.My_Mob()
+        if not player then return nil end
+
         local player_name = "Debug"
         DB.Lists.Sort.Total_Damage()
         for rank, data in ipairs(DB.Sorted.Total_Damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
                 player_name = data[1]
                 Parse.Mini.Rows(player_name)
+            elseif data[1] == player.name then
+                Parse.Mini.Rows(player.name)
             end
         end
 

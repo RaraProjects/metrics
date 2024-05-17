@@ -77,14 +77,12 @@ end
 DB.Team_Damage = function()
 	local total = 0
 	DB.Lists.Sort.Total_Damage()
-	for rank, data in ipairs(DB.Sorted.Total_Damage) do
-		if rank <= Parse.Config.Rank_Cutoff() then
-			local player_name = data[1]
-			if Parse.Config.Include_SC_Damage() then
-				total = total + DB.Data.Get(player_name, DB.Enum.Trackable.TOTAL, DB.Enum.Metric.TOTAL)
-			else
-				total = total + DB.Data.Get(player_name, DB.Enum.Trackable.TOTAL_NO_SC, DB.Enum.Metric.TOTAL)
-			end
+	for _, data in ipairs(DB.Sorted.Total_Damage) do
+		local player_name = data[1]
+		if Parse.Config.Include_SC_Damage() then
+			total = total + DB.Data.Get(player_name, DB.Enum.Trackable.TOTAL, DB.Enum.Metric.TOTAL)
+		else
+			total = total + DB.Data.Get(player_name, DB.Enum.Trackable.TOTAL_NO_SC, DB.Enum.Metric.TOTAL)
 		end
 	end
 	return total
