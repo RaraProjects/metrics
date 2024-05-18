@@ -75,7 +75,7 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
 
 	-- GRAND TOTAL ////////////////////////////////////////////////////////////////////////////////
 	-- There is a regular track and a "no skillchains" track.
-    if trackable ~= DB.Enum.Trackable.HEALING and trackable ~= DB.Enum.Trackable.PET_HEAL and trackable ~= DB.Enum.Trackable.MP_DRAIN then
+    if DB.Catalog.Include_Total_Damage(trackable) then
     	DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.TOTAL, DB.Enum.Metric.TOTAL)
 		if trackable ~= DB.Enum.Trackable.SC then
 			DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.TOTAL_NO_SC, DB.Enum.Metric.TOTAL)
@@ -295,4 +295,26 @@ DB.Catalog.Maximum = function(max, index, trackable, action_name, metric)
 		max = DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric]
 	end
 	return max
+end
+
+------------------------------------------------------------------------------------------------------
+-- Helper function for getting cataloged data for maximum metric.
+------------------------------------------------------------------------------------------------------
+---@param trackable string a tracked item from the trackable list.
+---@return boolean
+------------------------------------------------------------------------------------------------------
+DB.Catalog.Include_Total_Damage = function(trackable)
+	if trackable == DB.Enum.Trackable.HEALING or
+	   trackable == DB.Enum.Trackable.PET_HEAL or
+	   trackable == DB.Enum.Trackable.MP_DRAIN or
+	   trackable == DB.Enum.Trackable.SPELL_DMG_TAKEN or
+	   trackable == DB.Enum.Trackable.SPELL_PET_DMG_TAKEN or
+	   trackable == DB.Enum.Trackable.INCOMING_SPIKE_DMG or
+	   trackable == DB.Enum.Trackable.TP_DMG_TAKEN or
+	   trackable == DB.Enum.Trackable.PET_TP_DMG_TAKEN or
+	   trackable == DB.Enum.Trackable.MELEE_DMG_TAKEN or
+	   trackable == DB.Enum.Trackable.MELEE_PET_DMG_TAKEN then
+		return false
+	end
+	return true
 end

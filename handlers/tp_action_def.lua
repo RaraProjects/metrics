@@ -30,10 +30,6 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
         end
     end
 
-    local audits = H.TP_Def.Audits(actor_mob, owner_mob, target_mob)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, audits.trackable, skill_name, H.Metric.COUNT)
-    if damage > 0 then DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, audits.trackable, skill_name, H.Metric.HIT_COUNT) end
-
     return true
 end
 
@@ -52,16 +48,19 @@ end
 H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
     _Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "TP Def", result)
     local damage = result.param
+    local message_id = result.message
     local audits = H.TP_Def.Audits(actor_mob, owner_mob, target_mob)
 
     -- A lot of pet abilities just land a status effect and it carries in a value as if it were damage.
-    damage = H.TP_Def.Ignore_Damage(damage, ws_id, ws_name)
+    damage = H.TP_Def.Ignore_Damage(damage, ws_id, ws_name, message_id)
 
     -- Some weaponskills drain MP instead of doing damage.
     audits = H.TP.MP_Drain(audits, ws_id)
 
     if not owner_mob then DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, H.Metric.TOTAL) end
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, audits.trackable, damage, ws_name, audits.pet_name)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, audits.trackable, ws_name, H.Metric.COUNT)
+    if damage > 0 then DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, audits.trackable, ws_name, H.Metric.HIT_COUNT) end
 
     return damage
 end
@@ -105,9 +104,11 @@ end
 ---@param ws_name string
 ---@return number
 -- ------------------------------------------------------------------------------------------------------
-H.TP_Def.Ignore_Damage = function(damage, ws_id, ws_name)
+H.TP_Def.Ignore_Damage = function(damage, ws_id, ws_name, message_id)
     if not Res.Monster.Get_Damaging_Ability(ws_id) then
         _Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
+        damage = 0
+    elseif message_id == Ashita.Enum.Message.MISS_TP then
         damage = 0
     end
     return damage

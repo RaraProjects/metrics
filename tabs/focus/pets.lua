@@ -10,7 +10,6 @@ Focus.Pets.Display = function(player_name)
     local table_flags = Window.Table.Flags.Fixed_Borders
     local name_width = Column.Widths.Standard
     local damage_width = Column.Widths.Damage
-    local percent_width = Column.Widths.Percent
 
     local pet_total = DB.Data.Get(player_name, DB.Enum.Trackable.PET, DB.Enum.Metric.TOTAL)
 
@@ -98,7 +97,6 @@ end
 Focus.Pets.Single = function(player_name, pet_name)
     local table_flags = Window.Table.Flags.Fixed_Borders
     local col_flags = Column.Flags.None
-    local damage = Column.Widths.Standard
     local name_width = Column.Widths.Standard
     local damage_width = Column.Widths.Damage
     local percent_width = Column.Widths.Percent
@@ -123,13 +121,13 @@ Focus.Pets.Single = function(player_name, pet_name)
         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET, true)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
 
-        local pet_melee = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_RANGED, DB.Enum.Metric.TOTAL)
+        local pet_melee = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_MELEE, DB.Enum.Metric.TOTAL)
         if pet_melee > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Melee")
-            UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET)
-            UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET, true, nil, true)
-            UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET, true)
+            UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_MELEE)
+            UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_MELEE, true, nil, true)
+            UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_MELEE, true)
             UI.TableNextColumn() Column.Acc.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
         end
 

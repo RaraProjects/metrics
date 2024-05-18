@@ -73,6 +73,7 @@ Ashita.Enum.Message = T{
     ENDRAIN    = 161,
     ENASPIR    = 162,
     RANGEPUP   = 185,
+    MISS_TP    = 188,
     ENSPELL    = 229,
     ENF_LAND   = 236,
     BURST      = 252,
