@@ -108,7 +108,7 @@ H.TP_Def.Ignore_Damage = function(damage, ws_id, ws_name, message_id)
     if not Res.Monster.Get_Damaging_Ability(ws_id) then
         _Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
         damage = 0
-    elseif message_id == Ashita.Enum.Message.MISS_TP then
+    elseif message_id == Ashita.Enum.Message.MISS_TP or message_id == Ashita.Enum.Message.SHADOWS then
         damage = 0
     end
     return damage
