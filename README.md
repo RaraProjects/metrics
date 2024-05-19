@@ -87,14 +87,14 @@ The Magic tab works about as you would expect after reading through the other ta
 7. **MP Drain:** This isn't counted toward total damage. Instead, this is a measure of how much MP you've drained from mobs using spells like Aspir.
 8. **Spikes:** This is how much damage you've caused by a mob hitting you and proccing a spike effect.
 
-Abilities<br>
+### Abilities
 ![xiloader_pdpRM0MPry](https://github.com/RaraProjects/metrics/assets/72292212/12d55fae-f15f-4edf-8613-ebccb6063789)<br>
 Sample data for the Abilities tab.
 
 1. How many of each ability were used.
 2. Total ability damage and a breakdown of how much damage was caused by each ability used.
 
-Pets<br>
+### Pets
 ![xiloader_hFrv0Y8GAz](https://github.com/RaraProjects/metrics/assets/72292212/2e7a5008-af96-4100-b6cb-1b160b637b51)<br>
 Sample data for the Pets tab.
 
@@ -102,8 +102,7 @@ Sample data for the Pets tab.
 2. Provides a breakdown of each ability used by the pet similar to skillchains.
 3. Handles wyvern breaths including healing breaths (which are counted toward player healing).
 
-
-**Battle Log**<br>
+## Battle Log
 ![xiloader_d4z50wIayI](https://github.com/RaraProjects/metrics/assets/72292212/11e6d5ef-ea25-4914-bb8e-079e8541beb7)<br>
 Sample data for the Battle Log.
 
