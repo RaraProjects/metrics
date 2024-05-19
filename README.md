@@ -1,15 +1,14 @@
-This project seeks to provide detailed battle metrics for Final Fantasy XI. This is built for Ashita and intended to be used on the HorizonXI server.
+## Introduction
+Metrics is a DPS parsing tool at it's core, but it can take you much deeper into the data than the typical parser. There are views to keep things simple if that's all you want, but for those hungry for the most specific of data I try to provide that in the most aesthetically pleasing and usable way possible.
+
+I have two branches you can download from 1) Release and 2) Testing. The Testing branch is where I push my changes the most frequently. The TL;DR is that if you want more frequent changes or the newest content that are tested or mostly tested then you should try downloading from the Testing branch. If you want slower / larger changes that have more field testing then you should use the Release branch. I test the changes myself to the best of my ability and I work a couple others who also do some testing for things like alliance content. Once I feel sufficient testing has been completed I will push the changes on the Testing branch to the Release branch. My number one priority is to prevent crashes because if you crash you lose your data and that's a bad feeling.
 
 ## Table of Contents<br>
-1. [Introduction](#introduction)
 2. [Parse](#parse)
 3. [Focus](#focus)
 4. [Battle Log](#battle-log)
-5. Report
-6. Settings
-
-## Introduction
-Metrics is broken up in several windows each with its own purpose.
+5. [Report](#report)
+6. [Settings](#settings)
 
 ## Parse
 This screen resembles your typical parser. It shows things like DPS, total damage, accuracy, and various damage breakdown column. There are three different modes to view the parser depending on how much detail you want to see at the time (and how much screen space you are willing to commit to that data).
@@ -88,22 +87,44 @@ The Magic tab works about as you would expect after reading through the other ta
 8. **Spikes:** This is how much damage you've caused by a mob hitting you and proccing a spike effect.
 
 ### Abilities
-![xiloader_pdpRM0MPry](https://github.com/RaraProjects/metrics/assets/72292212/12d55fae-f15f-4edf-8613-ebccb6063789)<br>
-Sample data for the Abilities tab.
+![image](https://github.com/RaraProjects/metrics/assets/72292212/0e03e2a5-3823-4e4c-bea7-d72f5137b3dd)<br>
+_Sample data for the Abilities tab._
 
-1. How many of each ability were used.
-2. Total ability damage and a breakdown of how much damage was caused by each ability used.
+Shows how much damage you've done through the use of offensive abilities as well how many times you've used non-offensive abilities.
 
 ### Pets
-![xiloader_hFrv0Y8GAz](https://github.com/RaraProjects/metrics/assets/72292212/2e7a5008-af96-4100-b6cb-1b160b637b51)<br>
-Sample data for the Pets tab.
+![image](https://github.com/RaraProjects/metrics/assets/72292212/8caee9c4-9019-4362-9a20-f93f6b03be16)<br>
+_Sample data for the Pets tab._
 
+Similar to other tabs. Here are some interesting points:
 1. Captures actions taken BST pets, avatars, and wyverns.
-2. Provides a breakdown of each ability used by the pet similar to skillchains.
+2. Provides a breakdown of each ability used by the pet.
 3. Handles wyvern breaths including healing breaths (which are counted toward player healing).
+
+### Defense
+![image](https://github.com/RaraProjects/metrics/assets/72292212/3c067a44-c4a2-466b-967e-fcf8e94be994)<br>
+_Sample data for the Defense tab._
+
+This tab is going show how much damage you and/or your pet has taken with a breakdown of what types of damage that total damage is comprised of. Additionally, it can show you how often mobs are hitting you with critical strikes and how often you are mitigating their attacks with evasion, parry, shield, etc. A list of the mobs TP moves performed against you is shown at the bottom along with relevant stats.
+
+**Note:** I had to manually go through a couple thousand mob TP moves and pick out which ones deal damage. I used a wiki to help with this, but sometimes the wiki isn't great. If you find that there is a mob TP move that should do damage--but isn't--or a mob that shouldn't do damage--that is--then please let me know and I can update my filter list.
 
 ## Battle Log
 ![xiloader_d4z50wIayI](https://github.com/RaraProjects/metrics/assets/72292212/11e6d5ef-ea25-4914-bb8e-079e8541beb7)<br>
-Sample data for the Battle Log.
+_Sample data for the Battle Log. This is an older screenshot._
 
 Maintain line of sight on the more important pieces of the battle without dealing with the game chat. Some neat features here are that you can see the TP at which a player used a weaponskill or see how many mobs were hit by an AOE spell.
+
+### Report
+![image](https://github.com/RaraProjects/metrics/assets/72292212/d296058f-2a69-4fb4-8e7a-eda1f121f825)
+_Sample data for the Report tab._
+
+You can use the chat report quick buttons to output some reports to the chat. You can pick the chat mode. Please be courteous to your neighbors when you use anything other than party. You can also output the database and Battle Log to a CSV for your own analysis. Currently I just output a the raw data, but I'm thinking about creating a Google doc or Excel template that can be used to build higher level summaries like in the Focus tab. The CSV will contain only the data nodes that have non-zero values keep creating files as quick as possible. A note about the Battle Log is that it only keeps about 100 of the last events you've chosen to log, so if your CSV seems short that's why. I'm not quite sure how much data an addon session can handle so I'm trying to be frugal with the amount of memory I use.
+
+The Monsters Defeated is just something I wanted to try and didn't really have a better spot for it. Sometimes it's nice to see how many crabs you've killed after grinding them out for a couple hours.
+
+### Settings
+![image](https://github.com/RaraProjects/metrics/assets/72292212/92b72c43-5824-4cd5-8a9b-ebc645f73c5d)<br>
+_Example of the Settings tab._
+
+There are a few settings that need their own spot. One of the biggest is controlling how the window looks. The Help tab contains some chat commands and the current version number. I tend to update frequently so it's always good to know which version you're on compared to the latest version.
