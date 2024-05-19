@@ -115,15 +115,15 @@ _Sample data for the Battle Log. This is an older screenshot._
 
 Maintain line of sight on the more important pieces of the battle without dealing with the game chat. Some neat features here are that you can see the TP at which a player used a weaponskill or see how many mobs were hit by an AOE spell.
 
-### Report
-![image](https://github.com/RaraProjects/metrics/assets/72292212/d296058f-2a69-4fb4-8e7a-eda1f121f825)
+## Report
+![image](https://github.com/RaraProjects/metrics/assets/72292212/d296058f-2a69-4fb4-8e7a-eda1f121f825)<br>
 _Sample data for the Report tab._
 
 You can use the chat report quick buttons to output some reports to the chat. You can pick the chat mode. Please be courteous to your neighbors when you use anything other than party. You can also output the database and Battle Log to a CSV for your own analysis. Currently I just output a the raw data, but I'm thinking about creating a Google doc or Excel template that can be used to build higher level summaries like in the Focus tab. The CSV will contain only the data nodes that have non-zero values keep creating files as quick as possible. A note about the Battle Log is that it only keeps about 100 of the last events you've chosen to log, so if your CSV seems short that's why. I'm not quite sure how much data an addon session can handle so I'm trying to be frugal with the amount of memory I use.
 
 The Monsters Defeated is just something I wanted to try and didn't really have a better spot for it. Sometimes it's nice to see how many crabs you've killed after grinding them out for a couple hours.
 
-### Settings
+## Settings
 ![image](https://github.com/RaraProjects/metrics/assets/72292212/92b72c43-5824-4cd5-8a9b-ebc645f73c5d)<br>
 _Example of the Settings tab._
 
