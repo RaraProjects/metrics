@@ -10,6 +10,7 @@ Parse.Config.Defaults = T{
     Rank_Cutoff = 6,
     DPS_Graph_Height = 50,
     Total_Acc = false,
+    DPS = true,
     Melee = true,
     Weaponskill = true,
     Ranged = false,
@@ -98,21 +99,28 @@ Parse.Config.Column_Selection = function()
         UI.TableNextColumn()
         if UI.Checkbox("Basic Only", {Metrics.Parse.Basic_Columns_Only}) then
             Metrics.Parse.Basic_Columns_Only = not Metrics.Parse.Basic_Columns_Only
-            Metrics.Parse.Total_Acc = false
-            Metrics.Parse.Melee = false
-            Metrics.Parse.Crit = false
-            Metrics.Parse.Weaponskill = false
-            Metrics.Parse.Ranged = false
-            Metrics.Parse.Magic = false
-            Metrics.Parse.Ability = false
-            Metrics.Parse.Pet = false
-            Metrics.Parse.Healing = false
-            Metrics.Parse.Deaths = false
+            if Metrics.Parse.Basic_Columns_Only then
+                Metrics.Parse.DPS = true
+                Metrics.Parse.Total_Acc = false
+                Metrics.Parse.Melee = false
+                Metrics.Parse.Crit = false
+                Metrics.Parse.Weaponskill = false
+                Metrics.Parse.Ranged = false
+                Metrics.Parse.Magic = false
+                Metrics.Parse.Ability = false
+                Metrics.Parse.Pet = false
+                Metrics.Parse.Healing = false
+                Metrics.Parse.Deaths = false
+            end
             Parse.Util.Calculate_Column_Flags()
         end
         UI.SameLine() Window.Widgets.HelpMarker("Reduces the amount of columns on Parse table to just "
                                                 .."the most essential: Name, %T, Total, and Running Accuracy.")
         UI.TableNextColumn()
+        if UI.Checkbox("Show DPS", {Metrics.Parse.DPS}) then
+            Metrics.Parse.DPS = not Metrics.Parse.DPS
+            Parse.Util.Calculate_Column_Flags()
+        end
         UI.TableNextColumn()
 
         -- Row 1

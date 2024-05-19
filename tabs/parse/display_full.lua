@@ -3,7 +3,6 @@ Parse.Full.Name = "Parse"
 Parse.Full.Table_Flags = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders)
 Parse.Full.Width = T{
     Base = 410,
-    Current = 410,
 }
 
 ------------------------------------------------------------------------------------------------------
@@ -45,7 +44,7 @@ Parse.Full.Headers = function()
 
     -- Basics
     UI.TableSetupColumn("Name", flags)
-    UI.TableSetupColumn("DPS", flags)
+    if Metrics.Parse.DPS then UI.TableSetupColumn("DPS", flags) end
     UI.TableSetupColumn("%T", flags)
     UI.TableSetupColumn("Total", flags)
     UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
@@ -78,7 +77,7 @@ end
 Parse.Full.Rows = function(player_name)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(player_name)
-    UI.TableNextColumn() Column.Damage.DPS(player_name, true)
+    if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
     UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
     UI.TableNextColumn() Column.Acc.Running(player_name)

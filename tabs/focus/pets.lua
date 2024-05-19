@@ -62,7 +62,7 @@ Focus.Pets.Display = function(player_name)
             UI.TableNextColumn() UI.Text("Weaponskill")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_WS)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_WS, true)
-            UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_WS)
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 
         local ability = DB.Data.Get(player_name, DB.Enum.Trackable.PET_ABILITY, DB.Enum.Metric.TOTAL)
@@ -70,7 +70,7 @@ Focus.Pets.Display = function(player_name)
             UI.TableNextColumn() UI.Text("Ability")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY, true)
-            UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY)
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 
         UI.EndTable()
