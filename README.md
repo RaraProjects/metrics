@@ -41,10 +41,17 @@ _Sample data for the Parse Mini Mode (with pet data expanded)._<br>
 
 Mini mode is just like the full mode, but it's designed to be small. You can't really add any columns here with the exception of a couple pet columns. This is the mode to use if you want to just cruise in parse mode without a large investment in screen space.
 
+### Nano Mode
 ![image](https://github.com/RaraProjects/metrics/assets/72292212/b3df7378-5e75-4d6b-83ee-800599531f3a)<br>
 _Sample data for the Parse Nano Mode._<br>
 
 Nano mode is as concise as it gets. If you really only care about what you're doing then this is the mode for you. Other players will not show up here.
+
+### DPS Graph
+![image](https://github.com/RaraProjects/metrics/assets/72292212/c7e8fdad-b2d7-43f7-a5bd-52a3265dd5d0)<br>
+_Sample DPS Graph data._<br>
+
+I'm not sure how useful this is. It's off by default, but if you want to try it out you can turn it on. It doesn't take up a lot of space and it can be a nice way to visualize DPS spikes and dips. It shows up in a second window so it won't interfere with the primary Metrics window.
 
 ## Focus
 Set your attention to a specific player in the parser--including yourself--and then drill down into the various aspects of your actions such as Melee, Weaponskills, Skillchains, Magic, Abilities, Pets, Defense, etc.
