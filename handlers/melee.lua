@@ -450,8 +450,6 @@ H.Melee.Additional_Effect = function(audits, value, message_id, effect_animation
     if message_id == Ashita.Enum.Message.ENSPELL then
         if no_damage then value = 0 end
         DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.MAGIC,       H.Metric.TOTAL)
-        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.TOTAL,       H.Metric.TOTAL)       -- It's an extra step to add additional enspell damage to total.
-        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)       -- It's an extra step to add additional enspell damage to total.
         DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.ENSPELL,     H.Metric.HIT_COUNT)
         DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.MAGIC,       H.Metric.COUNT)       -- Used to flag that data is availabel for show in Focus.
         if Res.Spells.Get_Enspell_Type(effect_animation_id) then
