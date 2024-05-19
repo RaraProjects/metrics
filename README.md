@@ -2,9 +2,9 @@ This project seeks to provide detailed battle metrics for Final Fantasy XI. This
 
 ## Table of Contents<br>
 1. [Introduction](#introduction)
-2. Parse
-3. Focus
-4. Battle Log
+2. [Parse](#parse)
+3. [Focus](#focus)
+4. [Battle Log](#battle-log)
 5. Report
 6. Settings
 
