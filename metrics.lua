@@ -224,7 +224,9 @@ ashita.events.register('command', 'command_cb', function (e)
 ---@diagnostic disable-next-line: undefined-field
     if table.contains({"/metrics"}, command_args[1]) or table.contains({"/met"}, command_args[1]) then
         local arg = command_args[2]
-        if arg == "show" or arg == "s" or arg == "vis" then
+        if not arg then
+            Config.Show_Window = not Config.Show_Window
+        elseif arg == "show" or arg == "s" or arg == "vis" then
             Window.Toggle_Visibility()
         elseif arg == "debug" then
             _Debug.Toggle()

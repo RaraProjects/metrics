@@ -1,6 +1,5 @@
 Parse.Mini = T{}
 
-Parse.Mini.Active = false
 Parse.Mini.Column_Flags = Column.Flags.None
 Parse.Mini.Table_Flags = bit.bor(ImGuiTableFlags_Borders)
 
@@ -71,13 +70,12 @@ end
 -- Returns whether mini mode is enabled.
 ------------------------------------------------------------------------------------------------------
 Parse.Mini.Is_Enabled = function()
-    return Parse.Mini.Active
+    return Metrics.Parse.Display_Mode == Parse.Enum.Display_Mode.MINI
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles mini mode.
 ------------------------------------------------------------------------------------------------------
 Parse.Mini.Toggle = function()
-    Parse.Mini.Active = not Parse.Mini.Active
-    if Parse.Mini.Active then Parse.Nano.Active = false end
+    Metrics.Parse.Display_Mode = Parse.Enum.Display_Mode.MINI
 end

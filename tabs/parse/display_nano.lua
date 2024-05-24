@@ -1,6 +1,5 @@
 Parse.Nano = T{}
 
-Parse.Nano.Active = false
 Parse.Nano.Table_Flags = bit.bor(ImGuiTableFlags_Borders)
 
 ------------------------------------------------------------------------------------------------------
@@ -33,13 +32,12 @@ end
 -- Returns whether nano mode is enabled.
 ------------------------------------------------------------------------------------------------------
 Parse.Nano.Is_Enabled = function()
-    return Parse.Nano.Active
+    return Metrics.Parse.Display_Mode == Parse.Enum.Display_Mode.NANO
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles nano mode.
 ------------------------------------------------------------------------------------------------------
 Parse.Nano.Toggle = function()
-    Parse.Nano.Active = not Parse.Nano.Active
-    if Parse.Nano.Active then Parse.Mini.Active = false end
+    Metrics.Parse.Display_Mode = Parse.Enum.Display_Mode.NANO
 end

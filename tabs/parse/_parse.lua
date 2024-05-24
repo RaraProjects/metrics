@@ -13,6 +13,7 @@ Parse.Columns = {
 }
 
 -- Load dependencies
+require("tabs.parse.enum")
 require("tabs.parse.config")
 require("tabs.parse.display_full")
 require("tabs.parse.display_mini")

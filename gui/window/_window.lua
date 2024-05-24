@@ -149,6 +149,14 @@ Window.Populate = function()
             end
         end
 
+        if Config.Show_Window then
+            if UI.Begin("Settings", {Window.Visible}, Window.Flags) then
+                Window.Visible = -1
+                Config.Populate()
+                UI.End()
+            end
+        end
+
         if _Debug.Is_Enabled() and _Debug.Config.Show_Unit_Tests then
             if UI.Begin("Unit Tests", {Window.Visible}, Window.Flags) then
                 Window.Visible = -1

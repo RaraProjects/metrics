@@ -104,6 +104,5 @@ end
 -- Toggles full mode.
 ------------------------------------------------------------------------------------------------------
 Parse.Full.Enable = function()
-    Parse.Mini.Active = false
-    Parse.Nano.Active = false
+    Metrics.Parse.Display_Mode = Parse.Enum.Display_Mode.FULL
 end

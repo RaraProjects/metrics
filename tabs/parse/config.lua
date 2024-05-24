@@ -20,6 +20,7 @@ Parse.Config.Defaults = T{
     Pet = false,
     Healing = false,
     Deaths = false,
+    Display_Mode = Parse.Enum.Display_Mode.FULL,
 }
 
 Parse.Config.Show_Settings = false
