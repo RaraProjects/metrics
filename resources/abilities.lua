@@ -22,3 +22,27 @@ Res.Abilities.Damaging = T{
     [805] = {id = 805, old_id = 293, en = "Soul Jump"},
     [841] = {id = 841              , en = "Intervene"},
 }
+
+-- Based off of job_abilities.lua from Windower.
+Res.Abilities.Healing = T{
+    [541] = {id = 541, oldid = 29, en = "Spirit Surge"},
+    [550] = {id = 550, oldid = 38, en = "Chakra"},
+    [702] = {id = 702, oldid = 190, en = "Curing Waltz"},
+    [703] = {id = 703, oldid = 191, en = "Curing Waltz II"},
+    [704] = {id = 704, oldid = 192, en = "Curing Waltz III"},
+    [705] = {id = 705, oldid = 193, en = "Curing Waltz IV"},
+    [707] = {id = 707, oldid = 195, en = "Divine Waltz"},
+}
+
+-- Based off of job_abilities.lua from Windower.
+Res.Abilities.Pet_Healing = T{
+    [590] = {id = 590, oldid = 78, en = "Reward"},
+    [592] = {id = 592, oldid = 80, en = "Spirit Link"},
+    -- Repair
+}
+
+-- Based off of job_abilities.lua from Windower.
+Res.Abilities.MP_Recovery = T{
+    [666] = {id = 666, oldid = 154, en = "Devotion"},
+    [670] = {id = 670, oldid = 158, en = "Chivalry"},
+}

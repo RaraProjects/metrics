@@ -15,6 +15,7 @@ DB.DPS.DPS_Graph_Length = 10
 ---@param damage number
 ------------------------------------------------------------------------------------------------------
 DB.DPS.Inc_Buffer = function(player_name, damage)
+    if not player_name or not damage then return nil end
     if not DB.Tracking.Running_Damage[player_name] then DB.Tracking.Running_Damage[player_name] = 0 end
 	DB.Tracking.Running_Damage[player_name] = DB.Tracking.Running_Damage[player_name] + damage
 end
@@ -25,6 +26,7 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 DB.DPS.Get_Buffer = function(player_name)
+    if not player_name then return 0 end
     if not DB.Tracking.Running_Damage[player_name] then return 0 end
     return DB.Tracking.Running_Damage[player_name]
 end

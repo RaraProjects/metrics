@@ -90,12 +90,10 @@ Focus.Populate = function()
             UI.EndTabItem()
         end
 
-        if DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY, DB.Enum.Metric.COUNT) > 0 then
-            if UI.BeginTabItem(Focus.Tabs.Names.ABILITIES, false, Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES]) then
-                Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES] = nil
-                Focus.Abilities.Display(player_name)
-                UI.EndTabItem()
-            end
+        if UI.BeginTabItem(Focus.Tabs.Names.ABILITIES, false, Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES]) then
+            Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES] = nil
+            Focus.Abilities.Display(player_name)
+            UI.EndTabItem()
         end
 
         if DB.Data.Get(player_name, DB.Enum.Trackable.PET, DB.Enum.Metric.TOTAL) > 0 then

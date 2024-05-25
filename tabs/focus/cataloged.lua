@@ -17,7 +17,6 @@ Focus.Catalog.Single = function(player_name, focus_type)
     if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
 
     local acc_string = "Accuracy %"
-    local damage_string = "Damage"
     local action_string = "Action"
     local attempt_string = "Attempts"
     if focus_type == DB.Enum.Trackable.MAGIC then
@@ -27,10 +26,13 @@ Focus.Catalog.Single = function(player_name, focus_type)
     elseif focus_type == DB.Enum.Trackable.HEALING then
         action_string = "Spell"
         acc_string = "Overcure"
-        damage_string = "Healing"
         attempt_string = "Casts (MP)"
+    elseif focus_type == DB.Enum.Trackable.ABILITY_DAMAGING then
+        action_string = "Damaging"
     elseif focus_type == DB.Enum.Trackable.ABILITY or focus_type == DB.Enum.Trackable.PET_ABILITY or focus_type == DB.Enum.Trackable.PET_WS then
         action_string = "Ability"
+    elseif focus_type == DB.Enum.Trackable.ABILITY_HEALING then
+        action_string = "Healing"
     elseif focus_type == DB.Enum.Trackable.WS then
         action_string = "Weaponskill"
     elseif focus_type == DB.Enum.Trackable.SC then
@@ -39,12 +41,12 @@ Focus.Catalog.Single = function(player_name, focus_type)
 
     if UI.BeginTable(focus_type, 7, table_flags) then
         UI.TableSetupColumn(action_string, col_flags, width)
-        UI.TableSetupColumn("Total " .. damage_string, col_flags, width)
+        UI.TableSetupColumn("Total", col_flags, width)
         UI.TableSetupColumn(attempt_string, col_flags, width)
         UI.TableSetupColumn(acc_string, col_flags, width)
-        UI.TableSetupColumn("Avg. " .. damage_string, col_flags, width)
-        UI.TableSetupColumn("Min. " .. damage_string, col_flags, width)
-        UI.TableSetupColumn("Max. " .. damage_string, col_flags, width)
+        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("Mininum", col_flags, width)
+        UI.TableSetupColumn("Maximum", col_flags, width)
         UI.TableHeadersRow()
 
         DB.Lists.Sort.Catalog_Damage(player_name, focus_type)

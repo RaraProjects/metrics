@@ -113,7 +113,14 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
         end
     else
         if Res.Abilities.Get_Damaging(ability_id) then
-            H.Ability.Damaging_Player_Ability(audits, damage, ability_type, ability_name)
+            ability_type = H.Trackable.ABILITY_DAMAGING
+            H.Ability.Catalog(audits, damage, ability_type, ability_name)
+        elseif Res.Abilities.Get_Player_Healing(ability_id) or Res.Abilities.Get_Pet_Healing(ability_id) then
+            ability_type = H.Trackable.ABILITY_HEALING
+            H.Ability.Catalog(audits, damage, ability_type, ability_name)
+        elseif Res.Abilities.Get_MP_Recovery(ability_id) then
+            -- ability_type = H.Trackable.ABILITY_MP_RECOVERY
+            -- H.Ability.Catalog(audits, damage, ability_type, ability_name)
         end
     end
 
@@ -179,7 +186,17 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data)
     local audits = H.Ability.Audits(actor_mob.name, target_mob.name)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ABILITY, ability_data.Name, H.Metric.COUNT)
+    local trackable = H.Trackable.ABILITY
+
+    if Res.Abilities.Get_Damaging(ability_data.Id) then
+        trackable = H.Trackable.ABILITY_DAMAGING
+    elseif Res.Abilities.Get_Player_Healing(ability_data.Id) or Res.Abilities.Get_Pet_Healing(ability_data.Id) then
+        trackable = H.Trackable.ABILITY_HEALING
+    elseif Res.Abilities.Get_MP_Recovery(ability_data.Id) then
+        -- trackable = H.Trackable.ABILITY_MP_RECOVERY
+    end
+
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, ability_data.Name, H.Metric.COUNT)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -312,7 +329,7 @@ end
 ---@param ability_type string
 ---@param ability_name string
 ------------------------------------------------------------------------------------------------------
-H.Ability.Damaging_Player_Ability = function(audits, damage, ability_type, ability_name)
+H.Ability.Catalog = function(audits, damage, ability_type, ability_name)
     if damage > 0 then
         DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT)

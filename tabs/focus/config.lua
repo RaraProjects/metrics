@@ -28,10 +28,10 @@ Focus.Config.Display = function()
         UI.SameLine() Window.Widgets.HelpMarker("Show a column with numerator and denominator for damage mitigation.")
 
         UI.TableNextColumn()
-        if UI.Checkbox("Misc Spells", {Metrics.Focus.Show_Misc_Spells}) then
-            Metrics.Focus.Show_Misc_Spells = not Metrics.Focus.Show_Misc_Spells
+        if UI.Checkbox("Misc Actions", {Metrics.Focus.Show_Misc_Actions}) then
+            Metrics.Focus.Show_Misc_Actions = not Metrics.Focus.Show_Misc_Actions
         end
-        UI.SameLine() Window.Widgets.HelpMarker("Shows uncategorized spells in the Magic and Defense catalogs. "
+        UI.SameLine() Window.Widgets.HelpMarker("Shows uncategorized actions in the catalog lists. "
                                               .."Sometimes these lists can get quite long and take up a lot of space. "
                                               .."Turn this off if you aren't interested in seeing those.")
 

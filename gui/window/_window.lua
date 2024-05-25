@@ -121,12 +121,6 @@ Window.Populate = function()
                         Report.Populate()
                         UI.EndTabItem()
                     end
-                    if UI.BeginTabItem(Window.Tabs.Names.SETTINGS, false, Window.Tabs.Switch[Window.Tabs.Names.SETTINGS]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.SETTINGS] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.SETTINGS
-                        Config.Populate()
-                        UI.EndTabItem()
-                    end
                     if _Debug.Is_Enabled() then
                         if UI.BeginTabItem(Window.Tabs.Names.DEBUG) then
                             _Debug.Populate()

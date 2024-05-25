@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "05/19/24.00"
+addon.version = "05/24/24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -182,7 +182,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             elseif log_defense then H.TP_Def.Monster_Action(action, actor_mob, owner_mob, log_defense) end
         elseif (action.category == 12) then -- Do nothing (Begin Ranged Attack)
         elseif (action.category == 13) then H.Ability.Pet_Action(action, actor_mob, log_offense)
-        elseif (action.category == 14) then -- Do nothing (Unblinkable Job Ability)
+        elseif (action.category == 14) then -- Do nothing (Unblinkable Job Ability); Waltz
         end
 
     -- Action Messages

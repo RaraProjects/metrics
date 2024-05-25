@@ -163,6 +163,36 @@ Res.Abilities.Get_Damaging = function(ability_id)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Checks whether the ability does heals a player.
+-- ------------------------------------------------------------------------------------------------------
+---@param ability_id integer
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Abilities.Get_Player_Healing = function(ability_id)
+    return Res.Abilities.Healing[ability_id]
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Checks whether the ability heals a pet.
+-- ------------------------------------------------------------------------------------------------------
+---@param ability_id integer
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Abilities.Get_Pet_Healing = function(ability_id)
+    return Res.Abilities.Pet_Healing[ability_id]
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Checks whether the ability recovers MP.
+-- ------------------------------------------------------------------------------------------------------
+---@param ability_id integer
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Abilities.Get_MP_Recovery = function(ability_id)
+    return Res.Abilities.MP_Recovery[ability_id]
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Checks whether the ability is a damaging wyvern breath.
 -- ------------------------------------------------------------------------------------------------------
 ---@param ability_id integer

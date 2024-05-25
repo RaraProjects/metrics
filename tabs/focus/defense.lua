@@ -11,7 +11,7 @@ Focus.Defense.Display = function(player_name)
     Focus.Defense.Mitigation(player_name)
     Focus.Defense.Single(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
     Focus.Defense.Single(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
-    if Metrics.Focus.Show_Misc_Spells then Focus.Defense.Single(player_name, DB.Enum.Trackable.DEF_NO_DMG_SPELLS) end
+    if Metrics.Focus.Show_Misc_Actions then Focus.Defense.Single(player_name, DB.Enum.Trackable.DEF_NO_DMG_SPELLS) end
 end
 
 ------------------------------------------------------------------------------------------------------
