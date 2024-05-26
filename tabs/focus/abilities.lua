@@ -12,7 +12,7 @@ Focus.Abilities.Display = function(player_name)
 
     local ability_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Enum.Metric.COUNT)
     local healing_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_HEALING, DB.Enum.Metric.COUNT)
-    local mp_recovery = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_PET_HEAL, DB.Enum.Metric.COUNT)
+    local mp_recovery = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, DB.Enum.Metric.COUNT)
     local misc_count = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY, DB.Enum.Metric.COUNT)
 
     if UI.BeginTable("Ability", 2, table_flags) then
@@ -29,7 +29,7 @@ Focus.Abilities.Display = function(player_name)
 
     if ability_total > 0 then Focus.Catalog.Single(player_name, DB.Enum.Trackable.ABILITY_DAMAGING) end
     if healing_total > 0 then Focus.Catalog.Single(player_name, DB.Enum.Trackable.ABILITY_HEALING) end
-    -- if mp_recovery > 0 then Focus.Catalog.Single(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY) end
+    if mp_recovery > 0 then Focus.Catalog.Single(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY) end
     if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Catalog.Single(player_name, DB.Enum.Trackable.ABILITY) end
 
     -- Publish buttons

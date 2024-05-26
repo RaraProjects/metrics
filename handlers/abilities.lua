@@ -29,6 +29,7 @@ H.Ability.Action = function(action, actor_mob, log_offense)
 
     -- Log remaining action data.
     H.Ability.Player_Catalog_Count(actor_mob, target_mob, ability_data)
+    H.Ability.Blog(actor_mob, ability_data, ability_id, damage)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -119,8 +120,8 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
             ability_type = H.Trackable.ABILITY_HEALING
             H.Ability.Catalog(audits, damage, ability_type, ability_name)
         elseif Res.Abilities.Get_MP_Recovery(ability_id) then
-            -- ability_type = H.Trackable.ABILITY_MP_RECOVERY
-            -- H.Ability.Catalog(audits, damage, ability_type, ability_name)
+            ability_type = H.Trackable.ABILITY_MP_RECOVERY
+            H.Ability.Catalog(audits, damage, ability_type, ability_name)
         end
     end
 
@@ -140,6 +141,30 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Audits = function(player_name, target_name, pet_name)
     return {player_name = player_name, target_name = target_name, pet_name = pet_name}
+end
+
+------------------------------------------------------------------------------------------------------
+-- Adds ability damage to the battle log.
+------------------------------------------------------------------------------------------------------
+---@param actor_mob table
+---@param ability_data table
+---@param ability_id number
+---@param damage number
+------------------------------------------------------------------------------------------------------
+H.Ability.Blog = function(actor_mob, ability_data, ability_id, damage)
+    if Metrics.Blog.Flags.Ability then
+        if Res.Abilities.Get_Damaging(ability_id) or Res.Abilities.Get_MP_Recovery(ability_id) then
+            local note = nil
+            if ability_id == Res.Abilities.CHIVALRY then note = Ashita.Party.Refresh(actor_mob.name, Ashita.Enum.Player_Attributes.TP) end
+            Blog.Add(actor_mob.name, ability_data.Name, damage, note)
+        end
+    end
+
+    if Metrics.Blog.Flags.Healing then
+        if Res.Abilities.Get_Player_Healing(ability_id) or Res.Abilities.Get_Pet_Healing(ability_id) then
+            Blog.Add(actor_mob.name, ability_data.Name, damage)
+        end
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -193,7 +218,7 @@ H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data)
     elseif Res.Abilities.Get_Player_Healing(ability_data.Id) or Res.Abilities.Get_Pet_Healing(ability_data.Id) then
         trackable = H.Trackable.ABILITY_HEALING
     elseif Res.Abilities.Get_MP_Recovery(ability_data.Id) then
-        -- trackable = H.Trackable.ABILITY_MP_RECOVERY
+        trackable = H.Trackable.ABILITY_MP_RECOVERY
     end
 
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, ability_data.Name, H.Metric.COUNT)

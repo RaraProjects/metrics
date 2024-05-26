@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "05/24/24.00"
+addon.version = "05/25/24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -302,6 +302,7 @@ end)
 ashita.events.register('unload', 'unload_cb', function ()
     Settings_File.save(Config.Enum.File.DATABASE)
     Settings_File.save(Config.Enum.File.PARSE)
+    Settings_File.save(Config.Enum.File.FOCUS)
     Settings_File.save(Config.Enum.File.BLOG)
     Settings_File.save(Config.Enum.File.WINDOW)
     Settings_File.save(Config.Enum.File.REPORT)

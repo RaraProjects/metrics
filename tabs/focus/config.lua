@@ -2,7 +2,7 @@ Focus.Config = T{}
 
 Focus.Config.Defaults = T{
     Show_Mitigation_Details = false,
-    Show_Misc_Spells = false,
+    Show_Misc_Actions = false,
 }
 
 Focus.Config.Show_Settings = false

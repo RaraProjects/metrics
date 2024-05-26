@@ -1,5 +1,7 @@
 Res.Abilities = T{}
 
+Res.Abilities.CHIVALRY = 670
+
 -- Based off of job_abilities.lua from Windower.
 Res.Abilities.Damaging = T{
     [538] = {id = 538, old_id = 26,  en = "Eagle Eye Shot"},

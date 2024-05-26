@@ -27,16 +27,13 @@ Focus.Catalog.Single = function(player_name, focus_type)
         action_string = "Spell"
         acc_string = "Overcure"
         attempt_string = "Casts (MP)"
-    elseif focus_type == DB.Enum.Trackable.ABILITY_DAMAGING then
-        action_string = "Damaging"
     elseif focus_type == DB.Enum.Trackable.ABILITY or focus_type == DB.Enum.Trackable.PET_ABILITY or focus_type == DB.Enum.Trackable.PET_WS then
         action_string = "Ability"
-    elseif focus_type == DB.Enum.Trackable.ABILITY_HEALING then
-        action_string = "Healing"
-    elseif focus_type == DB.Enum.Trackable.WS then
-        action_string = "Weaponskill"
-    elseif focus_type == DB.Enum.Trackable.SC then
-        action_string = "Skillchain"
+    elseif focus_type == DB.Enum.Trackable.ABILITY_DAMAGING then action_string = "Damaging"
+    elseif focus_type == DB.Enum.Trackable.ABILITY_HEALING then action_string = "Healing"
+    elseif focus_type == DB.Enum.Trackable.ABILITY_MP_RECOVERY then action_string = "MP Recover"
+    elseif focus_type == DB.Enum.Trackable.WS then action_string = "Weaponskill"
+    elseif focus_type == DB.Enum.Trackable.SC then action_string = "Skillchain"
     end
 
     if UI.BeginTable(focus_type, 7, table_flags) then

@@ -306,6 +306,7 @@ end
 DB.Catalog.Include_Total_Damage = function(trackable)
 	if trackable == DB.Enum.Trackable.HEALING or
 	   trackable == DB.Enum.Trackable.ABILITY_HEALING or
+	   trackable == DB.Enum.Trackable.ABILITY_MP_RECOVERY or
 	   trackable == DB.Enum.Trackable.PET_HEAL or
 	   trackable == DB.Enum.Trackable.MP_DRAIN or
 	   trackable == DB.Enum.Trackable.SPELL_DMG_TAKEN or
