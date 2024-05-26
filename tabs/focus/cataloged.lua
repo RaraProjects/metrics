@@ -42,7 +42,7 @@ Focus.Catalog.Single = function(player_name, focus_type)
         UI.TableSetupColumn(attempt_string, col_flags, width)
         UI.TableSetupColumn(acc_string, col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("Mininum", col_flags, width)
+        UI.TableSetupColumn("Minimum", col_flags, width)
         UI.TableSetupColumn("Maximum", col_flags, width)
         UI.TableHeadersRow()
 

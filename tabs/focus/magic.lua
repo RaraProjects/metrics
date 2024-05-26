@@ -48,7 +48,7 @@ Focus.Magic.Display = function(player_name)
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Healing")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.HEALING)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.HEALING, true)
+        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.HEALING)
         UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.HEALING)
 

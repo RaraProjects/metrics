@@ -96,7 +96,7 @@ Parse.Full.Rows = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_RANGED, false, true)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY, false, true)
     end
-    if Metrics.Parse.Healing then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.HEALING, false, true) end
+    if Metrics.Parse.Healing then UI.TableNextColumn() Column.Healing.Total(player_name, false, true) end
     if Metrics.Parse.Deaths then UI.TableNextColumn() Column.Proc.Deaths(player_name) end
 end
 
