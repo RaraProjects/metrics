@@ -70,20 +70,141 @@ end
 -- Shows text commands the user can use.
 ------------------------------------------------------------------------------------------------------
 s.Section.Text_Commands = function()
+    UI.Text("Read Me: https://github.com/RaraProjects/metrics")
     UI.Text("Version: " .. tostring(addon.version))
     UI.Text("Base command: /metrics or /met")
+
     UI.Text("Arguments:")
-    UI.BulletText("show  / s -- toggles window visibility.")
-    UI.BulletText("mini  / m -- toggles mini mode.")
-    UI.BulletText("nano  / n -- toggles nano mode.")
-    UI.BulletText("full  / f -- toggles full mode.")
-    UI.BulletText("pet   / p -- toggles pet columns in Team.")
-    UI.BulletText("reset / r -- resets the parse data.")
-    UI.BulletText("clock / c -- toggle parse run time duration clock.")
-    UI.BulletText("total     -- publishes total damage for group.")
-    UI.BulletText("acc       -- publishes total accuracy for group.")
-    UI.BulletText("melee     -- publishes melee damage for group.")
-    UI.BulletText("healing   -- publishes healing done for group.")
+    if UI.BeginTable("Text Commands", 4, Window.Table.Flags.Borders) then
+        UI.TableSetupColumn("Type")
+        UI.TableSetupColumn("Full")
+        UI.TableSetupColumn("Short")
+        UI.TableSetupColumn("Description")
+        UI.TableHeadersRow()
+
+        UI.TableNextRow()
+        UI.TableNextColumn()
+        UI.TableNextColumn() UI.Text("None")
+        UI.TableNextColumn()
+        UI.TableNextColumn() UI.Text("Toggles settings window.")
+
+        UI.TableNextColumn()
+        UI.TableNextColumn() UI.Text("reset")
+        UI.TableNextColumn() UI.Text("r")
+        UI.TableNextColumn() UI.Text("Clears the database.")
+
+        UI.TableNextColumn()
+        UI.TableNextColumn() UI.Text("show")
+        UI.TableNextColumn() UI.Text("s")
+        UI.TableNextColumn() UI.Text("Toggles window visibility.")
+
+        UI.TableNextColumn() UI.Text("Switch")
+        UI.TableNextColumn() UI.Text("parse")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Switch to the Parse tab.")
+
+        UI.TableNextColumn() UI.Text("Switch")
+        UI.TableNextColumn() UI.Text("focus")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Switch to the Focus tab.")
+
+        UI.TableNextColumn() UI.Text("Switch")
+        UI.TableNextColumn() UI.Text("log")
+        UI.TableNextColumn() UI.Text("bl")
+        UI.TableNextColumn() UI.Text("Switch to the Battle Log tab.")
+
+        UI.TableNextColumn() UI.Text("Switch")
+        UI.TableNextColumn() UI.Text("report")
+        UI.TableNextColumn() UI.Text("rep")
+        UI.TableNextColumn() UI.Text("Switch to the Report tab.")
+
+        UI.TableNextColumn() UI.Text("Parse")
+        UI.TableNextColumn() UI.Text("full")
+        UI.TableNextColumn() UI.Text("f")
+        UI.TableNextColumn() UI.Text("Shows Parse in full mode.")
+
+        UI.TableNextColumn() UI.Text("Parse")
+        UI.TableNextColumn() UI.Text("mini")
+        UI.TableNextColumn() UI.Text("m")
+        UI.TableNextColumn() UI.Text("Shows Parse in mini mode.")
+
+        UI.TableNextColumn() UI.Text("Parse")
+        UI.TableNextColumn() UI.Text("nano")
+        UI.TableNextColumn() UI.Text("n")
+        UI.TableNextColumn() UI.Text("Shows Parse in nano mode.")
+
+        UI.TableNextColumn() UI.Text("Parse")
+        UI.TableNextColumn() UI.Text("pet")
+        UI.TableNextColumn() UI.Text("p")
+        UI.TableNextColumn() UI.Text("Toggles pet columns in Parse (if not in Focus tab).")
+
+        UI.TableNextColumn() UI.Text("Parse")
+        UI.TableNextColumn() UI.Text("clock")
+        UI.TableNextColumn() UI.Text("c")
+        UI.TableNextColumn() UI.Text("Toggles the duration timer visibility.")
+
+        UI.TableNextColumn() UI.Text("Focus")
+        UI.TableNextColumn() UI.Text("player name")
+        UI.TableNextColumn() UI.Text("pl name")
+        UI.TableNextColumn() UI.Text("Focus on a player in the Focus tab. Partial matching works.")
+
+        UI.TableNextColumn() UI.Text("Focus")
+        UI.TableNextColumn() UI.Text("melee")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Switch to Melee tab in Focus tab.")
+
+        UI.TableNextColumn() UI.Text("Focus")
+        UI.TableNextColumn() UI.Text("ranged")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Switch to Ranged tab in Focus tab.")
+
+        UI.TableNextColumn() UI.Text("Focus")
+        UI.TableNextColumn() UI.Text("weaponskill")
+        UI.TableNextColumn() UI.Text("ws")
+        UI.TableNextColumn() UI.Text("Switch to Weaponskill tab in Focus tab.")
+
+        UI.TableNextColumn() UI.Text("Focus")
+        UI.TableNextColumn() UI.Text("magic")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Switch to Magic tab in Focus tab.")
+
+        UI.TableNextColumn() UI.Text("Focus")
+        UI.TableNextColumn() UI.Text("ability")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Switch to Ability tab in Focus tab.")
+
+        UI.TableNextColumn() UI.Text("Focus")
+        UI.TableNextColumn() UI.Text("pet")
+        UI.TableNextColumn() UI.Text("p")
+        UI.TableNextColumn() UI.Text("Switch to Pet tab in Focus tab.")
+
+        UI.TableNextColumn() UI.Text("Report")
+        UI.TableNextColumn() UI.Text("rep total")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Publishes total damage report in chat.")
+
+        UI.TableNextColumn() UI.Text("Report")
+        UI.TableNextColumn() UI.Text("rep acc")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Publishes accuracy report in chat.")
+
+        UI.TableNextColumn() UI.Text("Report")
+        UI.TableNextColumn() UI.Text("rep melee")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Publishes melee report in chat.")
+
+        UI.TableNextColumn() UI.Text("Report")
+        UI.TableNextColumn() UI.Text("rep ws")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Publishes weaponskill report in chat.")
+
+        UI.TableNextColumn() UI.Text("Report")
+        UI.TableNextColumn() UI.Text("rep healing")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Publishes healing report in chat.")
+
+        UI.EndTable()
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

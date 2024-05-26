@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "05/25/24.00"
+addon.version = "05/25/24.01"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -226,7 +226,7 @@ ashita.events.register('command', 'command_cb', function (e)
         local arg = command_args[2]
         if not arg then
             Config.Show_Window = not Config.Show_Window
-        elseif arg == "show" or arg == "s" or arg == "vis" then
+        elseif arg == "show" or arg == "s" then
             Window.Toggle_Visibility()
         elseif arg == "debug" then
             _Debug.Toggle()
@@ -268,8 +268,6 @@ ashita.events.register('command', 'command_cb', function (e)
             Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG] = ImGuiTabItemFlags_SetSelected
         elseif arg == "report" or arg == "rep" then
             Window.Tabs.Switch[Window.Tabs.Names.REPORT] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "settings" or arg == "set" or arg == "config" then
-            Window.Tabs.Switch[Window.Tabs.Names.SETTINGS] = ImGuiTabItemFlags_SetSelected
 
         -- Player selection
         elseif arg == "player" or arg == "pl" then
