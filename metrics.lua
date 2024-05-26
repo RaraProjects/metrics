@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "05/25/24.01"
+addon.version = "05/25/24.02"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -235,7 +235,7 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "mini" or arg == "m" then
             Parse.Mini.Toggle()
         elseif arg == "reset" or arg == "r" then
-            DB.Initialize()
+            DB.Initialize(true)
         elseif arg == "full" or arg == "f" then
             Parse.Full.Enable()
         elseif (arg == "pet" or arg == "p") and (Window.Tabs.Active == Window.Tabs.Names.PARSE or Parse.Mini.Is_Enabled()) then
@@ -304,4 +304,10 @@ ashita.events.register('unload', 'unload_cb', function ()
     Settings_File.save(Config.Enum.File.BLOG)
     Settings_File.save(Config.Enum.File.WINDOW)
     Settings_File.save(Config.Enum.File.REPORT)
+
+    if Metrics.Report.Auto_Save then
+        File.Save_Data()
+        File.Save_Catalog()
+        File.Save_Battlelog()
+    end
 end)

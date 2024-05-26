@@ -39,7 +39,15 @@ require("database.widgets")
 ------------------------------------------------------------------------------------------------------
 -- Resets the parsing data and clears the battle log.
 ------------------------------------------------------------------------------------------------------
-DB.Initialize = function()
+---@param reset? boolean true: manual reset; false: normal initialization
+------------------------------------------------------------------------------------------------------
+DB.Initialize = function(reset)
+	if Metrics.Report.Auto_Save and reset then
+		File.Save_Data()
+		File.Save_Catalog()
+		File.Save_Battlelog()
+	end
+
 	DB.Parse = T{}
 
 	DB.Tracking.Trackable = T{}

@@ -32,7 +32,9 @@ _Debug.Data_View.Node = function(data)
                 UI.TreePop()
             end
         else
-            UI.Text(tostring(index) .. ": " .. tostring(value))
+            if value and value > 0 then
+                UI.Text(tostring(index) .. ": " .. tostring(value))
+            end
         end
     end
 end
