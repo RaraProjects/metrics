@@ -9,6 +9,8 @@ Focus.Defense.Display = function(player_name)
     Focus.Defense.Damage_Taken(player_name)
     Focus.Defense.Other_Damage(player_name)
     Focus.Defense.Mitigation(player_name)
+    UI.Separator()
+
     Focus.Defense.Single(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
     Focus.Defense.Single(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
     if Metrics.Focus.Show_Misc_Actions then Focus.Defense.Single(player_name, DB.Enum.Trackable.DEF_NO_DMG_SPELLS) end
@@ -22,13 +24,13 @@ end
 Focus.Defense.Damage_Taken = function(player_name)
     local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local name_width = Column.Widths.Standard
-    local damage_width = Column.Widths.Damage
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
 
     if UI.BeginTable("Damage Taken", 3, table_flags) then
         UI.TableSetupColumn("Damage Taken", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Damage %", col_flags, damage_width)
+        UI.TableSetupColumn("Damage", col_flags, width)
+        UI.TableSetupColumn("Damage %", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Total")
@@ -59,13 +61,13 @@ end
 Focus.Defense.Other_Damage = function(player_name)
     local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local name_width = Column.Widths.Standard
-    local damage_width = Column.Widths.Damage
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
 
     if UI.BeginTable("Other Damage", 3, table_flags) then
         UI.TableSetupColumn("Misc. Defense", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Damage %", col_flags, damage_width)
+        UI.TableSetupColumn("Damage", col_flags, width)
+        UI.TableSetupColumn("Damage %", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Crits")
@@ -98,18 +100,18 @@ end
 Focus.Defense.Mitigation = function(player_name)
     local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local name_width = Column.Widths.Standard
-    local damage_width = Column.Widths.Damage
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
 
     local columns = 3
     if Metrics.Focus.Show_Mitigation_Details then columns = 5 end
     if UI.BeginTable("Defense", columns, table_flags) then
         UI.TableSetupColumn("Mitigation", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Rate (%)", col_flags, damage_width)
+        UI.TableSetupColumn("Damage", col_flags, width)
+        UI.TableSetupColumn("Rate (%)", col_flags, width)
         if Metrics.Focus.Show_Mitigation_Details then
-            UI.TableSetupColumn("Procs", col_flags, damage_width)
-            UI.TableSetupColumn("Chances", col_flags, damage_width)
+            UI.TableSetupColumn("Procs", col_flags, width)
+            UI.TableSetupColumn("Chances", col_flags, width)
         end
         UI.TableHeadersRow()
 
@@ -203,9 +205,8 @@ Focus.Defense.Single = function(player_name, focus_type)
     if not focus_type then return nil end
     local table_flags = Window.Table.Flags.Fixed_Borders
     local col_flags = Column.Flags.None
-    local name_width = Column.Widths.Standard
-    local short_width = Column.Widths.Percent
-    local damage_width = Column.Widths.Damage
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
 
     -- Error Protection
     if not DB.Tracking.Trackable[focus_type] then return nil end
@@ -218,11 +219,11 @@ Focus.Defense.Single = function(player_name, focus_type)
 
     if UI.BeginTable(focus_type, 6, table_flags) then
         UI.TableSetupColumn(action_string, col_flags, name_width)
-        UI.TableSetupColumn("Tries", col_flags, short_width)
-        UI.TableSetupColumn("Total", col_flags, damage_width)
-        UI.TableSetupColumn("Average", col_flags, damage_width)
-        UI.TableSetupColumn("Minimum", col_flags, damage_width)
-        UI.TableSetupColumn("Maximum", col_flags, damage_width)
+        UI.TableSetupColumn("Tries", col_flags, width)
+        UI.TableSetupColumn("Total", col_flags, width)
+        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("Minimum", col_flags, width)
+        UI.TableSetupColumn("Maximum", col_flags, width)
         UI.TableHeadersRow()
 
         DB.Lists.Sort.Catalog_Damage(player_name, focus_type)

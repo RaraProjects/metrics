@@ -9,9 +9,8 @@ Focus.WS.Display = function(player_name)
     -- GUI configuration
     local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local name_width = Column.Widths.Standard
-    local damage_width = Column.Widths.Damage
-    local percent_width = Column.Widths.Percent
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
 
     -- Data setup
     local trackable_ws = DB.Enum.Trackable.WS
@@ -20,9 +19,9 @@ Focus.WS.Display = function(player_name)
     -- Basic stats
     if UI.BeginTable("WS and SC", 4, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Damage %", col_flags, damage_width)
-        UI.TableSetupColumn("Accuracy", col_flags, damage_width)
+        UI.TableSetupColumn("Damage", col_flags, width)
+        UI.TableSetupColumn("Damage %", col_flags, width)
+        UI.TableSetupColumn("Accuracy", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()

@@ -73,6 +73,9 @@ H.Ranged.Parse = function(result, player_name, target_name, owner_mob)
     -- Accuracy and misc. traits.
     H.Ranged.Message(message_id, audits, damage, ranged_type)
 
+    -- Additional Effects
+    H.Ranged.Additional_Effect(audits, result)
+
     -- Min/Max
     H.Ranged.Min_Max(damage, audits, ranged_type)
 
@@ -187,6 +190,48 @@ H.Ranged.Crit = function(audits, damage, ranged_type)
     DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, H.Metric.CRIT_DAMAGE)
     DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
     DB.Accuracy.Update(audits.player_name, true)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Catalog's ranged attack additional effects.
+-- Additional elemental effects are treated as magic damage.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param result table
+------------------------------------------------------------------------------------------------------
+H.Ranged.Additional_Effect = function(audits, result)
+    if not result then return nil end
+    if result.has_add_effect then
+        local message_id = result.add_effect_message
+        local animation_id = result.add_effect_animation
+        local param = result.add_effect_param   -- This is either damage or the type of debuff applied.
+
+        if message_id == Ashita.Enum.Message.ENDAMAGE then
+            local effect_name = Res.Game.Get_Additional_Effect_Animation(animation_id)
+            if animation_id then
+                DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.MAGIC,    H.Metric.TOTAL)
+                DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.ENDAMAGE_R, H.Metric.HIT_COUNT)
+                DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.ENDAMAGE_R, param, effect_name)
+                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENDAMAGE_R, effect_name, H.Metric.HIT_COUNT)
+            end
+        elseif message_id == Ashita.Enum.Message.ENDEBUFF then
+            local buff = Res.Buffs.Get_Buff(param)
+            if buff then
+                DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.ENDEBUFF_R, H.Metric.HIT_COUNT)
+                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENDEBUFF_R, buff.en, H.Metric.HIT_COUNT)
+            end
+        elseif message_id == Ashita.Enum.Message.ENDRAIN then
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.MAGIC,       H.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.TOTAL,       H.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENDRAIN_R,   H.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENDRAIN_R,   H.Metric.HIT_COUNT)
+        elseif message_id == Ashita.Enum.Message.ENASPIR then
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENASPIR_R, H.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENASPIR_R, H.Metric.HIT_COUNT)
+        end
+
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

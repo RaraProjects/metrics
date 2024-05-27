@@ -8,16 +8,16 @@ Focus.Pets = T{}
 Focus.Pets.Display = function(player_name)
     local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
-    local name_width = Column.Widths.Standard
-    local damage_width = Column.Widths.Damage
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
 
     local pet_total = DB.Data.Get(player_name, DB.Enum.Trackable.PET, DB.Enum.Metric.TOTAL)
 
     if UI.BeginTable("Pets Melee", 4, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Damage %", col_flags, damage_width)
-        UI.TableSetupColumn("Accuracy", col_flags, damage_width)
+        UI.TableSetupColumn("Damage", col_flags, width)
+        UI.TableSetupColumn("Damage %", col_flags, width)
+        UI.TableSetupColumn("Accuracy", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Total")
@@ -97,9 +97,8 @@ end
 Focus.Pets.Single = function(player_name, pet_name)
     local table_flags = Window.Table.Flags.Fixed_Borders
     local col_flags = Column.Flags.None
-    local name_width = Column.Widths.Standard
-    local damage_width = Column.Widths.Damage
-    local percent_width = Column.Widths.Percent
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
 
     if not DB.Tracking.Initialized_Pets[player_name] then
         _Debug.Error.Add("Display.Pet_Single_Data: Tried to loop through pets of unitialized player in the focus window.")
@@ -108,10 +107,10 @@ Focus.Pets.Single = function(player_name, pet_name)
 
     if UI.BeginTable(pet_name, 5, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Damage %", col_flags, percent_width)
-        UI.TableSetupColumn("Pet %", col_flags, percent_width)
-        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
+        UI.TableSetupColumn("Damage", col_flags, width)
+        UI.TableSetupColumn("Damage %", col_flags, width)
+        UI.TableSetupColumn("Pet %", col_flags, width)
+        UI.TableSetupColumn("Accuracy", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
@@ -185,12 +184,12 @@ Focus.Pets.Single = function(player_name, pet_name)
 
     if UI.BeginTable(pet_name.." single", 7, table_flags) then
         UI.TableSetupColumn("Action Name", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Attempts", col_flags, percent_width)
-        UI.TableSetupColumn("Accuracy", col_flags, percent_width)
-        UI.TableSetupColumn("Average", col_flags, damage_width)
-        UI.TableSetupColumn("Min.", col_flags, damage_width)
-        UI.TableSetupColumn("Max.", col_flags, damage_width)
+        UI.TableSetupColumn("Damage", col_flags, width)
+        UI.TableSetupColumn("Attempts", col_flags, width)
+        UI.TableSetupColumn("Accuracy", col_flags, width)
+        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("Minimum", col_flags, width)
+        UI.TableSetupColumn("Maximum", col_flags, width)
         UI.TableHeadersRow()
 
         local has_data = false

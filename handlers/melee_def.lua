@@ -258,13 +258,13 @@ H.Melee_Def.Spikes = function(audits, result)
         if spike_message == Ashita.Enum.Message.SPIKE_DMG then
             DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.MAGIC, H.Metric.TOTAL)
             DB.Data.Update(H.Mode.INC, 1     , audits, H.Trackable.OUTGOING_SPIKE_DMG, H.Metric.HIT_COUNT)
-            if spike_animation == Ashita.Enum.Spike_Animation.BLAZE then
+            if spike_animation == Ashita.Enum.Effect_Animation.FIRE then
                 DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.OUTGOING_SPIKE_DMG, damage, "Blaze Spikes")
                 DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.OUTGOING_SPIKE_DMG, "Blaze Spikes", H.Metric.HIT_COUNT)
-            elseif spike_animation == Ashita.Enum.Spike_Animation.ICE then
+            elseif spike_animation == Ashita.Enum.Effect_Animation.ICE then
                 DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.OUTGOING_SPIKE_DMG, damage, "Ice Spikes")
                 DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.OUTGOING_SPIKE_DMG, "Ice Spikes", H.Metric.HIT_COUNT)
-            elseif spike_animation == Ashita.Enum.Spike_Animation.SHOCK then
+            elseif spike_animation == Ashita.Enum.Effect_Animation.THUNDER then
                 DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.OUTGOING_SPIKE_DMG, damage, "Shock Spikes")
                 DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.OUTGOING_SPIKE_DMG, "Shock Spikes", H.Metric.HIT_COUNT)
             else

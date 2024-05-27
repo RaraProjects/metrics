@@ -5,8 +5,10 @@ require("resources.weapon_skills_curated")
 require("resources.spells_curated")
 require("resources.avatars")
 require("resources.abilities")
+require("resources.buffs")
 require("resources.pets")
 require("resources.colors")
+require("resources.game")
 
 Res.WS.Full_List = require("resources.weapon_skills")
 Res.Monster.Full_List = require("resources.monster_abilities")
@@ -270,4 +272,24 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Res.Colors.Get_Element = function(element_id)
     return Res.Colors.Elements[element_id]
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Gets the animation ID of an additional effect.
+-- ------------------------------------------------------------------------------------------------------
+---@param animation_id integer
+---@return string
+-- ------------------------------------------------------------------------------------------------------
+Res.Game.Get_Additional_Effect_Animation = function(animation_id)
+    return Res.Game.Effect_Animation[animation_id]
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Gets buff information.
+-- ------------------------------------------------------------------------------------------------------
+---@param buff_id integer
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Buffs.Get_Buff = function(buff_id)
+    return Res.Buffs.List[buff_id]
 end

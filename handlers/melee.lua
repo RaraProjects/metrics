@@ -80,10 +80,8 @@ end
 H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     _Debug.Packet.Add_Action(player_name, target_name, "Melee", result)
     local animation_id = result.animation
-    local effect_animation_id = result.add_effect_animation
     local damage = result.param
     local message_id = result.message
-    local effect_message_id = result.add_effect_message
     local throwing = false
 
     local melee_type_broad = DB.Enum.Trackable.MELEE
@@ -119,9 +117,8 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     -- Min/Max
     H.Melee.Min_Max(throwing, damage, audits, melee_type_broad, no_damage)
 
-    -- Enspell
-    local add_effect_damage = result.add_effect_param
-    if add_effect_damage > 0 then H.Melee.Additional_Effect(audits, add_effect_damage, effect_message_id, effect_animation_id, no_damage) end
+    -- Additional effects like enspell.
+    H.Melee.Additional_Effect(audits, result, no_damage)
 
     -- Accuracy, crits, absorbed by shadows, etc.
     H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete)
@@ -440,29 +437,48 @@ end
 -- Captures additional effects from melee.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param value number how much of the thing you did.
----@param message_id number numberic identifier for system chat messages.
----@param effect_animation_id number the element of the enspell.
+---@param result table
 ---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Additional_Effect = function(audits, value, message_id, effect_animation_id, no_damage)
-    -- Only add additional damage to the damage totals.
-    if message_id == Ashita.Enum.Message.ENSPELL then
-        if no_damage then value = 0 end
-        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.MAGIC,       H.Metric.TOTAL)
-        DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.ENSPELL,     H.Metric.HIT_COUNT)
-        DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.MAGIC,       H.Metric.COUNT)       -- Used to flag that data is availabel for show in Focus.
-        if Res.Spells.Get_Enspell_Type(effect_animation_id) then
-            local enspell_name = Res.Spells.Get_Enspell_Type(effect_animation_id)
-            DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.ENSPELL, value, enspell_name)
-            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.HIT_COUNT)
+H.Melee.Additional_Effect = function(audits, result, no_damage)
+    if not result then return nil end
+    if result.has_add_effect then
+        local message_id = result.add_effect_message
+        local animation_id = result.add_effect_animation
+        local param = result.add_effect_param   -- This is either damage or the type of debuff applied.
+
+        if message_id == Ashita.Enum.Message.ENSPELL then
+            if no_damage then param = 0 end
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.MAGIC,   H.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.ENSPELL, H.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.MAGIC,   H.Metric.COUNT)       -- Used to flag that data is availabel for show in Focus.
+            if Res.Spells.Get_Enspell_Type(animation_id) then
+                local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
+                DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.ENSPELL, param, enspell_name)
+                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, H.Metric.HIT_COUNT)
+            end
+        elseif message_id == Ashita.Enum.Message.ENDAMAGE then
+            local effect_name = Res.Game.Get_Additional_Effect_Animation(animation_id)
+            if animation_id then
+                DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.MAGIC,    H.Metric.TOTAL)
+                DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.ENDAMAGE, H.Metric.HIT_COUNT)
+                DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.ENDAMAGE, param, effect_name)
+                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENDAMAGE, effect_name, H.Metric.HIT_COUNT)
+            end
+        elseif message_id == Ashita.Enum.Message.ENDEBUFF then
+            local buff = Res.Buffs.Get_Buff(param)
+            if buff then
+                DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.ENDEBUFF, H.Metric.HIT_COUNT)
+                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENDEBUFF, buff.en, H.Metric.HIT_COUNT)
+            end
+        elseif message_id == Ashita.Enum.Message.ENDRAIN then
+            -- Drain Samba and Blood Weapon do not contribute to net new damage.
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENDRAIN, H.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENDRAIN, H.Metric.HIT_COUNT)
+        elseif message_id == Ashita.Enum.Message.ENASPIR then
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENASPIR, H.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENASPIR, H.Metric.HIT_COUNT)
         end
-    elseif message_id == Ashita.Enum.Message.ENDRAIN then
-        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.ENDRAIN,     H.Metric.TOTAL)
-        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.ENDRAIN,     H.Metric.HIT_COUNT)
-    elseif message_id == Ashita.Enum.Message.ENASPIR then
-        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.TOTAL)
-        DB.Data.Update(H.Mode.INC, value, audits, H.Trackable.ENASPIR,     H.Metric.HIT_COUNT)
     end
 end
 

@@ -6,13 +6,14 @@ Column.Flags = T{
 }
 
 Column.Widths = T{
-    Name = 150,
+    Name = 110,
     Damage = 80,
     Percent = 60,
     Single = 40,
-    Standard = 100,
+    Standard = 75,
     Settings = 175,
     Report = 110,
+    Catalog = 65,
 }
 
 Column.Mode = DB.Enum.Mode

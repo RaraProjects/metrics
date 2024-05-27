@@ -49,10 +49,26 @@ Ashita.Enum.Reaction = T{
     SHIELD_BLOCK = 4,
 }
 
-Ashita.Enum.Spike_Animation = T{
-    BLAZE = 1,
-    ICE   = 2,
-    SHOCK = 5,
+Ashita.Enum.Effect_Animation = T{
+    FIRE     = 1,
+    ICE      = 2,
+    WIND     = 3,
+    EARTH    = 4,
+    THUNDER  = 5,
+    WATER    = 6,
+    LIGHT    = 7,
+    DARK     = 8,
+    SLEEP    = 9,
+    POISON   = 10,
+    PARALYZE = 11,
+    BLIND    = 12,
+    SILENCE  = 13,
+    STUN     = 16,
+    CURSE    = 17,
+    DEF_DOWN = 18,
+    DRAIN    = 21,
+    ASPIR    = 22,
+    HASTE    = 23,
 }
 
 -- Message IDs from incoming packet 0x029 (Action Message).
@@ -70,8 +86,10 @@ Ashita.Enum.Message = T{
     CRIT       = 67,
     PARRY      = 70,
     DEATH      = 97,
+    ENDEBUFF   = 160,
     ENDRAIN    = 161,
     ENASPIR    = 162,
+    ENDAMAGE   = 163,
     RANGEPUP   = 185,
     MISS_TP    = 188,
     ENSPELL    = 229,

@@ -6,27 +6,46 @@ Focus.Melee = T{}
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Melee.Display = function(player_name)
-    local col_flags = Column.Flags.None
-    local table_flags = Window.Table.Flags.Fixed_Borders
-    local name_width = Column.Widths.Standard
-    local damage_width = Column.Widths.Damage
-    local percent_width = Column.Widths.Percent
-
     local off_hand = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.TOTAL)
     local kick_damage = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.TOTAL)
     local counter_damage = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.TOTAL)
+    local endamage = DB.Data.Get(player_name, DB.Enum.Trackable.ENDAMAGE, DB.Enum.Metric.TOTAL)
+    local endebuff = DB.Data.Get(player_name, DB.Enum.Trackable.ENDEBUFF, DB.Enum.Metric.HIT_COUNT)
 
-    if UI.BeginTable("Melee Primary", 5, table_flags) then
-        UI.TableSetupColumn("Type", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, damage_width)
-        UI.TableSetupColumn("Damage %", col_flags, damage_width)
-        UI.TableSetupColumn("Accuracy", col_flags, damage_width)
-        UI.TableSetupColumn("Rate", col_flags, percent_width)
+    Focus.Melee.Total(player_name, off_hand, kick_damage, counter_damage)
+    Focus.Melee.Auxiliary(player_name, endamage)
+    Focus.Melee.Multi_Attack(player_name, kick_damage)
+
+    if endebuff > 0 or endamage > 0 then UI.Separator() end
+    if endebuff > 0 then Focus.Catalog.Endebuff(player_name, DB.Enum.Trackable.ENDEBUFF) end
+    if endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Enum.Trackable.ENDAMAGE) end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Build total melee damage table.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param off_hand number
+---@param kick_damage number
+---@param counter_damage number
+------------------------------------------------------------------------------------------------------
+Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    if UI.BeginTable("Total Melee", 5, table_flags) then
+        UI.TableSetupColumn("Melee", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, width)
+        UI.TableSetupColumn("Damage %", col_flags, width)
+        UI.TableSetupColumn("Accuracy", col_flags, width)
+        UI.TableSetupColumn("Rate", col_flags, width)
         UI.TableHeadersRow()
 
         -- Total
         UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Melee Total")
+        UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, true)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.MELEE)
@@ -70,24 +89,114 @@ Focus.Melee.Display = function(player_name)
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
         end
 
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Build auxiliary melee damage table.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param endamage number
+------------------------------------------------------------------------------------------------------
+Focus.Melee.Auxiliary = function(player_name, endamage)
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    local mob_heal = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE, DB.Enum.Metric.MOB_HEAL)
+    local shadows  = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE, DB.Enum.Metric.SHADOWS)
+    local enspell  = DB.Data.Get(player_name, DB.Enum.Trackable.ENSPELL, DB.Enum.Metric.TOTAL)
+    local endrain  = DB.Data.Get(player_name, DB.Enum.Trackable.ENDRAIN, DB.Enum.Metric.TOTAL)
+    local enaspir  = DB.Data.Get(player_name, DB.Enum.Trackable.ENASPIR, DB.Enum.Metric.TOTAL)
+
+    if UI.BeginTable("Aux. Melee", 4, table_flags) then
+        UI.TableSetupColumn("Auxiliary", col_flags, name_width)
+        UI.TableSetupColumn("Damage", col_flags, width)
+        UI.TableSetupColumn("Damage %", col_flags, width)
+        UI.TableSetupColumn("Rate", col_flags, width)
+        UI.TableHeadersRow()
+
         -- Critical Hits
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Crits")
         UI.TableNextColumn() Column.Proc.Crit_Damage(player_name, DB.Enum.Trackable.MELEE)
         UI.TableNextColumn() Column.Proc.Crit_Damage(player_name, DB.Enum.Trackable.MELEE, true)
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Trackable.MELEE)
+
+        if endamage > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("En-Damage")
+            UI.TableNextColumn() UI.Text(Column.String.Format_Number(endamage))
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        if enspell > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("En-Spell")
+            UI.TableNextColumn() UI.Text(Column.String.Format_Number(enspell))
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        if endrain > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("En-Drain")
+            UI.TableNextColumn() UI.Text(Column.String.Format_Number(endrain))
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        if enaspir > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("En-Aspir")
+            UI.TableNextColumn() UI.Text(Column.String.Format_Number(enaspir))
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+
+        if mob_heal > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Mob Heal")
+            UI.TableNextColumn() UI.Text(Column.String.Format_Number(mob_heal))
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        if shadows > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Shadows")
+            UI.TableNextColumn() UI.Text(Column.String.Format_Number(shadows))
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
 
         UI.EndTable()
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Build melee multi-attack rate table.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param kick_damage number
+------------------------------------------------------------------------------------------------------
+Focus.Melee.Multi_Attack = function(player_name, kick_damage)
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
 
     local columns = 3
     if kick_damage > 0 then columns = 4 end
     if UI.BeginTable("Multi-Attack", columns, table_flags) then
-        UI.TableSetupColumn("Multi-Rank", col_flags, name_width)
-        UI.TableSetupColumn("Main-Hand", col_flags, damage_width)
-        UI.TableSetupColumn("Off-Hand", col_flags, damage_width)
-        if kick_damage > 0 then UI.TableSetupColumn("Kicks", col_flags, damage_width) end
+        UI.TableSetupColumn("Multi-Attack", col_flags, name_width)
+        UI.TableSetupColumn("Main-Hand", col_flags, width)
+        UI.TableSetupColumn("Off-Hand", col_flags, width)
+        if kick_damage > 0 then UI.TableSetupColumn("Kicks", col_flags, width) end
         UI.TableHeadersRow()
 
         local multi_attack_found = false
@@ -172,50 +281,5 @@ Focus.Melee.Display = function(player_name)
         end
 
         UI.EndTable()
-    end
-
-    local mob_heal = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE, DB.Enum.Metric.MOB_HEAL)
-    local shadows  = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE, DB.Enum.Metric.SHADOWS)
-    local enspell  = DB.Data.Get(player_name, DB.Enum.Trackable.ENSPELL, DB.Enum.Metric.TOTAL)
-    local endrain  = DB.Data.Get(player_name, DB.Enum.Trackable.ENDRAIN, DB.Enum.Metric.TOTAL)
-    local enaspir  = DB.Data.Get(player_name, DB.Enum.Trackable.ENASPIR, DB.Enum.Metric.TOTAL)
-
-    if mob_heal > 0 or shadows > 0 or enspell > 0 or endrain > 0 or enaspir > 0 then
-        if UI.BeginTable("Melee Misc.", 2, table_flags) then
-            UI.TableSetupColumn("Type", col_flags, name_width)
-            UI.TableSetupColumn("Damage", col_flags, damage_width)
-            UI.TableHeadersRow()
-
-            if mob_heal > 0 then
-                UI.TableNextRow()
-                UI.TableNextColumn() UI.Text("Mob Heal")
-                UI.TableNextColumn() UI.Text(Column.String.Format_Number(mob_heal))
-            end
-
-            if shadows > 0 then
-                UI.TableNextRow()
-                UI.TableNextColumn() UI.Text("Shadows")
-                UI.TableNextColumn() UI.Text(Column.String.Format_Number(shadows))
-            end
-
-            if enspell > 0 then
-                UI.TableNextRow()
-                UI.TableNextColumn() UI.Text("En-Spell")
-                UI.TableNextColumn() UI.Text(Column.String.Format_Number(enspell))
-            end
-
-            if endrain > 0 then
-                UI.TableNextRow()
-                UI.TableNextColumn() UI.Text("En-Drain")
-                UI.TableNextColumn() UI.Text(Column.String.Format_Number(endrain))
-            end
-
-            if enaspir > 0 then
-                UI.TableNextRow()
-                UI.TableNextColumn() UI.Text("En-Aspir")
-                UI.TableNextColumn() UI.Text(Column.String.Format_Number(enaspir))
-            end
-            UI.EndTable()
-        end
     end
 end
