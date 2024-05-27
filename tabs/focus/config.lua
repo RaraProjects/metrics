@@ -47,3 +47,12 @@ Focus.Config.Settings_Button = function()
         Focus.Config.Show_Settings = not Focus.Config.Show_Settings
     end
 end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the settings showing for the battle log.
+------------------------------------------------------------------------------------------------------
+Focus.Config.Screenshot_Button = function()
+    if UI.SmallButton("Screenshot") then
+        Focus.Screenshot_Mode = not Focus.Screenshot_Mode
+    end
+end

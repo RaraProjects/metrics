@@ -88,6 +88,13 @@ Report.Section.File = function()
     local width = Column.Widths.Report
     UI.Text("Create CSV File")
     UI.Text("Files can be found in: /config/Metrics/")
+
+    local blog_length = #Blog.Log
+    if blog_length >= 50000 then
+        UI.Text("NOTICE: There are " .. tostring(blog_length) .. " entries in the battle log.")
+        UI.Text("        You may notice a stagger when saving it.")
+    end
+
     if UI.BeginTable("Save File", 4, Window.Table.Flags.None) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)

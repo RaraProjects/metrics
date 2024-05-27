@@ -20,25 +20,31 @@ Blog.Config.Defaults.Thresholds = T{
     MAX   = 99999,
 }
 Blog.Config.Defaults.Visible_Length = 8
+Blog.Config.Defaults.Line_Height = 20
 
 Blog.Settings = {
-    Size = 32,
-    Length = 100,
+    Line_Size_Default = 20,
+    Max_Length = 100000,
     Truncate_Length = 6,
     Visible_Length = 8,
 }
 
 Blog.Config.Show_Settings = false
 Blog.Config.Slider_Width = 100
+Blog.Config.Page_Slider_Width = 60
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the battle log settings.
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Reset = function()
     Metrics.Blog.Flags.Damage_Highlighting = true
+    Metrics.Blog.Line_Height = Blog.Settings.Line_Size_Default
+    Metrics.Blog.Visible_Length = Blog.Settings.Visible_Length
+
     for flag, value in pairs(Blog.Config.Defaults.Flags) do
         Metrics.Blog.Flags[flag] = value
     end
+
     for type, threshold in pairs(Blog.Config.Defaults.Thresholds) do
         Metrics.Blog.Thresholds[type] = threshold
     end
@@ -175,9 +181,12 @@ Blog.Config.Length = function()
         Metrics.Blog.Visible_Length = Blog.Settings.Visible_Length
     end
     UI.SameLine() UI.Text(" ") UI.SameLine()
+
     local length = {[1] = Metrics.Blog.Visible_Length}
     UI.SetNextItemWidth(50)
     if UI.DragInt("Length", length, 0.1, Blog.Settings.Visible_Length, 50, "%d", ImGuiSliderFlags_None) then
         Metrics.Blog.Visible_Length = length[1]
+        local last_page = Blog.Max_Page()
+        if Blog.Page > last_page then Blog.Page = last_page end
     end
 end

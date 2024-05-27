@@ -42,10 +42,41 @@ end
 -- Toggles the settings showing for the battle log.
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.Settings_Button = function()
-    if UI.SmallButton("Settings") then
+    if UI.Button("Settings") then
         Blog.Config.Show_Settings = not Blog.Config.Show_Settings
     end
     if Blog.Config.Show_Settings then
         Blog.Config.Display()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the current battle log page.
+------------------------------------------------------------------------------------------------------
+Blog.Widgets.Page = function()
+    local last_page = Blog.Max_Page()
+    local page = {[1] = Blog.Page}
+    UI.SetNextItemWidth(Blog.Config.Page_Slider_Width)
+    if UI.DragInt("Page", page, 0.1, 1, last_page, "%d", ImGuiSliderFlags_None) then
+        if last_page > 1 then Blog.Page = page[1] end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Jumps to the first page in the battle log.
+------------------------------------------------------------------------------------------------------
+Blog.Widgets.First_Page = function()
+    if UI.Button("First") then
+        Blog.Page = 1
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Jumps to the last page in the battle log.
+------------------------------------------------------------------------------------------------------
+Blog.Widgets.Last_Page = function()
+    local last_page = Blog.Max_Page()
+    if UI.Button("Last (" .. tostring(last_page) .. ")") then
+        Blog.Page = last_page
     end
 end

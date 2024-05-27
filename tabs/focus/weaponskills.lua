@@ -4,8 +4,9 @@ Focus.WS = T{}
 -- Loads data to the weaponskill and skillchain drop down inside the focus window.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param hide_publish? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.WS.Display = function(player_name)
+Focus.WS.Display = function(player_name, hide_publish)
     -- GUI configuration
     local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
@@ -52,11 +53,13 @@ Focus.WS.Display = function(player_name)
     end
 
     -- Publish buttons
-    if show_ws_publish then
-        Report.Widgets.Button(player_name, trackable_ws, "Publish Weaponskills")
-    end
-    if show_sc_publish then
-        UI.SameLine() UI.Text(" ") UI.SameLine()
-        Report.Widgets.Button(player_name, trackable_sc, "Publish Skillchains")
+    if not hide_publish then
+        if show_ws_publish then
+            Report.Widgets.Button(player_name, trackable_ws, "Publish Weaponskills")
+        end
+        if show_sc_publish then
+            UI.SameLine() UI.Text(" ") UI.SameLine()
+            Report.Widgets.Button(player_name, trackable_sc, "Publish Skillchains")
+        end
     end
 end

@@ -107,7 +107,7 @@ end
 H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
     local blog_note = ""
     local space = ""
-    if Res.Spells.Get_Damaging(spell_id) and not Res.Spells.Get_DoT(spell_id) and Metrics.Blog.Flags.Magic then
+    if Res.Spells.Get_Damaging(spell_id) and not Res.Spells.Get_DoT(spell_id) then
         -- Show magic burst message.
         if is_burst then
             blog_note = Blog.Enum.Text.MB
@@ -117,13 +117,14 @@ H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_
         if Res.Spells.Get_AOE(spell_id) then
             blog_note = blog_note .. space .. "Targets: " .. tostring(target_count)
         end
-        Blog.Add(actor_mob.name, spell_name, damage, blog_note, DB.Enum.Trackable.MAGIC, spell_data)
+        Blog.Add(actor_mob.name, Blog.Enum.Types.MAGIC, spell_name, damage, blog_note, DB.Enum.Trackable.MAGIC, spell_data)
     end
-    if Res.Spells.Get_Healing(spell_id) and Metrics.Blog.Flags.Healing then
+
+    if Res.Spells.Get_Healing(spell_id) then
         if Res.Spells.Get_AOE(spell_id) then
             blog_note = blog_note .. space .. "Targets: " .. tostring(target_count)
         end
-        Blog.Add(actor_mob.name, spell_name, damage, blog_note, DB.Enum.Trackable.HEALING, spell_data)
+        Blog.Add(actor_mob.name, Blog.Enum.Types.HEALING, spell_name, damage, blog_note, DB.Enum.Trackable.HEALING, spell_data)
     end
 end
 

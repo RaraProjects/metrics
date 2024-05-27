@@ -4,8 +4,9 @@ Focus.Abilities = T{}
 -- Loads data to the ability drop down inside the focus window.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param hide_publish? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.Abilities.Display = function(player_name)
+Focus.Abilities.Display = function(player_name, hide_publish)
     local ability_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Enum.Metric.COUNT)
     local healing_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_HEALING, DB.Enum.Metric.COUNT)
     local mp_recovery = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, DB.Enum.Metric.COUNT)
@@ -19,7 +20,7 @@ Focus.Abilities.Display = function(player_name)
     if mp_recovery > 0   then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, "MP Recover") end
     if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY, "Ability") end
 
-    Focus.Abilities.Publish(player_name, ability_total)
+    if not hide_publish then Focus.Abilities.Publish(player_name, ability_total) end
 end
 
 ------------------------------------------------------------------------------------------------------

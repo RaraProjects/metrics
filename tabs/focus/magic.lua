@@ -4,8 +4,9 @@ Focus.Magic = T{}
 -- Loads data to the magic tab inside the focus window.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param hide_publish? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.Magic.Display = function(player_name)
+Focus.Magic.Display = function(player_name, hide_publish)
     local nuke_total     = DB.Data.Get(player_name, DB.Enum.Trackable.NUKE,       DB.Enum.Metric.TOTAL)
     local burst_total    = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC,      DB.Enum.Metric.BURST_DAMAGE)
     local melee_endamage = DB.Data.Get(player_name, DB.Enum.Trackable.ENDAMAGE,   DB.Enum.Metric.TOTAL)
@@ -33,7 +34,7 @@ Focus.Magic.Display = function(player_name)
     if range_endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Enum.Trackable.ENDAMAGE_R, " (R)") end
     if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Magic.Single(player_name, DB.Enum.Trackable.MAGIC) end
 
-    Focus.Magic.Publish(player_name, nuke_total, healing_total)
+    if not hide_publish then Focus.Magic.Publish(player_name, nuke_total, healing_total) end
 end
 
 ------------------------------------------------------------------------------------------------------

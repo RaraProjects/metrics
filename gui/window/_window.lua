@@ -19,6 +19,11 @@ Window.Flags = bit.bor(
         ImGuiWindowFlags_NoFocusOnAppearing,
         ImGuiWindowFlags_NoNav)
 
+Window.Screenshot_Flags = bit.bor(
+    ImGuiWindowFlags_AlwaysAutoResize,
+    ImGuiWindowFlags_NoSavedSettings,
+    ImGuiWindowFlags_NoNav)
+
 Window.Tabs = {}
 Window.Tabs.Flags = ImGuiTabBarFlags_None
 Window.Tabs.Names = {
@@ -121,6 +126,12 @@ Window.Populate = function()
                         Report.Populate()
                         UI.EndTabItem()
                     end
+                    if UI.BeginTabItem(Window.Tabs.Names.SETTINGS, false, Window.Tabs.Switch[Window.Tabs.Names.SETTINGS]) then
+                        Window.Tabs.Switch[Window.Tabs.Names.SETTINGS] = nil
+                        Window.Tabs.Active = Window.Tabs.Names.SETTINGS
+                        Config.Populate()
+                        UI.EndTabItem()
+                    end
                     if _Debug.Is_Enabled() then
                         if UI.BeginTabItem(Window.Tabs.Names.DEBUG) then
                             _Debug.Populate()
@@ -144,11 +155,21 @@ Window.Populate = function()
         end
 
         if Config.Show_Window then
-            if UI.Begin("Settings", {Window.Visible}, Window.Flags) then
+            if UI.Begin("Help", {Window.Visible}, Window.Flags) then
                 Window.Visible = -1
-                Config.Populate()
+                Config.Section.Text_Commands()
                 UI.End()
             end
+        end
+
+        if Focus.Screenshot_Mode then
+            UI.PushStyleVar(ImGuiStyleVar_Alpha, 1)
+            if UI.Begin("Screenshot Mode", {Window.Visible}, Window.Screenshot_Flags) then
+                Window.Visible = -1
+                Focus.Screenshot()
+                UI.End()
+            end
+            UI.PopStyleVar(1)
         end
 
         if _Debug.Is_Enabled() and _Debug.Config.Show_Unit_Tests then
@@ -170,6 +191,7 @@ Window.Set_Window_Scale = function()
     if not Window.Scaling_Set then
         UI.SetWindowFontScale(Metrics.Window.Window_Scaling)
         Window.Scaling_Set = true
+        Metrics.Blog.Line_Height = UI.GetFontSize() + 2
     end
 end
 

@@ -24,6 +24,7 @@ Focus.Tabs.Switch = {
 
 Focus.Column_Flags = Column.Flags.None
 Focus.Table_Flags  = Window.Table.Flags.Fixed_Borders
+Focus.Screenshot_Mode = false
 
 -- Load dependencies
 require("tabs.focus.config")
@@ -53,11 +54,15 @@ Focus.Populate = function()
     UI.SameLine() UI.Text("  ") UI.SameLine()
     DB.Widgets.Mob_Filter()
 
+    local unselected = false
+    local player_name = DB.Widgets.Util.Get_Player_Focus()
+    if player_name == DB.Widgets.Dropdown.Enum.NONE then unselected = true end
+
     Focus.Config.Settings_Button()
+    if not unselected then UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.Screenshot_Button() end
     if Focus.Config.Show_Settings then Focus.Config.Display() end
 
-    local player_name = DB.Widgets.Util.Get_Player_Focus()
-    if player_name == DB.Widgets.Dropdown.Enum.NONE then return nil end
+    if unselected then return nil end
 
     UI.Separator()
     Focus.Overall(player_name)
@@ -181,6 +186,23 @@ Focus.Overall = function(player_name)
         if pet > 0     then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET) end
         UI.EndTable()
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Opens a new window to show all tabs as a vertical column.
+------------------------------------------------------------------------------------------------------
+Focus.Screenshot = function()
+    local player_name = DB.Widgets.Util.Get_Player_Focus()
+    if player_name == DB.Widgets.Dropdown.Enum.NONE then return nil end
+
+    UI.Text("Overall") Focus.Overall(player_name)
+    UI.Separator() UI.Text("Melee")        Focus.Melee.Display(player_name)
+    UI.Separator() UI.Text("Ranged")       Focus.Ranged.Display(player_name)
+    UI.Separator() UI.Text("Weaponskills") Focus.WS.Display(player_name, true)
+    UI.Separator() UI.Text("Magic")        Focus.Magic.Display(player_name, true)
+    UI.Separator() UI.Text("Abilities")    Focus.Abilities.Display(player_name, true)
+    UI.Separator() UI.Text("Pets")         Focus.Pets.Display(player_name)
+    UI.Separator() UI.Text("Defense")      Focus.Defense.Display(player_name)
 end
 
 ------------------------------------------------------------------------------------------------------

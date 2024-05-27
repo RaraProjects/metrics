@@ -33,9 +33,7 @@ end
 ---@param damage number
 -- ------------------------------------------------------------------------------------------------------
 H.Ranged.Blog = function(actor_mob, damage)
-    if Metrics.Blog.Flags.Ranged then
-        Blog.Add(actor_mob.name, H.Trackable.RANGED, damage)
-    end
+    Blog.Add(actor_mob.name, Blog.Enum.Types.RANGED, H.Trackable.RANGED, damage)
 end
 
 ------------------------------------------------------------------------------------------------------
