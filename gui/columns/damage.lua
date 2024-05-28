@@ -34,6 +34,24 @@ Column.Damage.By_Type_Raw = function(player_name, damage_type)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Shows the average damage for a trackable (like weaponskills)
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param damage_type string a trackable from the model.
+---@param justify? boolean whether or not to right justify the text
+---@return number
+------------------------------------------------------------------------------------------------------
+Column.Damage.Average_By_Type = function(player_name, damage_type, justify)
+    local focused_damage = DB.Data.Get(player_name, damage_type, Column.Metric.TOTAL)
+    local focused_count  = DB.Data.Get(player_name, damage_type, Column.Metric.HIT_COUNT)
+    local color = Column.String.Color_Zero(focused_damage)
+    if focused_damage == 0 or focused_count == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
+
+    local focused_average = focused_damage / focused_count
+    return UI.TextColored(color, Column.String.Format_Number(focused_average, justify))
+end
+
+------------------------------------------------------------------------------------------------------
 -- Grabs the damage of a certain trackable that the entity's pet has done.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string the entity that owns the pet.

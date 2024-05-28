@@ -12,6 +12,7 @@ Parse.Config.Defaults = T{
     Total_Acc = false,
     DPS = true,
     Melee = true,
+    Average_WS = false,
     Weaponskill = true,
     Ranged = false,
     Magic = true,
@@ -105,6 +106,7 @@ Parse.Config.Column_Selection = function()
                 Metrics.Parse.Total_Acc = false
                 Metrics.Parse.Melee = false
                 Metrics.Parse.Crit = false
+                Metrics.Parse.Average_WS = false
                 Metrics.Parse.Weaponskill = false
                 Metrics.Parse.Ranged = false
                 Metrics.Parse.Magic = false
@@ -123,6 +125,10 @@ Parse.Config.Column_Selection = function()
             Parse.Util.Calculate_Column_Flags()
         end
         UI.TableNextColumn()
+        if UI.Checkbox("Average WS", {Metrics.Parse.Average_WS}) then
+            Metrics.Parse.Average_WS = not Metrics.Parse.Average_WS
+            Parse.Util.Calculate_Column_Flags()
+        end
 
         -- Row 1
         UI.TableNextColumn()
