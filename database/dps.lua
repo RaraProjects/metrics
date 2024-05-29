@@ -82,10 +82,18 @@ end
 -- Get a player's DPS.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@return number
 ------------------------------------------------------------------------------------------------------
 DB.DPS.Get_DPS = function(player_name)
-    if not DB.DPS.DPS[player_name] then return 0 end
-    return DB.DPS.DPS[player_name]
+    if Metrics.Parse.Global_DPS then
+        local total_damage = Column.Damage.Raw_Total_Player_Damage(player_name)
+        local duration = Timers.Get_Duration(Timers.Enum.Names.PARSE)
+        if duration == 0 then duration = 1 end
+        return total_damage / duration
+    else
+        if not DB.DPS.DPS[player_name] then return 0 end
+        return DB.DPS.DPS[player_name]
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

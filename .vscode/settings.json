@@ -102,7 +102,9 @@
         "switch",
         "GetEntity",
         "ImGuiTabItemFlags_SetSelected",
-        "ImGuiWindowFlags_NoBackground"
+        "ImGuiWindowFlags_NoBackground",
+        "ImGuiTableBgTarget_CellBg",
+        "ImGuiTableBgTarget_RowBg0"
     ],
     "Lua.diagnostics.disable": [
         "undefined-field"

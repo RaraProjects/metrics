@@ -78,7 +78,7 @@ DB.Initialize = function(reset)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Calculates the total damage from everyone currently on the Team display.
+-- Calculates the total damage from everyone currently on the Parse display.
 ------------------------------------------------------------------------------------------------------
 ---@return number
 ------------------------------------------------------------------------------------------------------
@@ -97,7 +97,7 @@ DB.Team_Damage = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Calculates the total damage by type from everyone currently on the Team display.
+-- Calculates the total damage by type from everyone currently on the Parse display.
 ------------------------------------------------------------------------------------------------------
 ---@return number
 ------------------------------------------------------------------------------------------------------

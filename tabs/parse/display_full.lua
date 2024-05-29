@@ -31,6 +31,7 @@ Parse.Full.Populate = function()
                 Parse.Full.Rows(player.name)
             end
         end
+        if Metrics.Parse.Grand_Totals and #DB.Sorted.Total_Damage > 0 then Parse.Full.Total_Row() end
 
         UI.EndTable()
     end
@@ -44,9 +45,9 @@ Parse.Full.Headers = function()
 
     -- Basics
     UI.TableSetupColumn("Name", flags)
-    if Metrics.Parse.DPS then UI.TableSetupColumn("DPS", flags) end
-    UI.TableSetupColumn("%T", flags)
     UI.TableSetupColumn("Total", flags)
+    UI.TableSetupColumn("%T", flags)
+    if Metrics.Parse.DPS then UI.TableSetupColumn("DPS", flags) end
     UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
 
     -- Extras
@@ -75,12 +76,14 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Loads data into the rows of the Team table.
 ------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
 Parse.Full.Rows = function(player_name)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(player_name)
-    if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
-    UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
+    UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
+    if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
     UI.TableNextColumn() Column.Acc.Running(player_name)
 
     if Metrics.Parse.Total_Acc then   UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, true) end
@@ -101,6 +104,41 @@ Parse.Full.Rows = function(player_name)
     end
     if Metrics.Parse.Healing then UI.TableNextColumn() Column.Healing.Total(player_name, false, true) end
     if Metrics.Parse.Deaths then  UI.TableNextColumn() Column.Proc.Deaths(player_name) end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows totals for each column.
+------------------------------------------------------------------------------------------------------
+Parse.Full.Total_Row = function()
+    UI.TableNextRow()
+    local x, y, z, w = UI.GetStyleColorVec4(ImGuiCol_TableHeaderBg)
+    local row_bg_color = UI.GetColorU32({x, y, z, w})
+    UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color)
+
+    UI.TableNextColumn() UI.Text("Total")
+    UI.TableNextColumn() Column.Damage.Parse_Total(true)
+    UI.TableNextColumn() UI.Text(" ")
+    if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.Parse_DPS(true) end
+    UI.TableNextColumn() UI.Text(" ")
+
+    if Metrics.Parse.Total_Acc then   UI.TableNextColumn() UI.Text(" ") end
+    if Metrics.Parse.Melee then       UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.MELEE, true) end
+    if Metrics.Parse.Crit then        UI.TableNextColumn() UI.Text(" ") end
+    if Metrics.Parse.Average_WS then  UI.TableNextColumn() UI.Text(" ") end
+    if Metrics.Parse.Weaponskill then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.WS, true) end
+    if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.SC, true) end
+    if Metrics.Parse.Ranged then      UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.RANGED, true) end
+    if Metrics.Parse.Magic then       UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.MAGIC, true) end
+    if Metrics.Parse.Ability then     UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.ABILITY, true) end
+    if Metrics.Parse.Pet then
+        UI.TableNextColumn() UI.Text(" ")
+        UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET_MELEE, true)
+        UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET_WS, true)
+        UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET_RANGED, true)
+        UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET_ABILITY, true)
+    end
+    if Metrics.Parse.Healing then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.HEALING, true) end
+    if Metrics.Parse.Deaths then  UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.DEATH, true) end
 end
 
 ------------------------------------------------------------------------------------------------------

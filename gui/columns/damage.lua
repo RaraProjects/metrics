@@ -163,3 +163,43 @@ Column.Damage.Raw_Total_Player_Damage = function(player_name)
     end
     return 0
 end
+
+------------------------------------------------------------------------------------------------------
+-- Calculates total for a trackable across all members of the database.
+------------------------------------------------------------------------------------------------------
+---@param trackable string
+---@param justify? boolean whether or not to right justify the text
+------------------------------------------------------------------------------------------------------
+Column.Damage.Trackable_Total = function(trackable,justify)
+    local damage = 0
+    for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
+        damage = damage + DB.Data.Get(player_name, trackable, Column.Metric.TOTAL)
+    end
+    local color = Column.String.Color_Zero(damage)
+    return UI.TextColored(color, Column.String.Format_Number(damage, justify))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Displays the sum total damage of all members of the database.
+------------------------------------------------------------------------------------------------------
+---@param justify? boolean whether or not to right justify the text
+------------------------------------------------------------------------------------------------------
+Column.Damage.Parse_Total = function(justify)
+    local damage = DB.Team_Damage()
+    local color = Column.String.Color_Zero(damage)
+    return UI.TextColored(color, Column.String.Format_Number(damage, justify))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Displays the sum dps of all members of the database.
+------------------------------------------------------------------------------------------------------
+---@param justify? boolean whether or not to right justify the text
+------------------------------------------------------------------------------------------------------
+Column.Damage.Parse_DPS = function(justify)
+    local dps = 0
+    for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
+        dps = dps + DB.DPS.Get_DPS(player_name)
+    end
+    local color = Column.String.Color_Zero(dps)
+    return UI.TextColored(color, Column.String.Format_Number(dps, justify))
+end

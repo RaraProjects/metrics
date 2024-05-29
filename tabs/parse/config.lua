@@ -21,6 +21,8 @@ Parse.Config.Defaults = T{
     Pet = false,
     Healing = false,
     Deaths = false,
+    Grand_Totals = false,
+    Global_DPS = false,
     Display_Mode = Parse.Enum.Display_Mode.FULL,
 }
 
@@ -70,15 +72,30 @@ Parse.Config.General = function()
         if UI.Checkbox("Run Time", {Metrics.Parse.Show_Clock}) then
             Metrics.Parse.Show_Clock = not Metrics.Parse.Show_Clock
         end
-        UI.SameLine() Window.Widgets.HelpMarker("Show a timer of how long action has been taking place.")
+        UI.SameLine() Window.Widgets.HelpMarker("Show a timer of how long actions have been taking place.")
+        UI.TableNextColumn() Parse.Widgets.SC_Damage()
+        UI.TableNextColumn() Parse.Widgets.Condensed_Numbers()
+
+        -- Row 2
+        UI.TableNextColumn()
+        if UI.Checkbox("Global DPS", {Metrics.Parse.Global_DPS}) then
+            Metrics.Parse.Global_DPS = not Metrics.Parse.Global_DPS
+        end
+        UI.SameLine() Window.Widgets.HelpMarker("TL;DR The default DPS calculation method is local. Local DPS is spikey and closer to the present. "
+                                             .. "Global DPS is smoother and averaged over a longer period. \n \n"
+                                             .. "The default DPS calculation method is a local such that actions you do right now matter more. "
+                                             .. "For example, if you were to stop taking actions for {X} amount of seconds your DPS would drop to zero. "
+                                             .. "Global DPS is your total damage divided by the parse duration timer. The timer only runs while actions "
+                                             .. "are taking place by your affiliates near you so idle time by the party won't hurt your DPS by much.")
         UI.TableNextColumn()
         if UI.Checkbox("Show DPS Graph", {Metrics.Parse.Show_DPS_Graph}) then
             Metrics.Parse.Show_DPS_Graph = not Metrics.Parse.Show_DPS_Graph
         end
-        UI.TableNextColumn() Parse.Widgets.Condensed_Numbers()
-
-        -- Row 2
-        UI.TableNextColumn() Parse.Widgets.SC_Damage()
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Total Row", {Metrics.Parse.Grand_Totals}) then
+            Metrics.Parse.Grand_Totals = not Metrics.Parse.Grand_Totals
+            Parse.Util.Calculate_Column_Flags()
+        end
 
         UI.EndTable()
     end
