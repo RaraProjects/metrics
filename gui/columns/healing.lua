@@ -23,7 +23,6 @@ Column.Healing.Total = function(player_name, percent, justify, raw)
     return UI.TextColored(color, Column.String.Format_Number(total_healing, justify))
 end
 
-
 ------------------------------------------------------------------------------------------------------
 -- Grabs the overcure amount for the player.
 ------------------------------------------------------------------------------------------------------

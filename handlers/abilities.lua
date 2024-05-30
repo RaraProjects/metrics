@@ -119,6 +119,7 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
         elseif Res.Abilities.Get_Player_Healing(ability_id) or Res.Abilities.Get_Pet_Healing(ability_id) then
             ability_type = H.Trackable.ABILITY_HEALING
             H.Ability.Catalog(audits, damage, ability_type, ability_name)
+            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.ALL_HEAL, H.Metric.TOTAL)
         elseif Res.Abilities.Get_MP_Recovery(ability_id) then
             ability_type = H.Trackable.ABILITY_MP_RECOVERY
             H.Ability.Catalog(audits, damage, ability_type, ability_name)

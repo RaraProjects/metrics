@@ -20,7 +20,7 @@ Focus.Abilities.Display = function(player_name, hide_publish)
     if mp_recovery > 0   then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, "MP Recover") end
     if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY, "Ability") end
 
-    if not hide_publish then Focus.Abilities.Publish(player_name, ability_total) end
+    if not hide_publish then Focus.Abilities.Publish(player_name, ability_total, healing_total) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -55,9 +55,14 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param ability_total number
+---@param healing_total number
 ------------------------------------------------------------------------------------------------------
-Focus.Abilities.Publish = function(player_name, ability_total)
+Focus.Abilities.Publish = function(player_name, ability_total, healing_total)
     if ability_total > 0 then
-        Report.Widgets.Button(player_name, DB.Enum.Trackable.ABILITY, "Publish Abilities")
+        Report.Widgets.Button(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, "Publish Abilities")
+    end
+    if healing_total > 0 then
+        if ability_total > 0 then UI.SameLine() UI.Text(" ") UI.SameLine() end
+        Report.Widgets.Button(player_name, DB.Enum.Trackable.ABILITY_HEALING, "Publish Healing")
     end
 end

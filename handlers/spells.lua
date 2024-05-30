@@ -253,6 +253,7 @@ H.Spell.Overcure = function(audits, spell_name, damage, burst)
     local trackable = H.Trackable.HEALING
     if audits.pet_name then trackable = H.Trackable.PET_HEAL end
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, nil, burst)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.ALL_HEAL, H.Metric.TOTAL)
     local spell_max = DB.Catalog.Get(audits.player_name, trackable, spell_name, H.Metric.MAX)
     local overcure = 0
     if spell_max > damage then

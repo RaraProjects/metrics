@@ -170,7 +170,7 @@ end
 ---@param trackable string
 ---@param justify? boolean whether or not to right justify the text
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Trackable_Total = function(trackable,justify)
+Column.Damage.Trackable_Total = function(trackable, justify)
     local damage = 0
     for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
         damage = damage + DB.Data.Get(player_name, trackable, Column.Metric.TOTAL)

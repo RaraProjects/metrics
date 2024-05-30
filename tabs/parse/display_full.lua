@@ -94,7 +94,7 @@ Parse.Full.Rows = function(player_name)
     if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.SC, false, true) end
     if Metrics.Parse.Ranged then      UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, false, true) end
     if Metrics.Parse.Magic then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, false, true) end
-    if Metrics.Parse.Ability then     UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY, false, true) end
+    if Metrics.Parse.Ability then     UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, false, true) end
     if Metrics.Parse.Pet then
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_MELEE, false, true)
@@ -129,7 +129,7 @@ Parse.Full.Total_Row = function()
     if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.SC, true) end
     if Metrics.Parse.Ranged then      UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.RANGED, true) end
     if Metrics.Parse.Magic then       UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.MAGIC, true) end
-    if Metrics.Parse.Ability then     UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.ABILITY, true) end
+    if Metrics.Parse.Ability then     UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.ABILITY_DAMAGING, true) end
     if Metrics.Parse.Pet then
         UI.TableNextColumn() UI.Text(" ")
         UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET_MELEE, true)
@@ -137,7 +137,7 @@ Parse.Full.Total_Row = function()
         UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET_RANGED, true)
         UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET_ABILITY, true)
     end
-    if Metrics.Parse.Healing then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.HEALING, true) end
+    if Metrics.Parse.Healing then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.ALL_HEAL, true) end
     if Metrics.Parse.Deaths then  UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.DEATH, true) end
 end
 
