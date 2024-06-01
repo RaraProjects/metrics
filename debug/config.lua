@@ -4,7 +4,7 @@ _Debug.Config.Column_Flags = Column.Flags.None
 _Debug.Config.Column_Width = Column.Widths.Settings
 
 _Debug.Config.Show_Demo = false
-_Debug.Config.Show_Unit_Tests = false
+_Debug.Config.Show_Unit_Tests = {false}
 
 ------------------------------------------------------------------------------------------------------
 -- Shows settings that affect debugging.
@@ -26,7 +26,7 @@ _Debug.Config.Display = function()
 
         UI.TableNextColumn()
         if UI.Checkbox("Show Unit Tests", {_Debug.Config.Show_Unit_Tests}) then
-            _Debug.Config.Show_Unit_Tests = not _Debug.Config.Show_Unit_Tests
+            _Debug.Config.Show_Unit_Tests[1] = not _Debug.Config.Show_Unit_Tests[1]
         end
         UI.TableNextColumn()
 

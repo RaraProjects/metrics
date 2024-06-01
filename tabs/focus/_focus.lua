@@ -24,7 +24,7 @@ Focus.Tabs.Switch = {
 
 Focus.Column_Flags = Column.Flags.None
 Focus.Table_Flags  = Window.Table.Flags.Fixed_Borders
-Focus.Screenshot_Mode = false
+Focus.Screenshot_Mode = {false}
 
 -- Load dependencies
 require("tabs.focus.config")

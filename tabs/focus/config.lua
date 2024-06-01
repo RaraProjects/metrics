@@ -49,7 +49,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Config.Screenshot_Button = function()
     if UI.SmallButton("Screenshot") then
-        Focus.Screenshot_Mode = not Focus.Screenshot_Mode
+        Focus.Screenshot_Mode[1] = not Focus.Screenshot_Mode[1]
     end
 end
 

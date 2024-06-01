@@ -1,7 +1,7 @@
 Window = T{}
 
 Window.Name = "Metrics (Beta)"
-Window.Visible = true
+Window.Visible = {true}
 Window.Scaling_Set = false
 
 Window.Defaults = T{
@@ -76,7 +76,7 @@ end
 -- Populate the data in the monitor window.
 ------------------------------------------------------------------------------------------------------
 Window.Populate = function()
-    if not Ashita.States.Zoning and Window.Visible then
+    if not Ashita.States.Zoning and Window.Visible[1] then
 
         UI.PushStyleVar(ImGuiStyleVar_Alpha, Metrics.Window.Alpha)
         UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})
@@ -89,8 +89,7 @@ Window.Populate = function()
             window_flags = bit.bor(window_flags, ImGuiWindowFlags_NoTitleBar)
         end
 
-        if UI.Begin(Window.Name, {Window.Visible}, window_flags) then
-            Window.Visible = -1
+        if UI.Begin(Window.Name, Window.Visible, window_flags) then
             Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()
             Window.Set_Window_Scale()
             Window.Theme.Set()
@@ -146,35 +145,31 @@ Window.Populate = function()
 
         local player = Ashita.Player.My_Mob()
         if player and Parse.Config.Show_DPS_Graph() then
-            if UI.Begin("DPS Graph", {Window.Visible}, Parse.Config.DPS_Graph_Window_Flags) then
-                Window.Visible = -1
+            if UI.Begin("DPS Graph", Window.Visible, Parse.Config.DPS_Graph_Window_Flags) then
                 UI.Text("Click this to Drag")
                 Parse.Widgets.DPS_Graph(player.name)
                 UI.End()
             end
         end
 
-        if Config.Show_Window then
-            if UI.Begin("Help", {Window.Visible}, Window.Flags) then
-                Window.Visible = -1
+        if Config.Show_Window[1] then
+            if UI.Begin("Help", Config.Show_Window, Window.Flags) then
                 Config.Section.Text_Commands()
                 UI.End()
             end
         end
 
-        if Focus.Screenshot_Mode then
+        if Focus.Screenshot_Mode[1] then
             UI.PushStyleVar(ImGuiStyleVar_Alpha, 1)
-            if UI.Begin("Screenshot Mode", {Window.Visible}, Window.Screenshot_Flags) then
-                Window.Visible = -1
+            if UI.Begin("Screenshot Mode", Focus.Screenshot_Mode, Window.Screenshot_Flags) then
                 Focus.Screenshot()
                 UI.End()
             end
             UI.PopStyleVar(1)
         end
 
-        if _Debug.Is_Enabled() and _Debug.Config.Show_Unit_Tests then
-            if UI.Begin("Unit Tests", {Window.Visible}, Window.Flags) then
-                Window.Visible = -1
+        if _Debug.Is_Enabled() and _Debug.Config.Show_Unit_Tests[1] then
+            if UI.Begin("Unit Tests", _Debug.Config.Show_Unit_Tests, Window.Flags) then
                 _Debug.Unit.Populate()
                 UI.End()
             end
@@ -199,5 +194,5 @@ end
 -- Toggles window visibility.
 ------------------------------------------------------------------------------------------------------
 Window.Toggle_Visibility = function()
-    Window.Visible = not Window.Visible
+    Window.Visible[1] = not Window.Visible[1]
 end

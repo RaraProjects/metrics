@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "05/31/24.01"
+addon.version = "06/01/24.02"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -226,7 +226,7 @@ ashita.events.register('command', 'command_cb', function (e)
     if table.contains({"/metrics"}, command_args[1]) or table.contains({"/met"}, command_args[1]) then
         local arg = command_args[2]
         if not arg then
-            Config.Show_Window = not Config.Show_Window
+            Config.Show_Window[1] = not Config.Show_Window[1]
         elseif arg == "show" or arg == "s" then
             Window.Toggle_Visibility()
         elseif arg == "debug" then

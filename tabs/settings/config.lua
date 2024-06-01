@@ -13,7 +13,7 @@ s.Enum.File = {
     REPORT   = "report",
 }
 
-s.Show_Window = false
+s.Show_Window = {false}
 
 ------------------------------------------------------------------------------------------------------
 -- Loads the settings data to the screen.
