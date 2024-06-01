@@ -7,17 +7,14 @@ Focus.WS = T{}
 ---@param hide_publish? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.WS.Display = function(player_name, hide_publish)
-    -- GUI configuration
     local col_flags = Column.Flags.None
     local table_flags = Window.Table.Flags.Fixed_Borders
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    -- Data setup
     local trackable_ws = DB.Enum.Trackable.WS
     local trackable_sc = DB.Enum.Trackable.SC
 
-    -- Basic stats
     if UI.BeginTable("WS and SC", 4, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
@@ -37,6 +34,21 @@ Focus.WS.Display = function(player_name, hide_publish)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable_sc, true)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         UI.EndTable()
+    end
+
+    local guard = DB.Data.Get(player_name, DB.Enum.Trackable.WS, DB.Enum.Metric.GUARD)
+
+    if guard > 0 then
+        if UI.BeginTable("Aux. WS", 2, table_flags) then
+            UI.TableSetupColumn("Auxiliary", col_flags, name_width)
+            UI.TableSetupColumn("Rate", col_flags, width)
+            UI.TableHeadersRow()
+
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Guarded")
+            UI.TableNextColumn() Column.Proc.Guard(player_name, DB.Enum.Trackable.WS)
+            UI.EndTable()
+        end
     end
 
     -- Cataloged data

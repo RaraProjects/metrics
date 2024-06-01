@@ -90,3 +90,17 @@ Column.Proc.Multi_Attack = function(player_name, melee_type, multi_attack_metric
     local color = Column.String.Color_Zero(multi_attack)
     return UI.TextColored(color, Column.String.Format_Percent(multi_attack, attack_rounds))
 end
+
+------------------------------------------------------------------------------------------------------
+-- Grabs the guard rate for a trackable.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param trackable string
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Proc.Guard = function(player_name, trackable)
+    local guard = DB.Data.Get(player_name, trackable, Column.Metric.GUARD)
+    local attempts = DB.Data.Get(player_name, trackable, Column.Metric.HIT_COUNT)
+    local color = Column.String.Color_Zero(guard)
+    return UI.TextColored(color, Column.String.Format_Percent(guard, attempts))
+end

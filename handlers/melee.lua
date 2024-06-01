@@ -123,6 +123,9 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     -- Accuracy, crits, absorbed by shadows, etc.
     H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete)
 
+    -- Guard
+    H.Melee.Reaction(result, audits, melee_type_broad)
+
     -- Spike damage
     H.Melee.Spikes(audits, result)
 
@@ -231,6 +234,20 @@ H.Melee.Animation = function(animation_id, audits, damage, melee_type_broad, thr
         _Debug.Error.Add("Melee.Animation: {" .. tostring(audits.player_name) .. "} Unhandled animation: " .. tostring(animation_id))
     end
     return throwing
+end
+
+------------------------------------------------------------------------------------------------------
+-- The melee's reaction to determine whether the attack was guarded or not.
+------------------------------------------------------------------------------------------------------
+---@param result table
+---@param audits table
+---@param melee_type_broad string
+------------------------------------------------------------------------------------------------------
+H.Melee.Reaction = function(result, audits, melee_type_broad)
+    local reaction = result.reaction
+    if reaction == Ashita.Enum.Reaction.GUARD then
+        DB.Data.Update(H.Mode.INC, 1, audits, melee_type_broad, H.Metric.GUARD)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

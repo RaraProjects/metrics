@@ -2,7 +2,7 @@ _Debug.Packet = {}
 _Debug.Packet.Action_Log = {}      -- Entity, Action, Result
 _Debug.Packet.Message_Log = {}
 _Debug.Packet.Item_Log = {}
-_Debug.Packet.Limit = 100
+_Debug.Packet.Limit = 500
 _Debug.Packet.Size = 32
 
 _Debug.Packet.Actions = T{

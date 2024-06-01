@@ -83,6 +83,7 @@ DB.Enum.Metric = T{
     MULT_ATK_6   = "Mult. VI",
     MULT_ATK_7   = "Mult. VII",
     MULT_ATK_8   = "Mult. VIII",
+    GUARD        = "Guard",
     HIT_COUNT    = "Hits",
     SQUARE_COUNT = "Square Count",
     TRUE_COUNT   = "Truestrike Count",
