@@ -27,11 +27,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "05/31/24.00"
+addon.version = "05/31/24.01"
 
 _Globals = {}
 _Globals.Initialized = false
 Settings_File = require("settings")
+Metrics = T{}
 
 -- Resources
 require("resources._resource")
@@ -292,6 +293,55 @@ ashita.events.register('command', 'command_cb', function (e)
             Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = ImGuiTabItemFlags_SetSelected
         end
     end
+end)
+
+------------------------------------------------------------------------------------------------------
+-- Check for character switches. Reloads character specific Database settings.
+------------------------------------------------------------------------------------------------------
+Settings_File.register(Config.Enum.File.DATABASE, "settings_update", function(settings)
+    if settings ~= nil and _Globals.Initialized then Metrics.Model = settings end
+end)
+
+------------------------------------------------------------------------------------------------------
+-- Check for character switches. Reloads character specific Parse settings.
+------------------------------------------------------------------------------------------------------
+Settings_File.register(Config.Enum.File.PARSE, "settings_update", function(settings)
+    if settings ~= nil and _Globals.Initialized then
+        Metrics.Parse = settings
+        Parse.Util.Calculate_Column_Flags()
+    end
+end)
+
+------------------------------------------------------------------------------------------------------
+-- Check for character switches. Reloads character specific Parse settings.
+------------------------------------------------------------------------------------------------------
+Settings_File.register(Config.Enum.File.FOCUS, "settings_update", function(settings)
+    if settings ~= nil and _Globals.Initialized then Metrics.Focus = settings end
+end)
+
+------------------------------------------------------------------------------------------------------
+-- Check for character switches. Reloads character specific Parse settings.
+------------------------------------------------------------------------------------------------------
+Settings_File.register(Config.Enum.File.BLOG, "settings_update", function(settings)
+    if settings ~= nil and _Globals.Initialized then Metrics.Blog = settings end
+end)
+
+------------------------------------------------------------------------------------------------------
+-- Check for character switches. Reloads character specific Parse settings.
+------------------------------------------------------------------------------------------------------
+Settings_File.register(Config.Enum.File.WINDOW, "settings_update", function(settings)
+    if settings ~= nil and _Globals.Initialized then
+        Metrics.Window = settings
+        Window.Theme.Is_Set = false
+        Window.Scaling_Set = false
+    end
+end)
+
+------------------------------------------------------------------------------------------------------
+-- Check for character switches. Reloads character specific Parse settings.
+------------------------------------------------------------------------------------------------------
+Settings_File.register(Config.Enum.File.REPORT, "settings_update", function(settings)
+    if settings ~= nil and _Globals.Initialized then Metrics.Report = settings end
 end)
 
 ------------------------------------------------------------------------------------------------------
