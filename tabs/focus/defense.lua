@@ -115,16 +115,10 @@ Focus.Defense.Mitigation = function(player_name)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local columns = 3
-    if Metrics.Focus.Show_Mitigation_Details then columns = 5 end
-    if UI.BeginTable("Defense", columns, table_flags) then
+    if UI.BeginTable("Defense", 3, table_flags) then
         UI.TableSetupColumn("Mitigation", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
         UI.TableSetupColumn("Rate (%)", col_flags, width)
-        if Metrics.Focus.Show_Mitigation_Details then
-            UI.TableSetupColumn("Procs", col_flags, width)
-            UI.TableSetupColumn("Chances", col_flags, width)
-        end
         UI.TableHeadersRow()
 
         local evade = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_EVASION, DB.Enum.Metric.HIT_COUNT)
@@ -132,10 +126,6 @@ Focus.Defense.Mitigation = function(player_name)
             UI.TableNextColumn() UI.Text("Evasion")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_EVASION)
-            if Metrics.Focus.Show_Mitigation_Details then
-                UI.TableNextColumn() Column.Defense.Proc_Count(player_name, DB.Enum.Trackable.DEF_EVASION)
-                UI.TableNextColumn() Column.Defense.Total_Count(player_name, DB.Enum.Trackable.DEF_EVASION)
-            end
         end
 
         local parry = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_PARRY, DB.Enum.Metric.HIT_COUNT)
@@ -143,10 +133,6 @@ Focus.Defense.Mitigation = function(player_name)
             UI.TableNextColumn() UI.Text("Parry")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_PARRY)
-            if Metrics.Focus.Show_Mitigation_Details then
-                UI.TableNextColumn() Column.Defense.Proc_Count(player_name, DB.Enum.Trackable.DEF_PARRY)
-                UI.TableNextColumn() Column.Defense.Total_Count(player_name, DB.Enum.Trackable.DEF_PARRY)
-            end
         end
 
         local shadows = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_SHADOWS, DB.Enum.Metric.HIT_COUNT)
@@ -154,10 +140,6 @@ Focus.Defense.Mitigation = function(player_name)
             UI.TableNextColumn() UI.Text("Shadows")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_SHADOWS)
-            if Metrics.Focus.Show_Mitigation_Details then
-                UI.TableNextColumn() Column.Defense.Proc_Count(player_name, DB.Enum.Trackable.DEF_SHADOWS)
-                UI.TableNextColumn() Column.Defense.Total_Count(player_name, DB.Enum.Trackable.DEF_SHADOWS)
-            end
         end
 
         local counter = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.HIT_COUNT)
@@ -165,10 +147,6 @@ Focus.Defense.Mitigation = function(player_name)
             UI.TableNextColumn() UI.Text("Counter")
             UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
-            if Metrics.Focus.Show_Mitigation_Details then
-                UI.TableNextColumn() Column.Defense.Proc_Count(player_name, DB.Enum.Trackable.DEF_COUNTER)
-                UI.TableNextColumn() Column.Defense.Total_Count(player_name, DB.Enum.Trackable.DEF_COUNTER)
-            end
         end
 
         local guard = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_GUARD, DB.Enum.Metric.HIT_COUNT)
@@ -176,10 +154,6 @@ Focus.Defense.Mitigation = function(player_name)
             UI.TableNextColumn() UI.Text("Guard")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_GUARD)
-            if Metrics.Focus.Show_Mitigation_Details then
-                UI.TableNextColumn() Column.Defense.Proc_Count(player_name, DB.Enum.Trackable.DEF_GUARD)
-                UI.TableNextColumn() Column.Defense.Total_Count(player_name, DB.Enum.Trackable.DEF_GUARD)
-            end
         end
 
         local shield = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_BLOCK, DB.Enum.Metric.HIT_COUNT)
@@ -187,20 +161,12 @@ Focus.Defense.Mitigation = function(player_name)
             UI.TableNextColumn() UI.Text("Shield Block")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_BLOCK)
-            if Metrics.Focus.Show_Mitigation_Details then
-                UI.TableNextColumn() Column.Defense.Proc_Count(player_name, DB.Enum.Trackable.DEF_BLOCK)
-                UI.TableNextColumn() Column.Defense.Total_Count(player_name, DB.Enum.Trackable.DEF_BLOCK)
-            end
         end
 
         if (evade + parry + shadows + counter + guard + shield) == 0 then
             UI.TableNextColumn() UI.Text("None Yet")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            if Metrics.Focus.Show_Mitigation_Details then
-                UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            end
         end
 
         UI.EndTable()

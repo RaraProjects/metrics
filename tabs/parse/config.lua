@@ -97,6 +97,9 @@ Parse.Config.General = function()
             Parse.Util.Calculate_Column_Flags()
         end
 
+        -- Row 3
+        UI.TableNextColumn() Focus.Config.Percent_Details()
+
         UI.EndTable()
     end
 end

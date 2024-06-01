@@ -6,6 +6,7 @@ Focus.Config.Defaults = T{
 }
 
 Focus.Config.Show_Settings = false
+Focus.Config.Show_Percent_Details = false
 Focus.Config.Column_Flags = Column.Flags.None
 Focus.Config.Column_Width = Column.Widths.Settings
 
@@ -21,12 +22,7 @@ Focus.Config.Display = function()
         UI.TableSetupColumn("Col 2", col_flags)
 
         -- Row 1
-        UI.TableNextColumn()
-        if UI.Checkbox("Defense Details", {Metrics.Focus.Show_Mitigation_Details}) then
-            Metrics.Focus.Show_Mitigation_Details = not Metrics.Focus.Show_Mitigation_Details
-        end
-        UI.SameLine() Window.Widgets.HelpMarker("Show a column with numerator and denominator for damage mitigation.")
-
+        UI.TableNextColumn() Focus.Config.Percent_Details()
         UI.TableNextColumn()
         if UI.Checkbox("Misc Actions", {Metrics.Focus.Show_Misc_Actions}) then
             Metrics.Focus.Show_Misc_Actions = not Metrics.Focus.Show_Misc_Actions
@@ -55,4 +51,14 @@ Focus.Config.Screenshot_Button = function()
     if UI.SmallButton("Screenshot") then
         Focus.Screenshot_Mode = not Focus.Screenshot_Mode
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows percent details checkbox.
+------------------------------------------------------------------------------------------------------
+Focus.Config.Percent_Details = function()
+    if UI.Checkbox("Percent Details", {Focus.Config.Show_Percent_Details}) then
+        Focus.Config.Show_Percent_Details = not Focus.Config.Show_Percent_Details
+    end
+    UI.SameLine() Window.Widgets.HelpMarker("Show numerator and denominator for percentages in the same cell.")
 end

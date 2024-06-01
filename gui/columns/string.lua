@@ -27,10 +27,20 @@ end
 Column.String.Format_Percent = function(numerator, denominator, justify)
     local format = "%.1f"
     if justify then format = "%5.1f" end
-    if not denominator or denominator == 0 then return string.format(format, 0) end
-    local percent = (numerator / denominator) * 100
-    if percent == 0 then return string.format(format, 0) end
-    return string.format(format, percent)
+
+    local percent = 0
+    local ret_value = string.format(format, 0)
+    if denominator and denominator ~= 0 then percent = (numerator / denominator) * 100 end
+    if percent ~= 0 then ret_value = string.format(format, percent) end
+
+    if Focus.Config.Show_Percent_Details and not Report.Publishing.Lock then
+        format = "%d"
+        local top = "N: " .. string.format(format, numerator)
+        local bottom = "D: " .. string.format(format, denominator)
+        return tostring(ret_value) .. "\n" .. tostring(top) .. "\n" .. tostring(bottom)
+    end
+
+    return ret_value
 end
 
 ------------------------------------------------------------------------------------------------------
