@@ -5,7 +5,7 @@ Window.Visible = true
 Window.Scaling_Set = false
 
 Window.Defaults = T{
-    Alpha = 0.85,
+    Alpha = 1.0,
     Window_Scaling = 1.0,
     Style = 0,
     X_Pos = 100,

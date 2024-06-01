@@ -25,6 +25,7 @@ Parse.Mini.Populate = function()
                 Parse.Mini.Rows(player.name)
             end
         end
+        if Metrics.Parse.Grand_Totals and #DB.Sorted.Total_Damage > 0 then Parse.Mini.Total_Row() end
 
         UI.EndTable()
     end
@@ -37,9 +38,9 @@ Parse.Mini.Headers = function()
     local flags = Parse.Mini.Column_Flags
 
     UI.TableSetupColumn("Name", flags)
-    if Metrics.Parse.DPS then UI.TableSetupColumn("DPS", flags) end
-    UI.TableSetupColumn("%T", flags)
     UI.TableSetupColumn("Total", flags)
+    UI.TableSetupColumn("%T", flags)
+    if Metrics.Parse.DPS then UI.TableSetupColumn("DPS", flags) end
     UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
     if Metrics.Parse.Pet then
         UI.TableSetupColumn("Pet D.", flags)
@@ -56,13 +57,34 @@ end
 Parse.Mini.Rows = function(player_name)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(player_name)
-    if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
-    UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
+    UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
+    if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
     UI.TableNextColumn() Column.Acc.Running(player_name)
     if Metrics.Parse.Pet then
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows totals for each column.
+------------------------------------------------------------------------------------------------------
+Parse.Mini.Total_Row = function()
+    UI.TableNextRow()
+    local x, y, z, w = UI.GetStyleColorVec4(ImGuiCol_TableHeaderBg)
+    local row_bg_color = UI.GetColorU32({x, y, z, w})
+    UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color)
+
+    UI.TableNextColumn() UI.Text("Total")
+    UI.TableNextColumn() Column.Damage.Parse_Total(true)
+    UI.TableNextColumn() UI.Text(" ")
+    if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.Parse_DPS(true) end
+    UI.TableNextColumn() UI.Text(" ")
+    if Metrics.Parse.Pet then
+        UI.TableNextColumn() UI.Text(" ")
+        UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET, true)
+        UI.TableNextColumn() UI.Text(" ")
     end
 end
 

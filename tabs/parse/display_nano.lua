@@ -11,17 +11,15 @@ Parse.Nano.Populate = function()
     if not player then return nil end
     local player_name = player.name
 
-    if UI.BeginTable("Team Nano", 4, Parse.Nano.Table_Flags) then
-        if Metrics.Parse.DPS then UI.TableSetupColumn("DPS", flags) end
-        UI.TableSetupColumn("%T", flags)
+    if UI.BeginTable("Team Nano", 3, Parse.Nano.Table_Flags) then
         UI.TableSetupColumn("Total", flags)
+        if Metrics.Parse.DPS then UI.TableSetupColumn("DPS", flags) end
         UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
-        if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
-        UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
         UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
+        if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
         UI.TableNextColumn() Column.Acc.Running(player_name)
 
         UI.EndTable()
