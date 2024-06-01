@@ -105,12 +105,13 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local mob_heal = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE,   DB.Enum.Metric.MOB_HEAL)
-    local shadows  = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE,   DB.Enum.Metric.SHADOWS)
-    local enspell  = DB.Data.Get(player_name, DB.Enum.Trackable.ENSPELL, DB.Enum.Metric.TOTAL)
-    local endrain  = DB.Data.Get(player_name, DB.Enum.Trackable.ENDRAIN, DB.Enum.Metric.TOTAL)
-    local enaspir  = DB.Data.Get(player_name, DB.Enum.Trackable.ENASPIR, DB.Enum.Metric.TOTAL)
-    local guard    = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE,   DB.Enum.Metric.GUARD)
+    local mob_heal = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE,       DB.Enum.Metric.MOB_HEAL)
+    local shadows  = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE,       DB.Enum.Metric.SHADOWS)
+    local enspell  = DB.Data.Get(player_name, DB.Enum.Trackable.ENSPELL,     DB.Enum.Metric.TOTAL)
+    local endrain  = DB.Data.Get(player_name, DB.Enum.Trackable.ENDRAIN,     DB.Enum.Metric.TOTAL)
+    local enaspir  = DB.Data.Get(player_name, DB.Enum.Trackable.ENASPIR,     DB.Enum.Metric.TOTAL)
+    local guard    = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE,       DB.Enum.Metric.GUARD)
+    local counter  = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.GUARD)
 
     if UI.BeginTable("Aux. Melee", 4, table_flags) then
         UI.TableSetupColumn("Auxiliary", col_flags, name_width)
@@ -126,12 +127,12 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
         UI.TableNextColumn() Column.Proc.Crit_Damage(player_name, DB.Enum.Trackable.MELEE, true)
         UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Trackable.MELEE)
 
-        if guard > 0 then
+        if counter > 0 then
             UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("Guarded")
+            UI.TableNextColumn() UI.Text("Counter")
+            UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() Column.Proc.Guard(player_name, DB.Enum.Trackable.MELEE)
+            UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
         end
 
         if endamage > 0 then
@@ -173,6 +174,14 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(mob_heal))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        if guard > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Guarded")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() Column.Proc.Guard(player_name, DB.Enum.Trackable.MELEE)
         end
 
         if shadows > 0 then

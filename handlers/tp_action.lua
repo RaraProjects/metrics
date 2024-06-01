@@ -131,9 +131,6 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
     -- Some weaponskills drain MP instead of doing damage.
     audits = H.TP.MP_Drain(audits, ws_id)
 
-    -- Guard
-    H.TP.Reaction(result, audits)
-
     -- This handles both the pet and player case.
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, audits.trackable, damage, ws_name, audits.pet_name)
 
@@ -213,19 +210,6 @@ end
 H.TP.Weaponskill_Hit = function(audits, ws_name)
     DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.WS, H.Metric.HIT_COUNT)
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.WS, ws_name, H.Metric.HIT_COUNT)
-end
-
-------------------------------------------------------------------------------------------------------
--- The weaponskills's reaction to determine whether the attack was guarded or not.
-------------------------------------------------------------------------------------------------------
----@param result table
----@param audits table
-------------------------------------------------------------------------------------------------------
-H.TP.Reaction = function(result, audits)
-    local reaction = result.reaction
-    if reaction == Ashita.Enum.Reaction.GUARD then
-        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.WS, H.Metric.GUARD)
-    end
 end
 
 -- ------------------------------------------------------------------------------------------------------

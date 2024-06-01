@@ -64,14 +64,16 @@ Focus.Defense.Other_Damage = function(player_name)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    if UI.BeginTable("Other Damage", 3, table_flags) then
+    if UI.BeginTable("Other Damage", 4, table_flags) then
         UI.TableSetupColumn("Misc. Defense", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
         UI.TableSetupColumn("Damage %", col_flags, width)
+        UI.TableSetupColumn("Rate %", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Crits")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DEF_CRIT)
+        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DEF_CRIT, true)
         UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_CRIT)
 
         local pet = DB.Data.Get(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET, DB.Enum.Metric.TOTAL)
@@ -79,12 +81,22 @@ Focus.Defense.Other_Damage = function(player_name)
             UI.TableNextColumn() UI.Text("Pet")
             UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        local counter = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_COUNTERED, DB.Enum.Metric.TOTAL)
+        if counter > 0 then
+            UI.TableNextColumn() UI.Text("Countered")
+            UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_COUNTERED)
+            UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_COUNTERED, true)
+            UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.MELEE_COUNTERED)
         end
 
         local spikes = DB.Data.Get(player_name, DB.Enum.Trackable.INCOMING_SPIKE_DMG, DB.Enum.Metric.TOTAL)
         if spikes > 0 then
             UI.TableNextColumn() UI.Text("Spikes")
             UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.INCOMING_SPIKE_DMG)
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 

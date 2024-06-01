@@ -502,6 +502,7 @@ end
 ---@param result table action data
 ------------------------------------------------------------------------------------------------------
 H.Melee.Spikes = function(audits, result)
+    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MELEE_COUNTERED, H.Metric.COUNT)
     local spike_effect = result.has_spike_effect
     if spike_effect and not audits.pet_name then
         local damage = result.spike_effect_param
@@ -511,6 +512,11 @@ H.Melee.Spikes = function(audits, result)
             DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.SPELL_DMG_TAKEN, H.Metric.TOTAL)
             DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.INCOMING_SPIKE_DMG, H.Metric.TOTAL)
             DB.Data.Update(H.Mode.INC, 1     , audits, H.Trackable.INCOMING_SPIKE_DMG, H.Metric.HIT_COUNT)
+        elseif spike_message == Ashita.Enum.Message.COUNTER then
+            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, H.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.MELEE_DMG_TAKEN, H.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.MELEE_COUNTERED, H.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, 1     , audits, H.Trackable.MELEE_COUNTERED, H.Metric.HIT_COUNT)
         end
     end
 end

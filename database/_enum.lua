@@ -14,6 +14,7 @@ DB.Enum.Trackable = T{
     MELEE_KICK          = "Melee Kicks",
     PET_MELEE           = "Pet Melee",
     PET_MELEE_DISCRETE  = "Pet Melee Discrete",
+    MELEE_COUNTERED     = "Countered",
     RANGED              = "Ranged",              -- Ranged
     PET_RANGED          = "Pet Ranged",
     THROWING            = "Throwing",

@@ -36,21 +36,6 @@ Focus.WS.Display = function(player_name, hide_publish)
         UI.EndTable()
     end
 
-    local guard = DB.Data.Get(player_name, DB.Enum.Trackable.WS, DB.Enum.Metric.GUARD)
-
-    if guard > 0 then
-        if UI.BeginTable("Aux. WS", 2, table_flags) then
-            UI.TableSetupColumn("Auxiliary", col_flags, name_width)
-            UI.TableSetupColumn("Rate", col_flags, width)
-            UI.TableHeadersRow()
-
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("Guarded")
-            UI.TableNextColumn() Column.Proc.Guard(player_name, DB.Enum.Trackable.WS)
-            UI.EndTable()
-        end
-    end
-
     -- Cataloged data
     local show_ws_publish = false
     local show_sc_publish = false
