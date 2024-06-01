@@ -225,8 +225,12 @@ ashita.events.register('command', 'command_cb', function (e)
 ---@diagnostic disable-next-line: undefined-field
     if table.contains({"/metrics"}, command_args[1]) or table.contains({"/met"}, command_args[1]) then
         local arg = command_args[2]
+
+        -- Help Text
         if not arg then
             Config.Show_Window[1] = not Config.Show_Window[1]
+
+        -- General Settings
         elseif arg == "show" or arg == "s" then
             Window.Toggle_Visibility()
         elseif arg == "debug" then
@@ -244,6 +248,8 @@ ashita.events.register('command', 'command_cb', function (e)
             Parse.Util.Calculate_Column_Flags()
         elseif arg == "clock" or arg == "c" then
             Parse.Config.Toggle_Clock()
+        elseif arg == "percent" then
+            Focus.Config.Percent_Toggle()
 
         -- General reports.
         elseif arg == "report" or arg == "rep" then

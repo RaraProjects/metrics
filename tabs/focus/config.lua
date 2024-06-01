@@ -58,7 +58,14 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Config.Percent_Details = function()
     if UI.Checkbox("Percent Details", {Focus.Config.Show_Percent_Details}) then
-        Focus.Config.Show_Percent_Details = not Focus.Config.Show_Percent_Details
+        Focus.Config.Percent_Toggle()
     end
     UI.SameLine() Window.Widgets.HelpMarker("Show numerator and denominator for percentages in the same cell.")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the percent details setting.
+------------------------------------------------------------------------------------------------------
+Focus.Config.Percent_Toggle = function()
+    Focus.Config.Show_Percent_Details = not Focus.Config.Show_Percent_Details
 end
