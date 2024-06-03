@@ -72,6 +72,29 @@ Blog.Widgets.First_Page = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Jumps to the previous page in the battle log.
+------------------------------------------------------------------------------------------------------
+Blog.Widgets.Previous_Page = function()
+    if UI.Button("<") then
+        local prev_page = Blog.Page - 1
+        if prev_page < 1 then return nil end
+        Blog.Page = prev_page
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Jumps to the next page in the battle log.
+------------------------------------------------------------------------------------------------------
+Blog.Widgets.Next_Page = function()
+    if UI.Button(">") then
+        local last_page = Blog.Max_Page()
+        local next_page = Blog.Page + 1
+        if next_page > last_page then return nil end
+        Blog.Page = next_page
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Jumps to the last page in the battle log.
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.Last_Page = function()

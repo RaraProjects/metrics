@@ -292,7 +292,7 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
 
         if not multi_attack_found then
             UI.TableNextRow()
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "None")
+            UI.TableNextColumn() UI.Text("None")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             if kick_damage > 0 then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end

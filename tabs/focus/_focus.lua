@@ -163,9 +163,12 @@ Focus.Overall = function(player_name)
         if pet > 0     then UI.TableSetupColumn("Pet", col_flags, width) end
         UI.TableHeadersRow()
 
+        local total_trackable = DB.Enum.Trackable.TOTAL_NO_SC
+        if Parse.Config.Include_SC_Damage() then total_trackable = DB.Enum.Trackable.TOTAL end
+
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Percent")
-        UI.TableNextColumn() Column.Damage.Total(player_name, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, total_trackable, true)
         if melee > 0   then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, true) end
         if ranged > 0  then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, true) end
         if ws > 0      then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.WS, true) end

@@ -55,6 +55,8 @@ Blog.Populate = function()
     Blog.Widgets.Settings_Button()
     UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Page()
     UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.First_Page()
+    UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Previous_Page()
+    UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Next_Page()
     UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Last_Page()
     if Blog.Filtered_Count > 0 then UI.Text("Filtered Rows: " .. tostring(Blog.Filtered_Count)) end
 

@@ -31,11 +31,12 @@ end
 Focus.Abilities.Total = function(player_name)
     local col_flags = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Standard
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
 
     if UI.BeginTable("Ability", 2, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
-        UI.TableSetupColumn("Total", col_flags, name_width)
+        UI.TableSetupColumn("Total", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
@@ -45,6 +46,10 @@ Focus.Abilities.Total = function(player_name)
         UI.TableNextRow()
         UI.TableNextColumn()UI.Text("Healing")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_HEALING)
+
+        UI.TableNextRow()
+        UI.TableNextColumn()UI.Text("MP Recovery")
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY)
 
         UI.EndTable()
     end
