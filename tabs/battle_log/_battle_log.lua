@@ -68,7 +68,7 @@ Blog.Populate = function()
         local count = 1
         Blog.Filtered_Count = 0
         for i = start, 100000, 1 do
-            if count > stop then break end
+            if count > Metrics.Blog.Visible_Length then break end
             local entry = Blog.Log[i]
             if entry then
                 if entry.Flag and Blog.Show_Row(entry.Flag.Value) then
@@ -81,6 +81,12 @@ Blog.Populate = function()
         end
 
         UI.EndTable()
+
+        if _Debug.Is_Enabled() then
+            UI.Text("Start: " ..tostring(start)) UI.SameLine() UI.Text(" ") UI.SameLine()
+            UI.Text("Stop: " ..tostring(stop)) UI.SameLine() UI.Text(" ") UI.SameLine()
+            UI.Text("Showing: " ..tostring(count - 1))
+        end
     end
 end
 
