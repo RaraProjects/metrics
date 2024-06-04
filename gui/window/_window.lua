@@ -59,18 +59,11 @@ Window.Table.Flags = {
     Scrollable = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_ScrollY),
 }
 
+Window.Reset_Position = true
+
 require("gui.window.themes")
 require("gui.window.widgets")
 require("gui.window.config")
-
-------------------------------------------------------------------------------------------------------
--- Found the font scaling code here:
--- https://skia.googlesource.com/external/github.com/ocornut/imgui/+/v1.51/imgui_demo.cpp
-------------------------------------------------------------------------------------------------------
-Window.Initialize = function()
-    UI.SetNextWindowPos({Metrics.Window.X_Pos, Metrics.Window.Y_Pos}, ImGuiCond_Always)
-    Window.Populate()
-end
 
 ------------------------------------------------------------------------------------------------------
 -- Populate the data in the monitor window.
@@ -85,11 +78,16 @@ Window.Populate = function()
         UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
 
         local window_flags = Window.Flags
-        if not Metrics.Window.Show_Title then
-            window_flags = bit.bor(window_flags, ImGuiWindowFlags_NoTitleBar)
+        if not Metrics.Window.Show_Title then window_flags = bit.bor(window_flags, ImGuiWindowFlags_NoTitleBar) end
+
+        -- Handle resetting the window position between characters.
+        if Window.Reset_Position then
+            UI.SetNextWindowPos({Metrics.Window.X_Pos, Metrics.Window.Y_Pos}, ImGuiCond_Always)
+            Window.Reset_Position = false
         end
 
         if UI.Begin(Window.Name, Window.Visible, window_flags) then
+            UI.Text(tostring(Metrics.Window.X_Pos) .. " " .. tostring(Metrics.Window.Y_Pos))
             Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()
             Window.Set_Window_Scale()
             Window.Theme.Set()

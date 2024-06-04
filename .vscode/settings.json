@@ -104,7 +104,8 @@
         "ImGuiTabItemFlags_SetSelected",
         "ImGuiWindowFlags_NoBackground",
         "ImGuiTableBgTarget_CellBg",
-        "ImGuiTableBgTarget_RowBg0"
+        "ImGuiTableBgTarget_RowBg0",
+        "ImGuiCond_Once"
     ],
     "Lua.diagnostics.disable": [
         "undefined-field"

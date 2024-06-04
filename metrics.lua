@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "06/03/24.00"
+addon.version = "06/04/24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -43,10 +43,8 @@ require("database._database")
 require("file")
 Timers = require("timers")
 
--- Ashita Helpers
-require("ashita._ashita")
 
--- Action Handlers
+require("ashita._ashita")
 require("handlers._handler")
 
 -- Windows
@@ -58,6 +56,8 @@ require("tabs.focus._focus")
 require("tabs.battle_log._battle_log")
 require("tabs.report._report")
 
+require("commands")
+
 -- Debug
 require("debug._debug")
 
@@ -67,37 +67,10 @@ require("debug._debug")
 -- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
 -- https://github.com/ocornut/imgui/blob/master/imgui_tables.cpp
 ------------------------------------------------------------------------------------------------------
-ashita.events.register('d3d_present', 'present_cb', function ()
-    if not _Globals.Initialized then
-        -- Initialize Settings
-        Metrics = T{
-            Window = Settings_File.load(Window.Defaults, Config.Enum.File.WINDOW),
-            Parse  = Settings_File.load(Parse.Config.Defaults, Config.Enum.File.PARSE),
-            Focus  = Settings_File.load(Focus.Config.Defaults, Config.Enum.File.FOCUS),
-            Blog   = Settings_File.load(Blog.Config.Defaults, Config.Enum.File.BLOG),
-            Model  = Settings_File.load(DB.Defaults, Config.Enum.File.DATABASE),
-            Report = Settings_File.load(Report.Config.Defaults, Config.Enum.File.REPORT),
-        }
-
-        -- Initialize Modules
-        Window.Initialize()
-        DB.Initialize()
-        Parse.Initialize()
-        Ashita.Party.Refresh()
-
-        -- Start the clock.
-        Timers.Start(Timers.Enum.Names.PARSE)
-        Timers.Start(Timers.Enum.Names.AUTOPAUSE)
-        Timers.Start(Timers.Enum.Names.DPS)
-
-        _Globals.Initialized = true
-    end
-
+ashita.events.register('d3d_present', 'present_cb', function()
+    if not _Globals.Initialized then return nil end
     if not Ashita.Player.Is_Logged_In() then return nil end
-
-    if _Debug.Is_Enabled() and _Debug.Config.Show_Demo then
-        UI.ShowDemoWindow()
-    end
+    if _Debug.Is_Enabled() and _Debug.Config.Show_Demo then UI.ShowDemoWindow() end
 
     Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
     Timers.Cycle(Timers.Enum.Names.DPS)
@@ -216,92 +189,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     end
 end)
 
-------------------------------------------------------------------------------------------------------
--- Subscribe to addon commands.
--- Influenced by HXUI: https://github.com/tirem/HXUI
-------------------------------------------------------------------------------------------------------
-ashita.events.register('command', 'command_cb', function (e)
-    local command_args = e.command:lower():args()
----@diagnostic disable-next-line: undefined-field
-    if table.contains({"/metrics"}, command_args[1]) or table.contains({"/met"}, command_args[1]) then
-        local arg = command_args[2]
 
-        -- Help Text
-        if not arg then
-            Config.Show_Window[1] = not Config.Show_Window[1]
-
-        -- General Settings
-        elseif arg == "show" or arg == "s" then
-            Window.Toggle_Visibility()
-        elseif arg == "debug" then
-            _Debug.Toggle()
-        elseif arg == "nano" or arg == "n" then
-            Parse.Nano.Toggle()
-        elseif arg == "mini" or arg == "m" then
-            Parse.Mini.Toggle()
-        elseif arg == "reset" or arg == "r" then
-            DB.Initialize(true)
-        elseif arg == "full" or arg == "f" then
-            Parse.Full.Enable()
-        elseif (arg == "pet" or arg == "p") and (Window.Tabs.Active == Window.Tabs.Names.PARSE or Parse.Mini.Is_Enabled()) then
-            Parse.Config.Toggle_Pet()
-            Parse.Util.Calculate_Column_Flags()
-        elseif arg == "clock" or arg == "c" then
-            Parse.Config.Toggle_Clock()
-        elseif arg == "percent" then
-            Focus.Config.Percent_Toggle()
-
-        -- General reports.
-        elseif arg == "report" or arg == "rep" then
-            local report_type = command_args[3]
-            if report_type == "total" then
-                Report.Publishing.Total_Damage()
-            elseif report_type == "acc" then
-                Report.Publishing.Accuracy()
-            elseif report_type == "melee" then
-                Report.Publishing.Damage_By_Type(DB.Enum.Trackable.MELEE)
-            elseif report_type == "ws" then
-                Report.Publishing.Damage_By_Type(DB.Enum.Trackable.WS)
-            elseif report_type == "healing" then
-                Report.Publishing.Damage_By_Type(DB.Enum.Trackable.HEALING)
-            end
-
-        -- Primary tab switching.
-        elseif arg == "team" or arg == "parse" then
-            Window.Tabs.Switch[Window.Tabs.Names.PARSE] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "focus" then
-            Window.Tabs.Switch[Window.Tabs.Names.FOCUS] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "log" or arg == "bl" then
-            Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "report" or arg == "rep" then
-            Window.Tabs.Switch[Window.Tabs.Names.REPORT] = ImGuiTabItemFlags_SetSelected
-
-        -- Player selection
-        elseif arg == "player" or arg == "pl" then
-            local player_string = command_args[3]
-            _Debug.Error.Add("Metrics Command: " .. tostring(arg) .. " " .. tostring(command_args[3]))
-            if player_string then
-                DB.Widgets.Util.Player_Switch(player_string)
-            end
-
-        -- Focus tab switching.
-        elseif arg == "melee" then
-            Focus.Tabs.Switch[Focus.Tabs.Names.MELEE] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "ranged" then
-            Focus.Tabs.Switch[Focus.Tabs.Names.RANGED] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "ws" or arg == "weaponskill" then
-            Focus.Tabs.Switch[Focus.Tabs.Names.WS] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "magic" then
-            Focus.Tabs.Switch[Focus.Tabs.Names.MAGIC] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "ability" or arg == "abil" then
-            Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES] = ImGuiTabItemFlags_SetSelected
-        elseif (arg == "pet" or arg == "p") and Window.Tabs.Active == Window.Tabs.Names.FOCUS then
-            Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "defense" or arg == "def" then
-            Focus.Tabs.Switch[Focus.Tabs.Names.DEFENSE] = ImGuiTabItemFlags_SetSelected
-        end
-    end
-end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Database settings.
@@ -352,6 +240,7 @@ Settings_File.register(Config.Enum.File.WINDOW, "settings_update", function(sett
         Metrics.Window = settings
         Window.Theme.Is_Set = false
         Window.Scaling_Set = false
+        Window.Reset_Position = true
         Settings_File.save(Config.Enum.File.WINDOW)
     end
 end)
@@ -364,6 +253,32 @@ Settings_File.register(Config.Enum.File.REPORT, "settings_update", function(sett
         Metrics.Report = settings
         Settings_File.save(Config.Enum.File.REPORT)
     end
+end)
+
+------------------------------------------------------------------------------------------------------
+-- Load settings when the addon is loaded.
+------------------------------------------------------------------------------------------------------
+ashita.events.register('load', 'load_cb', function()
+    Metrics = T{
+        Window = Settings_File.load(Window.Defaults, Config.Enum.File.WINDOW),
+        Parse  = Settings_File.load(Parse.Config.Defaults, Config.Enum.File.PARSE),
+        Focus  = Settings_File.load(Focus.Config.Defaults, Config.Enum.File.FOCUS),
+        Blog   = Settings_File.load(Blog.Config.Defaults, Config.Enum.File.BLOG),
+        Model  = Settings_File.load(DB.Defaults, Config.Enum.File.DATABASE),
+        Report = Settings_File.load(Report.Config.Defaults, Config.Enum.File.REPORT),
+    }
+
+    -- Initialize Modules
+    DB.Initialize()
+    Parse.Initialize()
+    Ashita.Party.Refresh()
+
+    -- Start the clock.
+    Timers.Start(Timers.Enum.Names.PARSE)
+    Timers.Start(Timers.Enum.Names.AUTOPAUSE)
+    Timers.Start(Timers.Enum.Names.DPS)
+
+    _Globals.Initialized = true
 end)
 
 ------------------------------------------------------------------------------------------------------

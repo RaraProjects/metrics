@@ -8,7 +8,6 @@ Window.Config.Reset = function()
     Metrics.Window.Window_Scaling = Window.Defaults.Window_Scaling
     Metrics.Window.Show_Title = Window.Defaults.Show_Title
     Window.Scaling_Set = false
-    Window.Initialize()
 end
 
 ------------------------------------------------------------------------------------------------------
