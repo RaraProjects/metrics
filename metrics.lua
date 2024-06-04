@@ -69,8 +69,6 @@ require("debug._debug")
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('d3d_present', 'present_cb', function ()
     if not _Globals.Initialized then
-        if not Ashita.Player.Is_Logged_In() then return nil end
-
         -- Initialize Settings
         Metrics = T{
             Window = Settings_File.load(Window.Defaults, Config.Enum.File.WINDOW),
@@ -94,6 +92,8 @@ ashita.events.register('d3d_present', 'present_cb', function ()
 
         _Globals.Initialized = true
     end
+
+    if not Ashita.Player.Is_Logged_In() then return nil end
 
     if _Debug.Is_Enabled() and _Debug.Config.Show_Demo then
         UI.ShowDemoWindow()
@@ -307,16 +307,20 @@ end)
 -- Check for character switches. Reloads character specific Database settings.
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.Enum.File.DATABASE, "settings_update", function(settings)
-    if settings ~= nil and _Globals.Initialized then Metrics.Model = settings end
+    if settings ~= nil then
+        Metrics.Model = settings
+        Settings_File.save(Config.Enum.File.DATABASE)
+    end
 end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Parse settings.
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.Enum.File.PARSE, "settings_update", function(settings)
-    if settings ~= nil and _Globals.Initialized then
+    if settings ~= nil then
         Metrics.Parse = settings
         Parse.Util.Calculate_Column_Flags()
+        Settings_File.save(Config.Enum.File.PARSE)
     end
 end)
 
@@ -324,24 +328,31 @@ end)
 -- Check for character switches. Reloads character specific Parse settings.
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.Enum.File.FOCUS, "settings_update", function(settings)
-    if settings ~= nil and _Globals.Initialized then Metrics.Focus = settings end
+    if settings ~= nil then
+        Metrics.Focus = settings
+        Settings_File.save(Config.Enum.File.FOCUS)
+    end
 end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Parse settings.
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.Enum.File.BLOG, "settings_update", function(settings)
-    if settings ~= nil and _Globals.Initialized then Metrics.Blog = settings end
+    if settings ~= nil then
+        Metrics.Blog = settings
+        Settings_File.save(Config.Enum.File.BLOG)
+    end
 end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Parse settings.
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.Enum.File.WINDOW, "settings_update", function(settings)
-    if settings ~= nil and _Globals.Initialized then
+    if settings ~= nil then
         Metrics.Window = settings
         Window.Theme.Is_Set = false
         Window.Scaling_Set = false
+        Settings_File.save(Config.Enum.File.WINDOW)
     end
 end)
 
@@ -349,7 +360,10 @@ end)
 -- Check for character switches. Reloads character specific Parse settings.
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.Enum.File.REPORT, "settings_update", function(settings)
-    if settings ~= nil and _Globals.Initialized then Metrics.Report = settings end
+    if settings ~= nil then
+        Metrics.Report = settings
+        Settings_File.save(Config.Enum.File.REPORT)
+    end
 end)
 
 ------------------------------------------------------------------------------------------------------
