@@ -87,7 +87,6 @@ Window.Populate = function()
         end
 
         if UI.Begin(Window.Name, Window.Visible, window_flags) then
-            UI.Text(tostring(Metrics.Window.X_Pos) .. " " .. tostring(Metrics.Window.Y_Pos))
             Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()
             Window.Set_Window_Scale()
             Window.Theme.Set()
