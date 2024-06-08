@@ -3,12 +3,22 @@ Metrics is a DPS parsing tool at it's core, but it can take you much deeper into
 
 I have two branches you can download from 1) Release and 2) Testing. The Testing branch is where I push my changes the most frequently. The TL;DR is that if you want more frequent changes or the newest content that are tested or mostly tested then you should try downloading from the Testing branch. If you want slower / larger changes that have more field testing then you should use the Release branch. I test the changes myself to the best of my ability and I work a couple others who also do some testing for things like alliance content. Once I feel sufficient testing has been completed I will push the changes on the Testing branch to the Release branch. My number one priority is to prevent crashes because if you crash you lose your data and that's a bad feeling.
 
+## Installation
+Within your HorizonXI install location (mine is ~/HorizonXI/Game) you should see several folders. There is one called /addons and another called /config/addons. The plain (non config) /addons folder is the one that houses the base addons. This is the folder you want to put your addon folders.
+
+1. Download Metrics using the green Code button near the top of Metrics Github page.
+2. Unzip the folder. This will create a folder with metrics in the name. The rest of the name depends on which branch you're downloading (Release or Testing).
+3. Inside the folder you just created, there will be another folder with the same name. Put that folder in your /addons folder.
+4. Remove the "-Release" or "-Testing" from the folder name. The folder should just be called "metrics".
+5. Load the addon from inside the game by typing "/addon load metrics" in the game chat.
+6. If you get an error saying "No such file or directory" when loading, then you may have forgotten to remove the branch tag in step #4.
+
 ## Table of Contents<br>
-2. [Parse](#parse)
-3. [Focus](#focus)
-4. [Battle Log](#battle-log)
-5. [Report](#report)
-6. [Settings](#settings)
+1. [Parse](#parse)
+2. [Focus](#focus)
+3. [Battle Log](#battle-log)
+4. [Report](#report)
+5. [Settings](#settings)
 
 ## Parse
 This screen resembles your typical parser. It shows things like DPS, total damage, accuracy, and various damage breakdown column. There are three different modes to view the parser depending on how much detail you want to see at the time (and how much screen space you are willing to commit to that data).
