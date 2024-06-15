@@ -32,6 +32,8 @@ ashita.events.register('command', 'command_cb', function (e)
             Parse.Config.Toggle_Clock()
         elseif arg == "percent" then
             Focus.Config.Percent_Toggle()
+        elseif arg == "dps" then
+            Metrics.Parse.DPS = not Metrics.Parse.DPS
 
         -- General reports.
         elseif arg == "report" or arg == "rep" then

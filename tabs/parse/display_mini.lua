@@ -7,8 +7,9 @@ Parse.Mini.Table_Flags = bit.bor(ImGuiTableFlags_Borders)
 -- Loads shows just the Team tab with just the player.
 ------------------------------------------------------------------------------------------------------
 Parse.Mini.Populate = function()
-    local columns = 5
+    local columns = 4
     if Metrics.Parse.Pet then columns = columns + 2 end
+    if Metrics.Parse.DPS then columns = columns + 1 end
     if UI.BeginTable("Team Mini", columns, Parse.Mini.Table_Flags) then
         Parse.Mini.Headers()
 
