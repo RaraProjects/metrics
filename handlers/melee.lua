@@ -141,7 +141,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.Melee.Blog = function(actor_mob, owner_mob, damage)
     local blog_name = actor_mob.name
-    if owner_mob then blog_name = owner_mob.name .. " (" .. actor_mob.name .. ")" end
+    if owner_mob then blog_name = tostring(owner_mob.name) .. " (" .. actor_mob.name .. ")" end
     Blog.Add(blog_name, Blog.Enum.Types.MELEE, DB.Enum.Trackable.MELEE, damage)
 end
 
