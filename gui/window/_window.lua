@@ -11,6 +11,7 @@ Window.Defaults = T{
     X_Pos = 100,
     Y_Pos = 100,
     Show_Title = false,
+    Show_Mouse = false,
 }
 
 Window.Flags = bit.bor(
@@ -60,6 +61,9 @@ Window.Table.Flags = {
 }
 
 Window.Reset_Position = true
+
+Window.IO = UI.GetIO()
+Window.IO.MouseDrawCursor = false
 
 require("gui.window.themes")
 require("gui.window.widgets")

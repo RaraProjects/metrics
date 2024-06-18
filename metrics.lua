@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "06.15.24.00"
+addon.version = "06.17.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -272,6 +272,7 @@ ashita.events.register('load', 'load_cb', function()
     DB.Initialize()
     Parse.Initialize()
     Ashita.Party.Refresh()
+    Window.IO.MouseDrawCursor = Metrics.Window.Show_Mouse
 
     -- Start the clock.
     Timers.Start(Timers.Enum.Names.PARSE)
