@@ -52,6 +52,22 @@ Column.Damage.Average_By_Type = function(player_name, damage_type, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Shows the damage metric for a trackable.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param damage_type string a trackable from the model.
+---@param metric string
+---@param justify? boolean whether or not to right justify the text
+---@return number
+------------------------------------------------------------------------------------------------------
+Column.Damage.By_Type_Metric = function(player_name, damage_type, metric, justify)
+    local damage = DB.Data.Get(player_name, damage_type, metric)
+    if metric == DB.Enum.Metric.MIN and damage == DB.Enum.Values.MAX_DAMAGE then damage = 0 end
+    local color = Column.String.Color_Zero(damage)
+    return UI.TextColored(color, Column.String.Format_Number(damage, justify))
+end
+
+------------------------------------------------------------------------------------------------------
 -- Grabs the damage of a certain trackable that the entity's pet has done.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string the entity that owns the pet.

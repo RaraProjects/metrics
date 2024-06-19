@@ -13,6 +13,7 @@ Focus.Melee.Display = function(player_name)
     local endebuff = DB.Data.Get(player_name, DB.Enum.Trackable.ENDEBUFF, DB.Enum.Metric.HIT_COUNT)
 
     Focus.Melee.Total(player_name, off_hand, kick_damage, counter_damage)
+    Focus.Melee.Min_Max(player_name)
     Focus.Melee.Auxiliary(player_name, endamage)
     Focus.Melee.Multi_Attack(player_name, kick_damage)
 
@@ -190,6 +191,53 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(shadows))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows min, max, average damage for melee attacks.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Melee.Min_Max = function(player_name)
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    local off_hand = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.TOTAL)
+    local kick_damage = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.TOTAL)
+
+    if UI.BeginTable("Min Max Melee", 4, table_flags) then
+        UI.TableSetupColumn("MMA", col_flags, name_width)
+        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("Minimum", col_flags, width)
+        UI.TableSetupColumn("Maximum", col_flags, width)
+        UI.TableHeadersRow()
+
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Main-Hand")
+        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.MELEE_MAIN)
+        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MIN)
+        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MAX)
+
+        if off_hand > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Off-Hand")
+            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.MELEE_OFFHAND)
+            UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MIN)
+            UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MAX)
+        end
+
+        if kick_damage > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Kick Attacks")
+            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.MELEE_KICK)
+            UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MIN)
+            UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MAX)
         end
 
         UI.EndTable()

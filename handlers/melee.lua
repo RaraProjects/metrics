@@ -115,7 +115,7 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     throwing = H.Melee.Animation(animation_id, audits, damage, melee_type_broad, throwing, no_damage)
 
     -- Min/Max
-    H.Melee.Min_Max(throwing, damage, audits, melee_type_broad, no_damage)
+    H.Melee.Min_Max(throwing, damage, audits, melee_type_discrete, no_damage)
 
     -- Additional effects like enspell.
     H.Melee.Additional_Effect(audits, result, no_damage)
@@ -432,17 +432,17 @@ end
 ---@param throwing boolean whether or not the animation is a NIN auto throwing attack.
 ---@param damage number
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param melee_type_broad string player melee or pet melee.
+---@param melee_type_discrete string player melee or pet melee.
 ---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Min_Max = function(throwing, damage, audits, melee_type_broad, no_damage)
+H.Melee.Min_Max = function(throwing, damage, audits, melee_type_discrete, no_damage)
     if no_damage then damage = 0 end
     if throwing then
         if damage > 0 and (damage < DB.Data.Get(audits.player_name, H.Trackable.RANGED, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MIN) end
         if damage > DB.Data.Get(audits.player_name, H.Trackable.RANGED, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MAX) end
     else
-        if damage > 0 and (damage < DB.Data.Get(audits.player_name, melee_type_broad, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_broad, H.Metric.MIN) end
-        if damage > DB.Data.Get(audits.player_name, melee_type_broad, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_broad, H.Metric.MAX) end
+        if damage > 0 and (damage < DB.Data.Get(audits.player_name, melee_type_discrete, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_discrete, H.Metric.MIN) end
+        if damage > DB.Data.Get(audits.player_name, melee_type_discrete, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_discrete, H.Metric.MAX) end
     end
 end
 
