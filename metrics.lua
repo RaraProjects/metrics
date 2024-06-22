@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "06.18.24.00"
+addon.version = "06.21.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -48,13 +48,14 @@ require("ashita._ashita")
 require("handlers._handler")
 
 -- Windows
-Config = require("tabs.settings.config")
+require("windows.config._config")
 require("gui.window._window")
 require("gui.columns._column")
-require("tabs.parse._parse")
-require("tabs.focus._focus")
-require("tabs.battle_log._battle_log")
-require("tabs.report._report")
+require("windows.parse._parse")
+require("windows.focus._focus")
+require("windows.battle log._battle_log")
+require("windows.report._report")
+require("windows.hub")
 
 require("commands")
 
@@ -75,6 +76,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
     Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
     Timers.Cycle(Timers.Enum.Names.DPS)
     Window.Populate()
+    Hub.Populate()
 end)
 
 ------------------------------------------------------------------------------------------------------
@@ -188,8 +190,6 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         -- Not implemented.
     end
 end)
-
-
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Database settings.

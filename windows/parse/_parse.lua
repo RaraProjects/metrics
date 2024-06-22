@@ -13,12 +13,13 @@ Parse.Columns = {
 }
 
 -- Load dependencies
-require("tabs.parse.enum")
-require("tabs.parse.config")
-require("tabs.parse.display_full")
-require("tabs.parse.display_mini")
-require("tabs.parse.display_nano")
-require("tabs.parse.widgets")
+require("windows.parse.enum")
+require("windows.parse.config")
+require("windows.parse.display_full")
+require("windows.parse.display_mini")
+require("windows.parse.display_nano")
+require("windows.parse.widgets")
+require("windows.parse.window")
 
 ------------------------------------------------------------------------------------------------------
 -- Initializes the Parse screen.

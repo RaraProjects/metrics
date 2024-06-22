@@ -42,12 +42,29 @@ end
 -- Toggles the settings showing for the battle log.
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.Settings_Button = function()
-    if UI.Button("Settings") then
+    if UI.SmallButton("Settings") then
         Blog.Config.Show_Settings = not Blog.Config.Show_Settings
     end
-    if Blog.Config.Show_Settings then
-        Blog.Config.Display()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the filter pages showing.
+------------------------------------------------------------------------------------------------------
+Blog.Widgets.Show_Page = function()
+    if UI.SmallButton("Paging") then
+        Metrics.Blog.Flags.Paging = not Metrics.Blog.Flags.Paging
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Displays the battle log page buttons.
+------------------------------------------------------------------------------------------------------
+Blog.Widgets.Page_Buttons = function()
+    Blog.Widgets.First_Page()
+    UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Previous_Page()
+    UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Page()
+    UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Next_Page()
+    UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Last_Page()
 end
 
 ------------------------------------------------------------------------------------------------------

@@ -13,6 +13,8 @@ Blog.Config.Defaults.Flags = T{
     Healing   = true,
     Deaths    = false,
     Mob_Death = true,
+    Paging    = false,
+    Streaming = true,
 }
 Blog.Config.Defaults.Thresholds = T{
     WS    = 600,

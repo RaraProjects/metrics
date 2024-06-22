@@ -9,15 +9,16 @@ Parse.Full.Width = T{
 -- Loads the Team data to the screen.
 ------------------------------------------------------------------------------------------------------
 Parse.Full.Populate = function()
-    DB.Widgets.Mob_Filter()
     Parse.Widgets.Settings_Button()
+    UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Filter_Button()
+    UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Timer_Button()
+    if Metrics.Parse.Show_Filter then DB.Widgets.Mob_Filter() end
     Parse.Widgets.Clock()
     if Parse.Config.Show_Settings then Parse.Config.Display() end
 
     local player = Ashita.Player.My_Mob()
     if not player then return nil end
 
-    -- Main Body
     if UI.BeginTable(Parse.Full.Name, Parse.Columns.Current, Parse.Full.Table_Flags) then
         Parse.Full.Headers()
 

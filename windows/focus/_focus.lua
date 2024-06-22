@@ -27,15 +27,16 @@ Focus.Table_Flags  = Window.Table.Flags.Fixed_Borders
 Focus.Screenshot_Mode = {false}
 
 -- Load dependencies
-require("tabs.focus.config")
-require("tabs.focus.melee")
-require("tabs.focus.ranged")
-require("tabs.focus.weaponskills")
-require("tabs.focus.magic")
-require("tabs.focus.abilities")
-require("tabs.focus.pets")
-require("tabs.focus.defense")
-require("tabs.focus.cataloged")
+require("windows.focus.config")
+require("windows.focus.melee")
+require("windows.focus.ranged")
+require("windows.focus.weaponskills")
+require("windows.focus.magic")
+require("windows.focus.abilities")
+require("windows.focus.pets")
+require("windows.focus.defense")
+require("windows.focus.cataloged")
+require("windows.focus.window")
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the focus settings.
@@ -62,7 +63,11 @@ Focus.Populate = function()
     if not unselected then UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.Screenshot_Button() end
     if Focus.Config.Show_Settings then Focus.Config.Display() end
 
-    if unselected then return nil end
+    if unselected then
+        UI.Separator()
+        UI.Text("No player selected.")
+        return nil
+    end
 
     UI.Separator()
     Focus.Overall(player_name)

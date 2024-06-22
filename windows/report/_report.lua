@@ -3,9 +3,10 @@ Report = T{}
 Report.Section = T{}
 
 -- Load dependencies
-require("tabs.report.config")
-require("tabs.report.publishing")
-require("tabs.report.widgets")
+require("windows.report.config")
+require("windows.report.publishing")
+require("windows.report.widgets")
+require("windows.report.window")
 
 ------------------------------------------------------------------------------------------------------
 -- Creates some buttons to publish various party metrics to chat.

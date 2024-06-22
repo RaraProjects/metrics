@@ -12,6 +12,20 @@ Window.Defaults = T{
     Y_Pos = 100,
     Show_Title = false,
     Show_Mouse = false,
+    Multi_Window = false,
+    Active_Window = "Parse",
+    Hub_X = 100,
+    Hub_Y = 100,
+    Parse_X = 100,
+    Parse_Y = 100,
+    Focus_X = 100,
+    Focus_Y = 100,
+    Blog_X = 100,
+    Blog_Y = 100,
+    Report_X = 100,
+    Report_Y = 100,
+    Config_X = 100,
+    Config_Y = 100,
 }
 
 Window.Flags = bit.bor(
@@ -43,7 +57,7 @@ Window.Tabs.Names = {
     DATAVIEW  = "Data Viewer",
 }
 Window.Tabs.Switch = {
-    [Window.Tabs.Names.PARSE]      = nil,
+    [Window.Tabs.Names.PARSE]     = nil,
     [Window.Tabs.Names.FOCUS]     = nil,
     [Window.Tabs.Names.BATTLELOG] = nil,
     [Window.Tabs.Names.REPORT]    = nil,
@@ -86,63 +100,26 @@ Window.Populate = function()
 
         -- Handle resetting the window position between characters.
         if Window.Reset_Position then
-            UI.SetNextWindowPos({Metrics.Window.X_Pos, Metrics.Window.Y_Pos}, ImGuiCond_Always)
+            UI.SetNextWindowPos({Metrics.Window.Parse_X, Metrics.Window.Parse_Y}, ImGuiCond_Always)
             Window.Reset_Position = false
         end
 
-        if UI.Begin(Window.Name, Window.Visible, window_flags) then
-            Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()
-            Window.Set_Window_Scale()
-            Window.Theme.Set()
+        -- local nano_mode = Parse.Nano.Is_Enabled()
+        -- local mini_mode = Parse.Mini.Is_Enabled()
 
-            if Parse.Nano.Is_Enabled() then
-                Parse.Nano.Populate()
-            elseif Parse.Mini.Is_Enabled() then
-                Parse.Mini.Populate()
-            else
-                if _Debug.Is_Enabled() then UI.Text("Error Count: " .. tostring(_Debug.Error.Util.Error_Count())) end
-                if UI.BeginTabBar(Window.Tabs.Names.PARENT, Window.Tabs.Flags) then
-                    if UI.BeginTabItem(Parse.Tab_Name, false, Window.Tabs.Switch[Window.Tabs.Names.PARSE]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.PARSE] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.PARSE
-                        Parse.Full.Populate()
-                        UI.EndTabItem()
-                    end
-                    if UI.BeginTabItem(Focus.Tab_Name, false, Window.Tabs.Switch[Window.Tabs.Names.FOCUS]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.FOCUS] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.FOCUS
-                        Focus.Populate()
-                        UI.EndTabItem()
-                    end
-                    if UI.BeginTabItem(Window.Tabs.Names.BATTLELOG, false, Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.BATTLELOG
-                        Blog.Populate()
-                        UI.EndTabItem()
-                    end
-                    if UI.BeginTabItem(Window.Tabs.Names.REPORT, false, Window.Tabs.Switch[Window.Tabs.Names.REPORT]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.REPORT] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.REPORT
-                        Report.Populate()
-                        UI.EndTabItem()
-                    end
-                    if UI.BeginTabItem(Window.Tabs.Names.SETTINGS, false, Window.Tabs.Switch[Window.Tabs.Names.SETTINGS]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.SETTINGS] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.SETTINGS
-                        Config.Populate()
-                        UI.EndTabItem()
-                    end
-                    if _Debug.Is_Enabled() then
-                        if UI.BeginTabItem(Window.Tabs.Names.DEBUG) then
-                            _Debug.Populate()
-                            UI.EndTabItem()
-                        end
-                    end
-                    UI.EndTabBar()
-                end
-                UI.End()
-            end
-        end
+        -- if not Metrics.Window.Multi_Window and (nano_mode or mini_mode) then
+        --     if UI.Begin(Window.Name, Window.Visible, window_flags) then
+        --         Metrics.Window.Parse_X, Metrics.Window.Parse_Y = UI.GetWindowPos()
+        --         Window.Set_Window_Scale()
+        --         Window.Theme.Set()
+        --         if nano_mode then
+        --             Parse.Nano.Populate()
+        --         elseif mini_mode then
+        --             Parse.Mini.Populate()
+        --         end
+        --         UI.End()
+        --     end
+        -- end
 
         local player = Ashita.Player.My_Mob()
         if player and Parse.Config.Show_DPS_Graph() then
@@ -154,7 +131,7 @@ Window.Populate = function()
         end
 
         if Config.Show_Window[1] then
-            if UI.Begin("Help", Config.Show_Window, Window.Flags) then
+            if UI.Begin("Metrics - Commands", Config.Show_Window, Window.Flags) then
                 Config.Section.Text_Commands()
                 UI.End()
             end
@@ -167,13 +144,6 @@ Window.Populate = function()
                 UI.End()
             end
             UI.PopStyleVar(1)
-        end
-
-        if _Debug.Is_Enabled() and _Debug.Config.Show_Unit_Tests[1] then
-            if UI.Begin("Unit Tests", _Debug.Config.Show_Unit_Tests, Window.Flags) then
-                _Debug.Unit.Populate()
-                UI.End()
-            end
         end
 
         UI.PopStyleVar(5)

@@ -23,6 +23,7 @@ Parse.Config.Defaults = T{
     Deaths = false,
     Grand_Totals = false,
     Global_DPS = false,
+    Show_Filter = false,
     Display_Mode = Parse.Enum.Display_Mode.FULL,
 }
 

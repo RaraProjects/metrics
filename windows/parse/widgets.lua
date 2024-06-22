@@ -5,19 +5,36 @@ Parse.Widgets = T{}
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Clock = function()
     if Metrics.Parse.Show_Clock then
-        UI.SameLine() UI.Text(" ") UI.SameLine()
         local pause_string = ""
-        if Timers.Is_Paused(Timers.Enum.Names.PARSE) then pause_string = " (paused)" end
+        if Timers.Is_Paused(Timers.Enum.Names.PARSE) then pause_string = " (||)" end
         UI.Text("Duration: " .. tostring(Timers.Check("Metrics"))) UI.SameLine() UI.Text(pause_string) Parse.Widgets.Timer_Duration_Help_Text()
     end
 end
 
 ------------------------------------------------------------------------------------------------------
--- Toggles the settings showing for the battle log.
+-- Toggles the settings showing for the parse window.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Settings_Button = function()
     if UI.SmallButton("Settings") then
         Parse.Config.Show_Settings = not Parse.Config.Show_Settings
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the mob filter showing for the parse window.
+------------------------------------------------------------------------------------------------------
+Parse.Widgets.Filter_Button = function()
+    if UI.SmallButton("Filters") then
+        Metrics.Parse.Show_Filter = not Metrics.Parse.Show_Filter
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the duration timer showing for the parse window.
+------------------------------------------------------------------------------------------------------
+Parse.Widgets.Timer_Button = function()
+    if UI.SmallButton("Timer") then
+        Metrics.Parse.Show_Clock = not Metrics.Parse.Show_Clock
     end
 end
 
@@ -108,7 +125,7 @@ Parse.Widgets.Timer_Duration_Help_Text = function()
                                         .. " seconds of no actions. The timer will auto restart after someone affiliated with you "
                                         .. "(in your party or alliance) takes an action. Data collection does NOT stop while "
                                         .. "paused! The duration and auto-pause is to help you see how long your group has actually "
-                                        .. "been active and to help with possible DPS calculations in the future. \n")
+                                        .. "been active. \n")
 end
 
 ------------------------------------------------------------------------------------------------------

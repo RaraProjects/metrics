@@ -30,9 +30,10 @@ Blog.Enum.Types = T{
 Blog.Page = 1
 Blog.Filtered_Count = 0
 
-require("tabs.battle_log.config")
-require("tabs.battle_log.columns")
-require("tabs.battle_log.widgets")
+require("windows.battle log.config")
+require("windows.battle log.columns")
+require("windows.battle log.widgets")
+require("windows.battle log.window")
 
 -- FUTURE CONSIDERATIONS
 -- Highlight damage if the damage is higher than the average for that weaponskill.
@@ -52,13 +53,12 @@ Blog.Populate = function()
     local columns = 4
     if Metrics.Blog.Flags.Timestamp then columns = columns + 1 end
 
-    Blog.Widgets.Settings_Button()
-    UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Page()
-    UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.First_Page()
-    UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Previous_Page()
-    UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Next_Page()
-    UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Last_Page()
-    if Blog.Filtered_Count > 0 then UI.Text("Filtered Rows: " .. tostring(Blog.Filtered_Count)) end
+    Blog.Widgets.Settings_Button() UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Show_Page()
+    if Blog.Config.Show_Settings then Blog.Config.Display() end
+    if Metrics.Blog.Flags.Paging then
+        Blog.Widgets.Page_Buttons()
+        if Blog.Filtered_Count > 0 then UI.Text("Filtered Rows: " .. tostring(Blog.Filtered_Count)) end
+    end
 
     if UI.BeginTable("Blog", columns, Window.Table.Flags.Scrollable, table_size) then
         Blog.Display.Headers()

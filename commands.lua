@@ -14,7 +14,7 @@ ashita.events.register('command', 'command_cb', function (e)
 
         -- General Settings
         elseif arg == "show" or arg == "s" then
-            Window.Toggle_Visibility()
+            Hub.Toggle_Visibility()
         elseif arg == "debug" then
             _Debug.Toggle()
         elseif arg == "nano" or arg == "n" then
@@ -54,12 +54,16 @@ ashita.events.register('command', 'command_cb', function (e)
         -- Primary tab switching.
         elseif arg == "team" or arg == "parse" then
             Window.Tabs.Switch[Window.Tabs.Names.PARSE] = ImGuiTabItemFlags_SetSelected
+            Parse.Window.Toggle_Visibility()
         elseif arg == "focus" then
             Window.Tabs.Switch[Window.Tabs.Names.FOCUS] = ImGuiTabItemFlags_SetSelected
+            Focus.Window.Toggle_Visibility()
         elseif arg == "log" or arg == "bl" then
             Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG] = ImGuiTabItemFlags_SetSelected
+            Blog.Window.Toggle_Visibility()
         elseif arg == "report" or arg == "rep" then
             Window.Tabs.Switch[Window.Tabs.Names.REPORT] = ImGuiTabItemFlags_SetSelected
+            Report.Window.Toggle_Visibility()
 
         -- Player selection
         elseif arg == "player" or arg == "pl" then

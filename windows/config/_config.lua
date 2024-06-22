@@ -1,10 +1,10 @@
-local s = {}
+Config = {}
 
-s.Section = {}
-s.Widget = {}
+Config.Section = {}
+Config.Widget = {}
 
-s.Enum = {}
-s.Enum.File = {
+Config.Enum = {}
+Config.Enum.File = {
     PARSE    = "parse",
     FOCUS    = "focus",
     BLOG     = "blog",
@@ -13,21 +13,23 @@ s.Enum.File = {
     REPORT   = "report",
 }
 
-s.Show_Window = {false}
+Config.Show_Window = {false}
+
+require("windows.config.window")
 
 ------------------------------------------------------------------------------------------------------
 -- Loads the settings data to the screen.
 ------------------------------------------------------------------------------------------------------
-s.Populate = function()
+Config.Populate = function()
     local tab_flags = Window.Tabs.Flags
 
     if UI.BeginTabBar("Focus Tabs", tab_flags) then
         if UI.BeginTabItem("Help", tab_flags) then
-            s.Section.Text_Commands()
+            Config.Section.Text_Commands()
             UI.EndTabItem()
         end
         if UI.BeginTabItem("Focus", tab_flags) then
-            s.Section.Focus()
+            Config.Section.Focus()
             UI.EndTabItem()
         end
         if UI.BeginTabItem("GUI", tab_flags) then
@@ -35,7 +37,7 @@ s.Populate = function()
             UI.EndTabItem()
         end
         if UI.BeginTabItem("Revert", tab_flags) then
-            s.Section.Revert()
+            Config.Section.Revert()
             UI.EndTabItem()
         end
         if _Debug.Is_Enabled() then
@@ -51,7 +53,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Revert and collapse setting buttons.
 ------------------------------------------------------------------------------------------------------
-s.Section.Revert = function()
+Config.Section.Revert = function()
     local clicked = 0
     if UI.Button("Revert to Default Settings") then
         clicked = 1
@@ -69,7 +71,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Shows text commands the user can use.
 ------------------------------------------------------------------------------------------------------
-s.Section.Text_Commands = function()
+Config.Section.Text_Commands = function()
     UI.Text("Read Me: https://github.com/RaraProjects/metrics")
     UI.Text("Version: " .. tostring(addon.version))
     UI.Text("Base command: /metrics or /met")
@@ -210,7 +212,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Shows settings that affect the Focus screen.
 ------------------------------------------------------------------------------------------------------
-s.Section.Focus = function()
+Config.Section.Focus = function()
     local col_flags = Column.Flags.None
     UI.Text("Set max healing thresholds for overcure.")
     UI.BulletText("Otherwise Divine Seal will mess up the calculations.")
@@ -222,15 +224,15 @@ s.Section.Focus = function()
         UI.TableSetupColumn("Col 1", col_flags)
         UI.TableSetupColumn("Col 2", col_flags)
 
-        UI.TableNextColumn() s.Widget.Healing("Cure")
-        UI.TableNextColumn() s.Widget.Healing("Curaga")
-        UI.TableNextColumn() s.Widget.Healing("Cure II")
-        UI.TableNextColumn() s.Widget.Healing("Curaga II")
-        UI.TableNextColumn() s.Widget.Healing("Cure III")
-        UI.TableNextColumn() s.Widget.Healing("Curaga III")
-        UI.TableNextColumn() s.Widget.Healing("Cure IV")
-        UI.TableNextColumn() s.Widget.Healing("Curaga IV")
-        UI.TableNextColumn() s.Widget.Healing("Cure V")
+        UI.TableNextColumn() Config.Widget.Healing("Cure")
+        UI.TableNextColumn() Config.Widget.Healing("Curaga")
+        UI.TableNextColumn() Config.Widget.Healing("Cure II")
+        UI.TableNextColumn() Config.Widget.Healing("Curaga II")
+        UI.TableNextColumn() Config.Widget.Healing("Cure III")
+        UI.TableNextColumn() Config.Widget.Healing("Curaga III")
+        UI.TableNextColumn() Config.Widget.Healing("Cure IV")
+        UI.TableNextColumn() Config.Widget.Healing("Curaga IV")
+        UI.TableNextColumn() Config.Widget.Healing("Cure V")
         UI.EndTable()
     end
 end
@@ -238,11 +240,9 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Set the healing threshold defaults to prevent overcure with Divine Seal.
 ------------------------------------------------------------------------------------------------------
-s.Widget.Healing = function(spell)
+Config.Widget.Healing = function(spell)
     local healing_threshold = {[1] = DB.Healing_Max[spell]}
     if UI.DragInt(spell, healing_threshold, 1, 0, 3000, "%d", ImGuiSliderFlags_None) then
         DB.Healing_Max[spell] = healing_threshold[1]
     end
 end
-
-return s
