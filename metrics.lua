@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "06.21.24.00"
+addon.version = "06.21.24.01"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -43,7 +43,7 @@ require("database._database")
 require("file")
 Timers = require("timers")
 
-
+require("throttling")
 require("ashita._ashita")
 require("handlers._handler")
 
@@ -72,6 +72,8 @@ ashita.events.register('d3d_present', 'present_cb', function()
     if not _Globals.Initialized then return nil end
     if not Ashita.Player.Is_Logged_In() then return nil end
     if _Debug.Is_Enabled() and _Debug.Config.Show_Demo then UI.ShowDemoWindow() end
+
+    Throttle.Throttle()     -- Throttling for performance.
 
     Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
     Timers.Cycle(Timers.Enum.Names.DPS)

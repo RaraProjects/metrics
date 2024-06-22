@@ -137,6 +137,13 @@ DB.Data.Get = function(player_name, trackable, metric)
 		return 0
 	end
 
+	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
+	if Throttle.Is_Enabled() and not Throttle.Allow_Calculation() then
+		if DB.Cache[player_name] and DB.Cache[player_name][trackable] and DB.Cache[player_name][trackable][metric] then
+			return DB.Cache[player_name][trackable][metric]
+		end
+	end
+
 	local total = 0
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	for index, _ in pairs(DB.Parse) do
@@ -150,6 +157,12 @@ DB.Data.Get = function(player_name, trackable, metric)
 			end
 		end
 	end
+
+	-- Cache for performance.
+	if not DB.Cache[player_name] then DB.Cache[player_name] = T{} end
+	if not DB.Cache[player_name][trackable] then DB.Cache[player_name][trackable] = T{} end
+	DB.Cache[player_name][trackable][metric] = total
+
 	return total
 end
 

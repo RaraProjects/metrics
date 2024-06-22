@@ -18,6 +18,9 @@ DB.Tracking.Running_Damage = T{}		-- [player_name]
 DB.Tracking.Multi_Attack = T{}			-- [player_name][multi-rank]
 DB.Tracking.Defeated_Mobs = T{}			-- [mob_name]
 
+-- Used to hold column data for performance improvements.
+DB.Cache = T{}							-- [player_name][trackable][metric]
+
 DB.Settings = T{}
 DB.Settings.Accuracy_Warning = 0.80
 

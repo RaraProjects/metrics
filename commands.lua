@@ -35,6 +35,8 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "dps" then
             Metrics.Parse.DPS = not Metrics.Parse.DPS
             Parse.Util.Calculate_Column_Flags()
+        elseif arg == "throttle" then
+            Throttle.Toggle()
 
         -- General reports.
         elseif arg == "report" or arg == "rep" then

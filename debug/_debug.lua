@@ -2,6 +2,7 @@ _Debug = {}
 _Debug.Enabled = false
 
 require("debug.config")
+require("debug.performance")
 require("debug.screens.mob_viewer")
 require("debug.screens.packet_viewer")
 require("debug.screens.error_log")
