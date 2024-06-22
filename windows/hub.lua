@@ -50,6 +50,7 @@ Hub.Populate = function()
         end
 
         UI.PopStyleVar(5)
+        Throttle.Block()
     end
 end
 
