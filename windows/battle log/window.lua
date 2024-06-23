@@ -1,14 +1,13 @@
 Blog.Window = T{}
 
 Blog.Window.Name = "Metrics - Battle Log"
-Blog.Window.Visible = {false}
 Blog.Window.Need_Position_Reset = true
 
 ------------------------------------------------------------------------------------------------------
 -- Populate the data in the monitor window.
 ------------------------------------------------------------------------------------------------------
 Blog.Window.Populate = function()
-    if not Ashita.States.Zoning and Blog.Window.Visible[1] then
+    if not Ashita.States.Zoning and Metrics.Window.Blog_Window_Visible[1] then
 
         UI.PushStyleVar(ImGuiStyleVar_Alpha, Metrics.Window.Alpha)
         UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})
@@ -25,7 +24,7 @@ Blog.Window.Populate = function()
             Blog.Window.Need_Position_Reset = false
         end
 
-        if UI.Begin(Blog.Window.Name, Blog.Window.Visible, window_flags) then
+        if UI.Begin(Blog.Window.Name, Metrics.Window.Blog_Window_Visible, window_flags) then
             Metrics.Window.Blog_X, Metrics.Window.Blog_Y = UI.GetWindowPos()
             Window.Set_Window_Scale()
             Window.Theme.Set()
@@ -41,12 +40,12 @@ end
 -- Toggles Battle Log window visibility.
 ------------------------------------------------------------------------------------------------------
 Blog.Window.Toggle_Visibility = function()
-    Blog.Window.Visible[1] = not Blog.Window.Visible[1]
+    Metrics.Window.Blog_Window_Visible[1] = not Metrics.Window.Blog_Window_Visible[1]
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Hides the battle log window.
 ------------------------------------------------------------------------------------------------------
 Blog.Window.Hide = function()
-    Blog.Window.Visible[1] = false
+    Metrics.Window.Blog_Window_Visible[1] = false
 end

@@ -16,14 +16,19 @@ Window.Defaults = T{
     Active_Window = "Parse",
     Hub_X = 100,
     Hub_Y = 100,
+    Parse_Window_Visible = {true},
     Parse_X = 100,
     Parse_Y = 100,
+    Focus_Window_Visible = {false},
     Focus_X = 100,
     Focus_Y = 100,
+    Blog_Window_Visible = {false},
     Blog_X = 100,
     Blog_Y = 100,
+    Report_Window_Visible = {false},
     Report_X = 100,
     Report_Y = 100,
+    Config_Window_Visible = {false},
     Config_X = 100,
     Config_Y = 100,
 }
@@ -104,23 +109,6 @@ Window.Populate = function()
             UI.SetNextWindowPos({Metrics.Window.Parse_X, Metrics.Window.Parse_Y}, ImGuiCond_Always)
             Window.Reset_Position = false
         end
-
-        -- local nano_mode = Parse.Nano.Is_Enabled()
-        -- local mini_mode = Parse.Mini.Is_Enabled()
-
-        -- if not Metrics.Window.Multi_Window and (nano_mode or mini_mode) then
-        --     if UI.Begin(Window.Name, Window.Visible, window_flags) then
-        --         Metrics.Window.Parse_X, Metrics.Window.Parse_Y = UI.GetWindowPos()
-        --         Window.Set_Window_Scale()
-        --         Window.Theme.Set()
-        --         if nano_mode then
-        --             Parse.Nano.Populate()
-        --         elseif mini_mode then
-        --             Parse.Mini.Populate()
-        --         end
-        --         UI.End()
-        --     end
-        -- end
 
         local player = Ashita.Player.My_Mob()
         if player and Parse.Config.Show_DPS_Graph() then

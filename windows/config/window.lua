@@ -1,14 +1,13 @@
 Config.Window = T{}
 
 Config.Window.Name = "Metrics - Help"
-Config.Window.Visible = {false}
 Config.Window.Need_Position_Reset = true
 
 ------------------------------------------------------------------------------------------------------
 -- Populate the data in the monitor window.
 ------------------------------------------------------------------------------------------------------
 Config.Window.Populate = function()
-    if not Ashita.States.Zoning and Config.Window.Visible[1] then
+    if not Ashita.States.Zoning and Metrics.Window.Config_Window_Visible[1] then
 
         UI.PushStyleVar(ImGuiStyleVar_Alpha, Metrics.Window.Alpha)
         UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})
@@ -25,7 +24,7 @@ Config.Window.Populate = function()
             Config.Window.Need_Position_Reset = false
         end
 
-        if UI.Begin(Config.Window.Name, Config.Window.Visible, window_flags) then
+        if UI.Begin(Config.Window.Name, Metrics.Window.Config_Window_Visible, window_flags) then
             Metrics.Window.Config_X, Metrics.Window.Config_Y = UI.GetWindowPos()
             Window.Set_Window_Scale()
             Window.Theme.Set()
@@ -41,12 +40,12 @@ end
 -- Toggles Settings window visibility.
 ------------------------------------------------------------------------------------------------------
 Config.Window.Toggle_Visibility = function()
-    Config.Window.Visible[1] = not Config.Window.Visible[1]
+    Metrics.Window.Config_Window_Visible[1] = not Metrics.Window.Config_Window_Visible[1]
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Hides the config window.
 ------------------------------------------------------------------------------------------------------
 Config.Window.Hide = function()
-    Config.Window.Visible[1] = false
+    Metrics.Window.Config_Window_Visible[1] = false
 end

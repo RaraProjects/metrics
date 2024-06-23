@@ -132,7 +132,7 @@ end
 -- Toggles the Parse window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Parse_Button = function()
-    local active = Parse.Window.Visible[1]
+    local active = Metrics.Window.Parse_Window_Visible[1]
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.DIM)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.DIM)
@@ -149,7 +149,7 @@ end
 -- Toggles the Focus window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Focus_Button = function()
-    local active = Focus.Window.Visible[1]
+    local active = Metrics.Window.Focus_Window_Visible[1]
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.DIM)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.DIM)
@@ -166,7 +166,7 @@ end
 -- Toggles the Battle Log window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Battle_Log_Button = function()
-    local active = Blog.Window.Visible[1]
+    local active = Metrics.Window.Blog_Window_Visible[1]
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.DIM)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.DIM)
@@ -183,7 +183,7 @@ end
 -- Toggles the Report window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Report_Button = function()
-    local active = Report.Window.Visible[1]
+    local active = Metrics.Window.Report_Window_Visible[1]
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.DIM)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.DIM)
@@ -200,7 +200,7 @@ end
 -- Toggles the Settings window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Settings_Button = function()
-    local active = Config.Window.Visible[1]
+    local active = Metrics.Window.Config_Window_Visible[1]
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.DIM)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.DIM)

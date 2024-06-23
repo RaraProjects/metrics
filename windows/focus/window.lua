@@ -1,14 +1,13 @@
 Focus.Window = T{}
 
 Focus.Window.Name = "Metrics - Focus"
-Focus.Window.Visible = {false}
 Focus.Window.Need_Position_Reset = true
 
 ------------------------------------------------------------------------------------------------------
 -- Populate the data in the monitor window.
 ------------------------------------------------------------------------------------------------------
 Focus.Window.Populate = function()
-    if not Ashita.States.Zoning and Focus.Window.Visible[1] then
+    if not Ashita.States.Zoning and Metrics.Window.Focus_Window_Visible[1] then
 
         UI.PushStyleVar(ImGuiStyleVar_Alpha, Metrics.Window.Alpha)
         UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})
@@ -25,7 +24,7 @@ Focus.Window.Populate = function()
             Focus.Window.Need_Position_Reset = false
         end
 
-        if UI.Begin(Focus.Window.Name, Focus.Window.Visible, window_flags) then
+        if UI.Begin(Focus.Window.Name, Metrics.Window.Focus_Window_Visible, window_flags) then
             Metrics.Window.Focus_X, Metrics.Window.Focus_Y = UI.GetWindowPos()
             Window.Set_Window_Scale()
             Window.Theme.Set()
@@ -41,12 +40,12 @@ end
 -- Toggles Focus window visibility.
 ------------------------------------------------------------------------------------------------------
 Focus.Window.Toggle_Visibility = function()
-    Focus.Window.Visible[1] = not Focus.Window.Visible[1]
+    Metrics.Window.Focus_Window_Visible[1] = not Metrics.Window.Focus_Window_Visible[1]
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Hides the focus window.
 ------------------------------------------------------------------------------------------------------
 Focus.Window.Hide = function()
-    Focus.Window.Visible[1] = false
+    Metrics.Window.Focus_Window_Visible[1] = false
 end
