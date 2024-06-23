@@ -25,6 +25,11 @@ Hub.Populate = function()
             Hub.Need_Position_Reset = false
         end
 
+        if Window.Set_Mouse then
+            Window.IO.MouseDrawCursor = Metrics.Window.Show_Mouse
+            Window.Set_Mouse = false
+        end
+
         local nano_mode = Parse.Nano.Is_Enabled()
         local mini_mode = Parse.Mini.Is_Enabled()
         local window_flags = Window.Flags

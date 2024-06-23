@@ -75,6 +75,7 @@ Window.Table.Flags = {
 }
 
 Window.Reset_Position = true
+Window.Set_Mouse = true
 
 Window.IO = UI.GetIO()
 Window.IO.MouseDrawCursor = false
