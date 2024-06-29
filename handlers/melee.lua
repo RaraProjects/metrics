@@ -442,6 +442,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Melee.Min_Max = function(throwing, damage, audits, melee_type_discrete, no_damage)
     if no_damage then damage = 0 end
+    if damage >= DB.Enum.Values.MAX_DAMAGE then damage = damage - DB.Enum.Values.MAX_DAMAGE end
     if throwing then
         if damage > 0 and (damage < DB.Data.Get(audits.player_name, H.Trackable.RANGED, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MIN) end
         if damage > DB.Data.Get(audits.player_name, H.Trackable.RANGED, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MAX) end
