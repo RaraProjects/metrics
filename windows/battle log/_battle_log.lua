@@ -23,6 +23,7 @@ Blog.Enum.Types = T{
     PET_MELEE = "Pet Melee",
     PET_WS    = "Pet Weaponskill",
     PET_HEAL  = "Pet Heal",
+    MOB_TP    = "Mob TP",
     MOB_DEATH = "Mob Death",
     DEATH     = "Death",
     MELEE     = "Melee",
@@ -101,6 +102,7 @@ end
 -- Add an entry to battle log.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string name of the player that took the action.
+---@param pet_name? string name of the pet (if applicable)
 ---@param action_flag string the type of action being taken. This is specific to the blog and not the database.
 ---@param action_name string name of the action the player took (like a weaponskill or ability).
 ---@param damage? number usually how much damage the action did.
@@ -119,6 +121,7 @@ Blog.Add = function(player_name, pet_name, action_flag, action_name, damage, not
             color = Res.Colors.Get_Element(element)
         end
     end
+    if not pet_name then pet_name = "NONE" end
 
     local entry = {
         Time   = {Value = os.date("%X"), Color = Res.Colors.Basic.WHITE},
@@ -140,6 +143,7 @@ end
 -- Checks battle log flags to see if the type of action should be shown in the battle log.
 ------------------------------------------------------------------------------------------------------
 ---@param action_flag string
+---@return boolean
 ------------------------------------------------------------------------------------------------------
 Blog.Show_Row = function(action_flag)
     if     action_flag == Blog.Enum.Types.HEALING   then return Metrics.Blog.Flags.Healing
@@ -148,6 +152,7 @@ Blog.Show_Row = function(action_flag)
     elseif action_flag == Blog.Enum.Types.PET_WS    then return Metrics.Blog.Flags.Pet_WS
     elseif action_flag == Blog.Enum.Types.PET_HEAL  then return Metrics.Blog.Flags.Pet_Heal
     elseif action_flag == Blog.Enum.Types.DEATH     then return Metrics.Blog.Flags.Deaths
+    elseif action_flag == Blog.Enum.Types.MOB_TP    then return Metrics.Blog.Flags.Mob_TP
     elseif action_flag == Blog.Enum.Types.MOB_DEATH then return Metrics.Blog.Flags.Mob_Death
     elseif action_flag == Blog.Enum.Types.MELEE     then return Metrics.Blog.Flags.Melee
     elseif action_flag == Blog.Enum.Types.RANGED    then return Metrics.Blog.Flags.Ranged

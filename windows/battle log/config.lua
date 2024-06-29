@@ -15,6 +15,7 @@ Blog.Config.Defaults.Flags = T{
     Pet       = true,
     Healing   = true,
     Deaths    = false,
+    Mob_TP    = false,
     Mob_Death = true,
     Paging    = false,
     Streaming = true,
@@ -158,6 +159,12 @@ Blog.Config.Column_Settings = function()
         if UI.Checkbox("Player Deaths", {Metrics.Blog.Flags.Deaths}) then
             Metrics.Blog.Flags.Deaths = not Metrics.Blog.Flags.Deaths
         end
+        UI.TableNextColumn()
+        if UI.Checkbox("Mob TP", {Metrics.Blog.Flags.Mob_TP}) then
+            Metrics.Blog.Flags.Mob_TP = not Metrics.Blog.Flags.Mob_TP
+        end
+
+        -- Row 5
         UI.TableNextColumn()
         if UI.Checkbox("Mob Deaths", {Metrics.Blog.Flags.Mob_Death}) then
             Metrics.Blog.Flags.Mob_Death = not Metrics.Blog.Flags.Mob_Death

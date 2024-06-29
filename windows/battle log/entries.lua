@@ -93,9 +93,11 @@ end
 Blog.Entries.Notes = function(note, action_type)
     local color = Res.Colors.Basic.WHITE
     local final_note = {Value = " ", Color = color}
+    if not note then return final_note end
 
     -- A note should be passed in with these actions. Just use that.
-    if action_type == DB.Enum.Trackable.MAGIC or action_type == DB.Enum.Trackable.HEALING or action_type == Blog.Enum.Flags.IGNORE then
+    if action_type == DB.Enum.Trackable.MAGIC or action_type == DB.Enum.Trackable.HEALING
+                      or DB.Enum.Trackable.TP_DMG_TAKEN or action_type == Blog.Enum.Flags.IGNORE then
         final_note.Value = tostring(note)
 
     -- If the player died then show who kill them.
