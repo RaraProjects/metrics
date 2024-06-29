@@ -51,6 +51,9 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
         end
     end
 
+    -- Keeps track of how many melee cycles have occurred (1 per packet).
+    DB.Data.Update(DB.Enum.Mode.INC, 1, details.audits, DB.Enum.Trackable.MELEE, DB.Enum.Metric.CYCLE)
+
     H.Melee.Blog(actor_mob, owner_mob, damage)
 end
 
