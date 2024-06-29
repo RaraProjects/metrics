@@ -1,95 +1,29 @@
 Blog.Columns = T{}
 
 ------------------------------------------------------------------------------------------------------
--- Format the name component of the battle log.
+-- Creates a name string for display in the battle log.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
----@return table {Name, Color}
+---@param pet_name string
+---@return string
 ------------------------------------------------------------------------------------------------------
-Blog.Columns.Name = function(player_name)
-    local color = Res.Colors.Basic.WHITE
-    if Ashita.Mob.Is_Me(player_name) then color = Res.Colors.Basic.GREEN end
-    return {Value = player_name, Color = color}
+Blog.Columns.Name = function(player_name, pet_name)
+    player_name = Column.String.Truncate(player_name, Blog.Settings.Truncate_Length)
+    if pet_name == Blog.Enum.Text.NO_PET then
+        return player_name
+    end
+    pet_name = " (" .. Column.String.Truncate(pet_name, Blog.Settings.Pet_Name_Truncate_Length) .. ")"
+    return player_name .. pet_name
 end
 
 ------------------------------------------------------------------------------------------------------
--- Format the damage component of the battle log.
-------------------------------------------------------------------------------------------------------
----@param damage? number
----@param action_type? string a trackable from the data model.
----@return table {Damage, Color}
-------------------------------------------------------------------------------------------------------
-Blog.Columns.Damage = function(damage, action_type)
-    -- Change the color of the text if the damage is over a certain threshold.
-    local threshold = DB.Enum.Values.MAX_DAMAGE
-    if action_type == DB.Enum.Trackable.WS then
-        threshold = Metrics.Blog.Thresholds.WS
-    elseif action_type == DB.Enum.Trackable.MAGIC then
-        threshold = Metrics.Blog.Thresholds.MAGIC
-    elseif action_type == Blog.Enum.Flags.IGNORE then
-        return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.WHITE}
-    end
-    -- Generate damage string.
-    if not damage then
-        return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
-    elseif damage == 0 then
-        return {Value = Blog.Enum.Text.MISS, Color = Res.Colors.Basic.RED}
-    elseif damage >= threshold then
-        return {Value = Column.String.Format_Number(damage), Color = Res.Colors.Basic.PURPLE}
-    end
-    return {Value = Column.String.Format_Number(damage), Color = Res.Colors.Basic.WHITE}
-end
-
-------------------------------------------------------------------------------------------------------
--- Format the action component of the battle log.
+-- Formats the action name.
 ------------------------------------------------------------------------------------------------------
 ---@param action_name string
----@param action_type? string a trackable from the data model.
----@param action_data? table additional information about the action to help with text formatting.
----@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
-Blog.Columns.Action = function(action_name, action_type, action_data)
-    local color = Res.Colors.Basic.WHITE
-    if action_type and action_data then
-        if action_type == DB.Enum.Trackable.MAGIC then
-            local element = action_data.Element
-            color = Res.Colors.Get_Element(element)
-        end
+Blog.Columns.Action = function(action_name)
+    if Metrics.Blog.Flags.Truncate_Actions then
+        action_name = Column.String.Truncate(action_name, Blog.Settings.Action_Truncate_Length)
     end
-    return {Value = action_name, Color = color}
-end
-
-------------------------------------------------------------------------------------------------------
--- Format the TP component of the battle log.
--- Will also show if a spell cast is a magic burst.
-------------------------------------------------------------------------------------------------------
----@param note? string|number how much TP was used by the weaponskill
----@param action_type? string a trackable from the data model.
----@return table
-------------------------------------------------------------------------------------------------------
-Blog.Columns.Notes = function(note, action_type)
-    local color = Res.Colors.Basic.WHITE
-    local final_note = {Value = " ", Color = color}
-
-    -- A note should be passed in with these actions. Just use that.
-    if action_type == DB.Enum.Trackable.MAGIC or action_type == DB.Enum.Trackable.HEALING or action_type == Blog.Enum.Flags.IGNORE then
-        final_note.Value = tostring(note)
-
-    -- If the player died then show who kill them.
-    elseif action_type == DB.Enum.Trackable.DEATH then
-        final_note.Value = "by " .. tostring(note)
-
-    -- We passed in a note, but didn't handle it above.
-    elseif type(note) == "string" then
-        _Debug.Error.Add("Unhandled battle log note. Note: {" .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "}.")
-        final_note.Value = " "
-
-    -- The default case is showing the user's TP for a weaponskill.
-    else
-    -- TP for WS is the default case.
-    ---@diagnostic disable-next-line: param-type-mismatch
-        if note then final_note.Value = "TP: " .. Column.String.Format_Number(note) .. " " end
-    end
-
-    return final_note
+    return action_name
 end

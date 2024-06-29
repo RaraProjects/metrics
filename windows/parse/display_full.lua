@@ -62,11 +62,11 @@ Parse.Full.Headers = function()
     if Metrics.Parse.Magic then       UI.TableSetupColumn("Magic", flags) end
     if Metrics.Parse.Ability then     UI.TableSetupColumn("JA", flags) end
     if Metrics.Parse.Pet then
-        UI.TableSetupColumn("Pet Acc", flags)
-        UI.TableSetupColumn("Pet Melee", flags)
-        UI.TableSetupColumn("Pet WS", flags)
-        UI.TableSetupColumn("Pet Ranged", flags)
-        UI.TableSetupColumn("Pet Ability", flags)
+        UI.TableSetupColumn("Acc (P)", flags)
+        UI.TableSetupColumn("Melee (P)", flags)
+        UI.TableSetupColumn("WS (P)", flags)
+        UI.TableSetupColumn("Ranged (P)", flags)
+        UI.TableSetupColumn("Ability (P)", flags)
     end
     if Metrics.Parse.Healing then UI.TableSetupColumn("Healing", flags) end
     if Metrics.Parse.Deaths then  UI.TableSetupColumn("Deaths", flags) end

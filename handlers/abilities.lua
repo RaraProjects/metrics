@@ -156,11 +156,11 @@ H.Ability.Blog = function(actor_mob, ability_data, ability_id, damage)
     if Res.Abilities.Get_Damaging(ability_id) or Res.Abilities.Get_MP_Recovery(ability_id) then
         local note = nil
         if ability_id == Res.Abilities.CHIVALRY then note = Ashita.Party.Refresh(actor_mob.name, Ashita.Enum.Player_Attributes.TP) end
-        Blog.Add(actor_mob.name, Blog.Enum.Types.ABILITY, ability_data.Name, damage, note)
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.ABILITY, ability_data.Name, damage, note)
     end
 
     if Res.Abilities.Get_Player_Healing(ability_id) or Res.Abilities.Get_Pet_Healing(ability_id) then
-        Blog.Add(actor_mob.name, Blog.Enum.Types.HEALING, ability_data.Name, damage)
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.HEALING, ability_data.Name, damage)
     end
 end
 
@@ -176,7 +176,9 @@ end
 H.Ability.Pet_Blog = function(actor_mob, owner_mob, ability_data, ability_id, damage)
     if damage > 0 then
         if Res.Avatar.Get_Rage(ability_id) or Res.Pets.Get_Damaging_Wyvern_Breath(ability_id) then
-            Blog.Add(owner_mob.name .. " (" .. Column.String.Truncate(actor_mob.name, Blog.Settings.Truncate_Length) .. ")", Blog.Enum.Types.PET, ability_data.Name, damage)
+            Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET, ability_data.Name, damage)
+        elseif Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then
+            Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_HEAL, ability_data.Name, damage)
         end
     end
 end

@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "06.23.24.00"
+addon.version = "06.28.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -175,7 +175,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             if Ashita.Party.Is_Affiliate(actor_mob.name) then
                 local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
                 DB.Defeated_Mob(target_mob.name)
-                Blog.Add(target_mob.name, Blog.Enum.Types.DEATH, Blog.Enum.Text.MOB_DEATH)
+                Blog.Add(target_mob.name, nil, Blog.Enum.Types.MOB_DEATH, Blog.Enum.Text.MOB_DEATH)
             end
 
         -- Being defeated by a mob.

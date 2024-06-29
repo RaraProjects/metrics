@@ -271,7 +271,9 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Res.Colors.Get_Element = function(element_id)
-    return Res.Colors.Elements[element_id]
+    local color = Res.Colors.Elements[element_id]
+    if not color then color = Res.Colors.Basic.WHITE end
+    return color
 end
 
 -- ------------------------------------------------------------------------------------------------------
