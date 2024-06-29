@@ -7,9 +7,10 @@ Parse.Mini.Table_Flags = bit.bor(ImGuiTableFlags_Borders)
 -- Loads shows just the Team tab with just the player.
 ------------------------------------------------------------------------------------------------------
 Parse.Mini.Populate = function()
-    local columns = 4
-    if Metrics.Parse.Pet then columns = columns + 2 end
+    local columns = 3
+    if Parse.Config.Is_Pet_Column_Enabled() then columns = columns + 2 end
     if Metrics.Parse.DPS then columns = columns + 1 end
+    if Metrics.Parse.Running_Acc then columns = columns + 1 end
     if UI.BeginTable("Team Mini", columns, Parse.Mini.Table_Flags) then
         Parse.Mini.Headers()
 
@@ -42,8 +43,8 @@ Parse.Mini.Headers = function()
     UI.TableSetupColumn("Total", flags)
     UI.TableSetupColumn("%T", flags)
     if Metrics.Parse.DPS then UI.TableSetupColumn("DPS", flags) end
-    UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags)
-    if Metrics.Parse.Pet then
+    if Metrics.Parse.Running_Acc then UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags) end
+    if Parse.Config.Is_Pet_Column_Enabled() then
         UI.TableSetupColumn("Pet D.", flags)
         UI.TableSetupColumn("Pet A.", flags)
     end
@@ -61,8 +62,8 @@ Parse.Mini.Rows = function(player_name)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
     UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
     if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
-    UI.TableNextColumn() Column.Acc.Running(player_name)
-    if Metrics.Parse.Pet then
+    if Metrics.Parse.Running_Acc then UI.TableNextColumn() Column.Acc.Running(player_name) end
+    if Parse.Config.Is_Pet_Column_Enabled() then
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
     end
@@ -79,10 +80,10 @@ Parse.Mini.Total_Row = function()
 
     UI.TableNextColumn() UI.Text("Total")
     UI.TableNextColumn() Column.Damage.Parse_Total(true)
-    UI.TableNextColumn() UI.Text(" ")
+    if Metrics.Parse.Running_Acc then UI.TableNextColumn() UI.Text(" ") end
     if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.Parse_DPS(true) end
     UI.TableNextColumn() UI.Text(" ")
-    if Metrics.Parse.Pet then
+    if Parse.Config.Is_Pet_Column_Enabled() then
         UI.TableNextColumn() UI.Text(" ")
         UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET, true)
         UI.TableNextColumn() UI.Text(" ")

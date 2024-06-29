@@ -7,9 +7,9 @@ Parse.Util = {}
 
 -- Keeps track of how many columns should be shown on the screen in full mode.
 Parse.Columns = {
-    Base = 4,
+    Base = 3,       -- Name, Total, %T
     Current = 5,
-    Max = 20,
+    Max = 21,
 }
 
 -- Load dependencies
@@ -34,6 +34,7 @@ end
 Parse.Util.Calculate_Column_Flags = function()
     local added_columns = 0
     if Metrics.Parse.DPS then added_columns = added_columns + 1 end
+    if Metrics.Parse.Running_Acc then added_columns = added_columns + 1 end
     if Metrics.Parse.Total_Acc then added_columns = added_columns + 1 end
     if Metrics.Parse.Melee then added_columns = added_columns + 1 end
     if Metrics.Parse.Crit then added_columns = added_columns + 1 end
@@ -43,7 +44,11 @@ Parse.Util.Calculate_Column_Flags = function()
     if Metrics.Parse.Ranged then added_columns = added_columns + 1 end
     if Metrics.Parse.Magic then added_columns = added_columns + 1 end
     if Metrics.Parse.Ability then added_columns = added_columns + 1 end
-    if Metrics.Parse.Pet then added_columns = added_columns + 5 end
+    if Metrics.Parse.Pet_Acc then added_columns = added_columns + 1 end
+    if Metrics.Parse.Pet_Melee then added_columns = added_columns + 1 end
+    if Metrics.Parse.Pet_Ranged then added_columns = added_columns + 1 end
+    if Metrics.Parse.Pet_WS then added_columns = added_columns + 1 end
+    if Metrics.Parse.Pet_Ability then added_columns = added_columns + 1 end
     if Metrics.Parse.Healing then added_columns = added_columns + 1 end
     if Metrics.Parse.Deaths then added_columns = added_columns + 1 end
 

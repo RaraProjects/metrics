@@ -25,9 +25,8 @@ ashita.events.register('command', 'command_cb', function (e)
             DB.Initialize(true)
         elseif arg == "full" or arg == "f" then
             Parse.Full.Enable()
-        elseif (arg == "pet" or arg == "p") and (Window.Tabs.Active == Window.Tabs.Names.PARSE or Parse.Mini.Is_Enabled()) then
+        elseif (arg == "pet" or arg == "p") then
             Parse.Config.Toggle_Pet()
-            Parse.Util.Calculate_Column_Flags()
         elseif arg == "clock" or arg == "c" then
             Parse.Config.Toggle_Clock()
         elseif arg == "percent" then
