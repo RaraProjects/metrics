@@ -97,23 +97,24 @@ Blog.Entries.Notes = function(note, action_type)
 
     -- A note should be passed in with these actions. Just use that.
     if action_type == DB.Enum.Trackable.MAGIC or action_type == DB.Enum.Trackable.HEALING
-                      or DB.Enum.Trackable.TP_DMG_TAKEN or action_type == Blog.Enum.Flags.IGNORE then
+                      or action_type == DB.Enum.Trackable.TP_DMG_TAKEN or action_type == Blog.Enum.Flags.IGNORE then
         final_note.Value = tostring(note)
 
-    -- If the player died then show who kill them.
+    -- If the player died then show who killed them.
     elseif action_type == DB.Enum.Trackable.DEATH then
-        final_note.Value = "by " .. tostring(note)
+        if note then final_note.Value = "by " .. tostring(note) end
+
+
+    -- Show the TP of the weaponskill.
+    elseif action_type == DB.Enum.Trackable.WS then
+        print("Blog.Entries.Notes: " .. tostring(note) .. " " .. tostring(action_type))
+        ---@diagnostic disable-next-line: param-type-mismatch
+        if note then final_note.Value = "TP:" .. Column.String.Format_Number(note) .. " " end
 
     -- We passed in a note, but didn't handle it above.
-    elseif type(note) == "string" then
+    else
         _Debug.Error.Add("Unhandled battle log note. Note: {" .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "}.")
         final_note.Value = " "
-
-    -- The default case is showing the user's TP for a weaponskill.
-    else
-        -- TP for WS is the default case.
-        ---@diagnostic disable-next-line: param-type-mismatch
-        if note then final_note.Value = "TP: " .. Column.String.Format_Number(note) .. " " end
     end
 
     return final_note

@@ -199,8 +199,7 @@ Blog.Display.Rows = function(entry)
     local name   = Blog.Columns.Name(entry.Player.Value, entry.Pet.Value)
     local action = Blog.Columns.Action(entry.Action.Value)
     local note   = entry.Note.Value
-    local damage_note = entry.Damage.Note
-    if damage_note then note = entry.Damage.Note .. " " .. note end
+    if entry.Damage.Note then note = note .. " " .. entry.Damage.Note end
 
     local damage = entry.Damage.Value
     local action_color = entry.Action.Color
