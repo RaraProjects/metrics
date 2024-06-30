@@ -107,7 +107,6 @@ Blog.Entries.Notes = function(note, action_type)
 
     -- Show the TP of the weaponskill.
     elseif action_type == DB.Enum.Trackable.WS then
-        print("Blog.Entries.Notes: " .. tostring(note) .. " " .. tostring(action_type))
         ---@diagnostic disable-next-line: param-type-mismatch
         if note then final_note.Value = "TP:" .. Column.String.Format_Number(note) .. " " end
 
