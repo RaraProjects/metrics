@@ -104,11 +104,10 @@ Blog.Entries.Notes = function(note, action_type)
     elseif action_type == DB.Enum.Trackable.DEATH then
         if note then final_note.Value = "by " .. tostring(note) end
 
-
     -- Show the TP of the weaponskill.
     elseif action_type == DB.Enum.Trackable.WS then
         ---@diagnostic disable-next-line: param-type-mismatch
-        if note then final_note.Value = "TP:" .. Column.String.Format_Number(note) .. " " end
+        if note then final_note.Value = "TP: " .. Column.String.Format_Number(note) .. " " end
 
     -- We passed in a note, but didn't handle it above.
     else
