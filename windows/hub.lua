@@ -3,6 +3,7 @@ Hub = T{}
 Hub.Name = "Metrics"
 Hub.Visible = {true}
 Hub.Need_Position_Reset = true
+Hub.Scaling_Set = false
 
 -- Need X and Y Position
 -- Need window reposition flag.
@@ -39,7 +40,7 @@ Hub.Populate = function()
 
         if UI.Begin(Hub.Name, Hub.Visible, window_flags) then
             Metrics.Window.Hub_X, Metrics.Window.Hub_Y = UI.GetWindowPos()
-            Window.Set_Window_Scale()
+            Hub.Set_Scaling()
             Window.Theme.Set()
 
             if Metrics.Window.Multi_Window then
@@ -227,8 +228,34 @@ Hub.Toggle_All_Button = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Toggles Report window visibility.
+-- Toggles hub window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Toggle_Visibility = function()
     Hub.Visible[1] = not Hub.Visible[1]
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the hub window scaling.
+------------------------------------------------------------------------------------------------------
+Hub.Set_Scaling = function()
+    if not Hub.Is_Scaling_Set() then
+        UI.SetWindowFontScale(Window.Get_Scaling())
+        Hub.Set_Scaling_Flag(true)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if the hub window scaling is set.
+------------------------------------------------------------------------------------------------------
+Hub.Is_Scaling_Set = function()
+    return Hub.Scaling_Set
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Sets the hub window scaling update flag.
+-- ------------------------------------------------------------------------------------------------------
+---@param scaling boolean
+-- ------------------------------------------------------------------------------------------------------
+Hub.Set_Scaling_Flag = function(scaling)
+    Hub.Scaling_Set = scaling
 end

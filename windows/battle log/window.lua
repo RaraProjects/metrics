@@ -2,6 +2,7 @@ Blog.Window = T{}
 
 Blog.Window.Name = "Metrics - Battle Log"
 Blog.Window.Need_Position_Reset = true
+Blog.Window.Scaling_Set = false
 
 ------------------------------------------------------------------------------------------------------
 -- Populate the data in the monitor window.
@@ -26,7 +27,7 @@ Blog.Window.Populate = function()
 
         if UI.Begin(Blog.Window.Name, Metrics.Window.Blog_Window_Visible, window_flags) then
             Metrics.Window.Blog_X, Metrics.Window.Blog_Y = UI.GetWindowPos()
-            Window.Set_Window_Scale()
+            Blog.Window.Set_Scaling()
             Window.Theme.Set()
             Blog.Populate()
             UI.End()
@@ -48,4 +49,30 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Window.Hide = function()
     Metrics.Window.Blog_Window_Visible[1] = false
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the battle log window scaling.
+------------------------------------------------------------------------------------------------------
+Blog.Window.Set_Scaling = function()
+    if not Blog.Window.Is_Scaling_Set() then
+        UI.SetWindowFontScale(Window.Get_Scaling())
+        Blog.Window.Set_Scaling_Flag(true)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if the battle log window scaling is set.
+------------------------------------------------------------------------------------------------------
+Blog.Window.Is_Scaling_Set = function()
+    return Blog.Window.Scaling_Set
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Sets the window scaling update flag.
+-- ------------------------------------------------------------------------------------------------------
+---@param scaling boolean
+-- ------------------------------------------------------------------------------------------------------
+Blog.Window.Set_Scaling_Flag = function(scaling)
+    Blog.Window.Scaling_Set = scaling
 end

@@ -41,6 +41,12 @@ Window.Widgets.Window_Scale = function()
         elseif window_scale[1] > 3 then window_scale[1] = 3 end
         Metrics.Window.Window_Scaling = window_scale[1]
         Window.Scaling_Set = false
+        Hub.Set_Scaling_Flag(false)
+        Blog.Window.Set_Scaling_Flag(false)
+        Config.Window.Set_Scaling_Flag(false)
+        Focus.Window.Set_Scaling_Flag(false)
+        Parse.Window.Set_Scaling_Flag(false)
+        Report.Window.Set_Scaling_Flag(false)
         Window.Set_Window_Scale()
     end
     UI.SameLine() Window.Widgets.HelpMarker("Adjust window element size.")

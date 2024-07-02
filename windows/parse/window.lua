@@ -2,6 +2,7 @@ Parse.Window = T{}
 
 Parse.Window.Name = "Metrics - Parse"
 Parse.Window.Need_Position_Reset = true
+Parse.Window.Scaling_Set = false
 
 ------------------------------------------------------------------------------------------------------
 -- Populate the data in the monitor window.
@@ -26,7 +27,7 @@ Parse.Window.Populate = function()
 
         if UI.Begin(Parse.Window.Name, Metrics.Window.Parse_Window_Visible, window_flags) then
             Metrics.Window.Parse_X, Metrics.Window.Parse_Y = UI.GetWindowPos()
-            Window.Set_Window_Scale()
+            Parse.Window.Set_Scaling()
             Window.Theme.Set()
 
             if Parse.Nano.Is_Enabled() then
@@ -56,4 +57,30 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Window.Hide = function()
     Metrics.Window.Parse_Window_Visible[1] = false
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the parse window scaling.
+------------------------------------------------------------------------------------------------------
+Parse.Window.Set_Scaling = function()
+    if not Parse.Window.Is_Scaling_Set() then
+        UI.SetWindowFontScale(Window.Get_Scaling())
+        Parse.Window.Set_Scaling_Flag(true)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if the parse window scaling is set.
+------------------------------------------------------------------------------------------------------
+Parse.Window.Is_Scaling_Set = function()
+    return Parse.Window.Scaling_Set
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Sets the parse window scaling update flag.
+-- ------------------------------------------------------------------------------------------------------
+---@param scaling boolean
+-- ------------------------------------------------------------------------------------------------------
+Parse.Window.Set_Scaling_Flag = function(scaling)
+    Parse.Window.Scaling_Set = scaling
 end

@@ -2,6 +2,7 @@ Config.Window = T{}
 
 Config.Window.Name = "Metrics - Help"
 Config.Window.Need_Position_Reset = true
+Config.Window.Scaling_Set = false
 
 ------------------------------------------------------------------------------------------------------
 -- Populate the data in the monitor window.
@@ -26,7 +27,7 @@ Config.Window.Populate = function()
 
         if UI.Begin(Config.Window.Name, Metrics.Window.Config_Window_Visible, window_flags) then
             Metrics.Window.Config_X, Metrics.Window.Config_Y = UI.GetWindowPos()
-            Window.Set_Window_Scale()
+            Config.Window.Set_Scaling()
             Window.Theme.Set()
             Config.Populate()       -- Populate the window.
             UI.End()
@@ -48,4 +49,30 @@ end
 ------------------------------------------------------------------------------------------------------
 Config.Window.Hide = function()
     Metrics.Window.Config_Window_Visible[1] = false
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the config window scaling.
+------------------------------------------------------------------------------------------------------
+Config.Window.Set_Scaling = function()
+    if not Config.Window.Is_Scaling_Set() then
+        UI.SetWindowFontScale(Window.Get_Scaling())
+        Config.Window.Set_Scaling_Flag(true)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if the config window scaling is set.
+------------------------------------------------------------------------------------------------------
+Config.Window.Is_Scaling_Set = function()
+    return Config.Window.Scaling_Set
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Sets the config window scaling update flag.
+-- ------------------------------------------------------------------------------------------------------
+---@param scaling boolean
+-- ------------------------------------------------------------------------------------------------------
+Config.Window.Set_Scaling_Flag = function(scaling)
+    Config.Window.Scaling_Set = scaling
 end

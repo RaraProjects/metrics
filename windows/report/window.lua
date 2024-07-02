@@ -2,6 +2,7 @@ Report.Window = T{}
 
 Report.Window.Name = "Metrics - Reporting"
 Report.Window.Need_Position_Reset = true
+Report.Window.Scaling_Set = false
 
 ------------------------------------------------------------------------------------------------------
 -- Populate the data in the monitor window.
@@ -26,7 +27,7 @@ Report.Window.Populate = function()
 
         if UI.Begin(Report.Window.Name, Metrics.Window.Report_Window_Visible, window_flags) then
             Metrics.Window.Report_X, Metrics.Window.Report_Y = UI.GetWindowPos()
-            Window.Set_Window_Scale()
+            Report.Window.Set_Scaling()
             Window.Theme.Set()
             Report.Populate()       -- Populate the window.
             UI.End()
@@ -48,4 +49,30 @@ end
 ------------------------------------------------------------------------------------------------------
 Report.Window.Hide = function()
     Metrics.Window.Report_Window_Visible[1] = false
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the report window scaling.
+------------------------------------------------------------------------------------------------------
+Report.Window.Set_Scaling = function()
+    if not Report.Window.Is_Scaling_Set() then
+        UI.SetWindowFontScale(Window.Get_Scaling())
+        Report.Window.Set_Scaling_Flag(true)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if the report window scaling is set.
+------------------------------------------------------------------------------------------------------
+Report.Window.Is_Scaling_Set = function()
+    return Report.Window.Scaling_Set
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Sets the report window scaling update flag.
+-- ------------------------------------------------------------------------------------------------------
+---@param scaling boolean
+-- ------------------------------------------------------------------------------------------------------
+Report.Window.Set_Scaling_Flag = function(scaling)
+    Report.Window.Scaling_Set = scaling
 end
