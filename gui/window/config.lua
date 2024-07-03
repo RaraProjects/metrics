@@ -35,8 +35,10 @@ Window.Config.Display = function()
             Metrics.Window.Multi_Window = not Metrics.Window.Multi_Window
             if Metrics.Window.Multi_Window then
                 Metrics.Window.Active_Window = nil
+                Config.Window.Show()
             else
                 Metrics.Window.Active_Window = Window.Tabs.Names.SETTINGS
+                Config.Window.Hide()
             end
         end
         UI.SameLine() Window.Widgets.HelpMarker("Have mutliple tabs open at once by enabling multiple windows. Be cautious running at " ..

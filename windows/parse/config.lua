@@ -31,7 +31,6 @@ Parse.Config.Defaults = T{
     Display_Mode = Parse.Enum.Display_Mode.FULL,
 }
 
-Parse.Config.Show_Settings = false
 Parse.Config.Column_Flags = Column.Flags.None
 Parse.Config.Column_Width = Column.Widths.Settings
 Parse.Config.Slider_Width = 100
@@ -53,10 +52,9 @@ end
 -- Shows settings that affect the Parse screens.
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Display = function()
-    UI.Separator() Parse.Config.General()
+    Parse.Config.General()
     UI.Separator() Parse.Config.Column_Selection()
     UI.Separator() Parse.Config.Sliders()
-    UI.Separator()
 end
 
 ------------------------------------------------------------------------------------------------------

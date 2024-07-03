@@ -38,7 +38,6 @@ Blog.Settings = {
     Visible_Length = 8,
 }
 
-Blog.Config.Show_Settings = false
 Blog.Config.Slider_Width = 100
 Blog.Config.Page_Slider_Width = 60
 
@@ -62,11 +61,10 @@ end
 -- Shows settings that affect the Battle Log screen.
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Display = function()
-    UI.Separator() Blog.Config.General_Settings()
+    Blog.Config.General_Settings()
     UI.Separator() Blog.Config.Damage_Sliders() UI.Separator()
     Blog.Config.Column_Settings()
     UI.Separator() Blog.Config.Length()
-    UI.Separator()
 end
 
 ------------------------------------------------------------------------------------------------------

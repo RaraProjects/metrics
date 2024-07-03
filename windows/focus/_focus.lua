@@ -61,7 +61,6 @@ Focus.Populate = function()
 
     Focus.Config.Settings_Button()
     if not unselected then UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.Screenshot_Button() end
-    if Focus.Config.Show_Settings then Focus.Config.Display() end
 
     if unselected then
         UI.Separator()

@@ -16,7 +16,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Settings_Button = function()
     if UI.SmallButton("Settings") then
-        Parse.Config.Show_Settings = not Parse.Config.Show_Settings
+        Config.Window.Button_Toggle(Config.Enum.File.PARSE)
     end
 end
 

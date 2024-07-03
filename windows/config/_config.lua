@@ -11,9 +11,11 @@ Config.Enum.File = {
     WINDOW   = "window",
     DATABASE = "database",
     REPORT   = "report",
+    CONFIG   = "config"     -- Just used for Settings Mode.
 }
 
 Config.Show_Window = {false}
+Config.Settings_Mode = Config.Enum.File.CONFIG
 
 require("windows.config.window")
 

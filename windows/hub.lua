@@ -88,6 +88,7 @@ end
 -- Shows Metrics in a single window with tabs.
 ------------------------------------------------------------------------------------------------------
 Hub.Single_Window = function()
+    Config.Window.Populate()
     if UI.BeginTabBar(Window.Tabs.Names.PARENT, Window.Tabs.Flags) then
         if UI.BeginTabItem(Parse.Tab_Name, false, Window.Tabs.Switch[Window.Tabs.Names.PARSE]) then
             Window.Tabs.Switch[Window.Tabs.Names.PARSE] = nil
@@ -210,6 +211,7 @@ Hub.Settings_Button = function()
     if UI.Button(Window.Tabs.Names.SETTINGS) then
         if Metrics.Window.Multi_Window then Config.Window.Toggle_Visibility() end
         Metrics.Window.Active_Window = Window.Tabs.Names.SETTINGS
+        Config.Settings_Mode = Config.Enum.File.CONFIG
     end
     if not active then UI.PopStyleColor(3) end
 end

@@ -62,7 +62,6 @@ Blog.Populate = function()
     if Metrics.Blog.Flags.Timestamp then columns = columns + 1 end
 
     Blog.Widgets.Settings_Button() UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Show_Page()
-    if Blog.Config.Show_Settings then Blog.Config.Display() end
     if Metrics.Blog.Flags.Paging then
         Blog.Widgets.Page_Buttons()
         if Blog.Filtered_Count > 0 then UI.Text("Filtered Rows: " .. tostring(Blog.Filtered_Count)) end

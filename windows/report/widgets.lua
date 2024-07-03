@@ -5,10 +5,7 @@ Report.Widgets = T{}
 ------------------------------------------------------------------------------------------------------
 Report.Widgets.Settings_Button = function()
     if UI.SmallButton("Settings") then
-        Report.Config.Show_Settings = not Report.Config.Show_Settings
-    end
-    if Report.Config.Show_Settings then
-        Report.Config.Display()
+        Config.Window.Button_Toggle(Config.Enum.File.REPORT)
     end
 end
 

@@ -5,7 +5,6 @@ Focus.Config.Defaults = T{
     Show_Misc_Actions = false,
 }
 
-Focus.Config.Show_Settings = false
 Focus.Config.Show_Percent_Details = false
 Focus.Config.Column_Flags = Column.Flags.None
 Focus.Config.Column_Width = Column.Widths.Settings
@@ -16,7 +15,6 @@ Focus.Config.Column_Width = Column.Widths.Settings
 Focus.Config.Display = function()
     local col_flags = Focus.Config.Column_Flags
 
-    UI.Separator()
     if UI.BeginTable("Focus General", 2) then
         UI.TableSetupColumn("Col 1", col_flags)
         UI.TableSetupColumn("Col 2", col_flags)
@@ -40,7 +38,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Config.Settings_Button = function()
     if UI.SmallButton("Settings") then
-        Focus.Config.Show_Settings = not Focus.Config.Show_Settings
+        Config.Window.Button_Toggle(Config.Enum.File.FOCUS)
     end
 end
 

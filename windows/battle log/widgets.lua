@@ -31,7 +31,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.Settings_Button = function()
     if UI.SmallButton("Settings") then
-        Blog.Config.Show_Settings = not Blog.Config.Show_Settings
+        Config.Window.Button_Toggle(Config.Enum.File.BLOG)
     end
 end
 

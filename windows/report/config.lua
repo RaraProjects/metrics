@@ -5,7 +5,6 @@ Report.Config.Defaults = T{
     Auto_Save = false,
 }
 
-Report.Config.Show_Settings = false
 Report.Config.Slider_Width = 100
 
 ------------------------------------------------------------------------------------------------------
@@ -21,7 +20,6 @@ end
 -- Shows settings that affect the Report tab.
 ------------------------------------------------------------------------------------------------------
 Report.Config.Display = function()
-    UI.Separator()
     if UI.Checkbox("Auto Save", {Metrics.Report.Auto_Save}) then
         Metrics.Report.Auto_Save = not Metrics.Report.Auto_Save
     end

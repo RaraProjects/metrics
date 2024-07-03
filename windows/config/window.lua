@@ -17,7 +17,6 @@ Config.Window.Populate = function()
         UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
 
         local window_flags = Window.Flags
-        if not Metrics.Window.Show_Title then window_flags = bit.bor(window_flags, ImGuiWindowFlags_NoTitleBar) end
 
         -- Handle resetting the window position between characters.
         if Config.Window.Need_Position_Reset then
@@ -29,12 +28,31 @@ Config.Window.Populate = function()
             Metrics.Window.Config_X, Metrics.Window.Config_Y = UI.GetWindowPos()
             Config.Window.Set_Scaling()
             Window.Theme.Set()
-            Config.Populate()       -- Populate the window.
+            if Config.Settings_Mode == Config.Enum.File.PARSE then
+                Parse.Config.Display()
+            elseif Config.Settings_Mode == Config.Enum.File.FOCUS then
+                Focus.Config.Display()
+            elseif Config.Settings_Mode == Config.Enum.File.BLOG then
+                Blog.Config.Display()
+            elseif Config.Settings_Mode == Config.Enum.File.REPORT then
+                Report.Config.Display()
+            elseif Config.Settings_Mode == Config.Enum.File.CONFIG then
+                Config.Populate()
+            end
             UI.End()
         end
 
         UI.PopStyleVar(5)
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns whether the config window is visible or not.
+------------------------------------------------------------------------------------------------------
+---@return boolean
+------------------------------------------------------------------------------------------------------
+Config.Window.Is_Visible = function()
+    return Metrics.Window.Config_Window_Visible[1]
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -45,10 +63,32 @@ Config.Window.Toggle_Visibility = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Shows the config window.
+------------------------------------------------------------------------------------------------------
+Config.Window.Show = function()
+    Metrics.Window.Config_Window_Visible[1] = true
+end
+
+------------------------------------------------------------------------------------------------------
 -- Hides the config window.
 ------------------------------------------------------------------------------------------------------
 Config.Window.Hide = function()
     Metrics.Window.Config_Window_Visible[1] = false
+end
+
+------------------------------------------------------------------------------------------------------
+-- Allows toggling and mode switching with the UI buttons.
+------------------------------------------------------------------------------------------------------
+---@param settings_mode string
+------------------------------------------------------------------------------------------------------
+Config.Window.Button_Toggle = function(settings_mode)
+    if not settings_mode then return nil end
+    if Config.Window.Is_Visible() and Config.Settings_Mode == settings_mode then
+        Config.Window.Hide()
+    else
+        Config.Settings_Mode = settings_mode
+        Config.Window.Show()
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
