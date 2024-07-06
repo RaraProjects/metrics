@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "07.02.24.00"
+addon.version = "07.06.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -46,6 +46,7 @@ Timers = require("timers")
 require("throttling")
 require("ashita._ashita")
 require("handlers._handler")
+require("windows.exp._exp")
 
 -- Windows
 require("windows.config._config")
@@ -77,7 +78,9 @@ ashita.events.register('d3d_present', 'present_cb', function()
 
     Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
     Timers.Cycle(Timers.Enum.Names.DPS)
+    Timers.Cycle(Timers.Enum.Names.EXP)
     Window.Populate()
+    XP.Window.Populate()
     Hub.Populate()
 end)
 
@@ -104,6 +107,9 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     -- 221 0xDD Party Member Update
     elseif packet.id == 0xDD then
         Ashita.Party.Need_Refresh = true
+
+    elseif packet.id == 0x2D then
+        XP.Parse(packet.data)
 
     -- Action Packet
     elseif packet.id == 0x028 then
@@ -155,7 +161,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         elseif (action.category ==  7) then -- Do nothing (Begin WS)
         elseif (action.category ==  8) then -- Do nothing (Begin Spellcasting)
         elseif (action.category ==  9) then -- Do nothing (Begin or Interrupt Item Usage)
-        elseif (action.category == 11) then 
+        elseif (action.category == 11) then
             if log_offense then H.TP.Monster_Action(action, actor_mob, log_offense)
             elseif log_defense then H.TP_Def.Monster_Action(action, actor_mob, owner_mob, log_defense) end
         elseif (action.category == 12) then -- Do nothing (Begin Ranged Attack)
@@ -273,13 +279,16 @@ ashita.events.register('load', 'load_cb', function()
     -- Initialize Modules
     DB.Initialize()
     Parse.Initialize()
+    XP.Local.Initialize()
     Ashita.Party.Refresh()
     Window.IO.MouseDrawCursor = Metrics.Window.Show_Mouse
 
     -- Start the clock.
+    Timers.Start(Timers.Enum.Names.METRICS)
     Timers.Start(Timers.Enum.Names.PARSE)
     Timers.Start(Timers.Enum.Names.AUTOPAUSE)
     Timers.Start(Timers.Enum.Names.DPS)
+    Timers.Start(Timers.Enum.Names.EXP)
 
     _Globals.Initialized = true
 end)

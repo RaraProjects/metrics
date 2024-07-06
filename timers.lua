@@ -4,10 +4,13 @@ timers.Timers = T{}
 
 timers.Enum = T{}
 timers.Enum.Names = T{
-    PARSE = "Metrics",
+    METRICS   = "Total Runtime",
+    PARSE     = "Active Time",
     AUTOPAUSE = "Auto-Pause",
-    AUTOSAVE = "Auto-Save",
-    DPS = "DPS",
+    AUTOSAVE  = "Auto-Save",
+    DPS       = "DPS",
+    EXP       = "EXP",
+    CHAIN     = "Chain",
 }
 
 timers.Tresholds = T{
@@ -135,6 +138,11 @@ timers.Cycle = function(name)
             DB.DPS.Create_Snapshot()
             timers.Reset(Timers.Enum.Names.DPS)
         end
+    elseif name == Timers.Enum.Names.EXP then
+        if duration > XP.Local.Bucket_Length then
+            XP.Local.Cycle_Window()
+            timers.Reset(Timers.Enum.Names.EXP)
+        end
     end
 end
 
@@ -142,15 +150,18 @@ end
 -- Formats the display timer.
 ------------------------------------------------------------------------------------------------------
 ---@param time? number duration in seconds.
+---@param hide_hour? boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
-timers.Format = function(time)
+timers.Format = function(time, hide_hour)
     if not time then return '00:00' end
     local hour, minute, second
     hour   = string.format("%02.f", math.floor(time / 3600))
     minute = string.format("%02.f", math.floor((time / 60) - (hour * 60)))
     second = string.format("%02.f", math.floor(time % 60))
-    return hour .. ":" .. minute .. ":" .. second
+    local formatted_time = minute .. ":" .. second
+    if not hide_hour then formatted_time = hour .. ":" .. formatted_time end
+    return formatted_time
 end
 
 return timers

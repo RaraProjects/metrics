@@ -107,6 +107,28 @@ Ashita.Packets.Build_Message = function(data)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Handles parsing the experience points packet 0x02D.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.EXP = function(data)
+	local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+	local parsed_data = T{}
+	parsed_data.player = reader:read(32)
+	parsed_data.target = reader:read(32)
+	parsed_data.player_index = reader:read(16)
+    parsed_data.target_index = reader:read(16)
+	parsed_data.xp_amount = reader:read(32)		-- Amount of XP or limit points.
+    parsed_data.chain_count = reader:read(32)	-- Current chain.
+	parsed_data.message_id = reader:read(16)	-- Determines if on a chain and if limit or exp.
+	parsed_data.unknown = reader:read(16)
+	return parsed_data
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- NOT IMPLEMENTED
 -- Handles parsing messages out of incoming packet 0x029.
 -- ------------------------------------------------------------------------------------------------------

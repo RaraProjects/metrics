@@ -3,7 +3,7 @@ Ashita.Player = T{}
 -- ------------------------------------------------------------------------------------------------------
 -- Get player data. If an attribute is provided then just get that attribute as long as it is handled.
 -- ------------------------------------------------------------------------------------------------------
----@param attribute string the specific attribute to be returned.
+---@param attribute? string the specific attribute to be returned.
 ---@return any
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.Get = function(attribute)
@@ -38,6 +38,24 @@ Ashita.Player.Is_Logged_In = function()
         end
     end
     return logged_in
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns the player's TNL.
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Exp_TNL = function()
+    local player = Ashita.Player.Get()
+    if not player then return 99999 end
+    return player:GetExpNeeded() - player:GetExpCurrent()
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns the player's TNLP.
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Exp_TNLP = function()
+    local player = Ashita.Player.Get()
+    if not player then return 99999 end
+    return 10000 - player:GetLimitPoints()
 end
 
 -- ------------------------------------------------------------------------------------------------------

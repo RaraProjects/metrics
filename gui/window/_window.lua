@@ -31,6 +31,9 @@ Window.Defaults = T{
     Config_Window_Visible = {false},
     Config_X = 100,
     Config_Y = 100,
+    XP_Window_Visible = {false},
+    XP_X = 100,
+    XP_Y = 100,
 }
 
 Window.Flags = bit.bor(

@@ -7,7 +7,7 @@ Parse.Widgets.Clock = function()
     if Metrics.Parse.Show_Clock then
         local pause_string = ""
         if Timers.Is_Paused(Timers.Enum.Names.PARSE) then pause_string = " (||)" end
-        UI.Text("Duration: " .. tostring(Timers.Check("Metrics"))) UI.SameLine() UI.Text(pause_string) Parse.Widgets.Timer_Duration_Help_Text()
+        UI.Text("Duration: " .. tostring(Timers.Check(Timers.Enum.Names.PARSE))) UI.SameLine() UI.Text(pause_string) Parse.Widgets.Timer_Duration_Help_Text()
     end
 end
 
@@ -35,6 +35,15 @@ end
 Parse.Widgets.Timer_Button = function()
     if UI.SmallButton("Timer") then
         Metrics.Parse.Show_Clock = not Metrics.Parse.Show_Clock
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the experience/limit points showing for the parse window.
+------------------------------------------------------------------------------------------------------
+Parse.Widgets.XP_Button = function()
+    if UI.SmallButton("EXP") then
+        Metrics.Window.XP_Window_Visible[1] = not Metrics.Window.XP_Window_Visible[1]
     end
 end
 
