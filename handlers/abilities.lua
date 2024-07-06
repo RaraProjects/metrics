@@ -176,7 +176,7 @@ end
 H.Ability.Pet_Blog = function(actor_mob, owner_mob, ability_data, ability_id, damage)
     if damage > 0 then
         if Res.Avatar.Get_Rage(ability_id) or Res.Pets.Get_Damaging_Wyvern_Breath(ability_id) then
-            Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET, ability_data.Name, damage)
+            Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_TP, ability_data.Name, damage)
         elseif Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then
             Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_HEAL, ability_data.Name, damage)
         end

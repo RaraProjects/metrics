@@ -9,7 +9,7 @@ Blog.Config.Defaults.Flags = T{
     SC        = true,
     Magic     = true,
     Ability   = true,
-    Pet_WS    = true,
+    Pet_TP    = true,
     Pet_Melee = true,
     Pet_Heal  = true,
     Pet       = true,
@@ -140,8 +140,8 @@ Blog.Config.Column_Settings = function()
             Metrics.Blog.Flags.Pet_Melee = not Metrics.Blog.Flags.Pet_Melee
         end
         UI.TableNextColumn()
-        if UI.Checkbox("Pet WS", {Metrics.Blog.Flags.Pet_WS}) then
-            Metrics.Blog.Flags.Pet_WS = not Metrics.Blog.Flags.Pet_WS
+        if UI.Checkbox("Pet TP", {Metrics.Blog.Flags.Pet_TP}) then
+            Metrics.Blog.Flags.Pet_TP = not Metrics.Blog.Flags.Pet_TP
         end
         UI.TableNextColumn()
         if UI.Checkbox("Pet Healing", {Metrics.Blog.Flags.Pet_Heal}) then

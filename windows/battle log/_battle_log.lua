@@ -21,7 +21,7 @@ Blog.Enum.Types = T{
     HEALING   = "Healing",
     PET       = "Pet",
     PET_MELEE = "Pet Melee",
-    PET_WS    = "Pet Weaponskill",
+    PET_TP    = "Pet Weaponskill",
     PET_HEAL  = "Pet Heal",
     MOB_TP    = "Mob TP",
     MOB_DEATH = "Mob Death",
@@ -146,9 +146,8 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Show_Row = function(action_flag)
     if     action_flag == Blog.Enum.Types.HEALING   then return Metrics.Blog.Flags.Healing
-    elseif action_flag == Blog.Enum.Types.PET       then return Metrics.Blog.Flags.Pet
     elseif action_flag == Blog.Enum.Types.PET_MELEE then return Metrics.Blog.Flags.Pet_Melee
-    elseif action_flag == Blog.Enum.Types.PET_WS    then return Metrics.Blog.Flags.Pet_WS
+    elseif action_flag == Blog.Enum.Types.PET_TP    then return Metrics.Blog.Flags.Pet_TP
     elseif action_flag == Blog.Enum.Types.PET_HEAL  then return Metrics.Blog.Flags.Pet_Heal
     elseif action_flag == Blog.Enum.Types.DEATH     then return Metrics.Blog.Flags.Deaths
     elseif action_flag == Blog.Enum.Types.MOB_TP    then return Metrics.Blog.Flags.Mob_TP
