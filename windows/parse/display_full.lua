@@ -78,7 +78,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Full.Rows = function(player_name)
     UI.TableNextRow()
-    UI.TableNextColumn() UI.Text(player_name)
+    UI.TableNextColumn() Column.String.Format_Name(player_name)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
     UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
 

@@ -29,6 +29,7 @@ Parse.Config.Defaults = T{
     Grand_Totals = false,
     Global_DPS   = false,
     Show_Filter  = false,
+    Name_Colors  = true,
     Display_Mode = Parse.Enum.Display_Mode.FULL,
 }
 
@@ -103,6 +104,10 @@ Parse.Config.General = function()
 
         -- Row 3
         UI.TableNextColumn() Focus.Config.Percent_Details()
+        UI.TableNextColumn()
+        if UI.Checkbox("Job Colors", {Metrics.Parse.Name_Colors}) then
+            Metrics.Parse.Name_Colors = not Metrics.Parse.Name_Colors
+        end
 
         UI.EndTable()
     end

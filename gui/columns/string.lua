@@ -1,6 +1,22 @@
 Column.String = T{}
 
 ------------------------------------------------------------------------------------------------------
+-- Formats the player name string.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Column.String.Format_Name = function(player_name)
+    if not player_name then player_name = "Player" end
+    local color = Res.Colors.Basic.WHITE
+    if Metrics.Parse.Name_Colors then
+        local job = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name])
+        if not job then job = Res.Jobs.List[0] end
+        color = Res.Colors.Get_Job(job.id)
+    end
+    UI.TextColored(color, player_name)
+end
+
+------------------------------------------------------------------------------------------------------
 -- Create a nicely formatted number string.
 -- I floor the number to get rid of any decimals. Decimals were a problem with the average column.
 ------------------------------------------------------------------------------------------------------

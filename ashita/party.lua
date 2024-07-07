@@ -1,6 +1,7 @@
 Ashita.Party = T{}
 
 Ashita.Party.List = {}              -- Maintains who is currently in the party.
+Ashita.Party.Jobs = {}              -- [player_name] Keeps track of player jobs.
 Ashita.Party.Need_Refresh = true    -- Caches if we have the most up-to-date party information.
 
 -- ------------------------------------------------------------------------------------------------------
@@ -91,7 +92,9 @@ Ashita.Party.Refresh = function(player_name, node)
         -- Group the 18 members up into 3 parties.
         local party_number = math.ceil((slot + 1) / 6)
         if data:GetMemberIsActive(slot) == 1 then
-            Ashita.Party.List[data:GetMemberName(slot)] = party_number
+            local name = data:GetMemberName(slot)
+            Ashita.Party.List[name] = party_number
+            Ashita.Party.Jobs[name] = data:GetMemberMainJob(slot)
 
             -- Might as well grab some data while looping through.
             if player_name then
