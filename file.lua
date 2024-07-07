@@ -132,20 +132,23 @@ File.Save_Battlelog = function()
     ---@diagnostic disable-next-line: undefined-field
     local file = io.open(('%s/%s'):fmt(path, filename), "w")
     if file ~= nil then
-        file:write(tostring("Time") .. File.Delimiter .. tostring("Name") .. File.Delimiter
-                .. tostring("Damage") .. File.Delimiter .. tostring("Action") .. File.Delimiter .. tostring("Note") .. "\n")
+        file:write(tostring("Time") .. File.Delimiter .. tostring("Flag") .. File.Delimiter .. tostring("Player Name") .. File.Delimiter
+                .. tostring("Pet Name") .. File.Delimiter.. tostring("Damage") .. File.Delimiter .. tostring("Action") .. File.Delimiter .. tostring("Note") .. "\n")
         for _, data in pairs(Blog.Log) do
-            local time = data.Time
-            local name = data.Name
-            local damage = data.Damage
-            local action = data.Action
-            local note = data.Note
-            if not time or not name or not damage or not action or not note then
-                _Debug.Error.Add("File.Save_Battlelog: Nil data: Time " .. tostring(time) .. " Name: " .. tostring(name.Value)
-                              .. " Damage: " .. tostring(damage.Value) .. " Action: " .. tostring(action.Value) .. " Note: " .. tostring(note))
+            local time        = data.Time
+            local flag        = data.Flag
+            local player_name = data.Player
+            local pet_name    = data.Pet
+            local damage      = data.Damage
+            local action      = data.Action
+            local note        = data.Note
+            if not time or not flag or  not player_name or not pet_name or not damage or not action or not note then
+                _Debug.Error.Add("File.Save_Battlelog: Nil data: Time " .. tostring(time) .. " Flag: " .. tostring(flag) " Player Name: " .. tostring(player_name)
+                              .. " Pet Name: " .. tostring(pet_name) .. " Damage: " .. tostring(damage) .. " Action: " .. tostring(action) .. " Note: " .. tostring(note))
             else
-                file:write(tostring(time.Value) .. File.Delimiter .. tostring(name.Value) .. File.Delimiter
-                        .. tostring(damage.Value) .. File.Delimiter .. tostring(action.Value) .. File.Delimiter .. tostring(note.Value) .. "\n")
+                file:write(tostring(time.Value) .. File.Delimiter .. tostring(flag.Value) .. File.Delimiter .. tostring(player_name.Value) .. File.Delimiter
+                        .. tostring(pet_name.Value) .. File.Delimiter .. tostring(damage.Value) .. File.Delimiter .. tostring(action.Value) .. File.Delimiter
+                        .. tostring(note.Value) .. "\n")
             end
         end
         file:close()
