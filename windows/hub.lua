@@ -209,7 +209,10 @@ Hub.Settings_Button = function()
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.DIM)
     end
     if UI.Button(Window.Tabs.Names.SETTINGS) then
-        if Metrics.Window.Multi_Window then Config.Window.Toggle_Visibility() end
+        -- Don't toggle off if config window is open and not showing settings.
+        if not (Config.Window.Is_Visible() and Config.Settings_Mode ~= Config.Enum.File.CONFIG) then
+            if Metrics.Window.Multi_Window then Config.Window.Toggle_Visibility() end
+        end
         Metrics.Window.Active_Window = Window.Tabs.Names.SETTINGS
         Config.Settings_Mode = Config.Enum.File.CONFIG
     end
