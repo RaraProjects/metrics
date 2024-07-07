@@ -51,6 +51,9 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
         end
     end
 
+    -- Don't calculate attack speed for pets.
+    if not owner_mob then DB.Attack_Speed.Update(actor_mob.name) end
+
     -- Keeps track of how many melee cycles have occurred (1 per packet).
     DB.Data.Update(DB.Enum.Mode.INC, 1, details.audits, DB.Enum.Trackable.MELEE, DB.Enum.Metric.CYCLE)
 

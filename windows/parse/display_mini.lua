@@ -9,6 +9,7 @@ Parse.Mini.Table_Flags = bit.bor(ImGuiTableFlags_Borders)
 Parse.Mini.Populate = function()
     local columns = 3
     if Parse.Config.Is_Pet_Column_Enabled() then columns = columns + 2 end
+    if Metrics.Parse.Attack_Speed then columns = columns + 1 end
     if Metrics.Parse.DPS then columns = columns + 1 end
     if Metrics.Parse.Running_Acc then columns = columns + 1 end
     if UI.BeginTable("Team Mini", columns, Parse.Mini.Table_Flags) then
@@ -42,8 +43,9 @@ Parse.Mini.Headers = function()
     UI.TableSetupColumn("Name", flags)
     UI.TableSetupColumn("Total", flags)
     UI.TableSetupColumn("%T", flags)
-    if Metrics.Parse.DPS then UI.TableSetupColumn("DPS", flags) end
-    if Metrics.Parse.Running_Acc then UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags) end
+    if Metrics.Parse.Attack_Speed then UI.TableSetupColumn("Speed", flags) end
+    if Metrics.Parse.DPS then          UI.TableSetupColumn("DPS", flags) end
+    if Metrics.Parse.Running_Acc then  UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags) end
     if Parse.Config.Is_Pet_Column_Enabled() then
         UI.TableSetupColumn("Pet D.", flags)
         UI.TableSetupColumn("Pet A.", flags)
@@ -61,8 +63,9 @@ Parse.Mini.Rows = function(player_name)
     UI.TableNextColumn() UI.Text(player_name)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
     UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
-    if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
-    if Metrics.Parse.Running_Acc then UI.TableNextColumn() Column.Acc.Running(player_name) end
+    if Metrics.Parse.Attack_Speed then UI.TableNextColumn() Column.Attack_Speed.Get(player_name, true) end
+    if Metrics.Parse.DPS then          UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
+    if Metrics.Parse.Running_Acc then  UI.TableNextColumn() Column.Acc.Running(player_name) end
     if Parse.Config.Is_Pet_Column_Enabled() then
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
@@ -80,8 +83,9 @@ Parse.Mini.Total_Row = function()
 
     UI.TableNextColumn() UI.Text("Total")
     UI.TableNextColumn() Column.Damage.Parse_Total(true)
-    if Metrics.Parse.Running_Acc then UI.TableNextColumn() UI.Text(" ") end
-    if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.Parse_DPS(true) end
+    if Metrics.Parse.Attack_Speed then UI.TableNextColumn() UI.Text(" ") end
+    if Metrics.Parse.DPS then          UI.TableNextColumn() Column.Damage.Parse_DPS(true) end
+    if Metrics.Parse.Running_Acc then  UI.TableNextColumn() UI.Text(" ") end
     UI.TableNextColumn() UI.Text(" ")
     if Parse.Config.Is_Pet_Column_Enabled() then
         UI.TableNextColumn() UI.Text(" ")

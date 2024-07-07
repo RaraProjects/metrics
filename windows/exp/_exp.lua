@@ -73,7 +73,11 @@ XP.Parse = function(data)
     XP.Chains(chain)
     XP.Get_Chain_Time()
 
-    XP.Local.Add_XP(xp_amount, XP.Type.LIMIT)
+    if xp_type == XP.Type.EXPERIENCE then
+        XP.Local.Add_XP(xp_amount, XP.Type.EXPERIENCE)
+    elseif xp_type == XP.Type.LIMIT then
+        XP.Local.Add_XP(xp_amount, XP.Type.LIMIT)
+    end
 end
 
 -- ------------------------------------------------------------------------------------------------------

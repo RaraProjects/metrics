@@ -23,6 +23,7 @@ Column.Metric = DB.Enum.Metric
 -- Load dependencies
 require("gui.columns.string")
 require("gui.columns.damage")
+require("gui.columns.attack_speed")
 require("gui.columns.defense")
 require("gui.columns.healing")
 require("gui.columns.accuracy")

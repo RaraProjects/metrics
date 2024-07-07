@@ -11,6 +11,7 @@ Parse.Config.Defaults = T{
     Total_Acc    = false,
     Running_Acc  = true,
     DPS          = true,
+    Attack_Speed = true,
     Melee        = true,
     Average_WS   = false,
     Weaponskill  = true,
@@ -175,6 +176,12 @@ Parse.Config.Physical_Flags = function(col_flags, width)
         UI.TableNextColumn()
         if UI.Checkbox("Total Accuracy", {Metrics.Parse.Total_Acc}) then
             Metrics.Parse.Total_Acc = not Metrics.Parse.Total_Acc
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Attack Speed", {Metrics.Parse.Attack_Speed}) then
+            Metrics.Parse.Attack_Speed = not Metrics.Parse.Attack_Speed
             Parse.Util.Calculate_Column_Flags()
         end
 

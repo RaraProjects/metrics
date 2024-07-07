@@ -17,6 +17,20 @@ Column.String.Format_Number = function(number, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Create a nicely formatted decimal string.
+-- I floor the number to get rid of any decimals. Decimals were a problem with the average column.
+------------------------------------------------------------------------------------------------------
+---@param number number this should be an actual number and not a string.
+---@param justify? boolean whether or not to right justify the text
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.String.Format_Decimal = function(number, justify)
+    local format = "%2f"
+    if justify then format = "%6.2f" end
+    return string.format(format, number)
+end
+
+------------------------------------------------------------------------------------------------------
 -- Calculates and formats a percent.
 ------------------------------------------------------------------------------------------------------
 ---@param numerator number The numerator for the percent.

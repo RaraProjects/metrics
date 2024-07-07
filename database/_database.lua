@@ -14,6 +14,7 @@ DB.Tracking.Initialized_Players = T{}   -- [player_name]
 DB.Tracking.Initialized_Pets = T{}      -- [player_name][pet_name]
 DB.Tracking.Initialized_Mobs = T{}      -- [mob_name]
 DB.Tracking.Running_Accuracy = T{}		-- [player_name]
+DB.Tracking.Running_Attack_Speed = T{}  -- [player_name]
 DB.Tracking.Running_Damage = T{}		-- [player_name]
 DB.Tracking.Multi_Attack = T{}			-- [player_name][multi-rank]
 DB.Tracking.Defeated_Mobs = T{}			-- [mob_name]
@@ -32,6 +33,7 @@ DB.Defaults = T{
 require("database._enum")
 require("database.accuracy")
 require("database.dps")
+require("database.attack_speed")
 require("database.catalog")
 require("database.data")
 require("database.lists")
