@@ -289,7 +289,7 @@ H.Spell.Enfeebling = function(audits, spell_name, message_id)
     if audits.pet_name then trackable = H.Trackable.PET_ENFEEBLING end
     DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT) -- Used to flag that data is availabel for show in Focus.
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
-    if message_id == Ashita.Enum.Message.ENF_LAND or message_id == Ashita.Enum.Message.ENF_BURST then
+    if message_id == Ashita.Enum.Message.ENF_LAND or message_id == Ashita.Enum.Message.ENF_LAND_2 or message_id == Ashita.Enum.Message.ENF_BURST then
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
     end
 end
