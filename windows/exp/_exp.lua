@@ -161,15 +161,15 @@ XP.Limit_Points = function()
         UI.TableNextColumn() UI.Text(tostring(XP.Global.Calculate(XP.Type.LIMIT)))
 
         UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("TNLP")
+        UI.TableNextColumn() UI.Text("TNM")
         UI.TableNextColumn() UI.Text(tostring(Ashita.Player.Exp_TNLP()))
 
         UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Time to LP")
+        UI.TableNextColumn() UI.Text("Time to Merit")
         UI.TableNextColumn() UI.Text(XP.Time_To_Level(XP.Type.LIMIT))
 
         UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Total Limit")
+        UI.TableNextColumn() UI.Text("Total LP")
         UI.TableNextColumn() UI.Text(tostring(XP.Metric.Limit_Total))
 
         if XP.Local.Show_Windows then

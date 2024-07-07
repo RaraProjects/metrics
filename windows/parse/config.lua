@@ -328,6 +328,7 @@ end
 ---@param bool boolean
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Set_Physical_Columns = function(bool)
+    Metrics.Parse.Attack_Speed = bool
     Metrics.Parse.Running_Acc = bool
     Metrics.Parse.Total_Acc = bool
     Metrics.Parse.Melee = bool
