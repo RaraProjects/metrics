@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "07.06.24.04"
+addon.version = "07.07.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -248,8 +248,25 @@ Settings_File.register(Config.Enum.File.WINDOW, "settings_update", function(sett
     if settings ~= nil then
         Metrics.Window = settings
         Window.Theme.Is_Set = false
-        Window.Scaling_Set = false
+
         Window.Reset_Position = true
+        Hub.Need_Position_Reset = true
+        Parse.Window.Need_Position_Reset = true
+        Focus.Window.Need_Position_Reset = true
+        Blog.Window.Need_Position_Reset = true
+        Report.Window.Need_Position_Reset = true
+        Config.Window.Need_Position_Reset = true
+        XP.Window.Need_Position_Reset = true
+
+        Window.Scaling_Set = false
+        Hub.Scaling_Set = false
+        Parse.Window.Scaling_Set = false
+        Focus.Window.Scaling_Set = false
+        Blog.Window.Scaling_Set = false
+        Report.Window.Scaling_Set = false
+        Config.Window.Scaling_Set = false
+        XP.Window.Scaling_Set = false
+
         Settings_File.save(Config.Enum.File.WINDOW)
     end
 end)
