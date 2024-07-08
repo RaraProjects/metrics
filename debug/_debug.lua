@@ -56,10 +56,10 @@ _Debug.Populate = function()
             _Debug.Packet.Populate_Message()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem(Window.Tabs.Names.ITEMS) then
-            _Debug.Packet.Populate_Item()
-            UI.EndTabItem()
-        end
+        -- if UI.BeginTabItem(Window.Tabs.Names.ITEMS) then
+        --     _Debug.Packet.Populate_Item()
+        --     UI.EndTabItem()
+        -- end
         if UI.BeginTabItem(Window.Tabs.Names.ERRORS) then
             _Debug.Error.Populate()
             UI.EndTabItem()
@@ -68,6 +68,26 @@ _Debug.Populate = function()
             _Debug.Data_View.Populate()
             UI.EndTabItem()
         end
+        if UI.BeginTabItem("Job Colors") then
+            UI.TextColored(Res.Colors.Get_Job(1),  "Warrior")
+            UI.TextColored(Res.Colors.Get_Job(2),  "Monk")
+            UI.TextColored(Res.Colors.Get_Job(3),  "White Mage")
+            UI.TextColored(Res.Colors.Get_Job(4),  "Black Mage")
+            UI.TextColored(Res.Colors.Get_Job(5),  "Red Mage")
+            UI.TextColored(Res.Colors.Get_Job(6),  "Thief")
+            UI.TextColored(Res.Colors.Get_Job(7),  "Paladin")
+            UI.TextColored(Res.Colors.Get_Job(8),  "Dark Knight")
+            UI.TextColored(Res.Colors.Get_Job(9),  "Beastmaster")
+            UI.TextColored(Res.Colors.Get_Job(10), "Bard")
+            UI.TextColored(Res.Colors.Get_Job(11), "Ranger")
+            UI.TextColored(Res.Colors.Get_Job(12), "Samurai")
+            UI.TextColored(Res.Colors.Get_Job(13), "Ninja")
+            UI.TextColored(Res.Colors.Get_Job(14), "Dragoon")
+            UI.TextColored(Res.Colors.Get_Job(15), "Summoner")
+            UI.EndTabItem()
+        end
         UI.EndTabBar()
     end
+
+
 end

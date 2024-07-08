@@ -19,11 +19,6 @@ Window.Theme.Choose = function()
         Window.Theme.Is_Set = false
     end
     UI.SameLine()
-    if UI.RadioButton("Light ", {Metrics.Window.Style}, 2) then
-        Metrics.Window.Style = 2
-        Window.Theme.Is_Set = false
-    end
-    UI.SameLine()
     if UI.RadioButton("Classic ", {Metrics.Window.Style}, 3) then
         Metrics.Window.Style = 3
         Window.Theme.Is_Set = false
