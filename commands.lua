@@ -10,7 +10,14 @@ ashita.events.register('command', 'command_cb', function (e)
 
         -- Help Text
         if not arg then
-            Config.Show_Window[1] = not Config.Show_Window[1]
+            if Config.Settings_Mode ~= Config.Enum.File.CONFIG and Metrics.Window.Config_Window_Visible[1] then
+                Config.Settings_Mode = Config.Enum.File.CONFIG
+            elseif Config.Settings_Mode ~= Config.Enum.File.CONFIG and not Metrics.Window.Config_Window_Visible[1] then
+                Config.Settings_Mode = Config.Enum.File.CONFIG
+                Metrics.Window.Config_Window_Visible[1] = true
+            elseif Config.Settings_Mode == Config.Enum.File.CONFIG then
+                Metrics.Window.Config_Window_Visible[1] = not Metrics.Window.Config_Window_Visible[1]
+            end
 
         -- General Settings
         elseif arg == "show" or arg == "s" then

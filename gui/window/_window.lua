@@ -119,13 +119,6 @@ Window.Populate = function()
             end
         end
 
-        if Config.Show_Window[1] then
-            if UI.Begin("Metrics - Commands", Config.Show_Window, Window.Flags) then
-                Config.Section.Text_Commands()
-                UI.End()
-            end
-        end
-
         UI.PopStyleVar(5)
     end
 end
