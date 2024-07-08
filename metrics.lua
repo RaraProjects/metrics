@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "07.07.24.04"
+addon.version = "07.08.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -254,6 +254,7 @@ Settings_File.register(Config.Enum.File.WINDOW, "settings_update", function(sett
         Hub.Need_Position_Reset = true
         Parse.Window.Need_Position_Reset = true
         Focus.Window.Need_Position_Reset = true
+        Focus.Window.Screenshot_Need_Position_Reset = true
         Blog.Window.Need_Position_Reset = true
         Report.Window.Need_Position_Reset = true
         Config.Window.Need_Position_Reset = true
@@ -263,6 +264,7 @@ Settings_File.register(Config.Enum.File.WINDOW, "settings_update", function(sett
         Hub.Scaling_Set = false
         Parse.Window.Scaling_Set = false
         Focus.Window.Scaling_Set = false
+        Focus.Window.Screenshot_Scaling_Set = false
         Blog.Window.Scaling_Set = false
         Report.Window.Scaling_Set = false
         Config.Window.Scaling_Set = false

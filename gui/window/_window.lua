@@ -22,6 +22,8 @@ Window.Defaults = T{
     Focus_Window_Visible = {false},
     Focus_X = 100,
     Focus_Y = 100,
+    Screenshot_X = 100,
+    Screenshot_Y = 100,
     Blog_Window_Visible = {false},
     Blog_X = 100,
     Blog_Y = 100,
@@ -41,11 +43,6 @@ Window.Flags = bit.bor(
         ImGuiWindowFlags_NoSavedSettings,
         ImGuiWindowFlags_NoFocusOnAppearing,
         ImGuiWindowFlags_NoNav)
-
-Window.Screenshot_Flags = bit.bor(
-    ImGuiWindowFlags_AlwaysAutoResize,
-    ImGuiWindowFlags_NoSavedSettings,
-    ImGuiWindowFlags_NoNav)
 
 Window.Tabs = {}
 Window.Tabs.Flags = ImGuiTabBarFlags_None
@@ -127,15 +124,6 @@ Window.Populate = function()
                 Config.Section.Text_Commands()
                 UI.End()
             end
-        end
-
-        if Focus.Screenshot_Mode[1] then
-            UI.PushStyleVar(ImGuiStyleVar_Alpha, 1)
-            if UI.Begin("Screenshot Mode", Focus.Screenshot_Mode, Window.Screenshot_Flags) then
-                Focus.Screenshot()
-                UI.End()
-            end
-            UI.PopStyleVar(1)
         end
 
         UI.PopStyleVar(5)

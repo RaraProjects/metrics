@@ -79,6 +79,7 @@ Hub.Multi_Window = function()
     Hub.Buttons()
     Parse.Window.Populate()
     Focus.Window.Populate()
+    Focus.Window.Populate_Screenshot()
     Blog.Window.Populate()
     Report.Window.Populate()
     Config.Window.Populate()
@@ -89,6 +90,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Hub.Single_Window = function()
     Config.Window.Populate()
+    Focus.Window.Populate_Screenshot()
     if UI.BeginTabBar(Window.Tabs.Names.PARENT, Window.Tabs.Flags) then
         if UI.BeginTabItem(Parse.Tab_Name, false, Window.Tabs.Switch[Window.Tabs.Names.PARSE]) then
             Window.Tabs.Switch[Window.Tabs.Names.PARSE] = nil

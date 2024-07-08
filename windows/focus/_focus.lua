@@ -24,6 +24,11 @@ Focus.Tabs.Switch = {
 
 Focus.Column_Flags = Column.Flags.None
 Focus.Table_Flags  = Window.Table.Flags.Fixed_Borders
+
+Focus.Screenshot_Flags = bit.bor(
+    ImGuiWindowFlags_AlwaysAutoResize,
+    ImGuiWindowFlags_NoSavedSettings,
+    ImGuiWindowFlags_NoNav)
 Focus.Screenshot_Mode = {false}
 
 -- Load dependencies
@@ -200,7 +205,10 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Screenshot = function()
     local player_name = DB.Widgets.Util.Get_Player_Focus()
-    if player_name == DB.Widgets.Dropdown.Enum.NONE then return nil end
+    if player_name == DB.Widgets.Dropdown.Enum.NONE then
+        Focus.Screenshot_Mode[1] = false
+        return nil
+    end
 
     UI.Text("Overall") Focus.Overall(player_name)
     UI.Separator() UI.Text("Melee")        Focus.Melee.Display(player_name)
