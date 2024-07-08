@@ -32,6 +32,8 @@ ashita.events.register('command', 'command_cb', function (e)
             DB.Initialize(true)
         elseif arg == "full" or arg == "f" then
             Parse.Full.Enable()
+        elseif arg == "xp" then
+            XP.Window.Toggle_Visibility()
         elseif (arg == "pet" or arg == "p") then
             Parse.Config.Toggle_Pet()
         elseif arg == "clock" or arg == "c" then
