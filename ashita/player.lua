@@ -41,7 +41,20 @@ Ashita.Player.Is_Logged_In = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Returns whether limit mode is enabled or not.
+-- ------------------------------------------------------------------------------------------------------
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Is_Limit_Mode_Enabled = function()
+    local player = Ashita.Player.Get()
+    if not player then return false end
+    return player:GetIsLimitModeEnabled()
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Returns the player's TNL.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.Exp_TNL = function()
     local player = Ashita.Player.Get()
@@ -52,7 +65,9 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Returns the player's TNLP.
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Exp_TNLP = function()
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Exp_TNM = function()
     local player = Ashita.Player.Get()
     if not player then return 99999 end
     return 10000 - player:GetLimitPoints()
@@ -63,6 +78,8 @@ end
 -- I grabbed and adjusted this snippet from HXUI and mobdb.
 -- https://github.com/tirem/HXUI
 -- https://github.com/ThornyFFXI/mobdb
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.Target_Index = function()
     local memory_manager = AshitaCore:GetMemoryManager()
@@ -81,6 +98,8 @@ end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get the player's mob structure.
+-- ------------------------------------------------------------------------------------------------------
+---@return table
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.My_Mob = function()
     return Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
