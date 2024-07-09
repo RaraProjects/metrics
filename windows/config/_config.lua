@@ -101,6 +101,10 @@ Config.Section.Text_Commands = function()
         UI.TableNextColumn() UI.Text("s")
         UI.TableNextColumn() UI.Text("Toggles window visibility.")
 
+        UI.TableNextColumn() UI.Text("percent")
+        UI.TableNextColumn() UI.Text("")
+        UI.TableNextColumn() UI.Text("Toggles showing numerators and denominators for percents.")
+
         UI.EndTable()
     end
 
@@ -212,6 +216,10 @@ Config.Section.Text_Commands = function()
         UI.TableNextColumn() UI.Text("pet")
         UI.TableNextColumn() UI.Text("p")
         UI.TableNextColumn() UI.Text("Switch to Pet tab in Focus tab.")
+
+        UI.TableNextColumn() UI.Text("defense")
+        UI.TableNextColumn() UI.Text("def")
+        UI.TableNextColumn() UI.Text("Switch to Defense tab in Focus tab.")
 
         UI.EndTable()
     end
