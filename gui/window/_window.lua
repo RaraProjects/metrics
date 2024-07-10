@@ -83,6 +83,8 @@ Window.Table.Flags = {
 
 Window.Reset_Position = true
 Window.Set_Mouse = true
+Window.Bar_Delay = Socket.gettime()
+Window.Bar_Delay_Threshold = 0.05
 
 Window.IO = UI.GetIO()
 Window.IO.MouseDrawCursor = false
@@ -148,4 +150,21 @@ end
 ------------------------------------------------------------------------------------------------------
 Window.Toggle_Visibility = function()
     Window.Visible[1] = not Window.Visible[1]
+end
+
+------------------------------------------------------------------------------------------------------
+-- Starts a timer for progress bars to delay their loading to prevent slow screen resizing.
+------------------------------------------------------------------------------------------------------
+Window.Set_Bar_Delay = function()
+    Window.Bar_Delay = Socket.gettime()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if the bar loading delay has passed.
+------------------------------------------------------------------------------------------------------
+---@return boolean
+------------------------------------------------------------------------------------------------------
+Window.Can_Bar_Load = function()
+    local now = Socket.gettime()
+    return (now - Window.Bar_Delay) > Window.Bar_Delay_Threshold
 end

@@ -15,6 +15,7 @@ XP.Columns.Count = function()
     if Metrics.Parse.XP_Boost_Rate then columns = columns + 1 end
     if Metrics.Parse.XP_Boost_Max  then columns = columns + 1 end
     XP.Columns.Display_Count = columns
+    Window.Set_Bar_Delay()
 end
 
 -- ------------------------------------------------------------------------------------------------------

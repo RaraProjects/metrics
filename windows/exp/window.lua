@@ -28,7 +28,11 @@ XP.Window.Populate = function()
         end
 
         if UI.Begin(XP.Window.Name, Metrics.Window.XP_Window_Visible, window_flags) then
+            local x = Metrics.Window.XP_X
+            local y = Metrics.Window.XP_Y
             Metrics.Window.XP_X, Metrics.Window.XP_Y = UI.GetWindowPos()
+            if x ~= Metrics.Window.XP_X or y ~= Metrics.Window.XP_Y then Window.Set_Bar_Delay() end
+
             XP.Window.Set_Scaling()
             Window.Theme.Set()
             XP.Populate()       -- Populate the window.

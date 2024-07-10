@@ -101,10 +101,12 @@ XP.Populate = function()
     else
         XP.Limit_Points()
     end
-
-    XP.Level_Progress_Bar()
-    XP.Boost_Progress_Bar()
     XP.Tracking()
+
+    if Window.Can_Bar_Load() then
+        XP.Level_Progress_Bar()
+        XP.Boost_Progress_Bar()
+    end
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -442,5 +444,6 @@ end
 XP.Tracking_Button = function()
     if UI.SmallButton("Tracking") then
         XP.Local.Show_Windows = not XP.Local.Show_Windows
+        Window.Set_Bar_Delay()
     end
 end
