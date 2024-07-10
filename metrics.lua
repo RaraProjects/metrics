@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "07.09.24.00"
+addon.version = "07.09.24.01"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -157,7 +157,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         elseif (action.category ==  4) then
             if log_offense then H.Spell.Action(action, actor_mob, log_offense)
             elseif log_defense then H.Spell_Def.Action(action, actor_mob, target_owner_mob, log_defense) end
-        elseif (action.category ==  5) then H.Item.Action(action)
+        elseif (action.category ==  5) then H.Item.Action(action, actor_mob)
         elseif (action.category ==  6) then H.Ability.Action(action, actor_mob, log_offense)
         elseif (action.category ==  7) then -- Do nothing (Begin WS)
         elseif (action.category ==  8) then -- Do nothing (Begin Spellcasting)

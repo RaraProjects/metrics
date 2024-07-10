@@ -109,9 +109,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 XP.EXP_Points = function()
     local flags = Column.Flags.None
+    local table_flags = XP.Window.Table_Flags
+    table_flags = bit.bor(table_flags, ImGuiTableFlags_RowBg)
     local xp_type = XP.Type.EXPERIENCE
 
-    if UI.BeginTable("EXP Metrics", XP.Columns.Display_Count, XP.Window.Table_Flags) then
+    UI.PushStyleColor(ImGuiCol_TableRowBg, Window.Theme.Table_Row_Bg)
+    if UI.BeginTable("EXP Metrics", XP.Columns.Display_Count, table_flags) then
         UI.TableSetupColumn("Chain", flags)
         UI.TableSetupColumn("XP/hr*", flags)
         if Metrics.Parse.Base_Rate     then UI.TableSetupColumn("XP/hr", flags) end
@@ -136,6 +139,7 @@ XP.EXP_Points = function()
 
         UI.EndTable()
     end
+    UI.PopStyleColor(1)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -148,7 +152,6 @@ XP.Limit_Points = function()
     local xp_type = XP.Type.LIMIT
 
     UI.PushStyleColor(ImGuiCol_TableRowBg, Window.Theme.Table_Row_Bg)
-
     if UI.BeginTable("LP Metrics", XP.Columns.Display_Count, table_flags) then
         UI.TableSetupColumn("Chain", flags)
         UI.TableSetupColumn("LP/hr*", flags)
@@ -174,7 +177,6 @@ XP.Limit_Points = function()
 
         UI.EndTable()
     end
-
     UI.PopStyleColor(1)
 end
 
