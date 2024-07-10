@@ -190,18 +190,24 @@ XP.Tracking = function()
     if not XP.Local.Show_Windows then return nil end
     local flags = Column.Flags.None
     if XP.Display_Mode == XP.Type.EXPERIENCE then
-        if UI.BeginTable("EXP Tracking", 5, XP.Window.Table_Flags) then
+        if UI.BeginTable("EXP Tracking", 3 + XP.Local.Bucket_Max, XP.Window.Table_Flags) then
             UI.TableSetupColumn("Cycle", flags)
             UI.TableSetupColumn("Scaling", flags)
             UI.TableSetupColumn("Total", flags)
-            UI.TableSetupColumn("History", flags)
+            for i, _ in ipairs(XP.Local.EXP_Base_Buckets) do UI.TableSetupColumn(tostring(i), flags) end
             UI.TableHeadersRow()
 
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(Timers.Check(Timers.Enum.Names.EXP))
             UI.TableNextColumn() UI.Text(tostring((1 / XP.Local.Window_Length()) * 3600))
             UI.TableNextColumn() UI.Text(tostring(XP.Local.XP_In_Window(XP.Type.EXPERIENCE)))
-            UI.TableNextColumn() UI.Text(XP.Local.Bucket_View(XP.Type.EXPERIENCE))
+            for _, v in ipairs(XP.Local.EXP_Base_Buckets) do UI.TableNextColumn() UI.Text(tostring(v)) end
+
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text(Timers.Check(Timers.Enum.Names.EXP))
+            UI.TableNextColumn() UI.Text(tostring((1 / XP.Local.Window_Length()) * 3600))
+            UI.TableNextColumn() UI.Text(tostring(XP.Local.XP_In_Window(XP.Type.EXPERIENCE)))
+            for _, v in ipairs(XP.Local.EXP_Buckets) do UI.TableNextColumn() UI.Text(tostring(v)) end
 
             UI.EndTable()
         end
@@ -210,14 +216,20 @@ XP.Tracking = function()
             UI.TableSetupColumn("Cycle", flags)
             UI.TableSetupColumn("Scaling", flags)
             UI.TableSetupColumn("Total", flags)
-            UI.TableSetupColumn("History", flags)
+            for i, _ in ipairs(XP.Local.EXP_Base_Buckets) do UI.TableSetupColumn(tostring(i), flags) end
             UI.TableHeadersRow()
 
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(Timers.Check(Timers.Enum.Names.EXP))
             UI.TableNextColumn() UI.Text(tostring((1 / XP.Local.Window_Length()) * 3600))
             UI.TableNextColumn() UI.Text(tostring(XP.Local.XP_In_Window(XP.Type.LIMIT)))
-            UI.TableNextColumn() UI.Text(XP.Local.Bucket_View(XP.Type.LIMIT))
+            for _, v in ipairs(XP.Local.LP_Base_Buckets) do UI.TableNextColumn() UI.Text(tostring(v)) end
+
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text(Timers.Check(Timers.Enum.Names.EXP))
+            UI.TableNextColumn() UI.Text(tostring((1 / XP.Local.Window_Length()) * 3600))
+            UI.TableNextColumn() UI.Text(tostring(XP.Local.XP_In_Window(XP.Type.LIMIT)))
+            for _, v in ipairs(XP.Local.LP_Buckets) do UI.TableNextColumn() UI.Text(tostring(v)) end
 
             UI.EndTable()
         end

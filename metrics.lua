@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "07.09.24.06"
+addon.version = "07.10.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -217,6 +217,7 @@ Settings_File.register(Config.Enum.File.PARSE, "settings_update", function(setti
     if settings ~= nil then
         Metrics.Parse = settings
         Parse.Util.Calculate_Column_Flags()
+        XP.Is_Initialized = false
         Settings_File.save(Config.Enum.File.PARSE)
     end
 end)
@@ -299,7 +300,6 @@ ashita.events.register('load', 'load_cb', function()
     -- Initialize Modules
     DB.Initialize()
     Parse.Initialize()
-    XP.Local.Initialize()
     Ashita.Party.Refresh()
     Window.IO.MouseDrawCursor = Metrics.Window.Show_Mouse
 

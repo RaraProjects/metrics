@@ -13,6 +13,10 @@ XP.Local.Show_Windows = false
 -- Initializes the local XP tracking table.
 -- ------------------------------------------------------------------------------------------------------
 XP.Local.Initialize = function()
+    XP.Local.EXP_Buckets = T{}
+    XP.Local.EXP_Base_Buckets = T{}
+    XP.Local.LP_Buckets = T{}
+    XP.Local.LP_Base_Buckets = T{}
     for i = 1, XP.Local.Bucket_Max do
         table.insert(XP.Local.EXP_Buckets, 0)
         table.insert(XP.Local.EXP_Base_Buckets, 0)
@@ -137,10 +141,8 @@ end
 -- ------------------------------------------------------------------------------------------------------
 XP.Local.Set_Rate = function(rate, type)
     if not rate then rate = 0 end
-    if type == XP.Type.EXPERIENCE then
-        XP.Local.EXP_Rate = rate
-    elseif type == XP.Type.LIMIT then
-        XP.Local.LP_Rate = rate
+    if     type == XP.Type.EXPERIENCE then XP.Local.EXP_Rate = rate
+    elseif type == XP.Type.LIMIT      then XP.Local.LP_Rate = rate
     end
 end
 
@@ -150,11 +152,8 @@ end
 ---@param type string
 -- ------------------------------------------------------------------------------------------------------
 XP.Local.Get_Rate = function(type)
-    if type == XP.Type.EXPERIENCE then
-        return XP.Local.EXP_Rate
-    elseif type == XP.Type.LIMIT then
-        return XP.Local.LP_Rate
-    else
-        return 0
+    if     type == XP.Type.EXPERIENCE then return XP.Local.EXP_Rate
+    elseif type == XP.Type.LIMIT      then return XP.Local.LP_Rate
+    else   return 0
     end
 end
