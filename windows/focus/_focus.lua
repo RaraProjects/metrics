@@ -56,17 +56,16 @@ end
 -- Loads the focus data to the screen.
 ------------------------------------------------------------------------------------------------------
 Focus.Populate = function()
+    Focus.Config.Settings_Button()
+
     DB.Widgets.Player_Filter()
     UI.SameLine() UI.Text("  ") UI.SameLine()
     DB.Widgets.Mob_Filter()
-
     local unselected = false
     local player_name = DB.Widgets.Util.Get_Player_Focus()
     if player_name == DB.Widgets.Dropdown.Enum.NONE then unselected = true end
 
-    Focus.Config.Settings_Button()
-    if not unselected then UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.Screenshot_Button() end
-
+    if not unselected then Focus.Config.Screenshot_Button() end
     if unselected then
         UI.Separator()
         UI.Text("No player selected.")
