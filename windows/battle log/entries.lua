@@ -8,8 +8,12 @@ Blog.Entries = T{}
 ------------------------------------------------------------------------------------------------------
 Blog.Entries.Name = function(player_name)
     local color = Res.Colors.Basic.WHITE
-    if Ashita.Mob.Is_Me(player_name) then color = Res.Colors.Basic.GREEN end
-    return {Value = player_name, Color = color}
+    if Metrics.Parse.Name_Colors then
+        local job = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name])
+        if not job then job = Res.Jobs.List[0] end
+        color = Res.Colors.Get_Job(job.id)
+    end
+    return {Value = tostring(player_name), Color = color}
 end
 
 ------------------------------------------------------------------------------------------------------
