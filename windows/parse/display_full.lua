@@ -12,7 +12,6 @@ Parse.Full.Populate = function()
     Parse.Widgets.Settings_Button()
     UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Filter_Button()
     UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Timer_Button()
-    UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.XP_Button()
     if Metrics.Parse.Show_Filter then DB.Widgets.Mob_Filter() end
     Parse.Widgets.Clock()
 

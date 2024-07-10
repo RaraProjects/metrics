@@ -11,7 +11,8 @@ Config.Enum.File = {
     WINDOW   = "window",
     DATABASE = "database",
     REPORT   = "report",
-    CONFIG   = "config"     -- Just used for Settings Mode.
+    CONFIG   = "config",    -- Just used for Settings Mode.
+    EXP      = "exp",
 }
 
 Config.Settings_Mode = Config.Enum.File.CONFIG

@@ -1,5 +1,9 @@
 Ashita.Player = T{}
 
+Ashita.Player.Buffs = T{
+    DEDICATION = 249,
+}
+
 -- ------------------------------------------------------------------------------------------------------
 -- Get player data. If an attribute is provided then just get that attribute as long as it is handled.
 -- ------------------------------------------------------------------------------------------------------
@@ -41,6 +45,22 @@ Ashita.Player.Is_Logged_In = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Checks if the player has a specific buff or not.
+-- ------------------------------------------------------------------------------------------------------
+---@param buff_id integer
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Has_Buff = function(buff_id)
+    local player = AshitaCore:GetMemoryManager():GetPlayer()
+    if not player then return false end
+    local buffs = player:GetBuffs()
+    for _, buff in pairs(buffs) do
+        if buff == buff_id then return true end
+    end
+    return false
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Returns whether limit mode is enabled or not.
 -- ------------------------------------------------------------------------------------------------------
 ---@return boolean
@@ -63,6 +83,28 @@ Ashita.Player.Exp_TNL = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Returns the player's current level's total XP to next level.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Level_XP = function()
+    local player = Ashita.Player.Get()
+    if not player then return 99999 end
+    return player:GetExpNeeded()
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns the player's current XP through the level.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Current_XP = function()
+    local player = Ashita.Player.Get()
+    if not player then return 99999 end
+    return player:GetExpCurrent()
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Returns the player's TNLP.
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
@@ -71,6 +113,17 @@ Ashita.Player.Exp_TNM = function()
     local player = Ashita.Player.Get()
     if not player then return 99999 end
     return 10000 - player:GetLimitPoints()
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns the player's current limit points through the level.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Limit_XP = function()
+    local player = Ashita.Player.Get()
+    if not player then return 99999 end
+    return player:GetLimitPoints()
 end
 
 -- ------------------------------------------------------------------------------------------------------

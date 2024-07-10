@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "07.08.24.04"
+addon.version = "07.09.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -76,12 +76,12 @@ ashita.events.register('d3d_present', 'present_cb', function()
     if _Debug.Is_Enabled() and _Debug.Config.Show_Demo then UI.ShowDemoWindow() end
 
     Throttle.Throttle()     -- Throttling for performance.
+    XP.Initialize()         -- Need to initialize here because some things aren't ready when addon loads.
 
     Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
     Timers.Cycle(Timers.Enum.Names.DPS)
     Timers.Cycle(Timers.Enum.Names.EXP)
     Window.Populate()
-    XP.Window.Populate()
     Hub.Populate()
 end)
 
@@ -120,7 +120,6 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             _Debug.Error.Add("Packet Event: action was nil from Packets.Build_Action")
             return nil
         end
-
         local actor_mob = Ashita.Mob.Get_Mob_By_ID(action.actor_id)
         if not actor_mob then
             _Debug.Error.Add("Packet Event: actor_mob was nil from Mob.Get_Mob_By_ID")
@@ -158,7 +157,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         elseif (action.category ==  4) then
             if log_offense then H.Spell.Action(action, actor_mob, log_offense)
             elseif log_defense then H.Spell_Def.Action(action, actor_mob, target_owner_mob, log_defense) end
-        elseif (action.category ==  5) then -- Do nothing (Finish Item Use)
+        elseif (action.category ==  5) then H.Item.Action(action)
         elseif (action.category ==  6) then H.Ability.Action(action, actor_mob, log_offense)
         elseif (action.category ==  7) then -- Do nothing (Begin WS)
         elseif (action.category ==  8) then -- Do nothing (Begin Spellcasting)

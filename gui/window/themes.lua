@@ -1,6 +1,7 @@
 Window.Theme = T{}
 
 Window.Theme.Is_Set = false
+Window.Theme.Table_Row_Bg = {0.00, 0.00, 0.00, 0.00}
 
 ------------------------------------------------------------------------------------------------------
 -- Change the window themes.
@@ -35,12 +36,15 @@ Window.Theme.Set = function()
     if not Window.Theme.Is_Set then
         if Metrics.Window.Style == 0 then
             Window.Theme.Apply_Custom(Themes.Default)
+            Window.Theme.Table_Row_Bg = {0.18, 0.20, 0.23, 0.96}
         elseif Metrics.Window.Style == 1 then
             UI.StyleColorsDark()
+            Window.Theme.Table_Row_Bg = {0.06, 0.06, 0.06, 0.94}
         elseif Metrics.Window.Style == 2 then
             UI.StyleColorsLight()
         elseif Metrics.Window.Style == 3 then
             UI.StyleColorsClassic()
+            Window.Theme.Table_Row_Bg = {0.00, 0.00, 0.00, 0.85}
         else
             Window.Theme.Apply_Custom(Themes.Default)
         end

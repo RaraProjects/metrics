@@ -19,6 +19,7 @@ XP.Window.Populate = function()
 
         local window_flags = Window.Flags
         if not Metrics.Window.Show_Title then window_flags = bit.bor(window_flags, ImGuiWindowFlags_NoTitleBar) end
+        if not Metrics.Parse.Show_Background then window_flags = bit.bor(window_flags, ImGuiWindowFlags_NoBackground) end
 
         -- Handle resetting the window position between characters.
         if XP.Window.Need_Position_Reset then

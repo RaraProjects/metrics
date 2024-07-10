@@ -38,6 +38,8 @@ Config.Window.Populate = function()
                 Report.Config.Display()
             elseif Config.Settings_Mode == Config.Enum.File.CONFIG then
                 Config.Populate()
+            elseif Config.Settings_Mode == Config.Enum.File.EXP then
+                XP.Config.Populate()
             end
             UI.End()
         end

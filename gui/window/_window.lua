@@ -51,6 +51,7 @@ Window.Tabs.Names = {
     PARSE     = "Parse",
     FOCUS     = "Focus",
     BATTLELOG = "Battle Log",
+    XP        = "XP",
     REPORT    = "Report",
     SETTINGS  = "Settings",
     DEBUG     = "Debug",
@@ -65,6 +66,7 @@ Window.Tabs.Switch = {
     [Window.Tabs.Names.PARSE]     = nil,
     [Window.Tabs.Names.FOCUS]     = nil,
     [Window.Tabs.Names.BATTLELOG] = nil,
+    [Window.Tabs.Names.XP]        = nil,
     [Window.Tabs.Names.REPORT]    = nil,
 }
 Window.Tabs.Active = nil

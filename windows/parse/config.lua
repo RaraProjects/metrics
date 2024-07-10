@@ -31,6 +31,17 @@ Parse.Config.Defaults = T{
     Show_Filter  = false,
     Name_Colors  = true,
     Display_Mode = Parse.Enum.Display_Mode.FULL,
+    -- XP
+    Show_Background = false,
+    Base_Rate       = false,
+    Time_To_Level   = true,
+    To_Next_Level   = true,
+    Total_XP        = true,
+    XP_Boost_Item   = false,
+    XP_Boost_Rate   = false,
+    XP_Boost_Max    = false,
+    XP_Progress     = true,
+    Boost_Progress  = true,
 }
 
 Parse.Config.Column_Flags = Column.Flags.None

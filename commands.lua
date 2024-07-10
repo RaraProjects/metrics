@@ -32,8 +32,6 @@ ashita.events.register('command', 'command_cb', function (e)
             DB.Initialize(true)
         elseif arg == "full" or arg == "f" then
             Parse.Full.Enable()
-        elseif arg == "xp" then
-            XP.Window.Toggle_Visibility()
         elseif (arg == "pet" or arg == "p") then
             Parse.Config.Toggle_Pet()
         elseif arg == "clock" or arg == "c" then
@@ -74,6 +72,9 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "log" or arg == "bl" then
             Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG] = ImGuiTabItemFlags_SetSelected
             Blog.Window.Toggle_Visibility()
+        elseif arg == "xp" then
+            Window.Tabs.Switch[Window.Tabs.Names.XP] = ImGuiTabItemFlags_SetSelected
+            XP.Window.Toggle_Visibility()
         elseif arg == "report" or arg == "rep" then
             Window.Tabs.Switch[Window.Tabs.Names.REPORT] = ImGuiTabItemFlags_SetSelected
             Report.Window.Toggle_Visibility()

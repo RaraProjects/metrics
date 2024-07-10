@@ -67,6 +67,7 @@ Hub.Buttons = function()
     UI.SameLine() Hub.Parse_Button()
     UI.SameLine() Hub.Focus_Button()
     UI.SameLine() Hub.Battle_Log_Button()
+    UI.SameLine() Hub.XP_Button()
     UI.SameLine() Hub.Report_Button()
     UI.SameLine() Hub.Settings_Button()
     UI.SameLine() Hub.Toggle_All_Button()
@@ -81,6 +82,7 @@ Hub.Multi_Window = function()
     Focus.Window.Populate()
     Focus.Window.Populate_Screenshot()
     Blog.Window.Populate()
+    XP.Window.Populate()
     Report.Window.Populate()
     Config.Window.Populate()
 end
@@ -108,6 +110,12 @@ Hub.Single_Window = function()
             Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG] = nil
             Window.Tabs.Active = Window.Tabs.Names.BATTLELOG
             Blog.Populate()
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem(Window.Tabs.Names.XP, false, Window.Tabs.Switch[Window.Tabs.Names.XP]) then
+            Window.Tabs.Switch[Window.Tabs.Names.XP] = nil
+            Window.Tabs.Active = Window.Tabs.Names.XP
+            XP.Populate()
             UI.EndTabItem()
         end
         if UI.BeginTabItem(Window.Tabs.Names.REPORT, false, Window.Tabs.Switch[Window.Tabs.Names.REPORT]) then
@@ -155,9 +163,9 @@ end
 Hub.Focus_Button = function()
     local active = Metrics.Window.Focus_Window_Visible[1]
     if not active then
-        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.DIM)
-        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.DIM)
-        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.DIM)
+        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Window.Tabs.Names.FOCUS) then
         if Metrics.Window.Multi_Window then Focus.Window.Toggle_Visibility() end
@@ -172,13 +180,30 @@ end
 Hub.Battle_Log_Button = function()
     local active = Metrics.Window.Blog_Window_Visible[1]
     if not active then
-        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.DIM)
-        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.DIM)
-        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.DIM)
+        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Window.Tabs.Names.BATTLELOG) then
         if Metrics.Window.Multi_Window then Blog.Window.Toggle_Visibility() end
         Metrics.Window.Active_Window = Window.Tabs.Names.BATTLELOG
+    end
+    if not active then UI.PopStyleColor(3) end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the XP window visibility.
+------------------------------------------------------------------------------------------------------
+Hub.XP_Button = function()
+    local active = Metrics.Window.XP_Window_Visible[1]
+    if not active then
+        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
+    end
+    if UI.Button(Window.Tabs.Names.XP) then
+        if Metrics.Window.Multi_Window then XP.Window.Toggle_Visibility() end
+        Metrics.Window.Active_Window = Window.Tabs.Names.XP
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -189,9 +214,9 @@ end
 Hub.Report_Button = function()
     local active = Metrics.Window.Report_Window_Visible[1]
     if not active then
-        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.DIM)
-        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.DIM)
-        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.DIM)
+        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Window.Tabs.Names.REPORT) then
         if Metrics.Window.Multi_Window then Report.Window.Toggle_Visibility() end
@@ -206,9 +231,9 @@ end
 Hub.Settings_Button = function()
     local active = Metrics.Window.Config_Window_Visible[1]
     if not active then
-        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.DIM)
-        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.DIM)
-        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.DIM)
+        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Window.Tabs.Names.SETTINGS) then
         -- Don't toggle off if config window is open and not showing settings.

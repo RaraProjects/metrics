@@ -10,6 +10,7 @@ require("resources.pets")
 require("resources.colors")
 require("resources.game")
 require("resources.jobs")
+require("resources.items")
 
 Res.WS.Full_List = require("resources.weapon_skills")
 Res.Monster.Full_List = require("resources.monster_abilities")
@@ -284,8 +285,22 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Res.Colors.Get_Job = function(job_id)
+    if not job_id then return Res.Colors.Basic.WHITE end
     local color = Res.Colors.Jobs[job_id]
     if not color then color = Res.Colors.Basic.WHITE end
+    return color
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Gets xp color.
+-- ------------------------------------------------------------------------------------------------------
+---@param xp_type integer
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Colors.Get_XP = function(xp_type)
+    if not xp_type then return Res.Colors.XP[1] end
+    local color = Res.Colors.XP[xp_type]
+    if not color then color = Res.Colors.XP[1] end
     return color
 end
 
@@ -318,4 +333,15 @@ end
 Res.Jobs.Get_Job = function(job_id)
     if not job_id then return Res.Jobs.List[0] end
     return Res.Jobs.List[job_id]
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Gets dedication item information.
+-- ------------------------------------------------------------------------------------------------------
+---@param item_id integer
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Items.Get_Dedication = function(item_id)
+    if not item_id then return {} end
+    return Res.Items.Dedication[item_id]
 end
