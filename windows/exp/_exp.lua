@@ -93,6 +93,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 XP.Populate = function()
     XP.Config.Settings_Button()
+    UI.SameLine() UI.Text(" ") UI.SameLine() XP.Tracking_Button()
 
     XP.Check_Dedication()
     if XP.Display_Mode == XP.Type.EXPERIENCE then
