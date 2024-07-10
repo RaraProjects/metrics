@@ -147,7 +147,6 @@ DB.Data.Get = function(player_name, trackable, metric)
 
 	local total = 0
 	if metric == DB.Enum.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
-	local max_fallback = 0
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	local search_string = player_name .. ":" .. mob_focus
 	if mob_focus == DB.Widgets.Dropdown.Enum.NONE then search_string = player_name .. ":" end
@@ -157,9 +156,6 @@ DB.Data.Get = function(player_name, trackable, metric)
 			local value = DB.Parse[index][trackable][metric]
 			if metric == DB.Enum.Metric.MIN then
 				if value < total then total = value end
-				if DB.Parse[index][trackable][DB.Enum.Metric.MAX] > max_fallback then
-					max_fallback = DB.Parse[index][trackable][DB.Enum.Metric.MAX]
-				end
 			elseif metric == DB.Enum.Metric.MAX then
 				if value > total then total = value end
 			else
@@ -167,9 +163,6 @@ DB.Data.Get = function(player_name, trackable, metric)
 			end
 		end
 	end
-
-	-- If we can't find a minimum then the minimum must be the same as the maximum.
-	if metric == DB.Enum.Metric.MIN and total == DB.Enum.Values.MAX_DAMAGE then total = max_fallback end
 
 	-- Cache for performance.
 	if not DB.Cache[player_name] then DB.Cache[player_name] = T{} end
