@@ -43,6 +43,7 @@ XP.Dedication_Total = 0
 
 XP.Is_Initialized = false
 XP.Display_Mode = XP.Type.EXPERIENCE
+XP.Last_XP_Time = 0
 XP.Show_Additional_Info = false
 
 require("windows.exp.window")
@@ -81,6 +82,7 @@ XP.Parse = function(data)
     local xp_type = XP.Get_XP_Type(message_id)
     local base_xp, bonus_xp = XP.Add_Total_XP(xp_amount, xp_type)   -- Add XP to sum total.
 
+    XP.Last_XP_Time = os.time()
     XP.Chains.Start(chain)                                          -- Handle chains.
     XP.Local.Add_XP(base_xp, bonus_xp, xp_type)                     -- XP per hour tracking.
     XP.Mode_Check()

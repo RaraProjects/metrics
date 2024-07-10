@@ -64,7 +64,9 @@ XP.Columns.Time_To_Level = function(type)
     local tnl = Ashita.Player.Exp_TNL()
     if type == XP.Type.LIMIT then tnl = Ashita.Player.Exp_TNM() end
     if rate_minute == 0 then return "---" end
-    return Timers.Format(tnl / rate_minute)
+    local now = os.time()
+    local estimated_time = XP.Last_XP_Time + (tnl / rate_minute)
+    return Timers.Format(estimated_time - now)
 end
 
 -- ------------------------------------------------------------------------------------------------------
