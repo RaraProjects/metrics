@@ -85,7 +85,6 @@ XP.Parse = function(data)
     XP.Last_XP_Time = os.time()
     XP.Chains.Start(chain)                                          -- Handle chains.
     XP.Local.Add_XP(base_xp, bonus_xp, xp_type)                     -- XP per hour tracking.
-    XP.Mode_Check()
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -95,6 +94,7 @@ XP.Populate = function()
     XP.Config.Settings_Button()
     UI.SameLine() UI.Text(" ") UI.SameLine() XP.Tracking_Button()
 
+    XP.Mode_Check()
     XP.Check_Dedication()
     if XP.Display_Mode == XP.Type.EXPERIENCE then
         XP.EXP_Points()
