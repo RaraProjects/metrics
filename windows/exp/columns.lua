@@ -67,7 +67,9 @@ XP.Columns.Time_To_Level = function(type)
     if rate_minute == 0 then return "---" end
     local now = os.time()
     local estimated_time = XP.Last_XP_Time + (tnl / rate_minute)
-    return Timers.Format(estimated_time - now)
+    local time_remaining = estimated_time - now
+    if time_remaining < 0 then return Timers.Format(0) end
+    return Timers.Format(time_remaining)
 end
 
 -- ------------------------------------------------------------------------------------------------------
