@@ -146,9 +146,9 @@ end
 Hub.Parse_Button = function()
     local active = Metrics.Window.Parse_Window_Visible[1]
     if not active then
-        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.DIM)
-        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.DIM)
-        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.DIM)
+        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Window.Tabs.Names.PARSE) then
         if Metrics.Window.Multi_Window then Parse.Window.Toggle_Visibility() end
