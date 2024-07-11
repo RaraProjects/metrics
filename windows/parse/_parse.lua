@@ -12,6 +12,8 @@ Parse.Columns = {
     Max = 21,
 }
 
+Parse.Confirmation = false
+
 -- Load dependencies
 require("windows.parse.enum")
 require("windows.parse.config")

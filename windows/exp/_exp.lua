@@ -45,6 +45,7 @@ XP.Is_Initialized = false
 XP.Display_Mode = XP.Type.EXPERIENCE
 XP.Last_XP_Time = 0
 XP.Show_Additional_Info = false
+XP.Confirmation = false
 
 require("windows.exp.window")
 require("windows.exp.columns")
@@ -61,6 +62,15 @@ XP.Initialize = function()
         XP.Local.Initialize()
         XP.Mode_Check()
         XP.Check_Dedication()
+        XP.Metric = T{
+            Experience_Total   = 0,
+            Experience_Base    = 0,
+            Experience_Boosted = 0,
+            Limit_Total        = 0,
+            Limit_Base         = 0,
+            Limit_Boosted      = 0,
+            Max_Chain          = 0,
+        }
         XP.Is_Initialized = true
     end
 end
@@ -93,6 +103,8 @@ end
 XP.Populate = function()
     XP.Config.Settings_Button()
     UI.SameLine() UI.Text(" ") UI.SameLine() XP.Tracking_Button()
+    UI.SameLine() UI.Text(" ") UI.SameLine() XP.Reset_Button()
+    if XP.Confirmation then UI.SameLine() UI.Text(" ") UI.SameLine() XP.Reset_Confirmation_Button() end
 
     XP.Mode_Check()
     XP.Check_Dedication()
@@ -445,5 +457,24 @@ XP.Tracking_Button = function()
     if UI.SmallButton("Tracking") then
         XP.Local.Show_Windows = not XP.Local.Show_Windows
         Window.Set_Bar_Delay()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the Confirmation button showing for the XP window.
+------------------------------------------------------------------------------------------------------
+XP.Reset_Button = function()
+    if UI.SmallButton("Reset") then
+        XP.Confirmation = not XP.Confirmation
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Confirms XP reset.
+------------------------------------------------------------------------------------------------------
+XP.Reset_Confirmation_Button = function()
+    if UI.SmallButton("I'm sure.") then
+        XP.Is_Initialized = false
+        XP.Confirmation = false
     end
 end

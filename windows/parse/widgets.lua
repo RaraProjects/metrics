@@ -39,11 +39,21 @@ Parse.Widgets.Timer_Button = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Toggles the experience/limit points showing for the parse window.
+-- Toggles the Confirmation button showing for the parse window.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.XP_Button = function()
-    if UI.SmallButton("EXP") then
-        Metrics.Window.XP_Window_Visible[1] = not Metrics.Window.XP_Window_Visible[1]
+Parse.Widgets.Reset_Button = function()
+    if UI.SmallButton("Reset") then
+        Parse.Confirmation = not Parse.Confirmation
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Confirms database reset.
+------------------------------------------------------------------------------------------------------
+Parse.Widgets.Reset_Confirmation_Button = function()
+    if UI.SmallButton("I'm sure.") then
+        DB.Initialize(true)
+        Parse.Confirmation = false
     end
 end
 
