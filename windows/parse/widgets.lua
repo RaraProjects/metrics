@@ -7,7 +7,10 @@ Parse.Widgets.Clock = function()
     if Metrics.Parse.Show_Clock then
         local pause_string = ""
         if Timers.Is_Paused(Timers.Enum.Names.PARSE) then pause_string = " (||)" end
-        UI.Text("Duration: " .. tostring(Timers.Check(Timers.Enum.Names.PARSE))) UI.SameLine() UI.Text(pause_string) Parse.Widgets.Timer_Duration_Help_Text()
+        UI.Text("Total: " .. tostring(Timers.Check(Timers.Enum.Names.METRICS)))
+        UI.SameLine() UI.Text(" ") UI.SameLine()
+        UI.SameLine() UI.Text("Active: " .. tostring(Timers.Check(Timers.Enum.Names.PARSE)))
+        UI.SameLine() UI.Text(pause_string) Parse.Widgets.Timer_Duration_Help_Text()
     end
 end
 
@@ -140,7 +143,7 @@ end
 -- Shows the help text for the player filter.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Timer_Duration_Help_Text = function()
-    UI.SameLine() Window.Widgets.HelpMarker("The duration timer will auto-pause after " .. tostring(Timers.Tresholds.AUTOPAUSE)
+    UI.SameLine() Window.Widgets.HelpMarker("The active timer will auto-pause after " .. tostring(Timers.Tresholds.AUTOPAUSE)
                                         .. " seconds of no actions. The timer will auto restart after someone affiliated with you "
                                         .. "(in your party or alliance) takes an action. Data collection does NOT stop while "
                                         .. "paused! The duration and auto-pause is to help you see how long your group has actually "
