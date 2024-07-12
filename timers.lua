@@ -11,6 +11,7 @@ timers.Enum.Names = T{
     DPS       = "DPS",
     EXP       = "EXP",
     CHAIN     = "Chain",
+    ZONE      = "Zone",
 }
 
 timers.Tresholds = T{

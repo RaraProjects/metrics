@@ -35,6 +35,13 @@ XP.Metric = T{
 
 XP.Global = T{}
 
+XP.Kill_Times = T{}
+XP.Kill_Time_Threshold = 10 * 60    -- Seconds
+XP.XP_Per_Kill = T{}
+XP.XP_Per_Kill_Base = T{}
+XP.XP_Per_Kill_Limit = 6
+XP.Last_XP_Time = 0
+
 XP.Is_Dedication_Active = true
 XP.Dedication_Item  = "None"
 XP.Dedication_Rate  = 0
@@ -43,7 +50,6 @@ XP.Dedication_Total = 0
 
 XP.Is_Initialized = false
 XP.Display_Mode = XP.Type.EXPERIENCE
-XP.Last_XP_Time = 0
 XP.Show_Additional_Info = false
 XP.Confirmation = false
 
@@ -71,6 +77,9 @@ XP.Initialize = function()
             Limit_Boosted      = 0,
             Max_Chain          = 0,
         }
+        XP.XP_Per_Kill = T{}
+        XP.XP_Per_Kill_Base = T{}
+        XP.Last_XP_Time = 0
         XP.Is_Initialized = true
     end
 end
@@ -92,7 +101,7 @@ XP.Parse = function(data)
     local xp_type = XP.Get_XP_Type(message_id)
     local base_xp, bonus_xp = XP.Add_Total_XP(xp_amount, xp_type)   -- Add XP to sum total.
 
-    XP.Last_XP_Time = os.time()
+    XP.Set_Kill_Time()
     XP.Chains.Start(chain)                                          -- Handle chains.
     XP.Local.Add_XP(base_xp, bonus_xp, xp_type)                     -- XP per hour tracking.
 end
@@ -108,11 +117,7 @@ XP.Populate = function()
 
     XP.Mode_Check()
     XP.Check_Dedication()
-    if XP.Display_Mode == XP.Type.EXPERIENCE then
-        XP.EXP_Points()
-    else
-        XP.Limit_Points()
-    end
+    XP.XP_Table(XP.Display_Mode)
     XP.Tracking()
 
     if Window.Can_Bar_Load() then
@@ -124,58 +129,33 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Shows the experience points rows.
 -- ------------------------------------------------------------------------------------------------------
-XP.EXP_Points = function()
+XP.XP_Table = function(xp_type)
     local flags = Column.Flags.None
     local table_flags = XP.Window.Table_Flags
     table_flags = bit.bor(table_flags, ImGuiTableFlags_RowBg)
-    local xp_type = XP.Type.EXPERIENCE
+    if not xp_type then xp_type = XP.Type.EXPERIENCE end
 
-    UI.PushStyleColor(ImGuiCol_TableRowBg, Window.Theme.Table_Row_Bg)
-    if UI.BeginTable("EXP Metrics", XP.Columns.Display_Count, table_flags) then
-        UI.TableSetupColumn("Chain", flags)
-        UI.TableSetupColumn("XP/hr*", flags)
-        if Metrics.Parse.Base_Rate     then UI.TableSetupColumn("XP/hr", flags) end
-        if Metrics.Parse.Time_To_Level then UI.TableSetupColumn("~TTL", flags) end
-        if Metrics.Parse.To_Next_Level then UI.TableSetupColumn("TNL", flags) end
-        if Metrics.Parse.Total_XP      then UI.TableSetupColumn("Total", flags) end
-        if Metrics.Parse.XP_Boost_Item then UI.TableSetupColumn("Bonus", flags) end
-        if Metrics.Parse.XP_Boost_Rate then UI.TableSetupColumn("Bonus %", flags) end
-        if Metrics.Parse.XP_Boost_Max  then UI.TableSetupColumn("Bonus Max", flags) end
-        UI.TableHeadersRow()
-
-        UI.TableNextRow()
-        UI.TableNextColumn() UI.Text(XP.Columns.Chain())
-        UI.TableNextColumn() UI.Text(tostring(XP.Local.Get_XP_Rate(xp_type)))
-        if Metrics.Parse.Base_Rate     then UI.TableNextColumn() UI.Text(tostring(XP.Local.Get_XP_Rate(xp_type, true))) end
-        if Metrics.Parse.Time_To_Level then UI.TableNextColumn() UI.Text(XP.Columns.Time_To_Level(xp_type)) end
-        if Metrics.Parse.To_Next_Level then UI.TableNextColumn() UI.Text(tostring(Ashita.Player.Exp_TNL())) end
-        if Metrics.Parse.Total_XP      then UI.TableNextColumn() UI.Text(XP.Columns.Total_XP(xp_type)) end
-        if Metrics.Parse.XP_Boost_Item then UI.TableNextColumn() UI.Text(tostring(XP.Dedication_Item)) end
-        if Metrics.Parse.XP_Boost_Rate then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Bonus()) end
-        if Metrics.Parse.XP_Boost_Max  then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Progress()) end
-
-        UI.EndTable()
+    local type_string = "XP"
+    local level_string = "L"
+    local tnl = Ashita.Player.Exp_TNL()
+    if xp_type == XP.Type.LIMIT then
+        type_string = "LP"
+        level_string = "M"
+        tnl = Ashita.Player.Exp_TNM()
     end
-    UI.PopStyleColor(1)
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Shows the limit points rows.
--- ------------------------------------------------------------------------------------------------------
-XP.Limit_Points = function()
-    local flags = Column.Flags.None
-    local table_flags = XP.Window.Table_Flags
-    table_flags = bit.bor(table_flags, ImGuiTableFlags_RowBg)
-    local xp_type = XP.Type.LIMIT
 
     UI.PushStyleColor(ImGuiCol_TableRowBg, Window.Theme.Table_Row_Bg)
-    if UI.BeginTable("LP Metrics", XP.Columns.Display_Count, table_flags) then
+    if UI.BeginTable("XP Metrics", XP.Columns.Display_Count, table_flags) then
         UI.TableSetupColumn("Chain", flags)
-        UI.TableSetupColumn("LP/hr*", flags)
-        if Metrics.Parse.Base_Rate     then UI.TableSetupColumn("LP/hr", flags) end
-        if Metrics.Parse.Time_To_Level then UI.TableSetupColumn("~TTM", flags) end
-        if Metrics.Parse.To_Next_Level then UI.TableSetupColumn("TNM", flags) end
+        UI.TableSetupColumn("*" .. type_string .. "/hr", flags)
+        if Metrics.Parse.Base_Rate     then UI.TableSetupColumn(type_string .. "/hr", flags) end
+        if Metrics.Parse.Time_To_Level then UI.TableSetupColumn("~TT" .. level_string, flags) end
+        if Metrics.Parse.To_Next_Level then UI.TableSetupColumn("TN" .. level_string, flags) end
+        if Metrics.Parse.Kill_Speed    then UI.TableSetupColumn("~K-Time", flags) end
+        if Metrics.Parse.Average_XP    then UI.TableSetupColumn("~K-XP", flags) end
         if Metrics.Parse.Total_XP      then UI.TableSetupColumn("Total", flags) end
+        if Metrics.Parse.Max_Chain     then UI.TableSetupColumn("Max Chain", flags) end
+        if Metrics.Parse.Zone_Time     then UI.TableSetupColumn("Zone Time", flags) end
         if Metrics.Parse.XP_Boost_Item then UI.TableSetupColumn("Bonus", flags) end
         if Metrics.Parse.XP_Boost_Rate then UI.TableSetupColumn("Bonus %", flags) end
         if Metrics.Parse.XP_Boost_Max  then UI.TableSetupColumn("Bonus Max", flags) end
@@ -183,11 +163,22 @@ XP.Limit_Points = function()
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text(XP.Columns.Chain())
-        UI.TableNextColumn() UI.Text(tostring(XP.Local.Get_XP_Rate(xp_type)))
-        if Metrics.Parse.Base_Rate     then UI.TableNextColumn() UI.Text(tostring(XP.Local.Get_XP_Rate(xp_type, true))) end
+        UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate())
+        if Metrics.Parse.Base_Rate     then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(true)) end
         if Metrics.Parse.Time_To_Level then UI.TableNextColumn() UI.Text(XP.Columns.Time_To_Level(xp_type)) end
-        if Metrics.Parse.To_Next_Level then UI.TableNextColumn() UI.Text(tostring(Ashita.Player.Exp_TNM())) end
+        if Metrics.Parse.To_Next_Level then UI.TableNextColumn() UI.Text(XP.Columns.TNL(xp_type)) end
+        if Metrics.Parse.Kill_Speed then
+            local kill_time = XP.Columns.Average_Kill_Time()
+            if kill_time < 0 then
+                UI.TableNextColumn() UI.Text("--:--")
+            else
+                UI.TableNextColumn() UI.Text(Timers.Format(kill_time, true))
+            end
+        end
+        if Metrics.Parse.Average_XP    then UI.TableNextColumn() UI.Text(string.format("%d", XP.Columns.Average_XP())) end
         if Metrics.Parse.Total_XP      then UI.TableNextColumn() UI.Text(XP.Columns.Total_XP(xp_type)) end
+        if Metrics.Parse.Max_Chain     then UI.TableNextColumn() UI.Text(XP.Columns.Max_Chain()) end
+        if Metrics.Parse.Zone_Time     then UI.TableNextColumn() UI.Text(XP.Columns.Zone_Time()) end
         if Metrics.Parse.XP_Boost_Item then UI.TableNextColumn() UI.Text(tostring(XP.Dedication_Item)) end
         if Metrics.Parse.XP_Boost_Rate then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Bonus()) end
         if Metrics.Parse.XP_Boost_Max  then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Progress()) end
@@ -226,7 +217,7 @@ XP.Tracking = function()
             UI.EndTable()
         end
     else
-        if UI.BeginTable("LP Tracking", 5, XP.Window.Table_Flags) then
+        if UI.BeginTable("LP Tracking", 3 + XP.Local.Bucket_Max, XP.Window.Table_Flags) then
             UI.TableSetupColumn("Cycle", flags)
             UI.TableSetupColumn("Scaling", flags)
             UI.TableSetupColumn("Total", flags)
@@ -247,6 +238,19 @@ XP.Tracking = function()
 
             UI.EndTable()
         end
+    end
+
+    local kill_max = #XP.Kill_Times
+    if UI.BeginTable("Kill Speed", 1 + kill_max, XP.Window.Table_Flags) then
+        UI.TableSetupColumn("Current", flags)
+        for i, _ in ipairs(XP.Kill_Times) do UI.TableSetupColumn(tostring(i), flags) end
+        UI.TableHeadersRow()
+
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Last_XP_Time))
+        for _, v in ipairs(XP.Kill_Times) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+
+        UI.EndTable()
     end
 end
 
@@ -294,6 +298,21 @@ XP.Mode_Check = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Handles mob kill time tracking.
+-- ------------------------------------------------------------------------------------------------------
+XP.Set_Kill_Time = function()
+    local duration = os.time() - XP.Last_XP_Time
+    if duration < XP.Kill_Time_Threshold then       -- Throw out afk/break times.
+        local elements = #XP.Kill_Times
+        if elements >= XP.XP_Per_Kill_Limit then
+            table.remove(XP.Kill_Times)
+        end
+        table.insert(XP.Kill_Times, 1, duration)
+    end
+    XP.Last_XP_Time = os.time()
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Tally's total experience / limit points.
 -- ------------------------------------------------------------------------------------------------------
 ---@param amount integer
@@ -304,6 +323,7 @@ XP.Add_Total_XP = function(amount, type)
     if not type or type == XP.Type.ERROR then return 0, 0 end
     if not amount then amount = 0 end
 
+    -- Handle dedication bonus xp.
     XP.Check_Dedication()
     local base_xp = amount
     local bonus_xp = 0
@@ -312,6 +332,7 @@ XP.Add_Total_XP = function(amount, type)
         bonus_xp = amount - base_xp
     end
 
+    -- Total Metrics
     if type == XP.Type.EXPERIENCE then
         XP.Metric.Experience_Base = XP.Metric.Experience_Base + base_xp
         XP.Metric.Experience_Boosted = XP.Metric.Experience_Boosted + bonus_xp
@@ -321,6 +342,15 @@ XP.Add_Total_XP = function(amount, type)
         XP.Metric.Limit_Boosted = XP.Metric.Limit_Boosted + bonus_xp
         XP.Metric.Limit_Total = XP.Metric.Limit_Base + XP.Metric.Limit_Boosted
     end
+
+    -- Average XP and Kill Times
+    local elements = #XP.XP_Per_Kill
+    if elements > XP.XP_Per_Kill_Limit then
+        table.remove(XP.XP_Per_Kill)
+        table.remove(XP.XP_Per_Kill_Base)
+    end
+    table.insert(XP.XP_Per_Kill, 1, base_xp + bonus_xp)
+    table.insert(XP.XP_Per_Kill_Base, 1, base_xp)
 
     return base_xp, bonus_xp
 end

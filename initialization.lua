@@ -107,6 +107,7 @@ ashita.events.register('load', 'load_cb', function()
     Timers.Start(Timers.Enum.Names.AUTOPAUSE)
     Timers.Start(Timers.Enum.Names.DPS)
     Timers.Start(Timers.Enum.Names.EXP)
+    Timers.Start(Timers.Enum.Names.ZONE)
 
     _Globals.Initialized = true
 end)

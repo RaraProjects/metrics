@@ -34,9 +34,13 @@ Parse.Config.Defaults = T{
     -- XP
     Show_Background = false,
     Base_Rate       = false,
+    Kill_Speed      = true,
+    Average_XP      = false,
     Time_To_Level   = true,
     To_Next_Level   = true,
     Total_XP        = true,
+    Max_Chain       = false,
+    Zone_Time       = false,
     XP_Boost_Item   = false,
     XP_Boost_Rate   = false,
     XP_Boost_Max    = false,

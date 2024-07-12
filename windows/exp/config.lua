@@ -63,6 +63,16 @@ XP.Config.Populate = function()
             XP.Columns.Count()
         end
         UI.TableNextColumn()
+        if UI.Checkbox("Kill Speed", {Metrics.Parse.Kill_Speed}) then
+            Metrics.Parse.Kill_Speed = not Metrics.Parse.Kill_Speed
+            XP.Columns.Count()
+        end
+        UI.TableNextColumn()
+        if UI.Checkbox("Average XP", {Metrics.Parse.Average_XP}) then
+            Metrics.Parse.Average_XP = not Metrics.Parse.Average_XP
+            XP.Columns.Count()
+        end
+        UI.TableNextColumn()
         if UI.Checkbox("Time to Level", {Metrics.Parse.Time_To_Level}) then
             Metrics.Parse.Time_To_Level = not Metrics.Parse.Time_To_Level
             XP.Columns.Count()
@@ -72,10 +82,19 @@ XP.Config.Populate = function()
             Metrics.Parse.To_Next_Level = not Metrics.Parse.To_Next_Level
             XP.Columns.Count()
         end
-
         UI.TableNextColumn()
         if UI.Checkbox("Total XP", {Metrics.Parse.Total_XP}) then
             Metrics.Parse.Total_XP = not Metrics.Parse.Total_XP
+            XP.Columns.Count()
+        end
+        UI.TableNextColumn()
+        if UI.Checkbox("Max Chain", {Metrics.Parse.Max_Chain}) then
+            Metrics.Parse.Max_Chain = not Metrics.Parse.Max_Chain
+            XP.Columns.Count()
+        end
+        UI.TableNextColumn()
+        if UI.Checkbox("Time in Zone", {Metrics.Parse.Zone_Time}) then
+            Metrics.Parse.Zone_Time = not Metrics.Parse.Zone_Time
             XP.Columns.Count()
         end
         UI.TableNextColumn()
@@ -112,6 +131,7 @@ XP.Config.Populate = function()
                     if UI.Selectable(list[n], is_selected) then
                         XP.Config.Total_Mode_Index = n
                         XP.Config.Total_Mode = list[n]
+                        Window.Set_Bar_Delay()
                     end
                     if is_selected then
                         UI.SetItemDefaultFocus()
