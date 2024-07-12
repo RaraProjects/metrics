@@ -77,6 +77,7 @@ XP.Initialize = function()
             Limit_Boosted      = 0,
             Max_Chain          = 0,
         }
+        XP.Kill_Times = T{}
         XP.XP_Per_Kill = T{}
         XP.XP_Per_Kill_Base = T{}
         XP.Last_XP_Time = 0
