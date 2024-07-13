@@ -48,6 +48,7 @@ Window.Widgets.Window_Scale = function()
         Focus.Window.Set_Screenshot_Scaling_Flag(false)
         Parse.Window.Set_Scaling_Flag(false)
         Report.Window.Set_Scaling_Flag(false)
+        XP.Window.Set_Scaling_Flag(false)
         Window.Set_Window_Scale()
     end
     UI.SameLine() Window.Widgets.HelpMarker("Adjust window element size.")
