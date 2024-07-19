@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "07.12.24.00"
+addon.version = "07.18.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -100,6 +100,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0xA then
         Ashita.Player.Zoning(false)
         Timers.Reset(Timers.Enum.Names.ZONE)
+        Window.Set_Bar_Delay()
         XP.Chains.End()
 
     -- 200 0xC8 Alliance Update
@@ -110,8 +111,13 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0xDD then
         Ashita.Party.Need_Refresh = true
 
+    -- Experience Points
     elseif packet.id == 0x2D then
         XP.Parse(packet.data)
+
+    -- Party Buffs
+    elseif packet.id == 0x76 then
+        XP.Check_Dedication()
 
     -- Action Packet
     elseif packet.id == 0x028 then

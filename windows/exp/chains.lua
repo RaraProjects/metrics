@@ -75,12 +75,20 @@ end
 -- Handles the chain countdown.
 -- ------------------------------------------------------------------------------------------------------
 XP.Chains.Timer = function()
-    if not XP.Chains.Is_Active then return Timers.Format(0, true) end
+    local color = Res.Colors.Basic.WHITE
+    if not XP.Chains.Is_Active then return UI.TextColored(color, Timers.Format(0, true)) end
     local now = os.time()
     local elapsed_time = now - XP.Chains.Start_Time
     local time_remaining = XP.Chains.Duration - elapsed_time
-    if time_remaining < 0 then
+    if time_remaining <=0 then
+        color = Res.Colors.Basic.RED
         XP.Chains.End()
+    elseif time_remaining <= 10 then
+        color = Res.Colors.Basic.RED
+    elseif time_remaining <= 30 then
+        color = Res.Colors.Basic.YELLOW
+    else
+        color = Res.Colors.Basic.WHITE
     end
-    return Timers.Format(time_remaining, true)
+    UI.TextColored(color, Timers.Format(time_remaining, true))
 end

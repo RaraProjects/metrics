@@ -84,7 +84,7 @@ Window.Table.Flags = {
 Window.Reset_Position = true
 Window.Set_Mouse = true
 Window.Bar_Delay = Socket.gettime()
-Window.Bar_Delay_Threshold = 0.05
+Window.Bar_Delay_Threshold = 0.70
 
 Window.IO = UI.GetIO()
 Window.IO.MouseDrawCursor = false

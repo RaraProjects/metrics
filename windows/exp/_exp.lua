@@ -117,13 +117,14 @@ XP.Populate = function()
     if XP.Confirmation then UI.SameLine() UI.Text(" ") UI.SameLine() XP.Reset_Confirmation_Button() end
 
     XP.Mode_Check()
-    XP.Check_Dedication()
     XP.XP_Table(XP.Display_Mode)
     XP.Tracking()
 
     if Window.Can_Bar_Load() then
         XP.Level_Progress_Bar()
         XP.Boost_Progress_Bar()
+    else
+        if Metrics.Parse.XP_Progress or Metrics.Parse.Boost_Progress then UI.Text("Loading...") end
     end
 end
 
@@ -146,7 +147,8 @@ XP.XP_Table = function(xp_type)
     end
 
     UI.PushStyleColor(ImGuiCol_TableRowBg, Window.Theme.Table_Row_Bg)
-    if UI.BeginTable("XP Metrics", XP.Columns.Display_Count, table_flags) then
+    if UI.BeginTable("XP Metrics", XP.Columns.Display_Count + 1, table_flags) then
+        UI.TableSetupColumn("Job", flags)
         UI.TableSetupColumn("Chain", flags)
         UI.TableSetupColumn("*" .. type_string .. "/hr", flags)
         if Metrics.Parse.Base_Rate     then UI.TableSetupColumn(type_string .. "/hr", flags) end
@@ -163,10 +165,11 @@ XP.XP_Table = function(xp_type)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
-        UI.TableNextColumn() UI.Text(XP.Columns.Chain())
+        UI.TableNextColumn() XP.Columns.Job()
+        UI.TableNextColumn() XP.Columns.Chain()
         UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate())
         if Metrics.Parse.Base_Rate     then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(true)) end
-        if Metrics.Parse.Time_To_Level then UI.TableNextColumn() UI.Text(XP.Columns.Time_To_Level(xp_type)) end
+        if Metrics.Parse.Time_To_Level then UI.TableNextColumn() XP.Columns.Time_To_Level(xp_type) end
         if Metrics.Parse.To_Next_Level then UI.TableNextColumn() UI.Text(XP.Columns.TNL(xp_type)) end
         if Metrics.Parse.Kill_Speed then
             local kill_time = XP.Columns.Average_Kill_Time()
@@ -385,7 +388,7 @@ XP.Check_Dedication = function()
         XP.Dedication_Max  = -1
 
     -- Dedication is not active.
-    elseif not XP.Is_Dedication_Active then
+    elseif not XP.Is_Dedication_Active and not Ashita.States.Zoning then
         XP.Clear_Dedication()
     end
 end
@@ -507,5 +510,25 @@ XP.Reset_Confirmation_Button = function()
     if UI.SmallButton("I'm sure.") then
         XP.Is_Initialized = false
         XP.Confirmation = false
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Converts a codepoint to UTF8.
+------------------------------------------------------------------------------------------------------
+---@param codepoint any
+---@return string
+------------------------------------------------------------------------------------------------------
+XP.Unicode_To_UTF8 = function(codepoint)
+    if codepoint <= 0x7F then
+        return string.char(codepoint)
+    elseif codepoint <= 0x7FF then
+        return string.char(0xC0 + math.floor(codepoint / 0x40), 0x80 + (codepoint % 0x40))
+    elseif codepoint <= 0xFFFF then
+        return string.char(0xE0 + math.floor(codepoint / 0x1000), 0x80 + (math.floor(codepoint / 0x40) % 0x40), 0x80 + (codepoint % 0x40))
+    elseif codepoint <= 0x10FFFF then
+        return string.char(0xF0 + math.floor(codepoint / 0x40000), 0x80 + (math.floor(codepoint / 0x1000) % 0x40), 0x80 + (math.floor(codepoint / 0x40) % 0x40), 0x80 + (codepoint % 0x40))
+    else
+        return "Codepoint out of range"
     end
 end

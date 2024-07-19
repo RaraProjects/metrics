@@ -23,12 +23,22 @@ XP.Columns.Count = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Creates a column that shows the player's level, job, and subjob with color.
+-- ------------------------------------------------------------------------------------------------------
+XP.Columns.Job = function()
+    local job_data = Ashita.Player.Job_Data()
+    local main_string = job_data.main .. string.format("%02d", job_data.main_level)
+    local sub_string = "/" .. job_data.sub .. string.format("%02d", job_data.sub_level)
+    if job_data.sub == "NON" then sub_string = "" end
+    UI.TextColored(job_data.main_color, main_string)
+    UI.SameLine() UI.TextColored(job_data.sub_color, sub_string)
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Get chain timer.
 -- ------------------------------------------------------------------------------------------------------
----@return string
--- ------------------------------------------------------------------------------------------------------
 XP.Columns.Chain = function()
-    return tostring(XP.Chains.Current) .. "->" .. tostring(XP.Chains.Current + 1) .. " " .. tostring(XP.Chains.Timer())
+    XP.Chains.Timer() UI.SameLine() UI.Text(" (" .. tostring(XP.Chains.Current) .. ")")
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -45,8 +55,7 @@ XP.Columns.TNL = function(xp_type)
     end
     if current == 0 then current = 1 end
     local tnl = needed - current
-    local progress = (current / needed) * 100
-    return string.format("%d", tnl) .. " (" .. string.format("%d", progress) .. "%)"
+    return string.format("%d", tnl)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -148,7 +157,8 @@ end
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Time_To_Level = function(type)
-    if XP.Last_XP_Time == 0 then return "--:--:--" end
+    local color = Res.Colors.Basic.WHITE
+    if XP.Last_XP_Time == 0 then return UI.TextColored(color, "--:--:--") end
     local duration = os.time() - XP.Last_XP_Time
 
     if not type then type = XP.Type.EXPERIENCE end
@@ -156,14 +166,15 @@ XP.Columns.Time_To_Level = function(type)
     if type == XP.Type.LIMIT then tnl = Ashita.Player.Exp_TNM() end
 
     local average_xp = XP.Columns.Average_XP()
-    if average_xp <= 0 then return "--:--:--" end
+    if average_xp <= 0 then return UI.TextColored(color, "--:--:--") end
 
+    color = Res.Colors.Basic.WHITE
     local kill_speed = XP.Columns.Average_Kill_Time()
     local kills_needed = tnl / average_xp
     local total_time = kill_speed * kills_needed
     local final_time = total_time - duration
     if final_time < 0 then final_time = 0 end
-    return Timers.Format(final_time)
+    return UI.TextColored(color, Timers.Format(final_time))
 end
 
 -- ------------------------------------------------------------------------------------------------------
