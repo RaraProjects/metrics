@@ -255,6 +255,7 @@ Hub.Toggle_All_Button = function()
         Config.Window.Hide()
         Focus.Window.Hide()
         Parse.Window.Hide()
+        XP.Window.Hide()
         Report.Window.Hide()
     end
 end
