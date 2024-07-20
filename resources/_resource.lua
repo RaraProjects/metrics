@@ -345,3 +345,12 @@ Res.Items.Get_Dedication = function(item_id)
     if not item_id then return {} end
     return Res.Items.Dedication[item_id]
 end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns a table of dedication items indexed by name.
+-- ------------------------------------------------------------------------------------------------------
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Items.Get_Dedication_Selection = function()
+    return Res.Items.Dedication_Selection
+end

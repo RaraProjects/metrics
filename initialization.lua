@@ -21,7 +21,7 @@ Settings_File.register(Config.Enum.File.PARSE, "settings_update", function(setti
 end)
 
 ------------------------------------------------------------------------------------------------------
--- Check for character switches. Reloads character specific Parse settings.
+-- Check for character switches. Reloads character specific Focus settings.
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.Enum.File.FOCUS, "settings_update", function(settings)
     if settings ~= nil then
@@ -31,7 +31,7 @@ Settings_File.register(Config.Enum.File.FOCUS, "settings_update", function(setti
 end)
 
 ------------------------------------------------------------------------------------------------------
--- Check for character switches. Reloads character specific Parse settings.
+-- Check for character switches. Reloads character specific Battle Log settings.
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.Enum.File.BLOG, "settings_update", function(settings)
     if settings ~= nil then
@@ -41,7 +41,7 @@ Settings_File.register(Config.Enum.File.BLOG, "settings_update", function(settin
 end)
 
 ------------------------------------------------------------------------------------------------------
--- Check for character switches. Reloads character specific Parse settings.
+-- Check for character switches. Reloads character specific Window settings.
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.Enum.File.WINDOW, "settings_update", function(settings)
     if settings ~= nil then
@@ -73,6 +73,16 @@ Settings_File.register(Config.Enum.File.WINDOW, "settings_update", function(sett
 end)
 
 ------------------------------------------------------------------------------------------------------
+-- Check for character switches. Reloads character specific EXP settings.
+------------------------------------------------------------------------------------------------------
+Settings_File.register(Config.Enum.File.EXP, "settings_update", function(settings)
+    if settings ~= nil then
+        Metrics.XP = settings
+        Settings_File.save(Config.Enum.File.EXP)
+    end
+end)
+
+------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Parse settings.
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.Enum.File.REPORT, "settings_update", function(settings)
@@ -91,6 +101,7 @@ ashita.events.register('load', 'load_cb', function()
         Parse  = Settings_File.load(Parse.Config.Defaults, Config.Enum.File.PARSE),
         Focus  = Settings_File.load(Focus.Config.Defaults, Config.Enum.File.FOCUS),
         Blog   = Settings_File.load(Blog.Config.Defaults, Config.Enum.File.BLOG),
+        XP     = Settings_File.load(XP.Config.Defaults, Config.Enum.File.EXP),
         Model  = Settings_File.load(DB.Defaults, Config.Enum.File.DATABASE),
         Report = Settings_File.load(Report.Config.Defaults, Config.Enum.File.REPORT),
     }
@@ -120,6 +131,7 @@ ashita.events.register('unload', 'unload_cb', function ()
     Settings_File.save(Config.Enum.File.PARSE)
     Settings_File.save(Config.Enum.File.FOCUS)
     Settings_File.save(Config.Enum.File.BLOG)
+    Settings_File.save(Config.Enum.File.EXP)
     Settings_File.save(Config.Enum.File.WINDOW)
     Settings_File.save(Config.Enum.File.REPORT)
 

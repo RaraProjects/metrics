@@ -113,7 +113,7 @@ end
 -- Populates the XP window.
 -- ------------------------------------------------------------------------------------------------------
 XP.Populate = function()
-    if not Metrics.Parse.XP_Mini then
+    if not Metrics.XP.XP_Mini then
         XP.Config.Settings_Button()
         UI.SameLine() UI.Text(" ") UI.SameLine() XP.Tracking_Button()
         UI.SameLine() UI.Text(" ") UI.SameLine() XP.Reset_Button()
@@ -128,7 +128,7 @@ XP.Populate = function()
         XP.Level_Progress_Bar()
         XP.Boost_Progress_Bar()
     else
-        if Metrics.Parse.XP_Progress or Metrics.Parse.Boost_Progress then UI.Text("Loading...") end
+        if Metrics.XP.XP_Progress or Metrics.XP.Boost_Progress then UI.Text("Loading...") end
     end
 end
 
@@ -150,30 +150,30 @@ XP.XP_Table = function(xp_type)
 
     UI.PushStyleColor(ImGuiCol_TableRowBg, Window.Theme.Table_Row_Bg)
     if UI.BeginTable("XP Metrics", XP.Columns.Display_Count, table_flags) then
-        if Metrics.Parse.XP_Job then UI.TableSetupColumn("Job", flags) end
+        if Metrics.XP.XP_Job then UI.TableSetupColumn("Job", flags) end
         UI.TableSetupColumn("Chain", flags)
         UI.TableSetupColumn("*" .. type_string .. "/hr", flags)
-        if Metrics.Parse.Base_Rate     then UI.TableSetupColumn(type_string .. "/hr", flags) end
-        if Metrics.Parse.Time_To_Level then UI.TableSetupColumn("~TT" .. level_string, flags) end
-        if Metrics.Parse.To_Next_Level then UI.TableSetupColumn("TN" .. level_string, flags) end
-        if Metrics.Parse.Kill_Speed    then UI.TableSetupColumn("Time/Kill", flags) end
-        if Metrics.Parse.Average_XP    then UI.TableSetupColumn("XP/Kill", flags) end
-        if Metrics.Parse.Total_XP      then UI.TableSetupColumn("Total", flags) end
-        if Metrics.Parse.Max_Chain     then UI.TableSetupColumn("Max Chain", flags) end
-        if Metrics.Parse.Zone_Time     then UI.TableSetupColumn("Zone Time", flags) end
-        if Metrics.Parse.XP_Boost_Item then UI.TableSetupColumn("Bonus", flags) end
-        if Metrics.Parse.XP_Boost_Rate then UI.TableSetupColumn("Bonus %", flags) end
-        if Metrics.Parse.XP_Boost_Max  then UI.TableSetupColumn("Bonus Max", flags) end
+        if Metrics.XP.Base_Rate     then UI.TableSetupColumn(type_string .. "/hr", flags) end
+        if Metrics.XP.Time_To_Level then UI.TableSetupColumn("~TT" .. level_string, flags) end
+        if Metrics.XP.To_Next_Level then UI.TableSetupColumn("TN" .. level_string, flags) end
+        if Metrics.XP.Kill_Speed    then UI.TableSetupColumn("Time/Kill", flags) end
+        if Metrics.XP.Average_XP    then UI.TableSetupColumn("XP/Kill", flags) end
+        if Metrics.XP.Total_XP      then UI.TableSetupColumn("Total", flags) end
+        if Metrics.XP.Max_Chain     then UI.TableSetupColumn("Max Chain", flags) end
+        if Metrics.XP.Zone_Time     then UI.TableSetupColumn("Zone Time", flags) end
+        if Metrics.XP.XP_Boost_Item then UI.TableSetupColumn("Bonus", flags) end
+        if Metrics.XP.XP_Boost_Rate then UI.TableSetupColumn("Bonus %", flags) end
+        if Metrics.XP.XP_Boost_Max  then UI.TableSetupColumn("Bonus Max", flags) end
         UI.TableHeadersRow()
 
         UI.TableNextRow()
-        if Metrics.Parse.XP_Job then UI.TableNextColumn() XP.Columns.Job() end
+        if Metrics.XP.XP_Job then UI.TableNextColumn() XP.Columns.Job() end
         UI.TableNextColumn() XP.Columns.Chain()
         UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate())
-        if Metrics.Parse.Base_Rate     then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(true)) end
-        if Metrics.Parse.Time_To_Level then UI.TableNextColumn() XP.Columns.Time_To_Level(xp_type) end
-        if Metrics.Parse.To_Next_Level then UI.TableNextColumn() UI.Text(XP.Columns.TNL(xp_type)) end
-        if Metrics.Parse.Kill_Speed then
+        if Metrics.XP.Base_Rate     then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(true)) end
+        if Metrics.XP.Time_To_Level then UI.TableNextColumn() XP.Columns.Time_To_Level(xp_type) end
+        if Metrics.XP.To_Next_Level then UI.TableNextColumn() UI.Text(XP.Columns.TNL(xp_type)) end
+        if Metrics.XP.Kill_Speed then
             local kill_time = XP.Columns.Average_Kill_Time()
             if kill_time < 0 then
                 UI.TableNextColumn() UI.Text("--:--")
@@ -181,13 +181,13 @@ XP.XP_Table = function(xp_type)
                 UI.TableNextColumn() UI.Text(Timers.Format(kill_time, true))
             end
         end
-        if Metrics.Parse.Average_XP    then UI.TableNextColumn() UI.Text(string.format("%d", XP.Columns.Average_XP())) end
-        if Metrics.Parse.Total_XP      then UI.TableNextColumn() UI.Text(XP.Columns.Total_XP(xp_type)) end
-        if Metrics.Parse.Max_Chain     then UI.TableNextColumn() UI.Text(XP.Columns.Max_Chain()) end
-        if Metrics.Parse.Zone_Time     then UI.TableNextColumn() UI.Text(XP.Columns.Zone_Time()) end
-        if Metrics.Parse.XP_Boost_Item then UI.TableNextColumn() UI.Text(tostring(XP.Dedication_Item)) end
-        if Metrics.Parse.XP_Boost_Rate then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Bonus()) end
-        if Metrics.Parse.XP_Boost_Max  then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Progress()) end
+        if Metrics.XP.Average_XP    then UI.TableNextColumn() UI.Text(string.format("%d", XP.Columns.Average_XP())) end
+        if Metrics.XP.Total_XP      then UI.TableNextColumn() UI.Text(XP.Columns.Total_XP(xp_type)) end
+        if Metrics.XP.Max_Chain     then UI.TableNextColumn() UI.Text(XP.Columns.Max_Chain()) end
+        if Metrics.XP.Zone_Time     then UI.TableNextColumn() UI.Text(XP.Columns.Zone_Time()) end
+        if Metrics.XP.XP_Boost_Item then UI.TableNextColumn() UI.Text(tostring(XP.Dedication_Item)) end
+        if Metrics.XP.XP_Boost_Rate then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Bonus()) end
+        if Metrics.XP.XP_Boost_Max  then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Progress()) end
 
         UI.EndTable()
     end
@@ -409,11 +409,11 @@ end
 -- Displays the level progress bar.
 ------------------------------------------------------------------------------------------------------
 XP.Level_Progress_Bar = function()
-    if Metrics.Parse.XP_Progress then
+    if Metrics.XP.XP_Progress then
         local color = Res.Colors.Get_XP(XP.Display_Mode)
         local height = XP.Full_Bar_Height
         local caption = nil
-        if Metrics.Parse.Small_Bars then
+        if Metrics.XP.Small_Bars then
             height = XP.Tiny_Bar_Height
             caption = ""
         end
@@ -427,14 +427,25 @@ end
 -- Displays the boost progress bar.
 ------------------------------------------------------------------------------------------------------
 XP.Boost_Progress_Bar = function()
-    if Metrics.Parse.Boost_Progress and XP.Is_Dedication_Active and XP.Dedication_Rate > 0 then
+    if Metrics.XP.Boost_Progress and XP.Is_Dedication_Active then
         local height = XP.Full_Bar_Height
         local caption = nil
-        if Metrics.Parse.Small_Bars then
-            height = XP.Tiny_Bar_Height
-            caption = ""
+        local progress = XP.Dedication_Progress()
+
+        -- We know what dedication item was used.
+        if XP.Dedication_Rate > 0 then
+            if Metrics.XP.Small_Bars then
+                height = XP.Tiny_Bar_Height
+                caption = ""
+            end
+
+        -- We DON'T know what dedication item was used.
+        else
+            caption = "Unknown dedication item used."
+            progress = 0
         end
-        UI.ProgressBar(XP.Dedication_Progress(), {-1, height}, caption)
+
+        UI.ProgressBar(progress, {-1, height}, caption)
     end
 end
 

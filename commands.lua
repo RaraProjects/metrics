@@ -51,7 +51,7 @@ ashita.events.register('command', 'command_cb', function (e)
         -- XP
         elseif arg == "xp" and sub_command then
             if sub_command == "mini" then
-                Metrics.Parse.XP_Mini = not Metrics.Parse.XP_Mini
+                Metrics.XP.XP_Mini = not Metrics.XP.XP_Mini
             end
 
         -- General reports.

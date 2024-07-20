@@ -7,18 +7,18 @@ XP.Columns.Display_Count = 2
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Count = function()
     local columns = 2
-    if Metrics.Parse.XP_Job        then columns = columns + 1 end
-    if Metrics.Parse.Base_Rate     then columns = columns + 1 end
-    if Metrics.Parse.Kill_Speed    then columns = columns + 1 end
-    if Metrics.Parse.Average_XP    then columns = columns + 1 end
-    if Metrics.Parse.Time_To_Level then columns = columns + 1 end
-    if Metrics.Parse.To_Next_Level then columns = columns + 1 end
-    if Metrics.Parse.Total_XP      then columns = columns + 1 end
-    if Metrics.Parse.Max_Chain     then columns = columns + 1 end
-    if Metrics.Parse.Zone_Time     then columns = columns + 1 end
-    if Metrics.Parse.XP_Boost_Item then columns = columns + 1 end
-    if Metrics.Parse.XP_Boost_Rate then columns = columns + 1 end
-    if Metrics.Parse.XP_Boost_Max  then columns = columns + 1 end
+    if Metrics.XP.XP_Job        then columns = columns + 1 end
+    if Metrics.XP.Base_Rate     then columns = columns + 1 end
+    if Metrics.XP.Kill_Speed    then columns = columns + 1 end
+    if Metrics.XP.Average_XP    then columns = columns + 1 end
+    if Metrics.XP.Time_To_Level then columns = columns + 1 end
+    if Metrics.XP.To_Next_Level then columns = columns + 1 end
+    if Metrics.XP.Total_XP      then columns = columns + 1 end
+    if Metrics.XP.Max_Chain     then columns = columns + 1 end
+    if Metrics.XP.Zone_Time     then columns = columns + 1 end
+    if Metrics.XP.XP_Boost_Item then columns = columns + 1 end
+    if Metrics.XP.XP_Boost_Rate then columns = columns + 1 end
+    if Metrics.XP.XP_Boost_Max  then columns = columns + 1 end
     XP.Columns.Display_Count = columns
     Window.Set_Bar_Delay()
 end
