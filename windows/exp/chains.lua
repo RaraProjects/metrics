@@ -23,10 +23,12 @@ XP.Chains.Max = 0
 ---@param chain integer
 -- ------------------------------------------------------------------------------------------------------
 XP.Chains.Start = function(chain)
-    XP.Chains.Is_Active = true
-    XP.Chains.Start_Time = os.time()
-    XP.Chains.Metrics(chain)
-    XP.Chains.Set_Duration()
+    if chain > XP.Chains.Current then
+        XP.Chains.Is_Active = true
+        XP.Chains.Start_Time = os.time()
+        XP.Chains.Metrics(chain)
+        XP.Chains.Set_Duration()
+    end
 end
 
 -- ------------------------------------------------------------------------------------------------------
