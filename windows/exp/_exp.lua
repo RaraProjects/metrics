@@ -200,8 +200,11 @@ end
 XP.Tracking = function()
     if not XP.Local.Show_Windows then return nil end
     local flags = Column.Flags.None
+    local table_flags = XP.Window.Table_Flags
+    table_flags = bit.bor(table_flags, ImGuiTableFlags_RowBg)
     local kill_max = #XP.Kill_Times
-    if UI.BeginTable("Kill Speed", 1 + kill_max, XP.Window.Table_Flags) then
+    UI.PushStyleColor(ImGuiCol_TableRowBg, Window.Theme.Table_Row_Bg)
+    if UI.BeginTable("Kill Speed", 1 + kill_max, table_flags) then
         UI.TableSetupColumn("Current", flags)
         for i, _ in ipairs(XP.Kill_Times) do UI.TableSetupColumn(tostring(i), flags) end
         UI.TableHeadersRow()
@@ -212,6 +215,7 @@ XP.Tracking = function()
 
         UI.EndTable()
     end
+    UI.PopStyleColor(1)
 end
 
 -- ------------------------------------------------------------------------------------------------------
