@@ -99,15 +99,17 @@ XP.Parse = function(data)
     if not parsed then return nil end
 
     local xp_amount = parsed.xp_amount
+    if xp_amount > 1000 then return nil end -- Ignore XP scrolls and ENM awards.
+
     local chain = parsed.chain_count
     local message_id = parsed.message_id
 
     local xp_type = XP.Get_XP_Type(message_id)
     if xp_type == XP.Type.ERROR then return nil end
 
-    XP.Add_Total_XP(xp_amount, xp_type)   -- Add XP to sum total.
+    XP.Add_Total_XP(xp_amount, xp_type)     -- Add XP to sum total.
     XP.Set_Kill_Time()
-    XP.Chains.Start(chain)                                          -- Handle chains.
+    XP.Chains.Start(chain)                  -- Handle chains.
 end
 
 -- ------------------------------------------------------------------------------------------------------
