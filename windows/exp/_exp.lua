@@ -44,12 +44,6 @@ XP.Last_XP_Time = 0
 XP.Full_Bar_Height = 18
 XP.Tiny_Bar_Height = 8
 
-XP.Is_Dedication_Active = true
-XP.Dedication_Item  = "None"
-XP.Dedication_Rate  = 0
-XP.Dedication_Max   = 0
-XP.Dedication_Total = 0
-
 XP.Is_Initialized = false
 XP.Display_Mode = XP.Type.EXPERIENCE
 XP.Show_Additional_Info = false
@@ -60,6 +54,7 @@ require("windows.exp.columns")
 require("windows.exp.config")
 require("windows.exp.tracking")
 require("windows.exp.chains")
+require("windows.exp.dedication")
 
 -- ------------------------------------------------------------------------------------------------------
 -- Initializes the XP module.
@@ -69,7 +64,7 @@ XP.Initialize = function()
         XP.Columns.Count()
         XP.Local.Initialize()
         XP.Mode_Check()
-        XP.Check_Dedication()
+        XP.Dedication.Check()
         XP.Metric = T{
             Experience_Total   = 0,
             Experience_Base    = 0,
@@ -185,7 +180,7 @@ XP.XP_Table = function(xp_type)
         if Metrics.XP.Total_XP      then UI.TableNextColumn() UI.Text(XP.Columns.Total_XP(xp_type)) end
         if Metrics.XP.Max_Chain     then UI.TableNextColumn() UI.Text(XP.Columns.Max_Chain()) end
         if Metrics.XP.Zone_Time     then UI.TableNextColumn() UI.Text(XP.Columns.Zone_Time()) end
-        if Metrics.XP.XP_Boost_Item then UI.TableNextColumn() UI.Text(tostring(XP.Dedication_Item)) end
+        if Metrics.XP.XP_Boost_Item then UI.TableNextColumn() UI.Text(tostring(XP.Dedication.Item)) end
         if Metrics.XP.XP_Boost_Rate then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Bonus()) end
         if Metrics.XP.XP_Boost_Max  then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Progress()) end
 
@@ -288,11 +283,11 @@ XP.Add_Total_XP = function(amount, type)
     if not amount then amount = 0 end
 
     -- Handle dedication bonus xp.
-    XP.Check_Dedication()
+    XP.Dedication.Check()
     local base_xp = amount
     local bonus_xp = 0
-    if XP.Is_Dedication_Active and XP.Dedication_Rate > 0 then
-        base_xp = amount / (1 + (XP.Dedication_Rate / 100))
+    if XP.Dedication.Is_Active and XP.Dedication.Rate > 0 then
+        base_xp = amount / (1 + (XP.Dedication.Rate / 100))
         bonus_xp = amount - base_xp
     end
 
@@ -336,60 +331,6 @@ XP.Level_Progress = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Checks if dedication is active.
--- ------------------------------------------------------------------------------------------------------
-XP.Check_Dedication = function()
-    XP.Is_Dedication_Active = Ashita.Player.Has_Buff(Ashita.Player.Buffs.DEDICATION)
-
-    -- Addon is loaded and dedication is active; don't know the details of the item used.
-    if XP.Is_Dedication_Active and XP.Dedication_Item == "None" then
-        XP.Dedication_Item = "Unknown"
-        XP.Dedication_Rate = -1
-        XP.Dedication_Max  = -1
-
-    -- Dedication is not active.
-    elseif not XP.Is_Dedication_Active and not Ashita.States.Zoning then
-        XP.Clear_Dedication()
-    end
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Checks dedication progress.
--- ------------------------------------------------------------------------------------------------------
----@return number
--- ------------------------------------------------------------------------------------------------------
-XP.Dedication_Progress = function()
-    if not XP.Is_Dedication_Active then return 0 end
-    local bonus_xp = XP.Metric.Experience_Boosted + XP.Metric.Limit_Boosted
-    local max_xp = XP.Dedication_Max
-    if not max_xp or max_xp == 0 then max_xp = 1 end
-    return bonus_xp / max_xp
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Sets dedication flags.
--- ------------------------------------------------------------------------------------------------------
----@param item? table
--- ------------------------------------------------------------------------------------------------------
-XP.Set_Dedication = function(item)
-    if item and item.name then
-        XP.Is_Dedication_Active = true
-        XP.Dedication_Item = item.name
-        XP.Dedication_Rate = item.boost
-        XP.Dedication_Max  = item.max
-    end
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Clears dedication flags.
--- ------------------------------------------------------------------------------------------------------
-XP.Clear_Dedication = function()
-    XP.Dedication_Item = "None"
-    XP.Dedication_Rate = 0
-    XP.Dedication_Max  = 0
-end
-
--- ------------------------------------------------------------------------------------------------------
 -- Returns how much xp per unit time where time is the total time the Metrics has been active.
 -- This will be a really big number early on.
 -- ------------------------------------------------------------------------------------------------------
@@ -427,13 +368,13 @@ end
 -- Displays the boost progress bar.
 ------------------------------------------------------------------------------------------------------
 XP.Boost_Progress_Bar = function()
-    if Metrics.XP.Boost_Progress and XP.Is_Dedication_Active then
+    if Metrics.XP.Boost_Progress and XP.Dedication.Is_Active then
         local height = XP.Full_Bar_Height
         local caption = nil
-        local progress = XP.Dedication_Progress()
+        local progress = XP.Dedication.Progress()
 
         -- We know what dedication item was used.
-        if XP.Dedication_Rate > 0 then
+        if XP.Dedication.Rate > 0 then
             if Metrics.XP.Small_Bars then
                 height = XP.Tiny_Bar_Height
                 caption = ""

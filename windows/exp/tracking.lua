@@ -70,7 +70,7 @@ XP.Local.Get_XP_Rate = function(type, base)
     local average_xp = (total_xp / XP.Local.Window_Length()) * 3600
     XP.Local.Set_Rate(average_xp, type)
     local return_string = string.format("%d", average_xp)
-    if not base and XP.Is_Dedication_Active then return_string = return_string .. "*" end
+    if not base and XP.Dedication.Is_Active then return_string = return_string .. "*" end
     return return_string
 end
 

@@ -59,6 +59,8 @@ XP.Config.Populate = function()
     UI.Text("Boost Item Defaulting")
     if UI.Checkbox("Enabled", {Metrics.XP.Boost_Default}) then
         Metrics.XP.Boost_Default = not Metrics.XP.Boost_Default
+        XP.Dedication.Check()
+        Window.Set_Bar_Delay()
     end
     UI.SameLine() Window.Widgets.HelpMarker("If Metrics is loaded when you already have the dedication buff it doesn't know which item you used."
                                 .." you can use this setting as a backup. This allows Metrics to know the boost rate and boost max."
@@ -75,6 +77,8 @@ XP.Config.Populate = function()
                     if UI.Selectable(list[n], is_selected) then
                         Metrics.XP.Boost_Item_Default_Index = n
                         Metrics.XP.Boost_Item_Default_Name = list[n]
+                        XP.Dedication.Check()
+                        Window.Set_Bar_Delay()
                     end
                     if is_selected then
                         UI.SetItemDefaultFocus()

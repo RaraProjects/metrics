@@ -354,3 +354,16 @@ end
 Res.Items.Get_Dedication_Selection = function()
     return Res.Items.Dedication_Selection
 end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns a dedication ID based on a dedication item name.
+-- ------------------------------------------------------------------------------------------------------
+---@param item_name string
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Res.Items.Get_Dedication_ID_From_Name = function(item_name)
+    if not item_name then return 0 end
+    local id = Res.Items.Dedication_Name_To_ID[item_name]
+    if not id then return 0 end
+    return id
+end

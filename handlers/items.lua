@@ -12,5 +12,5 @@ H.Item.Action = function(action, actor_mob)
     if not Ashita.Mob.Is_Me(actor_mob.name) then return nil end
     local item_id = action.param
     local dedication_item = Res.Items.Get_Dedication(item_id)
-    if dedication_item then XP.Set_Dedication(dedication_item) end
+    if dedication_item then XP.Dedication.Set(dedication_item, true) end
 end

@@ -115,9 +115,9 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0x2D then
         XP.Parse(packet.data)
 
-    -- Party Buffs
-    elseif packet.id == 0x76 then
-        XP.Check_Dedication()
+    -- Player Update
+    elseif packet.id == 0x37 then
+        XP.Dedication.Check()
 
     -- Action Packet
     elseif packet.id == 0x028 then

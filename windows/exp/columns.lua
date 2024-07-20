@@ -147,7 +147,7 @@ XP.Columns.Average_Rate = function(base_only)
     local final = (average_xp / kill_speed) * 3600
     if final > 99999 then final = 99999 end
     local return_string = string.format("%d", final)
-    if not base_only and XP.Is_Dedication_Active then return_string = return_string .. "*" end
+    if not base_only and XP.Dedication.Is_Active then return_string = return_string .. "*" end
     return return_string
 end
 
@@ -219,9 +219,9 @@ end
 -- Displays how far the player is through their dedication charge.
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Dedication_Progress = function()
-    if not XP.Is_Dedication_Active then return "None" end
+    if not XP.Dedication.Is_Active then return "None" end
     local bonus_xp = XP.Metric.Experience_Boosted + XP.Metric.Limit_Boosted
-    local max_xp = XP.Dedication_Max
+    local max_xp = XP.Dedication.Max
     local denominator = tostring(max_xp)
     if not max_xp or max_xp <= 0 then denominator = "???" end
     return string.format("%d", bonus_xp) .. "/" .. denominator
@@ -231,7 +231,7 @@ end
 -- Displays how much the dedication bonus is.
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Dedication_Bonus = function()
-    local rate = XP.Dedication_Rate
+    local rate = XP.Dedication.Rate
     if rate < 0 then return "???" end
     return tostring(rate) .. "%"
 end
