@@ -41,6 +41,8 @@ XP.XP_Per_Kill = T{}
 XP.XP_Per_Kill_Base = T{}
 XP.XP_Per_Kill_Limit = 6
 XP.Last_XP_Time = 0
+XP.Full_Bar_Height = 18
+XP.Tiny_Bar_Height = 8
 
 XP.Is_Dedication_Active = true
 XP.Dedication_Item  = "None"
@@ -100,21 +102,23 @@ XP.Parse = function(data)
     local message_id = parsed.message_id
 
     local xp_type = XP.Get_XP_Type(message_id)
-    local base_xp, bonus_xp = XP.Add_Total_XP(xp_amount, xp_type)   -- Add XP to sum total.
+    if xp_type == XP.Type.ERROR then return nil end
 
+    XP.Add_Total_XP(xp_amount, xp_type)   -- Add XP to sum total.
     XP.Set_Kill_Time()
     XP.Chains.Start(chain)                                          -- Handle chains.
-    XP.Local.Add_XP(base_xp, bonus_xp, xp_type)                     -- XP per hour tracking.
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Populates the XP window.
 -- ------------------------------------------------------------------------------------------------------
 XP.Populate = function()
-    XP.Config.Settings_Button()
-    UI.SameLine() UI.Text(" ") UI.SameLine() XP.Tracking_Button()
-    UI.SameLine() UI.Text(" ") UI.SameLine() XP.Reset_Button()
-    if XP.Confirmation then UI.SameLine() UI.Text(" ") UI.SameLine() XP.Reset_Confirmation_Button() end
+    if not Metrics.Parse.XP_Mini then
+        XP.Config.Settings_Button()
+        UI.SameLine() UI.Text(" ") UI.SameLine() XP.Tracking_Button()
+        UI.SameLine() UI.Text(" ") UI.SameLine() XP.Reset_Button()
+        if XP.Confirmation then UI.SameLine() UI.Text(" ") UI.SameLine() XP.Reset_Confirmation_Button() end
+    end
 
     XP.Mode_Check()
     XP.XP_Table(XP.Display_Mode)
@@ -139,23 +143,21 @@ XP.XP_Table = function(xp_type)
 
     local type_string = "XP"
     local level_string = "L"
-    local tnl = Ashita.Player.Exp_TNL()
     if xp_type == XP.Type.LIMIT then
         type_string = "LP"
         level_string = "M"
-        tnl = Ashita.Player.Exp_TNM()
     end
 
     UI.PushStyleColor(ImGuiCol_TableRowBg, Window.Theme.Table_Row_Bg)
-    if UI.BeginTable("XP Metrics", XP.Columns.Display_Count + 1, table_flags) then
-        UI.TableSetupColumn("Job", flags)
+    if UI.BeginTable("XP Metrics", XP.Columns.Display_Count, table_flags) then
+        if Metrics.Parse.XP_Job then UI.TableSetupColumn("Job", flags) end
         UI.TableSetupColumn("Chain", flags)
         UI.TableSetupColumn("*" .. type_string .. "/hr", flags)
         if Metrics.Parse.Base_Rate     then UI.TableSetupColumn(type_string .. "/hr", flags) end
         if Metrics.Parse.Time_To_Level then UI.TableSetupColumn("~TT" .. level_string, flags) end
         if Metrics.Parse.To_Next_Level then UI.TableSetupColumn("TN" .. level_string, flags) end
-        if Metrics.Parse.Kill_Speed    then UI.TableSetupColumn("~K-Time", flags) end
-        if Metrics.Parse.Average_XP    then UI.TableSetupColumn("~K-XP", flags) end
+        if Metrics.Parse.Kill_Speed    then UI.TableSetupColumn("Time/Kill", flags) end
+        if Metrics.Parse.Average_XP    then UI.TableSetupColumn("XP/Kill", flags) end
         if Metrics.Parse.Total_XP      then UI.TableSetupColumn("Total", flags) end
         if Metrics.Parse.Max_Chain     then UI.TableSetupColumn("Max Chain", flags) end
         if Metrics.Parse.Zone_Time     then UI.TableSetupColumn("Zone Time", flags) end
@@ -165,7 +167,7 @@ XP.XP_Table = function(xp_type)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
-        UI.TableNextColumn() XP.Columns.Job()
+        if Metrics.Parse.XP_Job then UI.TableNextColumn() XP.Columns.Job() end
         UI.TableNextColumn() XP.Columns.Chain()
         UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate())
         if Metrics.Parse.Base_Rate     then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(true)) end
@@ -198,52 +200,6 @@ end
 XP.Tracking = function()
     if not XP.Local.Show_Windows then return nil end
     local flags = Column.Flags.None
-    if XP.Display_Mode == XP.Type.EXPERIENCE then
-        if UI.BeginTable("EXP Tracking", 3 + XP.Local.Bucket_Max, XP.Window.Table_Flags) then
-            UI.TableSetupColumn("Cycle", flags)
-            UI.TableSetupColumn("Scaling", flags)
-            UI.TableSetupColumn("Total", flags)
-            for i, _ in ipairs(XP.Local.EXP_Base_Buckets) do UI.TableSetupColumn(tostring(i), flags) end
-            UI.TableHeadersRow()
-
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(Timers.Check(Timers.Enum.Names.EXP))
-            UI.TableNextColumn() UI.Text(tostring((1 / XP.Local.Window_Length()) * 3600))
-            UI.TableNextColumn() UI.Text(tostring(XP.Local.XP_In_Window(XP.Type.EXPERIENCE)))
-            for _, v in ipairs(XP.Local.EXP_Base_Buckets) do UI.TableNextColumn() UI.Text(tostring(v)) end
-
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(Timers.Check(Timers.Enum.Names.EXP))
-            UI.TableNextColumn() UI.Text(tostring((1 / XP.Local.Window_Length()) * 3600))
-            UI.TableNextColumn() UI.Text(tostring(XP.Local.XP_In_Window(XP.Type.EXPERIENCE)))
-            for _, v in ipairs(XP.Local.EXP_Buckets) do UI.TableNextColumn() UI.Text(tostring(v)) end
-
-            UI.EndTable()
-        end
-    else
-        if UI.BeginTable("LP Tracking", 3 + XP.Local.Bucket_Max, XP.Window.Table_Flags) then
-            UI.TableSetupColumn("Cycle", flags)
-            UI.TableSetupColumn("Scaling", flags)
-            UI.TableSetupColumn("Total", flags)
-            for i, _ in ipairs(XP.Local.EXP_Base_Buckets) do UI.TableSetupColumn(tostring(i), flags) end
-            UI.TableHeadersRow()
-
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(Timers.Check(Timers.Enum.Names.EXP))
-            UI.TableNextColumn() UI.Text(tostring((1 / XP.Local.Window_Length()) * 3600))
-            UI.TableNextColumn() UI.Text(tostring(XP.Local.XP_In_Window(XP.Type.LIMIT)))
-            for _, v in ipairs(XP.Local.LP_Base_Buckets) do UI.TableNextColumn() UI.Text(tostring(v)) end
-
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(Timers.Check(Timers.Enum.Names.EXP))
-            UI.TableNextColumn() UI.Text(tostring((1 / XP.Local.Window_Length()) * 3600))
-            UI.TableNextColumn() UI.Text(tostring(XP.Local.XP_In_Window(XP.Type.LIMIT)))
-            for _, v in ipairs(XP.Local.LP_Buckets) do UI.TableNextColumn() UI.Text(tostring(v)) end
-
-            UI.EndTable()
-        end
-    end
-
     local kill_max = #XP.Kill_Times
     if UI.BeginTable("Kill Speed", 1 + kill_max, XP.Window.Table_Flags) then
         UI.TableSetupColumn("Current", flags)
@@ -451,8 +407,14 @@ end
 XP.Level_Progress_Bar = function()
     if Metrics.Parse.XP_Progress then
         local color = Res.Colors.Get_XP(XP.Display_Mode)
+        local height = XP.Full_Bar_Height
+        local caption = nil
+        if Metrics.Parse.Small_Bars then
+            height = XP.Tiny_Bar_Height
+            caption = ""
+        end
         UI.PushStyleColor(ImGuiCol_PlotHistogram, color)
-        UI.ProgressBar(XP.Level_Progress(), {-1, 8}, "")
+        UI.ProgressBar(XP.Level_Progress(), {-1, height}, caption)
         UI.PopStyleColor(1)
     end
 end
@@ -462,7 +424,13 @@ end
 ------------------------------------------------------------------------------------------------------
 XP.Boost_Progress_Bar = function()
     if Metrics.Parse.Boost_Progress and XP.Is_Dedication_Active and XP.Dedication_Rate > 0 then
-        UI.ProgressBar(XP.Dedication_Progress(), {-1, 8}, "")
+        local height = XP.Full_Bar_Height
+        local caption = nil
+        if Metrics.Parse.Small_Bars then
+            height = XP.Tiny_Bar_Height
+            caption = ""
+        end
+        UI.ProgressBar(XP.Dedication_Progress(), {-1, height}, caption)
     end
 end
 

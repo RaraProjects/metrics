@@ -33,6 +33,8 @@ Parse.Config.Defaults = T{
     Display_Mode = Parse.Enum.Display_Mode.FULL,
     -- XP
     Show_Background = false,
+    XP_Mini         = false,
+    XP_Job          = true,
     Base_Rate       = false,
     Kill_Speed      = true,
     Average_XP      = false,
@@ -46,6 +48,7 @@ Parse.Config.Defaults = T{
     XP_Boost_Max    = false,
     XP_Progress     = true,
     Boost_Progress  = true,
+    Small_Bars      = true,
 }
 
 Parse.Config.Column_Flags = Column.Flags.None

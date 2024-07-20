@@ -46,6 +46,9 @@ XP.Config.Populate = function()
             Metrics.Parse.Boost_Progress = not Metrics.Parse.Boost_Progress
         end
         UI.TableNextColumn()
+        if UI.Checkbox("Small Bars", {Metrics.Parse.Small_Bars}) then
+            Metrics.Parse.Small_Bars = not Metrics.Parse.Small_Bars
+        end
 
         UI.EndTable()
     end
@@ -58,7 +61,12 @@ XP.Config.Populate = function()
         UI.TableSetupColumn("Col 3", col_flags, width)
 
         UI.TableNextColumn()
-        if UI.Checkbox("Base Rate", {Metrics.Parse.Base_Rate}) then
+        if UI.Checkbox("Job", {Metrics.Parse.XP_Job}) then
+            Metrics.Parse.XP_Job = not Metrics.Parse.XP_Job
+            XP.Columns.Count()
+        end
+        UI.TableNextColumn()
+        if UI.Checkbox("Base XP Rate", {Metrics.Parse.Base_Rate}) then
             Metrics.Parse.Base_Rate = not Metrics.Parse.Base_Rate
             XP.Columns.Count()
         end

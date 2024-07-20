@@ -7,6 +7,7 @@ XP.Columns.Display_Count = 2
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Count = function()
     local columns = 2
+    if Metrics.Parse.XP_Job        then columns = columns + 1 end
     if Metrics.Parse.Base_Rate     then columns = columns + 1 end
     if Metrics.Parse.Kill_Speed    then columns = columns + 1 end
     if Metrics.Parse.Average_XP    then columns = columns + 1 end
