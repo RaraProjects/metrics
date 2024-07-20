@@ -61,9 +61,15 @@ require("windows.exp.dedication")
 -- ------------------------------------------------------------------------------------------------------
 XP.Initialize = function()
     if not XP.Is_Initialized then
+        XP.Dedication.Need_Defaulting = false
+        XP.Dedication.Need_Clear = false
         XP.Columns.Count()
         XP.Local.Initialize()
         XP.Mode_Check()
+        if Metrics.XP.Boost_Item_Rate <= 0 then
+            XP.Dedication.Need_Defaulting = true
+            XP.Dedication.Need_Clear = true
+        end
         XP.Dedication.Check()
         XP.Metric = T{
             Experience_Total   = 0,
@@ -180,7 +186,7 @@ XP.XP_Table = function(xp_type)
         if Metrics.XP.Total_XP      then UI.TableNextColumn() UI.Text(XP.Columns.Total_XP(xp_type)) end
         if Metrics.XP.Max_Chain     then UI.TableNextColumn() UI.Text(XP.Columns.Max_Chain()) end
         if Metrics.XP.Zone_Time     then UI.TableNextColumn() UI.Text(XP.Columns.Zone_Time()) end
-        if Metrics.XP.XP_Boost_Item then UI.TableNextColumn() UI.Text(tostring(XP.Dedication.Item)) end
+        if Metrics.XP.XP_Boost_Item then UI.TableNextColumn() UI.Text(tostring(Metrics.XP.Boost_Item_Name)) end
         if Metrics.XP.XP_Boost_Rate then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Bonus()) end
         if Metrics.XP.XP_Boost_Max  then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Progress()) end
 
@@ -286,8 +292,8 @@ XP.Add_Total_XP = function(amount, type)
     XP.Dedication.Check()
     local base_xp = amount
     local bonus_xp = 0
-    if XP.Dedication.Is_Active and XP.Dedication.Rate > 0 then
-        base_xp = amount / (1 + (XP.Dedication.Rate / 100))
+    if XP.Dedication.Is_Active and Metrics.XP.Boost_Item_Rate > 0 then
+        base_xp = amount / (1 + (Metrics.XP.Boost_Item_Rate / 100))
         bonus_xp = amount - base_xp
     end
 
@@ -301,6 +307,7 @@ XP.Add_Total_XP = function(amount, type)
         XP.Metric.Limit_Boosted = XP.Metric.Limit_Boosted + bonus_xp
         XP.Metric.Limit_Total = XP.Metric.Limit_Base + XP.Metric.Limit_Boosted
     end
+    Metrics.XP.Boost_EXP = Metrics.XP.Boost_EXP + bonus_xp
 
     -- Average XP and Kill Times
     local elements = #XP.XP_Per_Kill
@@ -374,7 +381,7 @@ XP.Boost_Progress_Bar = function()
         local progress = XP.Dedication.Progress()
 
         -- We know what dedication item was used.
-        if XP.Dedication.Rate > 0 then
+        if Metrics.XP.Boost_Item_Rate > 0 then
             if Metrics.XP.Small_Bars then
                 height = XP.Tiny_Bar_Height
                 caption = ""

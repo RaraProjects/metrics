@@ -117,7 +117,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
 
     -- Player Update
     elseif packet.id == 0x37 then
-        XP.Dedication.Check()
+        if XP.Is_Initialized then XP.Dedication.Check() end
 
     -- Action Packet
     elseif packet.id == 0x028 then

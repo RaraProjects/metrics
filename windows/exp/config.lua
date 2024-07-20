@@ -21,6 +21,10 @@ XP.Config.Defaults = T{
     Boost_Default   = false,
     Boost_Item_Default_Name = "Anniversary Ring",
     Boost_Item_Default_Index = 1,
+    Boost_Item_Name = "None",
+    Boost_Item_Rate = 0,
+    Boost_Item_Max  = 0,
+    Boost_EXP       = 0,
 }
 
 XP.Config.Total_Mode_List = T{

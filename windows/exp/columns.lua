@@ -220,8 +220,8 @@ end
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Dedication_Progress = function()
     if not XP.Dedication.Is_Active then return "None" end
-    local bonus_xp = XP.Metric.Experience_Boosted + XP.Metric.Limit_Boosted
-    local max_xp = XP.Dedication.Max
+    local bonus_xp = Metrics.XP.Boost_EXP
+    local max_xp = Metrics.XP.Boost_Item_Max
     local denominator = tostring(max_xp)
     if not max_xp or max_xp <= 0 then denominator = "???" end
     return string.format("%d", bonus_xp) .. "/" .. denominator
@@ -231,7 +231,7 @@ end
 -- Displays how much the dedication bonus is.
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Dedication_Bonus = function()
-    local rate = XP.Dedication.Rate
+    local rate = Metrics.XP.Boost_Item_Rate
     if rate < 0 then return "???" end
     return tostring(rate) .. "%"
 end

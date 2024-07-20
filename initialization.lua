@@ -15,7 +15,6 @@ Settings_File.register(Config.Enum.File.PARSE, "settings_update", function(setti
     if settings ~= nil then
         Metrics.Parse = settings
         Parse.Util.Calculate_Column_Flags()
-        XP.Is_Initialized = false
         Settings_File.save(Config.Enum.File.PARSE)
     end
 end)
@@ -78,6 +77,7 @@ end)
 Settings_File.register(Config.Enum.File.EXP, "settings_update", function(settings)
     if settings ~= nil then
         Metrics.XP = settings
+        XP.Is_Initialized = false
         Settings_File.save(Config.Enum.File.EXP)
     end
 end)
