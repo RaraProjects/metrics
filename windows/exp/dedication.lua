@@ -3,6 +3,7 @@ XP.Dedication = T{}
 XP.Dedication.Is_Active = true
 XP.Dedication.Need_Defaulting = false
 XP.Dedication.Need_Clear      = false
+XP.Dedication.Zone_Delay      = 3
 
 -- ------------------------------------------------------------------------------------------------------
 -- Checks if dedication is active.
@@ -10,7 +11,8 @@ XP.Dedication.Need_Clear      = false
 XP.Dedication.Check = function()
     XP.Dedication.Is_Active = Ashita.Player.Has_Buff(Ashita.Player.Buffs.DEDICATION)
 
-    if not XP.Dedication.Is_Active and not Ashita.States.Zoning and XP.Dedication.Need_Clear then
+    if not XP.Dedication.Is_Active and not Ashita.States.Zoning and XP.Dedication.Need_Clear
+    and Timers.Get_Duration(Timers.Enum.Names.ZONE) > XP.Dedication.Zone_Delay then
         XP.Dedication.Clear()
 
     elseif XP.Dedication.Is_Active and XP.Dedication.Need_Defaulting then

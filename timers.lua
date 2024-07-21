@@ -90,6 +90,7 @@ end
 -- Gets the duration for a timer.
 ------------------------------------------------------------------------------------------------------
 ---@param name string name of the timer to check.
+---@return number
 ------------------------------------------------------------------------------------------------------
 timers.Get_Duration = function(name)
     local duration = 0
