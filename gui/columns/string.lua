@@ -9,11 +9,32 @@ Column.String.Format_Name = function(player_name)
     if not player_name then player_name = "Player" end
     local color = Res.Colors.Basic.WHITE
     if Metrics.Parse.Name_Colors then
-        local job = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name])
+        local job = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
         if not job then job = Res.Jobs.List[0] end
         color = Res.Colors.Get_Job(job.id)
     end
     UI.TextColored(color, player_name)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Formats the player job string.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Column.String.Job = function(player_name)
+    local color = Res.Colors.Basic.WHITE
+    if not player_name or not Ashita.Party.Jobs[player_name] then UI.TextColored(color, "NON0/NON0") end
+    local main       = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
+    local main_level = Ashita.Party.Jobs[player_name].main_level
+    local sub        = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].sub)
+    local sub_level  = Ashita.Party.Jobs[player_name].sub_level
+    if not main then main = Res.Jobs.List[0] end
+    if not sub then sub = Res.Jobs.List[0] end
+    local main_color = Res.Colors.Get_Job(main.id)
+    local sub_color = Res.Colors.Get_Job(sub.id)
+    UI.TextColored(main_color, string.format("%s%02d", main.ens, main_level))
+    UI.SameLine() UI.Text("/") UI.SameLine()
+    UI.TextColored(sub_color, string.format("%s%02d", sub.ens, sub_level))
 end
 
 ------------------------------------------------------------------------------------------------------

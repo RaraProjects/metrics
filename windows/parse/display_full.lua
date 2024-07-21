@@ -45,6 +45,8 @@ end
 Parse.Full.Headers = function()
     local flags = Column.Flags.None
 
+    if Metrics.Parse.Jobs then         UI.TableSetupColumn("Job", flags) end
+
     UI.TableSetupColumn("Name", flags)
     UI.TableSetupColumn("Total", flags)
     UI.TableSetupColumn("%T", flags)
@@ -79,6 +81,9 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Full.Rows = function(player_name)
     UI.TableNextRow()
+
+    if Metrics.Parse.Jobs then         UI.TableNextColumn() Column.String.Job(player_name) end
+
     UI.TableNextColumn() Column.String.Format_Name(player_name)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
     UI.TableNextColumn() Column.Damage.Total(player_name, true, true)

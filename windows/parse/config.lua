@@ -8,6 +8,7 @@ Parse.Config.Defaults = T{
     Condensed_Numbers  = false,
     Rank_Cutoff        = 6,
     DPS_Graph_Height   = 50,
+    Jobs         = false,
     Total_Acc    = false,
     Running_Acc  = true,
     DPS          = true,
@@ -141,6 +142,12 @@ Parse.Config.General_Flags = function(col_flags, width)
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Jobs", {Metrics.Parse.Jobs}) then
+            Metrics.Parse.Jobs = not Metrics.Parse.Jobs
+            Parse.Util.Calculate_Column_Flags()
+        end
 
         UI.TableNextColumn()
         if UI.Checkbox("Show DPS", {Metrics.Parse.DPS}) then

@@ -29,10 +29,11 @@ end
 XP.Columns.Job = function()
     local job_data = Ashita.Player.Job_Data()
     local main_string = job_data.main .. string.format("%02d", job_data.main_level)
-    local sub_string = "/" .. job_data.sub .. string.format("%02d", job_data.sub_level)
+    local sub_string = job_data.sub .. string.format("%02d", job_data.sub_level)
     if job_data.sub == "NON" then sub_string = "" end
     UI.TextColored(job_data.main_color, main_string)
-    UI.SameLine() UI.TextColored(job_data.sub_color, sub_string)
+    UI.SameLine() UI.Text("/") UI.SameLine()
+    UI.TextColored(job_data.sub_color, sub_string)
 end
 
 -- ------------------------------------------------------------------------------------------------------
