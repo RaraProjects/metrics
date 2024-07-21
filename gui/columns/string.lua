@@ -23,7 +23,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.String.Job = function(player_name)
     local color = Res.Colors.Basic.WHITE
-    if not player_name or not Ashita.Party.Jobs[player_name] then UI.TextColored(color, "NON0/NON0") end
+    if not player_name or not Ashita.Party.Jobs[player_name] then UI.TextColored(color, "NON0/NON0") return nil end
     local main       = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
     local main_level = Ashita.Party.Jobs[player_name].main_level
     local sub        = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].sub)
