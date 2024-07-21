@@ -94,7 +94,17 @@ Ashita.Party.Refresh = function(player_name, node)
         if data:GetMemberIsActive(slot) == 1 then
             local name = data:GetMemberName(slot)
             Ashita.Party.List[name] = party_number
-            Ashita.Party.Jobs[name] = data:GetMemberMainJob(slot)
+
+            local job = data:GetMemberMainJob(slot)
+            if not job then job = 0 end
+
+            -- Avoid random members having their job color grayed out when leaving party or zoning.
+            -- Only give NON jobs if they don't have one saved already.
+            if Ashita.Party.Jobs[name] then
+                if job > 0 then Ashita.Party.Jobs[name] = job end
+            else
+                Ashita.Party.Jobs[name] = job
+            end
 
             -- Might as well grab some data while looping through.
             if player_name then
