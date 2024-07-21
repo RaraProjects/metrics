@@ -14,7 +14,7 @@ XP.Chains.Max_Times = T{
 XP.Chains.Is_Active = false
 XP.Chains.Start_Time = 0
 XP.Chains.Duration = 0
-XP.Chains.Current = 0
+XP.Chains.Current = -1
 XP.Chains.Max = 0
 
 -- ------------------------------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ end
 -- Ends the chain.
 -- ------------------------------------------------------------------------------------------------------
 XP.Chains.End = function()
-    XP.Chains.Current = 0
+    XP.Chains.Current = -1
     XP.Chains.Duration = 999
     XP.Chains.Start_Time = 0
     XP.Chains.Is_Active = false
@@ -78,7 +78,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 XP.Chains.Timer = function()
     local color = Res.Colors.Basic.WHITE
-    if not XP.Chains.Is_Active then return UI.TextColored(color, Timers.Format(0, true)) end
+    if not XP.Chains.Is_Active then return UI.TextColored(color, "--:--") end
     local now = os.time()
     local elapsed_time = now - XP.Chains.Start_Time
     local time_remaining = XP.Chains.Duration - elapsed_time

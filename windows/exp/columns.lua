@@ -39,7 +39,9 @@ end
 -- Get chain timer.
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Chain = function()
-    XP.Chains.Timer() UI.SameLine() UI.Text(" (" .. tostring(XP.Chains.Current) .. ")")
+    local chain = tostring(XP.Chains.Current)
+    if XP.Chains.Current < 0 then chain = "-" end
+    XP.Chains.Timer() UI.SameLine() UI.Text(" (" .. chain .. ")")
 end
 
 -- ------------------------------------------------------------------------------------------------------

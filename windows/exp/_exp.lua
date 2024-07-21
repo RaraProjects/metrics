@@ -109,7 +109,9 @@ XP.Parse = function(data)
 
     XP.Add_Total_XP(xp_amount, xp_type)     -- Add XP to sum total.
     XP.Set_Kill_Time()
-    XP.Chains.Start(chain)                  -- Handle chains.
+
+    -- Handle chains for EM and above. I've observed 100 XP for EM mobs.
+    if xp_amount >= 100 then XP.Chains.Start(chain) end
 end
 
 -- ------------------------------------------------------------------------------------------------------
