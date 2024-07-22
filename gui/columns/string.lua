@@ -8,7 +8,7 @@ Column.String = T{}
 Column.String.Format_Name = function(player_name)
     if not player_name then player_name = "Player" end
     local color = Res.Colors.Basic.WHITE
-    if Metrics.Parse.Name_Colors then
+    if Metrics.Parse.Name_Colors and Ashita.Party.Jobs[player_name] then
         local job = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
         if not job then job = Res.Jobs.List[0] end
         color = Res.Colors.Get_Job(job.id)
