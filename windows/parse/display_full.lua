@@ -93,7 +93,7 @@ Parse.Full.Rows = function(player_name)
     if Metrics.Parse.Running_Acc then  UI.TableNextColumn() Column.Acc.Running(player_name) end
     if Metrics.Parse.Total_Acc then    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, true) end
     if Metrics.Parse.Melee then        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, false, true) end
-    if Metrics.Parse.Crit then         UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Trackable.MELEE, true) end
+    if Metrics.Parse.Crit then         UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Values.COMBINED, true) end
     if Metrics.Parse.Average_WS then   UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.WS, true) end
     if Metrics.Parse.Weaponskill then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.WS, false, true) end
     if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.SC, false, true) end
