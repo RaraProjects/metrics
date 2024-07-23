@@ -1,10 +1,14 @@
+_Some of the features shown below will be in an upcoming update. I'm just preparing the readme._
+
 ## Introduction
 Metrics is a DPS parsing tool at it's core, but it can take you much deeper into the data than the typical parser. There are views to keep things simple if that's all you want, but for those hungry for the most specific of data I try to provide that in the most aesthetically pleasing and usable way possible.
 
 I have two branches you can download from 1) Release and 2) Testing. The Testing branch is where I push my changes the most frequently. The TL;DR is that if you want more frequent changes or the newest content that are tested or mostly tested then you should try downloading from the Testing branch. If you want slower / larger changes that have more field testing then you should use the Release branch. I test the changes myself to the best of my ability and I work a couple others who also do some testing for things like alliance content. Once I feel sufficient testing has been completed I will push the changes on the Testing branch to the Release branch. My number one priority is to prevent crashes because if you crash you lose your data and that's a bad feeling.
 
 ## Installation
-Within your HorizonXI install location (mine is ~/HorizonXI/Game) you should see several folders. There is one called /addons and another called /config/addons. The plain (non config) /addons folder is the one that houses the base addons. This is the folder you want to put your addon folders.
+<details>
+<summary>Click to see installation instructions.</summary>
+<br>Within your HorizonXI install location (mine is ~/HorizonXI/Game) you should see several folders. There is one called /addons and another called /config/addons. The plain (non config) /addons folder is the one that houses the base addons. This is the folder you want to put your addon folders.
 
 1. Download Metrics using the green Code button near the top of Metrics Github page.
 2. Unzip the folder. This will create a folder with metrics in the name. The rest of the name depends on which branch you're downloading (Release or Testing).
@@ -12,6 +16,7 @@ Within your HorizonXI install location (mine is ~/HorizonXI/Game) you should see
 4. Remove the "-Release" or "-Testing" from the folder name. The folder should just be called "metrics".
 5. Load the addon from inside the game by typing "/addon load metrics" in the game chat.
 6. If you get an error saying "No such file or directory" when loading, then you may have forgotten to remove the branch tag in step #4.
+</details>
 
 ## Table of Contents<br>
 1. [Parse](#parse)
@@ -21,47 +26,80 @@ Within your HorizonXI install location (mine is ~/HorizonXI/Game) you should see
 5. [Settings](#settings)
 
 ## Parse
-This screen resembles your typical parser. It shows things like DPS, total damage, accuracy, and various damage breakdown column. There are three different modes to view the parser depending on how much detail you want to see at the time (and how much screen space you are willing to commit to that data).
+This screen resembles your typical parser. It shows things like DPS, total damage, accuracy, and various other damage breakdown columns. There are three different modes to view the parser depending on how much detail you want to see at the time (and how much screen space you are willing to commit to that data).
 
-### Full Mode
-![image](https://github.com/RaraProjects/metrics/assets/72292212/0a4cc710-89b7-436c-aa21-f1fb269c649f)<br>
-_Sample data for the Parse tab (with extra damage breakdown columns expanded)._<br>
-
-This gives you access to the full suite of parse data and takes up the most screen space. Here are some of the more prominent features:
+### General Highlights
 1. Members are ranked and displayed in decending order. You will always be shown even if you aren't in the visible ranks.
 2. The parser can be configured to show up to 18 members.
 3. Track your total and running accuracy. Running accuracy is your accuracy as of the last {X} amount of hits. It's beneficial to know this because you will be able to see sudden dips in accuracy (blind, food loss, etc.) much faster with the smaller lookback window. This amount of hits to look back, {X}, is configurable. The running accuracy column is called **A-{X}**.
-4. Various columns can be toggled in and out to show a breakdown of where your damage is coming from.
-   * This includes pet damage, healing, and deaths.
-5. There is a column to show you your DPS.
-   * Your DPS window is comprised of {Y} amount of buckets.
-   * Every {X} amount of seconds a snapshot is taken of the damage you've done in that time and stored in a bucket.
-   * The damage from each bucket is summed and averaged over the total DPS window (X * Y seconds).
-   * Example:
-     * Snapshot taken every X = 3 seconds.
-     * A DPS window with Y = 3 buckets.
-     * Total DPS window = 9 seconds.
-     * The damage you do (or don't do) will affect your DPS every 3 seconds. If you do nothing your DPS will drop to zero in 9 seconds.
-6. The duration timer tracks how long actions have been actively taking place. If 5 seconds pass with no one affiliated with you taking an action then the duration timer will pause and restart automatically upon the next action. Data collection is not affected by this timer.
-7. A mob filter allows you to pick a mob and only see the damage that everyone did to that specific mob. The filter acts on mob name and not individual mobs. So, if you set it to "Pugil" you will see the damage that all players in the parse did to any mob named "Pugil" even if that was several individual mobs.
-    
+4. Various columns can be toggled in and out to show a breakdown of where your damage is coming from. This includes pet damage, healing, deaths, etc.
+5. The duration timer tracks how long actions have been actively taking place. If 5 seconds pass with no one affiliated with you taking an action then the duration timer will pause and restart automatically upon the next action. Data collection is not affected by this timer.
+6. A mob filter allows you to pick a mob and only see the damage that everyone did to that specific mob. The filter acts on mob name and not individual mobs. So, if you set it to "Pugil" you will see the damage that all players in the parse did to any mob named "Pugil" even if that was several individual mobs.
+
+### Tidbits
+
+<details>
+<summary>Click to see available column descriptions.</summary>
+  
+| Column | Description |
+|----------|----------|
+| Job | Player's main job level and sub job level. The jobs are color coded with job colors. |
+| Name | The player's name. The name is color coded with job colors. |
+| Total | The total damage the player has done. |
+| %T | The percent of total party damage the player has done. |
+| Speed | The average amount of seconds between each melee attack. The speed of your last three melee attacks is averaged together. Times longer than 15 seconds are discarded. |
+| DPS | Damage per Second. See DPS explanation for more details. |
+| %A-# | Accuracy for the last # of melee/range attempts. This  |
+| %A-T | Total accuracy of melee/range attempts since the parse has been running. |
+| Melee | Total melee damage. |
+| Crit Rate | Critical hit rate for both melee and ranged combined. |
+| Avg WS | Average weaponskill damage across all weaponskills used. |
+| WS | Total weaponskill damage. |
+| SC | Total skillchain damage. This is only available if skillchain damage is enabled. |
+| Ranged | Total ranged attack damage. |
+| Magic | Total magic damage. |
+| JA | Total job ability damage. |
+| Acc (P) | Pet melee accuracy. |
+| Melee (P) | Total pet melee damage. |
+| Ranged (P) | Total pet ranged damage. |
+| WS (P) | Total pet weaponskill damage. This would be BST pet TP moves. |
+| Ability (P) | Total pet ability damage. This would be SMN rage blood pacts. |
+| Healing | Total healing done. |
+| Deaths | Total amount of deaths for this player. |
+
+</details>
+
+<details>
+<summary>Click to see DPS calculation explanation.</summary>
+
+* Your DPS window is comprised of {Y} amount of buckets.
+* Every {X} amount of seconds a snapshot is taken of the damage you've done in that time and stored in a bucket.
+* The damage from each bucket is summed and averaged over the total DPS window (X * Y seconds).
+* Example:
+  * Snapshot taken every X = 3 seconds.
+  * A DPS window with Y = 3 buckets.
+  * Total DPS window = 9 seconds.
+  * The damage you do (or don't do) will affect your DPS every 3 seconds. If you do nothing your DPS will drop to zero in 9 seconds.
+
+</details>
+
+### Full Mode
+![image](https://github.com/user-attachments/assets/3fa174c3-f639-4cb6-ad23-e67190e49cd8)<br>
+_Sample data for the Parse tab. Additional columns are available in the settings menu._<br>
+
+This is the standard mode that allows the most columns options.
+
 ### Mini Mode
-![image](https://github.com/RaraProjects/metrics/assets/72292212/aad2da70-68cb-4b31-80db-e1bcca50b4c2)<br>
+![image](https://github.com/user-attachments/assets/09db9d15-bc9a-4e59-b941-73e53ba7bf84)<br>
 _Sample data for the Parse Mini Mode (with pet data expanded)._<br>
 
 Mini mode is just like the full mode, but it's designed to be small. You can't really add any columns here with the exception of a couple pet columns. This is the mode to use if you want to just cruise in parse mode without a large investment in screen space.
 
 ### Nano Mode
-![image](https://github.com/RaraProjects/metrics/assets/72292212/b3df7378-5e75-4d6b-83ee-800599531f3a)<br>
+![image](https://github.com/user-attachments/assets/74b3e241-1581-4dca-a5ce-a502423366dc)<br>
 _Sample data for the Parse Nano Mode._<br>
 
 Nano mode is as concise as it gets. If you really only care about what you're doing then this is the mode for you. Other players will not show up here.
-
-### DPS Graph
-![image](https://github.com/RaraProjects/metrics/assets/72292212/c7e8fdad-b2d7-43f7-a5bd-52a3265dd5d0)<br>
-_Sample DPS Graph data._<br>
-
-I'm not sure how useful this is. It's off by default, but if you want to try it out you can turn it on. It doesn't take up a lot of space and it can be a nice way to visualize DPS spikes and dips. It shows up in a second window so it won't interfere with the primary Metrics window.
 
 ## Focus
 Set your attention to a specific player in the parser--including yourself--and then drill down into the various aspects of your actions such as Melee, Weaponskills, Skillchains, Magic, Abilities, Pets, Defense, etc.
