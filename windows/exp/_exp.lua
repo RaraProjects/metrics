@@ -120,7 +120,7 @@ end
 XP.Populate = function()
     if not Metrics.XP.XP_Mini then
         XP.Config.Settings_Button()
-        UI.SameLine() UI.Text(" ") UI.SameLine() XP.Tracking_Button()
+        if _Debug.Is_Enabled() then UI.SameLine() UI.Text(" ") UI.SameLine() XP.Tracking_Button() end
         UI.SameLine() UI.Text(" ") UI.SameLine() XP.Reset_Button()
         if XP.Confirmation then UI.SameLine() UI.Text(" ") UI.SameLine() XP.Reset_Confirmation_Button() end
     end
