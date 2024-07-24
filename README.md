@@ -173,10 +173,29 @@ This tab is going show how much damage you and/or your pet has taken with a brea
 _Sample data for the Defense tab._
 
 ## Battle Log
-![xiloader_d4z50wIayI](https://github.com/RaraProjects/metrics/assets/72292212/11e6d5ef-ea25-4914-bb8e-079e8541beb7)<br>
-_Sample data for the Battle Log. This is an older screenshot._
+Maintain line of sight on the more important pieces of the battle without dealing with the game chat. Some neat features here are that you can see the TP at which a player used a weaponskill, how many mobs were hit by an AOE spell, if a nuke was a magic burst etc. The jobs are color coded. The battle log can hold up to 100,000 items before starting to overwrite the old data. You can adjust the length of the battle log and filter various actions at will.
 
-Maintain line of sight on the more important pieces of the battle without dealing with the game chat. Some neat features here are that you can see the TP at which a player used a weaponskill or see how many mobs were hit by an AOE spell.
+<details>
+<summary>Click to see available actions/filters.</summary>
+
+* Melee
+* Ranged
+* Weapsonskills
+* Skillchains
+* Magic
+* Abilities
+* Pet Melee
+* Pet TP
+* Pet Healing
+* Healing
+* Player Deaths
+* Mob TP
+* Mob Deaths
+
+</details>
+
+![image](https://github.com/user-attachments/assets/325ae4f3-4c03-4219-b0a6-03fcf884ab9b)<br>
+_Sample data for the Battle Log._
 
 ## Report
 ![image](https://github.com/RaraProjects/metrics/assets/72292212/d296058f-2a69-4fb4-8e7a-eda1f121f825)<br>
