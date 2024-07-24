@@ -3,9 +3,11 @@ _Some of the features shown below will be in an upcoming update. I'm just prepar
 ## Introduction
 Metrics is a DPS parsing tool at it's core, but it can take you much deeper into the data than the typical parser. There are views to keep things simple if that's all you want, but for those hungry for the most specific of data I try to provide that in the most aesthetically pleasing and usable way possible.
 
-I have two branches you can download from 1) Release and 2) Testing. The Testing branch is where I push my changes the most frequently. The TL;DR is that if you want more frequent changes or the newest content that are tested or mostly tested then you should try downloading from the Testing branch. If you want slower / larger changes that have more field testing then you should use the Release branch. I test the changes myself to the best of my ability and I work a couple others who also do some testing for things like alliance content. Once I feel sufficient testing has been completed I will push the changes on the Testing branch to the Release branch. My number one priority is to prevent crashes because if you crash you lose your data and that's a bad feeling.
+Each of the modules described below can be displayed in either a single window with each module contained within its own tab or you can enable multi window mode to show multiple modules at once and house them in different areas of the screen simultaneously.
 
 ## Installation
+I have two branches you can download from 1) Release and 2) Testing. The Testing branch is where I push my changes the most frequently. The TL;DR is that if you want more frequent changes or the newest content that are tested or mostly tested then you should try downloading from the Testing branch. If you want slower / larger changes that have more field testing then you should use the Release branch. I test the changes myself to the best of my ability and I work a couple others who also do some testing for things like alliance content. Once I feel sufficient testing has been completed I will push the changes on the Testing branch to the Release branch. My number one priority is to prevent crashes because if you crash you lose your data and that's a bad feeling.
+
 <details>
 <summary>Click to see installation instructions.</summary>
 <br>Within your HorizonXI install location (mine is ~/HorizonXI/Game) you should see several folders. There is one called /addons and another called /config/addons. The plain (non config) /addons folder is the one that houses the base addons. This is the folder you want to put your addon folders.
@@ -130,7 +132,6 @@ _Sample data for the Weaponskills tab. Usually it won't look this busy. I just d
 ### Magic
 The Magic tab works about as you would expect after reading through the other tabs. It gives an overall breakdown of not only damage, but also MP spent for various categories of spells and then provides the same stats for each individual spell.
 
-
 <details>
 <summary>Click to see additional notes about terms used.</summary>
 
@@ -198,15 +199,17 @@ Maintain line of sight on the more important pieces of the battle without dealin
 _Sample data for the Battle Log._
 
 ## Report
-![image](https://github.com/RaraProjects/metrics/assets/72292212/d296058f-2a69-4fb4-8e7a-eda1f121f825)<br>
-_Sample data for the Report tab._
+You can use the chat report quick buttons to output some reports to the chat. You can pick the chat mode. Please be courteous to your neighbors when you use anything other than party. You can also output the database and Battle Log to a CSV for your own analysis. Currently I just output a the raw data, but I'm thinking about creating a Google doc or Excel template that can be used to build higher level summaries like in the Focus tab. The CSV will contain only the data nodes that have non-zero values keep creating files as quick as possible.
 
-You can use the chat report quick buttons to output some reports to the chat. You can pick the chat mode. Please be courteous to your neighbors when you use anything other than party. You can also output the database and Battle Log to a CSV for your own analysis. Currently I just output a the raw data, but I'm thinking about creating a Google doc or Excel template that can be used to build higher level summaries like in the Focus tab. The CSV will contain only the data nodes that have non-zero values keep creating files as quick as possible. A note about the Battle Log is that it only keeps about 100 of the last events you've chosen to log, so if your CSV seems short that's why. I'm not quite sure how much data an addon session can handle so I'm trying to be frugal with the amount of memory I use.
+The Monsters Defeated is just something I wanted to try and didn't really have a better spot for it for now. Sometimes it's nice to see how many crabs you've killed after grinding them out for a couple hours.
 
-The Monsters Defeated is just something I wanted to try and didn't really have a better spot for it. Sometimes it's nice to see how many crabs you've killed after grinding them out for a couple hours.
+![image](https://github.com/user-attachments/assets/5c504c29-70df-4e9f-8166-6691c52f849f)<br>
+_Example of the Report tab._
 
 ## Settings
-![image](https://github.com/RaraProjects/metrics/assets/72292212/92b72c43-5824-4cd5-8a9b-ebc645f73c5d)<br>
-_Example of the Settings tab._
-
 There are a few settings that need their own spot. One of the biggest is controlling how the window looks. The Help tab contains some chat commands and the current version number. I tend to update frequently so it's always good to know which version you're on compared to the latest version.
+
+Multi Window mode let's you have multiple modules open at the same time in their own window and the Show Mouse option forces your mouse to be visible if your mouse often turns invisible when hovering over an ImGUI based component.
+
+![image](https://github.com/user-attachments/assets/7b4eba23-8c5f-4fc6-9aa6-13da233a7b1f)<br>
+_Example of the Settings tab._
