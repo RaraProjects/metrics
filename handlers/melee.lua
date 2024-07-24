@@ -31,7 +31,7 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 		end
 	end
 
-    if details and details.audits then
+    if details and details.audits and details.audits.player_name then
         for type, number in pairs(mult_attack) do
             local metric = nil
             if number == 1 then metric = DB.Enum.Metric.MULT_ATK_1 end
