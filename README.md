@@ -24,8 +24,9 @@ I have two branches you can download from 1) Release and 2) Testing. The Testing
 1. [Parse](#parse)
 2. [Focus](#focus)
 3. [Battle Log](#battle-log)
-4. [Report](#report)
-5. [Settings](#settings)
+4. [XP](#xp)
+5. [Report](#report)
+6. [Settings](#settings)
 
 ## Parse
 This screen resembles your typical parser. It shows things like DPS, total damage, accuracy, and various other damage breakdown columns. There are three different modes to view the parser depending on how much detail you want to see at the time (and how much screen space you are willing to commit to that data).
@@ -197,6 +198,51 @@ Maintain line of sight on the more important pieces of the battle without dealin
 
 ![image](https://github.com/user-attachments/assets/325ae4f3-4c03-4219-b0a6-03fcf884ab9b)<br>
 _Sample data for the Battle Log._
+
+## XP
+The XP module tracks various experience/limit point related things. Aside from the basics, here are some unique things the XP module can do:
+
+1. The XP rate calculation is more immediate (isn't affected as much by old XP gained) and spools up within a couple kills.
+2. Gives you an estimated time remaining until you level up.
+3. Tracks dedication (XP boost). You can see how far along you are in your dedication buff. This saves between sessions and across characters.
+4. Can show you the base XP rate of your party even if you have dedication on.
+5. Tracks some unique metrics like time per kill, XP per kill, and maximum chain achieved.
+6. Progress bars are available and optional. They come in full size and compact forms.
+
+<details>
+<summary>Click to see how the XP/hr is calculated.</summary>
+
+1. Calculate average XP. This is the average of the XP gained over the last 6 mobs defeated.
+2. Calculate average kill time. This is the average amount of seconds it took to defeat the last 6 mobs.
+3. XP/hr = (Average XP / Average Kill Time) * 3600
+
+</details>
+
+<details>
+<summary>Click to see available columns.</summary>
+
+| Column | Description |
+|----------|----------|
+| Job | Displays the player's main and sub job with levels and color coding. |
+| Chain | Current chain and how much time is left in the current chain. |
+| *XP/hr | XP per hour rate is--including dedication. |
+| XP/hr | XP per hour rate minus dedication. |
+| Time/Kill | Average amount of time it takes to kill an XP mob. |
+| XP/Kill | The average amount of XP you're getting per mob. |
+| ~TTL | Approximate time remaining until you level. |
+| TNL | How many experience points remain until you level. |
+| Total | How much XP you've gained this session. This can be split into base and dedication XP. |
+| Max Chain | The maximum chain you were able to achieve this session. |
+| Zone Time | How long you've been in the current zone. |
+| Bonus | The currently active dedication item. |
+| Bonus % | The currently active dedication rate. |
+| Bonus Max | How much bonus XP you've gained out of the total allotment. |
+
+</details>
+
+![image](https://github.com/user-attachments/assets/ceb6693a-37d2-4acb-9978-0b848d9a2026)<br>
+_Sample data for the XP module. The yellow bar is progress through the level. The red bar is progress through the dedication buff._
+
 
 ## Report
 You can use the chat report quick buttons to output some reports to the chat. You can pick the chat mode. Please be courteous to your neighbors when you use anything other than party. You can also output the database and Battle Log to a CSV for your own analysis. Currently I just output a the raw data, but I'm thinking about creating a Google doc or Excel template that can be used to build higher level summaries like in the Focus tab. The CSV will contain only the data nodes that have non-zero values keep creating files as quick as possible.
