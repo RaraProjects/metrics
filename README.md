@@ -20,7 +20,7 @@ I have two branches you can download from 1) Release and 2) Testing. The Testing
 6. If you get an error saying "No such file or directory" when loading, then you may have forgotten to remove the branch tag in step #4.
 </details>
 
-## Table of Contents<br>
+## Modules<br>
 1. [Parse](#parse)
 2. [Focus](#focus)
 3. [Battle Log](#battle-log)
