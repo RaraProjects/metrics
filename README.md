@@ -240,9 +240,8 @@ The XP module tracks various experience/limit point related things. Aside from t
 
 </details>
 
-![image](https://github.com/user-attachments/assets/ceb6693a-37d2-4acb-9978-0b848d9a2026)<br>
+![image](https://github.com/user-attachments/assets/b0ded823-639c-4711-b6e2-4348e587e032)<br>
 _Sample data for the XP module. The yellow bar is progress through the level. The red bar is progress through the dedication buff._
-
 
 ## Report
 You can use the chat report quick buttons to output some reports to the chat. You can pick the chat mode. Please be courteous to your neighbors when you use anything other than party. You can also output the database and Battle Log to a CSV for your own analysis. Currently I just output a the raw data, but I'm thinking about creating a Google doc or Excel template that can be used to build higher level summaries like in the Focus tab. The CSV will contain only the data nodes that have non-zero values keep creating files as quick as possible.
