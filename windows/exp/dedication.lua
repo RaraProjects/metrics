@@ -3,7 +3,7 @@ XP.Dedication = T{}
 XP.Dedication.Is_Active = true
 XP.Dedication.Need_Defaulting = false
 XP.Dedication.Need_Clear      = false
-XP.Dedication.Zone_Delay      = 3
+XP.Dedication.Zone_Delay      = 10
 
 -- ------------------------------------------------------------------------------------------------------
 -- Checks if dedication is active.
