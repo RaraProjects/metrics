@@ -105,64 +105,72 @@ Nano mode is as concise as it gets. If you really only care about what you're do
 Set your attention to a specific player in the parser--including yourself--and then drill down into the various aspects of your actions such as Melee, Weaponskills, Skillchains, Magic, Abilities, Pets, Defense, etc.
 
 ### Melee
-![image](https://github.com/RaraProjects/metrics/assets/72292212/6466de0c-ffd9-47b1-a5e7-9fbc9f9e5dba)<br>
+This tab should show you most of the melee information you would be interested in. Note how you can get a main-hand and off-hand breakdown. Information only populates as it is performed so this screen usually won't be as busy as it is in the sample data pictured above. Not pictured in the image above is melee damage that heals the mob or attacks absorbed by a shadow. Those are tracked too.
+
+![image](https://github.com/user-attachments/assets/12cc586d-2538-4cdd-a0f5-7ff27f5a1c3d)<br>
 _Sample data for the Melee tab._
-* _Multi-Attack largely from WAR/NIN Kraken Club/Ridill_
+* _MMA = Max/Min/Average
+* _Multi-Attack largely from Kraken Club on MNK._
 * _Enspell largely from RDM_
 * _Endrain and Enaspir from DNC_
-* _Count and Kick Attacks from MNK_
-* _Shadows were attacks absorbed by Blink (Damage isn't the best name for the column.)_
-
-This tab should show you most of the melee information you would be interested in. Note how you can get a main-hand and off-hand breakdown. Information only populates as it is performed so this screen usually won't be as busy as it is in the sample data pictured above. Not pictured in the image above is melee damage that heals the mob. That is tracked too.
+* _Counter and Kick Attacks from MNK_
 
 ### Ranged
-![image](https://github.com/RaraProjects/metrics/assets/72292212/16a1d64f-105a-422f-bb93-09aa11513228)<br>
-_Sample data for the Ranged tab._
+Pretty much the same deal as melee, though there are less ranged stats to pull that I'm aware of. Ninja's Daken trait is included in this tab.
 
-Pretty much the same deal as melee though there are less ranged stats to pull that I'm aware of. Ninja's Daken trait is included in this tab.
+![image](https://github.com/user-attachments/assets/d64f04b4-ddc6-4965-8f95-72db44391232)<br>
+_Sample data for the Ranged tab. The endamage and endebuff effects come from the ammunition procs._
 
 ### Weaponskills and Skillchains
-![image](https://github.com/RaraProjects/metrics/assets/72292212/ff99b6d6-6cf2-4e74-98d8-e19cc0ee2568)<br>
-_Sample data for the Weaponskills tab._
-
 This tab breaks down your weaponskill and skillchain damage both in total and by individual weaponskill and skillchain.
 
+![image](https://github.com/user-attachments/assets/f1fe4d42-e1ab-4834-8d93-4660009061d8)<br>
+_Sample data for the Weaponskills tab. Usually it won't look this busy. I just did a lot of weaponskills to set up other tabs._
+
 ### Magic
-![image](https://github.com/RaraProjects/metrics/assets/72292212/aa7c164d-db8f-4269-b2ed-372787e0d52f)<br>
-_Sample data for the Magic tab._
+The Magic tab works about as you would expect after reading through the other tabs. It gives an overall breakdown of not only damage, but also MP spent for various categories of spells and then provides the same stats for each individual spell.
 
-The Magic tab works about as you would expect after reading through the other tabs. It gives an overall breakdown of not only damage, but also MP spent for various categories of spells and then provides the same stats for each individual spell. There are a few additional points to note:
 
-1. **Efficacy:** Capturing the damage and MP spent on a spell allows for the calculation of damage per MP. I call this Efficacy. This stat allows you gauge how much damage you're getting for your MP. Higher efficiancy isn't _always_ better though. For example, lower tier spells may give you higher efficacy, but come at the cost of needing to cast multiple times in order to achieve the same damage (which takes up time that you could be casting other more damaging spells).
-2. **Overcure:** This stat attempts to gauge how often you are using healing spells that are of higher tier than necessary. If another player is missing 100 HP and you cast a healing spell that can heal up to 400 HP then you overcured by 300 HP. Maybe it would have been better to cast a lower tier spell. The way this is calculated isn't straightforward as it can't be measured directly. The gist is that Metrics will keep track of the max amount of HP you have healed for using any given spell. If you heal over that amount with the same spell then the overcure will be (Max Heal Registered - HP Healed). Divine Seal cures can really boost your max so I have some limits in place to try and make sure that Divine Seal doesn't ruin the calculation.
-4. **Magic Bursts:** If you magic burst you will be shown how much MB damage you have done, what percent of your total damage is MB damage, and what percent of your magic damage is MB damage. Additionally, a count of magic bursts is recorded for each nuking spell.
-5. **Resist Rates:** Each enfeeble spell has a "Land Rate" column. This is essentially the resist rate. If your land rate is 82% then your resist rate will be 18%.
-6. **Enspell:** Enspell has a column called "Hits." That is how many times you struck the mob with your enspell i.e. how many times your enspell procced.
-7. **MP Drain:** This isn't counted toward total damage. Instead, this is a measure of how much MP you've drained from mobs using spells like Aspir.
-8. **Spikes:** This is how much damage you've caused by a mob hitting you and proccing a spike effect.
+<details>
+<summary>Click to see additional notes about terms used.</summary>
+
+| Term | Description |
+|----------|----------|
+| Efficacy | Capturing the damage and MP spent on a spell allows for the calculation of damage per MP. I call this Efficacy. This stat allows you gauge how much damage you're getting for your MP. Higher efficiancy isn't _always_ better though. For example, lower tier spells may give you higher efficacy, but come at the cost of needing to cast multiple times in order to achieve the same damage (which takes up time that you could be casting other more damaging spells). |
+| Overcure | This stat attempts to gauge how often you are using healing spells that are of higher tier than necessary. If another player is missing 100 HP and you cast a healing spell that can heal up to 400 HP then you overcured by 300 HP. Maybe it would have been better to cast a lower tier spell. The way this is calculated isn't straightforward as it can't be measured directly. The gist is that Metrics will keep track of the max amount of HP you have healed for using any given spell. If you heal over that amount with the same spell then the overcure will be (Max Heal Registered - HP Healed). Divine Seal cures can really boost your max so I have some limits in place to try and make sure that Divine Seal doesn't ruin the calculation. |
+| Magic Bursts | If you magic burst you will be shown how much MB damage you have done, what percent of your total damage is MB damage, and what percent of your magic damage is MB damage. Additionally, a count of magic bursts is recorded for each nuking spell. |
+| Resist Rates | Each enfeeble spell has a "Land Rate" column. This is essentially the resist rate. If your land rate is 82% then your resist rate will be 18%. |
+| Enspell | Enspell has a column called "Hits." That is how many times you struck the mob with your enspell i.e. how many times your enspell procced. |
+| MP Drain | This isn't counted toward total damage. Instead, this is a measure of how much MP you've drained from mobs using spells like Aspir. |
+| Spikes | This is how much damage you've caused by a mob hitting you and proccing a spike effect. |
+
+</details>
+
+![image](https://github.com/user-attachments/assets/57d0e768-d81f-4124-b640-2b62b35af73a)<br>
+_Sample data for the Magic tab. Not pictured are counts of various enhancements spells like Refresh, Haste, etc. These can be toggled in with a setting._
 
 ### Abilities
-![image](https://github.com/RaraProjects/metrics/assets/72292212/0e03e2a5-3823-4e4c-bea7-d72f5137b3dd)<br>
-_Sample data for the Abilities tab._
-
 Shows how much damage you've done through the use of offensive abilities as well how many times you've used non-offensive abilities.
 
-### Pets
-![image](https://github.com/RaraProjects/metrics/assets/72292212/8caee9c4-9019-4362-9a20-f93f6b03be16)<br>
-_Sample data for the Pets tab._
+![image](https://github.com/user-attachments/assets/6d05c606-a69e-4812-8c4c-578a8a559190)<br>
+_Sample data for the Abilities tab. Not pictured are various utility abilities like Holy Circle, Footwork, Call Wyvern, etc. These can be toggled in with a setting._
 
+### Pets
 Similar to other tabs. Here are some interesting points:
-1. Captures actions taken BST pets, avatars, and wyverns.
+1. Captures actions taken BST pets, avatars, and wyverns. Each pet gets its own tab.
 2. Provides a breakdown of each ability used by the pet.
 3. Handles wyvern breaths including healing breaths (which are counted toward player healing).
 
-### Defense
-![image](https://github.com/RaraProjects/metrics/assets/72292212/3c067a44-c4a2-466b-967e-fcf8e94be994)<br>
-_Sample data for the Defense tab._
+![image](https://github.com/user-attachments/assets/1ce10d6c-3298-41df-abe8-3aad49070f36)<br>
+_Sample data for the Pets tab._
 
+### Defense
 This tab is going show how much damage you and/or your pet has taken with a breakdown of what types of damage that total damage is comprised of. Additionally, it can show you how often mobs are hitting you with critical strikes and how often you are mitigating their attacks with evasion, parry, shield, etc. A list of the mobs TP moves performed against you is shown at the bottom along with relevant stats.
 
 **Note:** I had to manually go through a couple thousand mob TP moves and pick out which ones deal damage. I used a wiki to help with this, but sometimes the wiki isn't great. If you find that there is a mob TP move that should do damage--but isn't--or a mob that shouldn't do damage--that is--then please let me know and I can update my filter list.
+
+![image](https://github.com/user-attachments/assets/93d9750a-c0a6-4875-9cfe-87695bbcd9da)<br>
+_Sample data for the Defense tab._
 
 ## Battle Log
 ![xiloader_d4z50wIayI](https://github.com/RaraProjects/metrics/assets/72292212/11e6d5ef-ea25-4914-bb8e-079e8541beb7)<br>
