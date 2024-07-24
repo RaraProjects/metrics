@@ -5,9 +5,6 @@ Metrics is a DPS parsing tool at it's core, but it can take you much deeper into
 
 Each of the modules described below can be displayed in either a single window with each module contained within its own tab or you can enable multi window mode to show multiple modules at once and house them in different areas of the screen simultaneously.
 
-[Join the Discord](https://discord.gg/u5yqUbR6R7)<br>
-Ask questions, discuss feature requests, and report bugs. I will also be using the Discord to post occassional progress updates.
-
 ## Installation
 I have two branches you can download from 1) Release and 2) Testing. The Testing branch is where I push my changes the most frequently. The TL;DR is that if you want more frequent changes or the newest content that are tested or mostly tested then you should try downloading from the Testing branch. If you want slower / larger changes that have more field testing then you should use the Release branch. I test the changes myself to the best of my ability and I work a couple others who also do some testing for things like alliance content. Once I feel sufficient testing has been completed I will push the changes on the Testing branch to the Release branch. My number one priority is to prevent crashes because if you crash you lose your data and that's a bad feeling.
 
