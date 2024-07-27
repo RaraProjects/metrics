@@ -1,5 +1,3 @@
-_Some of the features shown below will be in an upcoming update. I'm just preparing the readme._
-
 ## Introduction
 Metrics is a DPS parsing tool at it's core, but it can take you much deeper into the data than the typical parser. There are views to keep things simple if that's all you want, but for those hungry for the most specific of data I try to provide that in the most aesthetically pleasing and usable way possible.
 
