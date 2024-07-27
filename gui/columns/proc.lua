@@ -60,9 +60,9 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Proc.Kick_Rate = function(player_name)
     local kick_count = DB.Data.Get(player_name, Column.Trackable.MELEE_KICK, Column.Metric.COUNT)
-    local melee_count = DB.Data.Get(player_name, Column.Trackable.MELEE, Column.Metric.COUNT)
+    local melee_cycles = DB.Data.Get(player_name, Column.Trackable.MELEE, Column.Metric.CYCLE)
     local color = Column.String.Color_Zero(kick_count)
-    return UI.TextColored(color, Column.String.Format_Percent(kick_count, melee_count))
+    return UI.TextColored(color, Column.String.Format_Percent(kick_count, melee_cycles))
 end
 
 ------------------------------------------------------------------------------------------------------

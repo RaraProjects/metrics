@@ -28,7 +28,7 @@ Res.WS.Abilities = T{
 -- Based off of weapons_skills.lua from Windower.
 Res.WS.MP_Drain = T{
     [21]  = {id=21,en="Energy Steal",ja="エナジースティール",element=7,icon_id=596,prefix="/weaponskill",range=2,skill=2,skillchain_a="",skillchain_b="",skillchain_c="",targets=32},
-    [22]  = {id=22,en="Energy Drain",ja="エナジードレイン",element=7,icon_id=596,prefix="/weaponskill",range=2,skill=2,skillchain_a="",skillchain_b="",skillchain_c="",targets=32},
+    -- [22]  = {id=22,en="Energy Drain",ja="エナジードレイン",element=7,icon_id=596,prefix="/weaponskill",range=2,skill=2,skillchain_a="",skillchain_b="",skillchain_c="",targets=32},
     [163] = {id=163,en="Starlight",ja="スターライト",element=6,icon_id=628,prefix="/weaponskill",range=2,skill=11,skillchain_a="",skillchain_b="",skillchain_c="",targets=1},
     [164] = {id=164,en="Moonlight",ja="ムーンライト",element=6,icon_id=628,prefix="/weaponskill",range=2,skill=11,skillchain_a="",skillchain_b="",skillchain_c="",targets=1},
     [183] = {id=183,en="Spirit Taker",ja="スピリットテーカー",element=6,icon_id=631,prefix="/weaponskill",range=2,skill=12,skillchain_a="",skillchain_b="",skillchain_c="",targets=32},

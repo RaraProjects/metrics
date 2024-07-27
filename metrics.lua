@@ -27,11 +27,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "06/04/24.00"
+addon.version = "07.23.24.01"
 
 _Globals = {}
 _Globals.Initialized = false
 Settings_File = require("settings")
+Socket = require("socket")              -- Needed for millisecond precision on timestamps for attack speed.
 Metrics = T{}
 
 -- Resources
@@ -43,23 +44,24 @@ require("database._database")
 require("file")
 Timers = require("timers")
 
-
+require("throttling")
 require("ashita._ashita")
 require("handlers._handler")
+require("windows.exp._exp")
 
 -- Windows
-Config = require("tabs.settings.config")
+require("windows.config._config")
 require("gui.window._window")
 require("gui.columns._column")
-require("tabs.parse._parse")
-require("tabs.focus._focus")
-require("tabs.battle_log._battle_log")
-require("tabs.report._report")
+require("windows.parse._parse")
+require("windows.focus._focus")
+require("windows.battle log._battle_log")
+require("windows.report._report")
+require("windows.hub")
 
 require("commands")
-
--- Debug
 require("debug._debug")
+require("initialization")
 
 ------------------------------------------------------------------------------------------------------
 -- Subscribe to screen rendering. Use this to drive things over time.
@@ -72,9 +74,14 @@ ashita.events.register('d3d_present', 'present_cb', function()
     if not Ashita.Player.Is_Logged_In() then return nil end
     if _Debug.Is_Enabled() and _Debug.Config.Show_Demo then UI.ShowDemoWindow() end
 
+    Throttle.Throttle()     -- Throttling for performance.
+    XP.Initialize()         -- Need to initialize here because some things aren't ready when addon loads.
+
     Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
     Timers.Cycle(Timers.Enum.Names.DPS)
+    Timers.Cycle(Timers.Enum.Names.EXP)
     Window.Populate()
+    Hub.Populate()
 end)
 
 ------------------------------------------------------------------------------------------------------
@@ -92,6 +99,9 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     -- End Zone
     elseif packet.id == 0xA then
         Ashita.Player.Zoning(false)
+        Timers.Reset(Timers.Enum.Names.ZONE)
+        Window.Set_Bar_Delay()
+        XP.Chains.End()
 
     -- 200 0xC8 Alliance Update
     elseif packet.id == 0xC8 then
@@ -101,6 +111,14 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0xDD then
         Ashita.Party.Need_Refresh = true
 
+    -- Experience Points
+    elseif packet.id == 0x2D then
+        XP.Parse(packet.data)
+
+    -- Player Update
+    elseif packet.id == 0x37 then
+        if XP.Is_Initialized then XP.Dedication.Check() end
+
     -- Action Packet
     elseif packet.id == 0x028 then
         local action = Ashita.Packets.Build_Action(packet.data)
@@ -108,7 +126,6 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             _Debug.Error.Add("Packet Event: action was nil from Packets.Build_Action")
             return nil
         end
-
         local actor_mob = Ashita.Mob.Get_Mob_By_ID(action.actor_id)
         if not actor_mob then
             _Debug.Error.Add("Packet Event: actor_mob was nil from Mob.Get_Mob_By_ID")
@@ -146,12 +163,12 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         elseif (action.category ==  4) then
             if log_offense then H.Spell.Action(action, actor_mob, log_offense)
             elseif log_defense then H.Spell_Def.Action(action, actor_mob, target_owner_mob, log_defense) end
-        elseif (action.category ==  5) then -- Do nothing (Finish Item Use)
+        elseif (action.category ==  5) then H.Item.Action(action, actor_mob)
         elseif (action.category ==  6) then H.Ability.Action(action, actor_mob, log_offense)
         elseif (action.category ==  7) then -- Do nothing (Begin WS)
         elseif (action.category ==  8) then -- Do nothing (Begin Spellcasting)
         elseif (action.category ==  9) then -- Do nothing (Begin or Interrupt Item Usage)
-        elseif (action.category == 11) then 
+        elseif (action.category == 11) then
             if log_offense then H.TP.Monster_Action(action, actor_mob, log_offense)
             elseif log_defense then H.TP_Def.Monster_Action(action, actor_mob, owner_mob, log_defense) end
         elseif (action.category == 12) then -- Do nothing (Begin Ranged Attack)
@@ -171,7 +188,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             if Ashita.Party.Is_Affiliate(actor_mob.name) then
                 local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
                 DB.Defeated_Mob(target_mob.name)
-                Blog.Add(target_mob.name, Blog.Enum.Types.DEATH, Blog.Enum.Text.MOB_DEATH)
+                Blog.Add(target_mob.name, nil, Blog.Enum.Types.MOB_DEATH, Blog.Enum.Text.MOB_DEATH)
             end
 
         -- Being defeated by a mob.
@@ -186,115 +203,5 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     -- Item obtained by someone.
     elseif packet.id == 0x0D3 then
         -- Not implemented.
-    end
-end)
-
-
-
-------------------------------------------------------------------------------------------------------
--- Check for character switches. Reloads character specific Database settings.
-------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.DATABASE, "settings_update", function(settings)
-    if settings ~= nil then
-        Metrics.Model = settings
-        Settings_File.save(Config.Enum.File.DATABASE)
-    end
-end)
-
-------------------------------------------------------------------------------------------------------
--- Check for character switches. Reloads character specific Parse settings.
-------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.PARSE, "settings_update", function(settings)
-    if settings ~= nil then
-        Metrics.Parse = settings
-        Parse.Util.Calculate_Column_Flags()
-        Settings_File.save(Config.Enum.File.PARSE)
-    end
-end)
-
-------------------------------------------------------------------------------------------------------
--- Check for character switches. Reloads character specific Parse settings.
-------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.FOCUS, "settings_update", function(settings)
-    if settings ~= nil then
-        Metrics.Focus = settings
-        Settings_File.save(Config.Enum.File.FOCUS)
-    end
-end)
-
-------------------------------------------------------------------------------------------------------
--- Check for character switches. Reloads character specific Parse settings.
-------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.BLOG, "settings_update", function(settings)
-    if settings ~= nil then
-        Metrics.Blog = settings
-        Settings_File.save(Config.Enum.File.BLOG)
-    end
-end)
-
-------------------------------------------------------------------------------------------------------
--- Check for character switches. Reloads character specific Parse settings.
-------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.WINDOW, "settings_update", function(settings)
-    if settings ~= nil then
-        Metrics.Window = settings
-        Window.Theme.Is_Set = false
-        Window.Scaling_Set = false
-        Window.Reset_Position = true
-        Settings_File.save(Config.Enum.File.WINDOW)
-    end
-end)
-
-------------------------------------------------------------------------------------------------------
--- Check for character switches. Reloads character specific Parse settings.
-------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.REPORT, "settings_update", function(settings)
-    if settings ~= nil then
-        Metrics.Report = settings
-        Settings_File.save(Config.Enum.File.REPORT)
-    end
-end)
-
-------------------------------------------------------------------------------------------------------
--- Load settings when the addon is loaded.
-------------------------------------------------------------------------------------------------------
-ashita.events.register('load', 'load_cb', function()
-    Metrics = T{
-        Window = Settings_File.load(Window.Defaults, Config.Enum.File.WINDOW),
-        Parse  = Settings_File.load(Parse.Config.Defaults, Config.Enum.File.PARSE),
-        Focus  = Settings_File.load(Focus.Config.Defaults, Config.Enum.File.FOCUS),
-        Blog   = Settings_File.load(Blog.Config.Defaults, Config.Enum.File.BLOG),
-        Model  = Settings_File.load(DB.Defaults, Config.Enum.File.DATABASE),
-        Report = Settings_File.load(Report.Config.Defaults, Config.Enum.File.REPORT),
-    }
-
-    -- Initialize Modules
-    DB.Initialize()
-    Parse.Initialize()
-    Ashita.Party.Refresh()
-
-    -- Start the clock.
-    Timers.Start(Timers.Enum.Names.PARSE)
-    Timers.Start(Timers.Enum.Names.AUTOPAUSE)
-    Timers.Start(Timers.Enum.Names.DPS)
-
-    _Globals.Initialized = true
-end)
-
-------------------------------------------------------------------------------------------------------
--- Save settings when the addon is unloaded.
-------------------------------------------------------------------------------------------------------
-ashita.events.register('unload', 'unload_cb', function ()
-    Settings_File.save(Config.Enum.File.DATABASE)
-    Settings_File.save(Config.Enum.File.PARSE)
-    Settings_File.save(Config.Enum.File.FOCUS)
-    Settings_File.save(Config.Enum.File.BLOG)
-    Settings_File.save(Config.Enum.File.WINDOW)
-    Settings_File.save(Config.Enum.File.REPORT)
-
-    if Metrics.Report.Auto_Save then
-        File.Save_Data()
-        File.Save_Catalog()
-        File.Save_Battlelog()
     end
 end)

@@ -7,14 +7,22 @@ ashita.events.register('command', 'command_cb', function (e)
 ---@diagnostic disable-next-line: undefined-field
     if table.contains({"/metrics"}, command_args[1]) or table.contains({"/met"}, command_args[1]) then
         local arg = command_args[2]
+        local sub_command = command_args[3]
 
         -- Help Text
         if not arg then
-            Config.Show_Window[1] = not Config.Show_Window[1]
+            if Config.Settings_Mode ~= Config.Enum.File.CONFIG and Metrics.Window.Config_Window_Visible[1] then
+                Config.Settings_Mode = Config.Enum.File.CONFIG
+            elseif Config.Settings_Mode ~= Config.Enum.File.CONFIG and not Metrics.Window.Config_Window_Visible[1] then
+                Config.Settings_Mode = Config.Enum.File.CONFIG
+                Metrics.Window.Config_Window_Visible[1] = true
+            elseif Config.Settings_Mode == Config.Enum.File.CONFIG then
+                Metrics.Window.Config_Window_Visible[1] = not Metrics.Window.Config_Window_Visible[1]
+            end
 
         -- General Settings
         elseif arg == "show" or arg == "s" then
-            Window.Toggle_Visibility()
+            Hub.Toggle_Visibility()
         elseif arg == "debug" then
             _Debug.Toggle()
         elseif arg == "nano" or arg == "n" then
@@ -25,13 +33,26 @@ ashita.events.register('command', 'command_cb', function (e)
             DB.Initialize(true)
         elseif arg == "full" or arg == "f" then
             Parse.Full.Enable()
-        elseif (arg == "pet" or arg == "p") and (Window.Tabs.Active == Window.Tabs.Names.PARSE or Parse.Mini.Is_Enabled()) then
+        elseif (arg == "pet" or arg == "p") then
             Parse.Config.Toggle_Pet()
-            Parse.Util.Calculate_Column_Flags()
         elseif arg == "clock" or arg == "c" then
             Parse.Config.Toggle_Clock()
         elseif arg == "percent" then
             Focus.Config.Percent_Toggle()
+        elseif arg == "dps" then
+            Metrics.Parse.DPS = not Metrics.Parse.DPS
+            Parse.Util.Calculate_Column_Flags()
+        elseif arg == "speed" then
+            Metrics.Parse.Attack_Speed = not Metrics.Parse.Attack_Speed
+            Parse.Util.Calculate_Column_Flags()
+        elseif arg == "throttle" then
+            Throttle.Toggle()
+
+        -- XP
+        elseif arg == "xp" and sub_command then
+            if sub_command == "mini" then
+                Metrics.XP.XP_Mini = not Metrics.XP.XP_Mini
+            end
 
         -- General reports.
         elseif arg == "report" or arg == "rep" then
@@ -51,12 +72,19 @@ ashita.events.register('command', 'command_cb', function (e)
         -- Primary tab switching.
         elseif arg == "team" or arg == "parse" then
             Window.Tabs.Switch[Window.Tabs.Names.PARSE] = ImGuiTabItemFlags_SetSelected
+            Parse.Window.Toggle_Visibility()
         elseif arg == "focus" then
             Window.Tabs.Switch[Window.Tabs.Names.FOCUS] = ImGuiTabItemFlags_SetSelected
+            Focus.Window.Toggle_Visibility()
         elseif arg == "log" or arg == "bl" then
             Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG] = ImGuiTabItemFlags_SetSelected
+            Blog.Window.Toggle_Visibility()
+        elseif arg == "xp" then
+            Window.Tabs.Switch[Window.Tabs.Names.XP] = ImGuiTabItemFlags_SetSelected
+            XP.Window.Toggle_Visibility()
         elseif arg == "report" or arg == "rep" then
             Window.Tabs.Switch[Window.Tabs.Names.REPORT] = ImGuiTabItemFlags_SetSelected
+            Report.Window.Toggle_Visibility()
 
         -- Player selection
         elseif arg == "player" or arg == "pl" then

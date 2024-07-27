@@ -94,6 +94,7 @@ Ashita.Enum.Message = T{
     MISS_TP    = 188,
     ENSPELL    = 229,
     ENF_LAND   = 236,
+    ENF_LAND_2 = 237,
     BURST      = 252,
     ENF_BURST  = 271,
     RANGEHIT   = 352,

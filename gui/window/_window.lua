@@ -11,6 +11,31 @@ Window.Defaults = T{
     X_Pos = 100,
     Y_Pos = 100,
     Show_Title = false,
+    Show_Mouse = false,
+    Multi_Window = false,
+    Active_Window = "Parse",
+    Hub_X = 100,
+    Hub_Y = 100,
+    Parse_Window_Visible = {true},
+    Parse_X = 100,
+    Parse_Y = 100,
+    Focus_Window_Visible = {false},
+    Focus_X = 100,
+    Focus_Y = 100,
+    Screenshot_X = 100,
+    Screenshot_Y = 100,
+    Blog_Window_Visible = {false},
+    Blog_X = 100,
+    Blog_Y = 100,
+    Report_Window_Visible = {false},
+    Report_X = 100,
+    Report_Y = 100,
+    Config_Window_Visible = {false},
+    Config_X = 100,
+    Config_Y = 100,
+    XP_Window_Visible = {false},
+    XP_X = 100,
+    XP_Y = 100,
 }
 
 Window.Flags = bit.bor(
@@ -19,11 +44,6 @@ Window.Flags = bit.bor(
         ImGuiWindowFlags_NoFocusOnAppearing,
         ImGuiWindowFlags_NoNav)
 
-Window.Screenshot_Flags = bit.bor(
-    ImGuiWindowFlags_AlwaysAutoResize,
-    ImGuiWindowFlags_NoSavedSettings,
-    ImGuiWindowFlags_NoNav)
-
 Window.Tabs = {}
 Window.Tabs.Flags = ImGuiTabBarFlags_None
 Window.Tabs.Names = {
@@ -31,6 +51,7 @@ Window.Tabs.Names = {
     PARSE     = "Parse",
     FOCUS     = "Focus",
     BATTLELOG = "Battle Log",
+    XP        = "XP",
     REPORT    = "Report",
     SETTINGS  = "Settings",
     DEBUG     = "Debug",
@@ -42,9 +63,10 @@ Window.Tabs.Names = {
     DATAVIEW  = "Data Viewer",
 }
 Window.Tabs.Switch = {
-    [Window.Tabs.Names.PARSE]      = nil,
+    [Window.Tabs.Names.PARSE]     = nil,
     [Window.Tabs.Names.FOCUS]     = nil,
     [Window.Tabs.Names.BATTLELOG] = nil,
+    [Window.Tabs.Names.XP]        = nil,
     [Window.Tabs.Names.REPORT]    = nil,
 }
 Window.Tabs.Active = nil
@@ -60,6 +82,12 @@ Window.Table.Flags = {
 }
 
 Window.Reset_Position = true
+Window.Set_Mouse = true
+Window.Bar_Delay = Socket.gettime()
+Window.Bar_Delay_Threshold = 0.70
+
+Window.IO = UI.GetIO()
+Window.IO.MouseDrawCursor = false
 
 require("gui.window.themes")
 require("gui.window.widgets")
@@ -82,62 +110,8 @@ Window.Populate = function()
 
         -- Handle resetting the window position between characters.
         if Window.Reset_Position then
-            UI.SetNextWindowPos({Metrics.Window.X_Pos, Metrics.Window.Y_Pos}, ImGuiCond_Always)
+            UI.SetNextWindowPos({Metrics.Window.Parse_X, Metrics.Window.Parse_Y}, ImGuiCond_Always)
             Window.Reset_Position = false
-        end
-
-        if UI.Begin(Window.Name, Window.Visible, window_flags) then
-            Metrics.Window.X_Pos, Metrics.Window.Y_Pos = UI.GetWindowPos()
-            Window.Set_Window_Scale()
-            Window.Theme.Set()
-
-            if Parse.Nano.Is_Enabled() then
-                Parse.Nano.Populate()
-            elseif Parse.Mini.Is_Enabled() then
-                Parse.Mini.Populate()
-            else
-                if _Debug.Is_Enabled() then UI.Text("Error Count: " .. tostring(_Debug.Error.Util.Error_Count())) end
-                if UI.BeginTabBar(Window.Tabs.Names.PARENT, Window.Tabs.Flags) then
-                    if UI.BeginTabItem(Parse.Tab_Name, false, Window.Tabs.Switch[Window.Tabs.Names.PARSE]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.PARSE] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.PARSE
-                        Parse.Full.Populate()
-                        UI.EndTabItem()
-                    end
-                    if UI.BeginTabItem(Focus.Tab_Name, false, Window.Tabs.Switch[Window.Tabs.Names.FOCUS]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.FOCUS] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.FOCUS
-                        Focus.Populate()
-                        UI.EndTabItem()
-                    end
-                    if UI.BeginTabItem(Window.Tabs.Names.BATTLELOG, false, Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.BATTLELOG
-                        Blog.Populate()
-                        UI.EndTabItem()
-                    end
-                    if UI.BeginTabItem(Window.Tabs.Names.REPORT, false, Window.Tabs.Switch[Window.Tabs.Names.REPORT]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.REPORT] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.REPORT
-                        Report.Populate()
-                        UI.EndTabItem()
-                    end
-                    if UI.BeginTabItem(Window.Tabs.Names.SETTINGS, false, Window.Tabs.Switch[Window.Tabs.Names.SETTINGS]) then
-                        Window.Tabs.Switch[Window.Tabs.Names.SETTINGS] = nil
-                        Window.Tabs.Active = Window.Tabs.Names.SETTINGS
-                        Config.Populate()
-                        UI.EndTabItem()
-                    end
-                    if _Debug.Is_Enabled() then
-                        if UI.BeginTabItem(Window.Tabs.Names.DEBUG) then
-                            _Debug.Populate()
-                            UI.EndTabItem()
-                        end
-                    end
-                    UI.EndTabBar()
-                end
-                UI.End()
-            end
         end
 
         local player = Ashita.Player.My_Mob()
@@ -145,29 +119,6 @@ Window.Populate = function()
             if UI.Begin("DPS Graph", Window.Visible, Parse.Config.DPS_Graph_Window_Flags) then
                 UI.Text("Click this to Drag")
                 Parse.Widgets.DPS_Graph(player.name)
-                UI.End()
-            end
-        end
-
-        if Config.Show_Window[1] then
-            if UI.Begin("Help", Config.Show_Window, Window.Flags) then
-                Config.Section.Text_Commands()
-                UI.End()
-            end
-        end
-
-        if Focus.Screenshot_Mode[1] then
-            UI.PushStyleVar(ImGuiStyleVar_Alpha, 1)
-            if UI.Begin("Screenshot Mode", Focus.Screenshot_Mode, Window.Screenshot_Flags) then
-                Focus.Screenshot()
-                UI.End()
-            end
-            UI.PopStyleVar(1)
-        end
-
-        if _Debug.Is_Enabled() and _Debug.Config.Show_Unit_Tests[1] then
-            if UI.Begin("Unit Tests", _Debug.Config.Show_Unit_Tests, Window.Flags) then
-                _Debug.Unit.Populate()
                 UI.End()
             end
         end
@@ -188,8 +139,32 @@ Window.Set_Window_Scale = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Returns the window scaling.
+------------------------------------------------------------------------------------------------------
+Window.Get_Scaling = function()
+    return Metrics.Window.Window_Scaling
+end
+
+------------------------------------------------------------------------------------------------------
 -- Toggles window visibility.
 ------------------------------------------------------------------------------------------------------
 Window.Toggle_Visibility = function()
     Window.Visible[1] = not Window.Visible[1]
+end
+
+------------------------------------------------------------------------------------------------------
+-- Starts a timer for progress bars to delay their loading to prevent slow screen resizing.
+------------------------------------------------------------------------------------------------------
+Window.Set_Bar_Delay = function()
+    Window.Bar_Delay = Socket.gettime()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if the bar loading delay has passed.
+------------------------------------------------------------------------------------------------------
+---@return boolean
+------------------------------------------------------------------------------------------------------
+Window.Can_Bar_Load = function()
+    local now = Socket.gettime()
+    return (now - Window.Bar_Delay) > Window.Bar_Delay_Threshold
 end

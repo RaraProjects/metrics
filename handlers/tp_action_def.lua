@@ -20,6 +20,7 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
 
     local result, target_mob
     local damage = 0
+    local count = 0
 
     -- Mob AOEs can hit pets. Need to check for all the target owner mobs because they may not be the original target.
     for target_index, target_value in pairs(action.targets) do
@@ -28,10 +29,13 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if target_mob then
                 owner_mob = Ashita.Mob.Pet_Owner(target_mob)
+                count = count + 1
                 damage = damage + H.TP_Def.Weaponskill_Parse(result, actor_mob, target_mob, skill_name, action_id, owner_mob)
             end
         end
     end
+
+    H.TP_Def.Blog(actor_mob, damage, skill_name, count)
 
     return true
 end
@@ -115,4 +119,16 @@ H.TP_Def.Ignore_Damage = function(damage, ws_id, ws_name, message_id)
         damage = 0
     end
     return damage
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Adds mob TP damage to the battle log.
+-- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table
+---@param damage integer
+---@param skill_name string
+---@param target_count integer
+-- ------------------------------------------------------------------------------------------------------
+H.TP_Def.Blog = function(actor_mob, damage, skill_name, target_count)
+    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MOB_TP, skill_name, damage, "TGTs: " .. tostring(target_count), DB.Enum.Trackable.TP_DMG_TAKEN)
 end

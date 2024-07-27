@@ -31,12 +31,18 @@ DB.Data.Init = function(index, player_name)
 		end
 	end
 
+	-- Need to set minimum high manually to capture accurate minimums
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MIN)
+
 	-- Initialize tracking tables
 	if player_name and not DB.Tracking.Initialized_Players[player_name] then
 		DB.Tracking.Initialized_Players[player_name] = true
 		DB.Lists.Sort.Players()
 		DB.Tracking.Running_Accuracy[player_name] = T{}
 		DB.Tracking.Running_Damage[player_name] = 0
+		DB.Tracking.Running_Attack_Speed[player_name] = T{}
 		DB.Tracking.Multi_Attack[player_name] = T{}
 	end
 
@@ -132,19 +138,37 @@ DB.Data.Get = function(player_name, trackable, metric)
 		return 0
 	end
 
+	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
+	if Throttle.Is_Enabled() and not Throttle.Allow_Calculation() then
+		if DB.Cache[player_name] and DB.Cache[player_name][trackable] and DB.Cache[player_name][trackable][metric] then
+			return DB.Cache[player_name][trackable][metric]
+		end
+	end
+
 	local total = 0
+	if metric == DB.Enum.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
+	local search_string = player_name .. ":" .. mob_focus
+	if mob_focus == DB.Widgets.Dropdown.Enum.NONE then search_string = player_name .. ":" end
+
 	for index, _ in pairs(DB.Parse) do
-		if mob_focus == DB.Widgets.Dropdown.Enum.NONE then
-			if string.find(index, player_name .. ":") then
-				total = total + DB.Parse[index][trackable][metric]
-			end
-		else
-			if string.find(index, player_name .. ":" .. mob_focus) then
-				total = total + DB.Parse[index][trackable][metric]
+		if string.find(index, search_string) then
+			local value = DB.Parse[index][trackable][metric]
+			if metric == DB.Enum.Metric.MIN then
+				if value < total then total = value end
+			elseif metric == DB.Enum.Metric.MAX then
+				if value > total then total = value end
+			else
+				total = total + value
 			end
 		end
 	end
+
+	-- Cache for performance.
+	if not DB.Cache[player_name] then DB.Cache[player_name] = T{} end
+	if not DB.Cache[player_name][trackable] then DB.Cache[player_name][trackable] = T{} end
+	DB.Cache[player_name][trackable][metric] = total
+
 	return total
 end
 

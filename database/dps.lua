@@ -44,6 +44,8 @@ end
 -- Takes a snapshot of all the DPS buffers.
 ------------------------------------------------------------------------------------------------------
 DB.DPS.Create_Snapshot = function()
+    if not Metrics.Parse.DPS then return nil end
+
     -- Create the Snapshots
     for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
         if not DB.DPS.Snapshots[player_name] then DB.DPS.Snapshots[player_name] = T{} end

@@ -115,16 +115,16 @@ H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_
         end
         -- Show how many targets were hit on the ga-spell.
         if Res.Spells.Get_AOE(spell_id) then
-            blog_note = blog_note .. space .. "Targets: " .. tostring(target_count)
+            blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
         end
-        Blog.Add(actor_mob.name, Blog.Enum.Types.MAGIC, spell_name, damage, blog_note, DB.Enum.Trackable.MAGIC, spell_data)
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MAGIC, spell_name, damage, blog_note, DB.Enum.Trackable.MAGIC, spell_data)
     end
 
     if Res.Spells.Get_Healing(spell_id) then
         if Res.Spells.Get_AOE(spell_id) then
-            blog_note = blog_note .. space .. "Targets: " .. tostring(target_count)
+            blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
         end
-        Blog.Add(actor_mob.name, Blog.Enum.Types.HEALING, spell_name, damage, blog_note, DB.Enum.Trackable.HEALING, spell_data)
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.HEALING, spell_name, damage, blog_note, DB.Enum.Trackable.HEALING, spell_data)
     end
 end
 
@@ -289,7 +289,7 @@ H.Spell.Enfeebling = function(audits, spell_name, message_id)
     if audits.pet_name then trackable = H.Trackable.PET_ENFEEBLING end
     DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT) -- Used to flag that data is availabel for show in Focus.
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
-    if message_id == Ashita.Enum.Message.ENF_LAND or message_id == Ashita.Enum.Message.ENF_BURST then
+    if message_id == Ashita.Enum.Message.ENF_LAND or message_id == Ashita.Enum.Message.ENF_LAND_2 or message_id == Ashita.Enum.Message.ENF_BURST then
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
     end
 end

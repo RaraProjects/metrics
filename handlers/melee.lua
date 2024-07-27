@@ -31,7 +31,7 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 		end
 	end
 
-    if details and details.audits then
+    if details and details.audits and details.audits.player_name then
         for type, number in pairs(mult_attack) do
             local metric = nil
             if number == 1 then metric = DB.Enum.Metric.MULT_ATK_1 end
@@ -50,6 +50,12 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
             end
         end
     end
+
+    -- Don't calculate attack speed for pets.
+    if not owner_mob then DB.Attack_Speed.Update(actor_mob.name) end
+
+    -- Keeps track of how many melee cycles have occurred (1 per packet).
+    DB.Data.Update(DB.Enum.Mode.INC, 1, details.audits, DB.Enum.Trackable.MELEE, DB.Enum.Metric.CYCLE)
 
     H.Melee.Blog(actor_mob, owner_mob, damage)
 end
@@ -115,7 +121,7 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     throwing = H.Melee.Animation(animation_id, audits, damage, melee_type_broad, throwing, no_damage)
 
     -- Min/Max
-    H.Melee.Min_Max(throwing, damage, audits, melee_type_broad, no_damage)
+    H.Melee.Min_Max(throwing, damage, audits, melee_type_discrete, no_damage)
 
     -- Additional effects like enspell.
     H.Melee.Additional_Effect(audits, result, no_damage)
@@ -140,9 +146,11 @@ end
 ---@param damage number
 -- ------------------------------------------------------------------------------------------------------
 H.Melee.Blog = function(actor_mob, owner_mob, damage)
-    local blog_name = actor_mob.name
-    if owner_mob then blog_name = owner_mob.name .. " (" .. actor_mob.name .. ")" end
-    Blog.Add(blog_name, Blog.Enum.Types.MELEE, DB.Enum.Trackable.MELEE, damage)
+    if owner_mob then
+        Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_MELEE, DB.Enum.Trackable.PET_MELEE, damage)
+    else
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MELEE, DB.Enum.Trackable.MELEE, damage)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -432,17 +440,17 @@ end
 ---@param throwing boolean whether or not the animation is a NIN auto throwing attack.
 ---@param damage number
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param melee_type_broad string player melee or pet melee.
+---@param melee_type_discrete string player melee or pet melee.
 ---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Min_Max = function(throwing, damage, audits, melee_type_broad, no_damage)
+H.Melee.Min_Max = function(throwing, damage, audits, melee_type_discrete, no_damage)
     if no_damage then damage = 0 end
     if throwing then
         if damage > 0 and (damage < DB.Data.Get(audits.player_name, H.Trackable.RANGED, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MIN) end
         if damage > DB.Data.Get(audits.player_name, H.Trackable.RANGED, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.RANGED, H.Metric.MAX) end
     else
-        if damage > 0 and (damage < DB.Data.Get(audits.player_name, melee_type_broad, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_broad, H.Metric.MIN) end
-        if damage > DB.Data.Get(audits.player_name, melee_type_broad, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_broad, H.Metric.MAX) end
+        if damage > 0 and (damage < DB.Data.Get(audits.player_name, melee_type_discrete, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_discrete, H.Metric.MIN) end
+        if damage > DB.Data.Get(audits.player_name, melee_type_discrete, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_discrete, H.Metric.MAX) end
     end
 end
 
