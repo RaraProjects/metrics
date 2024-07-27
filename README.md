@@ -3,7 +3,7 @@ _Some of the features shown below will be in an upcoming update. I'm just prepar
 ## Introduction
 Metrics is a DPS parsing tool at it's core, but it can take you much deeper into the data than the typical parser. There are views to keep things simple if that's all you want, but for those hungry for the most specific of data I try to provide that in the most aesthetically pleasing and usable way possible.
 
-Each of the modules described below can be displayed in either a single window with each module contained within its own tab or you can enable multi window mode to show multiple modules at once and house them in different areas of the screen simultaneously.
+Each of the modules described below can be displayed in either a single window with each module contained within its own tab or you can enable multi window mode to show multiple modules at once and house them in different areas of the screen simultaneously. If you use multi window mode just use the hub bar to toggle certain windows on and off.
 
 [Join the Discord](https://discord.gg/u5yqUbR6R7)<br>
 Ask questions, discuss feature requests, and report bugs. I will also be using the Discord to post occassional progress updates.
