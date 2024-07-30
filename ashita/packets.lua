@@ -156,3 +156,32 @@ Ashita.Packets.Get_Action_Target = function(action)
 	end
 	return nil
 end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Check if the packet is a duplicate.
+-- Duplicate packet checking from Thorny by way of the parse addon.
+-- https://github.com/WinterSolstice8/parse/
+-- ------------------------------------------------------------------------------------------------------
+---@param packet table
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.Is_Duplicate = function(packet)
+	--Check if new chunk..
+    if (FFI.C.memcmp(packet.data_raw, packet.chunk_data_raw, packet.size) == 0) then
+        Last_Chunk_Buffer = Current_Chunk_Buffer
+        Current_Chunk_Buffer = T{}
+    end
+
+    --Add packet to current chunk's buffer..
+    local pointer = FFI.cast('uint8_t*', packet.data_raw)
+    local new_packet = FFI.new('uint8_t[?]', 512)
+    FFI.copy(new_packet, pointer, packet.size)
+    Current_Chunk_Buffer:append(new_packet)
+
+    --Check if last chunk contained this packet..
+    for _, p in ipairs(Last_Chunk_Buffer) do
+        if (FFI.C.memcmp(p, pointer, packet.size) == 0) then return true end
+    end
+
+    return false
+end
