@@ -27,13 +27,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "07.23.24.01"
+addon.version = "07.29.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
 Settings_File = require("settings")
 Socket = require("socket")              -- Needed for millisecond precision on timestamps for attack speed.
 Metrics = T{}
+
+-- Duplicate packet checking from Thorny by way of the parse addon.
+-- https://github.com/WinterSolstice8/parse/
+FFI = require("ffi")
+FFI.cdef[[
+    int32_t memcmp(const void* buff1, const void* buff2, size_t count);
+]]
+Last_Chunk_Buffer = T{}
+Current_Chunk_Buffer = T{}
 
 -- Resources
 require("resources._resource")
@@ -91,6 +100,16 @@ end)
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     if not _Globals.Initialized then return nil end
+    if not packet then return nil end
+
+    -- Duplicate packet checking from Thorny by way of the parse addon.
+    -- https://github.com/WinterSolstice8/parse/
+	local is_duplicate = false
+	if not packet.injected then is_duplicate = Ashita.Packets.Is_Duplicate(packet) end
+    if is_duplicate then
+        _Debug.Error.Add("Duplicate packet for packet " .. tostring(packet.id) .. " found.")
+        return nil
+    end
 
     -- Start Zone
     if packet.id == 0xB then
