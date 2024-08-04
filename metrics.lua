@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "07.29.24.00"
+addon.version = "08.04.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -89,8 +89,11 @@ ashita.events.register('d3d_present', 'present_cb', function()
     Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
     Timers.Cycle(Timers.Enum.Names.DPS)
     Timers.Cycle(Timers.Enum.Names.EXP)
-    Window.Populate()
-    Hub.Populate()
+
+    if not Ashita.Menu.Hide() then
+        Window.Populate()
+        Hub.Populate()
+    end
 end)
 
 ------------------------------------------------------------------------------------------------------
