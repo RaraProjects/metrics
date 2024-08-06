@@ -22,7 +22,7 @@ DB.Data.Init = function(index, player_name)
 	-- Initialize primary node.
 	DB.Parse[index] = {}
 
-	-- Initialize data nodes
+	-- Initialize data nodes.
 	for _, trackable in pairs(DB.Enum.Trackable) do
 		DB.Parse[index][trackable] = {}
 		DB.Parse[index][trackable][DB.Enum.Values.CATALOG] = {}
@@ -31,12 +31,23 @@ DB.Data.Init = function(index, player_name)
 		end
 	end
 
-	-- Need to set minimum high manually to capture accurate minimums
+	-- Need to set minimum high manually to capture accurate minimums.
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MIN)
 
-	-- Initialize tracking tables
+	-- Initialize tracking tables.
+	DB.Data.Init_Player(player_name)
+
+	return true
+end
+
+------------------------------------------------------------------------------------------------------
+-- Initializes a player in the player list.
+------------------------------------------------------------------------------------------------------
+---@param player_name? string
+------------------------------------------------------------------------------------------------------
+DB.Data.Init_Player = function(player_name)
 	if player_name and not DB.Tracking.Initialized_Players[player_name] then
 		DB.Tracking.Initialized_Players[player_name] = true
 		DB.Lists.Sort.Players()
@@ -45,19 +56,6 @@ DB.Data.Init = function(index, player_name)
 		DB.Tracking.Running_Attack_Speed[player_name] = T{}
 		DB.Tracking.Multi_Attack[player_name] = T{}
 	end
-
-	return true
-end
-
-------------------------------------------------------------------------------------------------------
--- Initializes a player in the player list.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@return nil
-------------------------------------------------------------------------------------------------------
-DB.Data.Init_Player = function(player_name)
-	if not player_name then return nil end
-	DB.Tracking.Initialized_Players[player_name] = true
 end
 
 ------------------------------------------------------------------------------------------------------
