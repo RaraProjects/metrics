@@ -50,6 +50,17 @@ DB.Data.Init = function(index, player_name)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Initializes a player in the player list.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@return nil
+------------------------------------------------------------------------------------------------------
+DB.Data.Init_Player = function(player_name)
+	if not player_name then return nil end
+	DB.Tracking.Initialized_Players[player_name] = true
+end
+
+------------------------------------------------------------------------------------------------------
 -- A handler function that makes sure the data is set appropriately.
 -- This does not set data directly. Rather, it calls the Set~ or Inc~ functions.
 -- This is called by the functions that perform the action handling.

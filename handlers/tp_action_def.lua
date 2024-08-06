@@ -41,6 +41,19 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Parse the packet where a mob buffs themselves with a self-targeting buff.
+------------------------------------------------------------------------------------------------------
+---@param action table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+------------------------------------------------------------------------------------------------------
+H.TP_Def.Mob_Self_Target = function(action, actor_mob)
+    local skill_data = H.TP.Pet_Skill_Data(action.param, actor_mob)
+    if not skill_data then return nil end
+    local skill_name = skill_data.en
+    H.TP_Def.Blog(actor_mob, 0, skill_name, 1)
+end
+
+------------------------------------------------------------------------------------------------------
 -- Set data for a weaponskill action.
 -- AOE weaponskills will go through this one time for each mob hit.
 ------------------------------------------------------------------------------------------------------

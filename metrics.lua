@@ -165,6 +165,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         local target_owner_mob = Ashita.Mob.Pet_Owner(target_mob)
         local log_offense = false
         local log_defense = false
+        local mob_buff    = false
 
         -- Process action if the actor is an affiliated pet or affiliated player.
         if owner_mob or Ashita.Party.Is_Affiliate(actor_mob.name) then
@@ -175,6 +176,8 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             log_defense = true
             Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
             Timers.Unpause(Timers.Enum.Names.PARSE)
+        elseif Ashita.Mob.Claimed_By_Affiliate(actor_mob) and actor_mob.name == target_mob.name then
+            mob_buff = true
         end
 
         if (action.category ==  1) then
@@ -192,7 +195,8 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         elseif (action.category ==  9) then -- Do nothing (Begin or Interrupt Item Usage)
         elseif (action.category == 11) then
             if log_offense then H.TP.Monster_Action(action, actor_mob, log_offense)
-            elseif log_defense then H.TP_Def.Monster_Action(action, actor_mob, owner_mob, log_defense) end
+            elseif log_defense then H.TP_Def.Monster_Action(action, actor_mob, owner_mob, log_defense)
+            elseif mob_buff then H.TP_Def.Mob_Self_Target(action, actor_mob) end
         elseif (action.category == 12) then -- Do nothing (Begin Ranged Attack)
         elseif (action.category == 13) then H.Ability.Pet_Action(action, actor_mob, log_offense)
         elseif (action.category == 14) then -- Do nothing (Unblinkable Job Ability); Waltz

@@ -94,6 +94,7 @@ Ashita.Party.Refresh = function(player_name, node)
         if data:GetMemberIsActive(slot) == 1 then
             local name = data:GetMemberName(slot)
             Ashita.Party.List[name] = party_number
+            DB.Data.Init_Player(name)
 
             local main_job       = data:GetMemberMainJob(slot)
             local main_job_level = data:GetMemberMainJobLevel(slot)

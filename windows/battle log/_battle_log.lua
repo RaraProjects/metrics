@@ -114,6 +114,7 @@ Blog.Add = function(player_name, pet_name, action_flag, action_name, damage, not
     if #Blog.Log >= Blog.Settings.Max_Length then table.remove(Blog.Log, Blog.Settings.Length) end
 
     local color = Res.Colors.Basic.WHITE
+    local is_mob = not Ashita.Party.Jobs[player_name]
     if action_type and action_data then
         if action_type == DB.Enum.Trackable.MAGIC then
             local element = action_data.Element
@@ -125,11 +126,11 @@ Blog.Add = function(player_name, pet_name, action_flag, action_name, damage, not
     local entry = {
         Time   = {Value = os.date("%X"), Color = Res.Colors.Basic.WHITE},
         Flag   = {Value = action_flag, Color = Res.Colors.Basic.WHITE},
-        Player = Blog.Entries.Name(player_name),
+        Player = Blog.Entries.Name(player_name, is_mob),
         Pet    = Blog.Entries.Pet_Name(pet_name),
-        Damage = Blog.Entries.Damage(damage, action_type, color),
-        Action = Blog.Entries.Action(action_name, color),
-        Note   = Blog.Entries.Notes(note, action_type)
+        Damage = Blog.Entries.Damage(damage, action_type, color, is_mob),
+        Action = Blog.Entries.Action(action_name, color, is_mob),
+        Note   = Blog.Entries.Notes(note, action_type, is_mob)
     }
     -- Gray out mob deaths for better visual parsing of the battle.
     if action_name == Blog.Enum.Text.MOB_DEATH then
@@ -201,7 +202,7 @@ Blog.Display.Rows = function(entry)
 
     local damage = entry.Damage.Value
     local action_color = entry.Action.Color
-    local note_color = Res.Colors.Basic.WHITE
+    local note_color = entry.Note.Color
     if damage == "0" then
         action_color = Res.Colors.Basic.DIM
         note_color = Res.Colors.Basic.DIM

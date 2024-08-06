@@ -4,11 +4,14 @@ Blog.Entries = T{}
 -- Format the player name component of the battle log.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param is_mob? boolean
 ---@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
-Blog.Entries.Name = function(player_name)
-    local color = Res.Colors.Basic.WHITE
-    if Metrics.Parse.Name_Colors and Ashita.Party.Jobs[player_name] then
+Blog.Entries.Name = function(player_name, is_mob)
+    local color = Res.Colors.Basic.DIM
+    if is_mob then
+        color = Res.Colors.Basic.MOB
+    elseif Metrics.Parse.Name_Colors and Ashita.Party.Jobs[player_name] then
         local job = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
         if not job then job = Res.Jobs.List[0] end
         color = Res.Colors.Get_Job(job.id)
@@ -34,9 +37,10 @@ end
 ---@param damage? number
 ---@param action_type? string a trackable from the data model.
 ---@param color? table
+---@param is_mob? boolean
 ---@return table {Damage, Color}
 ------------------------------------------------------------------------------------------------------
-Blog.Entries.Damage = function(damage, action_type, color)
+Blog.Entries.Damage = function(damage, action_type, color, is_mob)
     if action_type == Blog.Enum.Flags.IGNORE then return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.WHITE} end
 
     local default_color = Res.Colors.Basic.WHITE
@@ -50,6 +54,8 @@ Blog.Entries.Damage = function(damage, action_type, color)
         return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
     elseif damage == 0 then
         return {Value = Column.String.Format_Number(0), Color = Res.Colors.Basic.DIM, Note = Blog.Enum.Text.MISS}
+    elseif is_mob then
+        return {Value = Column.String.Format_Number(damage), Color = Res.Colors.Basic.MOB}
     elseif damage >= threshold then
         return {Value = Column.String.Format_Number(damage), Color = default_color, Note = Blog.Enum.Text.HIGH_DAMAGE}
     end
@@ -80,9 +86,11 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param action_name string
 ---@param color table
+---@param is_mob? boolean
 ---@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
-Blog.Entries.Action = function(action_name, color)
+Blog.Entries.Action = function(action_name, color, is_mob)
+    if is_mob then color = Res.Colors.Basic.MOB end
     return {Value = action_name, Color = color}
 end
 
@@ -92,10 +100,13 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param note? string|number how much TP was used by the weaponskill
 ---@param action_type? string a trackable from the data model.
+---@param is_mob? boolean
 ---@return table
 ------------------------------------------------------------------------------------------------------
-Blog.Entries.Notes = function(note, action_type)
+Blog.Entries.Notes = function(note, action_type, is_mob)
     local color = Res.Colors.Basic.WHITE
+    if is_mob then color = Res.Colors.Basic.MOB end
+
     local final_note = {Value = " ", Color = color}
     if not note then return final_note end
 

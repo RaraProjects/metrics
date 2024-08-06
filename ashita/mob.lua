@@ -67,7 +67,7 @@ Ashita.Mob.Data = function(id, convert_id)
     entity.name = entity_manager:GetName(index)
     entity.id = string.sub(string.format("0x%X", entity_manager:GetServerId(index)), -3) -- This came from HXUI
     entity.id_num = entity_manager:GetServerId(index)
-    entity.index = index    -- Primary identifier.
+    entity.index = index                                        -- Primary identifier.
     entity.entity_type = entity_manager:GetType(index)
     entity.status = entity_manager:GetStatus(index)             -- Idle [0], Engaged [1], Healing [33]
     entity.distance = entity_manager:GetDistance(index)         -- This distance is NOT in yalms.
@@ -146,4 +146,19 @@ Ashita.Mob.Pet_Owner = function(pet_data)
         end
     end
     return owner
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Checks if a mob is claimed by someone in the party or alliance.
+-- ------------------------------------------------------------------------------------------------------
+---@param mob_data table
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Mob.Claimed_By_Affiliate = function(mob_data)
+    if not mob_data then return false end
+    local claim_id = mob_data.claim_id
+    if not claim_id or claim_id == 0 then return false end
+    local claimer = Ashita.Mob.Get_Mob_By_ID(claim_id)
+    if not claimer then return false end
+    return Ashita.Party.Is_Affiliate(claimer.name)
 end
