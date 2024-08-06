@@ -129,6 +129,36 @@ Ashita.Packets.EXP = function(data)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Handles parsing the character update packet 0x0DF.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.Character_Update = function(data)
+	local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+	local parsed_data = T{}
+	parsed_data.ID    = reader:read(32)
+	parsed_data.HP    = reader:read(32)
+	parsed_data.MP    = reader:read(32)
+	parsed_data.TP    = reader:read(32)
+	parsed_data.Index = reader:read(16)
+	parsed_data.HPP   = reader:read(16)
+	parsed_data.MPP   = reader:read(16)
+	parsed_data.Unk1  = reader:read(16)
+	parsed_data.Unk2  = reader:read(16)
+	parsed_data.Mon_Species = reader:read(16)
+	parsed_data.Mon_Name1   = reader:read(8)
+	parsed_data.Mon_Name2   = reader:read(8)
+	parsed_data.Main_Job = reader:read(8)
+	parsed_data.Main_Lvl = reader:read(8)
+	parsed_data.Sub_Job  = reader:read(8)
+	parsed_data.Sub_Lvl  = reader:read(8)
+	return parsed_data
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- NOT IMPLEMENTED
 -- Handles parsing messages out of incoming packet 0x029.
 -- ------------------------------------------------------------------------------------------------------

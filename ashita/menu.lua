@@ -37,6 +37,12 @@ Ashita.Menu.Types = T{
     scresult = true,    -- Search results
     evitem   = true,    -- Curencies
     statcom2 = true,    -- Combat skills
+    auc1     = true,    -- AH Bid/Sell
+    moneyctr = true,    -- AH Window
+    shopsell = true,    -- Sell prompt
+    comyn    = true,    -- AH confirm sell
+    auclist  = true,    -- AH Sales Status
+    gmtell   = true,    -- Gob OP menu
 }
 
 -- ------------------------------------------------------------------------------------------------------

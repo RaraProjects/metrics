@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "08.04.24.00"
+addon.version = "08.05.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -85,6 +85,8 @@ ashita.events.register('d3d_present', 'present_cb', function()
 
     Throttle.Throttle()     -- Throttling for performance.
     XP.Initialize()         -- Need to initialize here because some things aren't ready when addon loads.
+    Ashita.Party.Check_Refresh_Time()
+    Ashita.Party.Refresh()
 
     Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
     Timers.Cycle(Timers.Enum.Names.DPS)
@@ -115,30 +117,30 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     end
 
     -- Start Zone
-    if packet.id == 0xB then
+    if packet.id == 0x00B then
         Ashita.Player.Zoning(true)
 
     -- End Zone
-    elseif packet.id == 0xA then
+    elseif packet.id == 0x00A then
         Ashita.Player.Zoning(false)
         Timers.Reset(Timers.Enum.Names.ZONE)
         Window.Set_Bar_Delay()
         XP.Chains.End()
 
     -- 200 0xC8 Alliance Update
-    elseif packet.id == 0xC8 then
+    elseif packet.id == 0x0C8 then
         Ashita.Party.Need_Refresh = true
 
     -- 221 0xDD Party Member Update
-    elseif packet.id == 0xDD then
+    elseif packet.id == 0x0DD then
         Ashita.Party.Need_Refresh = true
 
     -- Experience Points
-    elseif packet.id == 0x2D then
+    elseif packet.id == 0x02D then
         XP.Parse(packet.data)
 
     -- Player Update
-    elseif packet.id == 0x37 then
+    elseif packet.id == 0x037 then
         if XP.Is_Initialized then XP.Dedication.Check() end
 
     -- Action Packet
