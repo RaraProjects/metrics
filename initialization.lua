@@ -109,7 +109,7 @@ ashita.events.register('load', 'load_cb', function()
     -- Initialize Modules
     DB.Initialize()
     Parse.Initialize()
-    Ashita.Party.Refresh()
+    Ashita.Party.Need_Refresh = true
     Window.IO.MouseDrawCursor = Metrics.Window.Show_Mouse
 
     -- Start the clock.
