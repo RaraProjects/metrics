@@ -162,3 +162,20 @@ Ashita.Mob.Claimed_By_Affiliate = function(mob_data)
     if not claimer then return false end
     return Ashita.Party.Is_Affiliate(claimer.name)
 end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Gets the distance between two mobs.
+-- ------------------------------------------------------------------------------------------------------
+---@param pos1 table could be a mob or any table with an x and y element.
+---@param pos2 table could be a mob or any table with an x and y element.
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Mob.Distance = function(pos1, pos2)
+    if not pos1 or not pos2 then return -1 end
+    if not pos1.x or not pos2.x then return -1 end
+    if not pos1.y or not pos2.y then return -1 end
+    local x = (pos2.x - pos1.x)^2
+    local y = (pos2.y - pos1.y)^2
+    local d = math.sqrt(x + y)
+    return d
+end
