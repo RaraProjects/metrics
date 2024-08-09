@@ -8,17 +8,17 @@ H.Ranged = {}
 ---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Action = function(action, actor_mob, log_offense)
-    if not log_offense then return end
-    local result, target
+    if not log_offense then return nil end
+    local result, target_mob
     local damage = 0
 
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
-            target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if target then
-                if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target.name) end
-                damage = damage + H.Ranged.Parse(result, actor_mob.name, target.name)
+            target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            if target_mob then
+                if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target_mob.name) end
+                damage = damage + H.Ranged.Parse(result, actor_mob, target_mob)
             end
         end
     end
@@ -40,17 +40,20 @@ end
 -- Set data for a ranged attack action.
 ------------------------------------------------------------------------------------------------------
 ---@param result table contains all the information for the action.
----@param player_name string name of the player that did the action.
----@param target_name string name of the target that received the action.
+---@param actor_mob table name of the player that did the action.
+---@param target_mob table name of the target that received the action.
 ---@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
 ---@return number
 ------------------------------------------------------------------------------------------------------
-H.Ranged.Parse = function(result, player_name, target_name, owner_mob)
-    _Debug.Packet.Add_Action(player_name, target_name, "Ranged", result)
+H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
+    if not actor_mob or not target_mob then return 0 end
+
+    _Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Ranged", result)
     local damage = result.param
     local message_id = result.message
 
     -- Need special handling for pets
+    local player_name = actor_mob.name
     local ranged_type = H.Trackable.RANGED
     if owner_mob then
         ranged_type = H.Trackable.PET_RANGED
@@ -59,7 +62,7 @@ H.Ranged.Parse = function(result, player_name, target_name, owner_mob)
 
     local audits = {
         player_name = player_name,
-        target_name = target_name,
+        target_name = target_mob.name,
     }
 
     -- Totals
@@ -76,6 +79,9 @@ H.Ranged.Parse = function(result, player_name, target_name, owner_mob)
 
     -- Min/Max
     H.Ranged.Min_Max(damage, audits, ranged_type)
+
+    -- Shot Distance
+    H.Ranged.Distance(audits, actor_mob, target_mob, ranged_type)
 
     return damage
 end
@@ -281,4 +287,20 @@ end
 H.Ranged.Min_Max = function(damage, audits, ranged_type)
     if damage > 0 and (damage < DB.Data.Get(audits.player_name, ranged_type, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, ranged_type, H.Metric.MIN) end
     if damage > DB.Data.Get(audits.player_name, ranged_type, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, ranged_type, H.Metric.MAX) end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Gets the distance between the actor and target.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param actor_mob table
+---@param target_mob table
+---@param ranged_type string player ranged or melee ranged.
+------------------------------------------------------------------------------------------------------
+H.Ranged.Distance = function(audits, actor_mob, target_mob, ranged_type)
+    if not actor_mob or not target_mob then return nil end
+    local distance = Ashita.Mob.Distance(actor_mob, target_mob)
+    if distance < 0 then return nil end
+    if distance > 30 then distance = 30 end
+    DB.Data.Update(H.Mode.INC, distance, audits, ranged_type, H.Metric.SHOT_DISTANCE)
 end

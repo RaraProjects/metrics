@@ -164,6 +164,17 @@ Column.Damage.DPS = function(player_name, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Displays the maximum local DPS for a player.
+------------------------------------------------------------------------------------------------------
+---@param justify? boolean whether or not to right justify the text
+------------------------------------------------------------------------------------------------------
+Column.Damage.Max_DPS = function(player_name, justify)
+    local max_dps = DB.DPS.Get_Max_DPS(player_name)
+    local color = Column.String.Color_Zero(max_dps)
+    return UI.TextColored(color, Column.String.Format_Number(max_dps, justify))
+end
+
+------------------------------------------------------------------------------------------------------
 -- Grabs the total damage that the entity has done.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
@@ -218,4 +229,18 @@ Column.Damage.Parse_DPS = function(justify)
     end
     local color = Column.String.Color_Zero(dps)
     return UI.TextColored(color, Column.String.Format_Number(dps, justify))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Displays the sum dps of all members of the database.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param justify? boolean whether or not to right justify the text
+------------------------------------------------------------------------------------------------------
+Column.Damage.Shot_Distance = function(player_name, justify)
+    local shot_distance = DB.Data.Get(player_name, Column.Trackable.RANGED, Column.Metric.SHOT_DISTANCE)
+    if shot_distance then shot_distance = shot_distance / 100 end
+    local count = DB.Data.Get(player_name, Column.Trackable.RANGED, Column.Metric.COUNT)
+    local color = Column.String.Color_Zero(shot_distance)
+    return UI.TextColored(color, Column.String.Format_Percent(shot_distance, count, justify))
 end

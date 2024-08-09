@@ -1,6 +1,7 @@
 DB.DPS = T{}
 
-DB.DPS.DPS = T{}
+DB.DPS.DPS = T{}                -- [player_name]
+DB.DPS.Max = T{}                -- [player_name]
 DB.DPS.Snapshots = T{}          -- [player_name][snapshot index]
 DB.DPS.Snapshot_Time = 3		-- Seconds between each snapshot
 DB.DPS.Snapshot_Count = 3		-- Max number of snapshots
@@ -77,6 +78,10 @@ DB.DPS.Create_Snapshot = function()
         end
         local dps = total_damage / (DB.DPS.Snapshot_Time * DB.DPS.Snapshot_Count)
         DB.DPS.DPS[player_name] = dps
+
+        -- Max local DPS tracking
+        if not DB.DPS.Max[player_name] then DB.DPS.Max[player_name] = 0 end
+        if dps > DB.DPS.Max[player_name] then DB.DPS.Max[player_name] = dps end
     end
 end
 
@@ -96,6 +101,17 @@ DB.DPS.Get_DPS = function(player_name)
         if not DB.DPS.DPS[player_name] then return 0 end
         return DB.DPS.DPS[player_name]
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Get a player's maximum local DPS.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@return number
+------------------------------------------------------------------------------------------------------
+DB.DPS.Get_Max_DPS = function(player_name)
+    if not DB.DPS.Max[player_name] then DB.DPS.Max[player_name] = 0 end
+    return DB.DPS.Max[player_name]
 end
 
 ------------------------------------------------------------------------------------------------------
