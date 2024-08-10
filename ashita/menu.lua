@@ -42,7 +42,6 @@ Ashita.Menu.Types = T{
     shopsell = true,    -- Sell prompt
     comyn    = true,    -- AH confirm sell
     auclist  = true,    -- AH Sales Status
-    gmtell   = true,    -- Gob OP menu
 }
 
 -- ------------------------------------------------------------------------------------------------------
