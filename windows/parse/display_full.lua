@@ -44,6 +44,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Full.Headers = function()
     local flags = Column.Flags.None
+    local width = Column.Widths.Parse
 
     if Metrics.Parse.Jobs then         UI.TableSetupColumn("Job", flags) end
 
@@ -63,11 +64,11 @@ Parse.Full.Headers = function()
     if Metrics.Parse.Ranged then       UI.TableSetupColumn("Ranged", flags) end
     if Metrics.Parse.Magic then        UI.TableSetupColumn("Magic", flags) end
     if Metrics.Parse.Ability then      UI.TableSetupColumn("JA", flags) end
-    if Metrics.Parse.Pet_Acc then      UI.TableSetupColumn("Acc (P)", flags) end
-    if Metrics.Parse.Pet_Melee then    UI.TableSetupColumn("Melee (P)", flags) end
-    if Metrics.Parse.Pet_Ranged then   UI.TableSetupColumn("Ranged (P)", flags) end
-    if Metrics.Parse.Pet_WS then       UI.TableSetupColumn("WS (P)", flags) end
-    if Metrics.Parse.Pet_Ability then  UI.TableSetupColumn("Ability (P)", flags) end
+    if Metrics.Parse.Pet_Acc then      UI.TableSetupColumn("P.Acc", flags) end
+    if Metrics.Parse.Pet_Melee then    UI.TableSetupColumn("P.Melee", flags) end
+    if Metrics.Parse.Pet_Ranged then   UI.TableSetupColumn("P.RA", flags) end
+    if Metrics.Parse.Pet_WS then       UI.TableSetupColumn("P.WS", flags) end
+    if Metrics.Parse.Pet_Ability then  UI.TableSetupColumn("P.JA", flags) end
     if Metrics.Parse.Healing then      UI.TableSetupColumn("Healing", flags) end
     if Metrics.Parse.Deaths then       UI.TableSetupColumn("Deaths", flags) end
 
@@ -100,7 +101,7 @@ Parse.Full.Rows = function(player_name)
     if Metrics.Parse.Ranged then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, false, true) end
     if Metrics.Parse.Magic then        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, false, true) end
     if Metrics.Parse.Ability then      UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, false, true) end
-    if Metrics.Parse.Pet_Acc then      UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE) end
+    if Metrics.Parse.Pet_Acc then      UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE, true) end
     if Metrics.Parse.Pet_Melee then    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_MELEE, false, true) end
     if Metrics.Parse.Pet_Ranged then   UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_RANGED, false, true) end
     if Metrics.Parse.Pet_WS then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_WS, false, true) end

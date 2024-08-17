@@ -44,6 +44,7 @@ Ashita.Menu.Types = T{
     comyn    = true,    -- AH confirm sell
     auclist  = true,    -- AH Sales Status
     auchisto = true,    -- AH History
+    auc4     = true,    -- AH Stop Sale
     post1    = true,    -- Delivery Box
     post2    = true,    -- Delivery Box Confirm
     stringdl = true,    -- Delivery Box Send Recipient

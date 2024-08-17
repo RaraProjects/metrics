@@ -47,7 +47,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.String.Format_Number = function(number, justify)
     local format = "%d"
-    if justify then format = "%6d" end
+    if justify then format = "%7d" end
     if Parse.Config.Condensed_Numbers() then return Column.String.Compact_Number(number, justify) end
     number = math.floor(number)
     return string.format(format, number)
@@ -63,7 +63,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.String.Format_Decimal = function(number, justify)
     local format = "%2f"
-    if justify then format = "%6.2f" end
+    if justify then format = "%7.2f" end
     return string.format(format, number)
 end
 
@@ -77,7 +77,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.String.Format_Percent = function(numerator, denominator, justify)
     local format = "%.1f"
-    if justify then format = "%5.1f" end
+    if justify then format = "%7.1f" end
 
     local percent = 0
     local ret_value = string.format(format, 0)
