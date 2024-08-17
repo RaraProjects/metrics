@@ -7,6 +7,7 @@ Ashita.Menu.Types = T{
     fulllog  = true,    -- Expanded chat log
     equip    = true,    -- Equipment menu
     inventor = true,    -- Inventory
+    mnstorag = true,    -- Equip inventory selection
     iuse     = true,    -- Use item
     map0     = true,    -- Regular map
     maplist  = true,    -- Selecting a map from within the regular map
@@ -42,6 +43,21 @@ Ashita.Menu.Types = T{
     shopsell = true,    -- Sell prompt
     comyn    = true,    -- AH confirm sell
     auclist  = true,    -- AH Sales Status
+    auchisto = true,    -- AH History
+    post1    = true,    -- Delivery Box
+    post2    = true,    -- Delivery Box Confirm
+    stringdl = true,    -- Delivery Box Send Recipient
+    delivery = true,    -- Delivery Box Sending
+    mcr1edlo = true,    -- Macro editing row 1
+    mcr2edlo = true,    -- Macro editing row 2
+    mcresed  = true,    -- Equipset editing
+    bank     = true,    -- Mog Satchel
+    handover = true,    -- Trade Menu
+    itmsortw = true,    -- Item Sort Menu
+    sortyn   = true,    -- Item Sort Yes/No
+    itemctrl = true,    -- Choosing the number of items to select for transfer in inventory
+    loot     = true,    -- Treasure Pool
+    lootope  = true,    -- Cast Lot
 }
 
 -- ------------------------------------------------------------------------------------------------------

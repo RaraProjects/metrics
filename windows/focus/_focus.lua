@@ -69,6 +69,7 @@ Focus.Populate = function()
     if unselected then
         UI.Separator()
         UI.Text("No player selected.")
+        if _Debug.Is_Enabled() then UI.SameLine() UI.Text(Ashita.Menu.Get_Menu_Name()) end
         return nil
     end
 
