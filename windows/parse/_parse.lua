@@ -46,6 +46,7 @@ Parse.Util.Calculate_Column_Flags = function()
     if Metrics.Parse.Weaponskill then added_columns = added_columns + 1 end
     if Parse.Config.Include_SC_Damage() then added_columns = added_columns + 1 end
     if Metrics.Parse.Ranged then added_columns = added_columns + 1 end
+    if Metrics.Parse.Ranged_Dist then added_columns = added_columns + 1 end
     if Metrics.Parse.Magic then added_columns = added_columns + 1 end
     if Metrics.Parse.Ability then added_columns = added_columns + 1 end
     if Metrics.Parse.Pet_Acc then added_columns = added_columns + 1 end

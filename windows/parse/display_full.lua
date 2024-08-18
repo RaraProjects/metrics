@@ -53,24 +53,25 @@ Parse.Full.Headers = function()
     UI.TableSetupColumn("%T", flags)
 
     if Metrics.Parse.Attack_Speed then UI.TableSetupColumn("s/Melee", flags) end
-    if Metrics.Parse.DPS then          UI.TableSetupColumn("DPS", flags) end
+    if Metrics.Parse.DPS then          UI.TableSetupColumn("DPS",     flags) end
     if Metrics.Parse.Running_Acc then  UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags) end
-    if Metrics.Parse.Total_Acc then    UI.TableSetupColumn("%A-T", flags) end
-    if Metrics.Parse.Melee then        UI.TableSetupColumn("Melee", flags) end
-    if Metrics.Parse.Crit then         UI.TableSetupColumn("%Crit", flags) end
-    if Metrics.Parse.Average_WS then   UI.TableSetupColumn("Avg WS", flags) end
-    if Metrics.Parse.Weaponskill then  UI.TableSetupColumn("WS", flags) end
+    if Metrics.Parse.Total_Acc then    UI.TableSetupColumn("%A-T",    flags) end
+    if Metrics.Parse.Melee then        UI.TableSetupColumn("Melee",   flags) end
+    if Metrics.Parse.Crit then         UI.TableSetupColumn("%Crit",   flags) end
+    if Metrics.Parse.Average_WS then   UI.TableSetupColumn("Avg WS",  flags) end
+    if Metrics.Parse.Weaponskill then  UI.TableSetupColumn("WS",      flags) end
     if Parse.Config.Include_SC_Damage() then UI.TableSetupColumn("SC", flags) end
-    if Metrics.Parse.Ranged then       UI.TableSetupColumn("Ranged", flags) end
-    if Metrics.Parse.Magic then        UI.TableSetupColumn("Magic", flags) end
-    if Metrics.Parse.Ability then      UI.TableSetupColumn("JA", flags) end
-    if Metrics.Parse.Pet_Acc then      UI.TableSetupColumn("P.Acc", flags) end
+    if Metrics.Parse.Ranged then       UI.TableSetupColumn("Ranged",  flags) end
+    if Metrics.Parse.Ranged_Dist then  UI.TableSetupColumn("R.Dist",  flags) end
+    if Metrics.Parse.Magic then        UI.TableSetupColumn("Magic",   flags) end
+    if Metrics.Parse.Ability then      UI.TableSetupColumn("JA",      flags) end
+    if Metrics.Parse.Pet_Acc then      UI.TableSetupColumn("P.Acc",   flags) end
     if Metrics.Parse.Pet_Melee then    UI.TableSetupColumn("P.Melee", flags) end
-    if Metrics.Parse.Pet_Ranged then   UI.TableSetupColumn("P.RA", flags) end
-    if Metrics.Parse.Pet_WS then       UI.TableSetupColumn("P.WS", flags) end
-    if Metrics.Parse.Pet_Ability then  UI.TableSetupColumn("P.JA", flags) end
+    if Metrics.Parse.Pet_Ranged then   UI.TableSetupColumn("P.RA",    flags) end
+    if Metrics.Parse.Pet_WS then       UI.TableSetupColumn("P.WS",    flags) end
+    if Metrics.Parse.Pet_Ability then  UI.TableSetupColumn("P.JA",    flags) end
     if Metrics.Parse.Healing then      UI.TableSetupColumn("Healing", flags) end
-    if Metrics.Parse.Deaths then       UI.TableSetupColumn("Deaths", flags) end
+    if Metrics.Parse.Deaths then       UI.TableSetupColumn("Deaths",  flags) end
 
     UI.TableHeadersRow()
 end
@@ -99,6 +100,7 @@ Parse.Full.Rows = function(player_name)
     if Metrics.Parse.Weaponskill then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.WS, false, true) end
     if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.SC, false, true) end
     if Metrics.Parse.Ranged then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, false, true) end
+    if Metrics.Parse.Ranged_Dist then  UI.TableNextColumn() Column.Damage.Shot_Distance(player_name, true) end
     if Metrics.Parse.Magic then        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, false, true) end
     if Metrics.Parse.Ability then      UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, false, true) end
     if Metrics.Parse.Pet_Acc then      UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE, true) end
