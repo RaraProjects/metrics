@@ -78,7 +78,7 @@ Blog.Populate = function()
             if count > Metrics.Blog.Visible_Length then break end
             local entry = Blog.Log[i]
             if entry then
-                if entry.Flag and Blog.Show_Row(entry.Flag.Value) then
+                if entry.Flag and Blog.Action_Filter(entry.Flag.Value) and Blog.Player_Filter(entry) then
                     count = count + 1
                     Blog.Display.Rows(entry)
                 else
@@ -145,7 +145,7 @@ end
 ---@param action_flag string
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Blog.Show_Row = function(action_flag)
+Blog.Action_Filter = function(action_flag)
     if     action_flag == Blog.Enum.Types.HEALING   then return Metrics.Blog.Flags.Healing
     elseif action_flag == Blog.Enum.Types.PET_MELEE then return Metrics.Blog.Flags.Pet_Melee
     elseif action_flag == Blog.Enum.Types.PET_TP    then return Metrics.Blog.Flags.Pet_TP
@@ -160,6 +160,18 @@ Blog.Show_Row = function(action_flag)
     elseif action_flag == Blog.Enum.Types.SC        then return Metrics.Blog.Flags.SC
     elseif action_flag == Blog.Enum.Types.ABILITY   then return Metrics.Blog.Flags.Ability
     else return false end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check to see if entry passes search filter.
+------------------------------------------------------------------------------------------------------
+---@param entry table
+---@return boolean
+------------------------------------------------------------------------------------------------------
+Blog.Player_Filter = function(entry)
+    if not entry then return false end
+    if Blog.Widgets.Player_Focus == DB.Widgets.Dropdown.Enum.NONE then return true end
+    return entry.Player.Value == Blog.Widgets.Player_Focus
 end
 
 ------------------------------------------------------------------------------------------------------

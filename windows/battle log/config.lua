@@ -62,9 +62,10 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Display = function()
     Blog.Config.General_Settings()
-    UI.Separator() Blog.Config.Damage_Sliders() UI.Separator()
-    Blog.Config.Column_Settings()
+    UI.Separator() Blog.Config.Column_Settings()
     UI.Separator() Blog.Config.Length()
+    UI.Separator() Blog.Config.Filters()
+    UI.Separator() Blog.Config.Damage_Sliders()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -74,6 +75,7 @@ Blog.Config.General_Settings = function()
     local col_flags = Column.Flags.None
     local width = Column.Widths.Settings
 
+    UI.Text("General Settings")
     if UI.BeginTable("Battle Log", 3) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
@@ -170,6 +172,14 @@ Blog.Config.Column_Settings = function()
 
         UI.EndTable()
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows filters that affect the Battle Log screen.
+------------------------------------------------------------------------------------------------------
+Blog.Config.Filters = function()
+    UI.Text("Log Filters")
+    Blog.Widgets.Player_Filter()
 end
 
 ------------------------------------------------------------------------------------------------------

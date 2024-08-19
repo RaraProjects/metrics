@@ -1,5 +1,8 @@
 Blog.Widgets = T{}
 
+Blog.Widgets.Player_Focus = DB.Widgets.Dropdown.Enum.NONE
+Blog.Widgets.Player_Index = 1
+
 ------------------------------------------------------------------------------------------------------
 -- Set the battle log damage highlighting threshold for weaponskills.
 ------------------------------------------------------------------------------------------------------
@@ -106,5 +109,33 @@ Blog.Widgets.Last_Page = function()
     local last_page = Blog.Max_Page()
     if UI.Button("Last (" .. tostring(last_page) .. ")") then
         Blog.Page = last_page
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Creates a dropdown menu to show only damage done by a certain entity.
+------------------------------------------------------------------------------------------------------
+Blog.Widgets.Player_Filter = function()
+    local list = DB.Lists.Get.Players() or T{}
+    local flags = DB.Widgets.Dropdown.Flags
+    if list[1] then
+        UI.SetNextItemWidth(DB.Widgets.Dropdown.Width)
+        if UI.BeginCombo(DB.Widgets.Dropdown.Enum.FOCUS, list[Blog.Widgets.Player_Index], flags) then
+            for n = 1, #list, 1 do
+                local is_selected = Blog.Widgets.Player_Index == n
+                if UI.Selectable(list[n], is_selected) then
+                    Blog.Widgets.Player_Index = n
+                    Blog.Widgets.Player_Focus = list[n]
+                end
+                if is_selected then
+                    UI.SetItemDefaultFocus()
+                end
+            end
+            UI.EndCombo()
+        end
+    else
+        if UI.BeginCombo(DB.Widgets.Dropdown.Enum.FOCUS, DB.Widgets.Dropdown.Enum.NONE, flags) then
+            UI.EndCombo()
+        end
     end
 end
