@@ -49,6 +49,21 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- This is for cataloged actions.
+-- Grabs the total tp used for a weaponskill.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name string
+------------------------------------------------------------------------------------------------------
+Column.Single.Average_TP = function(player_name, action_name)
+    local tp = DB.Catalog.Get(player_name, Column.Trackable.WS, action_name, Column.Metric.TP_SPENT)
+    local attempts = DB.Catalog.Get(player_name, Column.Trackable.WS, action_name, Column.Metric.COUNT)
+    local color = Column.String.Color_Zero(tp)
+    if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
+    return UI.TextColored(color, string.format("%d", Column.String.Raw_Percent(tp, attempts)))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
 -- This is for pet actions.
 -- Grabs the total amount of damage a cataloged action has done for a given trackable and metric.
 ------------------------------------------------------------------------------------------------------

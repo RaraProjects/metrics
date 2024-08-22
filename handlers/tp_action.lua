@@ -47,12 +47,16 @@ H.TP.Action = function(action, actor_mob, log_offense)
         player_name = actor_mob.name,
         target_name = target_mob.name,
     }
+    local tp = Ashita.Party.Refresh(actor_mob.name, Ashita.Enum.Player_Attributes.TP)
+    if not tp then tp = 0 end
+
     H.TP.Weaponskill_Attempts(audits, ws_name)
+    H.TP.Weaponskill_TP(audits, ws_name, tp)
     if damage > 0 then H.TP.Weaponskill_Hit(audits, ws_name) end
     if sc_name ~= DB.Enum.Values.DEBUG then H.TP.Skillchain_Hit(audits, sc_name) end
 
     -- Update the battle log.
-    H.TP.Blog_WS(actor_mob, damage, ws_data, ws_name)
+    H.TP.Blog_WS(actor_mob, damage, ws_data, ws_name, tp)
     H.TP.Blog_SC(actor_mob, sc_damage, sc_name)
 end
 
@@ -213,6 +217,20 @@ H.TP.Weaponskill_Hit = function(audits, ws_name)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Increments weaponskill hits.
+-- ------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param ws_name string
+---@param tp integer
+-- ------------------------------------------------------------------------------------------------------
+H.TP.Weaponskill_TP = function(audits, ws_name, tp)
+    if tp < 0 then tp = 0 end
+    if tp > 3000 then tp = 3000 end
+    DB.Data.Update(H.Mode.INC, tp, audits, H.Trackable.WS, H.Metric.TP_SPENT)
+    DB.Catalog.Update_Metric(H.Mode.INC, tp, audits, H.Trackable.WS, ws_name, H.Metric.TP_SPENT)
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Increments pet skill attempts.
 -- ------------------------------------------------------------------------------------------------------
 ---@param audits table
@@ -351,9 +369,10 @@ end
 ---@param damage number
 ---@param ws_data table
 ---@param ws_name string
+---@param tp integer
 -- ------------------------------------------------------------------------------------------------------
-H.TP.Blog_WS = function(actor_mob, damage, ws_data, ws_name)
-    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.WS, ws_name, damage, Ashita.Party.Refresh(actor_mob.name, Ashita.Enum.Player_Attributes.TP), H.Trackable.WS, ws_data)
+H.TP.Blog_WS = function(actor_mob, damage, ws_data, ws_name, tp)
+    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.WS, ws_name, damage, tp, H.Trackable.WS, ws_data)
 end
 
 -- ------------------------------------------------------------------------------------------------------

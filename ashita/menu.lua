@@ -61,6 +61,11 @@ Ashita.Menu.Types = T{
     itemctrl = true,    -- Choosing the number of items to select for transfer in inventory
     loot     = true,    -- Treasure Pool
     lootope  = true,    -- Cast Lot
+    meritcat = true,    -- Merit Categories
+    merit1   = true,    -- Merit Categories/Mode Switch
+    merit2   = true,    -- Merit EXP/Limit Points
+    merit3   = true,    -- Merit Raise/Lower
+    shop     = true,    -- Setting bazaar prices
 }
 
 -- ------------------------------------------------------------------------------------------------------

@@ -101,6 +101,7 @@ DB.Enum.Metric = T{
     BURST_DAMAGE  = "Burst Damage",
     OVERCURE      = "Overcure",
     MP_SPENT      = "MP Spent",
+    TP_SPENT      = "TP Spent",
 }
 
 DB.Enum.Pet_Single_Trackable = T{

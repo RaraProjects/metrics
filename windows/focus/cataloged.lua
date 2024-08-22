@@ -39,9 +39,10 @@ Focus.Catalog.Single = function(player_name, focus_type, action_string)
     elseif focus_type == DB.Enum.Trackable.SC then action_string = "Skillchain"
     end
 
-    if UI.BeginTable(focus_type, 7, table_flags) then
+    if UI.BeginTable(focus_type, 8, table_flags) then
         UI.TableSetupColumn(action_string, col_flags, name_width)
         UI.TableSetupColumn("Total", col_flags, width)
+        UI.TableSetupColumn("Avg. TP", col_flags, width)
         UI.TableSetupColumn(attempt_string, col_flags, width)
         UI.TableSetupColumn(acc_string, col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
@@ -70,6 +71,7 @@ Focus.Catalog.Single_Row = function(player_name, action_name, focus_type)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(action_name)
     UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
+    UI.TableNextColumn() Column.Single.Average_TP(player_name, action_name)
     UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
 
     -- Accuracy changes between what the trackable is. Accuracy for spells isn't useful.
