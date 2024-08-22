@@ -85,7 +85,7 @@ Parse.Full.Rows = function(player_name)
     UI.TableNextRow()
 
     if Metrics.Parse.Focus then        UI.TableNextColumn() Column.Util.Focus(player_name) end
-    if Metrics.Parse.Jobs then         UI.TableNextColumn() Column.String.Job(player_name) end
+    if Metrics.Parse.Jobs then         UI.TableNextColumn() Column.String.Job(player_name, Metrics.Parse.Hide_Subjob) end
 
     UI.TableNextColumn() Column.String.Format_Name(player_name)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)

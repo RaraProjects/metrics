@@ -10,6 +10,7 @@ Parse.Config.Defaults = T{
     DPS_Graph_Height   = 50,
     Focus        = false,
     Jobs         = false,
+    Hide_Subjob  = false,
     Total_Acc    = false,
     Running_Acc  = true,
     DPS          = true,
@@ -154,6 +155,12 @@ Parse.Config.General_Flags = function(col_flags, width)
         UI.TableNextColumn()
         if UI.Checkbox("Show Jobs", {Metrics.Parse.Jobs}) then
             Metrics.Parse.Jobs = not Metrics.Parse.Jobs
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Hide Sub Job", {Metrics.Parse.Hide_Subjob}) then
+            Metrics.Parse.Hide_Subjob = not Metrics.Parse.Hide_Subjob
             Parse.Util.Calculate_Column_Flags()
         end
 

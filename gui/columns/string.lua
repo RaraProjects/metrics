@@ -20,21 +20,29 @@ end
 -- Formats the player job string.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param hide_subjob boolean
 ------------------------------------------------------------------------------------------------------
-Column.String.Job = function(player_name)
+Column.String.Job = function(player_name, hide_subjob)
     local color = Res.Colors.Basic.WHITE
-    if not player_name or not Ashita.Party.Jobs[player_name] then UI.TextColored(color, "NON0/NON0") return nil end
-    local main       = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
+
+    local anon_string = "NON0/NON0"
+    if hide_subjob then anon_string = "NON0" end
+    if not player_name or not Ashita.Party.Jobs[player_name] then UI.TextColored(color, anon_string) return nil end
+
+    local main = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
     local main_level = Ashita.Party.Jobs[player_name].main_level
-    local sub        = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].sub)
-    local sub_level  = Ashita.Party.Jobs[player_name].sub_level
     if not main then main = Res.Jobs.List[0] end
-    if not sub then sub = Res.Jobs.List[0] end
     local main_color = Res.Colors.Get_Job(main.id)
-    local sub_color = Res.Colors.Get_Job(sub.id)
     UI.TextColored(main_color, string.format("%s%02d", main.ens, main_level))
-    UI.SameLine() UI.Text("/") UI.SameLine()
-    UI.TextColored(sub_color, string.format("%s%02d", sub.ens, sub_level))
+
+    if not hide_subjob then
+        local sub = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].sub)
+        local sub_level = Ashita.Party.Jobs[player_name].sub_level
+        if not sub then sub = Res.Jobs.List[0] end
+        local sub_color = Res.Colors.Get_Job(sub.id)
+        UI.SameLine() UI.Text("/") UI.SameLine()
+        UI.TextColored(sub_color, string.format("%s%02d", sub.ens, sub_level))
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
