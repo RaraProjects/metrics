@@ -96,7 +96,23 @@ DB.Widgets.Player_Filter_Help_Text = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Utility function for accessing the name of the currently focused entity.
+------------------------------------------------------------------------------------------------------
+DB.Widgets.Util.Get_Player_Focus = function()
+    return DB.Widgets.Dropdown.Player.Focus
+end
+
+------------------------------------------------------------------------------------------------------
+-- Utility function for accessing the name of the currently focused mob.
+------------------------------------------------------------------------------------------------------
+DB.Widgets.Util.Get_Mob_Focus = function()
+    return DB.Widgets.Dropdown.Mob.Focus
+end
+
+------------------------------------------------------------------------------------------------------
 -- Switches to a player in the player filter based on partial matching.
+------------------------------------------------------------------------------------------------------
+---@param player_string string
 ------------------------------------------------------------------------------------------------------
 DB.Widgets.Util.Player_Switch = function(player_string)
     local list = DB.Lists.Get.Players()
@@ -110,18 +126,4 @@ DB.Widgets.Util.Player_Switch = function(player_string)
             end
         end
     end
-end
-
-------------------------------------------------------------------------------------------------------
--- Utility function for accessing the name of the currently focused entity.
-------------------------------------------------------------------------------------------------------
-DB.Widgets.Util.Get_Player_Focus = function()
-    return DB.Widgets.Dropdown.Player.Focus
-end
-
-------------------------------------------------------------------------------------------------------
--- Utility function for accessing the name of the currently focused mob.
-------------------------------------------------------------------------------------------------------
-DB.Widgets.Util.Get_Mob_Focus = function()
-    return DB.Widgets.Dropdown.Mob.Focus
 end

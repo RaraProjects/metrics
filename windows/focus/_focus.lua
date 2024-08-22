@@ -160,6 +160,8 @@ Focus.Overall = function(player_name)
         columns = columns + 1
     end
 
+    Column.String.Job(player_name)
+
     if UI.BeginTable("Overall", columns, table_flags) then
         UI.TableSetupColumn("Type", col_flags, width)
         UI.TableSetupColumn("Total", col_flags, width)

@@ -35,6 +35,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Util.Calculate_Column_Flags = function()
     local added_columns = 0
+    if Metrics.Parse.Focus then added_columns = added_columns + 1 end
     if Metrics.Parse.Jobs then added_columns = added_columns + 1 end
     if Metrics.Parse.Attack_Speed then added_columns = added_columns + 1 end
     if Metrics.Parse.DPS then added_columns = added_columns + 1 end

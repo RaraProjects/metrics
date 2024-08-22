@@ -44,8 +44,8 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Full.Headers = function()
     local flags = Column.Flags.None
-    local width = Column.Widths.Parse
 
+    if Metrics.Parse.Focus then        UI.TableSetupColumn("Focus", flags) end
     if Metrics.Parse.Jobs then         UI.TableSetupColumn("Job", flags) end
 
     UI.TableSetupColumn("Name", flags)
@@ -84,6 +84,7 @@ end
 Parse.Full.Rows = function(player_name)
     UI.TableNextRow()
 
+    if Metrics.Parse.Focus then        UI.TableNextColumn() Column.Util.Focus(player_name) end
     if Metrics.Parse.Jobs then         UI.TableNextColumn() Column.String.Job(player_name) end
 
     UI.TableNextColumn() Column.String.Format_Name(player_name)
