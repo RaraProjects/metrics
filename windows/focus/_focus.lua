@@ -4,6 +4,7 @@ Focus.Tab_Name = "Focus"
 
 Focus.Tabs = {}
 Focus.Tabs.Names = {
+    OVERVIEW  = "Overview",
     MELEE     = "Melee",
     RANGED    = "Ranged",
     WS        = "Weaponskills",
@@ -13,6 +14,7 @@ Focus.Tabs.Names = {
     DEFENSE   = "Defense",
 }
 Focus.Tabs.Switch = {
+    [Focus.Tabs.Names.OVERVIEW]  = nil,
     [Focus.Tabs.Names.MELEE]     = nil,
     [Focus.Tabs.Names.RANGED]    = nil,
     [Focus.Tabs.Names.WS]        = nil,
@@ -41,6 +43,7 @@ require("windows.focus.abilities")
 require("windows.focus.pets")
 require("windows.focus.defense")
 require("windows.focus.cataloged")
+require("windows.focus.overview")
 require("windows.focus.window")
 
 ------------------------------------------------------------------------------------------------------
@@ -78,6 +81,13 @@ Focus.Populate = function()
     UI.Separator()
 
     if UI.BeginTabBar("Focus Tabs", Window.Tabs.Flags) then
+
+        if UI.BeginTabItem(Focus.Tabs.Names.OVERVIEW, false, Focus.Tabs.Switch[Focus.Tabs.Names.OVERVIEW]) then
+            Focus.Tabs.Switch[Focus.Tabs.Names.OVERVIEW] = nil
+            Focus.Overview.Job_Selection(player_name)
+            UI.EndTabItem()
+        end
+
         if UI.BeginTabItem(Focus.Tabs.Names.MELEE, false, Focus.Tabs.Switch[Focus.Tabs.Names.MELEE]) then
             Focus.Tabs.Switch[Focus.Tabs.Names.MELEE] = nil
             Focus.Melee.Display(player_name)

@@ -6,7 +6,7 @@ Column.Flags = T{
 }
 
 Column.Widths = T{
-    Name = 110,
+    Name = 150,
     Parse = 60,
     Percent = 60,
     Single = 40,

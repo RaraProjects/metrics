@@ -70,9 +70,10 @@ end
 -- {X} is defined in the model's settings.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param justify? boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Acc.Running = function(player_name)
+Column.Acc.Running = function(player_name, justify)
     local accuracy = DB.Accuracy.Get(player_name)
     local color = Res.Colors.Basic.WHITE
     local percent = Column.String.Raw_Percent(accuracy[1], accuracy[2])
@@ -83,5 +84,5 @@ Column.Acc.Running = function(player_name)
         color = Res.Colors.Basic.RED
     end
 
-    return UI.TextColored(color, Column.String.Format_Percent(accuracy[1], accuracy[2], true))
+    return UI.TextColored(color, Column.String.Format_Percent(accuracy[1], accuracy[2], justify))
 end

@@ -65,7 +65,7 @@ Parse.Mini.Rows = function(player_name)
     UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
     if Metrics.Parse.Attack_Speed then UI.TableNextColumn() Column.Attack_Speed.Get(player_name, true) end
     if Metrics.Parse.DPS then          UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
-    if Metrics.Parse.Running_Acc then  UI.TableNextColumn() Column.Acc.Running(player_name) end
+    if Metrics.Parse.Running_Acc then  UI.TableNextColumn() Column.Acc.Running(player_name, true) end
     if Parse.Config.Is_Pet_Column_Enabled() then
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)

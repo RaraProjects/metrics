@@ -49,7 +49,7 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- This is for cataloged actions.
--- Grabs the total tp used for a weaponskill.
+-- Grabs the average tp used for a weaponskill.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param action_name string
@@ -57,6 +57,21 @@ end
 Column.Single.Average_TP = function(player_name, action_name)
     local tp = DB.Catalog.Get(player_name, Column.Trackable.WS, action_name, Column.Metric.TP_SPENT)
     local attempts = DB.Catalog.Get(player_name, Column.Trackable.WS, action_name, Column.Metric.COUNT)
+    local color = Column.String.Color_Zero(tp)
+    if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
+    return UI.TextColored(color, string.format("%d", Column.String.Raw_Percent(tp, attempts)))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- Grabs the average tp used for a pet weaponskill.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name string
+------------------------------------------------------------------------------------------------------
+Column.Single.Average_Pet_TP = function(player_name, pet_name, trackable, action_name)
+    local tp = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, Column.Metric.TP_SPENT)
+    local attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, Column.Metric.COUNT)
     local color = Column.String.Color_Zero(tp)
     if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
     return UI.TextColored(color, string.format("%d", Column.String.Raw_Percent(tp, attempts)))

@@ -24,7 +24,7 @@ Parse.Nano.Populate = function()
         UI.TableNextRow()
         UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
         if Metrics.Parse.DPS then UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
-        if Metrics.Parse.Running_Acc then UI.TableNextColumn() Column.Acc.Running(player_name) end
+        if Metrics.Parse.Running_Acc then UI.TableNextColumn() Column.Acc.Running(player_name, true) end
 
         UI.EndTable()
     end

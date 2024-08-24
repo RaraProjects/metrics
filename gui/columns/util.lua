@@ -7,12 +7,22 @@ Column.Util = T{}
 ------------------------------------------------------------------------------------------------------
 Column.Util.Focus = function(player_name)
     if not player_name then return nil end
+    local focus_check = player_name
     player_name = string.lower(player_name)
     UI.PushID(player_name)
     if UI.SmallButton("  F  ") then
-        DB.Widgets.Util.Player_Switch(player_name)
-        Window.Tabs.Switch[Window.Tabs.Names.FOCUS] = ImGuiTabItemFlags_SetSelected
-        Metrics.Window.Focus_Window_Visible[1] = true
+        -- Default to the Overview tab when jumping from this column.
+        Focus.Tabs.Switch[Focus.Tabs.Names.OVERVIEW] = ImGuiTabItemFlags_SetSelected
+
+        -- If in multi-window mode toggle open and closing if the focus is already the given player.
+        -- Always jump to Focus if in non-Window mode.
+        if focus_check ~= DB.Widgets.Util.Get_Player_Focus() or not Metrics.Window.Multi_Window then
+            DB.Widgets.Util.Player_Switch(player_name)
+            Window.Tabs.Switch[Window.Tabs.Names.FOCUS] = ImGuiTabItemFlags_SetSelected
+            Metrics.Window.Focus_Window_Visible[1] = true
+        else
+            Metrics.Window.Focus_Window_Visible[1] = not Metrics.Window.Focus_Window_Visible[1]
+        end
     end
     UI.PopID()
 end

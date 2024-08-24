@@ -51,13 +51,62 @@ H.TP.Action = function(action, actor_mob, log_offense)
     if not tp then tp = 0 end
 
     H.TP.Weaponskill_Attempts(audits, ws_name)
-    H.TP.Weaponskill_TP(audits, ws_name, tp)
+    H.TP.Weaponskill_TP(audits, ws_name, tp, H.Trackable.WS)
     if damage > 0 then H.TP.Weaponskill_Hit(audits, ws_name) end
     if sc_name ~= DB.Enum.Values.DEBUG then H.TP.Skillchain_Hit(audits, sc_name) end
 
     -- Update the battle log.
     H.TP.Blog_WS(actor_mob, damage, ws_data, ws_name, tp)
     H.TP.Blog_SC(actor_mob, sc_damage, sc_name)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Parse the begin monster TP move packet. This is primarily used to capture pet TP when using abilities.
+-- BST Pet and Puppet ranged attacks fall into this category.
+-- Trust abilities can show up here too. They don't have an owner.
+-- As DRG, using Smiting Breath and Restoring Breath also come through here (as abilities).
+-- Using the avatar ability as SMN also goes through here.
+------------------------------------------------------------------------------------------------------
+---@param action table action packet data.
+---@param actor_mob table the mob data of the entity performing the action.
+---@param log_offense boolean if this action should actually be logged.
+------------------------------------------------------------------------------------------------------
+H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
+    if not log_offense then return false end
+    local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
+
+    local target_mob, result, action_id, skill_data, skill_name
+    local trackable = H.Trackable.PET_WS
+    for target_index, target_value in pairs(action.targets) do
+        target_mob = Ashita.Mob.Get_Mob_By_ID(target_value.id)
+        if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
+        for action_index, _ in pairs(target_value.actions) do
+            result = action.targets[target_index].actions[action_index]
+            action_id = result.param
+            skill_data = H.TP.Pet_Skill_Data(action_id, actor_mob)
+            if not skill_data then return nil end
+            skill_name = skill_data.en
+
+            -- Avatar and wyvern abilities go through here too.
+            if Res.Avatar.Get_Healing(action_id) then
+                trackable = H.Trackable.PET_HEAL
+            elseif Res.Avatar.Get_Rage(action_id) or Res.Avatar.Get_Ward(action_id) then
+                trackable = H.Trackable.PET_ABILITY
+            elseif Res.Pets.Get_Damaging_Wyvern_Breath(action_id) then
+                trackable = H.Trackable.PET_ABILITY
+                skill_name = Res.Pets.Get_Damaging_Wyvern_Breath(action_id).en
+            elseif Res.Pets.Get_Healing_Wyvern_Breath(action_id) then
+                trackable = H.Trackable.PET_HEAL
+                skill_name = Res.Pets.Get_Healing_Wyvern_Breath(action_id).en
+            elseif not Res.Monster.Get_Damaging_Ability(action_id) then
+                return nil
+            end
+        end
+    end
+
+    local pet_tp = Ashita.Player.Get(Ashita.Enum.Player_Attributes.PET_TP) or 0
+    local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
+    H.TP.Weaponskill_TP(audits, skill_name, pet_tp, trackable)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -222,12 +271,13 @@ end
 ---@param audits table
 ---@param ws_name string
 ---@param tp integer
+---@param trackable string
 -- ------------------------------------------------------------------------------------------------------
-H.TP.Weaponskill_TP = function(audits, ws_name, tp)
+H.TP.Weaponskill_TP = function(audits, ws_name, tp, trackable)
     if tp < 0 then tp = 0 end
     if tp > 3000 then tp = 3000 end
-    DB.Data.Update(H.Mode.INC, tp, audits, H.Trackable.WS, H.Metric.TP_SPENT)
-    DB.Catalog.Update_Metric(H.Mode.INC, tp, audits, H.Trackable.WS, ws_name, H.Metric.TP_SPENT)
+    DB.Data.Update(H.Mode.INC, tp, audits, trackable, H.Metric.TP_SPENT)
+    DB.Catalog.Update_Metric(H.Mode.INC, tp, audits, trackable, ws_name, H.Metric.TP_SPENT)
 end
 
 -- ------------------------------------------------------------------------------------------------------

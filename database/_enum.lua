@@ -46,6 +46,7 @@ DB.Enum.Trackable = T{
     HEALING             = "Healing",
     ALL_HEAL            = "Combined Healing",
     ENFEEBLE            = "Enfeebling",
+    BUFF_SONG           = "BRD Buff Song",
     MP_DRAIN            = "MP Drain",
     OUTGOING_SPIKE_DMG  = "Outgoing Spike Damage",
     DAMAGE_TAKEN_TOTAL  = "Total Damage Taken", -- Defense

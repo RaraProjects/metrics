@@ -213,6 +213,11 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
 
+    elseif Res.Spells.Get_Buff_Song(spell_id) then
+        trackable = H.Trackable.BUFF_SONG
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+
     else
         if is_pet then trackable = H.Trackable.PET_MAGIC else trackable = H.Trackable.MAGIC end
         DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
@@ -287,9 +292,12 @@ end
 H.Spell.Enfeebling = function(audits, spell_name, message_id)
     local trackable = H.Trackable.ENFEEBLE
     if audits.pet_name then trackable = H.Trackable.PET_ENFEEBLING end
-    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT) -- Used to flag that data is availabel for show in Focus.
+    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT) -- Used to flag that data is available for show in Focus.
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
-    if message_id == Ashita.Enum.Message.ENF_LAND or message_id == Ashita.Enum.Message.ENF_LAND_2 or message_id == Ashita.Enum.Message.ENF_BURST then
+    if message_id == Ashita.Enum.Message.ENF_LAND   or message_id == Ashita.Enum.Message.ENF_LAND_2 or message_id == Ashita.Enum.Message.ENF_BURST
+    or message_id == Ashita.Enum.Message.ABSORB_STR or message_id == Ashita.Enum.Message.ABSORB_DEX or message_id == Ashita.Enum.Message.ABSORB_VIT
+    or message_id == Ashita.Enum.Message.ABSORB_AGI or message_id == Ashita.Enum.Message.ABSORB_INT or message_id == Ashita.Enum.Message.ABSORB_MND
+    or message_id == Ashita.Enum.Message.ABSORB_CHR or message_id == Ashita.Enum.Message.ABSORB_TP  or message_id == Ashita.Enum.Message.ABSORB_ACC then
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
     end
 end

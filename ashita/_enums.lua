@@ -9,6 +9,7 @@ Ashita.Enum.Chat = T{
 
 Ashita.Enum.Player_Attributes = T{
     TP       = "TP",
+    PET_TP   = "Pet TP",
     ISZONING = "IsZoning",
 }
 
@@ -97,9 +98,18 @@ Ashita.Enum.Message = T{
     ENF_LAND_2 = 237,
     BURST      = 252,
     ENF_BURST  = 271,
+    ABSORB_STR = 329,
+    ABSORB_DEX = 330,
+    ABSORB_VIT = 331,
+    ABSORB_AGI = 332,
+    ABSORB_INT = 333,
+    ABSORB_MND = 334,
+    ABSORB_CHR = 335,
     RANGEHIT   = 352,
     RANGECRIT  = 353,
     RANGEMISS  = 354,
+    ABSORB_TP  = 454,
+    ABSORB_ACC = 533,
     SQUARE     = 576,
     TRUE       = 577,
 }

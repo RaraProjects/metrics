@@ -20,7 +20,7 @@ end
 -- Formats the player job string.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
----@param hide_subjob boolean
+---@param hide_subjob? boolean
 ------------------------------------------------------------------------------------------------------
 Column.String.Job = function(player_name, hide_subjob)
     local color = Res.Colors.Basic.WHITE

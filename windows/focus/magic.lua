@@ -17,6 +17,7 @@ Focus.Magic.Display = function(player_name, hide_publish)
     local enspell_count  = DB.Data.Get(player_name, DB.Enum.Trackable.ENSPELL,    DB.Enum.Metric.COUNT)
     local enfeeble_count = DB.Data.Get(player_name, DB.Enum.Trackable.ENFEEBLE,   DB.Enum.Metric.COUNT)
     local spike_damage   = DB.Data.Get(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG, DB.Enum.Metric.TOTAL)
+    local buff_songs     = DB.Data.Get(player_name, DB.Enum.Trackable.BUFF_SONG,  DB.Enum.Metric.COUNT)
     local misc_count     = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC,      DB.Enum.Metric.COUNT)
 
     Focus.Magic.Total(player_name, nuke_total, melee_endamage, range_endamage, enspell_count, endrain, spike_damage)
@@ -32,6 +33,7 @@ Focus.Magic.Display = function(player_name, hide_publish)
     if spike_damage > 0   then Focus.Magic.Single(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG) end
     if melee_endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Enum.Trackable.ENDAMAGE, " (M)") end
     if range_endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Enum.Trackable.ENDAMAGE_R, " (R)") end
+    if buff_songs > 0     then Focus.Overview.Buff_Songs(player_name) end
     if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Magic.Single(player_name, DB.Enum.Trackable.MAGIC) end
 
     if not hide_publish then Focus.Magic.Publish(player_name, nuke_total, healing_total) end
