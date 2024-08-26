@@ -8,6 +8,7 @@ Blog.Config.Defaults.Flags = T{
     WS        = true,
     SC        = true,
     Magic     = true,
+    Enfeeble  = true,
     Ability   = true,
     Pet_TP    = true,
     Pet_Melee = true,
@@ -108,7 +109,6 @@ Blog.Config.Column_Settings = function()
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
-        -- Row 1
         UI.TableNextColumn()
         if UI.Checkbox("Melee", {Metrics.Blog.Flags.Melee}) then
             Metrics.Blog.Flags.Melee = not Metrics.Blog.Flags.Melee
@@ -122,7 +122,6 @@ Blog.Config.Column_Settings = function()
             Metrics.Blog.Flags.WS = not Metrics.Blog.Flags.WS
         end
 
-        -- Row 2
         UI.TableNextColumn()
         if UI.Checkbox("Skillchains", {Metrics.Blog.Flags.SC}) then
             Metrics.Blog.Flags.SC = not Metrics.Blog.Flags.SC
@@ -132,11 +131,14 @@ Blog.Config.Column_Settings = function()
             Metrics.Blog.Flags.Magic = not Metrics.Blog.Flags.Magic
         end
         UI.TableNextColumn()
+        if UI.Checkbox("Enfeeble", {Metrics.Blog.Flags.Enfeeble}) then
+            Metrics.Blog.Flags.Enfeeble = not Metrics.Blog.Flags.Enfeeble
+        end
+
+        UI.TableNextColumn()
         if UI.Checkbox("Abilities", {Metrics.Blog.Flags.Ability}) then
             Metrics.Blog.Flags.Ability = not Metrics.Blog.Flags.Ability
         end
-
-        -- Row 3
         UI.TableNextColumn()
         if UI.Checkbox("Pet Melee", {Metrics.Blog.Flags.Pet_Melee}) then
             Metrics.Blog.Flags.Pet_Melee = not Metrics.Blog.Flags.Pet_Melee
@@ -145,12 +147,11 @@ Blog.Config.Column_Settings = function()
         if UI.Checkbox("Pet TP", {Metrics.Blog.Flags.Pet_TP}) then
             Metrics.Blog.Flags.Pet_TP = not Metrics.Blog.Flags.Pet_TP
         end
+
         UI.TableNextColumn()
         if UI.Checkbox("Pet Healing", {Metrics.Blog.Flags.Pet_Heal}) then
             Metrics.Blog.Flags.Pet_Heal = not Metrics.Blog.Flags.Pet_Heal
         end
-
-        -- Row 4
         UI.TableNextColumn()
         if UI.Checkbox("Healing", {Metrics.Blog.Flags.Healing}) then
             Metrics.Blog.Flags.Healing = not Metrics.Blog.Flags.Healing
@@ -159,12 +160,11 @@ Blog.Config.Column_Settings = function()
         if UI.Checkbox("Player Deaths", {Metrics.Blog.Flags.Deaths}) then
             Metrics.Blog.Flags.Deaths = not Metrics.Blog.Flags.Deaths
         end
+
         UI.TableNextColumn()
         if UI.Checkbox("Mob TP", {Metrics.Blog.Flags.Mob_TP}) then
             Metrics.Blog.Flags.Mob_TP = not Metrics.Blog.Flags.Mob_TP
         end
-
-        -- Row 5
         UI.TableNextColumn()
         if UI.Checkbox("Mob Deaths", {Metrics.Blog.Flags.Mob_Death}) then
             Metrics.Blog.Flags.Mob_Death = not Metrics.Blog.Flags.Mob_Death

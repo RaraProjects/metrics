@@ -133,6 +133,11 @@ Res.Spells.Buff_Songs = T{
     [472] = {id=472,en="Pining Nocturne",ja="恋情のノクターン",cast_time=2,duration=120,element=0,icon_id=-1,icon_id_nq=32,levels={[10]=95},mp_cost=0,prefix="/song",range=12,recast=24,recast_id=472,requirements=0,skill=40,status=223,targets=32,type="BardSong"},
 }
 
+Res.Spells.Dispel = T{
+    [260] = {id=260,en="Dispel",ja="ディスペル",cast_time=3,element=7,icon_id=316,icon_id_nq=15,levels={[5]=32,[20]=32},mp_cost=25,prefix="/magic",range=12,recast=10,recast_id=260,requirements=6,skill=35,targets=32,type="BlackMagic"},
+    [462] = {id=462,en="Magic Finale",ja="魔法のフィナーレ",cast_time=2,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=33},mp_cost=0,prefix="/song",range=12,recast=24,recast_id=462,requirements=0,skill=40,targets=32,type="BardSong"},
+}
+
 -- Based off of spells.lua from Windower.
 Res.Spells.Enfeebling = T{
     [56] = {id=56,en="Slow",ja="スロウ",cast_time=2,duration=180,element=3,icon_id=141,icon_id_nq=3,levels={[3]=13,[5]=13},mp_cost=15,prefix="/magic",range=12,recast=20,recast_id=56,requirements=0,skill=35,status=13,targets=32,type="WhiteMagic"},

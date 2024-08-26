@@ -32,6 +32,7 @@ Blog.Enum.Types = T{
     WS        = "WS",
     SC        = "SC",
     ABILITY   = "Ability",
+    ENFEEBLE  = "Enfeeble",
 }
 
 Blog.Page = 1
@@ -159,6 +160,7 @@ Blog.Action_Filter = function(action_flag)
     elseif action_flag == Blog.Enum.Types.WS        then return Metrics.Blog.Flags.WS
     elseif action_flag == Blog.Enum.Types.SC        then return Metrics.Blog.Flags.SC
     elseif action_flag == Blog.Enum.Types.ABILITY   then return Metrics.Blog.Flags.Ability
+    elseif action_flag == Blog.Enum.Types.ENFEEBLE  then return Metrics.Blog.Flags.Enfeeble
     else return false end
 end
 
@@ -218,6 +220,8 @@ Blog.Display.Rows = function(entry)
     if damage == "0" then
         action_color = Res.Colors.Basic.DIM
         note_color = Res.Colors.Basic.DIM
+    elseif damage == "-1" then
+        damage = "---"
     end
 
     UI.TableNextRow()

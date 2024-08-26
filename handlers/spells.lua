@@ -82,7 +82,7 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
     end
 
     if Res.Spells.Get_Enfeeble(spell_id) then
-        H.Spell.Enfeebling(audits, spell_name, message_id)
+        damage = H.Spell.Enfeebling(audits, spell_name, message_id, damage)
         is_mapped = true
     end
 
@@ -118,13 +118,23 @@ H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_
             blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
         end
         Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MAGIC, spell_name, damage, blog_note, DB.Enum.Trackable.MAGIC, spell_data)
-    end
 
-    if Res.Spells.Get_Healing(spell_id) then
+    elseif Res.Spells.Get_Healing(spell_id) then
         if Res.Spells.Get_AOE(spell_id) then
             blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
         end
         Blog.Add(actor_mob.name, nil, Blog.Enum.Types.HEALING, spell_name, damage, blog_note, DB.Enum.Trackable.HEALING, spell_data)
+
+    elseif Res.Spells.Get_Enfeeble(spell_id) then
+        if damage == -1 then
+            blog_note = "No Effect"
+        elseif damage == -2 then
+            blog_note = "Resist!"
+        elseif Res.Spells.Get_Dispel(spell_id) then
+            local buff = Res.Buffs.Get_Buff(damage)
+            if buff then blog_note = buff.en end
+        end
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.ENFEEBLE, spell_name, -1, blog_note, DB.Enum.Trackable.ENFEEBLE, spell_data)
     end
 end
 
@@ -288,16 +298,26 @@ end
 ---@param audits table
 ---@param spell_name string
 ---@param message_id number defines what happened to the spell (resist, etc.)
+---@param damage integer used as a flag to distinguish between no effect and resist.
 ------------------------------------------------------------------------------------------------------
-H.Spell.Enfeebling = function(audits, spell_name, message_id)
+H.Spell.Enfeebling = function(audits, spell_name, message_id, damage)
     local trackable = H.Trackable.ENFEEBLE
     if audits.pet_name then trackable = H.Trackable.PET_ENFEEBLING end
+
     DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT) -- Used to flag that data is available for show in Focus.
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
-    if message_id == Ashita.Enum.Message.ENF_LAND   or message_id == Ashita.Enum.Message.ENF_LAND_2 or message_id == Ashita.Enum.Message.ENF_BURST
-    or message_id == Ashita.Enum.Message.ABSORB_STR or message_id == Ashita.Enum.Message.ABSORB_DEX or message_id == Ashita.Enum.Message.ABSORB_VIT
-    or message_id == Ashita.Enum.Message.ABSORB_AGI or message_id == Ashita.Enum.Message.ABSORB_INT or message_id == Ashita.Enum.Message.ABSORB_MND
-    or message_id == Ashita.Enum.Message.ABSORB_CHR or message_id == Ashita.Enum.Message.ABSORB_TP  or message_id == Ashita.Enum.Message.ABSORB_ACC then
+
+    -- No Effect (count this as a hit to not be penalized)
+    if message_id == Ashita.Enum.Message.NO_EFFECT or message_id == Ashita.Enum.Message.EFFECT_FAIL then
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+        damage = -1
+    -- Resists
+    elseif message_id == Ashita.Enum.Message.RESIST or message_id == Ashita.Enum.Message.RESIST_2 then
+        damage = -2
+    -- Effect Landed
+    else
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
     end
+
+    return damage
 end
