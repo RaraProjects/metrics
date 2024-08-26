@@ -400,21 +400,18 @@ Focus.Overview.Skillchains = function(player_name)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    if UI.BeginTable("Skillchains", 3, table_flags) then
+    if UI.BeginTable("Skillchains", 2, table_flags) then
         UI.TableSetupColumn("Skillchains", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, width)
         UI.TableSetupColumn("Count", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Opened")
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.SC, DB.Enum.Metric.SC_OPENED)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Closed")
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.SC, DB.Enum.Metric.SC_CLOSED)
 
         UI.EndTable()
     end

@@ -1,5 +1,8 @@
 H.TP = {}
 
+H.TP.SC_Opener = nil
+H.TP.SC_Step   = 0
+
 ------------------------------------------------------------------------------------------------------
 -- Parse the weaponskill packet.
 -- Surprises:
@@ -380,6 +383,10 @@ H.TP.Skillchain_Parse = function(result, actor_mob, target_mob)
     if sc_id > 0 then
         sc_name    = Res.WS.Get_Skillchain(sc_id)
         sc_damage  = sc_damage + H.TP.Skillchain_Damage(result, actor_mob.name, target_mob.name, sc_name)
+        H.TP.SC_Step = H.TP.SC_Step + 1
+    else
+        H.TP.SC_Opener = actor_mob.name
+        H.TP.SC_Step   = 1
     end
     return sc_damage, sc_name
 end
@@ -406,10 +413,23 @@ end
 ---@param sc_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Skillchain_Hit = function(audits, sc_name)
+    -- Total Attempts
     DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.COUNT)
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.COUNT)
+
+    -- Successfull SC Count
     DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.HIT_COUNT)
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.HIT_COUNT)
+
+    -- Credit to skillchain closer.
+    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.SC_CLOSED)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.SC_CLOSED)
+
+    -- Credit to skillchain opener (except for multistep skillchains).
+    if H.TP.SC_Step <= 2 then
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.SC_OPENED)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.SC_OPENED)
+    end
 end
 
 -- ------------------------------------------------------------------------------------------------------

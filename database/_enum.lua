@@ -103,6 +103,8 @@ DB.Enum.Metric = T{
     OVERCURE      = "Overcure",
     MP_SPENT      = "MP Spent",
     TP_SPENT      = "TP Spent",
+    SC_OPENED     = "Skillchains Opened",
+    SC_CLOSED     = "Skillchains Closed",
 }
 
 DB.Enum.Pet_Single_Trackable = T{
