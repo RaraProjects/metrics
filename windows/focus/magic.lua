@@ -28,13 +28,13 @@ Focus.Magic.Display = function(player_name, hide_publish)
 
     if nuke_total > 0     then Focus.Magic.Single(player_name, DB.Enum.Trackable.NUKE) end
     if healing_total > 0  then Focus.Magic.Single(player_name, DB.Enum.Trackable.HEALING) end
-    if enfeeble_count > 0 then Focus.Magic.Single(player_name, DB.Enum.Trackable.ENFEEBLE) end
     if enspell_count > 0  then Focus.Magic.Single(player_name, DB.Enum.Trackable.ENSPELL) end
     if spike_damage > 0   then Focus.Magic.Single(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG) end
     if melee_endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Enum.Trackable.ENDAMAGE, " (M)") end
     if range_endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Enum.Trackable.ENDAMAGE_R, " (R)") end
+    if enfeeble_count > 0 then Focus.Overview.Debuff(player_name) end
     if buff_songs > 0     then Focus.Overview.Buff_Songs(player_name) end
-    if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Magic.Single(player_name, DB.Enum.Trackable.MAGIC) end
+    if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Overview.Spell(player_name) end
 
     if not hide_publish then Focus.Magic.Publish(player_name, nuke_total, healing_total) end
 end

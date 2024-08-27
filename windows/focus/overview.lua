@@ -683,6 +683,48 @@ Focus.Overview.Buff_Songs = function(player_name)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Shows generic spell overview stats.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.Spell = function(player_name)
+    if not player_name then return nil end
+
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    if UI.BeginTable("Spells", 3, table_flags) then
+        UI.TableSetupColumn("Spell", col_flags, name_width)
+        UI.TableSetupColumn("Count", col_flags, width)
+        UI.TableSetupColumn("MP Used", col_flags, width)
+
+        UI.TableHeadersRow()
+
+        local trackable = DB.Enum.Trackable.MAGIC
+        if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
+            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local action_name
+            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+                action_name = data[1]
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text(action_name)
+                UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
+                UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable)
+            end
+        else
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("None")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Shows ability overview stats.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
