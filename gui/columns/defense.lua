@@ -23,6 +23,22 @@ Column.Defense.Damage_Taken_By_Type = function(player_name, damage_type, percent
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Grabs the percent of party damage the player has taken.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param justify? boolean whether or not to right justify the text
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Defense.Damage_Taken_Percent_Party = function(player_name, justify, raw)
+    local total = DB.Data.Get(player_name, Column.Trackable.DAMAGE_TAKEN_TOTAL, Column.Metric.TOTAL)
+    local color = Column.String.Color_Zero(total)
+    local team_total = DB.Team_Damage_By_Type(Column.Trackable.DAMAGE_TAKEN_TOTAL)
+    if raw then return Column.String.Format_Percent(total, team_total) end
+    return UI.TextColored(color, Column.String.Format_Percent(total, team_total, justify))
+end
+
+------------------------------------------------------------------------------------------------------
 -- Grabs the proc rate of certain defensive actions.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string

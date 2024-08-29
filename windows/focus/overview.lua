@@ -774,7 +774,7 @@ Focus.Overview.Defense = function(player_name)
 
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL)
-        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL, true)
+        UI.TableNextColumn() Column.Defense.Damage_Taken_Percent_Party(player_name)
 
         UI.EndTable()
     end
