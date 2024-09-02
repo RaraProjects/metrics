@@ -21,7 +21,6 @@ Hub.Content = function()
     else
         Hub.Single_Window()
     end
-    Throttle.Block()
 end
 
 ------------------------------------------------------------------------------------------------------

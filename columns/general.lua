@@ -16,7 +16,7 @@ Column.General.By_Type = function(player_name, trackable, metric, metric_denomin
     local color = Column.String.Color_Zero(numerator)
     if metric_denominator then
         local denominator = DB.Data.Get(player_name, trackable, metric_denominator)
-        if not denominator or denominator <= 0 then return Column.String.Format_Number(0) end
+        if not denominator or denominator <= 0 then return UI.TextColored(color, Column.String.Format_Percent(0, 0, justify)) end
         if raw then return Column.String.Format_Percent(numerator, denominator) end
         return UI.TextColored(color, Column.String.Format_Percent(numerator, denominator, justify))
     end

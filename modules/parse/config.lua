@@ -22,6 +22,7 @@ Parse.Config.Defaults = T{
     Melee        = true,
     Average_WS   = false,
     Weaponskill  = true,
+    WS_Accuracy  = false,
     Ranged       = false,
     Magic        = true,
     Ability      = false,
@@ -248,6 +249,12 @@ Parse.Config.Physical_Flags = function(col_flags, width)
         UI.TableNextColumn()
         if UI.Checkbox("Average WS", {Metrics.Parse.Average_WS}) then
             Metrics.Parse.Average_WS = not Metrics.Parse.Average_WS
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("WS Accuracy", {Metrics.Parse.WS_Accuracy}) then
+            Metrics.Parse.WS_Accuracy = not Metrics.Parse.WS_Accuracy
             Parse.Util.Calculate_Column_Flags()
         end
 

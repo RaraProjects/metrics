@@ -19,7 +19,6 @@ function Window:New(settings)
     local flags = bit.bor(
         ImGuiWindowFlags_AlwaysAutoResize,  -- This prevents manual resizing, but without it things look messed up.
         ImGuiWindowFlags_NoSavedSettings,
-        ImGuiWindowFlags_NoFocusOnAppearing,
         ImGuiWindowFlags_NoNav
     )
 

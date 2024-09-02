@@ -60,6 +60,7 @@ Parse.Full.Headers = function()
     if Metrics.Parse.Crit then         UI.TableSetupColumn("%Crit",   flags) end
     if Metrics.Parse.Average_WS then   UI.TableSetupColumn("Avg WS",  flags) end
     if Metrics.Parse.Weaponskill then  UI.TableSetupColumn("WS",      flags) end
+    if Metrics.Parse.WS_Accuracy then  UI.TableSetupColumn("WS Acc.", flags) end
     if Parse.Config.Include_SC_Damage() then UI.TableSetupColumn("SC", flags) end
     if Metrics.Parse.Ranged then       UI.TableSetupColumn("Ranged",  flags) end
     if Metrics.Parse.Ranged_Dist then  UI.TableSetupColumn("R.Dist",  flags) end
@@ -99,6 +100,7 @@ Parse.Full.Rows = function(player_name)
     if Metrics.Parse.Crit then         UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Values.COMBINED, true) end
     if Metrics.Parse.Average_WS then   UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.WS, true) end
     if Metrics.Parse.Weaponskill then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.WS, false, true) end
+    if Metrics.Parse.WS_Accuracy then  UI.TableNextColumn() Column.General.By_Type(player_name, DB.Enum.Trackable.WS, DB.Enum.Metric.HIT_COUNT, DB.Enum.Metric.COUNT, true) end
     if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.SC, false, true) end
     if Metrics.Parse.Ranged then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, false, true) end
     if Metrics.Parse.Ranged_Dist then  UI.TableNextColumn() Column.Damage.Shot_Distance(player_name, true) end
@@ -111,6 +113,8 @@ Parse.Full.Rows = function(player_name)
     if Metrics.Parse.Pet_Ability then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY, false, true) end
     if Metrics.Parse.Healing then      UI.TableNextColumn() Column.Healing.Total(player_name, false, true) end
     if Metrics.Parse.Deaths then       UI.TableNextColumn() Column.Proc.Deaths(player_name) end
+
+
 end
 
 ------------------------------------------------------------------------------------------------------

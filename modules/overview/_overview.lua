@@ -23,14 +23,18 @@ Overview.Content = function()
         return nil
     end
 
-    UI.Text("Overall") Focus.Overall(player_name)
-    UI.Separator() UI.Text("Melee")        Focus.Melee.Display(player_name)
-    UI.Separator() UI.Text("Ranged")       Focus.Ranged.Display(player_name)
-    UI.Separator() UI.Text("Weaponskills") Focus.WS.Display(player_name, true)
-    UI.Separator() UI.Text("Magic")        Focus.Magic.Display(player_name, true)
-    UI.Separator() UI.Text("Abilities")    Focus.Abilities.Display(player_name, true)
-    UI.Separator() UI.Text("Pets")         Focus.Pets.Display(player_name)
-    UI.Separator() UI.Text("Defense")      Focus.Defense.Display(player_name)
+    if Debug.Is_Enabled() then
+        Debug.Content()
+    else
+        UI.Text("Overall") Focus.Overall(player_name)
+        UI.Separator() UI.Text("Melee")        Focus.Melee.Display(player_name)
+        UI.Separator() UI.Text("Ranged")       Focus.Ranged.Display(player_name)
+        UI.Separator() UI.Text("Weaponskills") Focus.WS.Display(player_name, true)
+        UI.Separator() UI.Text("Magic")        Focus.Magic.Display(player_name, true)
+        UI.Separator() UI.Text("Abilities")    Focus.Abilities.Display(player_name, true)
+        UI.Separator() UI.Text("Pets")         Focus.Pets.Display(player_name)
+        UI.Separator() UI.Text("Defense")      Focus.Defense.Display(player_name)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

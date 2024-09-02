@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "08.26.24.00"
+addon.version = "09.02.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -108,6 +108,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
             XP.Window.Populate(XP.Content)
             Report.Window.Populate(Report.Content)
         end
+        Throttle.Block()
     end
 end)
 
