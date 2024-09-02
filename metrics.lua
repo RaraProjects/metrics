@@ -47,29 +47,33 @@ Current_Chunk_Buffer = T{}
 -- Resources
 require("resources._resource")
 
--- Modules
-UI = require("imgui")
+-- Core Modules
 require("database._database")
 require("file")
 Timers = require("timers")
-
 require("throttling")
 require("ashita._ashita")
 require("handlers._handler")
-require("windows.exp._exp")
 
--- Windows
-require("windows.config._config")
-require("gui.window._window")
-require("gui.columns._column")
-require("windows.parse._parse")
-require("windows.focus._focus")
-require("windows.battle log._battle_log")
-require("windows.report._report")
-require("windows.hub")
+-- GUI
+UI = require("imgui")
+require("windows.!manager")
+require("windows.!window")
+require("columns.!column")
+
+-- Modules
+require("modules.config._config")
+require("modules.exp._exp")
+require("modules.parse._parse")
+require("modules.focus._focus")
+require("modules.battle log._battle_log")
+require("modules.report._report")
+require("modules.overview._overview")
+require("modules.hub.!hub")
+require("modules.debug.!debug")
 
 require("commands")
-require("debug._debug")
+
 require("initialization")
 
 ------------------------------------------------------------------------------------------------------
@@ -81,7 +85,7 @@ require("initialization")
 ashita.events.register('d3d_present', 'present_cb', function()
     if not _Globals.Initialized then return nil end
     if not Ashita.Player.Is_Logged_In() then return nil end
-    if _Debug.Is_Enabled() and _Debug.Config.Show_Demo then UI.ShowDemoWindow() end
+    if Debug.Is_Enabled() and Debug.Show_Demo then UI.ShowDemoWindow() end
 
     Throttle.Throttle()     -- Throttling for performance.
     XP.Initialize()         -- Need to initialize here because some things aren't ready when addon loads.
@@ -92,9 +96,18 @@ ashita.events.register('d3d_present', 'present_cb', function()
     Timers.Cycle(Timers.Enum.Names.DPS)
     Timers.Cycle(Timers.Enum.Names.EXP)
 
-    if not Ashita.Menu.Hide() then
-        Window.Populate()
-        Hub.Populate()
+    if not Ashita.Menu.Hide() and not Window_Manager.Is_Masked() then
+        Hub.Window.Populate(Hub.Content)
+        Overview.Window.Populate(Overview.Content)
+        Config.Window.Populate(Config.Content)
+        Debug.Window.Populate(Debug.Content)
+        if Metrics.Window.Multi_Window then
+            Parse.Window.Populate(Parse.Content)
+            Focus.Window.Populate(Focus.Content)
+            Blog.Window.Populate(Blog.Content)
+            XP.Window.Populate(XP.Content)
+            Report.Window.Populate(Report.Content)
+        end
     end
 end)
 
@@ -112,7 +125,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
 	local is_duplicate = false
 	if not packet.injected then is_duplicate = Ashita.Packets.Is_Duplicate(packet) end
     if is_duplicate then
-        _Debug.Error.Add("Duplicate packet for packet " .. tostring(packet.id) .. " found.")
+        Debug.Error.Add("Duplicate packet for packet " .. tostring(packet.id) .. " found.")
         return nil
     end
 
@@ -124,7 +137,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0x00A then
         Ashita.Player.Zoning(false)
         Timers.Reset(Timers.Enum.Names.ZONE)
-        Window.Set_Bar_Delay()
+        Window_Manager.Set_Bar_Delay()
         XP.Chains.End()
 
     -- 200 0xC8 Alliance Update
@@ -147,17 +160,17 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0x028 then
         local action = Ashita.Packets.Build_Action(packet.data)
         if not action then
-            _Debug.Error.Add("Packet Event: action was nil from Packets.Build_Action")
+            Debug.Error.Add("Packet Event: action was nil from Packets.Build_Action")
             return nil
         end
         local actor_mob = Ashita.Mob.Get_Mob_By_ID(action.actor_id)
         if not actor_mob then
-            _Debug.Error.Add("Packet Event: actor_mob was nil from Mob.Get_Mob_By_ID")
+            Debug.Error.Add("Packet Event: actor_mob was nil from Mob.Get_Mob_By_ID")
             return nil
         end
         local target_mob = Ashita.Packets.Get_Action_Target(action)
         if not target_mob then
-            _Debug.Error.Add("Packet Event: target_mob was nil from Mob.Get_Mob_By_ID")
+            Debug.Error.Add("Packet Event: target_mob was nil from Mob.Get_Mob_By_ID")
             return nil
         end
 
@@ -208,7 +221,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0x029 then
         local data = Ashita.Packets.Build_Message(packet.data)
         if not data then return nil end
-        if _Debug.Is_Enabled() then _Debug.Packet.Add_Message(data) end
+        if Debug.Is_Enabled() then Debug.Packet.Add_Message(data) end
 
         -- Killing a mob.
         if data.message == Ashita.Enum.Message.MOB_KILL then

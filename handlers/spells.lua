@@ -56,7 +56,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, burst)
-    _Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Spell", result)
+    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Spell", result)
     if not spell_data then return 0 end
 
     local spell_id = spell_data.Index
@@ -87,7 +87,7 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
     end
 
     if not is_mapped then
-        _Debug.Error.Add("Spell.Parse: {" .. tostring(actor_mob.name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
+        Debug.Error.Add("Spell.Parse: {" .. tostring(actor_mob.name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
     end
 
     return damage

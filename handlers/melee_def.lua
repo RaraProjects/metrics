@@ -34,7 +34,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
-    _Debug.Packet.Add_Action(actor_name, target_name, "Melee Def.", result)
+    Debug.Packet.Add_Action(actor_name, target_name, "Melee Def.", result)
     local damage = result.param
     local reaction_id = result.reaction
     local message_id = result.message

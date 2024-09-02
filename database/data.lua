@@ -12,7 +12,7 @@ DB.Data = T{}
 ------------------------------------------------------------------------------------------------------
 DB.Data.Init = function(index, player_name)
 	if not index then
-		_Debug.Error.Add("Data.Init: {" .. tostring(player_name) .. "} nil index passed in." )
+		Debug.Error.Add("Data.Init: {" .. tostring(player_name) .. "} nil index passed in." )
 		return false
 	end
 
@@ -107,7 +107,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Set = function(value, index, trackable, metric)
 	if not value or not index or not trackable or not metric then
-		_Debug.Error.Add("Set.Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Set.Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
 		return false
 	end
 	DB.Parse[index][trackable][metric] = value
@@ -125,7 +125,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Inc = function(value, index, trackable, metric)
 	if not value or not index or not trackable or not metric then
-		_Debug.Error.Add("Inc.Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Inc.Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
 		return false
 	end
 	DB.Parse[index][trackable][metric] = DB.Parse[index][trackable][metric] + value
@@ -143,7 +143,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Get = function(player_name, trackable, metric)
 	if not player_name or not trackable or not metric then
-		_Debug.Error.Add("Get.Data: Nil player name. " .. tostring(trackable) .. " " .. tostring(metric))
+		Debug.Error.Add("Get.Data: Nil player name. " .. tostring(trackable) .. " " .. tostring(metric))
 		return 0
 	end
 
@@ -190,11 +190,11 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Build_Index = function(actor_name, target_name)
 	if not target_name then
-		_Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil target name passed in.")
+		Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil target name passed in.")
 		target_name = DB.Enum.Values.DEBUG
 	end
 	if not actor_name then
-		_Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil actor name passed in.")
+		Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil actor name passed in.")
 		return DB.Enum.Values.DEBUG
 	end
 	return actor_name..":"..target_name

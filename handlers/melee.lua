@@ -70,7 +70,7 @@ end
 -- add_effect_message	229: comes up with Ygnas bonus attack
 -- add_effect_param		enspell damage
 -- spike_effect_param	0: consistently on MNK vs Apex bats
--- spike_effect_effect	
+-- spike_effect_effect
 -- effect 				2: killing blow
 -- 						4: counter? (probably not)
 -- stagger 				animation the target does when being hit
@@ -84,7 +84,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 H.Melee.Parse = function(result, player_name, target_name, owner_mob)
-    _Debug.Packet.Add_Action(player_name, target_name, "Melee", result)
+    Debug.Packet.Add_Action(player_name, target_name, "Melee", result)
     local animation_id = result.animation
     local damage = result.param
     local message_id = result.message
@@ -239,7 +239,7 @@ H.Melee.Animation = function(animation_id, audits, damage, melee_type_broad, thr
         DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.RANGED, H.Metric.TOTAL)
         DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.COUNT)
     else
-        _Debug.Error.Add("Melee.Animation: {" .. tostring(audits.player_name) .. "} Unhandled animation: " .. tostring(animation_id))
+        Debug.Error.Add("Melee.Animation: {" .. tostring(audits.player_name) .. "} Unhandled animation: " .. tostring(animation_id))
     end
     return throwing
 end
@@ -293,7 +293,7 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
     elseif message_id == Ashita.Enum.Message.RANGECRIT then
         H.Melee.Daken_Crit(audits, damage)
     else
-        _Debug.Error.Add("Melee.Message: {" .. tostring(audits.player_name) .. "} Unhandled Melee Nuance " .. tostring(message_id))
+        Debug.Error.Add("Melee.Message: {" .. tostring(audits.player_name) .. "} Unhandled Melee Nuance " .. tostring(message_id))
     end
 end
 

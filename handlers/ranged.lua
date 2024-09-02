@@ -48,7 +48,7 @@ end
 H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
     if not actor_mob or not target_mob then return 0 end
 
-    _Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Ranged", result)
+    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Ranged", result)
     local damage = result.param
     local message_id = result.message
 
@@ -136,7 +136,7 @@ H.Ranged.Message = function(message_id, audits, damage, ranged_type)
     elseif message_id == Ashita.Enum.Message.SHADOWS then
         H.Ranged.Shadows(audits, damage, ranged_type)
     else
-        _Debug.Error.Add("Ranged.Message: {" .. tostring(audits.player_name) .. "} Unhandled Ranged Message: " .. tostring(message_id))
+        Debug.Error.Add("Ranged.Message: {" .. tostring(audits.player_name) .. "} Unhandled Ranged Message: " .. tostring(message_id))
     end
 end
 

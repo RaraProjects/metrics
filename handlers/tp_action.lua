@@ -177,7 +177,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
-    _Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Weaponskill", result)
+    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Weaponskill", result)
     local damage = result.param
     local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
 
@@ -203,7 +203,7 @@ end
 H.TP.WS_Data = function(action, actor_mob)
     local ws_data = Ashita.WS.Get_By_ID(action.param)
 	if not ws_data then
-        _Debug.Error.Add("TP.WS_Data: {" .. tostring(actor_mob.name) .. "} used ws ID " .. tostring(action.param) .. " and it wasn't found.")
+        Debug.Error.Add("TP.WS_Data: {" .. tostring(actor_mob.name) .. "} used ws ID " .. tostring(action.param) .. " and it wasn't found.")
         return nil
     end
     return ws_data
@@ -219,7 +219,7 @@ end
 H.TP.Pet_Skill_Data = function(action_id, actor_mob)
     local skill_data = Res.Monster.Get_Full_List(action_id)
     if not skill_data then
-        _Debug.Error.Add("TP.Pet_Skill_Data: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action_id) .. " unampped in Pet_Skill.")
+        Debug.Error.Add("TP.Pet_Skill_Data: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action_id) .. " unampped in Pet_Skill.")
         skill_data = {id = action_id, en = "UNK Mon. Ability (" .. action_id .. ")"}
     end
     return skill_data
@@ -307,7 +307,7 @@ end
 H.TP.Pet_Skill_Ignore = function(owner_mob, audits, damage, ws_id, ws_name)
     if owner_mob then
         if not Res.Monster.Get_Damaging_Ability(ws_id) then
-            _Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
+            Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
             damage = 0
         end
         DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)

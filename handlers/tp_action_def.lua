@@ -66,7 +66,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
-    _Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "TP Def", result)
+    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "TP Def", result)
     local damage = result.param
     local message_id = result.message
     local audits = H.TP_Def.Audits(actor_mob, owner_mob, target_mob)
@@ -126,7 +126,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP_Def.Ignore_Damage = function(damage, ws_id, ws_name, message_id)
     if not Res.Monster.Get_Damaging_Ability(ws_id) then
-        _Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
+        Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
         damage = 0
     elseif message_id == Ashita.Enum.Message.MISS_TP or message_id == Ashita.Enum.Message.SHADOWS then
         damage = 0

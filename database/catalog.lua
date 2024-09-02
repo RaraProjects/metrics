@@ -16,7 +16,7 @@ DB.Catalog = T{}
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Init = function(index, player_name, trackable, action_name, pet_name)
 	if not index or not player_name or not trackable or not action_name then
-		_Debug.Error.Add("Init.Catalog_Action: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Init.Catalog_Action: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil required parameter passed in." )
 		return false
 	end
 
@@ -137,7 +137,7 @@ DB.Catalog.Update_Metric = function(mode, value, audits, trackable, action_name,
 	local index = DB.Data.Build_Index(player_name, target_name)
 
 	if not trackable or not player_name or not action_name then
-		_Debug.Error.Add("Update.Catalog_Metric: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Update.Catalog_Metric: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil required parameter passed in." )
 		return false
 	end
 	DB.Catalog.Init(index, player_name, trackable, action_name, pet_name)
@@ -182,7 +182,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Set = function(value, index, trackable, action_name, metric)
 	if not value or not index or not trackable or not action_name or not metric then
-		_Debug.Error.Add("Set.Catalog: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Set.Catalog: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
 		return false
 	end
 	DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric] = value
@@ -204,7 +204,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Inc = function(value, index, trackable, action_name, metric)
 	if not value or not index or not trackable or not action_name or not metric then
-		_Debug.Error.Add("Inc.Catalog: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Inc.Catalog: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
 		return false
 	end
 	DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric]
@@ -224,7 +224,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Get = function(player_name, trackable, action_name, metric)
 	if not player_name or not trackable or not action_name or not metric then
-		_Debug.Error.Add("Get.Catalog: player_name {" .. tostring(player_name) .. "} trackable {" .. tostring(trackable) .. "} action_name {" .. tostring(action_name) .. "} metric {" .. tostring(metric))
+		Debug.Error.Add("Get.Catalog: player_name {" .. tostring(player_name) .. "} trackable {" .. tostring(trackable) .. "} action_name {" .. tostring(action_name) .. "} metric {" .. tostring(metric))
 		return 0
 	end
 	local total = 0

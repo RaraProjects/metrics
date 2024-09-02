@@ -12,7 +12,7 @@ DB.Attack_Speed.Timeout = 15    -- Treshold in seconds to throw away a value (in
 ------------------------------------------------------------------------------------------------------
 DB.Attack_Speed.Update = function(player_name)
     if not DB.Tracking.Running_Attack_Speed[player_name] then
-		_Debug.Error.Add("Attack_Speed.Update: {" .. tostring(player_name) .. "} is missing in Tracking.Attack_Speed.")
+		Debug.Error.Add("Attack_Speed.Update: {" .. tostring(player_name) .. "} is missing in Tracking.Attack_Speed.")
 		return false
 	end
 

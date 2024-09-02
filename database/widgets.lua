@@ -50,7 +50,7 @@ end
 -- Shows the help text for the mob filter.
 ------------------------------------------------------------------------------------------------------
 DB.Widgets.Mob_Filter_Help_Text = function()
-    UI.SameLine() Window.Widgets.HelpMarker("You can filter to show only data for actions taken against mobs with a specific name.\n"
+    UI.SameLine() Window_Manager.Widgets.HelpMarker("You can filter to show only data for actions taken against mobs with a specific name.\n"
                                         .. "Notes:\n"
                                         .. "1. The filter may not be for individual mobs. It is for mobs with that name collectively.\n"
                                         .. "2. If the mob has a unique name (like an NM) then the data will be mob specific.\n"
@@ -92,7 +92,7 @@ end
 -- Shows the help text for the player filter.
 ------------------------------------------------------------------------------------------------------
 DB.Widgets.Player_Filter_Help_Text = function()
-    UI.SameLine() Window.Widgets.HelpMarker("Pick a player that you would like to see more detailed stats for.\n")
+    UI.SameLine() Window_Manager.Widgets.HelpMarker("Pick a player that you would like to see more detailed stats for.\n")
 end
 
 ------------------------------------------------------------------------------------------------------

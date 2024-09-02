@@ -83,7 +83,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Sort.Catalog_Damage = function(player_name, focus_type)
 	if not focus_type then
-		_Debug.Error.Add("Sort.Catalog_Damage: {" .. tostring(player_name) .. "} focus_type wasn't provided.")
+		Debug.Error.Add("Sort.Catalog_Damage: {" .. tostring(player_name) .. "} focus_type wasn't provided.")
 		return nil
 	end
 	DB.Lists.Populate.Catalog_Damage(player_name, focus_type)
@@ -136,10 +136,10 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Populate.Catalog_Damage = function(player_name, focus_type)
 	if not focus_type then
-		_Debug.Error.Add("Util.Populate_Total_Damage_Table: {" .. tostring(player_name) .. "} focus_type wasn't provided.")
+		Debug.Error.Add("Util.Populate_Total_Damage_Table: {" .. tostring(player_name) .. "} focus_type wasn't provided.")
 		return nil
 	elseif not DB.Tracking.Trackable[focus_type] or not DB.Tracking.Trackable[focus_type][player_name] then
-		_Debug.Error.Add("Util.Populate_Total_Damage_Table: {" .. tostring(player_name) .. "} does have data for focus type {" .. tostring(focus_type) .. "}")
+		Debug.Error.Add("Util.Populate_Total_Damage_Table: {" .. tostring(player_name) .. "} does have data for focus type {" .. tostring(focus_type) .. "}")
 		return nil
 	end
 	DB.Sorted.Catalog_Damage = {}

@@ -138,8 +138,8 @@ Ashita.Mob.Pet_Owner = function(pet_data)
     for _, member in pairs(party) do
         if type(member) == 'table' and member.mob then
             -- May not always have a pet when running unit tests so need to short circuit here.
-            if _Debug.Enabled and _Debug.Unit.Active then
-                return _Debug.Unit.Mob.PLAYER
+            if Debug.Enabled and Debug.Unit.Active then
+                return Debug.Unit.Mob.PLAYER
             elseif member.mob.pet_index == pet_data.index then
                 owner = member.mob
             end
