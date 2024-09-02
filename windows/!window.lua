@@ -5,11 +5,12 @@ function Window:New(settings)
     local self = T{}
     settings = settings or T{}
 
-    local name     = settings.Name     or "Default"
-    local title    = settings.Title    or "Default Title"
-    local module   = settings.Module   or "Default"
-    local x        = settings.X        or 100
-    local y        = settings.Y        or 100
+    local name       = settings.Name       or "Default"
+    local title      = settings.Title      or "Default Title"
+    local module     = settings.Module     or "Default"
+    local x          = settings.X          or 100
+    local y          = settings.Y          or 100
+    local show_title = settings.Show_Title or false
 
     local need_position_reset = true
     local scaling_set = false
@@ -37,12 +38,11 @@ function Window:New(settings)
         UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
         UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
 
-        if not Metrics.Window.Show_Title then flags = bit.bor(flags, ImGuiWindowFlags_NoTitleBar) end
-
+        if not Metrics.Window.Show_Title and not show_title then flags = bit.bor(flags, ImGuiWindowFlags_NoTitleBar) end
         self.Check_Position()
 
         if UI.Begin(title, visible, flags) then
-            self.Update_Position()
+            self.Update_Settings()
             self.Set_Scaling()
             Window_Manager.Theme.Set()
             if content then content() end
@@ -65,9 +65,10 @@ function Window:New(settings)
     ------------------------------------------------------------------------------------------------------
     -- Updates the window position for the settings file.
     ------------------------------------------------------------------------------------------------------
-    self.Update_Position = function()
+    self.Update_Settings = function()
         x, y = UI.GetWindowPos()
         Window_Manager.Save_Position(module, x, y)
+        Window_Manager.Save_Visibility(module, visible[1])
     end
 
     ------------------------------------------------------------------------------------------------------

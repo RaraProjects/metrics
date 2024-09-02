@@ -8,6 +8,7 @@ Overview.Window = Window:New({
     Title   = Overview.Title,
     Module  = Overview.Module,
     Visible = {false},
+    Show_Title = true,
 })
 
 require("modules.overview.config")
