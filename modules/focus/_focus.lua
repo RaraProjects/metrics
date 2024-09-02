@@ -81,6 +81,7 @@ Focus.Content = function()
         if Debug.Is_Enabled() then UI.SameLine() UI.Text(Ashita.Menu.Get_Menu_Name()) end
         return nil
     end
+    UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.Percent_Details()
 
     UI.Separator()
     Focus.Overall(player_name)

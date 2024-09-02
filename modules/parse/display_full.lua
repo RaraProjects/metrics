@@ -11,6 +11,7 @@ Parse.Full.Width = T{
 Parse.Full.Populate = function()
     Parse.Widgets.Settings_Button()
     UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Filter_Button()
+    UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.Percent_Details()
     UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Timer_Button()
     UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Reset_Button()
     if Parse.Confirmation then UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Reset_Confirmation_Button() end

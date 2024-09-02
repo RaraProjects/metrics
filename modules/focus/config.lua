@@ -23,7 +23,6 @@ Focus.Config.Display = function()
         UI.TableSetupColumn("Col 2", col_flags)
 
         -- Row 1
-        UI.TableNextColumn() Focus.Config.Percent_Details()
         UI.TableNextColumn()
         if UI.Checkbox("Misc Actions", {Metrics.Focus.Show_Misc_Actions}) then
             Metrics.Focus.Show_Misc_Actions = not Metrics.Focus.Show_Misc_Actions
@@ -49,10 +48,9 @@ end
 -- Shows percent details checkbox.
 ------------------------------------------------------------------------------------------------------
 Focus.Config.Percent_Details = function()
-    if UI.Checkbox("Percent Details", {Focus.Config.Show_Percent_Details}) then
+    if UI.SmallButton("% Details") then
         Focus.Config.Percent_Toggle()
     end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("Show numerator and denominator for percentages in the same cell.")
 end
 
 ------------------------------------------------------------------------------------------------------

@@ -111,7 +111,6 @@ Parse.Config.General = function()
         end
 
         -- Row 3
-        UI.TableNextColumn() Focus.Config.Percent_Details()
         UI.TableNextColumn()
         if UI.Checkbox("Job Colors", {Metrics.Parse.Name_Colors}) then
             Metrics.Parse.Name_Colors = not Metrics.Parse.Name_Colors
