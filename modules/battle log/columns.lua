@@ -22,7 +22,7 @@ end
 ---@param action_name string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Action = function(action_name)
-    if Metrics.Blog.Flags.Truncate_Actions then
+    if Metrics.Blog.Truncate_Actions then
         action_name = Column.String.Truncate(action_name, Blog.Settings.Action_Truncate_Length)
     end
     return action_name

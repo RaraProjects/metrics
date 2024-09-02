@@ -19,9 +19,9 @@ Column.Util.Focus = function(player_name)
         if focus_check ~= DB.Widgets.Util.Get_Player_Focus() or not Metrics.Window.Multi_Window then
             DB.Widgets.Util.Player_Switch(player_name)
             Window_Manager.Switch_Module(Focus.Name)
-            Metrics.Window.Focus_Window_Visible[1] = true
+            Focus.Window.Show()
         else
-            Metrics.Window.Focus_Window_Visible[1] = not Metrics.Window.Focus_Window_Visible[1]
+            Focus.Window.Toggle_Visibility()
         end
     end
     UI.PopID()

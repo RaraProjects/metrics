@@ -3,6 +3,7 @@ Report.Config = T{}
 Report.Config.Defaults = T{
     X = 100,
     Y = 100,
+    Visible = {true},
     Damage_Threshold = 5,   -- Controls what damage percent is needed for showing up in a cross-player chat report.
     Auto_Save = false,
 }

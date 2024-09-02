@@ -3,6 +3,7 @@ Focus.Config = T{}
 Focus.Config.Defaults = T{
     X = 100,
     Y = 100,
+    Visible = {true},
     Show_Mitigation_Details = false,
     Show_Misc_Actions = false,
 }

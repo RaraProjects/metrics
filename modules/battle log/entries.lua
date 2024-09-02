@@ -73,9 +73,9 @@ Blog.Entries.Damage_Threshold = function(action_type)
     if not action_type then
         return threshold
     elseif action_type == DB.Enum.Trackable.WS then
-        return Metrics.Blog.Thresholds.WS
+        return Metrics.Blog.WS_THRESHOLD
     elseif action_type == DB.Enum.Trackable.MAGIC then
-        return Metrics.Blog.Thresholds.MAGIC
+        return Metrics.Blog.MAGIC_THRESHOLD
     else
         return threshold
     end

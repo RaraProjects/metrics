@@ -68,10 +68,10 @@ end
 Blog.Content = function()
     local table_size = {0, Metrics.Blog.Line_Height * (Metrics.Blog.Visible_Length + 1)}    -- One for header row.
     local columns = 4
-    if Metrics.Blog.Flags.Timestamp then columns = columns + 1 end
+    if Metrics.Blog.Timestamp then columns = columns + 1 end
 
     Blog.Widgets.Settings_Button() UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Show_Page()
-    if Metrics.Blog.Flags.Paging then
+    if Metrics.Blog.Paging then
         Blog.Widgets.Page_Buttons()
         if Blog.Filtered_Count > 0 then UI.Text("Filtered Rows: " .. tostring(Blog.Filtered_Count)) end
     end
@@ -155,20 +155,20 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 Blog.Action_Filter = function(action_flag)
-    if     action_flag == Blog.Enum.Types.HEALING   then return Metrics.Blog.Flags.Healing
-    elseif action_flag == Blog.Enum.Types.PET_MELEE then return Metrics.Blog.Flags.Pet_Melee
-    elseif action_flag == Blog.Enum.Types.PET_TP    then return Metrics.Blog.Flags.Pet_TP
-    elseif action_flag == Blog.Enum.Types.PET_HEAL  then return Metrics.Blog.Flags.Pet_Heal
-    elseif action_flag == Blog.Enum.Types.DEATH     then return Metrics.Blog.Flags.Deaths
-    elseif action_flag == Blog.Enum.Types.MOB_TP    then return Metrics.Blog.Flags.Mob_TP
-    elseif action_flag == Blog.Enum.Types.MOB_DEATH then return Metrics.Blog.Flags.Mob_Death
-    elseif action_flag == Blog.Enum.Types.MELEE     then return Metrics.Blog.Flags.Melee
-    elseif action_flag == Blog.Enum.Types.RANGED    then return Metrics.Blog.Flags.Ranged
-    elseif action_flag == Blog.Enum.Types.MAGIC     then return Metrics.Blog.Flags.Magic
-    elseif action_flag == Blog.Enum.Types.WS        then return Metrics.Blog.Flags.WS
-    elseif action_flag == Blog.Enum.Types.SC        then return Metrics.Blog.Flags.SC
-    elseif action_flag == Blog.Enum.Types.ABILITY   then return Metrics.Blog.Flags.Ability
-    elseif action_flag == Blog.Enum.Types.ENFEEBLE  then return Metrics.Blog.Flags.Enfeeble
+    if     action_flag == Blog.Enum.Types.HEALING   then return Metrics.Blog.Healing
+    elseif action_flag == Blog.Enum.Types.PET_MELEE then return Metrics.Blog.Pet_Melee
+    elseif action_flag == Blog.Enum.Types.PET_TP    then return Metrics.Blog.Pet_TP
+    elseif action_flag == Blog.Enum.Types.PET_HEAL  then return Metrics.Blog.Pet_Heal
+    elseif action_flag == Blog.Enum.Types.DEATH     then return Metrics.Blog.Deaths
+    elseif action_flag == Blog.Enum.Types.MOB_TP    then return Metrics.Blog.Mob_TP
+    elseif action_flag == Blog.Enum.Types.MOB_DEATH then return Metrics.Blog.Mob_Death
+    elseif action_flag == Blog.Enum.Types.MELEE     then return Metrics.Blog.Melee
+    elseif action_flag == Blog.Enum.Types.RANGED    then return Metrics.Blog.Ranged
+    elseif action_flag == Blog.Enum.Types.MAGIC     then return Metrics.Blog.Magic
+    elseif action_flag == Blog.Enum.Types.WS        then return Metrics.Blog.WS
+    elseif action_flag == Blog.Enum.Types.SC        then return Metrics.Blog.SC
+    elseif action_flag == Blog.Enum.Types.ABILITY   then return Metrics.Blog.Ability
+    elseif action_flag == Blog.Enum.Types.ENFEEBLE  then return Metrics.Blog.Enfeeble
     else return false end
 end
 
@@ -205,7 +205,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Display.Headers = function()
     local no_flags = Column.Flags.None
-    if Metrics.Blog.Flags.Timestamp then UI.TableSetupColumn("Time", no_flags) end
+    if Metrics.Blog.Timestamp then UI.TableSetupColumn("Time", no_flags) end
     UI.TableSetupColumn("Name", no_flags)
     UI.TableSetupColumn("Damage", no_flags)
     UI.TableSetupColumn("Action", no_flags)
@@ -233,7 +233,7 @@ Blog.Display.Rows = function(entry)
     end
 
     UI.TableNextRow()
-    if Metrics.Blog.Flags.Timestamp then UI.TableNextColumn() UI.Text(entry.Time.Value) end
+    if Metrics.Blog.Timestamp then UI.TableNextColumn() UI.Text(entry.Time.Value) end
     UI.TableNextColumn() UI.TextColored(entry.Player.Color, name)
     UI.TableNextColumn() UI.TextColored(entry.Damage.Color, damage)
     UI.TableNextColumn() UI.TextColored(action_color, action)

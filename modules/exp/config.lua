@@ -3,6 +3,7 @@ XP.Config = T{}
 XP.Config.Defaults = T{
     X               = 100,
     Y               = 100,
+    Visible         = {true},
     Show_Background = false,
     XP_Mini         = false,
     XP_Job          = true,

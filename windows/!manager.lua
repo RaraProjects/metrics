@@ -75,6 +75,29 @@ Window_Manager.Reset_Scaling_Flags = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Gets saved window visibility data.
+------------------------------------------------------------------------------------------------------
+---@param module string
+---@return boolean
+------------------------------------------------------------------------------------------------------
+Window_Manager.Get_Visibility = function(module)
+    if not module or not Metrics[module] then return false end
+    if Metrics[module].Visible then return Metrics[module].Visible[1] end
+    return false
+end
+
+------------------------------------------------------------------------------------------------------
+-- Saves window visibility data.
+------------------------------------------------------------------------------------------------------
+---@param module string
+---@param visible boolean
+------------------------------------------------------------------------------------------------------
+Window_Manager.Save_Visibility = function(module, visible)
+    if not module or not Metrics[module] then return nil end
+    Metrics[module].Visible[1] = visible
+end
+
+------------------------------------------------------------------------------------------------------
 -- Gets saved window position data.
 ------------------------------------------------------------------------------------------------------
 ---@param module string
@@ -97,8 +120,8 @@ Window_Manager.Save_Position = function(module, x, y)
     if not module or not Metrics[module] then return nil end
     if not x then x = 100 end
     if not y then y = 100 end
-    if Metrics[module].X then Metrics[module].X = x end
-    if Metrics[module].Y then Metrics[module].Y = y end
+    Metrics[module].X = x
+    Metrics[module].Y = y
 end
 
 ------------------------------------------------------------------------------------------------------

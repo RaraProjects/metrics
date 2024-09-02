@@ -7,10 +7,10 @@ Blog.Widgets.Player_Index = 1
 -- Set the battle log damage highlighting threshold for weaponskills.
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.WS_Threshold = function()
-    local ws_threshold = {[1] = Metrics.Blog.Thresholds.WS}
+    local ws_threshold = {[1] = Metrics.Blog.WS_THRESHOLD}
     UI.SetNextItemWidth(Blog.Config.Slider_Width)
     if UI.DragInt("Weaponskill", ws_threshold, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
-        Metrics.Blog.Thresholds.WS = ws_threshold[1]
+        Metrics.Blog.WS_THRESHOLD = ws_threshold[1]
     end
     UI.SameLine() Window_Manager.Widgets.HelpMarker("Weaponskill damage over this amount will be highlighted "
                                     .. "in the battle log.")
@@ -20,10 +20,10 @@ end
 -- Set the battle log damage highlighting threshold for magic.
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.Magic_Threshold = function()
-    local magic_threshold = {[1] = Metrics.Blog.Thresholds.MAGIC}
+    local magic_threshold = {[1] = Metrics.Blog.MAGIC_THRESHOLD}
     UI.SetNextItemWidth(Blog.Config.Slider_Width)
     if UI.DragInt("Spell", magic_threshold, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
-        Metrics.Blog.Thresholds.MAGIC = magic_threshold[1]
+        Metrics.Blog.MAGIC_THRESHOLD = magic_threshold[1]
     end
     UI.SameLine() Window_Manager.Widgets.HelpMarker("Magic damage over this amount will be highlighted "
                                     .. "in the battle log.")
@@ -43,7 +43,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.Show_Page = function()
     if UI.SmallButton("Paging") then
-        Metrics.Blog.Flags.Paging = not Metrics.Blog.Flags.Paging
+        Metrics.Blog.Paging = not Metrics.Blog.Paging
     end
 end
 
