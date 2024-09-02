@@ -2,12 +2,18 @@ Config = {}
 
 Config.Name   = "Settings"
 Config.Title  = "Metrics - Help"
-Config.Module = "Settings"
+Config.Module = "Config"
 Config.Window = Window:New({
     Name   = Config.Name,
     Title  = Config.Title,
     Module = Config.Module,
 })
+
+Config.Defaults = T{
+    X = 100,
+    Y = 100,
+    Visible = {false},
+}
 
 Config.Section = {}
 Config.Widget = {}

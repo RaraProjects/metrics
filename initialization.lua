@@ -106,6 +106,7 @@ ashita.events.register('load', 'load_cb', function()
         Report   = Settings_File.load(Report.Config.Defaults,         Config.Enum.File.REPORT),
         Overview = Settings_File.load(Overview.Config.Defaults,       Config.Enum.File.OVERVIEW),
         Hub      = Settings_File.load(Hub.Config.Defaults,            Config.Enum.File.HUB),
+        Config   = Settings_File.load(Config.Defaults,                Config.Enum.File.CONFIG),
     }
 
     -- Initialize Modules
@@ -138,6 +139,7 @@ ashita.events.register('unload', 'unload_cb', function ()
     Settings_File.save(Config.Enum.File.REPORT)
     Settings_File.save(Config.Enum.File.OVERVIEW)
     Settings_File.save(Config.Enum.File.HUB)
+    Settings_File.save(Config.Enum.File.CONFIG)
 
     if Metrics.Report.Auto_Save then
         File.Save_Data()
