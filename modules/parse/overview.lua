@@ -1,9 +1,39 @@
 Parse.Overview = T{}
 
 ------------------------------------------------------------------------------------------------------
+-- Overview Content
+------------------------------------------------------------------------------------------------------
+Parse.Overview.Content = function()
+    Parse.Overview.Clock()
+    Parse.Overview.Weaponskills()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Overview Clocks
+------------------------------------------------------------------------------------------------------
+Parse.Overview.Clock = function()
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    if UI.BeginTable("Clocks", 2, table_flags) then
+        UI.TableSetupColumn("Total Time", col_flags, name_width)
+        UI.TableSetupColumn("Active Time", col_flags, name_width)
+        UI.TableHeadersRow()
+
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text(tostring(Timers.Check(Timers.Enum.Names.METRICS)))
+        UI.TableNextColumn() UI.Text(tostring(Timers.Check(Timers.Enum.Names.PARSE)))
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Populates the Parse overview.
 ------------------------------------------------------------------------------------------------------
-Parse.Overview.Populate = function()
+Parse.Overview.Weaponskills = function()
     local col_flags = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
     local name_width = Column.Widths.Name
