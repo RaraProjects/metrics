@@ -8,4 +8,6 @@ Overview.Config.Defaults = T{
     Ranged = false,
     WS = false,
     Nuke = false,
+    Healing = false,
+    Defense = false,
 }

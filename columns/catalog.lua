@@ -13,21 +13,19 @@ Column.Single = T{}
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Damage = function(player_name, action_name, focus_type, metric, percent, raw)
-    local single_damage
-    if metric == DB.Enum.Values.IGNORE then
-        single_damage = 0
-    else
-        single_damage = DB.Catalog.Get(player_name, focus_type, action_name, metric)
+    local action_total = 0
+    if metric ~= DB.Enum.Values.IGNORE then action_total = DB.Catalog.Get(player_name, focus_type, action_name, metric) end
+    local color = Column.String.Color_Zero(action_total)
+
+    if percent then
+        local player_total = Column.Damage.Raw_Total_Player_Damage(player_name)
+        if focus_type == DB.Enum.Trackable.HEALING then player_total = DB.Data.Get(player_name, DB.Enum.Trackable.HEALING, Column.Metric.TOTAL) end
+        if raw then return Column.String.Format_Percent(action_total, player_total) end
+        return UI.TextColored(color, Column.String.Format_Percent(action_total, player_total))
     end
 
-    local color = Column.String.Color_Zero(single_damage)
-    if percent then
-        local total_damage = Column.Damage.Raw_Total_Player_Damage(player_name)
-        if raw then return Column.String.Format_Percent(single_damage, total_damage) end
-        return UI.TextColored(color, Column.String.Format_Percent(single_damage, total_damage))
-    end
-    if raw then return Column.String.Format_Number(single_damage) end
-    return UI.TextColored(color, Column.String.Format_Number(single_damage))
+    if raw then return Column.String.Format_Number(action_total) end
+    return UI.TextColored(color, Column.String.Format_Number(action_total))
 end
 
 ------------------------------------------------------------------------------------------------------
