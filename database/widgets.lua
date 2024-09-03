@@ -8,6 +8,7 @@ DB.Widgets.Dropdown.Enum = T{
     FOCUS = "Player",
     NONE  = "!NONE",
 }
+DB.Widgets.Dropdown.Width = 150
 DB.Widgets.Dropdown.Flags = ImGuiComboFlags_None
 DB.Widgets.Dropdown.Player = T{}
 DB.Widgets.Dropdown.Player.Focus = DB.Widgets.Dropdown.Enum.NONE
@@ -15,7 +16,6 @@ DB.Widgets.Dropdown.Player.Index = 1
 DB.Widgets.Dropdown.Mob = T{}
 DB.Widgets.Dropdown.Mob.Focus = DB.Widgets.Dropdown.Enum.NONE
 DB.Widgets.Dropdown.Mob.Index = 1
-DB.Widgets.Dropdown.Width = 150
 
 ------------------------------------------------------------------------------------------------------
 -- Creates a dropdown menu to show only damage done to a certain mob.
@@ -60,6 +60,13 @@ DB.Widgets.Mob_Filter_Help_Text = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Utility function for accessing the name of the currently focused mob.
+------------------------------------------------------------------------------------------------------
+DB.Widgets.Util.Get_Mob_Focus = function()
+    return DB.Widgets.Dropdown.Mob.Focus
+end
+
+------------------------------------------------------------------------------------------------------
 -- Creates a dropdown menu to show only damage done by a certain entity.
 ------------------------------------------------------------------------------------------------------
 DB.Widgets.Player_Filter = function()
@@ -100,13 +107,6 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Widgets.Util.Get_Player_Focus = function()
     return DB.Widgets.Dropdown.Player.Focus
-end
-
-------------------------------------------------------------------------------------------------------
--- Utility function for accessing the name of the currently focused mob.
-------------------------------------------------------------------------------------------------------
-DB.Widgets.Util.Get_Mob_Focus = function()
-    return DB.Widgets.Dropdown.Mob.Focus
 end
 
 ------------------------------------------------------------------------------------------------------

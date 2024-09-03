@@ -104,7 +104,6 @@ Parse.Config.General = function()
         UI.TableNextColumn()
         if UI.Checkbox("Hide Sub Job", {Metrics.Parse.Hide_Subjob}) then
             Metrics.Parse.Hide_Subjob = not Metrics.Parse.Hide_Subjob
-            Parse.Util.Calculate_Column_Flags()
         end
 
         UI.TableNextColumn()
@@ -112,16 +111,6 @@ Parse.Config.General = function()
             Metrics.Parse.Name_Colors = not Metrics.Parse.Name_Colors
         end
 
-        UI.TableNextColumn()
-        if UI.Checkbox("Global DPS", {Metrics.Parse.Global_DPS}) then
-            Metrics.Parse.Global_DPS = not Metrics.Parse.Global_DPS
-        end
-        UI.SameLine() Window_Manager.Widgets.HelpMarker("TL;DR The default DPS calculation method is local. Local DPS is spikey and closer to the present. "
-                                             .. "Global DPS is smoother and averaged over a longer period. \n \n"
-                                             .. "The default DPS calculation method is a local such that actions you do right now matter more. "
-                                             .. "For example, if you were to stop taking actions for {X} amount of seconds your DPS would drop to zero. "
-                                             .. "Global DPS is your total damage divided by the parse duration timer. The timer only runs while actions "
-                                             .. "are taking place by your affiliates near you so idle time by the party won't hurt your DPS by much.")
         UI.TableNextColumn()
         if UI.Checkbox("Total Row", {Metrics.Parse.Grand_Totals}) then
             Metrics.Parse.Grand_Totals = not Metrics.Parse.Grand_Totals
@@ -200,6 +189,7 @@ Parse.Config.General_Flags = function(col_flags, width)
 
         UI.EndTable()
     end
+    DB.DPS.Dropdown(Parse.Config.Slider_Width)
 end
 
 ------------------------------------------------------------------------------------------------------

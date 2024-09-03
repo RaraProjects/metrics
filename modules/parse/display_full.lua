@@ -56,7 +56,7 @@ Parse.Full.Headers = function()
     UI.TableSetupColumn("%Total", flags)
 
     if Metrics.Parse.Attack_Speed then UI.TableSetupColumn("s/Melee",  flags) end
-    if Metrics.Parse.DPS then          UI.TableSetupColumn("DPS",      flags) end
+    if Metrics.Parse.DPS then          UI.TableSetupColumn(DB.DPS.Column_Header(), flags) end
     if Metrics.Parse.Running_Acc then  UI.TableSetupColumn("%A." .. Metrics.Model.Running_Accuracy_Limit, flags) end
     if Metrics.Parse.Total_Acc then    UI.TableSetupColumn("%A.Total", flags) end
     if Metrics.Parse.Crit then         UI.TableSetupColumn("%Crit",    flags) end

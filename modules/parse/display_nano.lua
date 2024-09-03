@@ -17,7 +17,7 @@ Parse.Nano.Populate = function()
 
     if UI.BeginTable("Team Nano", columns, Parse.Nano.Table_Flags) then
         UI.TableSetupColumn("Total", flags)
-        if Metrics.Parse.DPS then UI.TableSetupColumn("DPS", flags) end
+        if Metrics.Parse.DPS then         UI.TableSetupColumn(DB.DPS.Column_Header(), flags) end
         if Metrics.Parse.Running_Acc then UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags) end
         UI.TableHeadersRow()
 
