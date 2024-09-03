@@ -14,9 +14,9 @@ Parse.Util = {}
 
 -- Keeps track of how many columns should be shown on the screen in full mode.
 Parse.Columns = {
-    Base = 3,       -- Name, Total, %T
+    Base = 2,       -- Name, Total, %T
     Current = 5,
-    Max = 21,
+    Max = 32,
 }
 
 Parse.Confirmation = false
@@ -57,17 +57,23 @@ Parse.Util.Calculate_Column_Flags = function()
     local added_columns = 0
     if Metrics.Parse.Focus then added_columns = added_columns + 1 end
     if Metrics.Parse.Jobs then added_columns = added_columns + 1 end
+    if Metrics.Parse.Name then added_columns = added_columns + 1 end
     if Metrics.Parse.Attack_Speed then added_columns = added_columns + 1 end
     if Metrics.Parse.DPS then added_columns = added_columns + 1 end
     if Metrics.Parse.Running_Acc then added_columns = added_columns + 1 end
     if Metrics.Parse.Total_Acc then added_columns = added_columns + 1 end
-    if Metrics.Parse.Melee then added_columns = added_columns + 1 end
     if Metrics.Parse.Crit then added_columns = added_columns + 1 end
-    if Metrics.Parse.Average_WS then added_columns = added_columns + 1 end
+    if Metrics.Parse.Melee then added_columns = added_columns + 1 end
+    if Metrics.Parse.Melee_Acc then added_columns = added_columns + 1 end
+    if Metrics.Parse.Melee_Crit then added_columns = added_columns + 1 end
     if Metrics.Parse.Weaponskill then added_columns = added_columns + 1 end
+    if Metrics.Parse.Average_WS then added_columns = added_columns + 1 end
+    if Metrics.Parse.WS_TP then added_columns = added_columns + 1 end
     if Metrics.Parse.WS_Accuracy then added_columns = added_columns + 1 end
     if Parse.Config.Include_SC_Damage() then added_columns = added_columns + 1 end
     if Metrics.Parse.Ranged then added_columns = added_columns + 1 end
+    if Metrics.Parse.Ranged_Acc then added_columns = added_columns + 1 end
+    if Metrics.Parse.Ranged_Crit then added_columns = added_columns + 1 end
     if Metrics.Parse.Ranged_Dist then added_columns = added_columns + 1 end
     if Metrics.Parse.Magic then added_columns = added_columns + 1 end
     if Metrics.Parse.Ability then added_columns = added_columns + 1 end
@@ -77,6 +83,7 @@ Parse.Util.Calculate_Column_Flags = function()
     if Metrics.Parse.Pet_WS then added_columns = added_columns + 1 end
     if Metrics.Parse.Pet_Ability then added_columns = added_columns + 1 end
     if Metrics.Parse.Healing then added_columns = added_columns + 1 end
+    if Metrics.Parse.Damage_Taken then added_columns = added_columns + 1 end
     if Metrics.Parse.Deaths then added_columns = added_columns + 1 end
 
     -- Apply new column count.

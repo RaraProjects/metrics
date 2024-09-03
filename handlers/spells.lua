@@ -193,10 +193,16 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
     elseif Res.Spells.Get_Damaging(spell_id) then
         if is_pet then trackable = H.Trackable.PET_NUKE else trackable = H.Trackable.NUKE end
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
+
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
-        if is_burst then DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.BURST_COUNT) end
+        if is_burst then
+            DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.BURST_COUNT)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.BURST_COUNT)
+        end
 
     elseif Res.Spells.Get_Enfeeble(spell_id) then
         if is_pet then trackable = H.Trackable.PET_ENFEEBLING else trackable = H.Trackable.ENFEEBLE end

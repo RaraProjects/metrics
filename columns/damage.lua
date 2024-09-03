@@ -55,13 +55,16 @@ end
 -- Shows the average TP used for weaponskills.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param justify? boolean whether or not to right justify the text
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Average_TP = function(player_name)
+Column.Damage.Average_TP = function(player_name, justify)
     local tp = DB.Data.Get(player_name, Column.Trackable.WS, Column.Metric.TP_SPENT)
     local attempts = DB.Data.Get(player_name, Column.Trackable.WS, Column.Metric.COUNT)
     local color = Column.String.Color_Zero(tp)
     if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
-    return UI.TextColored(color, string.format("%d", Column.String.Raw_Percent(tp, attempts)))
+    local format = "%d"
+    if justify then format = "%8d" end
+    return UI.TextColored(color, string.format(format, Column.String.Raw_Percent(tp, attempts)))
 end
 
 ------------------------------------------------------------------------------------------------------

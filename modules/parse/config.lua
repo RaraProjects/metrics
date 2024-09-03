@@ -14,8 +14,11 @@ Parse.Config.Defaults = T{
     Focus        = false,
     Jobs         = false,
     Hide_Subjob  = false,
+    Name         = true,
     Total_Acc    = false,
     Running_Acc  = true,
+    Melee_Acc    = false,
+    Ranged_Acc   = false,
     DPS          = true,
     Attack_Speed = true,
     Ranged_Dist  = false,
@@ -23,16 +26,20 @@ Parse.Config.Defaults = T{
     Average_WS   = false,
     Weaponskill  = true,
     WS_Accuracy  = false,
+    WS_TP        = false,
     Ranged       = false,
     Magic        = true,
     Ability      = false,
     Crit         = false,
+    Melee_Crit   = false,
+    Ranged_Crit  = false,
     Pet_Melee    = false,
     Pet_Ranged   = false,
     Pet_Acc      = false,
     Pet_WS       = false,
     Pet_Ability  = false,
     Healing      = false,
+    Damage_Taken = false,
     Deaths       = false,
     Grand_Totals = false,
     Global_DPS   = false,
@@ -64,7 +71,6 @@ end
 Parse.Config.Display = function()
     Parse.Config.General()
     UI.Separator() Parse.Config.Column_Selection()
-    UI.Separator() Parse.Config.Sliders()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -89,7 +95,23 @@ Parse.Config.General = function()
         UI.TableNextColumn() Parse.Widgets.SC_Damage()
         UI.TableNextColumn() Parse.Widgets.Condensed_Numbers()
 
-        -- Row 2
+        UI.TableNextColumn()
+        if UI.Checkbox("Show Jobs", {Metrics.Parse.Jobs}) then
+            Metrics.Parse.Jobs = not Metrics.Parse.Jobs
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Hide Sub Job", {Metrics.Parse.Hide_Subjob}) then
+            Metrics.Parse.Hide_Subjob = not Metrics.Parse.Hide_Subjob
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Job Colors", {Metrics.Parse.Name_Colors}) then
+            Metrics.Parse.Name_Colors = not Metrics.Parse.Name_Colors
+        end
+
         UI.TableNextColumn()
         if UI.Checkbox("Global DPS", {Metrics.Parse.Global_DPS}) then
             Metrics.Parse.Global_DPS = not Metrics.Parse.Global_DPS
@@ -101,23 +123,14 @@ Parse.Config.General = function()
                                              .. "Global DPS is your total damage divided by the parse duration timer. The timer only runs while actions "
                                              .. "are taking place by your affiliates near you so idle time by the party won't hurt your DPS by much.")
         UI.TableNextColumn()
-        if UI.Checkbox("Show DPS Graph", {Metrics.Parse.Show_DPS_Graph}) then
-            Metrics.Parse.Show_DPS_Graph = not Metrics.Parse.Show_DPS_Graph
-        end
-        UI.TableNextColumn()
-        if UI.Checkbox("Show Total Row", {Metrics.Parse.Grand_Totals}) then
+        if UI.Checkbox("Total Row", {Metrics.Parse.Grand_Totals}) then
             Metrics.Parse.Grand_Totals = not Metrics.Parse.Grand_Totals
             Parse.Util.Calculate_Column_Flags()
         end
 
-        -- Row 3
-        UI.TableNextColumn()
-        if UI.Checkbox("Job Colors", {Metrics.Parse.Name_Colors}) then
-            Metrics.Parse.Name_Colors = not Metrics.Parse.Name_Colors
-        end
-
         UI.EndTable()
     end
+    Parse.Widgets.Player_Limit()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -128,7 +141,11 @@ Parse.Config.Column_Selection = function()
     local width = Parse.Config.Column_Width
     Parse.Config.General_Flags(col_flags, width)
     UI.Separator()
+    Parse.Config.Accuracy_Flags(col_flags, width)
+    UI.Separator()
     Parse.Config.Physical_Flags(col_flags, width)
+    UI.Separator()
+    Parse.Config.Weaponskill_Flags(col_flags, width)
     UI.Separator()
     Parse.Config.Magic_Flags(col_flags, width)
     UI.Separator()
@@ -150,37 +167,84 @@ Parse.Config.General_Flags = function(col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
         UI.TableNextColumn()
-        if UI.Checkbox("Show Focus", {Metrics.Parse.Focus}) then
+        if UI.Checkbox("Name", {Metrics.Parse.Name}) then
+            Metrics.Parse.Name = not Metrics.Parse.Name
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Focus Jump", {Metrics.Parse.Focus}) then
             Metrics.Parse.Focus = not Metrics.Parse.Focus
             Parse.Util.Calculate_Column_Flags()
         end
+        UI.SameLine() Window_Manager.Widgets.HelpMarker("Provides a button that allows you to quickly jump to the Focus window to look into "
+                                                     .. "the specified player's stats more.")
 
         UI.TableNextColumn()
-        if UI.Checkbox("Show Jobs", {Metrics.Parse.Jobs}) then
-            Metrics.Parse.Jobs = not Metrics.Parse.Jobs
-            Parse.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Hide Sub Job", {Metrics.Parse.Hide_Subjob}) then
-            Metrics.Parse.Hide_Subjob = not Metrics.Parse.Hide_Subjob
-            Parse.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Show DPS", {Metrics.Parse.DPS}) then
+        if UI.Checkbox("DPS", {Metrics.Parse.DPS}) then
             Metrics.Parse.DPS = not Metrics.Parse.DPS
             Parse.Util.Calculate_Column_Flags()
         end
 
         UI.TableNextColumn()
-        if UI.Checkbox("Show Deaths", {Metrics.Parse.Deaths}) then
+        if UI.Checkbox("Damage Taken", {Metrics.Parse.Damage_Taken}) then
+            Metrics.Parse.Damage_Taken = not Metrics.Parse.Damage_Taken
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Deaths", {Metrics.Parse.Deaths}) then
             Metrics.Parse.Deaths = not Metrics.Parse.Deaths
             Parse.Util.Calculate_Column_Flags()
         end
 
         UI.EndTable()
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows the accuracy column flags table.
+------------------------------------------------------------------------------------------------------
+---@param col_flags any
+---@param width any
+------------------------------------------------------------------------------------------------------
+Parse.Config.Accuracy_Flags = function(col_flags, width)
+    Parse.Config.Accuracy_Buttons()
+    UI.SameLine() UI.Text(" Accuracy")
+    if UI.BeginTable("Physical Parse Flags", 3) then
+        UI.TableSetupColumn("Col 1", col_flags, width)
+        UI.TableSetupColumn("Col 2", col_flags, width)
+        UI.TableSetupColumn("Col 3", col_flags, width)
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Acc. Recent", {Metrics.Parse.Running_Acc}) then
+            Metrics.Parse.Running_Acc = not Metrics.Parse.Running_Acc
+            Parse.Util.Calculate_Column_Flags()
+        end
+        UI.TableNextColumn()
+        UI.TableNextColumn()
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Acc. Melee", {Metrics.Parse.Melee_Acc}) then
+            Metrics.Parse.Melee_Acc = not Metrics.Parse.Melee_Acc
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Acc. Ranged", {Metrics.Parse.Ranged_Acc}) then
+            Metrics.Parse.Ranged_Acc = not Metrics.Parse.Ranged_Acc
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Acc. Combined", {Metrics.Parse.Total_Acc}) then
+            Metrics.Parse.Total_Acc = not Metrics.Parse.Total_Acc
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.EndTable()
+    end
+    Parse.Widgets.Acc_Limit()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -198,68 +262,92 @@ Parse.Config.Physical_Flags = function(col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
         UI.TableNextColumn()
-        if UI.Checkbox("Running Accuracy", {Metrics.Parse.Running_Acc}) then
-            Metrics.Parse.Running_Acc = not Metrics.Parse.Running_Acc
-            Parse.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Total Accuracy", {Metrics.Parse.Total_Acc}) then
-            Metrics.Parse.Total_Acc = not Metrics.Parse.Total_Acc
-            Parse.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Seconds per Melee", {Metrics.Parse.Attack_Speed}) then
-            Metrics.Parse.Attack_Speed = not Metrics.Parse.Attack_Speed
-            Parse.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Melee", {Metrics.Parse.Melee}) then
+        if UI.Checkbox("Melee Damage", {Metrics.Parse.Melee}) then
             Metrics.Parse.Melee = not Metrics.Parse.Melee
             Parse.Util.Calculate_Column_Flags()
         end
 
         UI.TableNextColumn()
-        if UI.Checkbox("Ranged", {Metrics.Parse.Ranged}) then
+        if UI.Checkbox("Melee Delay", {Metrics.Parse.Attack_Speed}) then
+            Metrics.Parse.Attack_Speed = not Metrics.Parse.Attack_Speed
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Melee Crit", {Metrics.Parse.Melee_Crit}) then
+            Metrics.Parse.Melee_Crit = not Metrics.Parse.Melee_Crit
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Ranged Damage", {Metrics.Parse.Ranged}) then
             Metrics.Parse.Ranged = not Metrics.Parse.Ranged
             Parse.Util.Calculate_Column_Flags()
         end
 
         UI.TableNextColumn()
-        if UI.Checkbox("Ranged Distance", {Metrics.Parse.Ranged_Dist}) then
+        if UI.Checkbox("Shot Distance", {Metrics.Parse.Ranged_Dist}) then
             Metrics.Parse.Ranged_Dist = not Metrics.Parse.Ranged_Dist
             Parse.Util.Calculate_Column_Flags()
         end
 
         UI.TableNextColumn()
-        if UI.Checkbox("Crit Rate", {Metrics.Parse.Crit}) then
+        if UI.Checkbox("Ranged Crit", {Metrics.Parse.Ranged_Crit}) then
+            Metrics.Parse.Ranged_Crit = not Metrics.Parse.Ranged_Crit
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Total Crit", {Metrics.Parse.Crit}) then
             Metrics.Parse.Crit = not Metrics.Parse.Crit
-            Parse.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Weaponskill", {Metrics.Parse.Weaponskill}) then
-            Metrics.Parse.Weaponskill = not Metrics.Parse.Weaponskill
-            Parse.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Average WS", {Metrics.Parse.Average_WS}) then
-            Metrics.Parse.Average_WS = not Metrics.Parse.Average_WS
-            Parse.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("WS Accuracy", {Metrics.Parse.WS_Accuracy}) then
-            Metrics.Parse.WS_Accuracy = not Metrics.Parse.WS_Accuracy
             Parse.Util.Calculate_Column_Flags()
         end
 
         UI.TableNextColumn()
         if UI.Checkbox("Abilities", {Metrics.Parse.Ability}) then
             Metrics.Parse.Ability = not Metrics.Parse.Ability
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows the weaponskill column flags table.
+------------------------------------------------------------------------------------------------------
+---@param col_flags any
+---@param width any
+------------------------------------------------------------------------------------------------------
+Parse.Config.Weaponskill_Flags = function(col_flags, width)
+    Parse.Config.Weaponskill_Buttons()
+    UI.SameLine() UI.Text(" Weaponskills")
+    if UI.BeginTable("Physical Parse Flags", 3) then
+        UI.TableSetupColumn("Col 1", col_flags, width)
+        UI.TableSetupColumn("Col 2", col_flags, width)
+        UI.TableSetupColumn("Col 3", col_flags, width)
+
+        UI.TableNextColumn()
+        if UI.Checkbox("WS Total", {Metrics.Parse.Weaponskill}) then
+            Metrics.Parse.Weaponskill = not Metrics.Parse.Weaponskill
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("WS Average", {Metrics.Parse.Average_WS}) then
+            Metrics.Parse.Average_WS = not Metrics.Parse.Average_WS
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("WS ~TP", {Metrics.Parse.WS_TP}) then
+            Metrics.Parse.WS_TP = not Metrics.Parse.WS_TP
+            Parse.Util.Calculate_Column_Flags()
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("WS Accuracy", {Metrics.Parse.WS_Accuracy}) then
+            Metrics.Parse.WS_Accuracy = not Metrics.Parse.WS_Accuracy
             Parse.Util.Calculate_Column_Flags()
         end
 
@@ -351,11 +439,41 @@ end
 ---@param bool boolean
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Set_All_Columns = function(bool)
+    Parse.Config.Set_General_Columns(bool)
+    Parse.Config.Set_Accuracy_Columns(bool)
     Parse.Config.Set_Physical_Columns(bool)
+    Parse.Config.Set_Weaponskill_Columns(bool)
     Parse.Config.Set_Magic_Columns(bool)
     Parse.Config.Set_Pet_Columns(bool)
     Metrics.Parse.DPS = bool
     Metrics.Parse.Deaths = bool
+    Parse.Util.Calculate_Column_Flags()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Activates or clears all of the general columns.
+------------------------------------------------------------------------------------------------------
+---@param bool boolean
+------------------------------------------------------------------------------------------------------
+Parse.Config.Set_General_Columns = function(bool)
+    Metrics.Parse.Focus = bool
+    Metrics.Parse.Name = bool
+    Metrics.Parse.DPS = bool
+    Metrics.Parse.Damage_Taken = bool
+    Metrics.Parse.Deaths = bool
+    Parse.Util.Calculate_Column_Flags()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Activates or clears all of the accuracy columns.
+------------------------------------------------------------------------------------------------------
+---@param bool boolean
+------------------------------------------------------------------------------------------------------
+Parse.Config.Set_Accuracy_Columns = function(bool)
+    Metrics.Parse.Running_Acc = bool
+    Metrics.Parse.Total_Acc = bool
+    Metrics.Parse.Melee_Acc = bool
+    Metrics.Parse.Ranged_Acc = bool
     Parse.Util.Calculate_Column_Flags()
 end
 
@@ -365,15 +483,27 @@ end
 ---@param bool boolean
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Set_Physical_Columns = function(bool)
-    Metrics.Parse.Attack_Speed = bool
-    Metrics.Parse.Running_Acc = bool
-    Metrics.Parse.Total_Acc = bool
     Metrics.Parse.Melee = bool
+    Metrics.Parse.Attack_Speed = bool
+    Metrics.Parse.Melee_Crit = bool
     Metrics.Parse.Ranged = bool
+    Metrics.Parse.Ranged_Dist = bool
+    Metrics.Parse.Ranged_Crit = bool
     Metrics.Parse.Crit = bool
+    Metrics.Parse.Ability = bool
+    Parse.Util.Calculate_Column_Flags()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Activates or clears all of the weaponskill columns.
+------------------------------------------------------------------------------------------------------
+---@param bool boolean
+------------------------------------------------------------------------------------------------------
+Parse.Config.Set_Weaponskill_Columns = function(bool)
     Metrics.Parse.Weaponskill = bool
     Metrics.Parse.Average_WS = bool
-    Metrics.Parse.Ability = bool
+    Metrics.Parse.WS_TP = bool
+    Metrics.Parse.WS_Accuracy = bool
     Parse.Util.Calculate_Column_Flags()
 end
 
@@ -421,12 +551,27 @@ end
 Parse.Config.General_Buttons = function()
     UI.PushID("General All")
     if UI.SmallButton("All") then
-        Parse.Config.Set_All_Columns(true)
+        Parse.Config.Set_General_Columns(true)
     end
     UI.SameLine() UI.Text(" ") UI.SameLine()
     UI.PushID("General None")
     if UI.SmallButton("None") then
-        Parse.Config.Set_All_Columns(false)
+        Parse.Config.Set_General_Columns(false)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Displays accuracy All and None column buttons.
+------------------------------------------------------------------------------------------------------
+Parse.Config.Accuracy_Buttons = function()
+    UI.PushID("Physical All")
+    if UI.SmallButton("All") then
+        Parse.Config.Set_Accuracy_Columns(true)
+    end
+    UI.SameLine() UI.Text(" ") UI.SameLine()
+    UI.PushID("Physical None")
+    if UI.SmallButton("None") then
+        Parse.Config.Set_Accuracy_Columns(false)
     end
 end
 
@@ -442,6 +587,21 @@ Parse.Config.Physical_Buttons = function()
     UI.PushID("Physical None")
     if UI.SmallButton("None") then
         Parse.Config.Set_Physical_Columns(false)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Displays weaponskill All and None column buttons.
+------------------------------------------------------------------------------------------------------
+Parse.Config.Weaponskill_Buttons = function()
+    UI.PushID("Physical All")
+    if UI.SmallButton("All") then
+        Parse.Config.Set_Weaponskill_Columns(true)
+    end
+    UI.SameLine() UI.Text(" ") UI.SameLine()
+    UI.PushID("Physical None")
+    if UI.SmallButton("None") then
+        Parse.Config.Set_Weaponskill_Columns(false)
     end
 end
 
@@ -473,16 +633,6 @@ Parse.Config.Pet_Buttons = function()
     if UI.SmallButton("None") then
         Parse.Config.Set_Pet_Columns(false)
     end
-end
-
-------------------------------------------------------------------------------------------------------
--- Shows slider settings.
-------------------------------------------------------------------------------------------------------
-Parse.Config.Sliders = function()
-    UI.Text("Use Ctrl+Click on the component to set the number directly.")
-    Parse.Widgets.Player_Limit()
-    Parse.Widgets.Acc_Limit()
-    if Metrics.Parse.Show_DPS_Graph then Parse.Widgets.DPS_Graph_Height() end
 end
 
 ------------------------------------------------------------------------------------------------------

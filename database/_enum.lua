@@ -78,6 +78,7 @@ DB.Enum.Metric = T{
     COUNT         = "Attempts",
     CYCLE         = "Melee Cycles",          -- How many times a melee cycle occurred.
     ROUNDS        = "Attack Rounds",         -- Used in multi-attacks
+    MULTI_TOTAL   = "Multi-Attack",
     MULT_ATK_1    = "Single",
     MULT_ATK_2    = "Double",
     MULT_ATK_3    = "Triple",

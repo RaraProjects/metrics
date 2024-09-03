@@ -33,7 +33,7 @@ end
 ---@param player_name string
 ---@param damage_type string
 ---@param percent? boolean whether or not the damage should be raw or percent.
----@param justify? boolean whether or not to right justify the text
+---@param justify? boolean whether or not to right justify the text.
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Proc.Crit_Damage = function(player_name, damage_type, percent, justify)
@@ -69,12 +69,13 @@ end
 -- Grabs how many times an entity has died.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param justify? boolean whether or not to right justify the text.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Proc.Deaths = function(player_name)
+Column.Proc.Deaths = function(player_name, justify)
     local death_count = DB.Data.Get(player_name, Column.Trackable.DEATH, Column.Metric.COUNT)
     local color = Column.String.Color_Zero(death_count)
-    return UI.TextColored(color, Column.String.Format_Number(death_count))
+    return UI.TextColored(color, Column.String.Format_Number(death_count, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
