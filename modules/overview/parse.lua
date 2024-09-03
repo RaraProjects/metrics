@@ -1,20 +1,65 @@
-Parse.Overview = T{}
+Overview.Parse = T{}
 
 ------------------------------------------------------------------------------------------------------
 -- Overview Content
 ------------------------------------------------------------------------------------------------------
-Parse.Overview.Content = function()
-    Parse.Overview.Clock()
-    Parse.Overview.Melee()
-    Parse.Overview.Ranged()
-    Parse.Overview.Weaponskills()
-    Parse.Overview.Nukes()
+Overview.Parse.Content = function()
+    Overview.Parse.Settings()
+    UI.Separator()
+    if Metrics.Overview.Timer then Overview.Parse.Clock() end
+    if Metrics.Overview.Melee then Overview.Parse.Melee() end
+    if Metrics.Overview.Ranged then Overview.Parse.Ranged() end
+    if Metrics.Overview.WS then Overview.Parse.Weaponskills() end
+    if Metrics.Overview.Nuke then Overview.Parse.Nukes() end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Parse Overview section selection.
+------------------------------------------------------------------------------------------------------
+Overview.Parse.Settings = function()
+    local col_flags = Column.Flags.None
+    local width = Column.Widths.Standard
+
+    if UI.BeginTable("Parse Overview", 5) then
+        UI.TableSetupColumn("Col 1", col_flags, width)
+        UI.TableSetupColumn("Col 2", col_flags, width)
+        UI.TableSetupColumn("Col 3", col_flags, width)
+        UI.TableSetupColumn("Col 4", col_flags, width)
+        UI.TableSetupColumn("Col 5", col_flags, width)
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Timer", {Metrics.Overview.Timer}) then
+            Metrics.Overview.Timer = not Metrics.Overview.Timer
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Melee", {Metrics.Overview.Melee}) then
+            Metrics.Overview.Melee = not Metrics.Overview.Melee
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Ranged", {Metrics.Overview.Ranged}) then
+            Metrics.Overview.Ranged = not Metrics.Overview.Ranged
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("WS", {Metrics.Overview.WS}) then
+            Metrics.Overview.WS = not Metrics.Overview.WS
+        end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Nuke", {Metrics.Overview.Nuke}) then
+            Metrics.Overview.Nuke = not Metrics.Overview.Nuke
+        end
+
+        UI.EndTable()
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Overview Clocks
 ------------------------------------------------------------------------------------------------------
-Parse.Overview.Clock = function()
+Overview.Parse.Clock = function()
     local col_flags = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
     local name_width = Column.Widths.Name
@@ -36,7 +81,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Populates the Parse melee overview.
 ------------------------------------------------------------------------------------------------------
-Parse.Overview.Melee = function()
+Overview.Parse.Melee = function()
     local col_flags = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
     local name_width = Column.Widths.Name
@@ -71,7 +116,7 @@ Parse.Overview.Melee = function()
                 UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.COUNT)
                 UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.MIN)
                 UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.MAX)
-                Parse.Overview.Row_Color(rank)
+                Overview.Parse.Row_Color(rank)
             end
         end
 
@@ -82,7 +127,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Populates the Parse melee overview.
 ------------------------------------------------------------------------------------------------------
-Parse.Overview.Ranged = function()
+Overview.Parse.Ranged = function()
     local col_flags = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
     local name_width = Column.Widths.Name
@@ -117,7 +162,7 @@ Parse.Overview.Ranged = function()
                 UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.COUNT)
                 UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.MIN)
                 UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.MAX)
-                Parse.Overview.Row_Color(rank)
+                Overview.Parse.Row_Color(rank)
             end
         end
 
@@ -128,7 +173,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Populates the Parse weaponskill overview.
 ------------------------------------------------------------------------------------------------------
-Parse.Overview.Weaponskills = function()
+Overview.Parse.Weaponskills = function()
     local col_flags = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
     local name_width = Column.Widths.Name
@@ -165,7 +210,7 @@ Parse.Overview.Weaponskills = function()
                 UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.COUNT)
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                Parse.Overview.Row_Color(1)
+                Overview.Parse.Row_Color(1)
 
                 -- Specific Weaponskills
                 if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
@@ -183,7 +228,7 @@ Parse.Overview.Weaponskills = function()
                         UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
                         UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.MIN)
                         UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.MAX)
-                        Parse.Overview.Row_Color(0)
+                        Overview.Parse.Row_Color(0)
                     end
                 end
             end
@@ -196,7 +241,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Populates the Parse weaponskill overview.
 ------------------------------------------------------------------------------------------------------
-Parse.Overview.Nukes = function()
+Overview.Parse.Nukes = function()
     local col_flags = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
     local name_width = Column.Widths.Name
@@ -233,7 +278,7 @@ Parse.Overview.Nukes = function()
                 UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.HIT_COUNT)
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                Parse.Overview.Row_Color(1)
+                Overview.Parse.Row_Color(1)
 
                 -- Specific Weaponskills
                 if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
@@ -251,7 +296,7 @@ Parse.Overview.Nukes = function()
                         UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
                         UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.MIN)
                         UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.MAX)
-                        Parse.Overview.Row_Color(0)
+                        Overview.Parse.Row_Color(0)
                     end
                 end
             end
@@ -266,7 +311,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param rank integer
 ------------------------------------------------------------------------------------------------------
-Parse.Overview.Row_Color = function(rank)
+Overview.Parse.Row_Color = function(rank)
     local x, y, z, w = UI.GetStyleColorVec4(ImGuiCol_TableRowBg)
     if (rank % 2) == 0 then x, y, z, w = UI.GetStyleColorVec4(ImGuiCol_TableRowBgAlt) end
     local row_color = UI.GetColorU32({x, y, z, w})

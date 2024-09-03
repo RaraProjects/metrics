@@ -28,7 +28,6 @@ require("modules.parse.display_full")
 require("modules.parse.display_mini")
 require("modules.parse.display_nano")
 require("modules.parse.widgets")
-require("modules.parse.overview")
 
 ------------------------------------------------------------------------------------------------------
 -- Initializes the Parse screen.

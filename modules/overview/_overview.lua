@@ -11,37 +11,59 @@ Overview.Window = Window:New({
     Show_Title = true,
 })
 
+Overview.Modes = T{
+    PARSE = "Parse",
+    FOCUS = "Focus",
+    BLOG  = "Battle Log",
+}
+Overview.Mode = Overview.Modes.PARSE
+
 require("modules.overview.config")
+require("modules.overview.parse")
+require("modules.overview.focus")
 
 ------------------------------------------------------------------------------------------------------
 -- Opens a new window to show all tabs as a vertical column.
 ------------------------------------------------------------------------------------------------------
 Overview.Content = function()
-    local player_name = DB.Widgets.Util.Get_Player_Focus()
-    if player_name == DB.Widgets.Dropdown.Enum.NONE then
-        Focus.Screenshot_Mode[1] = false
-        return nil
-    end
-
-    if Debug.Is_Enabled() then
-        Debug.Content()
+    if Overview.Mode == Overview.Modes.PARSE then
+        Overview.Parse.Content()
+    elseif Overview.Mode == Overview.Modes.FOCUS then
+        local player_name = DB.Widgets.Util.Get_Player_Focus()
+        if player_name == DB.Widgets.Dropdown.Enum.NONE then
+            Focus.Screenshot_Mode[1] = false
+            return nil
+        end
+        Overview.Focus.Content(player_name)
     else
-        UI.Text("Overall") Focus.Overall(player_name)
-        UI.Separator() UI.Text("Melee")        Focus.Melee.Display(player_name)
-        UI.Separator() UI.Text("Ranged")       Focus.Ranged.Display(player_name)
-        UI.Separator() UI.Text("Weaponskills") Focus.WS.Display(player_name, true)
-        UI.Separator() UI.Text("Magic")        Focus.Magic.Display(player_name, true)
-        UI.Separator() UI.Text("Abilities")    Focus.Abilities.Display(player_name, true)
-        UI.Separator() UI.Text("Pets")         Focus.Pets.Display(player_name)
-        UI.Separator() UI.Text("Defense")      Focus.Defense.Display(player_name)
+        UI.Text("No content.")
     end
 end
 
 ------------------------------------------------------------------------------------------------------
--- Toggles the settings showing for the battle log.
+-- Button that opens the overview window with focus content.
 ------------------------------------------------------------------------------------------------------
 Overview.Screenshot_Button = function()
     if UI.SmallButton("Screenshot") then
-        Overview.Window.Toggle_Visibility()
+        if Overview.Mode == Overview.Modes.FOCUS then
+            Overview.Window.Toggle_Visibility()
+        else
+            Overview.Window.Show()
+            Overview.Mode = Overview.Modes.FOCUS
+        end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Button that opens the overview window with parse content.
+------------------------------------------------------------------------------------------------------
+Overview.Overview_Button = function()
+    if UI.SmallButton("Overview") then
+        if Overview.Mode == Overview.Modes.PARSE then
+            Overview.Window.Toggle_Visibility()
+        else
+            Overview.Window.Show()
+            Overview.Mode = Overview.Modes.PARSE
+        end
     end
 end

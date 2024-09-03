@@ -10,6 +10,7 @@ Parse.Full.Width = T{
 ------------------------------------------------------------------------------------------------------
 Parse.Full.Populate = function()
     Parse.Widgets.Settings_Button()
+    UI.SameLine() UI.Text(" ") UI.SameLine() Overview.Overview_Button()
     UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Filter_Button()
     UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.Percent_Details()
     UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Timer_Button()
@@ -33,7 +34,7 @@ Parse.Full.Populate = function()
             elseif data[1] == player.name then
                 Parse.Full.Rows(player.name)
             end
-            Parse.Overview.Row_Color(rank)
+            Overview.Parse.Row_Color(rank)
         end
         if Metrics.Parse.Grand_Totals and #DB.Sorted.Total_Damage > 0 then Parse.Full.Total_Row() end
 
