@@ -21,6 +21,7 @@ Window_Manager.Table.Flags = {
 Window_Manager.Bar_Delay = Socket.gettime()
 Window_Manager.Bar_Delay_Threshold = 0.70
 
+Window_Manager.Show_Mouse_Refresh = true
 Window_Manager.IO = UI.GetIO()
 Window_Manager.IO.MouseDrawCursor = false
 
@@ -163,6 +164,16 @@ end
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Get_Scaling = function()
     return Metrics.Window.Window_Scaling
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the show mouse flag after a setting change or initialization.
+------------------------------------------------------------------------------------------------------
+Window_Manager.Check_Mouse = function()
+    if Window_Manager.Show_Mouse_Refresh then
+        Window_Manager.IO.MouseDrawCursor = Metrics.Window.Show_Mouse
+        Window_Manager.Show_Mouse_Refresh = false
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

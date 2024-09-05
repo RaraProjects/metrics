@@ -3,6 +3,7 @@ Overview.Config = T{}
 Overview.Config.Defaults = T{
     X = 100,
     Y = 100,
+    Visible = {false},
     Timer = true,
     Melee = false,
     Ranged = false,

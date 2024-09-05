@@ -91,6 +91,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
     XP.Initialize()         -- Need to initialize here because some things aren't ready when addon loads.
     Ashita.Party.Check_Refresh_Time()
     Ashita.Party.Refresh()
+    Window_Manager.Check_Mouse()
 
     Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
     Timers.Cycle(Timers.Enum.Names.DPS)

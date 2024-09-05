@@ -55,6 +55,7 @@ XP.Config.Populate = function()
         UI.TableNextColumn()
         if UI.Checkbox("Show Background", {Metrics.XP.Show_Background}) then
             Metrics.XP.Show_Background = not Metrics.XP.Show_Background
+            XP.Window.Set_Background(Metrics.XP.Show_Background)
         end
         UI.TableNextColumn()
         UI.TableNextColumn()

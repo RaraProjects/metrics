@@ -113,7 +113,8 @@ ashita.events.register('load', 'load_cb', function()
     DB.Initialize()
     Parse.Initialize()
     Ashita.Party.Need_Refresh = true
-    Window_Manager.IO.MouseDrawCursor = Metrics.Window.Show_Mouse
+    Window_Manager.Show_Mouse_Refresh = true
+    XP.Window.Set_Background(Metrics.XP.Show_Background)
 
     -- Start the clock.
     Timers.Start(Timers.Enum.Names.METRICS)

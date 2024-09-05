@@ -11,12 +11,13 @@ function Window:New(settings)
     local x          = settings.X          or 100
     local y          = settings.Y          or 100
     local show_title = settings.Show_Title or false
+    local show_bg    = true
 
     local need_position_reset = true
     local scaling_set = false
     local visible = {false}
 
-    local flags = bit.bor(
+    local flags_default = bit.bor(
         ImGuiWindowFlags_AlwaysAutoResize,  -- This prevents manual resizing, but without it things look messed up.
         ImGuiWindowFlags_NoSavedSettings,
         ImGuiWindowFlags_NoNav
@@ -37,7 +38,9 @@ function Window:New(settings)
         UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
         UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
 
+        local flags = flags_default
         if not Metrics.Window.Show_Title and not show_title then flags = bit.bor(flags, ImGuiWindowFlags_NoTitleBar) end
+        if not show_bg then flags = bit.bor(flags, ImGuiWindowFlags_NoBackground) end
         self.Check_Position()
 
         if UI.Begin(title, visible, flags) then
@@ -132,6 +135,15 @@ function Window:New(settings)
     ------------------------------------------------------------------------------------------------------
     self.Force_Scaling_Reset = function()
         scaling_set = false
+    end
+
+    ------------------------------------------------------------------------------------------------------
+    -- Forces the scaling flag to reset after toggling the scaling setting.
+    ------------------------------------------------------------------------------------------------------
+    ---@param background boolean
+    ------------------------------------------------------------------------------------------------------
+    self.Set_Background = function(background)
+        show_bg = background
     end
 
     Window_Manager.Add_Window(module, module, self)

@@ -42,6 +42,7 @@ Window_Manager.Config.Display = function()
         UI.TableNextColumn()
         if UI.Checkbox("Show Mouse", {Metrics.Window.Show_Mouse}) then
             Metrics.Window.Show_Mouse = not Metrics.Window.Show_Mouse
+            Window_Manager.Show_Mouse_Refresh = true
         end
         UI.SameLine() Window_Manager.Widgets.HelpMarker("There are a lot of click targets in Metrics. If you can't see your mouse when hovering over " ..
                                    "the windows of ImGui based addons and would like to then give this a try. It will show your regular " ..
