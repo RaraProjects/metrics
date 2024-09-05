@@ -39,3 +39,24 @@ Column.General.Percent_Party_Total = function(player_name, trackable, justify, r
     if raw then return Column.String.Format_Percent(player_total, party_total) end
     return UI.TextColored(color, Column.String.Format_Percent(player_total, party_total, justify))
 end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- Grabs the total amount of damage a cataloged action has done for a given trackable and metric.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name string
+---@param trackable string a trackable from the model.
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.General.Percent_Party_Total_Action = function(player_name, action_name, trackable, raw)
+    local action_total = DB.Catalog.Get(player_name, trackable, action_name, Column.Metric.TOTAL)
+    local color = Column.String.Color_Zero(action_total)
+    local party_total = 0
+    for name, _ in pairs(DB.Tracking.Initialized_Players) do
+        party_total = party_total + DB.Data.Get(name, trackable, Column.Metric.TOTAL)
+    end
+    if raw then return Column.String.Format_Percent(action_total, party_total) end
+    return UI.TextColored(color, Column.String.Format_Percent(action_total, party_total))
+end

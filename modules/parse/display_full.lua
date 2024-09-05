@@ -34,7 +34,7 @@ Parse.Full.Populate = function()
             elseif data[1] == player.name then
                 Parse.Full.Rows(player.name)
             end
-            Overview.Parse.Row_Color(rank)
+            Window_Manager.Table_Row_Color(rank)
         end
         if Metrics.Parse.Grand_Totals and #DB.Sorted.Total_Damage > 0 then Parse.Full.Total_Row() end
 

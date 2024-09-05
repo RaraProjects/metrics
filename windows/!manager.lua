@@ -177,6 +177,18 @@ Window_Manager.Check_Mouse = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Sets the table row color.
+------------------------------------------------------------------------------------------------------
+---@param row integer
+------------------------------------------------------------------------------------------------------
+Window_Manager.Table_Row_Color = function(row)
+    local x, y, z, w = UI.GetStyleColorVec4(ImGuiCol_TableRowBg)
+    if (row % 2) == 0 then x, y, z, w = UI.GetStyleColorVec4(ImGuiCol_TableRowBgAlt) end
+    local row_color = UI.GetColorU32({x, y, z, w})
+    UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_color)
+end
+
+------------------------------------------------------------------------------------------------------
 -- Starts a timer for progress bars to delay their loading to prevent slow screen resizing.
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Set_Bar_Delay = function()
