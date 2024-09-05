@@ -50,8 +50,8 @@ Parse.Full.Headers = function()
 
     if Metrics.Parse.Focus then        UI.TableSetupColumn("Focus", flags) end
     if Metrics.Parse.Jobs then         UI.TableSetupColumn("Job",   flags) end
-    if Metrics.Parse.Name then         UI.TableSetupColumn("Name",  flags) end
 
+    UI.TableSetupColumn("Name",   flags)
     UI.TableSetupColumn("Total",  flags)
     UI.TableSetupColumn("%Total", flags)
 
@@ -96,8 +96,8 @@ Parse.Full.Rows = function(player_name)
 
     if Metrics.Parse.Focus then        UI.TableNextColumn() Column.Util.Focus(player_name) end
     if Metrics.Parse.Jobs then         UI.TableNextColumn() Column.String.Job(player_name, Metrics.Parse.Hide_Subjob) end
-    if Metrics.Parse.Name then         UI.TableNextColumn() Column.String.Format_Name(player_name) end
 
+    UI.TableNextColumn() Column.String.Format_Name(player_name)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
     UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
 
@@ -142,8 +142,8 @@ Parse.Full.Total_Row = function()
 
     if Metrics.Parse.Focus then        UI.TableNextColumn() UI.Text(" ") end
     if Metrics.Parse.Jobs then         UI.TableNextColumn() UI.Text(" ") end
-    if Metrics.Parse.Name then         UI.TableNextColumn() UI.Text(" ") end
 
+    UI.TableNextColumn() UI.Text(" ")
     UI.TableNextColumn() Column.Damage.Parse_Total(true)
     UI.TableNextColumn() UI.Text(" ")
 

@@ -14,7 +14,7 @@ Parse.Config.Defaults = T{
     Focus        = false,
     Jobs         = false,
     Hide_Subjob  = false,
-    Name         = true,
+    Hide_Name    = true,
     Total_Acc    = false,
     Running_Acc  = true,
     Melee_Acc    = false,
@@ -112,6 +112,14 @@ Parse.Config.General = function()
         end
 
         UI.TableNextColumn()
+        if UI.Checkbox("Obfuscate Name", {Metrics.Parse.Name}) then
+            Metrics.Parse.Hide_Name = not Metrics.Parse.Hide_Name
+        end
+        UI.SameLine() Window_Manager.Widgets.HelpMarker(
+        "Sometimes you want to take a screenshot but are concerned about other player's privacy. " ..
+        "Use this setting to use the player's job instead of their name in name columns.")
+
+        UI.TableNextColumn()
         if UI.Checkbox("Total Row", {Metrics.Parse.Grand_Totals}) then
             Metrics.Parse.Grand_Totals = not Metrics.Parse.Grand_Totals
             Parse.Util.Calculate_Column_Flags()
@@ -154,12 +162,6 @@ Parse.Config.General_Flags = function(col_flags, width)
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Name", {Metrics.Parse.Name}) then
-            Metrics.Parse.Name = not Metrics.Parse.Name
-            Parse.Util.Calculate_Column_Flags()
-        end
 
         UI.TableNextColumn()
         if UI.Checkbox("Focus Jump", {Metrics.Parse.Focus}) then
@@ -447,7 +449,6 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Set_General_Columns = function(bool)
     Metrics.Parse.Focus = bool
-    Metrics.Parse.Name = bool
     Metrics.Parse.DPS = bool
     Metrics.Parse.Damage_Taken = bool
     Metrics.Parse.Deaths = bool
