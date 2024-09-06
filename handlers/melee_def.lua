@@ -74,6 +74,13 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
         if not action_taken then action_taken = H.Melee_Def.Guard(audits, damage, reaction_id) end
         if not action_taken then action_taken = H.Melee_Def.Block(audits, damage, reaction_id) end
 
+        -- Unmitigated melee hit.
+        if not action_taken then
+            DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MELEE_DMG_TAKEN, H.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_UNMITIGATED, H.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DEF_UNMITIGATED, H.Metric.TOTAL)
+        end
+
         H.Melee_Def.Crit(audits, damage, message_id)
         H.Melee_Def.Spikes(audits, result)
 

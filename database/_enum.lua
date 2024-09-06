@@ -60,6 +60,7 @@ DB.Enum.Trackable = T{
     DEF_GUARD           = "Guard",
     DEF_BLOCK           = "Shield Block",
     DEF_CRIT            = "Crits Taken",
+    DEF_UNMITIGATED     = "Unmitigated Melee Damage Taken",
     INCOMING_SPIKE_DMG  = "Incoming Spike Damage",
     SPELL_DMG_TAKEN     = "Spell Damage Taken",
     SPELL_PET_DMG_TAKEN = "Spell Pet Damage Taken",
