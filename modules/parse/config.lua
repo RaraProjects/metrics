@@ -112,7 +112,7 @@ Parse.Config.General = function()
         end
 
         UI.TableNextColumn()
-        if UI.Checkbox("Hide Names", {Metrics.Parse.Hide_Name}) then
+        if UI.Checkbox("Mask Names", {Metrics.Parse.Hide_Name}) then
             Metrics.Parse.Hide_Name = not Metrics.Parse.Hide_Name
         end
         UI.SameLine() Window_Manager.Widgets.HelpMarker(

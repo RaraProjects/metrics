@@ -33,6 +33,15 @@ Parse.Widgets.Filter_Button = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Toggles player name masking.
+------------------------------------------------------------------------------------------------------
+Parse.Widgets.Mask_Names = function()
+    if UI.SmallButton("Mask Names") then
+        Metrics.Parse.Hide_Name = not Metrics.Parse.Hide_Name
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Toggles the duration timer showing for the parse window.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Timer_Button = function()

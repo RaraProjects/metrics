@@ -4,6 +4,8 @@ Overview.Parse = T{}
 -- Overview Content
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Content = function()
+    Parse.Widgets.Mask_Names()
+    UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.Percent_Details()
     Overview.Parse.Settings()
     UI.Separator()
     if Metrics.Overview.Timer then Overview.Parse.Clock() end
