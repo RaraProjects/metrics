@@ -1,6 +1,7 @@
 H.TP = {}
 
 H.TP.SC_Opener = nil
+H.TP.SC_Opening_WS = nil
 H.TP.SC_Step   = 0
 
 ------------------------------------------------------------------------------------------------------
@@ -37,7 +38,7 @@ H.TP.Action = function(action, actor_mob, log_offense)
             if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target_mob.name) end
 
             -- Check for skillchains
-            sc_damage, sc_name = H.TP.Skillchain_Parse(result, actor_mob, target_mob)
+            sc_damage, sc_name = H.TP.Skillchain_Parse(result, actor_mob, target_mob, ws_name)
 
             -- Need to calculate WS damage here to account for AOE weaponskills
             damage = damage + H.TP.Weaponskill_Parse(result, actor_mob, target_mob, ws_name, ws_id)
@@ -374,9 +375,10 @@ end
 ---@param result table
 ---@param actor_mob table
 ---@param target_mob table
+---@param ws_name string
 ---@return number, string
 -- ------------------------------------------------------------------------------------------------------
-H.TP.Skillchain_Parse = function(result, actor_mob, target_mob)
+H.TP.Skillchain_Parse = function(result, actor_mob, target_mob, ws_name)
     local sc_id = result.add_effect_message
     local sc_damage = 0
     local sc_name = DB.Enum.Values.DEBUG
@@ -386,6 +388,7 @@ H.TP.Skillchain_Parse = function(result, actor_mob, target_mob)
         H.TP.SC_Step = H.TP.SC_Step + 1
     else
         H.TP.SC_Opener = actor_mob.name
+        H.TP.SC_Opening_WS = ws_name
         H.TP.SC_Step   = 1
     end
     return sc_damage, sc_name
@@ -427,8 +430,12 @@ H.TP.Skillchain_Hit = function(audits, sc_name)
 
     -- Credit to skillchain opener (except for multistep skillchains).
     if H.TP.SC_Step <= 2 then
-        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.SC_OPENED)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.SC_OPENED)
+        local sc_audits = T{
+            player_name = H.TP.SC_Opener,
+            target_name = audits.target_name,
+        }
+        DB.Data.Update(H.Mode.INC, 1, sc_audits, H.Trackable.SC, H.Metric.SC_OPENED)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, sc_audits, H.Trackable.SC, sc_name, H.Metric.SC_OPENED)
     end
 end
 

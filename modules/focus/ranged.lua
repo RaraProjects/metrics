@@ -91,7 +91,7 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
         UI.TableSetupColumn("Auxiliary", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
         UI.TableSetupColumn("%Player", col_flags, width)
-        UI.TableSetupColumn("Rate", col_flags, width)
+        UI.TableSetupColumn("%Proc", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
