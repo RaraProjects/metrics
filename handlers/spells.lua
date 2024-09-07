@@ -39,7 +39,7 @@ H.Spell.Action = function(action, actor_mob, log_offense)
     end
 
     local audits = H.Spell.Audits(actor_mob, target_mob, owner_mob)
-    H.Spell.Count(audits, spell_id, spell_name, mp_cost, is_burst)
+    H.Spell.Count(audits, spell_id, spell_name, mp_cost, is_burst, target_count)
     H.Spell.Blog(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
 end
 
@@ -73,6 +73,7 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
 
     if Res.Spells.Get_Healing(spell_id) then
     	H.Spell.Overcure(audits, spell_name, damage, burst)
+        H.Spell.Healing_Received(audits, spell_name, damage, burst)
         is_mapped = true
     end
 
@@ -164,6 +165,20 @@ H.Spell.Audits = function(actor_mob, target_mob, owner_mob)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Swaps the player and target for healing recieved.
+------------------------------------------------------------------------------------------------------
+---@param audits table
+------------------------------------------------------------------------------------------------------
+H.Spell.Audit_Swap = function(audits)
+    local audit_swap = {
+        player_name = audits.target_name,
+        target_name = audits.player_name,
+        pet_name = audits.pet_name,
+    }
+    return audit_swap
+end
+
+------------------------------------------------------------------------------------------------------
 -- Need the HIT_COUNT for average calculations in the catalog.
 -- This also handles keeping track of how much MP has been spent on certain spells.
 ------------------------------------------------------------------------------------------------------
@@ -172,8 +187,9 @@ end
 ---@param spell_name string
 ---@param mp_cost number
 ---@param is_burst boolean
+---@param target_count integer
 ------------------------------------------------------------------------------------------------------
-H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
+H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst, target_count)
     local trackable = H.Trackable.MAGIC
     local is_pet = false
     if audits.pet_name then
@@ -192,6 +208,16 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+
+        -- Healing Received (Only counts non-self healing)
+        if audits.player_name ~= audits.target_name then
+            local audit_swap = H.Spell.Audit_Swap(audits)
+            DB.Data.Update(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, H.Metric.COUNT)
+            DB.Data.Update(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, H.Metric.HIT_COUNT)
+            DB.Catalog.Update_Metric(H.Mode.INC, (mp_cost / target_count), audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, H.Metric.MP_SPENT)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, H.Metric.COUNT)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, H.Metric.HIT_COUNT)
+        end
 
     elseif Res.Spells.Get_Damaging(spell_id) then
         if is_pet then trackable = H.Trackable.PET_NUKE else trackable = H.Trackable.NUKE end
@@ -286,6 +312,21 @@ H.Spell.Overcure = function(audits, spell_name, damage, burst)
 
     DB.Data.Update(H.Mode.INC, overcure, audits, trackable, H.Metric.OVERCURE)
     DB.Catalog.Update_Metric(H.Mode.INC, overcure, audits, trackable, spell_name, H.Metric.OVERCURE)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks how much healing a player has recieved. Ignores self-healing.
+------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param spell_name string
+---@param damage number
+---@param burst boolean
+------------------------------------------------------------------------------------------------------
+H.Spell.Healing_Received = function(audits, spell_name, damage, burst)
+    if audits.player_name == audits.target_name then return nil end
+    local trackable = H.Trackable.HEALING_RECEIVED
+    local audit_swap = H.Spell.Audit_Swap(audits)
+    DB.Catalog.Update_Damage(audit_swap.player_name, audit_swap.target_name, trackable, damage, spell_name, nil, burst)
 end
 
 ------------------------------------------------------------------------------------------------------

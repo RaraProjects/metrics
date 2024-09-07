@@ -230,15 +230,12 @@ DB.Catalog.Get = function(player_name, trackable, action_name, metric)
 	local total = 0
 	if metric == DB.Enum.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
+	local search_string = player_name .. ":" .. mob_focus
+	if mob_focus == DB.Widgets.Dropdown.Enum.NONE or trackable == DB.Enum.Trackable.HEALING_RECEIVED then search_string = player_name .. ":" end
+
 	for index, _ in pairs(DB.Parse) do
-		if mob_focus == DB.Widgets.Dropdown.Enum.NONE then
-			if string.find(index, player_name) then
-				total = DB.Catalog.Calculate(total, index, trackable, action_name, metric)
-			end
-		else
-			if string.find(index, player_name .. ":" .. mob_focus) then
-				total = DB.Catalog.Calculate(total, index, trackable, action_name, metric)
-			end
+		if string.find(index, search_string) then
+			total = DB.Catalog.Calculate(total, index, trackable, action_name, metric)
 		end
 	end
 	return total

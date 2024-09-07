@@ -127,6 +127,7 @@ Focus.Overview.PLD = function(player_name)
     local buff_list = {[1] = "Enlight"}
     Focus.Overview.Defense(player_name)
     Focus.Overview.Healing(player_name)
+    Focus.Overview.Healing_Received(player_name)
     Focus.Overview.Debuff(player_name)
     Focus.Overview.Buffs(player_name, buff_list)
     Focus.Overview.Abilities(player_name, ability_list)
@@ -528,7 +529,7 @@ Focus.Overview.Healing = function(player_name)
     local width = Column.Widths.Standard
 
     if UI.BeginTable("Healing", 5, table_flags) then
-        UI.TableSetupColumn("Healing", col_flags, name_width)
+        UI.TableSetupColumn("Healing Cast", col_flags, name_width)
         UI.TableSetupColumn("Total", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
         UI.TableSetupColumn("MP Used", col_flags, width)
@@ -552,6 +553,50 @@ Focus.Overview.Healing = function(player_name)
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("None")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows healing received overview stats.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.Healing_Received = function(player_name)
+    if not player_name then return nil end
+
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    if UI.BeginTable("Healing", 4, table_flags) then
+        UI.TableSetupColumn("Healing Received", col_flags, name_width)
+        UI.TableSetupColumn("Total", col_flags, width)
+        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("MP Taken", col_flags, width)
+        UI.TableHeadersRow()
+
+        local trackable = DB.Enum.Trackable.HEALING_RECEIVED
+        if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
+            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local action_name
+            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+                action_name = data[1]
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text(action_name)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.TOTAL)
+                UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
+                UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable)
+            end
+        else
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("None")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")

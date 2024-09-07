@@ -108,6 +108,8 @@ ashita.events.register('load', 'load_cb', function()
         Hub      = Settings_File.load(Hub.Config.Defaults,            Config.Enum.File.HUB),
         Config   = Settings_File.load(Config.Defaults,                Config.Enum.File.CONFIG),
     }
+    Metrics.Debug = T{}
+    Metrics.Debug.Visible = {false}
 
     -- Initialize Modules
     DB.Initialize()
