@@ -8,6 +8,7 @@ Blog.Columns = T{}
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Name = function(player_name, pet_name)
+    if Metrics.Parse.Hide_Name then player_name = Blog.Columns.Job(player_name) end
     player_name = Column.String.Truncate(player_name, Blog.Settings.Truncate_Length)
     if pet_name == Blog.Enum.Text.NO_PET then
         return player_name
@@ -26,4 +27,33 @@ Blog.Columns.Action = function(action_name)
         action_name = Column.String.Truncate(action_name, Blog.Settings.Action_Truncate_Length)
     end
     return action_name
+end
+
+------------------------------------------------------------------------------------------------------
+-- Gets the player's job for name masking.
+-- Don't need the color because it gets saved when the entry is saved.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@return string
+------------------------------------------------------------------------------------------------------
+Blog.Columns.Job = function(player_name)
+    local anon_string = "NON0/NON0"
+    local hide_subjob = Metrics.Parse.Hide_Subjob
+    if hide_subjob then anon_string = "NON0" end
+    if not player_name or not Ashita.Party.Jobs[player_name] then return anon_string end
+
+    local main = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
+    local main_level = Ashita.Party.Jobs[player_name].main_level
+    if not main then main = Res.Jobs.List[0] end
+    local main_string = string.format("%s%02d", main.ens, main_level)
+
+    local sub_string = ""
+    if not hide_subjob then
+        local sub = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].sub)
+        local sub_level = Ashita.Party.Jobs[player_name].sub_level
+        if not sub then sub = Res.Jobs.List[0] end
+        sub_string = "/" .. string.format("%s%02d", sub.ens, sub_level)
+    end
+
+    return main_string .. sub_string
 end
