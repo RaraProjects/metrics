@@ -63,6 +63,7 @@ Res.Avatar.Rage = T{
     [912] = {id=912,en="Searing Light",ja="シアリングライト"},
     -- Diabolos
     [1903] = {id=1903,en="Camisado",ja="カミサドー"},
+    [1904] = {id=1904,en="Somnolence",ja="ソムノレンス"},
     [1909] = {id=1909,en="Cacodemonia",ja="カコデモニア"},
     [1910] = {id=1910,en="Nether Blast",ja="ネザーブラスト"},
     [1911] = {id=1911,en="Ruinous Omen",ja="ルイナスオーメン"},
@@ -100,7 +101,6 @@ Res.Avatar.Ward = T{
     [909] = {id=909,en="Glittering Ruby",ja="ルビーの煌き"},
     [911] = {id=911,en="Healing Ruby II",ja="ルビーの癒しII"},
     -- Diabolos
-    [1904] = {id=1904,en="Somnolence",ja="ソムノレンス"},
     [1905] = {id=1905,en="Noctoshield",ja="ノクトシールド"},
     [1906] = {id=1906,en="Ultimate Terror",ja="アルティメットテラー"},
     [1907] = {id=1907,en="Dream Shroud",ja="ドリームシュラウド"},
