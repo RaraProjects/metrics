@@ -455,13 +455,14 @@ Overview.Parse.Defense = function()
     local width = Column.Widths.Standard
 
     local trackable = DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL
-    if UI.BeginTable("Defense", 7, table_flags) then
+    if UI.BeginTable("Defense", 8, table_flags) then
         UI.TableSetupColumn("Damage Taken", col_flags, name_width)
-        UI.TableSetupColumn("HP-",    col_flags, width)
-        UI.TableSetupColumn("%Party",    col_flags, width)
+        UI.TableSetupColumn("HP-",      col_flags, width)
+        UI.TableSetupColumn("%Party",   col_flags, width)
+        UI.TableSetupColumn("%HP-Rec",  col_flags, width)
         UI.TableSetupColumn("%Melee",   col_flags, width)
-        UI.TableSetupColumn("%Magic",  col_flags, width)
-        UI.TableSetupColumn("%Mob TP",     col_flags, width)
+        UI.TableSetupColumn("%Magic",   col_flags, width)
+        UI.TableSetupColumn("%Mob TP",  col_flags, width)
         UI.TableSetupColumn("%Evasion", col_flags, width)
         UI.TableHeadersRow()
 
@@ -476,6 +477,7 @@ Overview.Parse.Defense = function()
                     UI.TableNextColumn() Column.String.Format_Name(player_name)
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL)
                     UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
+                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.HEALING_RECEIVED)
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN, true)
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN, true)
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN, true)
@@ -488,6 +490,7 @@ Overview.Parse.Defense = function()
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
