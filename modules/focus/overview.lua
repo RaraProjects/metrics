@@ -853,6 +853,7 @@ Focus.Overview.Defense = function(player_name)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
+    local row = 1
     if UI.BeginTable("Defense", 5, table_flags) then
         UI.TableSetupColumn("Damage Taken", col_flags, name_width)
         UI.TableSetupColumn("HP-", col_flags, width)
@@ -864,41 +865,45 @@ Focus.Overview.Defense = function(player_name)
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL)
         UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL)
-        UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL)
+        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL, true)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        Window_Manager.Table_Row_Color(1)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         UI.TableNextColumn() UI.Text("Melee")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN)
         UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.DEF_UNMITIGATED)
-        Window_Manager.Table_Row_Color(0)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         UI.TableNextColumn() UI.Text("Magic")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
         UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
-        Window_Manager.Table_Row_Color(1)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         UI.TableNextColumn() UI.Text("Mob TP")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
         UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
-        Window_Manager.Table_Row_Color(0)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         UI.EndTable()
     end
 
-    local row = 1
+    row = 1
     if UI.BeginTable("Defense", 5, table_flags) then
         UI.TableSetupColumn("Mitigation", col_flags, name_width)
-        UI.TableSetupColumn("~Damage", col_flags, width)
+        UI.TableSetupColumn("HP Saved", col_flags, width)
         UI.TableSetupColumn("%Proc", col_flags, width)
-        UI.TableSetupColumn("~Reduced", col_flags, width)
-        UI.TableSetupColumn("%DT", col_flags, width)
+        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("%DT-", col_flags, width)
         UI.TableHeadersRow()
 
         local evade = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_EVASION, DB.Enum.Metric.HIT_COUNT)
