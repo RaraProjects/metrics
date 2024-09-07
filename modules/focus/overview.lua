@@ -212,6 +212,8 @@ Focus.Overview.NIN = function(player_name)
     local buff_list = {[1] = "Utsusemi: Ichi", [2] = "Utsusemi: Ni"}
     Focus.Overview.Melee(player_name)
     Focus.Overview.Weaponskill(player_name)
+    Focus.Overview.Defense(player_name)
+    Focus.Overview.Healing_Received(player_name)
     Focus.Overview.Nuking(player_name, true)
     Focus.Overview.Debuff(player_name, true)
     Focus.Overview.Buffs(player_name, buff_list, true)
@@ -261,6 +263,7 @@ Focus.Overview.Melee = function(player_name)
     local counter_damage = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.TOTAL)
     local pet_damage = DB.Data.Get(player_name, DB.Enum.Trackable.PET_MELEE, DB.Enum.Metric.TOTAL)
 
+    local row = 1
     if UI.BeginTable("Melee", 4, table_flags) then
         UI.TableSetupColumn("Melee", col_flags, name_width)
         UI.TableSetupColumn("Average", col_flags, width)
@@ -273,6 +276,8 @@ Focus.Overview.Melee = function(player_name)
         UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.MELEE_MAIN)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.MELEE)
         UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Trackable.MELEE)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         if off_hand > 0 then
             UI.TableNextRow()
@@ -280,6 +285,8 @@ Focus.Overview.Melee = function(player_name)
             UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.MELEE_OFFHAND)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.MELEE_OFFHAND)
             UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Trackable.MELEE_OFFHAND)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if kick_damage > 0 then
@@ -288,6 +295,8 @@ Focus.Overview.Melee = function(player_name)
             UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.MELEE_KICK)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.MELEE_KICK)
             UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Trackable.MELEE_KICK)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if counter_damage > 0 then
@@ -296,6 +305,8 @@ Focus.Overview.Melee = function(player_name)
             UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if pet_damage > 0 then
@@ -304,12 +315,12 @@ Focus.Overview.Melee = function(player_name)
             UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.PET_MELEE)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE)
             UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Trackable.PET_MELEE)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         UI.EndTable()
     end
-
-    -- Multi Attack
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -365,6 +376,7 @@ Focus.Overview.Weaponskill = function(player_name)
         UI.TableHeadersRow()
 
         local trackable = DB.Enum.Trackable.WS
+        local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
             DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
@@ -375,6 +387,8 @@ Focus.Overview.Weaponskill = function(player_name)
                 UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Acc(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Average_TP(player_name, action_name)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
         else
             UI.TableNextRow()
@@ -413,6 +427,7 @@ Focus.Overview.Skillchains = function(player_name)
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Closed")
         UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.SC, DB.Enum.Metric.SC_CLOSED)
+        Window_Manager.Table_Row_Color(0)
 
         UI.EndTable()
     end
@@ -431,7 +446,7 @@ Focus.Overview.Pet_TP = function(player_name)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    if UI.BeginTable("BST TP", 4, table_flags) then
+    if UI.BeginTable("Pet TP", 4, table_flags) then
         UI.TableSetupColumn("Pet TP", col_flags, name_width)
         UI.TableSetupColumn("Average", col_flags, width)
         UI.TableSetupColumn("Accuracy", col_flags, width)
@@ -439,6 +454,7 @@ Focus.Overview.Pet_TP = function(player_name)
         UI.TableHeadersRow()
 
         local has_data = false
+        local row = 1
         if not DB.Tracking.Initialized_Pets[player_name] then DB.Tracking.Initialized_Pets[player_name] = T{} end
         for pet_name, _ in pairs(DB.Tracking.Initialized_Pets[player_name]) do
             DB.Lists.Sort.Pet_Catalog_Damage(player_name, pet_name)
@@ -451,6 +467,8 @@ Focus.Overview.Pet_TP = function(player_name)
                 UI.TableNextColumn() Column.Single.Pet_Average(player_name, pet_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Pet_Acc(player_name, pet_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Average_Pet_TP(player_name, pet_name, trackable, action_name)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
         end
         if not has_data then
@@ -485,11 +503,12 @@ Focus.Overview.Nuking = function(player_name, hide_mp)
         UI.TableSetupColumn("Nuking", col_flags, name_width)
         UI.TableSetupColumn("Total", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
-        if not hide_mp then UI.TableSetupColumn("Efficacy", col_flags, width) end
+        if not hide_mp then UI.TableSetupColumn("DMG/MP", col_flags, width) end
         UI.TableSetupColumn("Bursts", col_flags, width)
         UI.TableHeadersRow()
 
         local trackable = DB.Enum.Trackable.NUKE
+        local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
             DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
@@ -501,6 +520,8 @@ Focus.Overview.Nuking = function(player_name, hide_mp)
                 UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
                 if not hide_mp then UI.TableNextColumn() Column.Single.Damage_Per_MP(player_name, action_name, trackable) end
                 UI.TableNextColumn() Column.Single.Bursts(player_name, action_name)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
         else
             UI.TableNextRow()
@@ -530,13 +551,14 @@ Focus.Overview.Healing = function(player_name)
 
     if UI.BeginTable("Healing", 5, table_flags) then
         UI.TableSetupColumn("Healing Cast", col_flags, name_width)
-        UI.TableSetupColumn("Total", col_flags, width)
+        UI.TableSetupColumn("HP+", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("MP Used", col_flags, width)
+        UI.TableSetupColumn("MP-", col_flags, width)
         UI.TableSetupColumn("Overcure", col_flags, width)
         UI.TableHeadersRow()
 
         local trackable = DB.Enum.Trackable.HEALING
+        local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
             DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
@@ -548,6 +570,8 @@ Focus.Overview.Healing = function(player_name)
                 UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Overcure(player_name, action_name)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
         else
             UI.TableNextRow()
@@ -577,12 +601,13 @@ Focus.Overview.Healing_Received = function(player_name)
 
     if UI.BeginTable("Healing", 4, table_flags) then
         UI.TableSetupColumn("Healing Received", col_flags, name_width)
-        UI.TableSetupColumn("Total", col_flags, width)
+        UI.TableSetupColumn("HP+", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("MP Taken", col_flags, width)
+        UI.TableSetupColumn("MP-", col_flags, width)
         UI.TableHeadersRow()
 
         local trackable = DB.Enum.Trackable.HEALING_RECEIVED
+        local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
             DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
@@ -593,6 +618,8 @@ Focus.Overview.Healing_Received = function(player_name)
                 UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.TOTAL)
                 UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
         else
             UI.TableNextRow()
@@ -626,15 +653,18 @@ Focus.Overview.Buffs = function(player_name, buff_list, hide_mp)
 
     if UI.BeginTable("Buffs", columns, table_flags) then
         UI.TableSetupColumn("Buffs", col_flags, name_width)
-        UI.TableSetupColumn("Count", col_flags, width)
-        if not hide_mp then UI.TableSetupColumn("MP Used", col_flags, width) end
+        UI.TableSetupColumn("Casts", col_flags, width)
+        if not hide_mp then UI.TableSetupColumn("-MP", col_flags, width) end
         UI.TableHeadersRow()
 
+        local row = 1
         for _, buff_name in ipairs(buff_list) do
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(buff_name)
             UI.TableNextColumn() Column.Single.Attempts(player_name, buff_name, DB.Enum.Trackable.MAGIC)
             if not hide_mp then UI.TableNextColumn() Column.Single.MP_Used(player_name, buff_name, DB.Enum.Trackable.MAGIC) end
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         UI.EndTable()
@@ -660,12 +690,13 @@ Focus.Overview.Debuff = function(player_name, hide_mp)
 
     if UI.BeginTable("Debuffs", columns, table_flags) then
         UI.TableSetupColumn("Debuff", col_flags, name_width)
-        UI.TableSetupColumn("Count", col_flags, width)
-        if not hide_mp then UI.TableSetupColumn("MP Used", col_flags, width) end
-        UI.TableSetupColumn("Land Rate", col_flags, width)
+        UI.TableSetupColumn("%Land", col_flags, width)
+        UI.TableSetupColumn("Casts", col_flags, width)
+        if not hide_mp then UI.TableSetupColumn("MP-", col_flags, width) end
         UI.TableHeadersRow()
 
         local trackable = DB.Enum.Trackable.ENFEEBLE
+        local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
             DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
@@ -673,9 +704,11 @@ Focus.Overview.Debuff = function(player_name, hide_mp)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
+                UI.TableNextColumn() Column.Single.Acc(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
                 if not hide_mp then UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable) end
-                UI.TableNextColumn() Column.Single.Acc(player_name, action_name, trackable)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
         else
             UI.TableNextRow()
@@ -704,10 +737,11 @@ Focus.Overview.Buff_Songs = function(player_name)
 
     if UI.BeginTable("Buff Songs", 2, table_flags) then
         UI.TableSetupColumn("Buff Song", col_flags, name_width)
-        UI.TableSetupColumn("Count", col_flags, width)
+        UI.TableSetupColumn("Casts", col_flags, width)
         UI.TableHeadersRow()
 
         local trackable = DB.Enum.Trackable.BUFF_SONG
+        local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
             DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
@@ -716,6 +750,8 @@ Focus.Overview.Buff_Songs = function(player_name)
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
                 UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
         else
             UI.TableNextRow()
@@ -743,11 +779,12 @@ Focus.Overview.Spell = function(player_name)
     if UI.BeginTable("Spells", 3, table_flags) then
         UI.TableSetupColumn("Spell", col_flags, name_width)
         UI.TableSetupColumn("Count", col_flags, width)
-        UI.TableSetupColumn("MP Used", col_flags, width)
+        UI.TableSetupColumn("MP-", col_flags, width)
 
         UI.TableHeadersRow()
 
         local trackable = DB.Enum.Trackable.MAGIC
+        local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
             DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
@@ -757,6 +794,8 @@ Focus.Overview.Spell = function(player_name)
                 UI.TableNextColumn() UI.Text(action_name)
                 UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
         else
             UI.TableNextRow()
@@ -785,13 +824,16 @@ Focus.Overview.Abilities = function(player_name, ability_list)
 
     if UI.BeginTable("Ability", 2, table_flags) then
         UI.TableSetupColumn("Abilities", col_flags, name_width)
-        UI.TableSetupColumn("Count", col_flags, width)
+        UI.TableSetupColumn("Uses", col_flags, width)
         UI.TableHeadersRow()
 
+        local row = 1
         for _, ability_name in ipairs(ability_list) do
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(ability_name)
             UI.TableNextColumn() Column.Single.Attempts(player_name, ability_name, DB.Enum.Trackable.ABILITY)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         UI.EndTable()
@@ -813,7 +855,7 @@ Focus.Overview.Defense = function(player_name)
 
     if UI.BeginTable("Defense", 5, table_flags) then
         UI.TableSetupColumn("Damage Taken", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, width)
+        UI.TableSetupColumn("HP-", col_flags, width)
         UI.TableSetupColumn("%Party", col_flags, width)
         UI.TableSetupColumn("%Player", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
@@ -824,28 +866,33 @@ Focus.Overview.Defense = function(player_name)
         UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL)
         UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        Window_Manager.Table_Row_Color(1)
 
         UI.TableNextColumn() UI.Text("Melee")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN)
         UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.DEF_UNMITIGATED)
+        Window_Manager.Table_Row_Color(0)
 
         UI.TableNextColumn() UI.Text("Magic")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
         UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
+        Window_Manager.Table_Row_Color(1)
 
         UI.TableNextColumn() UI.Text("Mob TP")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
         UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
+        Window_Manager.Table_Row_Color(0)
 
         UI.EndTable()
     end
 
+    local row = 1
     if UI.BeginTable("Defense", 5, table_flags) then
         UI.TableSetupColumn("Mitigation", col_flags, name_width)
         UI.TableSetupColumn("~Damage", col_flags, width)
@@ -861,6 +908,8 @@ Focus.Overview.Defense = function(player_name)
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_EVASION)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         local parry = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_PARRY, DB.Enum.Metric.HIT_COUNT)
@@ -870,6 +919,8 @@ Focus.Overview.Defense = function(player_name)
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_PARRY)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         local shadows = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_SHADOWS, DB.Enum.Metric.HIT_COUNT)
@@ -879,6 +930,8 @@ Focus.Overview.Defense = function(player_name)
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_SHADOWS)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         local counter = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.HIT_COUNT)
@@ -888,6 +941,8 @@ Focus.Overview.Defense = function(player_name)
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         local guard = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_GUARD, DB.Enum.Metric.HIT_COUNT)
@@ -897,6 +952,8 @@ Focus.Overview.Defense = function(player_name)
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_GUARD)
             UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.DEF_GUARD)
             UI.TableNextColumn() Column.Defense.Damage_Reduction(player_name, DB.Enum.Trackable.DEF_GUARD)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         local shield = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_BLOCK, DB.Enum.Metric.HIT_COUNT)
@@ -906,6 +963,8 @@ Focus.Overview.Defense = function(player_name)
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_BLOCK)
             UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.DEF_BLOCK)
             UI.TableNextColumn() Column.Defense.Damage_Reduction(player_name, DB.Enum.Trackable.DEF_BLOCK)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if (evade + parry + shadows + counter + guard + shield) == 0 then
