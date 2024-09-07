@@ -36,12 +36,13 @@ Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
+    local row = 1
     if UI.BeginTable("Total Melee", 5, table_flags) then
         UI.TableSetupColumn("Melee", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
-        UI.TableSetupColumn("Damage %", col_flags, width)
+        UI.TableSetupColumn("%Player", col_flags, width)
         UI.TableSetupColumn("Accuracy", col_flags, width)
-        UI.TableSetupColumn("Rate", col_flags, width)
+        UI.TableSetupColumn("%Proc", col_flags, width)
         UI.TableHeadersRow()
 
         -- Total
@@ -51,6 +52,8 @@ Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, true)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.MELEE)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         -- Main-Hand
         UI.TableNextRow()
@@ -59,6 +62,8 @@ Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE_MAIN, true)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.MELEE_MAIN)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         -- Off-Hand
         if off_hand > 0 then
@@ -68,6 +73,8 @@ Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE_OFFHAND, true)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.MELEE_OFFHAND)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         -- Kick Attacks
@@ -78,6 +85,8 @@ Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE_KICK, true)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.MELEE_KICK)
             UI.TableNextColumn() Column.Proc.Kick_Rate(player_name)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         -- Counter
@@ -88,6 +97,8 @@ Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         UI.EndTable()
@@ -111,45 +122,52 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
     local enspell  = DB.Data.Get(player_name, DB.Enum.Trackable.ENSPELL,     DB.Enum.Metric.TOTAL)
     local endrain  = DB.Data.Get(player_name, DB.Enum.Trackable.ENDRAIN,     DB.Enum.Metric.TOTAL)
     local enaspir  = DB.Data.Get(player_name, DB.Enum.Trackable.ENASPIR,     DB.Enum.Metric.TOTAL)
-    local guard    = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE,       DB.Enum.Metric.GUARD)
-    local counter  = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.GUARD)
+    local counter  = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.TOTAL)
 
+    local row = 1
     if UI.BeginTable("Aux. Melee", 4, table_flags) then
         UI.TableSetupColumn("Auxiliary", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
-        UI.TableSetupColumn("Damage %", col_flags, width)
-        UI.TableSetupColumn("Rate", col_flags, width)
+        UI.TableSetupColumn("%Player", col_flags, width)
+        UI.TableSetupColumn("%Proc", col_flags, width)
         UI.TableHeadersRow()
 
-        -- Critical Hits
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Crits")
         UI.TableNextColumn() Column.Proc.Crit_Damage(player_name, DB.Enum.Trackable.MELEE)
         UI.TableNextColumn() Column.Proc.Crit_Damage(player_name, DB.Enum.Trackable.MELEE, true)
         UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Trackable.MELEE)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         if counter > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Counter")
             UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER, true)
             UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_COUNTER)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if endamage > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("En-Damage")
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(endamage))
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDAMAGE, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if enspell > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("En-Spell")
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(enspell))
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENSPELL, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if endrain > 0 then
@@ -158,6 +176,8 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(endrain))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if enaspir > 0 then
@@ -166,6 +186,8 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(enaspir))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
 
@@ -175,14 +197,8 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(mob_heal))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        end
-
-        if guard > 0 then
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("Guarded")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() Column.Proc.Guard(player_name, DB.Enum.Trackable.MELEE)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if shadows > 0 then
@@ -191,6 +207,8 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(shadows))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         UI.EndTable()
@@ -211,6 +229,7 @@ Focus.Melee.Min_Max = function(player_name)
     local off_hand = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.TOTAL)
     local kick_damage = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.TOTAL)
 
+    local row = 1
     if UI.BeginTable("Min Max Melee", 4, table_flags) then
         UI.TableSetupColumn("MMA", col_flags, name_width)
         UI.TableSetupColumn("Average", col_flags, width)
@@ -223,6 +242,8 @@ Focus.Melee.Min_Max = function(player_name)
         UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.MELEE_MAIN)
         UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MIN)
         UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MAX)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         if off_hand > 0 then
             UI.TableNextRow()
@@ -230,6 +251,8 @@ Focus.Melee.Min_Max = function(player_name)
             UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.MELEE_OFFHAND)
             UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MIN)
             UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MAX)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if kick_damage > 0 then
@@ -238,6 +261,8 @@ Focus.Melee.Min_Max = function(player_name)
             UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.MELEE_KICK)
             UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MIN)
             UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MAX)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         UI.EndTable()
@@ -257,6 +282,7 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
     local width = Column.Widths.Standard
 
     local columns = 3
+    local row = 1
     if kick_damage > 0 then columns = 4 end
     if UI.BeginTable("Multi-Attack", columns, table_flags) then
         UI.TableSetupColumn("Multi-Attack", col_flags, name_width)
@@ -273,6 +299,8 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MULT_ATK_1)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MULT_ATK_1)
             if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MULT_ATK_1) end
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if DB.Tracking.Multi_Attack[player_name][DB.Enum.Metric.MULT_ATK_2] then
@@ -282,6 +310,8 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MULT_ATK_2)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MULT_ATK_2)
             if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MULT_ATK_2) end
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if DB.Tracking.Multi_Attack[player_name][DB.Enum.Metric.MULT_ATK_3] then
@@ -291,6 +321,8 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MULT_ATK_3)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MULT_ATK_3)
             if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MULT_ATK_3) end
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if DB.Tracking.Multi_Attack[player_name][DB.Enum.Metric.MULT_ATK_4] then
@@ -300,6 +332,8 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MULT_ATK_4)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MULT_ATK_4)
             if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MULT_ATK_4) end
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if DB.Tracking.Multi_Attack[player_name][DB.Enum.Metric.MULT_ATK_5] then
@@ -309,6 +343,8 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MULT_ATK_5)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MULT_ATK_5)
             if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MULT_ATK_5) end
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if DB.Tracking.Multi_Attack[player_name][DB.Enum.Metric.MULT_ATK_6] then
@@ -318,6 +354,8 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MULT_ATK_6)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MULT_ATK_6)
             if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MULT_ATK_6) end
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if DB.Tracking.Multi_Attack[player_name][DB.Enum.Metric.MULT_ATK_7] then
@@ -327,6 +365,8 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MULT_ATK_7)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MULT_ATK_7)
             if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MULT_ATK_7) end
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if DB.Tracking.Multi_Attack[player_name][DB.Enum.Metric.MULT_ATK_8] then
@@ -336,6 +376,8 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MULT_ATK_8)
             UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MULT_ATK_8)
             if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MULT_ATK_8) end
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if not multi_attack_found then
@@ -344,6 +386,8 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             if kick_damage > 0 then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         UI.EndTable()
