@@ -23,8 +23,6 @@ Focus.Magic.Display = function(player_name, hide_publish)
     Focus.Magic.Total(player_name, nuke_total, melee_endamage, range_endamage, enspell_count, endrain, spike_damage)
     Focus.Magic.Auxiliary(player_name, healing_total, burst_total, mp_drain, enfeeble_count, misc_count)
     UI.Separator()
-    Focus.Magic.Overcure(player_name, healing_total)
-    if healing_total > 0 then UI.Separator() end
 
     if nuke_total > 0     then Focus.Magic.Single(player_name, DB.Enum.Trackable.NUKE) end
     if healing_total > 0  then Focus.Magic.Single(player_name, DB.Enum.Trackable.HEALING) end
@@ -56,12 +54,13 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
+    local row = 1
     if UI.BeginTable("Magic", 5, table_flags) then
         UI.TableSetupColumn("Magic", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
-        UI.TableSetupColumn("Damage %", col_flags, width)
-        UI.TableSetupColumn("MP Used", col_flags, width)
-        UI.TableSetupColumn("Efficacy", col_flags, width)
+        UI.TableSetupColumn("%Player", col_flags, width)
+        UI.TableSetupColumn("MP-", col_flags, width)
+        UI.TableSetupColumn("DMG/MP", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
@@ -70,6 +69,8 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, true)
         UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.MAGIC)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         if nuke_total > 0 then
             UI.TableNextRow()
@@ -78,24 +79,8 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.NUKE, true)
             UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.NUKE)
             UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.NUKE)
-        end
-
-        if melee_endamage > 0 then
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("En-DMG (M)")
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDAMAGE)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDAMAGE, true)
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        end
-
-        if range_endamage > 0 then
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("En-DMG (R)")
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDAMAGE_R)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDAMAGE_R, true)
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if enspell_count > 0 then
@@ -105,6 +90,40 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENSPELL, true)
             UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.ENSPELL)
             UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.ENSPELL)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
+
+        if spike_damage > 0 then
+            UI.TableNextColumn() UI.Text("Spikes")
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG, true)
+            UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
+            UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
+
+        if melee_endamage > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("En-DMG (M)")
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDAMAGE)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDAMAGE, true)
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
+
+        if range_endamage > 0 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("En-DMG (R)")
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDAMAGE_R)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDAMAGE_R, true)
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if endrain > 0 then
@@ -114,15 +133,10 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDRAIN_R, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
-        if spike_damage > 0 then
-            UI.TableNextColumn() UI.Text("Spikes")
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG, true)
-            UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
-            UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG)
-        end
         UI.EndTable()
     end
 end
@@ -143,13 +157,14 @@ Focus.Magic.Auxiliary = function(player_name, healing_total, burst_total, mp_dra
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
+    local row = 1
     if healing_total > 0 or mp_drain > 0 or enfeeble_count > 0 or misc_count > 0 then
         if UI.BeginTable("Aux. Magic", 5, table_flags) then
             UI.TableSetupColumn("Auxiliary", col_flags, name_width)
             UI.TableSetupColumn("Damage", col_flags, width)
-            UI.TableSetupColumn("Damage %", col_flags, width)
-            UI.TableSetupColumn("MP Used", col_flags, width)
-            UI.TableSetupColumn("Efficacy", col_flags, width)
+            UI.TableSetupColumn("%Player", col_flags, width)
+            UI.TableSetupColumn("MP-", col_flags, width)
+            UI.TableSetupColumn("DMG/MP", col_flags, width)
             UI.TableHeadersRow()
 
             if healing_total > 0 then
@@ -159,6 +174,8 @@ Focus.Magic.Auxiliary = function(player_name, healing_total, burst_total, mp_dra
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                 UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.HEALING)
                 UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.HEALING)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
 
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text("Overcure")
@@ -166,6 +183,8 @@ Focus.Magic.Auxiliary = function(player_name, healing_total, burst_total, mp_dra
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
 
             if burst_total > 0 then
@@ -175,6 +194,8 @@ Focus.Magic.Auxiliary = function(player_name, healing_total, burst_total, mp_dra
                 UI.TableNextColumn() Column.Damage.Burst(player_name, true)
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
 
             if mp_drain > 0 then
@@ -184,6 +205,8 @@ Focus.Magic.Auxiliary = function(player_name, healing_total, burst_total, mp_dra
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                 UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.MP_DRAIN)
                 UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Enum.Trackable.MP_DRAIN)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
 
             if enfeeble_count > 0 then
@@ -193,6 +216,8 @@ Focus.Magic.Auxiliary = function(player_name, healing_total, burst_total, mp_dra
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                 UI.TableNextColumn() Column.Spell.MP(player_name, DB.Enum.Trackable.ENFEEBLE)
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
 
             if misc_count > 0 then
@@ -202,6 +227,8 @@ Focus.Magic.Auxiliary = function(player_name, healing_total, burst_total, mp_dra
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                 UI.TableNextColumn() Column.Spell.MP(player_name, "Other")
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
             end
             UI.EndTable()
         end
@@ -270,8 +297,8 @@ Focus.Magic.Single = function(player_name, focus_type)
     if UI.BeginTable(focus_type, 9, table_flags) then
         UI.TableSetupColumn(action, col_flags, name_width)
         UI.TableSetupColumn(damage_string, col_flags, width)
-        UI.TableSetupColumn("MP Used", col_flags, width)
-        UI.TableSetupColumn("Efficacy", col_flags, width)
+        UI.TableSetupColumn("MP-", col_flags, width)
+        UI.TableSetupColumn("DMG/MP", col_flags, width)
         UI.TableSetupColumn("Casts", col_flags, width)
         UI.TableSetupColumn(acc_string, col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
@@ -283,9 +310,12 @@ Focus.Magic.Single = function(player_name, focus_type)
 
         -- Data
         local action_name
+        local row = 1
         for _, data in ipairs(DB.Sorted.Catalog_Damage) do
             action_name = data[1]
             Focus.Magic.Single_Row(player_name, action_name, focus_type)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
         UI.EndTable()
     end
@@ -334,8 +364,8 @@ Focus.Magic.Burst = function(player_name, nuke_total)
     if nuke_total > 0 then
         if UI.BeginTable("Bursts", 3, table_flags) then
             UI.TableSetupColumn("MB Damage", col_flags, name_width)
-            UI.TableSetupColumn("Damage %", col_flags, width)
-            UI.TableSetupColumn("Magic %", col_flags, width)
+            UI.TableSetupColumn("%Player", col_flags, width)
+            UI.TableSetupColumn("%Magic", col_flags, width)
             UI.TableHeadersRow()
 
             UI.TableNextRow()
