@@ -16,22 +16,24 @@ Focus.WS.Display = function(player_name, hide_publish)
     local trackable_sc = DB.Enum.Trackable.SC
 
     local row = 1
-    if UI.BeginTable("WS and SC", 6, table_flags) then
+    if UI.BeginTable("WS and SC", 7, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
         UI.TableSetupColumn("%Player", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
         UI.TableSetupColumn("Accuracy", col_flags, width)
-        UI.TableSetupColumn("TP Spent", col_flags, width)
+        UI.TableSetupColumn("~TP", col_flags, width)
+        UI.TableSetupColumn("DMG/TP", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Weaponskills")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable_ws)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable_ws, true)
-        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.WS)
+        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, trackable_ws)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable_ws)
-        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable_ws, DB.Enum.Metric.TP_SPENT)
+        UI.TableNextColumn() Column.Damage.Average_TP(player_name)
+        UI.TableNextColumn() Column.General.Fraction(player_name, trackable_ws, DB.Enum.Metric.TOTAL, DB.Enum.Metric.TP_SPENT, false, false, true)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -39,6 +41,7 @@ Focus.WS.Display = function(player_name, hide_publish)
         UI.TableNextColumn() UI.Text("Skillchains")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable_sc)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable_sc, true)
+        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, trackable_sc)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")

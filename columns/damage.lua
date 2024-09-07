@@ -46,9 +46,7 @@ Column.Damage.Average_By_Type = function(player_name, damage_type, justify)
     local focused_count  = DB.Data.Get(player_name, damage_type, Column.Metric.HIT_COUNT)
     local color = Column.String.Color_Zero(focused_damage)
     if focused_damage == 0 or focused_count == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
-
-    local focused_average = focused_damage / focused_count
-    return UI.TextColored(color, Column.String.Format_Number(focused_average, justify))
+    return UI.TextColored(color, Column.String.Format_Percent(focused_damage, focused_count, justify, true))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -62,9 +60,7 @@ Column.Damage.Average_TP = function(player_name, justify)
     local attempts = DB.Data.Get(player_name, Column.Trackable.WS, Column.Metric.COUNT)
     local color = Column.String.Color_Zero(tp)
     if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
-    local format = "%d"
-    if justify then format = "%8d" end
-    return UI.TextColored(color, string.format(format, Column.String.Raw_Percent(tp, attempts)))
+    return UI.TextColored(color, Column.String.Format_Percent(tp, attempts, justify, true))
 end
 
 ------------------------------------------------------------------------------------------------------

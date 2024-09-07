@@ -19,10 +19,11 @@ Focus.Catalog.Weaponskill = function(player_name, focus_type)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    if UI.BeginTable(focus_type, 8, table_flags) then
+    if UI.BeginTable(focus_type, 9, table_flags) then
         UI.TableSetupColumn("Weaponskill", col_flags, name_width)
         UI.TableSetupColumn("Total", col_flags, width)
         UI.TableSetupColumn("~TP", col_flags, width)
+        UI.TableSetupColumn("DMG/TP", col_flags, width)
         UI.TableSetupColumn("Attempts", col_flags, width)
         UI.TableSetupColumn("Accuracy", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
@@ -39,6 +40,7 @@ Focus.Catalog.Weaponskill = function(player_name, focus_type)
             UI.TableNextColumn() UI.Text(action_name)
             UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
             UI.TableNextColumn() Column.Single.Average_TP(player_name, action_name)
+            UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, focus_type, DB.Enum.Metric.TP_SPENT)
             UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
             UI.TableNextColumn() Column.Single.Acc(player_name, action_name, focus_type)
             Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)

@@ -37,5 +37,5 @@ Column.Spell.Unit_Per_MP = function(player_name, magic_type)
     local mp = DB.Data.Get(player_name, magic_type, Column.Metric.MP_SPENT)
     local unit = DB.Data.Get(player_name, magic_type, Column.Metric.TOTAL)
     local color = Column.String.Color_Zero(unit)
-    return UI.TextColored(color, string.format("%.1f", Column.String.Raw_Percent(unit, mp)))
+    return UI.TextColored(color, Column.String.Format_Percent(unit, mp, false, true))
 end

@@ -518,7 +518,7 @@ Focus.Overview.Nuking = function(player_name, hide_mp)
                 UI.TableNextColumn() UI.Text(action_name)
                 UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.TOTAL)
                 UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
-                if not hide_mp then UI.TableNextColumn() Column.Single.Damage_Per_MP(player_name, action_name, trackable) end
+                if not hide_mp then UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, trackable, DB.Enum.Metric.MP_SPENT) end
                 UI.TableNextColumn() Column.Single.Bursts(player_name, action_name)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1

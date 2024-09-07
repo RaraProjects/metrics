@@ -84,7 +84,7 @@ Column.Defense.Average_Damage_By_Type = function(player_name, damage_type, justi
     color = Column.String.Color_Zero(damage)
     local average_damage = math.floor(damage / count)
     if raw then return average_damage end
-    return UI.TextColored(color, Column.String.Format_Number(average_damage, justify))
+    return UI.TextColored(color, Column.String.Format_Percent(damage, count, justify, true))
 end
 
 ------------------------------------------------------------------------------------------------------

@@ -86,15 +86,18 @@ end
 ---@param numerator number The numerator for the percent.
 ---@param denominator number The denominator for the percent.
 ---@param justify? boolean whether or not to right justify the text
+---@param no_scaling? boolean do not scale the fraction by 100.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.String.Format_Percent = function(numerator, denominator, justify)
+Column.String.Format_Percent = function(numerator, denominator, justify, no_scaling)
     local format = "%.1f"
     if justify then format = "%8.1f" end
 
     local percent = 0
+    local scaling = 100
+    if no_scaling then scaling = 1 end
     local ret_value = string.format(format, 0)
-    if denominator and denominator ~= 0 then percent = (numerator / denominator) * 100 end
+    if denominator and denominator ~= 0 then percent = (numerator / denominator) * scaling end
     if percent ~= 0 then ret_value = string.format(format, percent) end
 
     if Focus.Config.Show_Percent_Details and not Report.Publishing.Lock then

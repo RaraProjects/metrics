@@ -333,7 +333,7 @@ Focus.Magic.Single_Row = function(player_name, action_name, focus_type)
     UI.TableNextColumn() UI.Text(action_name)
     UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
     UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, focus_type)
-    UI.TableNextColumn() Column.Single.Damage_Per_MP(player_name, action_name, focus_type)
+    UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, focus_type, DB.Enum.Metric.MP_SPENT)
     UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
 
     -- Accuracy changes between what the trackable is. Accuracy for spells isn't useful.
