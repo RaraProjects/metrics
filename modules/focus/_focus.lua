@@ -204,6 +204,7 @@ Focus.Overall = function(player_name)
         if magic > 0   then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, true) end
         if ability > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, true) end
         if pet > 0     then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET, true) end
+        Window_Manager.Table_Row_Color(1)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Raw")
@@ -215,6 +216,8 @@ Focus.Overall = function(player_name)
         if magic > 0   then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC) end
         if ability > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_DAMAGING) end
         if pet > 0     then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET) end
+        Window_Manager.Table_Row_Color(0)
+
         UI.EndTable()
     end
 end
