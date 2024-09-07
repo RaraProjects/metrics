@@ -97,6 +97,8 @@ H.Ranged.Totals = function(audits, damage, ranged_type)
     DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.TOTAL,  H.Metric.TOTAL)
     DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)
     DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED_SQUARE, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED_TRUE, H.Metric.COUNT)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -162,8 +164,9 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Square = function(audits, damage, ranged_type)
     DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.SQUARE_COUNT)
     DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED_SQUARE, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.RANGED_SQUARE, H.Metric.TOTAL)
     DB.Accuracy.Update(audits.player_name, true)
 end
 
@@ -176,8 +179,9 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Truestrike = function(audits, damage, ranged_type)
     DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.TRUE_COUNT)
     DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, H.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED_TRUE, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.RANGED_TRUE, H.Metric.TOTAL)
     DB.Accuracy.Update(audits.player_name, true)
 end
 

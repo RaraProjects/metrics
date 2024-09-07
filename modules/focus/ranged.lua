@@ -31,10 +31,12 @@ Focus.Ranged.Total = function(player_name)
     local width = Column.Widths.Standard
     local trackable = DB.Enum.Trackable.RANGED
 
-    if UI.BeginTable("Ranged", 4, table_flags) then
+    local row = 1
+    if UI.BeginTable("Ranged", 5, table_flags) then
         UI.TableSetupColumn("Ranged", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
-        UI.TableSetupColumn("Damage %", col_flags, width)
+        UI.TableSetupColumn("%Player", col_flags, width)
+        UI.TableSetupColumn("%Average", col_flags, width)
         UI.TableSetupColumn("Accuracy", col_flags, width)
         UI.TableHeadersRow()
 
@@ -42,7 +44,28 @@ Focus.Ranged.Total = function(player_name)
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, true)
+        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.RANGED)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
+
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Square Hit")
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED_SQUARE)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED_SQUARE, true)
+        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.RANGED_SQUARE)
+        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
+
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("True Strike")
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED_TRUE)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED_TRUE, true)
+        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name,DB.Enum.Trackable.RANGED_TRUE)
+        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         UI.EndTable()
     end
@@ -63,10 +86,11 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
     local width = Column.Widths.Standard
     local trackable = DB.Enum.Trackable.RANGED
 
+    local row = 1
     if UI.BeginTable("Aux. Ranged", 4, table_flags) then
         UI.TableSetupColumn("Auxiliary", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
-        UI.TableSetupColumn("Damage %", col_flags, width)
+        UI.TableSetupColumn("%Player", col_flags, width)
         UI.TableSetupColumn("Rate", col_flags, width)
         UI.TableHeadersRow()
 
@@ -75,25 +99,17 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
         UI.TableNextColumn() Column.Proc.Crit_Damage(player_name, trackable)
         UI.TableNextColumn() Column.Proc.Crit_Damage(player_name, trackable, true)
         UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, trackable)
-
-        UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Square Hit")
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, nil, DB.Enum.Metric.SQUARE_COUNT)
-
-        UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Truestrike")
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, nil, DB.Enum.Metric.TRUE_COUNT)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         if endamage > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("En-Damage")
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(endamage))
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDAMAGE_R, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if endrain > 0 then
@@ -102,6 +118,8 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(endrain))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         if enaspir > 0 then
@@ -110,6 +128,8 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(enaspir))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
 
         UI.EndTable()
