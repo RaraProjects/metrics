@@ -13,6 +13,7 @@ Overview.Parse.Content = function()
     if Metrics.Overview.Ranged then Overview.Parse.Ranged() end
     if Metrics.Overview.WS then Overview.Parse.Weaponskills() end
     if Metrics.Overview.Nuke then Overview.Parse.Nukes() end
+    if Metrics.Overview.Pets then Overview.Parse.Pets() end
     if Metrics.Overview.Healing then Overview.Parse.Healing() end
     if Metrics.Overview.Defense then Overview.Parse.Defense() end
     if Metrics.Overview.Mobs_Defeated then Overview.Parse.Monsters_Defeated() end
@@ -37,6 +38,7 @@ Overview.Parse.Settings = function()
         UI.TableNextColumn() if UI.Checkbox("Ranged", {Metrics.Overview.Ranged}) then Metrics.Overview.Ranged = not Metrics.Overview.Ranged end
         UI.TableNextColumn() if UI.Checkbox("Weaponskills", {Metrics.Overview.WS}) then Metrics.Overview.WS = not Metrics.Overview.WS end
         UI.TableNextColumn() if UI.Checkbox("Nuking", {Metrics.Overview.Nuke}) then Metrics.Overview.Nuke = not Metrics.Overview.Nuke end
+        UI.TableNextColumn() if UI.Checkbox("Pets", {Metrics.Overview.Pets}) then Metrics.Overview.Pets = not Metrics.Overview.Pets end
         UI.TableNextColumn() if UI.Checkbox("Healing", {Metrics.Overview.Healing}) then Metrics.Overview.Healing = not Metrics.Overview.Healing end
         UI.TableNextColumn() if UI.Checkbox("Defense", {Metrics.Overview.Defense}) then Metrics.Overview.Defense = not Metrics.Overview.Defense end
         UI.TableNextColumn() if UI.Checkbox("Mobs Defeated", {Metrics.Overview.Mobs_Defeated}) then Metrics.Overview.Mobs_Defeated = not Metrics.Overview.Mobs_Defeated end
@@ -292,15 +294,15 @@ Overview.Parse.Nukes = function()
     local action_name
 
     if UI.BeginTable("Nuke", 9, table_flags) then
-        UI.TableSetupColumn("Nuke",     col_flags, name_width)
-        UI.TableSetupColumn("Damage",   col_flags, width)
-        UI.TableSetupColumn("%Party",   col_flags, width)
-        UI.TableSetupColumn("Average",  col_flags, width)
-        UI.TableSetupColumn("Bursts",   col_flags, width)
-        UI.TableSetupColumn("DMG/MP", col_flags, width)
-        UI.TableSetupColumn("Casts",    col_flags, width)
-        UI.TableSetupColumn("Minimum",  col_flags, width)
-        UI.TableSetupColumn("Maximum",  col_flags, width)
+        UI.TableSetupColumn("Nuke",    col_flags, name_width)
+        UI.TableSetupColumn("Damage",  col_flags, width)
+        UI.TableSetupColumn("%Party",  col_flags, width)
+        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("Bursts",  col_flags, width)
+        UI.TableSetupColumn("DMG/MP",  col_flags, width)
+        UI.TableSetupColumn("Casts",   col_flags, width)
+        UI.TableSetupColumn("Minimum", col_flags, width)
+        UI.TableSetupColumn("Maximum", col_flags, width)
         UI.TableHeadersRow()
 
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
@@ -350,6 +352,83 @@ Overview.Parse.Nukes = function()
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Populates the Parse pet overview.
+------------------------------------------------------------------------------------------------------
+Overview.Parse.Pets = function()
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    local trackable = DB.Enum.Trackable.PET
+
+    if UI.BeginTable("Pets", 8, table_flags) then
+        UI.TableSetupColumn("Pet",      col_flags, name_width)
+        UI.TableSetupColumn("Damage",   col_flags, width)
+        UI.TableSetupColumn("%Party",   col_flags, width)
+        UI.TableSetupColumn("Accuracy", col_flags, width)
+        UI.TableSetupColumn("%Player",  col_flags, width)
+        UI.TableSetupColumn("%Melee",   col_flags, width)
+        UI.TableSetupColumn("%WS",      col_flags, width)
+        UI.TableSetupColumn("%Ability", col_flags, width)
+        UI.TableHeadersRow()
+
+        local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
+        local row = 1
+        for rank, data in ipairs(sorted_damage) do
+            if rank <= Parse.Config.Rank_Cutoff() then
+                local player_name = data[1]
+                local damage = DB.Data.Get(player_name, trackable, Column.Metric.TOTAL)
+                if damage > 0 then
+                    -- Player overall pet damage.
+                    UI.TableNextRow()
+                    UI.TableNextColumn() Column.String.Format_Name(player_name)
+                    UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
+                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
+                    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
+                    UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+                    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_MELEE, true)
+                    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_WS, true)
+                    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY, true)
+                    Window_Manager.Table_Row_Color(1)
+                    row = row + 1
+
+                    -- Specific Pets
+                    local pet_name = DB.Enum.Values.DEBUG
+                    DB.Lists.Populate.Pet_Damage(player_name)
+                    for _, pet_data in ipairs(DB.Sorted.Pet_Damage) do
+                        pet_name = pet_data[1]
+                        UI.TableNextRow()
+                        UI.TableNextColumn() UI.Text("> " .. tostring(pet_name))
+                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable)
+                        UI.TableNextColumn() Column.General.Percent_Party_Total_Pet(player_name, pet_name, trackable)
+                        UI.TableNextColumn() Column.Acc.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
+                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable, true)
+                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_MELEE, true)
+                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_WS, true)
+                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_ABILITY, true)
+                        Window_Manager.Table_Row_Color(0)
+                    end
+                end
+            end
+        end
+        if row == 1 then
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("No data")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")

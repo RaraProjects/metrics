@@ -9,6 +9,7 @@ Overview.Config.Defaults = T{
     Ranged = false,
     WS = false,
     Nuke = false,
+    Pets = false,
     Healing = false,
     Defense = false,
     Mobs_Defeated = false,
