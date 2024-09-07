@@ -13,6 +13,7 @@ Overview.Parse.Content = function()
     if Metrics.Overview.Nuke then Overview.Parse.Nukes() end
     if Metrics.Overview.Healing then Overview.Parse.Healing() end
     if Metrics.Overview.Defense then Overview.Parse.Defense() end
+    if Metrics.Overview.Mobs_Defeated then Overview.Parse.Monsters_Defeated() end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -20,24 +21,23 @@ end
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Settings = function()
     local col_flags = Column.Flags.None
-    local width = Column.Widths.Report
+    local width = Column.Widths.Name
 
-    if UI.BeginTable("Parse Overview", 7) then
+    if UI.BeginTable("Parse Overview", 5) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
         UI.TableSetupColumn("Col 4", col_flags, width)
         UI.TableSetupColumn("Col 5", col_flags, width)
-        UI.TableSetupColumn("Col 6", col_flags, width)
-        UI.TableSetupColumn("Col 7", col_flags, width)
 
         UI.TableNextColumn() if UI.Checkbox("Timer", {Metrics.Overview.Timer}) then Metrics.Overview.Timer = not Metrics.Overview.Timer end
         UI.TableNextColumn() if UI.Checkbox("Melee", {Metrics.Overview.Melee}) then Metrics.Overview.Melee = not Metrics.Overview.Melee end
         UI.TableNextColumn() if UI.Checkbox("Ranged", {Metrics.Overview.Ranged}) then Metrics.Overview.Ranged = not Metrics.Overview.Ranged end
-        UI.TableNextColumn() if UI.Checkbox("WS", {Metrics.Overview.WS}) then Metrics.Overview.WS = not Metrics.Overview.WS end
-        UI.TableNextColumn() if UI.Checkbox("Nuke", {Metrics.Overview.Nuke}) then Metrics.Overview.Nuke = not Metrics.Overview.Nuke end
+        UI.TableNextColumn() if UI.Checkbox("Weaponskills", {Metrics.Overview.WS}) then Metrics.Overview.WS = not Metrics.Overview.WS end
+        UI.TableNextColumn() if UI.Checkbox("Nuking", {Metrics.Overview.Nuke}) then Metrics.Overview.Nuke = not Metrics.Overview.Nuke end
         UI.TableNextColumn() if UI.Checkbox("Healing", {Metrics.Overview.Healing}) then Metrics.Overview.Healing = not Metrics.Overview.Healing end
         UI.TableNextColumn() if UI.Checkbox("Defense", {Metrics.Overview.Defense}) then Metrics.Overview.Defense = not Metrics.Overview.Defense end
+        UI.TableNextColumn() if UI.Checkbox("Mobs Defeated", {Metrics.Overview.Mobs_Defeated}) then Metrics.Overview.Mobs_Defeated = not Metrics.Overview.Mobs_Defeated end
 
         UI.EndTable()
     end
@@ -114,15 +114,15 @@ Overview.Parse.Melee = function()
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 
         UI.EndTable()
@@ -178,15 +178,15 @@ Overview.Parse.Ranged = function()
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 
         UI.EndTable()
@@ -263,14 +263,14 @@ Overview.Parse.Weaponskills = function()
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 
         UI.EndTable()
@@ -347,14 +347,14 @@ Overview.Parse.Nukes = function()
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 
         UI.EndTable()
@@ -379,7 +379,7 @@ Overview.Parse.Healing = function()
         UI.TableSetupColumn("%Party",   col_flags, width)
         UI.TableSetupColumn("Average",  col_flags, width)
         UI.TableSetupColumn("Overcure", col_flags, width)
-        UI.TableSetupColumn("Efficacy", col_flags, width)
+        UI.TableSetupColumn("HP+/MP", col_flags, width)
         UI.TableSetupColumn("Casts",    col_flags, width)
         UI.TableSetupColumn("Minimum",  col_flags, width)
         UI.TableSetupColumn("Maximum",  col_flags, width)
@@ -431,14 +431,14 @@ Overview.Parse.Healing = function()
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 
         UI.EndTable()
@@ -457,7 +457,7 @@ Overview.Parse.Defense = function()
     local trackable = DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL
     if UI.BeginTable("Defense", 7, table_flags) then
         UI.TableSetupColumn("Damage Taken", col_flags, name_width)
-        UI.TableSetupColumn("Damage",    col_flags, width)
+        UI.TableSetupColumn("HP-",    col_flags, width)
         UI.TableSetupColumn("%Party",    col_flags, width)
         UI.TableSetupColumn("%Melee",   col_flags, width)
         UI.TableSetupColumn("%Magic",  col_flags, width)
@@ -488,12 +488,41 @@ Overview.Parse.Defense = function()
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
-            UI.TableNextColumn() UI.Text("---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Builds the monsters defeated section.
+------------------------------------------------------------------------------------------------------
+Overview.Parse.Monsters_Defeated = function()
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    if UI.BeginTable("Mobs Defeated", 2, table_flags) then
+        UI.TableSetupColumn("Mob Name", col_flags, name_width)
+        UI.TableSetupColumn("Defeated", col_flags, width)
+        UI.TableHeadersRow()
+
+        local mobs_defeated = 0
+        for mob_name, count in pairs(DB.Tracking.Defeated_Mobs) do
+            UI.TableNextColumn() UI.Text(tostring(mob_name))
+            UI.TableNextColumn() UI.Text(tostring(count))
+            mobs_defeated = mobs_defeated + 1
+        end
+        if mobs_defeated == 0 then
+            UI.TableNextColumn() UI.Text("None")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 
         UI.EndTable()

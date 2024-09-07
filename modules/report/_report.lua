@@ -23,7 +23,6 @@ Report.Content = function()
     Report.Widgets.Settings_Button()
     UI.Separator() Report.Section.Chat_Reports()
     UI.Separator() Report.Section.File()
-    UI.Separator() Report.Section.Monsters_Defeated()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -124,17 +123,4 @@ Report.Section.File = function()
         end
         UI.EndTable()
     end
-end
-
-------------------------------------------------------------------------------------------------------
--- Builds the monsters defeated section.
-------------------------------------------------------------------------------------------------------
-Report.Section.Monsters_Defeated = function()
-    UI.Text("Monsters Defeated")
-    local mobs_defeated = 0
-    for mob_name, count in pairs(DB.Tracking.Defeated_Mobs) do
-        UI.BulletText(mob_name .. ": " .. tostring(count))
-        mobs_defeated = mobs_defeated + 1
-    end
-    if mobs_defeated == 0 then UI.BulletText("None") end
 end

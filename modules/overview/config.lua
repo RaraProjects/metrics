@@ -11,4 +11,5 @@ Overview.Config.Defaults = T{
     Nuke = false,
     Healing = false,
     Defense = false,
+    Mobs_Defeated = false,
 }
