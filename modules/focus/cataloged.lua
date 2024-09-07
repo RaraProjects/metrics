@@ -247,6 +247,22 @@ Focus.Catalog.Endebuff = function(player_name, focus_type, suffix)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Populates the Minimum column for a cataloged action.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name string
+---@param focus_type string
+------------------------------------------------------------------------------------------------------
+Focus.Catalog.Min = function(player_name, action_name, focus_type)
+    local min = DB.Catalog.Get(player_name, focus_type, action_name, DB.Enum.Metric.MIN)
+    if min == DB.Enum.Values.MAX_DAMAGE then
+        Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Values.IGNORE)
+    else
+        Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Populates the Average, Minimum, and Maximum columns for a cataloged action.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
@@ -255,11 +271,6 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Catalog.Avg_Min_Max = function(player_name, action_name, focus_type)
     UI.TableNextColumn() Column.Single.Average(player_name, action_name, focus_type)
-    local min = DB.Catalog.Get(player_name, focus_type, action_name, DB.Enum.Metric.MIN)
-    if min == 100000 then
-        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Values.IGNORE)
-    else
-        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN)
-    end
+    UI.TableNextColumn() Focus.Catalog.Min(player_name, action_name, focus_type)
     UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX)
 end

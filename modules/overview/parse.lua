@@ -254,7 +254,7 @@ Overview.Parse.Weaponskills = function()
                             UI.TableNextColumn() Column.Single.Acc(player_name, action_name, trackable)
                             UI.TableNextColumn() Column.Single.Average_TP(player_name, action_name)
                             UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
-                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.MIN)
+                            UI.TableNextColumn() Focus.Catalog.Min(player_name, action_name, trackable)
                             UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.MAX)
                             Window_Manager.Table_Row_Color(0)
                         end
