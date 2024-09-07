@@ -27,6 +27,7 @@ DB.Enum.Trackable = T{
     ABILITY_DAMAGING    = "Damaging Abilities",
     ABILITY_HEALING     = "Healing Abilities",
     ABILITY_MP_RECOVERY = "MP Recovery Abilities",
+    ABILITY_GENERAL     = "General Ability",
     PET                 = "Pet",                 -- Pets
     PET_ABILITY         = "Pet Ability",
     PET_HEAL            = "Pet Healing",

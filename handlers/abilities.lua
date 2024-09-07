@@ -210,16 +210,21 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data)
     local audits = H.Ability.Audits(actor_mob.name, target_mob.name)
-    local trackable = H.Trackable.ABILITY
 
+    -- Overall ability tracking.
+    local trackable = H.Trackable.ABILITY
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, ability_data.Name, H.Metric.COUNT)
+
+    -- Some abilities need to also have counts to tag them for pickup by listing functions.
     if Res.Abilities.Get_Damaging(ability_data.Id) then
         trackable = H.Trackable.ABILITY_DAMAGING
     elseif Res.Abilities.Get_Player_Healing(ability_data.Id) or Res.Abilities.Get_Pet_Healing(ability_data.Id) then
         trackable = H.Trackable.ABILITY_HEALING
     elseif Res.Abilities.Get_MP_Recovery(ability_data.Id) then
         trackable = H.Trackable.ABILITY_MP_RECOVERY
+    else
+        trackable = H.Trackable.ABILITY_GENERAL
     end
-
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, ability_data.Name, H.Metric.COUNT)
 end
 

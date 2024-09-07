@@ -93,7 +93,7 @@ Focus.Catalog.Skillchains = function(player_name, focus_type)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Sets up the table for a abilities inside the focus window.
+-- Sets up the table for abilities inside the focus window.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param focus_type string a trackable from the data model.
@@ -111,7 +111,7 @@ Focus.Catalog.Abilities = function(player_name, focus_type, action_string)
     if UI.BeginTable(focus_type, 7, table_flags) then
         UI.TableSetupColumn(action_string, col_flags, name_width)
         UI.TableSetupColumn("Total",       col_flags, width)
-        UI.TableSetupColumn("Attempts",    col_flags, width)
+        UI.TableSetupColumn("Uses",    col_flags, width)
         UI.TableSetupColumn("Accuracy",  col_flags, width)
         UI.TableSetupColumn("Average",     col_flags, width)
         UI.TableSetupColumn("Minimum",     col_flags, width)
@@ -120,6 +120,7 @@ Focus.Catalog.Abilities = function(player_name, focus_type, action_string)
 
         DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         local action_name
+        local row = 1
         for _, data in ipairs(DB.Sorted.Catalog_Damage) do
             action_name = data[1]
             UI.TableNextRow()
@@ -128,10 +129,48 @@ Focus.Catalog.Abilities = function(player_name, focus_type, action_string)
             UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
             UI.TableNextColumn() Column.Single.Acc(player_name, action_name, focus_type)
             Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
         end
         UI.EndTable()
     end
 end
+
+------------------------------------------------------------------------------------------------------
+-- Sets up the table for general abilities inside the focus window.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Catalog.Abilities_General = function(player_name)
+    local focus_type = H.Trackable.ABILITY_GENERAL
+    if not DB.Tracking.Trackable[focus_type] then return nil end
+    if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
+
+    local table_flags = Focus.Catalog.Table_Flags
+    local col_flags = Focus.Catalog.Column_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    if UI.BeginTable(focus_type, 2, table_flags) then
+        UI.TableSetupColumn("General", col_flags, name_width)
+        UI.TableSetupColumn("Uses",    col_flags, width)
+        UI.TableHeadersRow()
+
+        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local action_name
+        local row = 1
+        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            action_name = data[1]
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text(action_name)
+            UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
+        UI.EndTable()
+    end
+end
+
 
 ------------------------------------------------------------------------------------------------------
 -- Sets up the table for a endamage inside the focus window.

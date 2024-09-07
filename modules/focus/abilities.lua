@@ -18,7 +18,7 @@ Focus.Abilities.Display = function(player_name, hide_publish)
     if ability_total > 0 then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, "Damaging") end
     if healing_total > 0 then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY_HEALING, "Healing") end
     if mp_recovery > 0   then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, "MP Recover") end
-    if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY, "Ability") end
+    if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Catalog.Abilities_General(player_name) end
 
     if not hide_publish then Focus.Abilities.Publish(player_name, ability_total, healing_total) end
 end
@@ -34,6 +34,7 @@ Focus.Abilities.Total = function(player_name)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
+    local row = 1
     if UI.BeginTable("Ability", 2, table_flags) then
         UI.TableSetupColumn("Type", col_flags, name_width)
         UI.TableSetupColumn("Total", col_flags, width)
@@ -42,14 +43,20 @@ Focus.Abilities.Total = function(player_name)
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Damaging")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_DAMAGING)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         UI.TableNextRow()
         UI.TableNextColumn()UI.Text("Healing")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_HEALING)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         UI.TableNextRow()
         UI.TableNextColumn()UI.Text("MP Recovery")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
 
         UI.EndTable()
     end
