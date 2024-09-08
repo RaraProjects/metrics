@@ -212,11 +212,12 @@ Focus.Pets.Single = function(player_name, pet_name)
         UI.EndTable()
     end
 
-    if UI.BeginTable(pet_name.." single", 7, table_flags) then
+    if UI.BeginTable(pet_name.." single", 8, table_flags) then
         UI.TableSetupColumn("Action Name", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
-        UI.TableSetupColumn("Attempts", col_flags, width)
+        UI.TableSetupColumn("~TP", col_flags, width)
         UI.TableSetupColumn("Accuracy", col_flags, width)
+        UI.TableSetupColumn("Attempts", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
         UI.TableSetupColumn("Minimum", col_flags, width)
         UI.TableSetupColumn("Maximum", col_flags, width)
@@ -253,8 +254,9 @@ Focus.Pets.Single_Row = function(player_name, pet_name, action_name, trackable)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(action_name)
     UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Enum.Metric.TOTAL)
-    UI.TableNextColumn() Column.Single.Pet_Attempts(player_name, pet_name, action_name, trackable)
+    UI.TableNextColumn() Column.Single.Average_Pet_TP(player_name, pet_name, trackable, action_name)
     UI.TableNextColumn() Column.Single.Pet_Acc(player_name, pet_name, action_name, trackable)
+    UI.TableNextColumn() Column.Single.Pet_Attempts(player_name, pet_name, action_name, trackable)
     UI.TableNextColumn() Column.Single.Pet_Average(player_name, pet_name, action_name, trackable)
 
     local min = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Enum.Metric.MIN)
@@ -273,6 +275,7 @@ end
 Focus.Pets.Single_Blank_Row = function()
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text("None")
+    UI.TableNextColumn() UI.Text("0")
     UI.TableNextColumn() UI.Text("0")
     UI.TableNextColumn() UI.Text("0")
     UI.TableNextColumn() UI.Text("0")

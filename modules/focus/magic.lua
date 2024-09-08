@@ -271,6 +271,7 @@ Focus.Magic.Single = function(player_name, focus_type)
     local acc_string = "Acc. %"
     local action = "Spell"
     local damage_string = "Damage"
+    local efficacy_string = "DMG/MP"
     if focus_type == DB.Enum.Trackable.NUKE then
         action = "Nuke"
         acc_string = "Bursts"
@@ -278,6 +279,7 @@ Focus.Magic.Single = function(player_name, focus_type)
         action = "Heal"
         acc_string = "Overcure"
         damage_string = "Healing"
+        efficacy_string = "HP+/MP"
     elseif focus_type == DB.Enum.Trackable.ENFEEBLE then
         action = "Enfeeble"
         acc_string = "Land Rate"
@@ -298,7 +300,7 @@ Focus.Magic.Single = function(player_name, focus_type)
         UI.TableSetupColumn(action, col_flags, name_width)
         UI.TableSetupColumn(damage_string, col_flags, width)
         UI.TableSetupColumn("MP-", col_flags, width)
-        UI.TableSetupColumn("DMG/MP", col_flags, width)
+        UI.TableSetupColumn(efficacy_string, col_flags, width)
         UI.TableSetupColumn("Casts", col_flags, width)
         UI.TableSetupColumn(acc_string, col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
