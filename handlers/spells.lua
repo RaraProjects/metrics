@@ -358,9 +358,9 @@ H.Spell.Enfeebling = function(audits, spell_name, message_id, damage)
     DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT) -- Used to flag that data is available for show in Focus.
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
 
-    -- No Effect (count this as a hit to not be penalized)
+    -- No Effect. Pretend this never occurred. No hit numerator and undo the count increment.
     if message_id == Ashita.Enum.Message.NO_EFFECT or message_id == Ashita.Enum.Message.EFFECT_FAIL then
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, trackable, spell_name, H.Metric.COUNT)
         damage = -1
     -- Resists
     elseif message_id == Ashita.Enum.Message.RESIST or message_id == Ashita.Enum.Message.RESIST_2 then
