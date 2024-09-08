@@ -7,6 +7,7 @@ Config.Window = Window:New({
     Name   = Config.Name,
     Title  = Config.Title,
     Module = Config.Module,
+    Show_Title = true,
 })
 
 Config.Defaults = T{

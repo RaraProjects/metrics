@@ -7,6 +7,7 @@ Focus.Overview = T{}
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.Job_Selection = function(player_name)
     if not player_name or not Ashita.Party.Jobs[player_name] then Focus.Overview.Anon() end
+    if not Ashita.Party.Jobs[player_name].main then Focus.Overview.Anon() end -- Mob in player list crash prevention.
 
     local main = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
     if not main then Focus.Overview.Anon() end
@@ -900,7 +901,7 @@ Focus.Overview.Defense = function(player_name)
     row = 1
     if UI.BeginTable("Defense", 5, table_flags) then
         UI.TableSetupColumn("Mitigation", col_flags, name_width)
-        UI.TableSetupColumn("HP Saved", col_flags, width)
+        UI.TableSetupColumn("~HP Saved", col_flags, width)
         UI.TableSetupColumn("%Proc", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
         UI.TableSetupColumn("%DT-", col_flags, width)

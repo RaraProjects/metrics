@@ -62,7 +62,7 @@ Parse.Full.Headers = function()
     if Metrics.Parse.Crit then         UI.TableSetupColumn("%Crit",    flags) end
     if Metrics.Parse.Melee then        UI.TableSetupColumn("Melee",    flags) end
     if Metrics.Parse.Melee_Acc then    UI.TableSetupColumn("M.Acc",    flags) end
-    if Metrics.Parse.Melee_Crit then   UI.TableSetupColumn("M.Crit",   flags) end
+    if Metrics.Parse.Melee_Crit then   UI.TableSetupColumn("%M.Crit",  flags) end
     if Metrics.Parse.Weaponskill then  UI.TableSetupColumn("WS",       flags) end
     if Metrics.Parse.Average_WS then   UI.TableSetupColumn("WS Avg",   flags) end
     if Metrics.Parse.WS_TP then        UI.TableSetupColumn("WS ~TP",   flags) end
@@ -70,7 +70,7 @@ Parse.Full.Headers = function()
     if Parse.Config.Include_SC_Damage() then UI.TableSetupColumn("SC", flags) end
     if Metrics.Parse.Ranged then       UI.TableSetupColumn("Ranged",   flags) end
     if Metrics.Parse.Ranged_Acc then   UI.TableSetupColumn("R.Acc",    flags) end
-    if Metrics.Parse.Ranged_Crit then  UI.TableSetupColumn("R.Crit",   flags) end
+    if Metrics.Parse.Ranged_Crit then  UI.TableSetupColumn("%R.Crit",  flags) end
     if Metrics.Parse.Ranged_Dist then  UI.TableSetupColumn("R.Dist",   flags) end
     if Metrics.Parse.Magic then        UI.TableSetupColumn("Magic",    flags) end
     if Metrics.Parse.Ability then      UI.TableSetupColumn("JA",       flags) end

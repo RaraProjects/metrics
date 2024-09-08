@@ -147,7 +147,7 @@ Focus.Defense.Mitigation = function(player_name)
     local row = 1
     if UI.BeginTable("Defense", 5, table_flags) then
         UI.TableSetupColumn("Mitigation", col_flags, name_width)
-        UI.TableSetupColumn("HP Saved", col_flags, width)
+        UI.TableSetupColumn("~HP Saved", col_flags, width)
         UI.TableSetupColumn("%Proc", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
         UI.TableSetupColumn("%DT-", col_flags, width)

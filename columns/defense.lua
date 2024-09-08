@@ -57,6 +57,7 @@ Column.Defense.Damage_Mitigation = function(player_name, mitigation_type, justif
     if average_melee == 0 then return UI.TextColored(color, "...") end
 
     local average_reduced_damage = Column.Defense.Average_Damage_By_Type(player_name, mitigation_type, false, true)
+    if mitigation_type == DB.Enum.Trackable.DEF_COUNTER then average_reduced_damage = 0 end -- Counter reduces damage 100%, but stores counter damage done.
     local damage_mitigated = mitigation_proc * (average_melee - average_reduced_damage)
     if damage_mitigated < 0 then damage_mitigated = 0 end
     color = Column.String.Color_Zero(damage_mitigated)
@@ -102,5 +103,6 @@ Column.Defense.Damage_Reduction = function(player_name, mitigation_type, justify
 
     local average_reduced_damage = Column.Defense.Average_Damage_By_Type(player_name, mitigation_type, false, true)
     color = Column.String.Color_Zero(average_reduced_damage)
-    return UI.TextColored(color, Column.String.Format_Percent(average_reduced_damage, average_melee, justify))
+
+    return UI.TextColored(color, Column.String.Format_Percent(average_melee - average_reduced_damage, average_melee, justify))
 end
