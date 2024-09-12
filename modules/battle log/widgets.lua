@@ -3,6 +3,8 @@ Blog.Widgets = T{}
 Blog.Widgets.Player_Focus = DB.Widgets.Dropdown.Enum.NONE
 Blog.Widgets.Player_Index = 1
 
+Blog.Widgets.Action_Buffer = T{}
+
 ------------------------------------------------------------------------------------------------------
 -- Set the battle log damage highlighting threshold for weaponskills.
 ------------------------------------------------------------------------------------------------------
@@ -138,4 +140,11 @@ Blog.Widgets.Player_Filter = function()
             UI.EndCombo()
         end
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Creates an input text box for the action filter.
+------------------------------------------------------------------------------------------------------
+Blog.Widgets.Action_Filter_Input = function()
+    UI.SetNextItemWidth(150) UI.InputText("Action", Blog.Widgets.Action_Buffer, 100, ImGuiInputTextFlags_AutoSelectAll)
 end

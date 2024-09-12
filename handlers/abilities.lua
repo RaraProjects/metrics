@@ -157,10 +157,10 @@ H.Ability.Blog = function(actor_mob, ability_data, ability_id, damage)
         local note = nil
         if ability_id == Res.Abilities.CHIVALRY then note = Ashita.Party.Refresh(actor_mob.name, Ashita.Enum.Player_Attributes.TP) end
         Blog.Add(actor_mob.name, nil, Blog.Enum.Types.ABILITY, ability_data.Name, damage, note)
-    end
-
-    if Res.Abilities.Get_Player_Healing(ability_id) or Res.Abilities.Get_Pet_Healing(ability_id) then
+    elseif Res.Abilities.Get_Player_Healing(ability_id) or Res.Abilities.Get_Pet_Healing(ability_id) then
         Blog.Add(actor_mob.name, nil, Blog.Enum.Types.HEALING, ability_data.Name, damage)
+    else
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.ABILITY, ability_data.Name)
     end
 end
 

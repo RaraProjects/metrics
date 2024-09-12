@@ -165,12 +165,14 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param string string
 ---@param limit number
+---@param ignore_dot? boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.String.Truncate = function(string, limit)
+Column.String.Truncate = function(string, limit, ignore_dot)
     local length = string.len(string)
     if length <= limit then return string end
-    return string.sub(string, 1, limit) .. "."
+    if ignore_dot then return string.sub(string, 1, limit) end
+    return string.sub(string, 1, limit - 1) .. "."
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -182,4 +184,19 @@ end
 Column.String.Color_Zero = function(value)
     if value == 0 then return Res.Colors.Basic.DIM end
     return Res.Colors.Basic.WHITE
+end
+
+------------------------------------------------------------------------------------------------------
+-- Adds extra spaces to the end of a string to make it a certain length.
+-- Assumes the string input has been truncated already.
+------------------------------------------------------------------------------------------------------
+---@param string string
+---@param limit number
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.String.Set_Length = function(string, limit)
+    local length = string.len(string)
+    if length >= limit then return string end
+    local chars_needed = limit - length
+    return string .. string.rep(" ", chars_needed)
 end

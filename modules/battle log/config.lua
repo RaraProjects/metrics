@@ -22,7 +22,6 @@ Blog.Config.Defaults = T{
     Mob_Death = true,
     Paging    = false,
     Streaming = true,
-    Truncate_Actions = false,
     WS_THRESHOLD    = 600,
     MAGIC_THRESHOLD = 1000,
     MAX_THRESHOLD   = 99999,
@@ -33,9 +32,11 @@ Blog.Config.Defaults = T{
 Blog.Settings = {
     Line_Size_Default = 20,
     Max_Length = 100000,
-    Truncate_Length = 11,           -- Max length for player name is 15 characters.
-    Pet_Name_Truncate_Length = 5,
+    Truncate_Length = 15,               -- Max length for player name is 15 characters.
+    Pet_Name_Truncate_Length = 3,
+    Player_Name_Truncate_Length = 11,   -- Length needed to show the JOB##/JOB## string.
     Action_Truncate_Length = 16,
+    Damage_Truncate_Length = 5,
     Visible_Length = 8,
 }
 
@@ -87,9 +88,6 @@ Blog.Config.General_Settings = function()
             Metrics.Blog.Timestamp = not Metrics.Blog.Timestamp
         end
         UI.TableNextColumn()
-        if UI.Checkbox("Truncate Actions", {Metrics.Blog.Truncate_Actions}) then
-            Metrics.Blog.Truncate_Actions = not Metrics.Blog.Truncate_Actions
-        end
         UI.TableNextColumn()
 
         UI.EndTable()
@@ -180,6 +178,7 @@ end
 Blog.Config.Filters = function()
     UI.Text("Log Filters")
     Blog.Widgets.Player_Filter()
+    Blog.Widgets.Action_Filter_Input()
 end
 
 ------------------------------------------------------------------------------------------------------

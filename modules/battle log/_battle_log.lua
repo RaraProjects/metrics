@@ -87,7 +87,7 @@ Blog.Content = function()
             if count > Metrics.Blog.Visible_Length then break end
             local entry = Blog.Log[i]
             if entry then
-                if entry.Flag and Blog.Action_Filter(entry.Flag.Value) and Blog.Player_Filter(entry) then
+                if entry.Flag and Blog.Action_Filter(entry.Flag.Value) and Blog.Player_Filter(entry) and Blog.Action_Name_Filter(entry) then
                     count = count + 1
                     Blog.Display.Rows(entry)
                 else
@@ -173,7 +173,20 @@ Blog.Action_Filter = function(action_flag)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Check to see if entry passes search filter.
+-- Check to see if the entry contains an action that passes the filter.
+------------------------------------------------------------------------------------------------------
+---@param entry table
+---@return boolean
+------------------------------------------------------------------------------------------------------
+Blog.Action_Name_Filter = function(entry)
+    if not entry or not entry.Action or not entry.Action.Value then return false end
+    local action_string = Blog.Widgets.Action_Buffer[1]
+    if not action_string then return true end
+    return string.find(string.lower(entry.Action.Value), string.lower(action_string)) ~= nil
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check to see if entry contains a player that passes the filter.
 ------------------------------------------------------------------------------------------------------
 ---@param entry table
 ---@return boolean
@@ -206,10 +219,10 @@ end
 Blog.Display.Headers = function()
     local no_flags = Column.Flags.None
     if Metrics.Blog.Timestamp then UI.TableSetupColumn("Time", no_flags) end
-    UI.TableSetupColumn("Name", no_flags)
+    UI.TableSetupColumn("Name", no_flags, Column.Widths.Name)
     UI.TableSetupColumn("Damage", no_flags)
-    UI.TableSetupColumn("Action", no_flags)
-    UI.TableSetupColumn("Notes", no_flags)
+    UI.TableSetupColumn("Action", no_flags, Column.Widths.Name)
+    UI.TableSetupColumn("Notes", no_flags, Column.Widths.Name)
     UI.TableHeadersRow()
 end
 
@@ -219,18 +232,20 @@ end
 Blog.Display.Rows = function(entry)
     local name   = Blog.Columns.Name(entry.Player.Value, entry.Pet.Value)
     local action = Blog.Columns.Action(entry.Action.Value)
-    local note   = entry.Note.Value
-    -- if entry.Damage.Note then note = note .. " " .. entry.Damage.Note end
+    local note   = Blog.Columns.Notes(entry.Note.Value)
 
-    local damage = entry.Damage.Value
     local action_color = entry.Action.Color
     local note_color = entry.Note.Color
+
+    local damage = entry.Damage.Value
     if damage == "0" then
         action_color = Res.Colors.Basic.DIM
         note_color = Res.Colors.Basic.DIM
     elseif damage == "-1" then
         damage = "---"
     end
+    damage = Blog.Columns.Damage(damage)
+
 
     UI.TableNextRow()
     if Metrics.Blog.Timestamp then UI.TableNextColumn() UI.Text(entry.Time.Value) end
