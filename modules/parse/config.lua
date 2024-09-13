@@ -11,6 +11,7 @@ Parse.Config.Defaults = T{
     Condensed_Numbers = false,
     Rank_Cutoff       = 6,
     DPS_Graph_Height  = 50,
+    Lurk_Mode    = false,
     Focus        = false,
     Jobs         = false,
     Hide_Subjob  = false,
@@ -124,6 +125,14 @@ Parse.Config.General = function()
             Metrics.Parse.Grand_Totals = not Metrics.Parse.Grand_Totals
             Parse.Util.Calculate_Column_Flags()
         end
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Lurk Mode", {Metrics.Parse.Lurk_Mode}) then
+            Metrics.Parse.Lurk_Mode = not Metrics.Parse.Lurk_Mode
+        end
+        UI.SameLine() Window_Manager.Widgets.HelpMarker(
+        "!!! POSSIBLE NEGATIVE PERFORMANCE IMPACT !!!\n" ..
+        "Track actions from entities outside of your party/alliance.")
 
         UI.EndTable()
     end

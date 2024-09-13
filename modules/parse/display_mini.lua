@@ -12,6 +12,7 @@ Parse.Mini.Populate = function()
     if Metrics.Parse.Attack_Speed then columns = columns + 1 end
     if Metrics.Parse.DPS then columns = columns + 1 end
     if Metrics.Parse.Running_Acc then columns = columns + 1 end
+    if Metrics.Parse.Lurk_Mode then UI.Text("Lurking...") end
     if UI.BeginTable("Team Mini", columns, Parse.Mini.Table_Flags) then
         Parse.Mini.Headers()
 

@@ -16,6 +16,7 @@ Parse.Full.Populate = function()
     UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Timer_Button()
     UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Reset_Button()
     if Parse.Confirmation then UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Reset_Confirmation_Button() end
+    if Metrics.Parse.Lurk_Mode then UI.SameLine() UI.Text(" Lurking...") end
     if Metrics.Parse.Show_Filter then DB.Widgets.Mob_Filter() end
     Parse.Widgets.Clock()
 

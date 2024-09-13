@@ -6,8 +6,8 @@ Focus.Overview = T{}
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.Job_Selection = function(player_name)
-    if not player_name or not Ashita.Party.Jobs[player_name] then Focus.Overview.Anon() end
-    if not Ashita.Party.Jobs[player_name].main then Focus.Overview.Anon() end -- Mob in player list crash prevention.
+    if not player_name or not Ashita.Party.Jobs[player_name] then return Focus.Overview.Anon() end
+    if not Ashita.Party.Jobs[player_name].main then return Focus.Overview.Anon() end -- Mob in player list crash prevention.
 
     local main = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
     if not main then Focus.Overview.Anon() end
@@ -36,7 +36,7 @@ end
 -- Highlights for anonymous jobs.
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.Anon = function()
-    UI.Text("Player is anonymous.")
+    UI.Text("Player's job is unknown.")
 end
 
 ------------------------------------------------------------------------------------------------------

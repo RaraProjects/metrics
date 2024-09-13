@@ -71,6 +71,7 @@ Blog.Content = function()
     if Metrics.Blog.Timestamp then columns = columns + 1 end
 
     Blog.Widgets.Settings_Button() UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Show_Page()
+    if Metrics.Parse.Lurk_Mode then UI.SameLine() UI.Text(" Lurking...") end
     if Metrics.Blog.Paging then
         Blog.Widgets.Page_Buttons()
         if Blog.Filtered_Count > 0 then UI.Text("Filtered Rows: " .. tostring(Blog.Filtered_Count)) end
@@ -124,6 +125,7 @@ Blog.Add = function(player_name, pet_name, action_flag, action_name, damage, not
 
     local color = Res.Colors.Basic.WHITE
     local is_mob = not Ashita.Party.Jobs[player_name]
+    if Metrics.Parse.Lurk_Mode then is_mob = false end  -- Prevent everything from being dim in Lurk mode.
     if action_type and action_data then
         if action_type == DB.Enum.Trackable.MAGIC then
             local element = action_data.Element
@@ -238,12 +240,7 @@ Blog.Display.Rows = function(entry)
     local note_color = entry.Note.Color
 
     local damage = entry.Damage.Value
-    if damage == "0" then
-        action_color = Res.Colors.Basic.DIM
-        note_color = Res.Colors.Basic.DIM
-    elseif damage == "-1" then
-        damage = "---"
-    end
+    if damage == "-1" then damage = "---" end
     damage = Blog.Columns.Damage(damage)
 
 

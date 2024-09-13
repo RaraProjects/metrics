@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "09.08.24.00"
+addon.version = "09.12.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -195,6 +195,16 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             Timers.Unpause(Timers.Enum.Names.PARSE)
         elseif Ashita.Mob.Claimed_By_Affiliate(actor_mob) and actor_mob.name == target_mob.name then
             mob_buff = true
+        elseif Metrics.Parse.Lurk_Mode then
+            if Ashita.Mob.Is_Player(actor_mob) then
+                log_offense = true
+            else
+                if actor_mob.name == target_mob.name then
+                    mob_buff = true
+                else
+                    log_defense = true
+                end
+            end
         end
 
         if (action.category ==  1) then

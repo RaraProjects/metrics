@@ -96,6 +96,17 @@ Ashita.Mob.Is_Me = function(player_name)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Checks if a given mob is a player.
+-- ------------------------------------------------------------------------------------------------------
+---@param mob_data table
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Mob.Is_Player = function(mob_data)
+    if not mob_data or not mob_data.spawn_flags then return false end
+    return mob_data.spawn_flags == 1
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Get mob data. Trying to make this behave like get_mob_by_target() in windower.
 -- Ashita  : https://github.com/AshitaXI/Ashita-v4beta/blob/main/plugins/sdk/Ashita.h
 -- Windower: https://github.com/Windower/Lua/wiki/FFXI-Functions

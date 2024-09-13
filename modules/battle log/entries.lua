@@ -8,7 +8,7 @@ Blog.Entries = T{}
 ---@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
 Blog.Entries.Name = function(player_name, is_mob)
-    local color = Res.Colors.Basic.DIM
+    local color = Res.Colors.Basic.WHITE
     if is_mob then
         color = Res.Colors.Basic.MOB
     elseif Metrics.Parse.Name_Colors and Ashita.Party.Jobs[player_name] then
@@ -53,7 +53,7 @@ Blog.Entries.Damage = function(damage, action_type, color, is_mob)
     if not damage then
         return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
     elseif damage == 0 then
-        return {Value = Column.String.Format_Number(0), Color = Res.Colors.Basic.DIM, Note = Blog.Enum.Text.MISS}
+        return {Value = Column.String.Format_Number(0), Color = default_color, Note = Blog.Enum.Text.MISS}
     elseif is_mob then
         return {Value = Column.String.Format_Number(damage), Color = Res.Colors.Basic.MOB}
     elseif damage >= threshold then
