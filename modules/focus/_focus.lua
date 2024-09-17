@@ -7,6 +7,7 @@ Focus.Window = Window:New({
     Name   = Focus.Name,
     Title  = Focus.Title,
     Module = Focus.Module,
+    Show_Title = true,
 })
 
 Focus.Tabs = {}
