@@ -24,7 +24,7 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
-            if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(actor_mob.name) end
+            if not Ashita.Mob.Is_Player(target_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
 
             new_damage = H.Spell_Def.Parse(spell_data, result, actor_mob, target_mob, owner_mob)
             if not new_damage then new_damage = 0 end
@@ -34,14 +34,7 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
         end
     end
 
-    local audits = H.Spell_Def.Audits(actor_mob, target_mob, owner_mob)
-    if Res.Spells.Get_Damaging(spell_id) then
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.HIT_COUNT)
-    else
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.HIT_COUNT)
-    end
+    if Res.Spells.Get_Damaging(spell_id) then H.Spell_Def.Blog(actor_mob, spell_id, spell_data, spell_name, damage, target_count) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -82,6 +75,19 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
 
     if not is_mapped then
         Debug.Error.Add("Spell_Def.Parse: {" .. tostring(actor_mob.name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
+    end
+
+    -- Do the count here to capture ga-spells.
+    if Res.Spells.Get_Damaging(spell_id) then
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.HIT_COUNT)
+    else
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.HIT_COUNT)
     end
 
     return damage
@@ -152,4 +158,20 @@ H.Spell_Def.Enfeebling = function(audits)
     if not audits.pet_name then
         DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_ENFEEBLE, H.Metric.COUNT) -- Used to flag that data is availabel for show in Focus.
     end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Adds spell damage taken to the battle log.
+-- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table the mob data of the entity receiving the action.
+---@param spell_id integer
+---@param spell_data table
+---@param spell_name string
+---@param damage number
+---@param target_count integer
+-- ------------------------------------------------------------------------------------------------------
+H.Spell_Def.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, target_count)
+    local blog_note = ""
+    if Res.Spells.Get_AOE(spell_id) then blog_note = "TGTs: " .. tostring(target_count) end
+    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MOB_SPELL, spell_name, damage, blog_note, DB.Enum.Trackable.MAGIC, spell_data)
 end

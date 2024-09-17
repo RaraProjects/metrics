@@ -19,6 +19,7 @@ Blog.Config.Defaults = T{
     Healing   = true,
     Deaths    = false,
     Mob_TP    = false,
+    Mob_Spell = false,
     Mob_Death = true,
     Paging    = false,
     Streaming = true,
@@ -162,6 +163,10 @@ Blog.Config.Column_Settings = function()
         UI.TableNextColumn()
         if UI.Checkbox("Mob TP", {Metrics.Blog.Mob_TP}) then
             Metrics.Blog.Mob_TP = not Metrics.Blog.Mob_TP
+        end
+        UI.TableNextColumn()
+        if UI.Checkbox("Mob Spell", {Metrics.Blog.Mob_Spell}) then
+            Metrics.Blog.Mob_Spell = not Metrics.Blog.Mob_Spell
         end
         UI.TableNextColumn()
         if UI.Checkbox("Mob Deaths", {Metrics.Blog.Mob_Death}) then

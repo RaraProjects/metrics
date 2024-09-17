@@ -52,10 +52,10 @@ Blog.Entries.Damage = function(damage, action_type, color, is_mob)
     -- Generate damage string.
     if not damage then
         return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
-    elseif damage == 0 then
-        return {Value = Column.String.Format_Number(0), Color = default_color, Note = Blog.Enum.Text.MISS}
     elseif is_mob then
         return {Value = Column.String.Format_Number(damage), Color = Res.Colors.Basic.MOB}
+    elseif damage == 0 then
+        return {Value = Column.String.Format_Number(0), Color = default_color, Note = Blog.Enum.Text.MISS}
     elseif damage >= threshold then
         return {Value = Column.String.Format_Number(damage), Color = default_color, Note = Blog.Enum.Text.HIGH_DAMAGE}
     end
