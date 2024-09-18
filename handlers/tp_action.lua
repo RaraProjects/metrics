@@ -76,7 +76,7 @@ end
 ---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
 H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
-    if not log_offense then return false end
+    if not log_offense or Ashita.Mob.Is_Player(actor_mob) then return false end
     local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
 
     local target_mob, result, action_id, skill_data, skill_name
@@ -220,7 +220,7 @@ end
 H.TP.Pet_Skill_Data = function(action_id, actor_mob)
     local skill_data = Res.Monster.Get_Full_List(action_id)
     if not skill_data then
-        Debug.Error.Add("TP.Pet_Skill_Data: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action_id) .. " unampped in Pet_Skill.")
+        Debug.Error.Add("TP.Pet_Skill_Data: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action_id) .. " unmapped in Pet_Skill.")
         skill_data = {id = action_id, en = "UNK Mon. Ability (" .. action_id .. ")"}
     end
     return skill_data
