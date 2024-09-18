@@ -64,7 +64,13 @@ end
 ---@param burst? boolean whether or not a magic burst took place.
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, action_name, pet_name, burst)
-    local index = DB.Data.Build_Index(player_name, mob_name)
+    if player_name == "" or mob_name == "" or pet_name == "" then
+		Debug.Error.Add("Data.Update: Empty name: " .. tostring(player_name) .. " " .. tostring(mob_name)
+		.. " " .. tostring(pet_name) .. " " .. tostring(trackable) .. " " .. tostring(action_name))
+		return nil
+	end
+
+	local index = DB.Data.Build_Index(player_name, mob_name)
     DB.Catalog.Init(index, player_name, trackable, action_name, pet_name)
 
 	local audits = {
@@ -131,6 +137,12 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Update_Metric = function(mode, value, audits, trackable, action_name, metric)
+	if audits.player_name == "" or audits.target_name == "" then
+		Debug.Error.Add("Data.Update: Empty name: " .. tostring(audits.player_name) .. " " .. tostring(audits.target_name)
+		.. " " .. tostring(trackable) .. " " .. tostring(metric))
+		return false
+	end
+
 	local player_name = audits.player_name
 	local target_name = audits.target_name
 	local pet_name = audits.pet_name

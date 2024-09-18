@@ -72,6 +72,12 @@ end
 ---@param metric string a trackable's metric from the metric list.
 ------------------------------------------------------------------------------------------------------
 DB.Data.Update = function(mode, value, audits, trackable, metric)
+	if audits.player_name == "" or audits.target_name == "" then
+		Debug.Error.Add("Data.Update: Empty name: " .. tostring(audits.player_name) .. " " .. tostring(audits.target_name)
+		.. " " .. tostring(trackable) .. " " .. tostring(metric))
+		return nil
+	end
+
 	local player_name = audits.player_name
 	local target_name = audits.target_name
 	local pet_name = audits.pet_name

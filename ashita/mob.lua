@@ -103,7 +103,18 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.Is_Player = function(mob_data)
     if not mob_data or not mob_data.spawn_flags then return false end
-    return mob_data.spawn_flags == 1
+    return mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.MAINPLAYER or mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.OTHERPLAYER
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Checks if a given mob is an engageable mob.
+-- ------------------------------------------------------------------------------------------------------
+---@param mob_data table
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Mob.Is_Monster = function(mob_data)
+    if not mob_data or not mob_data.spawn_flags then return false end
+    return mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.MOB
 end
 
 -- ------------------------------------------------------------------------------------------------------
