@@ -65,7 +65,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, action_name, pet_name, burst)
     if player_name == "" or mob_name == "" or pet_name == "" then
-		Debug.Error.Add("Data.Update: Empty name: " .. tostring(player_name) .. " " .. tostring(mob_name)
+		Debug.Error.Add("Catalog.Update_Damage: Empty name: " .. tostring(player_name) .. " " .. tostring(mob_name)
 		.. " " .. tostring(pet_name) .. " " .. tostring(trackable) .. " " .. tostring(action_name))
 		return nil
 	end
@@ -138,7 +138,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Update_Metric = function(mode, value, audits, trackable, action_name, metric)
 	if audits.player_name == "" or audits.target_name == "" then
-		Debug.Error.Add("Data.Update: Empty name: " .. tostring(audits.player_name) .. " " .. tostring(audits.target_name)
+		Debug.Error.Add("Catalog.Update_Metric: Empty name: " .. tostring(audits.player_name) .. " " .. tostring(audits.target_name)
 		.. " " .. tostring(trackable) .. " " .. tostring(metric))
 		return false
 	end

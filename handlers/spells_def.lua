@@ -52,6 +52,9 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Spell Def", result)
     if not spell_data then return 0 end
 
+    -- Need to double check each target in case a pet gets hit by AOE and wasn't the primary target.
+    if not owner_mob then owner_mob = Ashita.Mob.Pet_Owner(target_mob) end
+
     local spell_id = spell_data.Index
     local spell_name = Ashita.Spell.Name(spell_id, spell_data)
     local is_mapped = false
