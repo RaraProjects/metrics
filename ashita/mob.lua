@@ -103,7 +103,10 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.Is_Player = function(mob_data)
     if not mob_data or not mob_data.spawn_flags then return false end
-    return mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.MAINPLAYER or mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.OTHERPLAYER
+    return mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.MAINPLAYER
+    or mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.OTHERPLAYER
+    or mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.IN_PARTY
+    or mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.IN_ALLIANCE
 end
 
 -- ------------------------------------------------------------------------------------------------------

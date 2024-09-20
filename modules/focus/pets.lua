@@ -92,14 +92,16 @@ Focus.Pets.Display = function(player_name)
     end
 
     if pet_total > 0 then
-        if UI.BeginTabBar("Pet Tabs", Window_Manager.Tabs.Flags) then
-            for pet_name, _ in pairs(DB.Tracking.Initialized_Pets[player_name]) do
-                if UI.BeginTabItem(pet_name) then
-                    Focus.Pets.Single(player_name, pet_name)
-                    UI.EndTabItem()
+        if DB.Tracking.Initialized_Pets[player_name] then
+            if UI.BeginTabBar("Pet Tabs", Window_Manager.Tabs.Flags) then
+                for pet_name, _ in pairs(DB.Tracking.Initialized_Pets[player_name]) do
+                    if UI.BeginTabItem(pet_name) then
+                        Focus.Pets.Single(player_name, pet_name)
+                        UI.EndTabItem()
+                    end
                 end
+                UI.EndTabBar()
             end
-            UI.EndTabBar()
         end
     end
 end

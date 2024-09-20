@@ -77,6 +77,9 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
         is_mapped = true
     end
 
+    if Res.Spells.Get_Debuff_Removal(spell_id) then is_mapped = true end
+    if Res.Spells.Get_Buff(spell_id) then is_mapped = true end
+
     if Res.Spells.Get_MP_Drain(spell_id) then
         H.Spell.MP_Drain(audits, spell_name, damage, burst)
         is_mapped = true
@@ -219,6 +222,20 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst, target
             DB.Catalog.Update_Metric(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, H.Metric.HIT_COUNT)
         end
 
+    elseif Res.Spells.Get_Debuff_Removal(spell_id) then
+        trackable = H.Trackable.DEBUFF_REMOVAL
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+
+    elseif Res.Spells.Get_Buff(spell_id) then
+        trackable = H.Trackable.BUFF_SPELL
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+
     elseif Res.Spells.Get_Damaging(spell_id) then
         if is_pet then trackable = H.Trackable.PET_NUKE else trackable = H.Trackable.NUKE end
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
@@ -359,7 +376,7 @@ H.Spell.Enfeebling = function(audits, spell_name, message_id, damage)
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
 
     -- No Effect. Pretend this never occurred. No hit numerator and undo the count increment.
-    if message_id == Ashita.Enum.Message.NO_EFFECT or message_id == Ashita.Enum.Message.EFFECT_FAIL then
+    if message_id == Ashita.Enum.Message.NO_EFFECT or message_id == Ashita.Enum.Message.EFFECT_FAIL or message_id == Ashita.Enum.Message.COMP_RESIST then
         DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, trackable, spell_name, H.Metric.COUNT)
         damage = -1
     -- Resists

@@ -23,6 +23,8 @@ Ashita.Enum.Spawn_Flags = T{
     MAINPLAYER  = 525,
     OTHERPLAYER = 1,
     NPC         = 2,
+    IN_PARTY    = 13,
+    IN_ALLIANCE = 9,
     MOB         = 16,
     TRUST       = 4366,
     PET         = 258,
@@ -117,4 +119,5 @@ Ashita.Enum.Message = T{
     ABSORB_ACC  = 533,
     SQUARE      = 576,
     TRUE        = 577,
+    COMP_RESIST = 655,
 }

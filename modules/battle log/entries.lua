@@ -54,6 +54,8 @@ Blog.Entries.Damage = function(damage, action_type, color, is_mob)
         return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
     elseif is_mob then
         return {Value = Column.String.Format_Number(damage), Color = Res.Colors.Basic.MOB}
+    elseif damage < 0 then  -- Enfeeble
+        return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
     elseif damage == 0 then
         return {Value = Column.String.Format_Number(0), Color = default_color, Note = Blog.Enum.Text.MISS}
     elseif damage >= threshold then

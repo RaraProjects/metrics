@@ -7,18 +7,20 @@ Focus.Magic = T{}
 ---@param hide_publish? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Magic.Display = function(player_name, hide_publish)
-    local nuke_total     = DB.Data.Get(player_name, DB.Enum.Trackable.NUKE,       DB.Enum.Metric.TOTAL)
-    local burst_total    = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC,      DB.Enum.Metric.BURST_DAMAGE)
-    local melee_endamage = DB.Data.Get(player_name, DB.Enum.Trackable.ENDAMAGE,   DB.Enum.Metric.TOTAL)
-    local range_endamage = DB.Data.Get(player_name, DB.Enum.Trackable.ENDAMAGE_R, DB.Enum.Metric.TOTAL)
-    local endrain        = DB.Data.Get(player_name, DB.Enum.Trackable.ENDRAIN_R,  DB.Enum.Metric.TOTAL)
-    local mp_drain       = DB.Data.Get(player_name, DB.Enum.Trackable.MP_DRAIN,   DB.Enum.Metric.TOTAL)
-    local healing_total  = DB.Data.Get(player_name, DB.Enum.Trackable.HEALING,    DB.Enum.Metric.TOTAL)
-    local enspell_count  = DB.Data.Get(player_name, DB.Enum.Trackable.ENSPELL,    DB.Enum.Metric.COUNT)
-    local enfeeble_count = DB.Data.Get(player_name, DB.Enum.Trackable.ENFEEBLE,   DB.Enum.Metric.COUNT)
+    local nuke_total     = DB.Data.Get(player_name, DB.Enum.Trackable.NUKE,           DB.Enum.Metric.TOTAL)
+    local burst_total    = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC,          DB.Enum.Metric.BURST_DAMAGE)
+    local melee_endamage = DB.Data.Get(player_name, DB.Enum.Trackable.ENDAMAGE,       DB.Enum.Metric.TOTAL)
+    local range_endamage = DB.Data.Get(player_name, DB.Enum.Trackable.ENDAMAGE_R,     DB.Enum.Metric.TOTAL)
+    local endrain        = DB.Data.Get(player_name, DB.Enum.Trackable.ENDRAIN_R,      DB.Enum.Metric.TOTAL)
+    local mp_drain       = DB.Data.Get(player_name, DB.Enum.Trackable.MP_DRAIN,       DB.Enum.Metric.TOTAL)
+    local healing_total  = DB.Data.Get(player_name, DB.Enum.Trackable.HEALING,        DB.Enum.Metric.TOTAL)
+    local debuff_removal = DB.Data.Get(player_name, DB.Enum.Trackable.DEBUFF_REMOVAL, DB.Enum.Metric.COUNT)
+    local buff           = DB.Data.Get(player_name, DB.Enum.Trackable.BUFF_SPELL,     DB.Enum.Metric.COUNT)
+    local enspell_count  = DB.Data.Get(player_name, DB.Enum.Trackable.ENSPELL,        DB.Enum.Metric.COUNT)
+    local enfeeble_count = DB.Data.Get(player_name, DB.Enum.Trackable.ENFEEBLE,       DB.Enum.Metric.COUNT)
     local spike_damage   = DB.Data.Get(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG, DB.Enum.Metric.TOTAL)
-    local buff_songs     = DB.Data.Get(player_name, DB.Enum.Trackable.BUFF_SONG,  DB.Enum.Metric.COUNT)
-    local misc_count     = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC,      DB.Enum.Metric.COUNT)
+    local buff_songs     = DB.Data.Get(player_name, DB.Enum.Trackable.BUFF_SONG,      DB.Enum.Metric.COUNT)
+    local misc_count     = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC,          DB.Enum.Metric.COUNT)
 
     Focus.Magic.Total(player_name, nuke_total, melee_endamage, range_endamage, enspell_count, endrain, spike_damage)
     Focus.Magic.Auxiliary(player_name, healing_total, burst_total, mp_drain, enfeeble_count, misc_count)
@@ -26,6 +28,8 @@ Focus.Magic.Display = function(player_name, hide_publish)
 
     if nuke_total > 0     then Focus.Magic.Single(player_name, DB.Enum.Trackable.NUKE) end
     if healing_total > 0  then Focus.Magic.Single(player_name, DB.Enum.Trackable.HEALING) end
+    if debuff_removal > 0 then Focus.Magic.Single(player_name, DB.Enum.Trackable.DEBUFF_REMOVAL) end
+    if buff > 0           then Focus.Magic.Single(player_name, DB.Enum.Trackable.BUFF_SPELL) end
     if enspell_count > 0  then Focus.Magic.Single(player_name, DB.Enum.Trackable.ENSPELL) end
     if spike_damage > 0   then Focus.Magic.Single(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG) end
     if melee_endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Enum.Trackable.ENDAMAGE, " (M)") end
@@ -280,6 +284,10 @@ Focus.Magic.Single = function(player_name, focus_type)
         acc_string = "Overcure"
         damage_string = "Healing"
         efficacy_string = "HP+/MP"
+    elseif focus_type == DB.Enum.Trackable.DEBUFF_REMOVAL then
+        action = "Debuff Removal"
+    elseif focus_type == DB.Enum.Trackable.BUFF_SPELL then
+        action = "Buff Spell"
     elseif focus_type == DB.Enum.Trackable.ENFEEBLE then
         action = "Enfeeble"
         acc_string = "Land Rate"
