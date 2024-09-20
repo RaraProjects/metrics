@@ -72,8 +72,8 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
     end
 
     if Res.Spells.Get_Healing(spell_id) then
-    	H.Spell.Overcure(audits, spell_name, damage, burst)
-        H.Spell.Healing_Received(audits, spell_name, damage, burst)
+        H.Spell.Overcure(audits, spell_name, damage, burst)
+        if Ashita.Mob.Is_Player(target_mob) then H.Spell.Healing_Received(audits, spell_name, damage, burst) end -- Curing NPCs makes them show up in the party list.
         is_mapped = true
     end
 

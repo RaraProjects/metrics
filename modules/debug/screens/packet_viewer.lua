@@ -2,7 +2,7 @@ Debug.Packet = {}
 Debug.Packet.Action_Log = {}      -- Entity, Action, Result
 Debug.Packet.Message_Log = {}
 Debug.Packet.Item_Log = {}
-Debug.Packet.Limit = 500
+Debug.Packet.Limit = 1000
 Debug.Packet.Size = 32
 
 Debug.Packet.Actions = T{
@@ -16,7 +16,6 @@ Debug.Packet.Actions = T{
     TP_DEF = true,
     ABILITY = true,
 }
-
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the packet viewer.
