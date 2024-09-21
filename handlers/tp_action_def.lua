@@ -27,7 +27,7 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if target_mob then
+            if target_mob and (Ashita.Party.Is_Affiliate(target_mob.name) or Metrics.Parse.Lurk_Mode) then
                 owner_mob = Ashita.Mob.Pet_Owner(target_mob)
                 count = count + 1
                 damage = damage + H.TP_Def.Weaponskill_Parse(result, actor_mob, target_mob, skill_name, action_id, owner_mob)

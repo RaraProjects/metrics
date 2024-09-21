@@ -143,7 +143,7 @@ H.TP.Monster_Action = function(action, actor_mob, log_offense)
             -- Puppet ranged attack
             -- This needs to be inside the result loop in order to send the data to the ranged handler.
             if action_id == 1949 then
-                H.Ranged.Parse(result, actor_mob.name, target_mob.name, owner_mob)
+                H.Ranged.Parse(result, actor_mob, target_mob, owner_mob)
                 skill_name = "Pet Ranged"
                 damage = result.param
 

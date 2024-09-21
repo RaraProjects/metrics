@@ -24,6 +24,7 @@ Blog.Config.Defaults = T{
     Mob_Death = true,
     Paging    = false,
     Streaming = true,
+    Pet_Command = false,
     WS_THRESHOLD    = 600,
     MAGIC_THRESHOLD = 1000,
     MAX_THRESHOLD   = 99999,
@@ -153,14 +154,18 @@ Blog.Config.Column_Settings = function()
             Metrics.Blog.Pet_Heal = not Metrics.Blog.Pet_Heal
         end
         UI.TableNextColumn()
+        if UI.Checkbox("Pet Command", {Metrics.Blog.Pet_Command}) then
+            Metrics.Blog.Pet_Command = not Metrics.Blog.Pet_Command
+        end
+        UI.TableNextColumn()
         if UI.Checkbox("Healing", {Metrics.Blog.Healing}) then
             Metrics.Blog.Healing = not Metrics.Blog.Healing
         end
+
         UI.TableNextColumn()
         if UI.Checkbox("Player Deaths", {Metrics.Blog.Deaths}) then
             Metrics.Blog.Deaths = not Metrics.Blog.Deaths
         end
-
         UI.TableNextColumn()
         if UI.Checkbox("Mob Melee", {Metrics.Blog.Mob_Melee}) then
             Metrics.Blog.Mob_Melee = not Metrics.Blog.Mob_Melee
@@ -169,11 +174,11 @@ Blog.Config.Column_Settings = function()
         if UI.Checkbox("Mob TP", {Metrics.Blog.Mob_TP}) then
             Metrics.Blog.Mob_TP = not Metrics.Blog.Mob_TP
         end
+
         UI.TableNextColumn()
         if UI.Checkbox("Mob Spell", {Metrics.Blog.Mob_Spell}) then
             Metrics.Blog.Mob_Spell = not Metrics.Blog.Mob_Spell
         end
-
         UI.TableNextColumn()
         if UI.Checkbox("Mob Deaths", {Metrics.Blog.Mob_Death}) then
             Metrics.Blog.Mob_Death = not Metrics.Blog.Mob_Death

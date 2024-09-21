@@ -44,6 +44,7 @@ Blog.Enum.Types = T{
     SC        = "SC",
     ABILITY   = "Ability",
     ENFEEBLE  = "Enfeeble",
+    PET_COMMAND = "Pet Command",
 }
 
 Blog.Page = 1
@@ -174,6 +175,7 @@ Blog.Action_Filter = function(action_flag)
     elseif action_flag == Blog.Enum.Types.WS        then return Metrics.Blog.WS
     elseif action_flag == Blog.Enum.Types.SC        then return Metrics.Blog.SC
     elseif action_flag == Blog.Enum.Types.ABILITY   then return Metrics.Blog.Ability
+    elseif action_flag == Blog.Enum.Types.PET_COMMAND then return Metrics.Blog.Pet_Command
     elseif action_flag == Blog.Enum.Types.ENFEEBLE  then return Metrics.Blog.Enfeeble
     else return false end
 end

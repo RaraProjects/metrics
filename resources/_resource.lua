@@ -37,6 +37,16 @@ Res.Monster.Get_Damaging_Ability = function(ability_id)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Checks whether an ability is a pet command ability.
+-- ------------------------------------------------------------------------------------------------------
+---@param ability_id integer
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Abilities.Get_Pet_Command = function(ability_id)
+    return Res.Abilities.Pet_Commands[ability_id]
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Checks whether the ability is an avatar rage blood pact.
 -- ------------------------------------------------------------------------------------------------------
 ---@param ability_id integer
