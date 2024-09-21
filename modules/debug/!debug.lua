@@ -93,7 +93,7 @@ Debug.Content = function()
     elseif Debug.Active_Mode == Debug.Modes.MESSAGE_PACKET then Debug.Packet.Populate_Message()
     elseif Debug.Active_Mode == Debug.Modes.ERROR_LOG      then Debug.Error.Populate()
     elseif Debug.Active_Mode == Debug.Modes.DATA_VIEWER    then Debug.Data_View.Populate()
-    elseif Debug.Active_Mode == Debug.Modes.MOB_VIEWER     then
+    elseif Debug.Active_Mode == Debug.Modes.JOB_COLORS     then
         UI.TextColored(Res.Colors.Get_Job(1),  "Warrior")
         UI.TextColored(Res.Colors.Get_Job(2),  "Monk")
         UI.TextColored(Res.Colors.Get_Job(3),  "White Mage")
@@ -109,6 +109,9 @@ Debug.Content = function()
         UI.TextColored(Res.Colors.Get_Job(13), "Ninja")
         UI.TextColored(Res.Colors.Get_Job(14), "Dragoon")
         UI.TextColored(Res.Colors.Get_Job(15), "Summoner")
+        UI.TextColored(Res.Colors.Get_Job(16), "Blue Mage")
+        UI.TextColored(Res.Colors.Get_Job(17), "Corsair")
+        UI.TextColored(Res.Colors.Get_Job(18), "Puppetmaster")
     else
         UI.Text("Select a tool.")
     end
