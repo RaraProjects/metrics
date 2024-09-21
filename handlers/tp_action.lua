@@ -32,16 +32,17 @@ H.TP.Action = function(action, actor_mob, log_offense)
 
             -- Abilities marked as weaponskills
             if H.TP.WS_Ability(result, ws_id, action, actor_mob) then return nil end
-
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
-            if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target_mob.name) end
 
-            -- Check for skillchains
-            sc_damage, sc_name = H.TP.Skillchain_Parse(result, actor_mob, target_mob, ws_name)
+            if target_mob then
+                if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
 
-            -- Need to calculate WS damage here to account for AOE weaponskills
-            damage = damage + H.TP.Weaponskill_Parse(result, actor_mob, target_mob, ws_name, ws_id)
+                -- Check for skillchains
+                sc_damage, sc_name = H.TP.Skillchain_Parse(result, actor_mob, target_mob, ws_name)
+
+                -- Need to calculate WS damage here to account for AOE weaponskills
+                damage = damage + H.TP.Weaponskill_Parse(result, actor_mob, target_mob, ws_name, ws_id)
+            end
         end
     end
 

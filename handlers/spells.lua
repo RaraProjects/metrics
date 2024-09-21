@@ -26,15 +26,14 @@ H.Spell.Action = function(action, actor_mob, log_offense)
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
-            if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target_mob.name) end
-
-            is_burst = result.message == Ashita.Enum.Message.BURST
-            new_damage = H.Spell.Parse(spell_data, result, actor_mob, target_mob, owner_mob, is_burst)
-            if not new_damage then new_damage = 0 end
-
-            target_count = target_count + 1
-            damage = damage + new_damage
+            if target_mob then
+                if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+                is_burst = result.message == Ashita.Enum.Message.BURST
+                new_damage = H.Spell.Parse(spell_data, result, actor_mob, target_mob, owner_mob, is_burst)
+                if not new_damage then new_damage = 0 end
+                target_count = target_count + 1
+                damage = damage + new_damage
+            end
         end
     end
 
@@ -78,9 +77,6 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
         is_mapped = true
     end
 
-    if Res.Spells.Get_Debuff_Removal(spell_id) then is_mapped = true end
-    if Res.Spells.Get_Buff(spell_id) then is_mapped = true end
-
     if Res.Spells.Get_MP_Drain(spell_id) then
         H.Spell.MP_Drain(audits, spell_name, damage, burst)
         is_mapped = true
@@ -90,6 +86,10 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
         damage = H.Spell.Enfeebling(audits, spell_name, message_id, damage)
         is_mapped = true
     end
+
+    if Res.Spells.Get_Debuff_Removal(spell_id) then is_mapped = true end
+    if Res.Spells.Get_Buff(spell_id) then is_mapped = true end
+    if Res.Spells.Get_Buff_Song(spell_id) then is_mapped = true end
 
     if not is_mapped then
         Debug.Error.Add("Spell.Parse: {" .. tostring(actor_mob.name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
@@ -143,7 +143,7 @@ H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_
 
     elseif Res.Spells.Get_Buff_Song(spell_id) then
         blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
-        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MAGIC, spell_name, damage, blog_note, DB.Enum.Trackable.BUFF_SONG, spell_data)
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MAGIC, spell_name, nil, blog_note, DB.Enum.Trackable.BUFF_SONG, spell_data)
 
     end
 end

@@ -23,14 +23,13 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
-            if not Ashita.Mob.Is_Player(target_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
-
-            new_damage = H.Spell_Def.Parse(spell_data, result, actor_mob, target_mob, owner_mob)
-            if not new_damage then new_damage = 0 end
-
-            target_count = target_count + 1
-            damage = damage + new_damage
+            if target_mob and (Ashita.Party.Is_Affiliate(target_mob.name) or Metrics.Parse.Lurk_Mode) then
+                if Ashita.Mob.Is_Monster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
+                new_damage = H.Spell_Def.Parse(spell_data, result, actor_mob, target_mob, owner_mob)
+                if not new_damage then new_damage = 0 end
+                target_count = target_count + 1
+                damage = damage + new_damage
+            end
         end
     end
 

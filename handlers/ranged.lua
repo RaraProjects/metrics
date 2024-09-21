@@ -17,7 +17,7 @@ H.Ranged.Action = function(action, actor_mob, log_offense)
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if target_mob then
-                if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target_mob.name) end
+                if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
                 damage = damage + H.Ranged.Parse(result, actor_mob, target_mob)
             end
         end

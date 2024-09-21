@@ -10,7 +10,7 @@ H.Melee = {}
 -- ------------------------------------------------------------------------------------------------------
 H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 	if not log_offense then return nil end
-	local result, target
+	local result, target_mob
 	local damage = 0
     local details = T{}
     local mult_attack = T{}
@@ -18,15 +18,17 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 	for target_index, target_value in pairs(action.targets) do
 		for action_index, _ in pairs(target_value.actions) do
 			result = action.targets[target_index].actions[action_index]
-			target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-			if not target then target = {name = DB.Enum.Values.DEBUG} end
-            if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target.name) end
-			details = H.Melee.Parse(result, actor_mob.name, target.name, owner_mob)
+			target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+			if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
+            if target_mob then
+                if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+                details = H.Melee.Parse(result, actor_mob.name, target_mob.name, owner_mob)
 
-            if details and details.damage then damage = damage + details.damage end
-            if details and details.type then
-                if not mult_attack[details.type] then mult_attack[details.type] = 0 end
-                mult_attack[details.type] = mult_attack[details.type] + 1
+                if details and details.damage then damage = damage + details.damage end
+                if details and details.type then
+                    if not mult_attack[details.type] then mult_attack[details.type] = 0 end
+                    mult_attack[details.type] = mult_attack[details.type] + 1
+                end
             end
 		end
 	end

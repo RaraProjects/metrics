@@ -95,18 +95,24 @@ Ashita.Party.Refresh = function(player_name, node)
         local party_number = math.ceil((slot + 1) / 6)
         if data:GetMemberIsActive(slot) == 1 then
             local name = data:GetMemberName(slot)
-            Ashita.Party.List[name] = party_number
-            DB.Data.Init_Player(name)
+            local id = data:GetMemberServerId(slot)
+            local member_mob = Ashita.Mob.Get_Mob_By_ID(id)
+            if member_mob and name ~= "" then
+                Ashita.Party.List[name] = party_number
+                DB.Data.Init_Player(name)
 
-            local main_job       = data:GetMemberMainJob(slot)
-            local main_job_level = data:GetMemberMainJobLevel(slot)
-            local sub_job        = data:GetMemberSubJob(slot)
-            local sub_job_level  = data:GetMemberSubJobLevel(slot)
+                local main_job       = data:GetMemberMainJob(slot)
+                local main_job_level = data:GetMemberMainJobLevel(slot)
+                local sub_job        = data:GetMemberSubJob(slot)
+                local sub_job_level  = data:GetMemberSubJobLevel(slot)
 
-            Ashita.Party.Update_Job(name, main_job, main_job_level, sub_job, sub_job_level)
+                Ashita.Party.Update_Job(name, main_job, main_job_level, sub_job, sub_job_level)
 
-            -- Might as well grab some data while looping through.
-            if player_name and node and player_name == name then return_data = Ashita.Party.Get_Vital(data, slot, node) end
+                -- Might as well grab some data while looping through.
+                if player_name and node and player_name == name then return_data = Ashita.Party.Get_Vital(data, slot, node) end
+            else
+                Debug.Error.Add("Party.Refresh: nil member or blank name {" .. tostring(name) .. "}")
+            end
         end
     end
 
