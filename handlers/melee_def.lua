@@ -22,6 +22,8 @@ H.Melee_Def.Action = function(action, actor_mob, owner_mob, log_defense)
 			damage = damage + H.Melee_Def.Parse(result, actor_mob.name, target_mob.name, owner_mob)
 		end
 	end
+
+    H.Melee_Def.Blog(actor_mob, damage)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -90,6 +92,16 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
     end
 
     return damage
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Adds melee damage to the battle log.
+-- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table the mob data of the entity performing the action.
+---@param damage number
+-- ------------------------------------------------------------------------------------------------------
+H.Melee_Def.Blog = function(actor_mob, damage)
+    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MOB_MELEE, DB.Enum.Trackable.MELEE, damage)
 end
 
 ------------------------------------------------------------------------------------------------------

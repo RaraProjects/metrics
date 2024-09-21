@@ -32,6 +32,7 @@ Blog.Enum.Types = T{
     PET_MELEE = "Pet Melee",
     PET_TP    = "Pet Weaponskill",
     PET_HEAL  = "Pet Heal",
+    MOB_MELEE = "Mob Melee",
     MOB_TP    = "Mob TP",
     MOB_SPELL = "Mob Spell",
     MOB_DEATH = "Mob Death",
@@ -163,6 +164,7 @@ Blog.Action_Filter = function(action_flag)
     elseif action_flag == Blog.Enum.Types.PET_TP    then return Metrics.Blog.Pet_TP
     elseif action_flag == Blog.Enum.Types.PET_HEAL  then return Metrics.Blog.Pet_Heal
     elseif action_flag == Blog.Enum.Types.DEATH     then return Metrics.Blog.Deaths
+    elseif action_flag == Blog.Enum.Types.MOB_MELEE then return Metrics.Blog.Mob_Melee
     elseif action_flag == Blog.Enum.Types.MOB_TP    then return Metrics.Blog.Mob_TP
     elseif action_flag == Blog.Enum.Types.MOB_SPELL then return Metrics.Blog.Mob_Spell
     elseif action_flag == Blog.Enum.Types.MOB_DEATH then return Metrics.Blog.Mob_Death

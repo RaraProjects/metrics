@@ -18,6 +18,7 @@ Blog.Config.Defaults = T{
     Pet       = true,
     Healing   = true,
     Deaths    = false,
+    Mob_Melee = false,
     Mob_TP    = false,
     Mob_Spell = false,
     Mob_Death = true,
@@ -161,6 +162,10 @@ Blog.Config.Column_Settings = function()
         end
 
         UI.TableNextColumn()
+        if UI.Checkbox("Mob Melee", {Metrics.Blog.Mob_Melee}) then
+            Metrics.Blog.Mob_Melee = not Metrics.Blog.Mob_Melee
+        end
+        UI.TableNextColumn()
         if UI.Checkbox("Mob TP", {Metrics.Blog.Mob_TP}) then
             Metrics.Blog.Mob_TP = not Metrics.Blog.Mob_TP
         end
@@ -168,6 +173,7 @@ Blog.Config.Column_Settings = function()
         if UI.Checkbox("Mob Spell", {Metrics.Blog.Mob_Spell}) then
             Metrics.Blog.Mob_Spell = not Metrics.Blog.Mob_Spell
         end
+
         UI.TableNextColumn()
         if UI.Checkbox("Mob Deaths", {Metrics.Blog.Mob_Death}) then
             Metrics.Blog.Mob_Death = not Metrics.Blog.Mob_Death
