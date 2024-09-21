@@ -132,7 +132,9 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Spell_Def.Nuke = function(audits, damage, spell_name)
     if audits.pet_name then
+        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DMG_TAKEN_TOTAL_PET, H.Metric.TOTAL)
         DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.SPELL_PET_DMG_TAKEN, H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, 1,      audits, H.Trackable.SPELL_PET_DMG_TAKEN, H.Metric.COUNT)
     else
         DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, H.Metric.TOTAL)
         DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.SPELL_DMG_TAKEN, damage, spell_name, audits.pet_name)
