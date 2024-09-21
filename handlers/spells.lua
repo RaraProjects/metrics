@@ -73,7 +73,8 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
 
     if Res.Spells.Get_Healing(spell_id) then
         H.Spell.Overcure(audits, spell_name, damage, burst)
-        if Ashita.Mob.Is_Player(target_mob) then H.Spell.Healing_Received(audits, spell_name, damage, burst) end -- Curing NPCs makes them show up in the party list.
+        -- Curing NPCs or non-party members makes them show up in the party list.
+        if Ashita.Party.Is_Affiliate(target_mob.name) then H.Spell.Healing_Received(audits, spell_name, damage, burst) end
         is_mapped = true
     end
 
@@ -213,7 +214,7 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst, target
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
 
         -- Healing Received (Only counts non-self healing)
-        if audits.player_name ~= audits.target_name then
+        if audits.player_name ~= audits.target_name and Ashita.Party.Is_Affiliate(audits.target_name) then
             local audit_swap = H.Spell.Audit_Swap(audits)
             DB.Data.Update(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, H.Metric.COUNT)
             DB.Data.Update(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, H.Metric.HIT_COUNT)
