@@ -60,18 +60,21 @@ H.Ability.Pet_Action = function(action, actor_mob, log_offense)
 
     local result, target
     local damage = 0
+    local count = 0
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
             target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if not target then target = {name = 'test'} end
-            if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target.name) end
-            damage = damage + H.Ability.Parse(ability_data, result, owner_mob, target.name, actor_mob)
+            if target then
+                if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target.name) end
+                damage = damage + H.Ability.Parse(ability_data, result, owner_mob, target.name, actor_mob)
+                count = count + 1
+            end
         end
     end
 
     H.Ability.Pet_Count(actor_mob, owner_mob, target, ability_data, trackable, damage)
-    H.Ability.Pet_Blog(actor_mob, owner_mob, ability_data, ability_id, damage)
+    H.Ability.Pet_Blog(actor_mob, owner_mob, ability_data, ability_id, damage, count)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -175,13 +178,17 @@ end
 ---@param ability_data table
 ---@param ability_id number
 ---@param damage number
+---@param target_count? integer
 ------------------------------------------------------------------------------------------------------
-H.Ability.Pet_Blog = function(actor_mob, owner_mob, ability_data, ability_id, damage)
+H.Ability.Pet_Blog = function(actor_mob, owner_mob, ability_data, ability_id, damage, target_count)
     if damage > 0 then
         if Res.Avatar.Get_Rage(ability_id) or Res.Pets.Get_Damaging_Wyvern_Breath(ability_id) then
             Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_TP, ability_data.Name, damage)
         elseif Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then
             Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_HEAL, ability_data.Name, damage)
+        elseif Res.Avatar.Get_Ward(ability_id) then
+            local note = "TGTs: " .. tostring(target_count)
+            Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_TP, ability_data.Name, nil, note, DB.Enum.Trackable.PET_ABILITY, ability_data)
         end
     end
 end
