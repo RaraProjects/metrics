@@ -1016,15 +1016,15 @@ Res.Monster.Damaging_Abilities = T{
     [1275] = {id=1275,en="Empty Thrash",ja="エンプティスラッシュ"}, -- Craver
     [1276] = {id=1276,en="Promyvion Brume",ja="虚ろなる霧"},    -- Craver
     [1277] = {id=1277,en="Inferno Blast",ja="インフェルノブラスト"},    -- Tiamat?
-    [1278] = {id=1278,en="Inferno Blast",ja="インフェルノブラスト"},    -- Tiamat?
-    [1279] = {id=1279,en="Tebbad Wing",ja="テバッドウィング"},  -- Tiamat?
-    [1280] = {id=1280,en="Spike Flail",ja="スパイクフレイル"},  -- Tiamat?
-    [1281] = {id=1281,en="Fiery Breath",ja="ファイリィブレス"}, -- Tiamat?
-    [1282] = {id=1282,en="Touchdown",ja="タッチダウン"},    -- Tiamat?
-    [1283] = {id=1283,en="Inferno Blast",ja="インフェルノブラスト"},    -- Tiamat?
-    [1284] = {id=1284,en="Tebbad Wing",ja="テバッドウィング"},  -- Tiamat?
-    -- [1285] = {id=1285,en="Absolute Terror",ja="アブソルートテラー"}, -- Tiamat?
-    -- [1286] = {id=1286,en="Horrid Roar",ja="ホリッドロア"},   -- Tiamat?
+    [1278] = {id=1278,en="Inferno Blast",ja="インフェルノブラスト"},    -- Tiamat (Airborne Melee Attack)
+    [1279] = {id=1279,en="Tebbad Wing",ja="テバッドウィング"},          -- Tiamat (Ground)
+    [1280] = {id=1280,en="Spike Flail",ja="スパイクフレイル"},          -- Tiamat?
+    [1281] = {id=1281,en="Fiery Breath",ja="ファイリィブレス"},         -- Tiamat
+    [1282] = {id=1282,en="Touchdown",ja="タッチダウン"},                -- Tiamat
+    [1283] = {id=1283,en="Inferno Blast",ja="インフェルノブラスト"},    -- Tiamat (Airborne TP Move)
+    [1284] = {id=1284,en="Tebbad Wing",ja="テバッドウィング"},          -- Tiamat (Airborne)
+    -- [1285] = {id=1285,en="Absolute Terror",ja="アブソルートテラー"}, -- Tiamat
+    -- [1286] = {id=1286,en="Horrid Roar",ja="ホリッドロア"},           -- Tiamat?
     [1287] = {id=1287,en="Sleet Blast",ja="スリートブラスト"},  -- Jormungand
     [1288] = {id=1288,en="Sleet Blast",ja="スリートブラスト"},  -- Jormungand
     [1289] = {id=1289,en="Gregale Wing",ja="グレガーレウィング"},   -- Jormungand

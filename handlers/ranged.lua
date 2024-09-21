@@ -65,23 +65,12 @@ H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
         target_name = target_mob.name,
     }
 
-    -- Totals
-    H.Ranged.Totals(audits, damage, ranged_type)
-
-    -- Pet Totals
-    H.Ranged.Pet_Total(owner_mob, audits, damage)
-
-    -- Accuracy and misc. traits.
-    H.Ranged.Message(message_id, audits, damage, ranged_type)
-
-    -- Additional Effects
-    H.Ranged.Additional_Effect(audits, result)
-
-    -- Min/Max
-    H.Ranged.Min_Max(damage, audits, ranged_type)
-
-    -- Shot Distance
-    H.Ranged.Distance(audits, actor_mob, target_mob, ranged_type)
+    H.Ranged.Totals(audits, damage, ranged_type)                    -- Totals
+    H.Ranged.Pet_Total(owner_mob, audits, damage)                   -- Pet Totals
+    H.Ranged.Message(message_id, audits, damage, ranged_type)       -- Accuracy and misc. traits.
+    H.Ranged.Additional_Effect(audits, result)                      -- Additional Effects
+    H.Ranged.Min_Max(damage, audits, ranged_type)                   -- Min/Max
+    H.Ranged.Distance(audits, actor_mob, target_mob, ranged_type)   -- Shot Distance
 
     return damage
 end

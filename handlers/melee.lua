@@ -110,32 +110,15 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
         pet_name = pet_name,
     }
 
-    -- No damage Messages
-    local no_damage = H.Melee.No_Damage_Messages(message_id)
-
-    -- Totals
-    H.Melee.Totals(audits, damage, melee_type_discrete, no_damage)
-
-    -- Pet Totals
-    H.Melee.Pet_Total(owner_mob, audits, damage, no_damage)
-
-    -- Melee or Throwing Totals and Counts
-    throwing = H.Melee.Animation(animation_id, audits, damage, melee_type_broad, throwing, no_damage)
-
-    -- Min/Max
-    H.Melee.Min_Max(throwing, damage, audits, melee_type_broad, melee_type_discrete, no_damage)
-
-    -- Additional effects like enspell.
-    H.Melee.Additional_Effect(audits, result, no_damage)
-
-    -- Accuracy, crits, absorbed by shadows, etc.
-    H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete)
-
-    -- Guard
-    H.Melee.Reaction(result, audits, melee_type_broad)
-
-    -- Spike damage
-    H.Melee.Spikes(audits, result)
+    local no_damage = H.Melee.No_Damage_Messages(message_id)        -- No damage Messages
+    H.Melee.Totals(audits, damage, melee_type_discrete, no_damage)  -- Totals
+    H.Melee.Pet_Total(owner_mob, audits, damage, no_damage)         -- Pet Totals
+    throwing = H.Melee.Animation(animation_id, audits, damage, melee_type_broad, throwing, no_damage)   -- Melee or Throwing Totals and Counts
+    H.Melee.Min_Max(throwing, damage, audits, melee_type_broad, melee_type_discrete, no_damage)         -- Min/Max
+    H.Melee.Additional_Effect(audits, result, no_damage)                                                -- Additional effects like enspell.
+    H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete)                  -- Accuracy, crits, absorbed by shadows, etc.
+    H.Melee.Reaction(result, audits, melee_type_broad)              -- Guard
+    H.Melee.Spikes(audits, result)                                  -- Spike damage
 
     return {damage = damage, type = melee_type_discrete, audits = audits}
 end
