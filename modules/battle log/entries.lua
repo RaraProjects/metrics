@@ -115,7 +115,7 @@ Blog.Entries.Notes = function(note, action_type, is_mob)
     -- A note should be passed in with these actions. Just use that.
     if action_type == DB.Enum.Trackable.MAGIC or action_type == DB.Enum.Trackable.HEALING
     or action_type == DB.Enum.Trackable.TP_DMG_TAKEN or action_type == Blog.Enum.Flags.IGNORE
-    or action_type == DB.Enum.Trackable.ENFEEBLE then
+    or action_type == DB.Enum.Trackable.ENFEEBLE or action_type == DB.Enum.Trackable.BUFF_SONG then
         final_note.Value = tostring(note)
 
     -- If the player died then show who killed them.

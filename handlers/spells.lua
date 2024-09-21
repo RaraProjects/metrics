@@ -140,6 +140,11 @@ H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_
             if buff then blog_note = buff.en end
         end
         Blog.Add(actor_mob.name, nil, Blog.Enum.Types.ENFEEBLE, spell_name, -1, blog_note, DB.Enum.Trackable.ENFEEBLE, spell_data)
+
+    elseif Res.Spells.Get_Buff_Song(spell_id) then
+        blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MAGIC, spell_name, damage, blog_note, DB.Enum.Trackable.BUFF_SONG, spell_data)
+
     end
 end
 
