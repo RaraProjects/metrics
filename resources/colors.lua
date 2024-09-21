@@ -75,5 +75,5 @@ Res.Colors.Jobs = T{
 
 Res.Colors.XP = T{
     [1] = {0.83, 0.65, 0.31, 1.0},    -- Experience
-    [2] = {0.83, 0.65, 0.31, 1.0},    -- Limit
+    [2] = {0.30, 0.56, 0.83, 1.0},    -- Limit
 }
