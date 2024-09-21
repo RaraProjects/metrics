@@ -50,7 +50,7 @@ end
 ---@param player_name? string
 ------------------------------------------------------------------------------------------------------
 DB.Data.Init_Player = function(player_name)
-	if player_name and not DB.Tracking.Initialized_Players[player_name] then
+	if player_name and player_name ~= "" and not DB.Tracking.Initialized_Players[player_name] then
 		DB.Tracking.Initialized_Players[player_name] = true
 		DB.Lists.Sort.Players()
 		DB.Tracking.Running_Accuracy[player_name] = T{}
