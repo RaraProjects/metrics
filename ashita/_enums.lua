@@ -115,6 +115,7 @@ Ashita.Enum.Message = T{
     RANGEHIT    = 352,
     RANGECRIT   = 353,
     RANGEMISS   = 354,
+    COR_BUST    = 426,
     ABSORB_TP   = 454,
     ABSORB_ACC  = 533,
     SQUARE      = 576,

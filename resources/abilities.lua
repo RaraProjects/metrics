@@ -38,6 +38,75 @@ Res.Abilities.Maneuvers = T{
 }
 
 -- Based off of job_abilities.lua from Windower.
+Res.Abilities.Phantom_Roll = T{
+    [98] = {id=98,en="Fighter's Roll",ja="ファイターズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=310,targets=1,tp_cost=0,type="CorsairRoll"},
+    [99] = {id=99,en="Monk's Roll",ja="モンクスロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=311,targets=1,tp_cost=0,type="CorsairRoll"},
+    [100] = {id=100,en="Healer's Roll",ja="ヒーラーズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=312,targets=1,tp_cost=0,type="CorsairRoll"},
+    [101] = {id=101,en="Wizard's Roll",ja="ウィザーズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=313,targets=1,tp_cost=0,type="CorsairRoll"},
+    [102] = {id=102,en="Warlock's Roll",ja="ワーロックスロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=314,targets=1,tp_cost=0,type="CorsairRoll"},
+    [103] = {id=103,en="Rogue's Roll",ja="ローグズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=315,targets=1,tp_cost=0,type="CorsairRoll"},
+    [104] = {id=104,en="Gallant's Roll",ja="ガランツロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=316,targets=1,tp_cost=0,type="CorsairRoll"},
+    [105] = {id=105,en="Chaos Roll",ja="カオスロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=317,targets=1,tp_cost=0,type="CorsairRoll"},
+    [106] = {id=106,en="Beast Roll",ja="ビーストロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=318,targets=1,tp_cost=0,type="CorsairRoll"},
+    [107] = {id=107,en="Choral Roll",ja="コーラルロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=319,targets=1,tp_cost=0,type="CorsairRoll"},
+    [108] = {id=108,en="Hunter's Roll",ja="ハンターズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=320,targets=1,tp_cost=0,type="CorsairRoll"},
+    [109] = {id=109,en="Samurai Roll",ja="サムライロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=321,targets=1,tp_cost=0,type="CorsairRoll"},
+    [110] = {id=110,en="Ninja Roll",ja="ニンジャロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=322,targets=1,tp_cost=0,type="CorsairRoll"},
+    [111] = {id=111,en="Drachen Roll",ja="ドラケンロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=323,targets=1,tp_cost=0,type="CorsairRoll"},
+    [112] = {id=112,en="Evoker's Roll",ja="エボカーズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=324,targets=1,tp_cost=0,type="CorsairRoll"},
+    [113] = {id=113,en="Magus's Roll",ja="メガスズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=325,targets=1,tp_cost=0,type="CorsairRoll"},
+    [114] = {id=114,en="Corsair's Roll",ja="コルセアズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=326,targets=1,tp_cost=0,type="CorsairRoll"},
+    [115] = {id=115,en="Puppet Roll",ja="パペットロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=327,targets=1,tp_cost=0,type="CorsairRoll"},
+    [116] = {id=116,en="Dancer's Roll",ja="ダンサーロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=328,targets=1,tp_cost=0,type="CorsairRoll"},
+    [117] = {id=117,en="Scholar's Roll",ja="スカラーロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=329,targets=1,tp_cost=0,type="CorsairRoll"},
+    [118] = {id=118,en="Bolter's Roll",ja="ボルターズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=330,targets=1,tp_cost=0,type="CorsairRoll"},
+    [119] = {id=119,en="Caster's Roll",ja="キャスターズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=331,targets=1,tp_cost=0,type="CorsairRoll"},
+    [120] = {id=120,en="Courser's Roll",ja="コアサーズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=332,targets=1,tp_cost=0,type="CorsairRoll"},
+    [121] = {id=121,en="Blitzer's Roll",ja="ブリッツァロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=333,targets=1,tp_cost=0,type="CorsairRoll"},
+    [122] = {id=122,en="Tactician's Roll",ja="タクティックロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=334,targets=1,tp_cost=0,type="CorsairRoll"},
+    [302] = {id=302,en="Allies' Roll",ja="アライズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=335,targets=1,tp_cost=0,type="CorsairRoll"},
+    [303] = {id=303,en="Miser's Roll",ja="マイザーロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=336,targets=1,tp_cost=0,type="CorsairRoll"},
+    [304] = {id=304,en="Companion's Roll",ja="コンパニオンロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=337,targets=1,tp_cost=0,type="CorsairRoll"},
+    [305] = {id=305,en="Avenger's Roll",ja="カウンターロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=338,targets=1,tp_cost=0,type="CorsairRoll"},
+    [390] = {id=390,en="Naturalist's Roll",ja="ナチュラリストロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=339,targets=1,tp_cost=0,type="CorsairRoll"},
+    [391] = {id=391,en="Runeist's Roll",ja="ルーニストロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=600,targets=1,tp_cost=0,type="CorsairRoll"},
+}
+
+Res.Abilities.Phantom_Roll_Lucky = T{
+    [98]  = {lucky = 5, unlucky = 9},  -- Fighters
+    [99]  = {lucky = 3, unlucky = 7},  -- Monks
+    [100] = {lucky = 3, unlucky = 7},  -- Healers
+    [101] = {lucky = 5, unlucky = 9},  -- Wizards
+    [102] = {lucky = 4, unlucky = 8},  -- Warlocks
+    [103] = {lucky = 5, unlucky = 9},  -- Rogues
+    [104] = {lucky = 3, unlucky = 7},  -- Gallants
+    [105] = {lucky = 4, unlucky = 8},  -- Chaos
+    [106] = {lucky = 4, unlucky = 8},  -- Beast
+    [107] = {lucky = 2, unlucky = 6},  -- Choral
+    [108] = {lucky = 4, unlucky = 8},  -- Hunters
+    [109] = {lucky = 2, unlucky = 6},  -- Samurai
+    [110] = {lucky = 4, unlucky = 8},  -- Ninja
+    [111] = {lucky = 4, unlucky = 8},  -- Drachen
+    [112] = {lucky = 5, unlucky = 9},  -- Evokers
+    [113] = {lucky = 2, unlucky = 6},  -- Magus
+    [114] = {lucky = 5, unlucky = 9},  -- Corsairs
+    [115] = {lucky = 3, unlucky = 7},  -- Puppet
+    [116] = {lucky = 3, unlucky = 7},  -- Dancer
+    [117] = {lucky = 2, unlucky = 6},  -- Scholars
+    [118] = {lucky = 3, unlucky = 9},  -- Bolters
+    [119] = {lucky = 2, unlucky = 7},  -- Casters
+    [120] = {lucky = 3, unlucky = 9},  -- Coursers
+    [121] = {lucky = 4, unlucky = 9},  -- Blitzers
+    [122] = {lucky = 5, unlucky = 8},  -- Tacticians
+    [302] = {lucky = 3, unlucky = 10}, -- Allies
+    [303] = {lucky = 5, unlucky = 7},  -- Misers
+    [304] = {lucky = 2, unlucky = 10}, -- Companions
+    [305] = {lucky = 4, unlucky = 8},  -- Avengers
+    [390] = {lucky = 3, unlucky = 7},  -- Naturalists
+    [391] = {lucky = 4, unlucky = 8},  -- Runeist
+}
+
+-- Based off of job_abilities.lua from Windower.
 Res.Abilities.Healing = T{
     [541] = {id = 541, oldid = 29, en = "Spirit Surge"},
     [550] = {id = 550, oldid = 38, en = "Chakra"},

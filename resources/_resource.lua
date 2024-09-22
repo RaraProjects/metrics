@@ -47,6 +47,26 @@ Res.Abilities.Get_Maneuver = function(ability_id)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Checks whether an ability is a COR Phantom Roll ability.
+-- ------------------------------------------------------------------------------------------------------
+---@param ability_id integer
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Abilities.Get_Roll = function(ability_id)
+    return Res.Abilities.Phantom_Roll[ability_id]
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Gets phantrom roll lucky/unlucky stats.
+-- ------------------------------------------------------------------------------------------------------
+---@param ability_id integer
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Abilities.Get_Roll_Lucky = function(ability_id)
+    return Res.Abilities.Phantom_Roll_Lucky[ability_id]
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Checks whether an ability is a pet command ability.
 -- ------------------------------------------------------------------------------------------------------
 ---@param ability_id integer

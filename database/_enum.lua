@@ -29,6 +29,7 @@ DB.Enum.Trackable = T{
     ABILITY_MP_RECOVERY = "MP Recovery Abilities",
     ABILITY_GENERAL     = "General Ability",
     MANEUVER            = "Maneuver",
+    PHANTOM_ROLL        = "Corsair Roll",
     PET                 = "Pet",                 -- Pets
     PET_ABILITY         = "Pet Ability",
     PET_HEAL            = "Pet Healing",
@@ -113,6 +114,12 @@ DB.Enum.Metric = T{
     SC_OPENED     = "Skillchains Opened",
     SC_CLOSED     = "Skillchains Closed",
     OVERLOAD      = "Maneuver Overload",
+    PHANTOM_ROLL_FIRST_ROLL = "Phantom Roll First Rolls",
+    PHANTOM_ROLL_REROLL     = "Phantom Roll Rerolls",
+    BUST_COUNT    = "COR Roll Bust Count",
+    LUCKY_COUNT   = "COR Roll Lucky Count",
+    UNLUCKY_COUNT = "COR Roll Unlucky Count",
+    LUCKY_11_COUNT = "COR Roll Lucky 11 Count",
 }
 
 DB.Enum.Pet_Single_Trackable = T{

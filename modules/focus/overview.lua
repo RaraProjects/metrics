@@ -30,7 +30,7 @@ Focus.Overview.Job_Selection = function(player_name)
     elseif job_id == 14 then Focus.Overview.DRG(player_name)
     elseif job_id == 15 then Focus.Overview.SMN(player_name)
     elseif job_id == 16 then -- BLU
-    elseif job_id == 17 then -- COR
+    elseif job_id == 17 then Focus.Overview.COR(player_name)
     elseif job_id == 18 then Focus.Overview.PUP(player_name)
     end
 end
@@ -247,6 +247,18 @@ Focus.Overview.SMN = function(player_name)
     Focus.Overview.Pet_TP(player_name)
     Focus.Overview.Healing(player_name)
     Focus.Overview.Debuff(player_name)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Overview screen for COR.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.COR = function(player_name)
+    Focus.Overview.Melee(player_name)
+    Focus.Overview.Ranged(player_name)
+    Focus.Overview.Weaponskill(player_name)
+    Focus.Overview.Phantom_Roll(player_name)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -775,6 +787,62 @@ Focus.Overview.Buff_Songs = function(player_name)
         else
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("None")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows phantom roll overview stats.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.Phantom_Roll = function(player_name)
+    if not player_name then return nil end
+
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    local trackable = DB.Enum.Trackable.PHANTOM_ROLL
+    if UI.BeginTable("Phantom Roll", 7, table_flags) then
+        UI.TableSetupColumn("Phantom Roll", col_flags, name_width)
+        UI.TableSetupColumn("Rolls", col_flags, width)
+        UI.TableSetupColumn("Re-Rolls", col_flags, width)
+        UI.TableSetupColumn("Lucky", col_flags, width)
+        UI.TableSetupColumn("Lucky 11", col_flags, width)
+        UI.TableSetupColumn("Unlucky", col_flags, width)
+        UI.TableSetupColumn("Busts", col_flags, width)
+        UI.TableHeadersRow()
+
+        local row = 1
+        if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
+            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local action_name
+            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+                action_name = data[1]
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text(action_name)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.PHANTOM_ROLL_FIRST_ROLL)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.PHANTOM_ROLL_REROLL)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.LUCKY_COUNT)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.LUCKY_11_COUNT)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.UNLUCKY_COUNT)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.BUST_COUNT)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
+            end
+        else
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("None")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 
