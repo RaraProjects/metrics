@@ -29,7 +29,7 @@ Focus.Overview.Job_Selection = function(player_name)
     elseif job_id == 13 then Focus.Overview.NIN(player_name)
     elseif job_id == 14 then Focus.Overview.DRG(player_name)
     elseif job_id == 15 then Focus.Overview.SMN(player_name)
-    elseif job_id == 16 then -- BLU
+    elseif job_id == 16 then Focus.Overview.BLU(player_name)
     elseif job_id == 17 then Focus.Overview.COR(player_name)
     elseif job_id == 18 then Focus.Overview.PUP(player_name)
     end
@@ -247,6 +247,21 @@ Focus.Overview.SMN = function(player_name)
     Focus.Overview.Pet_TP(player_name)
     Focus.Overview.Healing(player_name)
     Focus.Overview.Debuff(player_name)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Overview screen for BLU.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.BLU = function(player_name)
+    local ability_list = {[1] = "Burst Affinity", [2] = "Chain Affinity"}
+    Focus.Overview.Melee(player_name)
+    Focus.Overview.Weaponskill(player_name)
+    Focus.Overview.Nuking(player_name, true)
+    Focus.Overview.Healing(player_name)
+    Focus.Overview.Debuff(player_name)
+    Focus.Overview.Abilities(player_name, ability_list)
 end
 
 ------------------------------------------------------------------------------------------------------

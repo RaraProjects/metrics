@@ -68,6 +68,7 @@ Ashita.Menu.Types = T{
     shop     = true,    -- Setting bazaar prices
     automato = true,    -- Automaton equipment menu
     bluinven = true,    -- Automaton equipment selection
+    bluequip = true,    -- BLU magic spell equip menu
 }
 
 -- ------------------------------------------------------------------------------------------------------
