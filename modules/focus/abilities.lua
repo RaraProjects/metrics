@@ -9,8 +9,9 @@ Focus.Abilities = T{}
 Focus.Abilities.Display = function(player_name, hide_publish)
     local ability_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Enum.Metric.COUNT)
     local healing_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_HEALING, DB.Enum.Metric.COUNT)
-    local mp_recovery = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, DB.Enum.Metric.COUNT)
-    local misc_count = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY, DB.Enum.Metric.COUNT)
+    local mp_recovery   = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, DB.Enum.Metric.COUNT)
+    local maneuvers     = DB.Data.Get(player_name, DB.Enum.Trackable.MANEUVER, DB.Enum.Metric.COUNT)
+    local misc_count    = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY, DB.Enum.Metric.COUNT)
 
     Focus.Abilities.Total(player_name)
     UI.Separator()
@@ -18,6 +19,7 @@ Focus.Abilities.Display = function(player_name, hide_publish)
     if ability_total > 0 then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, "Damaging") end
     if healing_total > 0 then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY_HEALING, "Healing") end
     if mp_recovery > 0   then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, "MP Recover") end
+    if maneuvers > 0     then Focus.Overview.Overload(player_name) end
     if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Catalog.Abilities_General(player_name) end
 
     if not hide_publish then Focus.Abilities.Publish(player_name, ability_total, healing_total) end

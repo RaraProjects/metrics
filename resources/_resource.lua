@@ -37,6 +37,16 @@ Res.Monster.Get_Damaging_Ability = function(ability_id)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Checks whether an ability is a PUP maneuver ability.
+-- ------------------------------------------------------------------------------------------------------
+---@param ability_id integer
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Res.Abilities.Get_Maneuver = function(ability_id)
+    return Res.Abilities.Maneuvers[ability_id]
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Checks whether an ability is a pet command ability.
 -- ------------------------------------------------------------------------------------------------------
 ---@param ability_id integer

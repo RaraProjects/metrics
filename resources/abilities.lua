@@ -26,6 +26,18 @@ Res.Abilities.Damaging = T{
 }
 
 -- Based off of job_abilities.lua from Windower.
+Res.Abilities.Maneuvers = T{
+    [141] = {id=141,en="Fire Maneuver",ja="ファイアマニューバ",element=0,icon_id=505,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
+    [142] = {id=142,en="Ice Maneuver",ja="アイスマニューバ",element=1,icon_id=506,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
+    [143] = {id=143,en="Wind Maneuver",ja="ウィンドマニューバ",element=2,icon_id=507,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
+    [144] = {id=144,en="Earth Maneuver",ja="アースマニューバ",element=3,icon_id=508,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
+    [145] = {id=145,en="Thunder Maneuver",ja="サンダーマニューバ",element=4,icon_id=509,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
+    [146] = {id=146,en="Water Maneuver",ja="ウォータマニューバ",element=5,icon_id=510,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
+    [147] = {id=147,en="Light Maneuver",ja="ライトマニューバ",element=6,icon_id=511,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
+    [148] = {id=148,en="Dark Maneuver",ja="ダークマニューバ",element=7,icon_id=512,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
+}
+
+-- Based off of job_abilities.lua from Windower.
 Res.Abilities.Healing = T{
     [541] = {id = 541, oldid = 29, en = "Spirit Surge"},
     [550] = {id = 550, oldid = 38, en = "Chakra"},

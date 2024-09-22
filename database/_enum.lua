@@ -28,6 +28,7 @@ DB.Enum.Trackable = T{
     ABILITY_HEALING     = "Healing Abilities",
     ABILITY_MP_RECOVERY = "MP Recovery Abilities",
     ABILITY_GENERAL     = "General Ability",
+    MANEUVER            = "Maneuver",
     PET                 = "Pet",                 -- Pets
     PET_ABILITY         = "Pet Ability",
     PET_HEAL            = "Pet Healing",
@@ -111,6 +112,7 @@ DB.Enum.Metric = T{
     TP_SPENT      = "TP Spent",
     SC_OPENED     = "Skillchains Opened",
     SC_CLOSED     = "Skillchains Closed",
+    OVERLOAD      = "Maneuver Overload",
 }
 
 DB.Enum.Pet_Single_Trackable = T{

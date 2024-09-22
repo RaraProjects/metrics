@@ -120,4 +120,5 @@ Ashita.Enum.Message = T{
     SQUARE      = 576,
     TRUE        = 577,
     COMP_RESIST = 655,
+    OVERLOAD    = 799,
 }

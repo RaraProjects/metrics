@@ -29,6 +29,9 @@ Focus.Overview.Job_Selection = function(player_name)
     elseif job_id == 13 then Focus.Overview.NIN(player_name)
     elseif job_id == 14 then Focus.Overview.DRG(player_name)
     elseif job_id == 15 then Focus.Overview.SMN(player_name)
+    elseif job_id == 16 then -- BLU
+    elseif job_id == 17 then -- COR
+    elseif job_id == 18 then Focus.Overview.PUP(player_name)
     end
 end
 
@@ -245,6 +248,21 @@ Focus.Overview.SMN = function(player_name)
     Focus.Overview.Healing(player_name)
     Focus.Overview.Debuff(player_name)
 end
+
+------------------------------------------------------------------------------------------------------
+-- Overview screen for PUP.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.PUP = function(player_name)
+    local ability_list = {[1] = "Deus Ex Automata", [2] = "Repair", [3] = "Maintenance"}
+    Focus.Overview.Melee(player_name)
+    Focus.Overview.Weaponskill(player_name)
+    Focus.Overview.Overload(player_name)
+    Focus.Overview.Maneuvers(player_name)
+    Focus.Overview.Abilities(player_name, ability_list)
+end
+
 
 ------------------------------------------------------------------------------------------------------
 -- Shows melee overview stats.
@@ -759,6 +777,74 @@ Focus.Overview.Buff_Songs = function(player_name)
             UI.TableNextColumn() UI.Text("None")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows manuever overview stats.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.Maneuvers = function(player_name)
+    if not player_name then return nil end
+
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    local trackable = DB.Enum.Trackable.MANEUVER
+    if UI.BeginTable("Maneuvers", 2, table_flags) then
+        UI.TableSetupColumn("Maneuver", col_flags, name_width)
+        UI.TableSetupColumn("Uses", col_flags, width)
+        UI.TableHeadersRow()
+
+        local row = 1
+        if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
+            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local action_name
+            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+                action_name = data[1]
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text(action_name)
+                UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
+            end
+        else
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("None")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows maneuver overload overview stats.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.Overload = function(player_name)
+    if not player_name then return nil end
+
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    local trackable = DB.Enum.Trackable.MANEUVER
+    if UI.BeginTable("Overload", 2, table_flags) then
+        UI.TableSetupColumn("Misc.", col_flags, name_width)
+        UI.TableSetupColumn("Count", col_flags, width)
+        UI.TableHeadersRow()
+
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Overload")
+        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.OVERLOAD)
 
         UI.EndTable()
     end

@@ -127,6 +127,11 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
         elseif Res.Abilities.Get_MP_Recovery(ability_id) then
             ability_type = H.Trackable.ABILITY_MP_RECOVERY
             H.Ability.Catalog(audits, damage, ability_type, ability_name)
+        elseif (ability_id - H.Enum.Offsets.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_id - H.Enum.Offsets.ABILITY) then
+            DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MANEUVER, H.Metric.COUNT)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.MANEUVER, ability_name, H.Metric.COUNT)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.MANEUVER, ability_name, H.Metric.HIT_COUNT)
+            if result.message == Ashita.Enum.Message.OVERLOAD then DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MANEUVER, H.Metric.OVERLOAD) end
         end
     end
 
