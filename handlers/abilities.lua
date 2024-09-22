@@ -121,9 +121,9 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
             ability_type = H.Trackable.ABILITY_DAMAGING
             H.Ability.Catalog(audits, damage, ability_type, ability_name)
         elseif Res.Abilities.Get_Player_Healing(ability_id) or Res.Abilities.Get_Pet_Healing(ability_id) then
+            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.ALL_HEAL, H.Metric.TOTAL)
             ability_type = H.Trackable.ABILITY_HEALING
             H.Ability.Catalog(audits, damage, ability_type, ability_name)
-            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.ALL_HEAL, H.Metric.TOTAL)
         elseif Res.Abilities.Get_MP_Recovery(ability_id) then
             ability_type = H.Trackable.ABILITY_MP_RECOVERY
             H.Ability.Catalog(audits, damage, ability_type, ability_name)
@@ -186,6 +186,8 @@ H.Ability.Pet_Blog = function(actor_mob, owner_mob, ability_data, ability_id, da
         if Res.Avatar.Get_Rage(ability_id) or Res.Pets.Get_Damaging_Wyvern_Breath(ability_id) then
             Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_TP, ability_data.Name, damage)
         elseif Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then
+            Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_HEAL, ability_data.Name, damage)
+        elseif Res.Avatar.Get_Healing(ability_id) then
             Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_HEAL, ability_data.Name, damage)
         elseif Res.Avatar.Get_Ward(ability_id) then
             local note = "TGTs: " .. tostring(target_count)
@@ -335,12 +337,10 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Healing = function(audits, owner_mob, damage, ability_name)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.ALL_HEAL, H.Metric.TOTAL)
     local ability_type = H.Trackable.PET_HEAL
-    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.HEALING, H.Metric.TOTAL)
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
-    if damage > 0 then
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT)
-    end
+    if damage > 0 then DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT) end
     return ability_type
 end
 

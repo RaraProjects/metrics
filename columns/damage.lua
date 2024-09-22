@@ -102,6 +102,23 @@ Column.Damage.Pet_By_Type = function(player_name, pet_name, damage_type, percent
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Grabs the damage of a certain trackable that the entity's pet has done.
+------------------------------------------------------------------------------------------------------
+---@param player_name string the entity that owns the pet.
+---@param pet_name? string the pet that we want the damage for.
+---@param damage_type string a trackable from the model.
+---@param justify? boolean whether or not to right justify the text
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Damage.Healing_Player = function(player_name, pet_name, damage_type, justify)
+    local healing = DB.Data.Get(player_name, damage_type, Column.Metric.TOTAL)
+    if pet_name then healing = DB.Pet_Data.Get(player_name, pet_name, damage_type, Column.Metric.TOTAL) end
+    local color = Column.String.Color_Zero(healing)
+    local player_healing = DB.Data.Get(player_name, Column.Trackable.ALL_HEAL, Column.Metric.TOTAL)
+    return UI.TextColored(color, Column.String.Format_Percent(healing, player_healing, justify))
+end
+
+------------------------------------------------------------------------------------------------------
 -- Grabs the magic burst damage for the player.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string

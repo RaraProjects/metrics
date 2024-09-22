@@ -39,7 +39,7 @@ H.Spell.Action = function(action, actor_mob, log_offense)
 
     local audits = H.Spell.Audits(actor_mob, target_mob, owner_mob)
     H.Spell.Count(audits, spell_id, spell_name, mp_cost, is_burst, target_count)
-    H.Spell.Blog(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
+    H.Spell.Blog(audits, spell_id, spell_data, spell_name, damage, is_burst, target_count)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -101,7 +101,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Adds spell information to the battle log.
 ------------------------------------------------------------------------------------------------------
----@param actor_mob table
+---@param audits table
 ---@param spell_id number
 ---@param spell_data table
 ---@param spell_name string
@@ -109,7 +109,7 @@ end
 ---@param is_burst boolean true if this cast was a magic burst.
 ---@param target_count number how many targets were hit by an AOE spell.
 ------------------------------------------------------------------------------------------------------
-H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_burst, target_count)
+H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_burst, target_count)
     local blog_note = ""
     local space = ""
     if Res.Spells.Get_Damaging(spell_id) and not Res.Spells.Get_DoT(spell_id) then
@@ -122,13 +122,13 @@ H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_
         if Res.Spells.Get_AOE(spell_id) then
             blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
         end
-        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MAGIC, spell_name, damage, blog_note, DB.Enum.Trackable.MAGIC, spell_data)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.Enum.Types.MAGIC, spell_name, damage, blog_note, DB.Enum.Trackable.MAGIC, spell_data)
 
     elseif Res.Spells.Get_Healing(spell_id) then
         if Res.Spells.Get_AOE(spell_id) then
             blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
         end
-        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.HEALING, spell_name, damage, blog_note, DB.Enum.Trackable.HEALING, spell_data)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.Enum.Types.HEALING, spell_name, damage, blog_note, DB.Enum.Trackable.HEALING, spell_data)
 
     elseif Res.Spells.Get_Enfeeble(spell_id) then
         if damage == -1 then
@@ -139,11 +139,11 @@ H.Spell.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, is_
             local buff = Res.Buffs.Get_Buff(damage)
             if buff then blog_note = buff.en end
         end
-        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.ENFEEBLE, spell_name, -1, blog_note, DB.Enum.Trackable.ENFEEBLE, spell_data)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.Enum.Types.ENFEEBLE, spell_name, -1, blog_note, DB.Enum.Trackable.ENFEEBLE, spell_data)
 
     elseif Res.Spells.Get_Buff_Song(spell_id) then
         blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
-        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MAGIC, spell_name, nil, blog_note, DB.Enum.Trackable.BUFF_SONG, spell_data)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.Enum.Types.MAGIC, spell_name, nil, blog_note, DB.Enum.Trackable.BUFF_SONG, spell_data)
 
     end
 end
@@ -323,16 +323,16 @@ end
 ---@param burst boolean
 ------------------------------------------------------------------------------------------------------
 H.Spell.Overcure = function(audits, spell_name, damage, burst)
-    local trackable = H.Trackable.HEALING
-    if audits.pet_name then trackable = H.Trackable.PET_HEAL end
-
-    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, nil, burst)
     DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.ALL_HEAL, H.Metric.TOTAL)
 
+    local trackable = H.Trackable.HEALING
+    if audits.pet_name then trackable = H.Trackable.PET_HEAL end
+    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, audits.pet_name, burst)
+
+    -- Overcure
     local spell_max = DB.Catalog.Get(audits.player_name, trackable, spell_name, H.Metric.MAX)
     local overcure = 0
     if spell_max > damage then overcure = spell_max - damage end
-
     DB.Data.Update(H.Mode.INC, overcure, audits, trackable, H.Metric.OVERCURE)
     DB.Catalog.Update_Metric(H.Mode.INC, overcure, audits, trackable, spell_name, H.Metric.OVERCURE)
 end
