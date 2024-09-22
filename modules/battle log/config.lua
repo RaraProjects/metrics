@@ -11,6 +11,7 @@ Blog.Config.Defaults = T{
     SC        = true,
     Magic     = true,
     BRD_Buff  = false,
+    COR_Rolls = false,
     Enfeeble  = true,
     Ability   = true,
     Pet_TP    = true,
@@ -151,6 +152,10 @@ Blog.Config.Column_Settings = function()
         UI.TableNextColumn()
         if UI.Checkbox("Song Buffs", {Metrics.Blog.BRD_Buffs}) then
             Metrics.Blog.BRD_Buffs = not Metrics.Blog.BRD_Buffs
+        end
+        UI.TableNextColumn()
+        if UI.Checkbox("Phantom Roll", {Metrics.Blog.COR_Rolls}) then
+            Metrics.Blog.COR_Rolls = not Metrics.Blog.COR_Rolls
         end
         UI.TableNextColumn()
         if UI.Checkbox("Abilities", {Metrics.Blog.Ability}) then

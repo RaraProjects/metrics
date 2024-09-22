@@ -135,7 +135,6 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
             H.Ability.Catalog(audits, damage, ability_type, ability_name)
         elseif (ability_id - H.Enum.Offsets.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_id - H.Enum.Offsets.ABILITY) then
             DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MANEUVER, H.Metric.COUNT)
-            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.MANEUVER, ability_name, H.Metric.COUNT)
             DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.MANEUVER, ability_name, H.Metric.HIT_COUNT)
             if result.message == Ashita.Enum.Message.OVERLOAD then DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MANEUVER, H.Metric.OVERLOAD) end
         elseif (ability_id - H.Enum.Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_id - H.Enum.Offsets.ABILITY) then
@@ -190,7 +189,7 @@ H.Ability.Blog = function(actor_mob, ability_data, ability_id, damage)
         elseif damage > 11 then
             suffix = " BUST!"
         end
-        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.ABILITY, ability_data.Name, nil, "Roll: " .. tostring(damage) .. suffix, DB.Enum.Trackable.PHANTOM_ROLL, ability_data)
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.COR_ROLLS, ability_data.Name, nil, "Roll: " .. tostring(damage) .. suffix, DB.Enum.Trackable.PHANTOM_ROLL, ability_data)
     else
         Blog.Add(actor_mob.name, nil, Blog.Enum.Types.ABILITY, ability_data.Name)
     end
@@ -260,6 +259,10 @@ H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data)
         trackable = H.Trackable.ABILITY_HEALING
     elseif Res.Abilities.Get_MP_Recovery(ability_data.Id) then
         trackable = H.Trackable.ABILITY_MP_RECOVERY
+    elseif (ability_data.Id - H.Enum.Offsets.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_data.Id - H.Enum.Offsets.ABILITY) then
+        trackable = H.Trackable.MANEUVER
+    elseif (ability_data.Id - H.Enum.Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_data.Id - H.Enum.Offsets.ABILITY) then
+        trackable = H.Trackable.PHANTOM_ROLL
     else
         trackable = H.Trackable.ABILITY_GENERAL
     end

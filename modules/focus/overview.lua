@@ -259,6 +259,7 @@ Focus.Overview.COR = function(player_name)
     Focus.Overview.Ranged(player_name)
     Focus.Overview.Weaponskill(player_name)
     Focus.Overview.Phantom_Roll(player_name)
+    Focus.Overview.Quick_Shot(player_name)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -798,8 +799,9 @@ end
 -- Shows phantom roll overview stats.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param full? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.Overview.Phantom_Roll = function(player_name)
+Focus.Overview.Phantom_Roll = function(player_name, full)
     if not player_name then return nil end
 
     local col_flags = Focus.Column_Flags
@@ -807,13 +809,15 @@ Focus.Overview.Phantom_Roll = function(player_name)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
+    local columns = 5
+    if full then columns = columns + 2 end
     local trackable = DB.Enum.Trackable.PHANTOM_ROLL
-    if UI.BeginTable("Phantom Roll", 7, table_flags) then
+    if UI.BeginTable("Phantom Roll", columns, table_flags) then
         UI.TableSetupColumn("Phantom Roll", col_flags, name_width)
         UI.TableSetupColumn("Rolls", col_flags, width)
-        UI.TableSetupColumn("Re-Rolls", col_flags, width)
+        if full then UI.TableSetupColumn("Re-Rolls", col_flags, width) end
         UI.TableSetupColumn("Lucky", col_flags, width)
-        UI.TableSetupColumn("Lucky 11", col_flags, width)
+        if full then UI.TableSetupColumn("Lucky 11", col_flags, width) end
         UI.TableSetupColumn("Unlucky", col_flags, width)
         UI.TableSetupColumn("Busts", col_flags, width)
         UI.TableHeadersRow()
@@ -827,9 +831,9 @@ Focus.Overview.Phantom_Roll = function(player_name)
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
                 UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.PHANTOM_ROLL_FIRST_ROLL)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.PHANTOM_ROLL_REROLL)
+                if full then UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.PHANTOM_ROLL_REROLL) end
                 UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.LUCKY_COUNT)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.LUCKY_11_COUNT)
+                if full then UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.LUCKY_11_COUNT) end
                 UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.UNLUCKY_COUNT)
                 UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.BUST_COUNT)
                 Window_Manager.Table_Row_Color(row)
@@ -839,9 +843,53 @@ Focus.Overview.Phantom_Roll = function(player_name)
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("None")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            if full then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            if full then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows quick shot overview stats.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.Quick_Shot = function(player_name)
+    if not player_name then return nil end
+
+    local col_flags = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    local trackable = DB.Enum.Trackable.ABILITY_DAMAGING
+    if UI.BeginTable("Quick Shot", 3, table_flags) then
+        UI.TableSetupColumn("Abilities", col_flags, name_width)
+        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("Uses", col_flags, width)
+        UI.TableHeadersRow()
+
+        local row = 1
+        if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
+            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local action_name
+            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+                action_name = data[1]
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text(action_name)
+                UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
+                UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
+            end
+        else
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("None")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
