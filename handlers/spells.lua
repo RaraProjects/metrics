@@ -143,7 +143,7 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
 
     elseif Res.Spells.Get_Buff_Song(spell_id) then
         blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
-        Blog.Add(audits.player_name, audits.pet_name, Blog.Enum.Types.MAGIC, spell_name, nil, blog_note, DB.Enum.Trackable.BUFF_SONG, spell_data)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.Enum.Types.BRD_BUFFS, spell_name, nil, blog_note, DB.Enum.Trackable.BUFF_SONG, spell_data)
 
     end
 end

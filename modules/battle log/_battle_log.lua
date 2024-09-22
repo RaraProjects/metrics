@@ -40,6 +40,7 @@ Blog.Enum.Types = T{
     MELEE     = "Melee",
     RANGED    = "Ranged",
     MAGIC     = "Magic",
+    BRD_BUFFS = "Bard Song Buffs",
     WS        = "WS",
     SC        = "SC",
     ABILITY   = "Ability",
@@ -172,6 +173,7 @@ Blog.Action_Filter = function(action_flag)
     elseif action_flag == Blog.Enum.Types.MELEE     then return Metrics.Blog.Melee
     elseif action_flag == Blog.Enum.Types.RANGED    then return Metrics.Blog.Ranged
     elseif action_flag == Blog.Enum.Types.MAGIC     then return Metrics.Blog.Magic
+    elseif action_flag == Blog.Enum.Types.BRD_BUFFS then return Metrics.Blog.BRD_Buffs
     elseif action_flag == Blog.Enum.Types.WS        then return Metrics.Blog.WS
     elseif action_flag == Blog.Enum.Types.SC        then return Metrics.Blog.SC
     elseif action_flag == Blog.Enum.Types.ABILITY   then return Metrics.Blog.Ability

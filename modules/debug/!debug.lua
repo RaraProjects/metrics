@@ -10,6 +10,7 @@ Debug.Window = Window:New({
     Title   = Debug.Title,
     Module  = Debug.Module,
     Visible = {false},
+    Show_Title = true,
 })
 
 Debug.Modes = T{

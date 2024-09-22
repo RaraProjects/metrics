@@ -10,6 +10,7 @@ Blog.Config.Defaults = T{
     WS        = true,
     SC        = true,
     Magic     = true,
+    BRD_Buff  = false,
     Enfeeble  = true,
     Ability   = true,
     Pet_TP    = true,
@@ -67,9 +68,9 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Display = function()
     Blog.Config.General_Settings()
-    UI.Separator() Blog.Config.Column_Settings()
-    UI.Separator() Blog.Config.Length()
     UI.Separator() Blog.Config.Filters()
+    UI.Separator() Blog.Config.Length()
+    UI.Separator() Blog.Config.Column_Settings()
     UI.Separator() Blog.Config.Damage_Sliders()
 end
 
@@ -80,7 +81,7 @@ Blog.Config.General_Settings = function()
     local col_flags = Column.Flags.None
     local width = Column.Widths.Settings
 
-    UI.Text("General Settings")
+    UI.Text("Additional Columns")
     if UI.BeginTable("Battle Log", 3) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
@@ -104,8 +105,21 @@ Blog.Config.Column_Settings = function()
     local col_flags = Column.Flags.None
     local width = Column.Widths.Settings
 
-    UI.Text("Which actions should populate the battle log?")
-    if UI.BeginTable("Battle Log", 3) then
+    UI.Text("General")
+    if UI.BeginTable("Battle Log - General", 3) then
+        UI.TableSetupColumn("Col 1", col_flags, width)
+        UI.TableSetupColumn("Col 2", col_flags, width)
+        UI.TableSetupColumn("Col 3", col_flags, width)
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Enfeeble", {Metrics.Blog.Enfeeble}) then
+            Metrics.Blog.Enfeeble = not Metrics.Blog.Enfeeble
+        end
+        UI.EndTable()
+    end
+
+    UI.Separator() UI.Text("Player")
+    if UI.BeginTable("Battle Log - Player", 3) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
@@ -122,7 +136,6 @@ Blog.Config.Column_Settings = function()
         if UI.Checkbox("Weaponskills", {Metrics.Blog.WS}) then
             Metrics.Blog.WS = not Metrics.Blog.WS
         end
-
         UI.TableNextColumn()
         if UI.Checkbox("Skillchains", {Metrics.Blog.SC}) then
             Metrics.Blog.SC = not Metrics.Blog.SC
@@ -132,58 +145,71 @@ Blog.Config.Column_Settings = function()
             Metrics.Blog.Magic = not Metrics.Blog.Magic
         end
         UI.TableNextColumn()
-        if UI.Checkbox("Enfeeble", {Metrics.Blog.Enfeeble}) then
-            Metrics.Blog.Enfeeble = not Metrics.Blog.Enfeeble
+        if UI.Checkbox("Healing", {Metrics.Blog.Healing}) then
+            Metrics.Blog.Healing = not Metrics.Blog.Healing
         end
-
+        UI.TableNextColumn()
+        if UI.Checkbox("Song Buffs", {Metrics.Blog.BRD_Buffs}) then
+            Metrics.Blog.BRD_Buffs = not Metrics.Blog.BRD_Buffs
+        end
         UI.TableNextColumn()
         if UI.Checkbox("Abilities", {Metrics.Blog.Ability}) then
             Metrics.Blog.Ability = not Metrics.Blog.Ability
         end
         UI.TableNextColumn()
-        if UI.Checkbox("Pet Melee", {Metrics.Blog.Pet_Melee}) then
+        if UI.Checkbox("Deaths", {Metrics.Blog.Deaths}) then
+            Metrics.Blog.Deaths = not Metrics.Blog.Deaths
+        end
+        UI.EndTable()
+    end
+
+    UI.Separator() UI.Text("Pets")
+    if UI.BeginTable("Battle Log - Pets", 3) then
+        UI.TableSetupColumn("Col 1", col_flags, width)
+        UI.TableSetupColumn("Col 2", col_flags, width)
+        UI.TableSetupColumn("Col 3", col_flags, width)
+
+        UI.TableNextColumn()
+        if UI.Checkbox("Melee", {Metrics.Blog.Pet_Melee}) then
             Metrics.Blog.Pet_Melee = not Metrics.Blog.Pet_Melee
         end
         UI.TableNextColumn()
-        if UI.Checkbox("Pet TP", {Metrics.Blog.Pet_TP}) then
+        if UI.Checkbox("TP/Abilities", {Metrics.Blog.Pet_TP}) then
             Metrics.Blog.Pet_TP = not Metrics.Blog.Pet_TP
         end
-
         UI.TableNextColumn()
-        if UI.Checkbox("Pet Healing", {Metrics.Blog.Pet_Heal}) then
+        if UI.Checkbox("Healing", {Metrics.Blog.Pet_Heal}) then
             Metrics.Blog.Pet_Heal = not Metrics.Blog.Pet_Heal
         end
         UI.TableNextColumn()
-        if UI.Checkbox("Pet Command", {Metrics.Blog.Pet_Command}) then
+        if UI.Checkbox("Commands", {Metrics.Blog.Pet_Command}) then
             Metrics.Blog.Pet_Command = not Metrics.Blog.Pet_Command
         end
-        UI.TableNextColumn()
-        if UI.Checkbox("Healing", {Metrics.Blog.Healing}) then
-            Metrics.Blog.Healing = not Metrics.Blog.Healing
-        end
+        UI.EndTable()
+    end
+
+    UI.Separator() UI.Text("Mobs")
+    if UI.BeginTable("Battle Log - Mobs", 3) then
+        UI.TableSetupColumn("Col 1", col_flags, width)
+        UI.TableSetupColumn("Col 2", col_flags, width)
+        UI.TableSetupColumn("Col 3", col_flags, width)
 
         UI.TableNextColumn()
-        if UI.Checkbox("Player Deaths", {Metrics.Blog.Deaths}) then
-            Metrics.Blog.Deaths = not Metrics.Blog.Deaths
-        end
-        UI.TableNextColumn()
-        if UI.Checkbox("Mob Melee", {Metrics.Blog.Mob_Melee}) then
+        if UI.Checkbox("Melee", {Metrics.Blog.Mob_Melee}) then
             Metrics.Blog.Mob_Melee = not Metrics.Blog.Mob_Melee
         end
         UI.TableNextColumn()
-        if UI.Checkbox("Mob TP", {Metrics.Blog.Mob_TP}) then
+        if UI.Checkbox("TP/Abilities", {Metrics.Blog.Mob_TP}) then
             Metrics.Blog.Mob_TP = not Metrics.Blog.Mob_TP
         end
-
         UI.TableNextColumn()
-        if UI.Checkbox("Mob Spell", {Metrics.Blog.Mob_Spell}) then
+        if UI.Checkbox("Spells", {Metrics.Blog.Mob_Spell}) then
             Metrics.Blog.Mob_Spell = not Metrics.Blog.Mob_Spell
         end
         UI.TableNextColumn()
-        if UI.Checkbox("Mob Deaths", {Metrics.Blog.Mob_Death}) then
+        if UI.Checkbox("Deaths", {Metrics.Blog.Mob_Death}) then
             Metrics.Blog.Mob_Death = not Metrics.Blog.Mob_Death
         end
-
         UI.EndTable()
     end
 end
@@ -193,8 +219,15 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Filters = function()
     UI.Text("Log Filters")
-    Blog.Widgets.Player_Filter()
-    Blog.Widgets.Action_Filter_Input()
+    if UI.BeginTable("Battle Log - Filters", 2) then
+        UI.TableSetupColumn("Col 1")
+        UI.TableSetupColumn("Col 2")
+
+        UI.TableNextColumn() Blog.Widgets.Player_Filter()
+        UI.TableNextColumn() Blog.Widgets.Action_Filter_Input()
+
+        UI.EndTable()
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -204,14 +237,13 @@ Blog.Config.Damage_Sliders = function()
     local col_flags = Column.Flags.None
     local width = 220
 
-    UI.Text("Use Ctrl+Click on the component to set the number directly." )
-    if UI.BeginTable("Battle Log", 2) then
+    UI.Text("Damage Threshold Highlighting")
+    if UI.BeginTable("Battle Log - Thresholds", 2) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
 
         UI.TableNextColumn() Blog.Widgets.WS_Threshold()
         UI.TableNextColumn() Blog.Widgets.Magic_Threshold()
-        UI.TableNextColumn()
 
         UI.EndTable()
     end
@@ -221,6 +253,7 @@ end
 -- Shows blog length settings that affect the Battle Log screen.
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Length = function()
+    UI.Text("Battle Log Length")
     if UI.Button("Default") then
         Metrics.Blog.Visible_Length = Blog.Settings.Visible_Length
     end
@@ -228,7 +261,7 @@ Blog.Config.Length = function()
 
     local length = {[1] = Metrics.Blog.Visible_Length}
     UI.SetNextItemWidth(50)
-    if UI.DragInt("Length", length, 0.1, Blog.Settings.Visible_Length, 50, "%d", ImGuiSliderFlags_None) then
+    if UI.DragInt("Lines", length, 0.1, Blog.Settings.Visible_Length, 50, "%d", ImGuiSliderFlags_None) then
         Metrics.Blog.Visible_Length = length[1]
         local last_page = Blog.Max_Page()
         if Blog.Page > last_page then Blog.Page = last_page end
