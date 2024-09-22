@@ -141,7 +141,7 @@ Blog.Config.Column_Settings = function()
             Metrics.Blog.SC = not Metrics.Blog.SC
         end
         UI.TableNextColumn()
-        if UI.Checkbox("Magic", {Metrics.Blog.Magic}) then
+        if UI.Checkbox("Nukes", {Metrics.Blog.Magic}) then
             Metrics.Blog.Magic = not Metrics.Blog.Magic
         end
         UI.TableNextColumn()

@@ -662,8 +662,8 @@ Focus.Overview.Buffs = function(player_name, buff_list, hide_mp)
         for _, buff_name in ipairs(buff_list) do
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(buff_name)
-            UI.TableNextColumn() Column.Single.Attempts(player_name, buff_name, DB.Enum.Trackable.MAGIC)
-            if not hide_mp then UI.TableNextColumn() Column.Single.MP_Used(player_name, buff_name, DB.Enum.Trackable.MAGIC) end
+            UI.TableNextColumn() Column.Single.Attempts(player_name, buff_name, DB.Enum.Trackable.BUFF_SPELL)
+            if not hide_mp then UI.TableNextColumn() Column.Single.MP_Used(player_name, buff_name, DB.Enum.Trackable.BUFF_SPELL) end
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end

@@ -49,6 +49,8 @@ ashita.events.register('command', 'command_cb', function (e)
             Parse.Util.Calculate_Column_Flags()
         elseif arg == "throttle" then
             Throttle.Toggle()
+        elseif arg == "lurk" then
+            Metrics.Parse.Lurk_Mode = not Metrics.Parse.Lurk_Mode
 
         -- XP
         elseif arg == "xp" and sub_command then
