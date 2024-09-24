@@ -184,8 +184,8 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
             Timers.Unpause(Timers.Enum.Names.PARSE)
 
-        -- DEFENSE: The target is an affiliate or the pet of an affiliate.
-        elseif target_owner_mob or Ashita.Party.Is_Affiliate(target_mob.name) then
+        -- DEFENSE: The actor is not another player and the target is an affiliate or the pet of an affiliate.
+        elseif not Ashita.Mob.Is_Player(actor_mob) and (target_owner_mob or Ashita.Party.Is_Affiliate(target_mob.name)) then
             log_defense = true
             Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
             Timers.Unpause(Timers.Enum.Names.PARSE)

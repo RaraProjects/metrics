@@ -90,6 +90,7 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
     if Res.Spells.Get_Debuff_Removal(spell_id) then is_mapped = true end
     if Res.Spells.Get_Buff(spell_id) then is_mapped = true end
     if Res.Spells.Get_Buff_Song(spell_id) then is_mapped = true end
+    if Res.Spells.Get_Avatar(spell_id) then is_mapped = true end
 
     if not is_mapped then
         Debug.Error.Add("Spell.Parse: {" .. tostring(actor_mob.name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
