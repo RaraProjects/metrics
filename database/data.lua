@@ -15,6 +15,10 @@ DB.Data.Init = function(index, player_name)
 		Debug.Error.Add("Data.Init: {" .. tostring(player_name) .. "} nil index passed in." )
 		return false
 	end
+	if not player_name or player_name == "" then
+		Debug.Error.Add("Data.Init: Player name {" .. tostring(player_name) .. "}." )
+		return false
+	end
 
 	-- Check to see if the nodes have already been initialized for the player and the pet.
 	if DB.Parse[index] then return false end
