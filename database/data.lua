@@ -12,11 +12,11 @@ DB.Data = T{}
 ------------------------------------------------------------------------------------------------------
 DB.Data.Init = function(index, player_name)
 	if not index then
-		Debug.Error.Add("Data.Init: {" .. tostring(player_name) .. "} nil index passed in." )
+		Debug.Error.Add("Data.Init: Player name {" .. tostring(player_name) .. "} has nil index passed in.")
 		return false
 	end
 	if not player_name or player_name == "" then
-		Debug.Error.Add("Data.Init: Player name {" .. tostring(player_name) .. "}." )
+		Debug.Error.Add("Data.Init: Index {" .. tostring(index) .. "} has nil or blank player name." )
 		return false
 	end
 
@@ -119,9 +119,15 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Set = function(value, index, trackable, metric)
 	if not value or not index or not trackable or not metric then
-		Debug.Error.Add("Set.Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Data.Set: Index {" .. tostring(index) .. "}; Trackable {" .. tostring(trackable) .. "}; "
+		            .. "Metric {" .. tostring(metric) .. "} nil required parameter passed in.")
 		return false
 	end
+	if not DB.Parse or not DB.Parse[index] then
+		Debug.Error.Add("Data.Set: Index {" .. tostring(index) .. "} is not initialized.")
+		return false
+	end
+
 	DB.Parse[index][trackable][metric] = value
 	return true
 end
@@ -137,9 +143,15 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Inc = function(value, index, trackable, metric)
 	if not value or not index or not trackable or not metric then
-		Debug.Error.Add("Inc.Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Data.Set: Index {" .. tostring(index) .. "}; Trackable {" .. tostring(trackable) .. "}; "
+		            .. "Metric {" .. tostring(metric) .. "} nil required parameter passed in.")
 		return false
 	end
+	if not DB.Parse or not DB.Parse[index] or not DB.Parse[index][trackable] or not DB.Parse[index][trackable][metric] then
+		Debug.Error.Add("Data.Inc: DB.Parse uninitialized {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} {" .. tostring(metric) .. "}." )
+		return false
+	end
+
 	DB.Parse[index][trackable][metric] = DB.Parse[index][trackable][metric] + value
 	return true
 end
@@ -155,7 +167,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Get = function(player_name, trackable, metric)
 	if not player_name or not trackable or not metric then
-		Debug.Error.Add("Get.Data: Nil player name. " .. tostring(trackable) .. " " .. tostring(metric))
+		Debug.Error.Add("Get.Data: Nil player name. Trackable {" .. tostring(trackable) .. "}; Metric {" .. tostring(metric) .. "}.")
 		return 0
 	end
 
@@ -202,12 +214,13 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Build_Index = function(actor_name, target_name)
 	if not target_name then
-		Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil target name passed in.")
+		Debug.Error.Add("Util.Build_Index: Actor {" .. tostring(actor_name) .. "}; Target {" .. tostring(target_name) .. "} nil target name passed in.")
 		target_name = DB.Enum.Values.DEBUG
 	end
 	if not actor_name then
-		Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil actor name passed in.")
+		Debug.Error.Add("Util.Build_Index: Actor {" .. tostring(actor_name) .. "}; Target {" .. tostring(target_name) .. "} nil actor name passed in.")
 		return DB.Enum.Values.DEBUG
 	end
+
 	return actor_name..":"..target_name
 end
