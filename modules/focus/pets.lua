@@ -15,7 +15,7 @@ Focus.Pets.Display = function(player_name)
 
     local row = 1
     if UI.BeginTable("Pets Melee", 4, table_flags) then
-        UI.TableSetupColumn("Damage Type", col_flags, name_width)
+        UI.TableSetupColumn("Offense Type", col_flags, name_width)
         UI.TableSetupColumn("Damage", col_flags, width)
         UI.TableSetupColumn("%Player", col_flags, width)
         UI.TableSetupColumn("Accuracy", col_flags, width)
@@ -91,6 +91,8 @@ Focus.Pets.Display = function(player_name)
         UI.EndTable()
     end
 
+    Focus.Pets.Damage_Taken(player_name)
+
     if pet_total > 0 then
         if DB.Tracking.Initialized_Pets[player_name] then
             if UI.BeginTabBar("Pet Tabs", Window_Manager.Tabs.Flags) then
@@ -103,6 +105,47 @@ Focus.Pets.Display = function(player_name)
                 UI.EndTabBar()
             end
         end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows damage taken breakdown.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Pets.Damage_Taken = function(player_name)
+    local col_flags = Column.Flags.None
+    local table_flags = Window_Manager.Table.Flags.Fixed_Borders
+    local name_width = Column.Widths.Name
+    local width = Column.Widths.Standard
+
+    local row = 1
+    if UI.BeginTable("Pet Damage Taken", 2, table_flags) then
+        UI.TableSetupColumn("Damage Taken", col_flags, name_width)
+        UI.TableSetupColumn("Pet HP-", col_flags, width)
+        UI.TableHeadersRow()
+
+        UI.TableNextColumn() UI.Text("Total")
+        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
+
+        UI.TableNextColumn() UI.Text("Melee")
+        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_PET_DMG_TAKEN)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
+
+        UI.TableNextColumn() UI.Text("Magic")
+        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_PET_DMG_TAKEN)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
+
+        UI.TableNextColumn() UI.Text("Mob TP")
+        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.PET_TP_DMG_TAKEN)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
+
+        UI.EndTable()
     end
 end
 

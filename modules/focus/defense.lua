@@ -28,18 +28,24 @@ Focus.Defense.Damage_Taken = function(player_name)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
+    local columns = 4
+    local pet_dt = DB.Data.Get(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET, DB.Enum.Metric.TOTAL)
+    if pet_dt > 0 then columns = 5 end
+
     local row = 1
-    if UI.BeginTable("Damage Taken", 4, table_flags) then
+    if UI.BeginTable("Damage Taken", columns, table_flags) then
         UI.TableSetupColumn("Damage Taken", col_flags, name_width)
         UI.TableSetupColumn("HP-", col_flags, width)
         UI.TableSetupColumn("%Player", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
+        if pet_dt then UI.TableSetupColumn("Pet HP-", col_flags, width) end
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL, true)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        if pet_dt then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET) end
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -47,6 +53,7 @@ Focus.Defense.Damage_Taken = function(player_name)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.DEF_UNMITIGATED)
+        if pet_dt then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_PET_DMG_TAKEN) end
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -54,6 +61,7 @@ Focus.Defense.Damage_Taken = function(player_name)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
+        if pet_dt then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_PET_DMG_TAKEN) end
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -61,6 +69,7 @@ Focus.Defense.Damage_Taken = function(player_name)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
+        if pet_dt then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.PET_TP_DMG_TAKEN) end
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -95,17 +104,6 @@ Focus.Defense.Other_Damage = function(player_name)
         UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_CRIT)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
-
-        local pet = DB.Data.Get(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET, DB.Enum.Metric.TOTAL)
-        if pet > 0 then
-            UI.TableNextColumn() UI.Text("Pet")
-            UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET)
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
 
         local counter = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_COUNTERED, DB.Enum.Metric.TOTAL)
         if counter > 0 then

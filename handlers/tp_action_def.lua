@@ -27,7 +27,8 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if target_mob and (Ashita.Party.Is_Affiliate(target_mob.name) or Metrics.Parse.Lurk_Mode) then
+            if target_mob and (Ashita.Party.Is_Affiliate(target_mob.name) or Ashita.Mob.Pet_Owner(target_mob) or Metrics.Parse.Lurk_Mode) then
+                if Ashita.Mob.Is_Monster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
                 owner_mob = Ashita.Mob.Pet_Owner(target_mob)
                 count = count + 1
                 damage = damage + H.TP_Def.Weaponskill_Parse(result, actor_mob, target_mob, skill_name, action_id, owner_mob)
@@ -77,7 +78,13 @@ H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws
     -- Some weaponskills drain MP instead of doing damage.
     audits = H.TP.MP_Drain(audits, ws_id)
 
-    if not owner_mob then DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, H.Metric.TOTAL) end
+    -- Totals need to be updated manually here because Update_Damage isn't set up for defense metrics totals.
+    if owner_mob then
+        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DMG_TAKEN_TOTAL_PET, H.Metric.TOTAL)
+    else
+        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, H.Metric.TOTAL)
+    end
+
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, audits.trackable, damage, ws_name, audits.pet_name)
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, audits.trackable, ws_name, H.Metric.COUNT)
     if damage > 0 then

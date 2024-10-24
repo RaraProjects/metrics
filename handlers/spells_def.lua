@@ -23,8 +23,9 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if target_mob and (Ashita.Party.Is_Affiliate(target_mob.name) or Metrics.Parse.Lurk_Mode) then
+            if target_mob and (Ashita.Party.Is_Affiliate(target_mob.name) or Ashita.Mob.Pet_Owner(target_mob) or Metrics.Parse.Lurk_Mode) then
                 if Ashita.Mob.Is_Monster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
+                owner_mob = Ashita.Mob.Pet_Owner(target_mob)
                 new_damage = H.Spell_Def.Parse(spell_data, result, actor_mob, target_mob, owner_mob)
                 if not new_damage then new_damage = 0 end
                 target_count = target_count + 1
@@ -34,6 +35,20 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
     end
 
     if Res.Spells.Get_Damaging(spell_id) then H.Spell_Def.Blog(actor_mob, spell_id, spell_data, spell_name, damage, target_count) end
+
+    -- Do the count here to not over count ga-spells.
+    local audits = H.Spell_Def.Audits(actor_mob, target_mob, owner_mob)
+    if Res.Spells.Get_Damaging(spell_id) then
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.HIT_COUNT)
+    else
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.HIT_COUNT)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -77,19 +92,6 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
 
     if not is_mapped then
         Debug.Error.Add("Spell_Def.Parse: {" .. tostring(actor_mob.name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
-    end
-
-    -- Do the count here to capture ga-spells.
-    if Res.Spells.Get_Damaging(spell_id) then
-        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, H.Metric.COUNT)
-        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, H.Metric.HIT_COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.HIT_COUNT)
-    else
-        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, H.Metric.COUNT)
-        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, H.Metric.HIT_COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.HIT_COUNT)
     end
 
     return damage
