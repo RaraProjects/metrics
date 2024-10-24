@@ -154,7 +154,18 @@ end
 -- This table contains the total amount of damage that each recognized player's pet has done.
 -- Capable of filtering out skillchain damage.
 ------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
 DB.Lists.Populate.Pet_Damage = function(player_name)
+	if not player_name then
+		Debug.Error.Add("Populate.Pet_Damage: player_name is nil.")
+		return nil
+	end
+	if not DB or not DB.Tracking or not DB.Tracking.Initialized_Pets or not DB.Tracking.Initialized_Pets[player_name] then
+		Debug.Error.Add("Populate.Pet_Damage: Initialized_Pets is nil for player {" .. tostring(player_name) .. "}.")
+		return nil
+	end
+
 	DB.Sorted.Pet_Damage = T{}
 	local damage = 0
 	for pet_name, _ in pairs(DB.Tracking.Initialized_Pets[player_name]) do
