@@ -142,9 +142,6 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
         end
     end
 
-    -- Set a flag to make this section show up in the Focus menu.
-    DB.Data.Update(H.Mode.INC, 1, audits, ability_type, H.Metric.COUNT)
-
     return damage
 end
 
@@ -250,7 +247,8 @@ H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data)
 
     -- Overall ability tracking.
     local trackable = H.Trackable.ABILITY
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, ability_data.Name, H.Metric.COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ABILITY, ability_data.Name, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.ABILITY, H.Metric.COUNT)
 
     -- Some abilities need to also have counts to tag them for pickup by listing functions.
     if Res.Abilities.Get_Damaging(ability_data.Id) then
@@ -267,6 +265,7 @@ H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data)
         trackable = H.Trackable.ABILITY_GENERAL
     end
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, ability_data.Name, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -333,6 +332,7 @@ end
 H.Ability.Pet_Count = function(actor_mob, owner_mob, target_mob, ability_data, trackable, damage)
     local audits = H.Ability.Audits(owner_mob.name, target_mob.name, actor_mob.name)
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, ability_data.Name, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
     if damage > 0 then
         DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
     end
@@ -401,6 +401,7 @@ H.Ability.Catalog = function(audits, damage, ability_type, ability_name)
     if damage > 0 then
         DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, ability_type, H.Metric.HIT_COUNT)
     end
 end
 

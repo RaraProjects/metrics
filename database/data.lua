@@ -48,6 +48,11 @@ DB.Data.Init = function(index, player_name)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.SC, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_WS, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MP_DRAIN, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ABILITY_HEALING, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ABILITY_MP_RECOVERY, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_ABILITY, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_HEAL, DB.Enum.Metric.MIN)
 
 	-- Initialize tracking tables.
 	DB.Data.Init_Player(player_name)

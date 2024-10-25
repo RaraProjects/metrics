@@ -136,6 +136,7 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Crit())
     -- Endamage
     -- Endebuff
+
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Square())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Truestrike())
@@ -145,6 +146,7 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Shadows())
     -- Endamage
     -- Endebuff
+
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Energy_Steal())
@@ -153,6 +155,19 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Miss_Single())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit_AOE())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_No_Damage_Debuff())
+
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Hit_TP())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Miss_TP())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Healing())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.MP())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.No_Damage())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Avatar_Rage())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Avatar_Ward())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Avatar_Healing())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Damage())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Healing())
     Debug.Unit.Active = false
 end
 
