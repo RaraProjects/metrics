@@ -55,6 +55,7 @@ Debug.Unit.Mob.ENEMY = {
 -- Healing
 -- Curaga
 
+
 ------------------------------------------------------------------------------------------------------
 -- Poulates the Unit Test Window.
 ------------------------------------------------------------------------------------------------------
@@ -81,6 +82,15 @@ Debug.Unit.Populate = function()
         end
 
         UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Short circuits Ashita.Mob.Data so that I can create a pet for unit tests.
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Get_Pet = function(mob_id)
+    if Debug.Enabled and Debug.Unit.Active and Debug.Unit.Has_Pet then
+        if mob_id == 2 then return Debug.Unit.Mob.PET end
     end
 end
 
@@ -169,13 +179,14 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Guard())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shield())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Crit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Spell())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Pet_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_AOE())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_AOE())
-    -- Pet Melee Hit
-    -- Pet Spell
-    -- Pet Spell AOE
+
     -- Pet TP Move
     -- Pet TP Move AOE
 
@@ -408,9 +419,6 @@ Debug.Unit.Check_Result = function(test_name, player_database, pet_database)
             end
         end
     end
-
-    -- DB.Pet_Parse[index][pet_name][trackable][metric] = value
-    -- DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric] = value
 
     local result = "Pass!"
     local color  = Res.Colors.Basic.GREEN

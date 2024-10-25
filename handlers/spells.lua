@@ -395,7 +395,6 @@ H.Spell.Enfeebling = function(audits, spell_name, message_id, damage)
 
     -- No Effect. Pretend this never occurred. No hit numerator and undo the count increment.
     if message_id == Ashita.Enum.Message.NO_EFFECT or message_id == Ashita.Enum.Message.EFFECT_FAIL or message_id == Ashita.Enum.Message.COMP_RESIST then
-        DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, trackable, spell_name, H.Metric.COUNT)
         damage = -1
     -- Resists
     elseif message_id == Ashita.Enum.Message.RESIST or message_id == Ashita.Enum.Message.RESIST_2 then

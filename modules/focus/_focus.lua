@@ -130,7 +130,7 @@ Focus.Content = function()
             UI.EndTabItem()
         end
 
-        if DB.Data.Get(player_name, DB.Enum.Trackable.PET, DB.Enum.Metric.TOTAL) > 0 then
+        if DB.Data.Get(player_name, DB.Enum.Trackable.PET, DB.Enum.Metric.TOTAL) > 0 or DB.Data.Get(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET, DB.Enum.Metric.TOTAL) > 0 then
             if UI.BeginTabItem(Focus.Tabs.Names.PETS, false, Focus.Tabs.Switch[Focus.Tabs.Names.PETS]) then
                 Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = nil
                 Focus.Pets.Display(player_name)

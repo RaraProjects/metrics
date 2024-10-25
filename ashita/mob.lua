@@ -56,6 +56,10 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.Data = function(id, convert_id)
+    -- Unit testing short circuit for creating pets.
+    local unit_testing_pet = Debug.Unit.Get_Pet(id)
+    if unit_testing_pet then return unit_testing_pet end
+
     local index = id
     if convert_id then
         index = Ashita.Mob.Index_By_ID(id)

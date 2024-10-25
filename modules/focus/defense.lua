@@ -38,14 +38,14 @@ Focus.Defense.Damage_Taken = function(player_name)
         UI.TableSetupColumn("HP-", col_flags, width)
         UI.TableSetupColumn("%Player", col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
-        if pet_dt then UI.TableSetupColumn("Pet HP-", col_flags, width) end
+        if pet_dt > 0 then UI.TableSetupColumn("Pet HP-", col_flags, width) end
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL, true)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        if pet_dt then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET) end
+        if pet_dt > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET) end
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -53,7 +53,7 @@ Focus.Defense.Damage_Taken = function(player_name)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.DEF_UNMITIGATED)
-        if pet_dt then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_PET_DMG_TAKEN) end
+        if pet_dt > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_PET_DMG_TAKEN) end
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -61,7 +61,7 @@ Focus.Defense.Damage_Taken = function(player_name)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN)
-        if pet_dt then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_PET_DMG_TAKEN) end
+        if pet_dt > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_PET_DMG_TAKEN) end
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -69,7 +69,7 @@ Focus.Defense.Damage_Taken = function(player_name)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN, true)
         UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN)
-        if pet_dt then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.PET_TP_DMG_TAKEN) end
+        if pet_dt > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.PET_TP_DMG_TAKEN) end
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 

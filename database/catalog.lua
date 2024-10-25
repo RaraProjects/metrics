@@ -65,8 +65,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, action_name, pet_name, burst)
     if player_name == "" or mob_name == "" or pet_name == "" then
-		Debug.Error.Add("Catalog.Update_Damage: Empty name: " .. tostring(player_name) .. " " .. tostring(mob_name)
-		.. " " .. tostring(pet_name) .. " " .. tostring(trackable) .. " " .. tostring(action_name))
+		Debug.Error.Add("Catalog.Update_Damage: Empty name: {}" .. tostring(player_name) .. "} {" .. tostring(mob_name)
+		.. "} {" .. tostring(pet_name) .. "} {" .. tostring(trackable) .. "} {" .. tostring(action_name) .. "} {" .. tostring(damage) .. "}")
 		return nil
 	end
 
@@ -145,8 +145,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Update_Metric = function(mode, value, audits, trackable, action_name, metric)
 	if audits.player_name == "" or audits.target_name == "" then
-		Debug.Error.Add("Catalog.Update_Metric: Empty name: " .. tostring(audits.player_name) .. " " .. tostring(audits.target_name)
-		.. " " .. tostring(trackable) .. " " .. tostring(metric))
+		Debug.Error.Add("Catalog.Update_Metric: Empty name: Player {" .. tostring(audits.player_name) .. "} Target {" .. tostring(audits.target_name)
+		.. "} Trackable {" .. tostring(trackable) .. "} Metric {" .. tostring(metric) .. "}")
 		return false
 	end
 
@@ -156,7 +156,8 @@ DB.Catalog.Update_Metric = function(mode, value, audits, trackable, action_name,
 	local index = DB.Data.Build_Index(player_name, target_name)
 
 	if not trackable or not player_name or not action_name then
-		Debug.Error.Add("Update.Catalog_Metric: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Catalog.Update_Metric: Player {" .. tostring(player_name) .. "} Pet {" .. tostring(pet_name) .. "} Action {" .. tostring(action_name)
+		.. "} nil required parameter passed in." )
 		return false
 	end
 	DB.Catalog.Init(index, player_name, trackable, action_name, pet_name)

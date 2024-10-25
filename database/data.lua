@@ -57,7 +57,9 @@ DB.Data.Init = function(index, player_name)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_NUKE, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.HEALING, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_DMG_TAKEN, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_PET_DMG_TAKEN, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.SPELL_DMG_TAKEN, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.SPELL_PET_DMG_TAKEN, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.TP_DMG_TAKEN, DB.Enum.Metric.MIN)
 
 	-- Initialize tracking tables.
@@ -237,8 +239,8 @@ DB.Data.Build_Index = function(actor_name, target_name)
 	end
 	if not actor_name then
 		Debug.Error.Add("Util.Build_Index: Actor {" .. tostring(actor_name) .. "}; Target {" .. tostring(target_name) .. "} nil actor name passed in.")
-		return DB.Enum.Values.DEBUG
+		actor_name = DB.Enum.Values.DEBUG
 	end
 
-	return actor_name..":"..target_name
+	return actor_name .. ":" .. target_name
 end

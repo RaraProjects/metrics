@@ -29,7 +29,7 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if target_mob and (Ashita.Party.Is_Affiliate(target_mob.name) or Ashita.Mob.Pet_Owner(target_mob) or Metrics.Parse.Lurk_Mode) then
                 if Ashita.Mob.Is_Monster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
-                owner_mob = Ashita.Mob.Pet_Owner(target_mob)
+                owner_mob = Ashita.Mob.Pet_Owner(target_mob)    -- Need to recheck for AOEs.
                 count = count + 1
                 damage = damage + H.TP_Def.Weaponskill_Parse(result, actor_mob, target_mob, skill_name, action_id, owner_mob)
             end
