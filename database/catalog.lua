@@ -92,6 +92,7 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
     DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Enum.Metric.TOTAL)
 	if burst then
 		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.MAGIC, DB.Enum.Metric.BURST_DAMAGE)
+		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Enum.Metric.BURST_DAMAGE)
 	end
 
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
@@ -112,7 +113,7 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
     -- CATALOG TOTAL, MIN, and MAX ////////////////////////////////////////////////////////////////
 	-- COUNT gets incremented in the packet handler.
     DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Enum.Metric.TOTAL)
-	if trackable == DB.Enum.Trackable.MAGIC and burst then
+	if trackable == DB.Enum.Trackable.NUKE and burst then
 		DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Enum.Metric.BURST_DAMAGE)
 	end
 

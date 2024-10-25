@@ -212,7 +212,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         elseif (action.category ==  2) then H.Ranged.Action(action, actor_mob, log_offense)
         elseif (action.category ==  3) then H.TP.Action(action, actor_mob, log_offense)
         elseif (action.category ==  4) then
-            if log_offense then H.Spell.Action(action, actor_mob, log_offense)
+            if log_offense then H.Spell.Action(action, actor_mob, owner_mob, log_offense)
             elseif log_defense then H.Spell_Def.Action(action, actor_mob, target_owner_mob, log_defense) end
         elseif (action.category ==  5) then H.Item.Action(action, actor_mob)
         elseif (action.category ==  6) then H.Ability.Action(action, actor_mob, log_offense)

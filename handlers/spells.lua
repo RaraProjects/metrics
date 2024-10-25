@@ -5,9 +5,10 @@ H.Spell = {}
 ------------------------------------------------------------------------------------------------------
 ---@param action table action packet data.
 ---@param actor_mob table the mob data of the entity performing the action.
+---@param owner_mob table|nil (if pet) the mob data of the entity's owner.
 ---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-H.Spell.Action = function(action, actor_mob, log_offense)
+H.Spell.Action = function(action, actor_mob, owner_mob, log_offense)
     if not log_offense then return nil end
 
     local result, target_mob, new_damage
@@ -20,7 +21,6 @@ H.Spell.Action = function(action, actor_mob, log_offense)
     local spell_name = Ashita.Spell.Name(spell_id, spell_data)
     local mp_cost = Ashita.Spell.MP(spell_id, spell_data)
     local is_burst = false
-    local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)    -- Check if pet is casting the spell.
 
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
@@ -50,7 +50,7 @@ end
 ---@param result table contains all the information for the action
 ---@param actor_mob table
 ---@param target_mob table
----@param owner_mob table
+---@param owner_mob? table
 ---@param burst boolean true if this cast was a magic burst.
 ---@return number
 ------------------------------------------------------------------------------------------------------
@@ -202,10 +202,12 @@ end
 H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst, target_count)
     local trackable = H.Trackable.MAGIC
     local is_pet = false
+
     if audits.pet_name then
         trackable = H.Trackable.PET_MAGIC
         is_pet = true
     end
+
     -- Overall Mana Tracking
     DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
 
@@ -252,10 +254,6 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst, target
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
-        if is_burst then
-            DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.BURST_COUNT)
-            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.BURST_COUNT)
-        end
 
     elseif Res.Spells.Get_Enfeeble(spell_id) then
         if is_pet then trackable = H.Trackable.PET_ENFEEBLING else trackable = H.Trackable.ENFEEBLE end
@@ -279,8 +277,10 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst, target
 
     elseif Res.Spells.Get_MP_Drain(spell_id) then
         trackable = H.Trackable.MP_DRAIN
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
 
     elseif Res.Spells.Get_Buff_Song(spell_id) then
         trackable = H.Trackable.BUFF_SONG
@@ -292,6 +292,13 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst, target
         DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+    end
+
+    -- Burst Tracking
+    if is_burst then
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MAGIC, H.Metric.BURST_COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.BURST_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.BURST_COUNT)
     end
 end
 
@@ -364,6 +371,10 @@ end
 H.Spell.MP_Drain = function(audits, spell_name, damage, burst)
     local trackable = H.Trackable.MP_DRAIN
     if audits.pet_name then trackable = H.Trackable.PET_MP_DRAIN end
+    if damage > 0 then
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+    end
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, nil, burst)
 end
 

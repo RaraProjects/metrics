@@ -81,31 +81,6 @@ Debug.Unit.Populate = function()
 
         UI.EndTable()
     end
-    --     -- TP Action
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Shield_Bash()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Jump_100()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Jump_200()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Jump_Miss()
-    --     --
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Avatar_Rage()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Avatar_Ward()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Avatar_Healing_Ward()
-    --     --
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Holy_Circle()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Hit()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Burst()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Cure_100()
-    --     ---
-    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Cure_200()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Holy()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.DoT_0()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.DoT_1()
-    --     ---
-    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Aspir()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Ga_Spell()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Curaga()
-    --     UI.EndTable()
-    -- end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -168,6 +143,22 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Avatar_Healing())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Damage())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Healing())
+
+    -- Spell AOEs fail on the non-cataloged minimum likely because of throttling and unit tests AOE'ing on the same target.
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke_Burst())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke_AOE())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Pet_Nuke())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Healing())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Healing_AOE())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Pet_Heal())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.DoT_No_Damage())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.DoT_Damage())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Aspir())
+    -- Enfeebling
+    -- BRD Songs
+    -- Status Removal
+
     Debug.Unit.Active = false
 end
 
