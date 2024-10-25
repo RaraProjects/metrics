@@ -6,6 +6,7 @@ Debug.Unit.Tests = {}
 Debug.Unit.Results = T{}
 Debug.Unit.Mob = {}
 Debug.Unit.Active = false
+Debug.Unit.Has_Pet = false
 
 Debug.Unit.Mob.Target_ID = 17254144
 
@@ -126,10 +127,10 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Energy_Steal())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Skillchain())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit_Single())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Miss_Single())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit_AOE())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_No_Damage_Debuff())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_No_Damage())
 
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Miss())
@@ -144,7 +145,7 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Damage())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Healing())
 
-    -- Spell AOEs fail on the non-cataloged minimum likely because of throttling and unit tests AOE'ing on the same target.
+    -- AOEs fail on the non-cataloged minimum likely because of throttling and unit tests AOE'ing on the same target.
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke_Burst())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke_AOE())
@@ -159,13 +160,32 @@ Debug.Unit.Run_Tests = function()
     -- BRD Songs
     -- Status Removal
 
+    -- AOEs fail on the non-cataloged minimum likely because of throttling and unit tests AOE'ing on the same target.
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Parry())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shadows())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Counter())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Guard())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shield())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Crit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Spell())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_AOE())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_AOE())
+    -- Pet Melee Hit
+    -- Pet Spell
+    -- Pet Spell AOE
+    -- Pet TP Move
+    -- Pet TP Move AOE
+
     Debug.Unit.Active = false
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Build the fake result table.
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_id, message_id, add_effect_param, add_effect_message, damage_two)
+Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_id, message_id, add_effect_param, add_effect_message, damage_two, spike_damage, spike_message, reaction_id)
     if not add_effect_param then add_effect_param = 0 end
 
     local action = {}
@@ -180,10 +200,14 @@ Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_
     local action_data = {}
     action_data.param = damage
     action_data.animation = animation_id
+    action_data.reaction = reaction_id
     action_data.message = message_id
     action_data.has_add_effect = add_effect_param or add_effect_message
     action_data.add_effect_param = add_effect_param
     action_data.add_effect_message = add_effect_message -- Skillchains
+    action_data.has_spike_effect = spike_damage or spike_message
+    action_data.spike_effect_param = spike_damage
+    action_data.spike_effect_message = spike_message
 
     if damage_two then
         target_data_two.id = target_id

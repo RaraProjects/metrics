@@ -224,6 +224,7 @@ H.Melee_Def.Guard = function(audits, damage, reaction_id)
     if reaction_id == Ashita.Enum.Reaction.GUARD then
         DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DEF_GUARD, H.Metric.TOTAL)
         DB.Data.Update(H.Mode.INC, 1,      audits, H.Trackable.DEF_GUARD, H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, 1,      audits, H.Trackable.MELEE_DMG_TAKEN, H.Metric.HIT_COUNT)
         guard = true
     end
     return guard
@@ -243,6 +244,7 @@ H.Melee_Def.Block = function(audits, damage, reaction_id)
     if reaction_id == Ashita.Enum.Reaction.SHIELD_BLOCK then
         DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DEF_BLOCK, H.Metric.TOTAL)
         DB.Data.Update(H.Mode.INC, 1,      audits, H.Trackable.DEF_BLOCK, H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, 1,      audits, H.Trackable.MELEE_DMG_TAKEN, H.Metric.HIT_COUNT)
         block = true
     end
     return block

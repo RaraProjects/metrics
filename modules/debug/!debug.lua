@@ -36,6 +36,7 @@ require("modules.debug.unit_tests.ranged")
 require("modules.debug.unit_tests.tp_action")
 require("modules.debug.unit_tests.abilities")
 require("modules.debug.unit_tests.spells")
+require("modules.debug.unit_tests.defense")
 
 ------------------------------------------------------------------------------------------------------
 -- Is debug mode enabled.
