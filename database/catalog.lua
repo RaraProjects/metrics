@@ -95,8 +95,14 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
 	end
 
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
-    if damage > 0 and damage < DB.Data.Get(player_name, trackable, DB.Enum.Metric.MIN) then
-		DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MIN)
+	if pet_name then
+		if damage > 0 and damage < DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Enum.Metric.MIN) then
+			DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MIN)
+		end
+	else
+		if damage > 0 and damage < DB.Data.Get(player_name, trackable, DB.Enum.Metric.MIN) then
+			DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MIN)
+		end
 	end
 
     if damage > DB.Data.Get(player_name, trackable, DB.Enum.Metric.MAX) then

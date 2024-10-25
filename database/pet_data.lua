@@ -30,6 +30,9 @@ DB.Pet_Data.Init = function(index, player_name, pet_name)
 		end
 	end
 
+	-- Need to set minimum high manually to capture accurate minimums.
+	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.PET_WS, DB.Enum.Metric.MIN)
+
 	-- Initialize pet tracking tables.
 	if player_name and not DB.Tracking.Initialized_Pets[player_name] then
 		DB.Tracking.Initialized_Pets[player_name] = {}

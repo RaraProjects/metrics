@@ -83,6 +83,7 @@ Debug.Content = function()
         UI.TableNextColumn() if UI.Button(Debug.Modes.JOB_COLORS) then Debug.Active_Mode = Debug.Modes.JOB_COLORS end
         UI.TableNextColumn() if UI.Button(Debug.Modes.UNIT_TESTS) then
             Debug.Active_Mode = Debug.Modes.UNIT_TESTS
+            Debug.Unit.Results = T{}
             Debug.Unit.Run_Tests()
         end
         UI.TableNextColumn() if UI.Button(Debug.Modes.DEMO) then Debug.Show_Demo = not Debug.Show_Demo end

@@ -320,7 +320,29 @@ Debug.Unit.Tests.Melee.Pet_Hit = function()
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Pet > Hit", player_database)
+    local pet_database = T{}
+    pet_database["Player:Debug"] = T{}
+    pet_database["Player:Debug"]["Pet Name"] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET][DB.Enum.Metric.TOTAL] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.TOTAL] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.MIN] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.MAX] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.TOTAL] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.MIN] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.MAX] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.TOTAL] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.TOTAL][DB.Enum.Metric.TOTAL] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage
+
+    return Debug.Unit.Check_Result("Melee - Pet > Hit", player_database, pet_database)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -341,7 +363,15 @@ Debug.Unit.Tests.Melee.Pet_Miss = function()
     player_database["Player:Debug"][DB.Enum.Trackable.PET_MELEE_DISCRETE] = T{}
     player_database["Player:Debug"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.COUNT] = 1
 
-    return Debug.Unit.Check_Result("Melee - Pet > Miss", player_database)
+    local pet_database = T{}
+    pet_database["Player:Debug"] = T{}
+    pet_database["Player:Debug"]["Pet Name"] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.COUNT] = 1
+
+    return Debug.Unit.Check_Result("Melee - Pet > Miss", player_database, pet_database)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -380,7 +410,33 @@ Debug.Unit.Tests.Melee.Pet_Crit = function()
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Pet > Crit", player_database)
+    local pet_database = T{}
+    pet_database["Player:Debug"] = T{}
+    pet_database["Player:Debug"]["Pet Name"] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET][DB.Enum.Metric.TOTAL] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.TOTAL] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.MIN] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.MAX] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.CRIT_DAMAGE] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.CRIT_COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.TOTAL] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.MIN] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.MAX] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.CRIT_DAMAGE] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.CRIT_COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.TOTAL] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.TOTAL][DB.Enum.Metric.TOTAL] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage
+
+    return Debug.Unit.Check_Result("Melee - Pet > Crit", player_database, pet_database)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -405,7 +461,19 @@ Debug.Unit.Tests.Melee.Pet_Shadows = function()
     player_database["Player:Debug"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.HIT_COUNT] = 1
     player_database["Player:Debug"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.SHADOWS] = 1
 
-    return Debug.Unit.Check_Result("Melee - Pet > Shadows", player_database)
+    local pet_database = T{}
+    pet_database["Player:Debug"] = T{}
+    pet_database["Player:Debug"]["Pet Name"] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.SHADOWS] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.SHADOWS] = 1
+
+    return Debug.Unit.Check_Result("Melee - Pet > Shadows", player_database, pet_database)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -430,7 +498,19 @@ Debug.Unit.Tests.Melee.Pet_Mob_Heal = function()
     player_database["Player:Debug"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.HIT_COUNT] = 1
     player_database["Player:Debug"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.MOB_HEAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Pet > Mob Heal", player_database)
+    local pet_database = T{}
+    pet_database["Player:Debug"] = T{}
+    pet_database["Player:Debug"]["Pet Name"] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE][DB.Enum.Metric.MOB_HEAL] = damage
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE] = T{}
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database["Player:Debug"]["Pet Name"][DB.Enum.Trackable.PET_MELEE_DISCRETE][DB.Enum.Metric.MOB_HEAL] = damage
+
+    return Debug.Unit.Check_Result("Melee - Pet > Mob Heal", player_database, pet_database)
 end
 
 ------------------------------------------------------------------------------------------------------

@@ -54,6 +54,7 @@ DB.Initialize = function(reset)
 	end
 
 	DB.Parse = T{}
+	DB.Pet_Parse = T{}
 
 	DB.Tracking.Trackable = T{}
 	DB.Tracking.Pet_Trackable = T{}

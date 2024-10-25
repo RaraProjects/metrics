@@ -1,7 +1,7 @@
 Debug.Unit.Tests.Ranged = {}
 
 ------------------------------------------------------------------------------------------------------
--- Melee - Ranged > Hit
+-- Ranged > Hit
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
@@ -28,11 +28,11 @@ Debug.Unit.Tests.Ranged.Hit = function()
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Ranged > Hit", player_database)
+    return Debug.Unit.Check_Result("Ranged > Hit", player_database)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Melee - Ranged > Square Hit
+-- Ranged > Square Hit
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
@@ -61,11 +61,11 @@ Debug.Unit.Tests.Ranged.Square = function()
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Ranged > Square Hit", player_database)
+    return Debug.Unit.Check_Result("Ranged > Square Hit", player_database)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Melee - Ranged > Square Hit
+-- Ranged > Square Hit
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
@@ -94,11 +94,11 @@ Debug.Unit.Tests.Ranged.Truestrike = function()
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Ranged > Truestrike", player_database)
+    return Debug.Unit.Check_Result("Ranged > Truestrike", player_database)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Melee - Ranged > Miss
+-- Ranged > Miss
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
@@ -116,11 +116,11 @@ Debug.Unit.Tests.Ranged.Miss = function()
     player_database["Player:Debug"][DB.Enum.Trackable.RANGED_TRUE] = T{}
     player_database["Player:Debug"][DB.Enum.Trackable.RANGED_TRUE][DB.Enum.Metric.COUNT] = 1
 
-    return Debug.Unit.Check_Result("Melee - Ranged > Miss", player_database)
+    return Debug.Unit.Check_Result("Ranged > Miss", player_database)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Melee - Ranged > Crit
+-- Ranged > Crit
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
@@ -149,11 +149,11 @@ Debug.Unit.Tests.Ranged.Crit = function()
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Ranged > Crit", player_database)
+    return Debug.Unit.Check_Result("Ranged > Crit", player_database)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Melee - Ranged > Shadows
+-- Ranged > Shadows
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
@@ -173,11 +173,11 @@ Debug.Unit.Tests.Ranged.Shadows = function()
     player_database["Player:Debug"][DB.Enum.Trackable.RANGED_TRUE] = T{}
     player_database["Player:Debug"][DB.Enum.Trackable.RANGED_TRUE][DB.Enum.Metric.COUNT] = 1
 
-    return Debug.Unit.Check_Result("Melee - Ranged > Shadows", player_database)
+    return Debug.Unit.Check_Result("Ranged > Shadows", player_database)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Melee - Ranged > Hit
+-- Ranged > Hit
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
@@ -204,5 +204,5 @@ Debug.Unit.Tests.Ranged.PUP = function()
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
     player_database["Player:Debug"][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Ranged > PUP", player_database)
+    return Debug.Unit.Check_Result("Ranged > PUP", player_database)
 end
