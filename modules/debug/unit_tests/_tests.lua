@@ -79,17 +79,6 @@ Debug.Unit.Populate = function()
 
         UI.EndTable()
     end
-
-    --     -- Ranged
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Hit()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Square()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Truestrike()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Miss()
-    --     ---
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Crit()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.PUP()
-    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Shadows()
-    --     UI.TableNextColumn()
     --     -- TP Action
     --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.WS_Hit_1000()
     --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.WS_Hit_2000()
@@ -154,6 +143,17 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Crit())
+    -- Endamage
+    -- Endebuff
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Square())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Truestrike())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Crit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.PUP())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Shadows())
+    -- Endamage
+    -- Endebuff
 end
 
 ------------------------------------------------------------------------------------------------------

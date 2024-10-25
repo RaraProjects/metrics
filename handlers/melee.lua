@@ -509,7 +509,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param result table action data
----@param owner_mob table
+---@param owner_mob? table
 ------------------------------------------------------------------------------------------------------
 H.Melee.Spikes = function(audits, result, owner_mob)
     if owner_mob or result.animation == Ashita.Enum.Animation.DAKEN then return nil end
