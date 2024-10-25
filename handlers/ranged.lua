@@ -252,7 +252,6 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Miss = function(audits, damage, ranged_type)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, H.Metric.MISS_COUNT)
     DB.Accuracy.Update(audits.player_name, false)
     return damage
 end

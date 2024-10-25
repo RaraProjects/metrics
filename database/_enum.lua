@@ -101,7 +101,6 @@ DB.Enum.Metric = T{
     SHOT_DISTANCE = "Shot Distance",
     CRIT_COUNT    = "Crit Count",
     CRIT_DAMAGE   = "Crit Damage",
-    MISS_COUNT    = "Misses",
     SHADOWS       = "Shadow Absorption",
     MOB_HEAL      = "Mob Heal",
     MIN           = "Min",

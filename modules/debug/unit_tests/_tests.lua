@@ -3,6 +3,7 @@ Debug.Unit.Action_Data = {}
 Debug.Unit.Action_Data.Player = {}
 Debug.Unit.Util = {}
 Debug.Unit.Tests = {}
+Debug.Unit.Results = T{}
 Debug.Unit.Mob = {}
 Debug.Unit.Active = false
 
@@ -14,7 +15,7 @@ Debug.Unit.Mob.PLAYER = {
     index = 1,
     target_index = 1,
     pet_index = 2,
-    spawn_flags = 525,
+    spawn_flags = Ashita.Enum.Spawn_Flags.MAINPLAYER,
     in_party = true,
     in_alliance = false,
 }
@@ -24,7 +25,7 @@ Debug.Unit.Mob.PET = {
     id = 2,
     index = 2,
     target_index = 2,
-    spawn_flags = 258,
+    spawn_flags = Ashita.Enum.Spawn_Flags.PET,
     in_party = true,
     in_alliance = false,
 }
@@ -34,7 +35,7 @@ Debug.Unit.Mob.ENEMY = {
     id = 3,
     index = 3,
     target_index = 3,
-    spawn_flags = 16,
+    spawn_flags = Ashita.Enum.Spawn_Flags.MOB,
     in_party = false,
     in_alliance = false,
 }
@@ -57,85 +58,102 @@ Debug.Unit.Mob.ENEMY = {
 -- Poulates the Unit Test Window.
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Populate = function()
-    if UI.BeginTable("Heals", 4, Window_Manager.Table.Flags.Borders) then
-        UI.TableNextRow()
-        -- Melee
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Main_Hit()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Off_Hand_Hit()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Main_Miss()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Off_Hand_Miss()
-        ---
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Crit()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Enspell()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Shadows()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Mob_Heal()
-        ---
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Pet_Hit()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Pet_Crit()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Pet_Miss()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Shadows()
-        ---
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Mob_Heal()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Daken_Hit()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Daken_Miss()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Daken_Square()
-        ---
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Daken_Truestrike()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Daken_Crit()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Kick_Hit()
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Kick_Miss()
-        ---
-        UI.TableNextColumn() Debug.Unit.Tests.Melee.Kick_Crit()
-        UI.TableNextColumn()
-        UI.TableNextColumn()
-        UI.TableNextColumn()
-        -- Ranged
-        UI.TableNextColumn() Debug.Unit.Tests.Ranged.Hit()
-        UI.TableNextColumn() Debug.Unit.Tests.Ranged.Square()
-        UI.TableNextColumn() Debug.Unit.Tests.Ranged.Truestrike()
-        UI.TableNextColumn() Debug.Unit.Tests.Ranged.Miss()
-        ---
-        UI.TableNextColumn() Debug.Unit.Tests.Ranged.Crit()
-        UI.TableNextColumn() Debug.Unit.Tests.Ranged.PUP()
-        UI.TableNextColumn() Debug.Unit.Tests.Ranged.Shadows()
-        UI.TableNextColumn()
-        -- TP Action
-        UI.TableNextColumn() Debug.Unit.Tests.TP_Action.WS_Hit_1000()
-        UI.TableNextColumn() Debug.Unit.Tests.TP_Action.WS_Hit_2000()
-        UI.TableNextColumn() Debug.Unit.Tests.TP_Action.WS_Miss()
-        UI.TableNextColumn() Debug.Unit.Tests.TP_Action.SC_1000()
-        ---
-        UI.TableNextColumn() Debug.Unit.Tests.TP_Action.SC_2000()
-        UI.TableNextColumn() Debug.Unit.Tests.TP_Action.Pet_Hit_100()
-        UI.TableNextColumn() Debug.Unit.Tests.TP_Action.Pet_Hit_200()
-        UI.TableNextColumn() Debug.Unit.Tests.TP_Action.Pet_Miss()
-        --
-        UI.TableNextColumn() Debug.Unit.Tests.Ability.Shield_Bash()
-        UI.TableNextColumn() Debug.Unit.Tests.Ability.Jump_100()
-        UI.TableNextColumn() Debug.Unit.Tests.Ability.Jump_200()
-        UI.TableNextColumn() Debug.Unit.Tests.Ability.Jump_Miss()
-        --
-        UI.TableNextColumn() Debug.Unit.Tests.Ability.Avatar_Rage()
-        UI.TableNextColumn() Debug.Unit.Tests.Ability.Avatar_Ward()
-        UI.TableNextColumn() Debug.Unit.Tests.Ability.Avatar_Healing_Ward()
-        UI.TableNextColumn() Debug.Unit.Tests.TP_Action.Sheep_Song()
-        --
-        UI.TableNextColumn() Debug.Unit.Tests.Ability.Holy_Circle()
-        UI.TableNextColumn() Debug.Unit.Tests.Spells.Hit()
-        UI.TableNextColumn() Debug.Unit.Tests.Spells.Burst()
-        UI.TableNextColumn() Debug.Unit.Tests.Spells.Cure_100()
-        ---
-        UI.TableNextColumn() Debug.Unit.Tests.Spells.Cure_200()
-        UI.TableNextColumn() Debug.Unit.Tests.Spells.Holy()
-        UI.TableNextColumn() Debug.Unit.Tests.Spells.DoT_0()
-        UI.TableNextColumn() Debug.Unit.Tests.Spells.DoT_1()
-        ---
-        UI.TableNextColumn() Debug.Unit.Tests.Spells.Aspir()
-        UI.TableNextColumn() Debug.Unit.Tests.TP_Action.Energy_Steal()
-        UI.TableNextColumn() Debug.Unit.Tests.Spells.Ga_Spell()
-        UI.TableNextColumn() Debug.Unit.Tests.Spells.Curaga()
+    local col_flags = Focus.Column_Flags
+
+    local row = 1
+    if UI.BeginTable("Unit Tests", 4) then
+        UI.TableSetupColumn("Test", col_flags)
+        UI.TableSetupColumn("Result", col_flags)
+        UI.TableSetupColumn("Errors", col_flags)
+        UI.TableSetupColumn("Error Message", col_flags)
+        UI.TableHeadersRow()
+
+        for _, result in ipairs(Debug.Unit.Results) do
+            UI.TableNextColumn() UI.Text(result.test)
+            UI.TableNextColumn() UI.TextColored(result.color, result.result)
+            UI.TableNextColumn() UI.Text(result.count)
+            UI.TableNextColumn() UI.Text(result.message)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
+
         UI.EndTable()
     end
+
+    --     -- Ranged
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Hit()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Square()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Truestrike()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Miss()
+    --     ---
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Crit()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.PUP()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ranged.Shadows()
+    --     UI.TableNextColumn()
+    --     -- TP Action
+    --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.WS_Hit_1000()
+    --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.WS_Hit_2000()
+    --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.WS_Miss()
+    --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.SC_1000()
+    --     ---
+    --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.SC_2000()
+    --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.Pet_Hit_100()
+    --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.Pet_Hit_200()
+    --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.Pet_Miss()
+    --     --
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Shield_Bash()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Jump_100()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Jump_200()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Jump_Miss()
+    --     --
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Avatar_Rage()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Avatar_Ward()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Avatar_Healing_Ward()
+    --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.Sheep_Song()
+    --     --
+    --     UI.TableNextColumn() Debug.Unit.Tests.Ability.Holy_Circle()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Hit()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Burst()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Cure_100()
+    --     ---
+    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Cure_200()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Holy()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.DoT_0()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.DoT_1()
+    --     ---
+    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Aspir()
+    --     UI.TableNextColumn() Debug.Unit.Tests.TP_Action.Energy_Steal()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Ga_Spell()
+    --     UI.TableNextColumn() Debug.Unit.Tests.Spells.Curaga()
+    --     UI.EndTable()
+    -- end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Run unit tests.
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Run_Tests = function()
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Crit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Enspell())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Shadows())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Mob_Heal())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Off_Hand_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Off_Hand_Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Crit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Shadows())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Mob_Heal())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Square())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Truestrike())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Crit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Crit())
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -157,6 +175,7 @@ Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_
     action_data.param = damage
     action_data.animation = animation_id
     action_data.message = message_id
+    action_data.has_add_effect = add_effect_param or add_effect_message
     action_data.add_effect_param = add_effect_param
     action_data.add_effect_message = add_effect_message -- Skillchains
 
@@ -173,4 +192,91 @@ Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_
     if damage_two then table.insert(action.targets, target_data_two) end
 
     return action
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check test results.
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Check_Result = function(test_name, player_database, pet_database, pet_catalog)
+
+    local error_count = 0
+    local error_message = ""
+
+    -- Player Database
+    for index, _ in pairs(DB.Parse) do
+        if not player_database[index] then
+            if error_count > 0 then error_message = error_message .. "\n" end
+            error_message = error_message .. "Couldn't find index: " .. tostring(index)
+            error_count = error_count + 1
+
+        else
+            for trackable, _ in pairs(DB.Parse[index]) do
+                for metric, value in pairs(DB.Parse[index][trackable]) do
+
+                    -- Cataloged Data
+                    if metric == DB.Enum.Values.CATALOG then
+                        for action_name, _ in pairs(DB.Parse[index][trackable][DB.Enum.Values.CATALOG]) do
+                            for catalog_metric, catalog_value in pairs(DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name]) do
+                                -- Make sure expected data matches.
+                                if player_database[index][trackable] and player_database[index][trackable][DB.Enum.Values.CATALOG][action_name] and player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] then
+                                    if player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == catalog_value then
+                                        -- Pass
+                                    elseif catalog_metric == DB.Enum.Metric.MIN and player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == DB.Enum.Values.MAX_DAMAGE then
+                                        -- Pass
+                                    elseif player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == 0 then
+                                        -- Pass
+                                    else
+                                        if error_count > 0 then error_message = error_message .. "\n" end
+                                        error_message = error_message .. "Catalog Mismatch: " .. tostring(trackable) .. " " .. tostring(catalog_metric) .. " " .. tostring(catalog_value) .. " Expected: " .. tostring(player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric])
+                                        error_count = error_count + 1
+                                    end
+
+                                -- There is unexpected data.
+                                elseif catalog_value ~= 0 and catalog_value ~= DB.Enum.Values.MAX_DAMAGE then
+                                    if error_count > 0 then error_message = error_message .. "\n" end
+                                    error_message = error_message .. "Unexpected catalog data: " .. tostring(trackable) .. " " .. tostring(catalog_metric) .. " " .. tostring(catalog_value)
+                                    error_count = error_count + 1
+                                end
+                            end
+                        end
+
+                    -- Non-cataloged Data
+                    else
+                        -- Make sure expected data matches.
+                        if player_database[index][trackable] and player_database[index][trackable][metric] then
+                            if player_database[index][trackable][metric] == value then
+                                -- Pass
+                            elseif metric == DB.Enum.Metric.MIN and DB.Parse[index][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
+                                -- Pass
+                            elseif player_database[index][trackable][metric] == 0 then
+                                -- Pass
+                            else
+                                if error_count > 0 then error_message = error_message .. "\n" end
+                                error_message = error_message .. "Data Mismatch: " .. tostring(trackable) .. " " .. tostring(metric) .. " " .. tostring(value) .. " Expected: " .. tostring(player_database[index][trackable][metric])
+                                error_count = error_count + 1
+                            end
+
+                        -- There is unexpected data.
+                        elseif value ~= 0 and value ~= DB.Enum.Values.MAX_DAMAGE then
+                            if error_count > 0 then error_message = error_message .. "\n" end
+                            error_message = error_message .. "Unexpected data: " .. tostring(trackable) .. " " .. tostring(metric) .. " " .. tostring(value)
+                            error_count = error_count + 1
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    -- DB.Pet_Parse[index][pet_name][trackable][metric] = value
+    -- DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric] = value
+
+    local result = "Pass!"
+    local color  = Res.Colors.Basic.GREEN
+    if error_count > 0 then
+        result = "Fail"
+        color  = Res.Colors.Basic.RED
+    end
+
+    return {test = test_name, result = result, color = color, count = tostring(error_count), message = error_message}
 end

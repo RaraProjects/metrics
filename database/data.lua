@@ -40,7 +40,10 @@ DB.Data.Init = function(index, player_name)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_MELEE, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_MELEE_DISCRETE, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.RANGED, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.THROWING, DB.Enum.Metric.MIN)
 
 	-- Initialize tracking tables.
 	DB.Data.Init_Player(player_name)

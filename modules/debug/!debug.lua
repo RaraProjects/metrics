@@ -20,6 +20,7 @@ Debug.Modes = T{
     ERROR_LOG      = "Error Log     ",
     DATA_VIEWER    = "Data Viewer   ",
     JOB_COLORS     = "Job Colors    ",
+    UNIT_TESTS     = "Unit Tests    ",
     DEMO           = "Demo Window   ",
 }
 Debug.Active_Mode = Debug.Modes.MOB_VIEWER
@@ -68,22 +69,22 @@ end
 Debug.Content = function()
     local col_flags = Column.Flags.None
     local width = 150
+
     if UI.BeginTable("Debug Functions", 3, Window_Manager.Table.Flags.None) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
-        UI.TableNextRow()
         UI.TableNextColumn() if UI.Button(Debug.Modes.MOB_VIEWER) then Debug.Active_Mode = Debug.Modes.MOB_VIEWER end
         UI.TableNextColumn() if UI.Button(Debug.Modes.ACTION_PACKET) then Debug.Active_Mode = Debug.Modes.ACTION_PACKET end
         UI.TableNextColumn() if UI.Button(Debug.Modes.MESSAGE_PACKET) then Debug.Active_Mode = Debug.Modes.MESSAGE_PACKET end
-
-        --
         UI.TableNextColumn() if UI.Button(Debug.Modes.ERROR_LOG) then Debug.Active_Mode = Debug.Modes.ERROR_LOG end
         UI.TableNextColumn() if UI.Button(Debug.Modes.DATA_VIEWER) then Debug.Active_Mode = Debug.Modes.DATA_VIEWER end
         UI.TableNextColumn() if UI.Button(Debug.Modes.JOB_COLORS) then Debug.Active_Mode = Debug.Modes.JOB_COLORS end
-
-        --
+        UI.TableNextColumn() if UI.Button(Debug.Modes.UNIT_TESTS) then
+            Debug.Active_Mode = Debug.Modes.UNIT_TESTS
+            Debug.Unit.Run_Tests()
+        end
         UI.TableNextColumn() if UI.Button(Debug.Modes.DEMO) then Debug.Show_Demo = not Debug.Show_Demo end
 
         UI.EndTable()
@@ -113,6 +114,8 @@ Debug.Content = function()
         UI.TextColored(Res.Colors.Get_Job(16), "Blue Mage")
         UI.TextColored(Res.Colors.Get_Job(17), "Corsair")
         UI.TextColored(Res.Colors.Get_Job(18), "Puppetmaster")
+    elseif Debug.Active_Mode == Debug.Modes.UNIT_TESTS     then
+        Debug.Unit.Populate()
     else
         UI.Text("Select a tool.")
     end
