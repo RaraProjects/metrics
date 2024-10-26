@@ -259,7 +259,8 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst, target
         if is_pet then trackable = H.Trackable.PET_ENFEEBLING else trackable = H.Trackable.ENFEEBLE end
         DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
-        -- Counts are handled in parse because we need the result message.
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
 
     elseif Res.Spells.Get_Enspell(spell_id) then
         trackable = H.Trackable.ENSPELL
@@ -390,17 +391,20 @@ H.Spell.Enfeebling = function(audits, spell_name, message_id, damage)
     local trackable = H.Trackable.ENFEEBLE
     if audits.pet_name then trackable = H.Trackable.PET_ENFEEBLING end
 
-    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT) -- Used to flag that data is available for show in Focus.
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.AOE_COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.AOE_COUNT)
 
-    -- No Effect. Pretend this never occurred. No hit numerator and undo the count increment.
+    -- These will not negatively impact resist metrics.
     if message_id == Ashita.Enum.Message.NO_EFFECT or message_id == Ashita.Enum.Message.EFFECT_FAIL or message_id == Ashita.Enum.Message.COMP_RESIST then
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
         damage = -1
     -- Resists
     elseif message_id == Ashita.Enum.Message.RESIST or message_id == Ashita.Enum.Message.RESIST_2 then
         damage = -2
     -- Effect Landed
     else
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
     end
 

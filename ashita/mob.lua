@@ -57,8 +57,8 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.Data = function(id, convert_id)
     -- Unit testing short circuit for creating pets.
-    local unit_testing_pet = Debug.Unit.Get_Pet(id)
-    if unit_testing_pet then return unit_testing_pet end
+    local unit_testing_mob = Debug.Unit.Get_Mob(id)
+    if unit_testing_mob then return unit_testing_mob end
 
     local index = id
     if convert_id then

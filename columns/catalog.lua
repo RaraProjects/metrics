@@ -199,6 +199,22 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- This is for cataloged actions.
+-- Grabs the accuracy for a an enfeebling spell.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name string
+---@param focus_type string a trackable from the model.
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Single.Enfeeble_Acc = function(player_name, action_name, focus_type)
+    local single_hits = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.HIT_COUNT)
+    local single_attempts = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.AOE_COUNT)
+    local color = Column.String.Color_Zero(single_hits)
+    return UI.TextColored(color, Column.String.Format_Percent(single_hits, single_attempts))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
 -- This is for pet actions.
 -- Grabs the accuracy for a given cataloged action and trackable.
 ------------------------------------------------------------------------------------------------------

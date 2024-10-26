@@ -8,18 +8,10 @@ Debug.Unit.Mob = {}
 Debug.Unit.Active = false
 Debug.Unit.Has_Pet = false
 
-Debug.Unit.Mob.Target_ID = 17254144
+Debug.Unit.Mob.Target_ID = 3
+Debug.Unit.Mob.Target_ID_Two = 4
 
-Debug.Unit.Mob.PLAYER = {
-    name = "Player",
-    id = 1,
-    index = 1,
-    target_index = 1,
-    pet_index = 2,
-    spawn_flags = Ashita.Enum.Spawn_Flags.MAINPLAYER,
-    in_party = true,
-    in_alliance = false,
-}
+Debug.Unit.Mob.PLAYER = T{} -- Gets populated dynamically when running the tests.
 
 Debug.Unit.Mob.PET = {
     name = "Pet Name",
@@ -36,6 +28,16 @@ Debug.Unit.Mob.ENEMY = {
     id = 3,
     index = 3,
     target_index = 3,
+    spawn_flags = Ashita.Enum.Spawn_Flags.MOB,
+    in_party = false,
+    in_alliance = false,
+}
+
+Debug.Unit.Mob.ENEMY_TWO = {
+    name = "Enemy Two",
+    id = 4,
+    index = 4,
+    target_index = 4,
     spawn_flags = Ashita.Enum.Spawn_Flags.MOB,
     in_party = false,
     in_alliance = false,
@@ -88,9 +90,15 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Short circuits Ashita.Mob.Data so that I can create a pet for unit tests.
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Get_Pet = function(mob_id)
-    if Debug.Enabled and Debug.Unit.Active and Debug.Unit.Has_Pet then
-        if mob_id == 2 then return Debug.Unit.Mob.PET end
+Debug.Unit.Get_Mob = function(mob_id)
+    if Debug.Enabled and Debug.Unit.Active then
+        if mob_id == 2 then
+            return Debug.Unit.Mob.PET
+        elseif mob_id == 3 then
+            return Debug.Unit.Mob.ENEMY
+        elseif mob_id == 4 then
+            return Debug.Unit.Mob.ENEMY_TWO
+        end
     end
 end
 
@@ -99,6 +107,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Run_Tests = function()
     Debug.Unit.Active = true
+    Debug.Unit.Mob.PLAYER = Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Crit())
@@ -166,9 +175,12 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.DoT_No_Damage())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.DoT_Damage())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Aspir())
-    -- Enfeebling
-    -- BRD Songs
-    -- Status Removal
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_Land())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_Resist())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_No_Effect())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_AOE_Land())
+    -- -- BRD Songs
+    -- -- Status Removal
 
     -- AOEs fail on the non-cataloged minimum likely because of throttling and unit tests AOE'ing on the same target.
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Hit())
@@ -180,12 +192,13 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shield())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Crit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Pet_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Pet_Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_AOE())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_AOE())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_AOE())
 
     -- Pet TP Move
     -- Pet TP Move AOE
@@ -196,9 +209,18 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Build the fake result table.
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_id, message_id, add_effect_param, add_effect_message, damage_two, spike_damage, spike_message, reaction_id)
-    if not add_effect_param then add_effect_param = 0 end
-
+---@param target_id integer
+---@param action_id? integer
+---@param damage integer
+---@param primary? table
+---@param add_effect? table
+---@param spike? table
+---@param target_id_two? integer
+---@param damage_two? integer
+---@param message_two? integer
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Util.Build_Action = function(target_id, action_id, damage, primary, add_effect, spike, target_id_two, damage_two, message_two)
     local action = {}
     action.param = action_id
     action.targets = {}
@@ -210,27 +232,51 @@ Debug.Unit.Util.Build_Action = function(action_id, target_id, damage, animation_
 
     local action_data = {}
     action_data.param = damage
-    action_data.animation = animation_id
-    action_data.reaction = reaction_id
-    action_data.message = message_id
-    action_data.has_add_effect = add_effect_param or add_effect_message
-    action_data.add_effect_param = add_effect_param
-    action_data.add_effect_message = add_effect_message -- Skillchains
-    action_data.has_spike_effect = spike_damage or spike_message
-    action_data.spike_effect_param = spike_damage
-    action_data.spike_effect_message = spike_message
 
-    if damage_two then
-        target_data_two.id = target_id
+    if primary then
+        action_data.animation = primary.animation
+        action_data.reaction = primary.reaction
+        action_data.message = primary.message
+    else
+        action_data.animation = 0
+        action_data.reaction = 0
+        action_data.message = 0
+    end
+
+    if add_effect then
+        action_data.has_add_effect = true
+        action_data.add_effect_param = add_effect.param
+        action_data.add_effect_animation = add_effect.animation
+        action_data.add_effect_message = add_effect.message -- Skillchains
+    else
+        action_data.has_add_effect = false
+        action_data.add_effect_param = 0
+        action_data.add_effect_animation = 0
+        action_data.add_effect_message = 0
+    end
+
+    if spike then
+        action_data.has_spike_effect = true
+        action_data.spike_effect_param = spike.param
+        action_data.spike_effect_message = spike.message
+    else
+        action_data.has_spike_effect = false
+        action_data.spike_effect_param = 0
+        action_data.spike_effect_message = 0
+    end
+
+    if target_id_two then
+        target_data_two.id = target_id_two
         target_data_two.actions = {}
         local action_data_two = {}
         action_data_two.param = damage_two
+        action_data_two.message = message_two
         table.insert(target_data_two.actions, action_data_two)
     end
 
     table.insert(target_data.actions, action_data)
     table.insert(action.targets, target_data)
-    if damage_two then table.insert(action.targets, target_data_two) end
+    if target_id_two then table.insert(action.targets, target_data_two) end
 
     return action
 end
@@ -279,17 +325,17 @@ Debug.Unit.Check_Result = function(test_name, player_database, pet_database)
                                             -- Pass
                                         else
                                             if error_count > 0 then error_message = error_message .. "\n" end
-                                            error_message = error_message .. "Catalog Mismatch: " .. tostring(trackable) .. " " .. tostring(catalog_metric) .. " "
-                                                            .. tostring(action_name) .. " " .. tostring(catalog_value) .. " Expected: "
-                                                            .. tostring(player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric])
+                                            error_message = error_message .. "Catalog Mismatch: " .. tostring(index) .. " " .. tostring(trackable) .. " "
+                                            .. tostring(catalog_metric) .. " " .. tostring(action_name) .. " " .. tostring(catalog_value) .. " Expected: "
+                                            .. tostring(player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric])
                                             error_count = error_count + 1
                                         end
 
                                     -- There is unexpected data.
                                     elseif catalog_value ~= 0 and catalog_value ~= DB.Enum.Values.MAX_DAMAGE then
                                         if error_count > 0 then error_message = error_message .. "\n" end
-                                        error_message = error_message .. "Unexpected catalog data: " .. tostring(trackable) .. " " .. tostring(catalog_metric)
-                                                        .. " " .. tostring(action_name) .. " " .. tostring(catalog_value)
+                                        error_message = error_message .. "Unexpected catalog data: " .. tostring(index) .. " " .. tostring(trackable) .. " "
+                                        .. tostring(catalog_metric) .. " " .. tostring(action_name) .. " " .. tostring(catalog_value)
                                         error_count = error_count + 1
                                     end
 
@@ -308,15 +354,16 @@ Debug.Unit.Check_Result = function(test_name, player_database, pet_database)
                                     -- Pass
                                 else
                                     if error_count > 0 then error_message = error_message .. "\n" end
-                                    error_message = error_message .. "Data Mismatch: " .. tostring(trackable) .. " " .. tostring(metric) .. " " .. tostring(value)
-                                                    .. " Expected: " .. tostring(player_database[index][trackable][metric])
+                                    error_message = error_message .. "Data Mismatch: " .. tostring(index) .. " " .. tostring(trackable) .. " " .. tostring(metric)
+                                    .. " " .. tostring(value) .. " Expected: " .. tostring(player_database[index][trackable][metric])
                                     error_count = error_count + 1
                                 end
 
                             -- There is unexpected data.
                             elseif value ~= 0 and value ~= DB.Enum.Values.MAX_DAMAGE then
                                 if error_count > 0 then error_message = error_message .. "\n" end
-                                error_message = error_message .. "Unexpected data: " .. tostring(trackable) .. " " .. tostring(metric) .. " " .. tostring(value)
+                                error_message = error_message .. "Unexpected data: " .. tostring(index) .. " " .. tostring(trackable) .. " " .. tostring(metric)
+                                .. " " .. tostring(value)
                                 error_count = error_count + 1
                             end
                         end

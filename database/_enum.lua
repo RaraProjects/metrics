@@ -85,6 +85,7 @@ DB.Enum.Trackable = T{
 DB.Enum.Metric = T{
     TOTAL         = "Total",
     COUNT         = "Attempts",
+    AOE_COUNT     = "AOE Targets Hit",
     CYCLE         = "Melee Cycles",          -- How many times a melee cycle occurred.
     ROUNDS        = "Attack Rounds",         -- Used in multi-attacks
     MULTI_TOTAL   = "Multi-Attack",

@@ -751,7 +751,7 @@ Focus.Overview.Debuff = function(player_name, hide_mp)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Acc(player_name, action_name, trackable)
+                UI.TableNextColumn() Column.Single.Enfeeble_Acc(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
                 if not hide_mp then UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable) end
                 Window_Manager.Table_Row_Color(row)

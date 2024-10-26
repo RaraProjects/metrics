@@ -131,6 +131,7 @@ H.Melee_Def.Pet_Total = function(audits, damage, no_damage)
     DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DMG_TAKEN_TOTAL_PET, H.Metric.TOTAL)
     DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.MELEE_PET_DMG_TAKEN, H.Metric.TOTAL)
     DB.Data.Update(H.Mode.INC, 1,      audits, H.Trackable.MELEE_PET_DMG_TAKEN, H.Metric.COUNT) -- Melee attempts against entity.
+    if damage > 0 then DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MELEE_PET_DMG_TAKEN, H.Metric.HIT_COUNT) end
 end
 
 ------------------------------------------------------------------------------------------------------
