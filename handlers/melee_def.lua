@@ -115,8 +115,13 @@ end
 H.Melee_Def.Totals = function(audits, damage, no_damage)
     if no_damage then damage = 0 end
     DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, H.Metric.TOTAL)
-    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.MELEE_DMG_TAKEN, H.Metric.TOTAL)
-    DB.Data.Update(H.Mode.INC, 1,      audits, H.Trackable.MELEE_DMG_TAKEN, H.Metric.COUNT) -- Melee attempts against entity.
+
+    local trackable = H.Trackable.MELEE_DMG_TAKEN
+    DB.Data.Update(H.Mode.INC, damage, audits, trackable, H.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC, 1,      audits, trackable, H.Metric.COUNT) -- Melee attempts against entity.
+    -- HIT_COUNT gets set in the primary parse function.
+    if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, trackable, H.Metric.MIN) end
+    if damage > DB.Data.Get(audits.player_name, trackable, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, trackable, H.Metric.MAX) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -129,9 +134,13 @@ end
 H.Melee_Def.Pet_Total = function(audits, damage, no_damage)
     if no_damage then damage = 0 end
     DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DMG_TAKEN_TOTAL_PET, H.Metric.TOTAL)
-    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.MELEE_PET_DMG_TAKEN, H.Metric.TOTAL)
-    DB.Data.Update(H.Mode.INC, 1,      audits, H.Trackable.MELEE_PET_DMG_TAKEN, H.Metric.COUNT) -- Melee attempts against entity.
-    if damage > 0 then DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MELEE_PET_DMG_TAKEN, H.Metric.HIT_COUNT) end
+
+    local trackable = H.Trackable.MELEE_PET_DMG_TAKEN
+    DB.Data.Update(H.Mode.INC, damage, audits, trackable, H.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC, 1,      audits, trackable, H.Metric.COUNT) -- Melee attempts against entity.
+    if damage > 0 then DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT) end
+    if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable, H.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, trackable, H.Metric.MIN) end
+    if damage > DB.Data.Get(audits.player_name, trackable, H.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, trackable, H.Metric.MAX) end
 end
 
 ------------------------------------------------------------------------------------------------------

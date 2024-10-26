@@ -43,6 +43,27 @@ Debug.Unit.Mob.ENEMY_TWO = {
     in_alliance = false,
 }
 
+Debug.Unit.Mob.PLAYER_TWO = {
+    name = "Player Two",
+    id = 5,
+    index = 5,
+    target_index = 5,
+    pet_index = 6,
+    spawn_flags = Ashita.Enum.Spawn_Flags.OTHERPLAYER,
+    in_party = true,
+    in_alliance = true,
+}
+
+Debug.Unit.Mob.PET_TWO = {
+    name = "Pet Two",
+    id = 6,
+    index = 6,
+    target_index = 6,
+    spawn_flags = Ashita.Enum.Spawn_Flags.PET,
+    in_party = false,
+    in_alliance = false,
+}
+
 -- Melee Attacks
 -- Pet Melee Attacks
 -- Ranged Attacks
@@ -98,6 +119,10 @@ Debug.Unit.Get_Mob = function(mob_id)
             return Debug.Unit.Mob.ENEMY
         elseif mob_id == 4 then
             return Debug.Unit.Mob.ENEMY_TWO
+        elseif mob_id == 5 then
+            return Debug.Unit.Mob.PLAYER_TWO
+        elseif mob_id == 6 then
+            return Debug.Unit.Mob.PET_TWO
         end
     end
 end
@@ -196,9 +221,9 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_AOE())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_AOE())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_AOE())
 
     -- Pet TP Move
     -- Pet TP Move AOE
