@@ -68,7 +68,13 @@ Ashita.Mob.Data = function(id, convert_id)
 	local entity_manager = AshitaCore:GetMemoryManager():GetEntity()
     local entity = {}
 
+    -- Sometimes players and pets can have blank names.
     entity.name = entity_manager:GetName(index)
+    if entity.name == "" then
+        Debug.Error.Add("Mob.Data: Encountered a blank mob name. ID {" .. tostring(id) .. "}.")
+        entity.name = DB.Enum.Values.DEBUG
+    end
+
     entity.id = string.sub(string.format("0x%X", entity_manager:GetServerId(index)), -3) -- This came from HXUI
     entity.id_num = entity_manager:GetServerId(index)
     entity.index = index                                        -- Primary identifier.

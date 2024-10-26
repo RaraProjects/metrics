@@ -133,6 +133,8 @@ end
 Debug.Unit.Run_Tests = function()
     Debug.Unit.Active = true
     Debug.Unit.Mob.PLAYER = Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
+
+    -- Melee
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Crit())
@@ -156,7 +158,9 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Crit())
     -- Endamage
     -- Endebuff
+    -- Enaspir
 
+    -- Ranged
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Square())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Truestrike())
@@ -167,6 +171,7 @@ Debug.Unit.Run_Tests = function()
     -- Endamage
     -- Endebuff
 
+    -- TP Action
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Energy_Steal())
@@ -176,6 +181,7 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit_AOE())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_No_Damage())
 
+    -- Ability
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Hit_TP())
@@ -189,7 +195,7 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Damage())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Healing())
 
-    -- AOEs fail on the non-cataloged minimum likely because of throttling and unit tests AOE'ing on the same target.
+    -- Spells
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke_Burst())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke_AOE())
@@ -204,10 +210,10 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_Resist())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_No_Effect())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_AOE_Land())
-    -- -- BRD Songs
-    -- -- Status Removal
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Song())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Status_Removal())
 
-    -- AOEs fail on the non-cataloged minimum likely because of throttling and unit tests AOE'ing on the same target.
+    -- Defense
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Parry())

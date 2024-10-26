@@ -87,7 +87,11 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
         is_mapped = true
     end
 
-    if Res.Spells.Get_Debuff_Removal(spell_id) then is_mapped = true end
+    if Res.Spells.Get_Debuff_Removal(spell_id) then
+        is_mapped = true
+        if message_id == Ashita.Enum.Message.NO_EFFECT then damage = -1 end
+    end
+
     if Res.Spells.Get_Buff(spell_id) then is_mapped = true end
     if Res.Spells.Get_Buff_Song(spell_id) then is_mapped = true end
     if Res.Spells.Get_Avatar(spell_id) then is_mapped = true end
@@ -130,6 +134,15 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
             blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
         end
         Blog.Add(audits.player_name, audits.pet_name, Blog.Enum.Types.HEALING, spell_name, damage, blog_note, DB.Enum.Trackable.HEALING, spell_data)
+
+    elseif Res.Spells.Get_Debuff_Removal(spell_id) then
+        local buff = Res.Buffs.Get_Buff(damage)
+        if damage == -1 then
+            blog_note = "No Effect"
+        elseif buff then
+            blog_note = buff.en
+        end
+        Blog.Add(audits.player_name, audits.pet_name, Blog.Enum.Types.DEBUFF_REMOVAL, spell_name, -1, blog_note, DB.Enum.Trackable.DEBUFF_REMOVAL, spell_data)
 
     elseif Res.Spells.Get_Enfeeble(spell_id) then
         if damage == -1 then
@@ -226,6 +239,7 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst, target
             local audit_swap = H.Spell.Audit_Swap(audits)
             DB.Data.Update(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, H.Metric.COUNT)
             DB.Data.Update(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, H.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC, (mp_cost / target_count), audit_swap, H.Trackable.HEALING_RECEIVED, H.Metric.MP_SPENT)
             DB.Catalog.Update_Metric(H.Mode.INC, (mp_cost / target_count), audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, H.Metric.MP_SPENT)
             DB.Catalog.Update_Metric(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, H.Metric.COUNT)
             DB.Catalog.Update_Metric(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, H.Metric.HIT_COUNT)

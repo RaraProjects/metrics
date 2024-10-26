@@ -240,11 +240,12 @@ end
 Debug.Unit.Tests.Spells.Healing = function()
     DB.Initialize(true)
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.PLAYER_TWO.name
+    local index_two = Debug.Unit.Mob.PLAYER_TWO.name .. ":" .. tostring(player_name)
     local damage = 100
     local action_id = 3   -- Cure III
     local mp_cost = 46
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PLAYER_TWO.id, action_id, damage)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player_database = T{}
@@ -268,6 +269,23 @@ Debug.Unit.Tests.Spells.Healing = function()
     player_database[index][DB.Enum.Trackable.HEALING][DB.Enum.Values.CATALOG]["Cure III"][DB.Enum.Metric.HIT_COUNT] = 1
     player_database[index][DB.Enum.Trackable.HEALING][DB.Enum.Values.CATALOG]["Cure III"][DB.Enum.Metric.COUNT] = 1
     player_database[index][DB.Enum.Trackable.HEALING][DB.Enum.Values.CATALOG]["Cure III"][DB.Enum.Metric.MP_SPENT] = mp_cost
+
+    player_database[index_two] = T{}
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED] = T{}
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Metric.TOTAL] = damage
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Metric.MIN] = damage
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Metric.MAX] = damage
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Metric.COUNT] = 1
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Metric.MP_SPENT] = mp_cost
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Values.CATALOG] = T{}
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Values.CATALOG]["Cure III"] = T{}
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Values.CATALOG]["Cure III"][DB.Enum.Metric.TOTAL] = damage
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Values.CATALOG]["Cure III"][DB.Enum.Metric.MIN] = damage
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Values.CATALOG]["Cure III"][DB.Enum.Metric.MAX] = damage
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Values.CATALOG]["Cure III"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Values.CATALOG]["Cure III"][DB.Enum.Metric.COUNT] = 1
+    player_database[index_two][DB.Enum.Trackable.HEALING_RECEIVED][DB.Enum.Values.CATALOG]["Cure III"][DB.Enum.Metric.MP_SPENT] = mp_cost
 
     return Debug.Unit.Check_Result("Spells > Healing", player_database)
 end
@@ -661,4 +679,59 @@ Debug.Unit.Tests.Spells.Enfeeble_AOE_Land = function()
     player_database[index_two][DB.Enum.Trackable.ENFEEBLE][DB.Enum.Values.CATALOG]["Sleepga II"][DB.Enum.Metric.MP_SPENT] = mp_cost
 
     return Debug.Unit.Check_Result("Spells - Enfeeble > AOE Land", player_database)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Spells - Song
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Spells.Song = function()
+    DB.Initialize(true)
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local index = tostring(player_name) .. ":" .. tostring(player_name)
+    local damage = 0
+    local action_id = 398 -- Valor Minuet V
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PLAYER.id_num, action_id, damage)
+    H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player_database = T{}
+    player_database[index] = T{}
+    player_database[index][DB.Enum.Trackable.BUFF_SONG] = T{}
+    player_database[index][DB.Enum.Trackable.BUFF_SONG][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.BUFF_SONG][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.BUFF_SONG][DB.Enum.Values.CATALOG]["Valor Minuet V"] = T{}
+    player_database[index][DB.Enum.Trackable.BUFF_SONG][DB.Enum.Values.CATALOG]["Valor Minuet V"][DB.Enum.Metric.COUNT] = 1
+
+    return Debug.Unit.Check_Result("Spells - Song", player_database)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Spells - Status_Removal
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Spells.Status_Removal = function()
+    DB.Initialize(true)
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.PLAYER_TWO.name
+    local damage = 128      -- Burn
+    local action_id = 143   -- Erase
+    local mp_cost = 18
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PLAYER_TWO.id, action_id, damage)
+    H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player_database = T{}
+    player_database[index] = T{}
+    player_database[index][DB.Enum.Trackable.MAGIC] = T{}
+    player_database[index][DB.Enum.Trackable.MAGIC][DB.Enum.Metric.MP_SPENT] = mp_cost
+    player_database[index][DB.Enum.Trackable.DEBUFF_REMOVAL] = T{}
+    player_database[index][DB.Enum.Trackable.DEBUFF_REMOVAL][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.DEBUFF_REMOVAL][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.DEBUFF_REMOVAL][DB.Enum.Values.CATALOG]["Erase"] = T{}
+    player_database[index][DB.Enum.Trackable.DEBUFF_REMOVAL][DB.Enum.Values.CATALOG]["Erase"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.DEBUFF_REMOVAL][DB.Enum.Values.CATALOG]["Erase"][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.DEBUFF_REMOVAL][DB.Enum.Values.CATALOG]["Erase"][DB.Enum.Metric.MP_SPENT] = mp_cost
+
+    return Debug.Unit.Check_Result("Spells - Status_Removal", player_database)
 end

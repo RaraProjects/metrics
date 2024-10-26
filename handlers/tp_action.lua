@@ -474,7 +474,7 @@ end
 -- The text needs a little massaging to avoid making it look like all the pet's status effect abilities missed.
 -- Additional abilities such as these may need to be added to monster ability filter.
 -- ------------------------------------------------------------------------------------------------------
----@param owner_mob table
+---@param owner_mob? table
 ---@param actor_mob table
 ---@param action_id number
 ---@param damage number

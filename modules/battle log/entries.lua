@@ -110,13 +110,14 @@ Blog.Entries.Notes = function(note, action_type, is_mob)
     if is_mob then color = Res.Colors.Basic.MOB end
 
     local final_note = {Value = " ", Color = color}
-    if not note then return final_note end
+    if not note or note == "" then return final_note end
 
     -- A note should be passed in with these actions. Just use that.
     if action_type == DB.Enum.Trackable.MAGIC or action_type == DB.Enum.Trackable.HEALING
     or action_type == DB.Enum.Trackable.TP_DMG_TAKEN or action_type == Blog.Enum.Flags.IGNORE
     or action_type == DB.Enum.Trackable.ENFEEBLE or action_type == DB.Enum.Trackable.BUFF_SONG
-    or action_type == DB.Enum.Trackable.PET_ABILITY or action_type == DB.Enum.Trackable.PHANTOM_ROLL then
+    or action_type == DB.Enum.Trackable.PET_ABILITY or action_type == DB.Enum.Trackable.PHANTOM_ROLL
+    or action_type == DB.Enum.Trackable.DEBUFF_REMOVAL then
         final_note.Value = tostring(note)
 
     -- If the player died then show who killed them.
@@ -130,7 +131,7 @@ Blog.Entries.Notes = function(note, action_type, is_mob)
 
     -- We passed in a note, but didn't handle it above.
     else
-        Debug.Error.Add("Entries.Notes: Unhandled battle log note. Note: {" .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "}.")
+        Debug.Error.Add("Entries.Notes: Unhandled battle log note. Note: {" .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "} Mob {" .. tostring(is_mob) .. "}.")
         final_note.Value = " "
     end
 

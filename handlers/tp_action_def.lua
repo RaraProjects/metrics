@@ -154,5 +154,7 @@ end
 ---@param target_count integer
 -- ------------------------------------------------------------------------------------------------------
 H.TP_Def.Blog = function(actor_mob, damage, skill_name, target_count)
-    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MOB_TP, skill_name, damage, "TGTs: " .. tostring(target_count), DB.Enum.Trackable.TP_DMG_TAKEN)
+    local note = nil
+    if target_count > 1 then note = "TGTs: " .. tostring(target_count) end
+    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MOB_TP, skill_name, damage, note, DB.Enum.Trackable.TP_DMG_TAKEN)
 end

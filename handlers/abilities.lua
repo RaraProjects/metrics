@@ -55,7 +55,7 @@ H.Ability.Pet_Action = function(action, actor_mob, log_offense)
     if not owner_mob then return nil end
 
     local ability_id = action.param
-    local ability_data
+    local ability_data = T{}
     local avatar = false
     local trackable = H.Trackable.PET_ABILITY
 

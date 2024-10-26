@@ -28,6 +28,7 @@ Blog.Enum.Flags = T{
 }
 Blog.Enum.Types = T{
     HEALING   = "Healing",
+    DEBUFF_REMOVAL = "Debuff Removal",
     PET       = "Pet",
     PET_MELEE = "Pet Melee",
     PET_TP    = "Pet Weaponskill",
@@ -162,7 +163,7 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 Blog.Action_Filter = function(action_flag)
-    if     action_flag == Blog.Enum.Types.HEALING   then return Metrics.Blog.Healing
+    if     action_flag == Blog.Enum.Types.HEALING or action_flag == Blog.Enum.Types.DEBUFF_REMOVAL then return Metrics.Blog.Healing
     elseif action_flag == Blog.Enum.Types.PET_MELEE then return Metrics.Blog.Pet_Melee
     elseif action_flag == Blog.Enum.Types.PET_TP    then return Metrics.Blog.Pet_TP
     elseif action_flag == Blog.Enum.Types.PET_HEAL  then return Metrics.Blog.Pet_Heal
