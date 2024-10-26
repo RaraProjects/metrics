@@ -221,12 +221,13 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_AOE())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_AOE())
-
-    -- Pet TP Move
-    -- Pet TP Move AOE
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_Pet())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_Pet_AOE_Primary())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary())
 
     Debug.Unit.Active = false
 end

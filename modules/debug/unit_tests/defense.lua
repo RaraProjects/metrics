@@ -526,11 +526,11 @@ Debug.Unit.Tests.Defense.Nuke_Pet = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Defense - Nuke Pet AOE
+-- Defense - Nuke Pet AOE (Primary)
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Defense.Nuke_Pet_AOE = function()
+Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary = function()
     DB.Initialize(true)
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
@@ -595,7 +595,80 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE = function()
     pet_database[index][pet][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET] = T{}
     pet_database[index][pet][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET][DB.Enum.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Defense - Nuke Pet AOE", player_database, pet_database)
+    return Debug.Unit.Check_Result("Defense - Nuke Pet AOE Primary", player_database, pet_database)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Defense - Nuke Pet AOE (Secondary)
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary = function()
+    DB.Initialize(true)
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local pet = Debug.Unit.Mob.PET.name
+    local damage = 100
+    local damage_two = 200
+    local action_id = 174 -- Firaga
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PLAYER.id, action_id, damage, nil, nil, nil, Debug.Unit.Mob.PET.id, damage_two)
+    Debug.Unit.Has_Pet = true
+    H.Spell_Def.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    Debug.Unit.Has_Pet = false
+
+    local player_database = T{}
+    player_database[index] = T{}
+    player_database[index][DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL] = T{}
+    player_database[index][DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN] = T{}
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"] = T{}
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.SPELL_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN] = T{}
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage_two
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.MIN] = damage_two
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.MAX] = damage_two
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"] = T{}
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.TOTAL] = damage_two
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.MIN] = damage_two
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.MAX] = damage_two
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET] = T{}
+    player_database[index][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET][DB.Enum.Metric.TOTAL] = damage_two
+
+    local pet_database = T{}
+    pet_database[index] = T{}
+    pet_database[index][pet] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.MAX] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.MIN] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.TOTAL] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.MIN] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.MAX] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Firaga"][DB.Enum.Metric.COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET][DB.Enum.Metric.TOTAL] = damage_two
+
+    return Debug.Unit.Check_Result("Defense - Nuke Pet AOE Secondary", player_database, pet_database)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -684,7 +757,7 @@ Debug.Unit.Tests.Defense.TP_AOE = function()
     player_database[index_two][DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL] = T{}
     player_database[index_two][DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL][DB.Enum.Metric.TOTAL] = damage_two
 
-    return Debug.Unit.Check_Result("Defense - Defense - TP AOE", player_database)
+    return Debug.Unit.Check_Result("Defense - TP AOE", player_database)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -694,49 +767,198 @@ end
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.TP_Pet = function()
     DB.Initialize(true)
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local pet = Debug.Unit.Mob.PET.name
     local damage = 100
     local action_id = 262   -- Sheep Charge
-    local player = Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
-    local action = Debug.Unit.Util.Build_Action(action_id, 2, damage)
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PET.id, action_id, damage)
     Debug.Unit.Has_Pet = true
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, player, true)
+    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, Debug.Unit.Mob.PLAYER, true)
     Debug.Unit.Has_Pet = false
 
-    local player_name = player.name
     local player_database = T{}
     player_database[index] = T{}
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN] = T{}
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.MIN] = damage
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.MAX] = damage
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"] = T{}
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.TOTAL] = damage
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.MIN] = damage
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.MAX] = damage
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.HIT_COUNT] = 1
-    player_database[index][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN] = T{}
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"] = T{}
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.COUNT] = 1
     player_database[index][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET] = T{}
     player_database[index][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET][DB.Enum.Metric.TOTAL] = damage
 
     local pet_database = T{}
     pet_database[index] = T{}
     pet_database[index][pet] = T{}
-    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN] = T{}
-    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage
-    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
-    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
-    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
-    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"] = T{}
-    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.TOTAL] = damage
-    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.MIN] = damage
-    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.MAX] = damage
-    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.HIT_COUNT] = 1
-    pet_database[index][pet][DB.Enum.Trackable.SPELL_PET_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MIN] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MAX] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.TOTAL] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.MIN] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.MAX] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Sheep Charge"][DB.Enum.Metric.COUNT] = 1
     pet_database[index][pet][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET] = T{}
     pet_database[index][pet][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET][DB.Enum.Metric.TOTAL] = damage
 
     return Debug.Unit.Check_Result("Defense - TP Pet", player_database, pet_database)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Defense - TP Pet AOE Primary
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Defense.TP_Pet_AOE_Primary = function()
+    DB.Initialize(true)
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local pet = Debug.Unit.Mob.PET.name
+    local damage = 100
+    local damage_two = 200
+    local action_id = 273   -- Claw Cyclone
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PET.id, action_id, damage, nil, nil, nil, Debug.Unit.Mob.PLAYER.id_num, damage_two)
+    Debug.Unit.Has_Pet = true
+    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, Debug.Unit.Mob.PLAYER, true)
+    Debug.Unit.Has_Pet = false
+
+    local player_database = T{}
+    player_database[index] = T{}
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN] = T{}
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage_two
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Metric.MIN] = damage_two
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Metric.MAX] = damage_two
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"] = T{}
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.TOTAL] = damage_two
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MIN] = damage_two
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MAX] = damage_two
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN] = T{}
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"] = T{}
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL] = T{}
+    player_database[index][DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL][DB.Enum.Metric.TOTAL] = damage_two
+    player_database[index][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET] = T{}
+    player_database[index][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET][DB.Enum.Metric.TOTAL] = damage
+
+    local pet_database = T{}
+    pet_database[index] = T{}
+    pet_database[index][pet] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MIN] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MAX] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.TOTAL] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MIN] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MAX] = damage
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET][DB.Enum.Metric.TOTAL] = damage
+
+    return Debug.Unit.Check_Result("Defense - TP Pet AOE Primary", player_database, pet_database)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Defense - TP Pet AOE Secondary
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary = function()
+    DB.Initialize(true)
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local pet = Debug.Unit.Mob.PET.name
+    local damage = 100
+    local damage_two = 200
+    local action_id = 273   -- Claw Cyclone
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PLAYER.id_num, action_id, damage, nil, nil, nil, Debug.Unit.Mob.PET.id, damage_two)
+    Debug.Unit.Has_Pet = true
+    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    Debug.Unit.Has_Pet = false
+
+    local player_database = T{}
+    player_database[index] = T{}
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN] = T{}
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"] = T{}
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN] = T{}
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage_two
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MIN] = damage_two
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MAX] = damage_two
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"] = T{}
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.TOTAL] = damage_two
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MIN] = damage_two
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MAX] = damage_two
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL] = T{}
+    player_database[index][DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET] = T{}
+    player_database[index][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET][DB.Enum.Metric.TOTAL] = damage_two
+
+    local pet_database = T{}
+    pet_database[index] = T{}
+    pet_database[index][pet] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.TOTAL] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MIN] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.MAX] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.TOTAL] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MIN] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.MAX] = damage_two
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.HIT_COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.PET_TP_DMG_TAKEN][DB.Enum.Values.CATALOG]["Claw Cyclone"][DB.Enum.Metric.COUNT] = 1
+    pet_database[index][pet][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET] = T{}
+    pet_database[index][pet][DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET][DB.Enum.Metric.TOTAL] = damage_two
+
+    return Debug.Unit.Check_Result("Defense - TP Pet AOE Secondary", player_database, pet_database)
 end

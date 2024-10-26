@@ -159,15 +159,16 @@ end
 -- Influenced by Flippant parse
 -- ------------------------------------------------------------------------------------------------------
 ---@param pet_data table the pet's mob table; needs to have an index.
----@return table
+---@return table|nil
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.Pet_Owner = function(pet_data)
+    if not pet_data then return nil end
     local party = Ashita.Party.Get()
     local owner
     for _, member in pairs(party) do
         if type(member) == 'table' and member.mob then
             -- May not always have a pet when running unit tests so need to short circuit here.
-            if Debug.Enabled and Debug.Unit.Active and Debug.Unit.Has_Pet then
+            if Debug.Enabled and Debug.Unit.Active and Debug.Unit.Has_Pet and pet_data.spawn_flags == Ashita.Enum.Spawn_Flags.PET then
                 return Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
             elseif member.mob.pet_index == pet_data.index then
                 owner = member.mob
