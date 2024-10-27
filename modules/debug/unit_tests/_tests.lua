@@ -156,9 +156,10 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Crit())
-    -- Endamage
-    -- Endebuff
-    -- Enaspir
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Endamage())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Endebuff())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Enaspir())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Endrain())
 
     -- Ranged
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Hit())
@@ -170,6 +171,7 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Shadows())
     -- Endamage
     -- Endebuff
+    -- Endrain
 
     -- TP Action
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Hit())
@@ -317,187 +319,13 @@ end
 -- Check test results.
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Check_Result = function(test_name, player_database, pet_database)
-
     local error_count = 0
     local error_message = ""
 
-    -- Player Database
-    for index, _ in pairs(DB.Parse) do
-        if not player_database[index] then
-            if error_count > 0 then error_message = error_message .. "\n" end
-            error_message = error_message .. "Couldn't find index: " .. tostring(index)
-            error_count = error_count + 1
-
-        else
-            for trackable, _ in pairs(DB.Parse[index]) do
-                if not DB.Parse[index][trackable] then
-                    if error_count > 0 then error_message = error_message .. "\n" end
-                    error_message = error_message .. "Couldn't find trackable: " .. tostring(index) .. " " .. tostring(trackable)
-                    error_count = error_count + 1
-
-                else
-                    for metric, value in pairs(DB.Parse[index][trackable]) do
-
-                        -- Cataloged Data
-                        if metric == DB.Enum.Values.CATALOG then
-                            for action_name, _ in pairs(DB.Parse[index][trackable][DB.Enum.Values.CATALOG]) do
-                                for catalog_metric, catalog_value in pairs(DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name]) do
-
-                                    -- Make sure expected data matches.
-                                    if player_database[index][trackable]
-                                    and player_database[index][trackable][DB.Enum.Values.CATALOG]
-                                    and player_database[index][trackable][DB.Enum.Values.CATALOG][action_name]
-                                    and player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] then
-                                        if player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == catalog_value then
-                                            -- Pass
-                                        elseif catalog_metric == DB.Enum.Metric.MIN
-                                        and player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == DB.Enum.Values.MAX_DAMAGE then
-                                            -- Pass
-                                        elseif player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == 0 then
-                                            -- Pass
-                                        else
-                                            if error_count > 0 then error_message = error_message .. "\n" end
-                                            error_message = error_message .. "Catalog Mismatch: " .. tostring(index) .. " " .. tostring(trackable) .. " "
-                                            .. tostring(catalog_metric) .. " " .. tostring(action_name) .. " " .. tostring(catalog_value) .. " Expected: "
-                                            .. tostring(player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric])
-                                            error_count = error_count + 1
-                                        end
-
-                                    -- There is unexpected data.
-                                    elseif catalog_value ~= 0 and catalog_value ~= DB.Enum.Values.MAX_DAMAGE then
-                                        if error_count > 0 then error_message = error_message .. "\n" end
-                                        error_message = error_message .. "Unexpected catalog data: " .. tostring(index) .. " " .. tostring(trackable) .. " "
-                                        .. tostring(catalog_metric) .. " " .. tostring(action_name) .. " " .. tostring(catalog_value)
-                                        error_count = error_count + 1
-                                    end
-
-                                end
-                            end
-
-                        -- Non-cataloged Data
-                        else
-                            -- Make sure expected data matches.
-                            if player_database[index][trackable] and player_database[index][trackable][metric] then
-                                if player_database[index][trackable][metric] == value then
-                                    -- Pass
-                                elseif metric == DB.Enum.Metric.MIN and DB.Parse[index][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
-                                    -- Pass
-                                elseif player_database[index][trackable][metric] == 0 then
-                                    -- Pass
-                                else
-                                    if error_count > 0 then error_message = error_message .. "\n" end
-                                    error_message = error_message .. "Data Mismatch: " .. tostring(index) .. " " .. tostring(trackable) .. " " .. tostring(metric)
-                                    .. " " .. tostring(value) .. " Expected: " .. tostring(player_database[index][trackable][metric])
-                                    error_count = error_count + 1
-                                end
-
-                            -- There is unexpected data.
-                            elseif value ~= 0 and value ~= DB.Enum.Values.MAX_DAMAGE then
-                                if error_count > 0 then error_message = error_message .. "\n" end
-                                error_message = error_message .. "Unexpected data: " .. tostring(index) .. " " .. tostring(trackable) .. " " .. tostring(metric)
-                                .. " " .. tostring(value)
-                                error_count = error_count + 1
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    -- Pet Database
-    if pet_database then
-        for index, _ in pairs(DB.Pet_Parse) do
-            if not pet_database[index] then
-                if error_count > 0 then error_message = error_message .. "\n" end
-                error_message = error_message .. "PET: Couldn't find index: " .. tostring(index)
-                error_count = error_count + 1
-
-            else
-                for pet_name, _ in pairs(DB.Pet_Parse[index]) do
-                    if not pet_database[index][pet_name] then
-                        if error_count > 0 then error_message = error_message .. "\n" end
-                        error_message = error_message .. "PET: Couldn't find pet index: " .. tostring(index) .. " " .. tostring(pet_name)
-                        error_count = error_count + 1
-
-                    else
-                        for trackable, _ in pairs(DB.Pet_Parse[index][pet_name]) do
-                            if not DB.Pet_Parse[index][pet_name][trackable] then
-                                if error_count > 0 then error_message = error_message .. "\n" end
-                                error_message = error_message .. "PET: Couldn't find trackable: " .. tostring(index) .. " " .. tostring(trackable)
-                                error_count = error_count + 1
-
-                            else
-                                for metric, value in pairs(DB.Pet_Parse[index][pet_name][trackable]) do
-
-                                    -- Cataloged Data
-                                    if metric == DB.Enum.Values.CATALOG then
-                                        for action_name, _ in pairs(DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG]) do
-                                            for catalog_metric, catalog_value in pairs(DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name]) do
-                                                -- Make sure expected data matches.
-                                                if pet_database[index][pet_name][trackable]
-                                                and pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG]
-                                                and pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name]
-                                                and pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] then
-                                                    if pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == catalog_value then
-                                                        -- Pass
-                                                    elseif catalog_metric == DB.Enum.Metric.MIN and
-                                                    pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == DB.Enum.Values.MAX_DAMAGE then
-                                                        -- Pass
-                                                    elseif pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == 0 then
-                                                        -- Pass
-                                                    else
-                                                        if error_count > 0 then error_message = error_message .. "\n" end
-                                                        error_message = error_message .. "PET: Catalog Mismatch: " .. tostring(trackable) .. " " .. tostring(catalog_metric)
-                                                                        .. " " .. tostring(action_name) .. " " .. tostring(catalog_value) .. " Expected: "
-                                                                        .. tostring(pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric])
-                                                        error_count = error_count + 1
-                                                    end
-
-                                                -- There is unexpected data.
-                                                elseif catalog_value ~= 0 and catalog_value ~= DB.Enum.Values.MAX_DAMAGE then
-                                                    if error_count > 0 then error_message = error_message .. "\n" end
-                                                    error_message = error_message .. "PET: Unexpected catalog data: " .. tostring(trackable) .. " " .. tostring(catalog_metric)
-                                                                    .. " " .. tostring(action_name) .. " " .. tostring(catalog_value)
-                                                    error_count = error_count + 1
-                                                end
-                                            end
-                                        end
-
-                                    -- Non-cataloged Data
-                                    else
-                                        -- Make sure expected data matches.
-                                        if pet_database[index][pet_name][trackable]
-                                        and pet_database[index][pet_name][trackable][metric] then
-                                            if pet_database[index][pet_name][trackable][metric] == value then
-                                                -- Pass
-                                            elseif metric == DB.Enum.Metric.MIN and DB.Pet_Parse[index][pet_name][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
-                                                -- Pass
-                                            elseif pet_database[index][pet_name][trackable][metric] == 0 then
-                                                -- Pass
-                                            else
-                                                if error_count > 0 then error_message = error_message .. "\n" end
-                                                error_message = error_message .. "PET: Data Mismatch: " .. tostring(trackable) .. " " .. tostring(metric) .. " "
-                                                                .. tostring(value) .. " Expected: " .. tostring(pet_database[index][pet_name][trackable][metric])
-                                                error_count = error_count + 1
-                                            end
-
-                                        -- There is unexpected data.
-                                        elseif value ~= 0 and value ~= DB.Enum.Values.MAX_DAMAGE then
-                                            if error_count > 0 then error_message = error_message .. "\n" end
-                                            error_message = error_message .. "PET: Unexpected data: " .. tostring(trackable) .. " " .. tostring(metric) .. " "
-                                                            .. tostring(value)
-                                            error_count = error_count + 1
-                                        end
-                                    end
-                                end
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
+    error_message, error_count = Debug.Unit.Check_Parse_Player_Database(player_database, error_message, error_count)
+    error_message, error_count = Debug.Unit.Check_Parse_Pet_Database(pet_database, error_message, error_count)
+    error_message, error_count = Debug.Unit.Check_Unit_Player_Database(player_database, error_message, error_count)
+    error_message, error_count = Debug.Unit.Check_Unit_Pet_Database(pet_database, error_message, error_count)
 
     local result = "Pass!"
     local color  = Res.Colors.Basic.GREEN
@@ -507,4 +335,484 @@ Debug.Unit.Check_Result = function(test_name, player_database, pet_database)
     end
 
     return {test = test_name, result = result, color = color, count = error_count, message = error_message}
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check DB.Parse player database.
+------------------------------------------------------------------------------------------------------
+---@param player_database table
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Check_Parse_Player_Database = function(player_database, error_message, error_count)
+    if not player_database then return error_message, error_count end
+    for index, _ in pairs(DB.Parse) do
+        if not player_database[index] then
+            if error_count > 0 then error_message = error_message .. "\n" end
+            error_message = error_message .. "Couldn't find index: " .. tostring(index)
+            error_count = error_count + 1
+        else
+            for trackable, _ in pairs(DB.Parse[index]) do
+                for metric, value in pairs(DB.Parse[index][trackable]) do
+                    if metric == DB.Enum.Values.CATALOG then
+                        error_message, error_count = Debug.Unit.Parse_Player_Catalog(player_database, index, trackable, error_message, error_count)
+                    else
+                        error_message, error_count = Debug.Unit.Parse_Player(player_database, index, trackable, metric, value, error_message, error_count)
+                    end
+                end
+            end
+        end
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check DB.Parse player nodes.
+------------------------------------------------------------------------------------------------------
+---@param player_database table
+---@param index string
+---@param trackable string
+---@param metric string
+---@param value integer
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Parse_Player = function(player_database, index, trackable, metric, value, error_message, error_count)
+    -- Check expected data.
+    if player_database[index][trackable] and player_database[index][trackable][metric] then
+        if player_database[index][trackable][metric] == value then
+            -- Pass
+        elseif metric == DB.Enum.Metric.MIN and DB.Parse[index][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
+            -- Pass
+        elseif player_database[index][trackable][metric] == 0 then
+            -- Pass
+        else
+            if error_count > 0 then error_message = error_message .. "\n" end
+            error_message = error_message .. "Data Mismatch: " .. tostring(index) .. " " .. tostring(trackable) .. " " .. tostring(metric)
+            .. " " .. tostring(value) .. " Expected: " .. tostring(player_database[index][trackable][metric])
+            error_count = error_count + 1
+        end
+    -- Check for unexpected data.
+    elseif value ~= 0 and value ~= DB.Enum.Values.MAX_DAMAGE then
+        if error_count > 0 then error_message = error_message .. "\n" end
+        error_message = error_message .. "Unexpected data: " .. tostring(index) .. " " .. tostring(trackable) .. " " .. tostring(metric)
+        .. " " .. tostring(value)
+        error_count = error_count + 1
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check DB.Parse catalog nodes.
+------------------------------------------------------------------------------------------------------
+---@param player_database table
+---@param index string
+---@param trackable string
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Parse_Player_Catalog = function(player_database, index, trackable, error_message, error_count)
+    for action_name, _ in pairs(DB.Parse[index][trackable][DB.Enum.Values.CATALOG]) do
+        for catalog_metric, catalog_value in pairs(DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name]) do
+            -- Check expected data.
+            if player_database[index][trackable]
+            and player_database[index][trackable][DB.Enum.Values.CATALOG]
+            and player_database[index][trackable][DB.Enum.Values.CATALOG][action_name]
+            and player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] then
+                if player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == catalog_value then
+                    -- Pass
+                elseif catalog_metric == DB.Enum.Metric.MIN
+                and player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == DB.Enum.Values.MAX_DAMAGE then
+                    -- Pass
+                elseif player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == 0 then
+                    -- Pass
+                else
+                    if error_count > 0 then error_message = error_message .. "\n" end
+                    error_message = error_message .. "Catalog Mismatch: " .. tostring(index) .. " " .. tostring(trackable) .. " "
+                    .. tostring(catalog_metric) .. " " .. tostring(action_name) .. " " .. tostring(catalog_value) .. " Expected: "
+                    .. tostring(player_database[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric])
+                    error_count = error_count + 1
+                end
+            -- Check for unexpected data.
+            elseif catalog_value ~= 0 and catalog_value ~= DB.Enum.Values.MAX_DAMAGE then
+                if error_count > 0 then error_message = error_message .. "\n" end
+                error_message = error_message .. "Unexpected catalog data: " .. tostring(index) .. " " .. tostring(trackable) .. " "
+                .. tostring(catalog_metric) .. " " .. tostring(action_name) .. " " .. tostring(catalog_value)
+                error_count = error_count + 1
+            end
+
+        end
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check DB.Parse pet catalog database.
+------------------------------------------------------------------------------------------------------
+---@param pet_database? table
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Check_Parse_Pet_Database = function(pet_database, error_message, error_count)
+    if not pet_database then return error_message, error_count end
+    for index, _ in pairs(DB.Pet_Parse) do
+        if not pet_database[index] then
+            if error_count > 0 then error_message = error_message .. "\n" end
+            error_message = error_message .. "PET: Couldn't find index: " .. tostring(index)
+            error_count = error_count + 1
+        else
+            for pet_name, _ in pairs(DB.Pet_Parse[index]) do
+                if not pet_database[index][pet_name] then
+                    if error_count > 0 then error_message = error_message .. "\n" end
+                    error_message = error_message .. "PET: Couldn't find pet index: " .. tostring(index) .. " " .. tostring(pet_name)
+                    error_count = error_count + 1
+                else
+                    for trackable, _ in pairs(DB.Pet_Parse[index][pet_name]) do
+                        for metric, value in pairs(DB.Pet_Parse[index][pet_name][trackable]) do
+                            if metric == DB.Enum.Values.CATALOG then
+                                error_message, error_count = Debug.Unit.Parse_Pet_Catalog(pet_database, index, pet_name, trackable, error_message, error_count)
+                            else
+                                error_message, error_count = Debug.Unit.Parse_Pet(pet_database, index, pet_name, trackable, metric, value, error_message, error_count)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check DB.Parse pet nodes.
+------------------------------------------------------------------------------------------------------
+---@param pet_database table
+---@param index string
+---@param pet_name string
+---@param trackable string
+---@param metric string
+---@param value integer
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Parse_Pet = function(pet_database, index, pet_name, trackable, metric, value, error_message, error_count)
+    -- Check expected data.
+    if pet_database[index][pet_name][trackable]
+    and pet_database[index][pet_name][trackable][metric] then
+        if pet_database[index][pet_name][trackable][metric] == value then
+            -- Pass
+        elseif metric == DB.Enum.Metric.MIN and DB.Pet_Parse[index][pet_name][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
+            -- Pass
+        elseif pet_database[index][pet_name][trackable][metric] == 0 then
+            -- Pass
+        else
+            if error_count > 0 then error_message = error_message .. "\n" end
+            error_message = error_message .. "PET: Data Mismatch: " .. tostring(trackable) .. " " .. tostring(metric) .. " "
+                            .. tostring(value) .. " Expected: " .. tostring(pet_database[index][pet_name][trackable][metric])
+            error_count = error_count + 1
+        end
+    -- Check for unexpected data.
+    elseif value ~= 0 and value ~= DB.Enum.Values.MAX_DAMAGE then
+        if error_count > 0 then error_message = error_message .. "\n" end
+        error_message = error_message .. "PET: Unexpected data: " .. tostring(trackable) .. " " .. tostring(metric) .. " "
+                        .. tostring(value)
+        error_count = error_count + 1
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check DB.Parse pet catalog nodes.
+------------------------------------------------------------------------------------------------------
+---@param pet_database table
+---@param index string
+---@param pet_name string
+---@param trackable string
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Parse_Pet_Catalog = function(pet_database, index, pet_name, trackable, error_message, error_count)
+    for action_name, _ in pairs(DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG]) do
+        for catalog_metric, catalog_value in pairs(DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name]) do
+            -- Check expected data.
+            if pet_database[index][pet_name][trackable]
+            and pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG]
+            and pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name]
+            and pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] then
+                if pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == catalog_value then
+                    -- Pass
+                elseif catalog_metric == DB.Enum.Metric.MIN and
+                pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == DB.Enum.Values.MAX_DAMAGE then
+                    -- Pass
+                elseif pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == 0 then
+                    -- Pass
+                else
+                    if error_count > 0 then error_message = error_message .. "\n" end
+                    error_message = error_message .. "PET: Catalog Mismatch: " .. tostring(trackable) .. " " .. tostring(catalog_metric)
+                                    .. " " .. tostring(action_name) .. " " .. tostring(catalog_value) .. " Expected: "
+                                    .. tostring(pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric])
+                    error_count = error_count + 1
+                end
+            -- Check for unexpected data.
+            elseif catalog_value ~= 0 and catalog_value ~= DB.Enum.Values.MAX_DAMAGE then
+                if error_count > 0 then error_message = error_message .. "\n" end
+                error_message = error_message .. "PET: Unexpected catalog data: " .. tostring(trackable) .. " " .. tostring(catalog_metric)
+                                .. " " .. tostring(action_name) .. " " .. tostring(catalog_value)
+                error_count = error_count + 1
+            end
+        end
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check unit test result player database.
+------------------------------------------------------------------------------------------------------
+---@param player_database table
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Check_Unit_Player_Database = function(player_database, error_message, error_count)
+    if not player_database then return error_message, error_count end
+    for index, _ in pairs(player_database) do
+        if not DB.Parse[index] then
+            if error_count > 0 then error_message = error_message .. "\n" end
+            error_message = error_message .. "UNIT: Couldn't find index: " .. tostring(index)
+            error_count = error_count + 1
+        else
+            for trackable, _ in pairs(player_database[index]) do
+                for metric, value in pairs(player_database[index][trackable]) do
+                    if metric == DB.Enum.Values.CATALOG then
+                        error_message, error_count = Debug.Unit.Unit_Player_Catalog(player_database, index, trackable, error_message, error_count)
+                    else
+                        error_message, error_count = Debug.Unit.Unit_Player(player_database, index, trackable, metric, value, error_message, error_count)
+                    end
+                end
+            end
+        end
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check unit player nodes.
+------------------------------------------------------------------------------------------------------
+---@param player_database table
+---@param index string
+---@param trackable string
+---@param metric string
+---@param value integer
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Unit_Player = function(player_database, index, trackable, metric, value, error_message, error_count)
+    -- Check expected data.
+    if DB.Parse[index][trackable] and player_database[index][trackable][metric] then
+        if DB.Parse[index][trackable][metric] == value then
+            -- Pass
+        elseif metric == DB.Enum.Metric.MIN and player_database[index][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
+            -- Pass
+        elseif DB.Parse[index][trackable][metric] == 0 then
+            -- Pass
+        else
+            if error_count > 0 then error_message = error_message .. "\n" end
+            error_message = error_message .. "UNIT: Data Mismatch: " .. tostring(index) .. " " .. tostring(trackable) .. " " .. tostring(metric)
+            .. " " .. tostring(value) .. " Expected: " .. tostring(player_database[index][trackable][metric])
+            error_count = error_count + 1
+        end
+    -- Check for unexpected data.
+    elseif value ~= 0 and value ~= DB.Enum.Values.MAX_DAMAGE then
+        if error_count > 0 then error_message = error_message .. "\n" end
+        error_message = error_message .. "UNIT: Unexpected data: " .. tostring(index) .. " " .. tostring(trackable) .. " " .. tostring(metric)
+        .. " " .. tostring(value)
+        error_count = error_count + 1
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check unit catalog nodes.
+------------------------------------------------------------------------------------------------------
+---@param player_database table
+---@param index string
+---@param trackable string
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Unit_Player_Catalog = function(player_database, index, trackable, error_message, error_count)
+    for action_name, _ in pairs(player_database[index][trackable][DB.Enum.Values.CATALOG]) do
+        for catalog_metric, catalog_value in pairs(player_database[index][trackable][DB.Enum.Values.CATALOG][action_name]) do
+            -- Check expected data.
+            if DB.Parse[index][trackable]
+            and DB.Parse[index][trackable][DB.Enum.Values.CATALOG]
+            and DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name]
+            and DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] then
+                if DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == catalog_value then
+                    -- Pass
+                elseif catalog_metric == DB.Enum.Metric.MIN
+                and DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == DB.Enum.Values.MAX_DAMAGE then
+                    -- Pass
+                elseif DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == 0 then
+                    -- Pass
+                else
+                    if error_count > 0 then error_message = error_message .. "\n" end
+                    error_message = error_message .. "UNIT: Catalog Mismatch: " .. tostring(index) .. " " .. tostring(trackable) .. " "
+                    .. tostring(catalog_metric) .. " " .. tostring(action_name) .. " " .. tostring(catalog_value) .. " Expected: "
+                    .. tostring(DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric])
+                    error_count = error_count + 1
+                end
+            -- Check for unexpected data.
+            elseif catalog_value ~= 0 and catalog_value ~= DB.Enum.Values.MAX_DAMAGE then
+                if error_count > 0 then error_message = error_message .. "\n" end
+                error_message = error_message .. "UNIT: Catalog data not in DB.Parse: " .. tostring(index) .. " " .. tostring(trackable) .. " "
+                .. tostring(catalog_metric) .. " " .. tostring(action_name) .. " " .. tostring(catalog_value)
+                error_count = error_count + 1
+            end
+
+        end
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check unit test result pet database.
+------------------------------------------------------------------------------------------------------
+---@param pet_database table
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Check_Unit_Pet_Database = function(pet_database, error_message, error_count)
+    if not pet_database then return error_message, error_count end
+    for index, _ in pairs(pet_database) do
+        if not DB.Pet_Parse[index] then
+            if error_count > 0 then error_message = error_message .. "\n" end
+            error_message = error_message .. "UNIT PET: Couldn't find index: " .. tostring(index)
+            error_count = error_count + 1
+        else
+            for pet_name, _ in pairs(pet_database[index]) do
+                if not DB.Pet_Parse[index][pet_name] then
+                    if error_count > 0 then error_message = error_message .. "\n" end
+                    error_message = error_message .. "UNIT PET: Couldn't find pet index: " .. tostring(index) .. " " .. tostring(pet_name)
+                    error_count = error_count + 1
+                else
+                    for trackable, _ in pairs(pet_database[index][pet_name]) do
+                        for metric, value in pairs(pet_database[index][pet_name][trackable]) do
+                            if metric == DB.Enum.Values.CATALOG then
+                                error_message, error_count = Debug.Unit.Unit_Pet_Catalog(pet_database, index, pet_name, trackable, error_message, error_count)
+                            else
+                                error_message, error_count = Debug.Unit.Unit_Pet(pet_database, index, pet_name, trackable, metric, value, error_message, error_count)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check unit pet nodes.
+------------------------------------------------------------------------------------------------------
+---@param pet_database table
+---@param index string
+---@param pet_name string
+---@param trackable string
+---@param metric string
+---@param value integer
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Unit_Pet = function(pet_database, index, pet_name, trackable, metric, value, error_message, error_count)
+    -- Check expected data.
+    if DB.Pet_Parse[index][pet_name][trackable]
+    and DB.Pet_Parse[index][pet_name][trackable][metric] then
+        if DB.Pet_Parse[index][pet_name][trackable][metric] == value then
+            -- Pass
+        elseif metric == DB.Enum.Metric.MIN and pet_database[index][pet_name][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
+            -- Pass
+        elseif DB.Pet_Parse[index][pet_name][trackable][metric] == 0 then
+            -- Pass
+        else
+            if error_count > 0 then error_message = error_message .. "\n" end
+            error_message = error_message .. "UNIT PET: Data Mismatch: " .. tostring(trackable) .. " " .. tostring(metric) .. " "
+                            .. tostring(value) .. " Expected: " .. tostring(DB.Pet_Parse[index][pet_name][trackable][metric])
+            error_count = error_count + 1
+        end
+    -- Check for unexpected data.
+    elseif value ~= 0 and value ~= DB.Enum.Values.MAX_DAMAGE then
+        if error_count > 0 then error_message = error_message .. "\n" end
+        error_message = error_message .. "UNIT PET: Unexpected data: " .. tostring(trackable) .. " " .. tostring(metric) .. " "
+                        .. tostring(value)
+        error_count = error_count + 1
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check unit pet catalog nodes.
+------------------------------------------------------------------------------------------------------
+---@param pet_database table
+---@param index string
+---@param pet_name string
+---@param trackable string
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Unit_Pet_Catalog = function(pet_database, index, pet_name, trackable, error_message, error_count)
+    for action_name, _ in pairs(pet_database[index][pet_name][trackable][DB.Enum.Values.CATALOG]) do
+        for catalog_metric, catalog_value in pairs(DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name]) do
+            -- Check expected data.
+            if DB.Pet_Parse[index][pet_name][trackable]
+            and DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG]
+            and DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name]
+            and DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] then
+                if DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == catalog_value then
+                    -- Pass
+                elseif catalog_metric == DB.Enum.Metric.MIN and
+                DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == DB.Enum.Values.MAX_DAMAGE then
+                    -- Pass
+                elseif DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric] == 0 then
+                    -- Pass
+                else
+                    if error_count > 0 then error_message = error_message .. "\n" end
+                    error_message = error_message .. "UNIT PET: Catalog Mismatch: " .. tostring(trackable) .. " " .. tostring(catalog_metric)
+                                    .. " " .. tostring(action_name) .. " " .. tostring(catalog_value) .. " Expected: "
+                                    .. tostring(DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][catalog_metric])
+                    error_count = error_count + 1
+                end
+            -- Check for unexpected data.
+            elseif catalog_value ~= 0 and catalog_value ~= DB.Enum.Values.MAX_DAMAGE then
+                if error_count > 0 then error_message = error_message .. "\n" end
+                error_message = error_message .. "UNIT PET: Unexpected catalog data: " .. tostring(trackable) .. " " .. tostring(catalog_metric)
+                                .. " " .. tostring(action_name) .. " " .. tostring(catalog_value)
+                error_count = error_count + 1
+            end
+        end
+    end
+    return error_message, error_count
 end

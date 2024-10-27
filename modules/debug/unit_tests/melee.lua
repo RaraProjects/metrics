@@ -876,3 +876,203 @@ Debug.Unit.Tests.Melee.Kick_Crit = function()
 
     return Debug.Unit.Check_Result("Melee - Kick > Crit", player_database)
 end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Endamage
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Endamage = function()
+    DB.Initialize(true)
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+    local additional_damage = 200
+    local add_effect_animation = 1  -- Fire
+    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.HIT}
+    local add_effect = {param = additional_damage, animation = add_effect_animation, message = Ashita.Enum.Message.ENDAMAGE}
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player_database = T{}
+    player_database[index] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.CYCLE] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.ROUNDS] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.ROUNDS] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.MULT_ATK_1] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_COUNTERED] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE_COUNTERED][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MAGIC] = T{}
+    player_database[index][DB.Enum.Trackable.MAGIC][DB.Enum.Metric.TOTAL] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE] = T{}
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.TOTAL] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.MIN] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.MAX] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Fire"] = T{}
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Fire"][DB.Enum.Metric.TOTAL] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Fire"][DB.Enum.Metric.MIN] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Fire"][DB.Enum.Metric.MAX] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Fire"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.TOTAL] = T{}
+    player_database[index][DB.Enum.Trackable.TOTAL][DB.Enum.Metric.TOTAL] = damage + additional_damage
+    player_database[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
+    player_database[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage + additional_damage
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Endamage", player_database)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Endebuff
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Endebuff = function()
+    DB.Initialize(true)
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+    local additional_damage = 200
+    local add_effect_animation = 12  -- Blind
+    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.HIT}
+    local add_effect = {param = additional_damage, animation = add_effect_animation, message = Ashita.Enum.Message.ENDAMAGE}
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player_database = T{}
+    player_database[index] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.CYCLE] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.ROUNDS] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.ROUNDS] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.MULT_ATK_1] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_COUNTERED] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE_COUNTERED][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MAGIC] = T{}
+    player_database[index][DB.Enum.Trackable.MAGIC][DB.Enum.Metric.TOTAL] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE] = T{}
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.TOTAL] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.MIN] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.MAX] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Blind"] = T{}
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Blind"][DB.Enum.Metric.TOTAL] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Blind"][DB.Enum.Metric.MIN] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Blind"][DB.Enum.Metric.MAX] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Blind"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.TOTAL] = T{}
+    player_database[index][DB.Enum.Trackable.TOTAL][DB.Enum.Metric.TOTAL] = damage + additional_damage
+    player_database[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
+    player_database[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage + additional_damage
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Endebuff", player_database)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Endrain
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Endrain = function()
+    DB.Initialize(true)
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+    local additional_damage = 200
+    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.HIT}
+    local add_effect = {param = additional_damage, animation = nil, message = Ashita.Enum.Message.ENDRAIN}
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player_database = T{}
+    player_database[index] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.CYCLE] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.ROUNDS] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.MIN] = damage
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.MAX] = damage
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.ROUNDS] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.MULT_ATK_1] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_COUNTERED] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE_COUNTERED][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.ENDRAIN] = T{}
+    player_database[index][DB.Enum.Trackable.ENDRAIN][DB.Enum.Metric.TOTAL] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENDRAIN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.TOTAL] = T{}
+    player_database[index][DB.Enum.Trackable.TOTAL][DB.Enum.Metric.TOTAL] = damage
+    player_database[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
+    player_database[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Endrain", player_database)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Enaspir
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Enaspir = function()
+    DB.Initialize(true)
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+    local additional_damage = 200
+    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.HIT}
+    local add_effect = {param = additional_damage, animation = nil, message = Ashita.Enum.Message.ENASPIR}
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player_database = T{}
+    player_database[index] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.CYCLE] = 1
+    player_database[index][DB.Enum.Trackable.MELEE][DB.Enum.Metric.ROUNDS] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.ROUNDS] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.MULT_ATK_1] = 1
+    player_database[index][DB.Enum.Trackable.MELEE_COUNTERED] = T{}
+    player_database[index][DB.Enum.Trackable.MELEE_COUNTERED][DB.Enum.Metric.COUNT] = 1
+    player_database[index][DB.Enum.Trackable.ENASPIR] = T{}
+    player_database[index][DB.Enum.Trackable.ENASPIR][DB.Enum.Metric.TOTAL] = additional_damage
+    player_database[index][DB.Enum.Trackable.ENASPIR][DB.Enum.Metric.HIT_COUNT] = 1
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Enaspir", player_database)
+end
