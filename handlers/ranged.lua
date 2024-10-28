@@ -222,10 +222,10 @@ H.Ranged.Additional_Effect = function(audits, result)
             DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.TOTAL,       H.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
             DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.TOTAL_NO_SC, H.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
             DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENDRAIN_R,   H.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENDRAIN_R,   H.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC, 1,     audits, H.Trackable.ENDRAIN_R,   H.Metric.HIT_COUNT)
         elseif message_id == Ashita.Enum.Message.ENASPIR then
             DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENASPIR_R, H.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENASPIR_R, H.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC, 1,     audits, H.Trackable.ENASPIR_R, H.Metric.HIT_COUNT)
         end
 
     end

@@ -945,10 +945,9 @@ Debug.Unit.Tests.Melee.Endebuff = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local additional_damage = 200
-    local add_effect_animation = 12  -- Blind
+    local additional_damage = 5  -- Blind
     local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.HIT}
-    local add_effect = {param = additional_damage, animation = add_effect_animation, message = Ashita.Enum.Message.ENDAMAGE}
+    local add_effect = {param = additional_damage, animation = nil, message = Ashita.Enum.Message.ENDEBUFF}
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -972,23 +971,15 @@ Debug.Unit.Tests.Melee.Endebuff = function()
     player_database[index][DB.Enum.Trackable.MELEE_MAIN][DB.Enum.Metric.MULT_ATK_1] = 1
     player_database[index][DB.Enum.Trackable.MELEE_COUNTERED] = T{}
     player_database[index][DB.Enum.Trackable.MELEE_COUNTERED][DB.Enum.Metric.COUNT] = 1
-    player_database[index][DB.Enum.Trackable.MAGIC] = T{}
-    player_database[index][DB.Enum.Trackable.MAGIC][DB.Enum.Metric.TOTAL] = additional_damage
-    player_database[index][DB.Enum.Trackable.ENDAMAGE] = T{}
-    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.TOTAL] = additional_damage
-    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.MIN] = additional_damage
-    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.MAX] = additional_damage
-    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Metric.HIT_COUNT] = 1
-    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG] = T{}
-    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Blind"] = T{}
-    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Blind"][DB.Enum.Metric.TOTAL] = additional_damage
-    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Blind"][DB.Enum.Metric.MIN] = additional_damage
-    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Blind"][DB.Enum.Metric.MAX] = additional_damage
-    player_database[index][DB.Enum.Trackable.ENDAMAGE][DB.Enum.Values.CATALOG]["Blind"][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.ENDEBUFF] = T{}
+    player_database[index][DB.Enum.Trackable.ENDEBUFF][DB.Enum.Metric.HIT_COUNT] = 1
+    player_database[index][DB.Enum.Trackable.ENDEBUFF][DB.Enum.Values.CATALOG] = T{}
+    player_database[index][DB.Enum.Trackable.ENDEBUFF][DB.Enum.Values.CATALOG]["Blind"] = T{}
+    player_database[index][DB.Enum.Trackable.ENDEBUFF][DB.Enum.Values.CATALOG]["Blind"][DB.Enum.Metric.HIT_COUNT] = 1
     player_database[index][DB.Enum.Trackable.TOTAL] = T{}
-    player_database[index][DB.Enum.Trackable.TOTAL][DB.Enum.Metric.TOTAL] = damage + additional_damage
+    player_database[index][DB.Enum.Trackable.TOTAL][DB.Enum.Metric.TOTAL] = damage
     player_database[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
-    player_database[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage + additional_damage
+    player_database[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Enum.Metric.TOTAL] = damage
 
     return Debug.Unit.Check_Result("Melee - Main-Hand > Endebuff", player_database)
 end

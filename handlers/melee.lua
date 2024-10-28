@@ -112,7 +112,7 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
         pet_name = pet_name,
     }
 
-    local no_damage = H.Melee.No_Damage_Messages(result)        -- No damage Messages
+    local no_damage = H.Melee.No_Damage_Messages(result)            -- No damage Messages
     H.Melee.Totals(audits, damage, melee_type_discrete, no_damage)  -- Totals
     H.Melee.Pet_Total(owner_mob, audits, damage, no_damage)         -- Pet Totals
     throwing = H.Melee.Animation(animation_id, audits, damage, melee_type_broad, throwing, no_damage)   -- Melee or Throwing Totals and Counts

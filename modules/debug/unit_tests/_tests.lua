@@ -160,6 +160,7 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Endebuff())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Enaspir())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Endrain())
+    -- Multi-attack
 
     -- Ranged
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Hit())
@@ -169,9 +170,9 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Crit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.PUP())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Shadows())
-    -- Endamage
-    -- Endebuff
-    -- Endrain
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endamage())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endebuff())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endrain())
 
     -- TP Action
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Hit())
