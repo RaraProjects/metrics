@@ -69,6 +69,11 @@ Ashita.Menu.Types = T{
     automato = true,    -- Automaton equipment menu
     bluinven = true,    -- Automaton equipment selection
     bluequip = true,    -- BLU magic spell equip menu
+    quest00  = true,    -- Quest menu
+    quest01  = true,    -- Quest selection menu
+    miss00   = true,    -- Mission submenu
+    faqsub   = true,    -- Help Desk
+    cmbhlst  = true,    -- Synthesis History
 }
 
 -- ------------------------------------------------------------------------------------------------------
