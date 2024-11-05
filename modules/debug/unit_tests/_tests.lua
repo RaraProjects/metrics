@@ -319,7 +319,13 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Check test results.
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Check_Result = function(test_name, player_database, pet_database)
+---@param test_name string
+---@param player_database table
+---@param pet_database? table
+---@param battle_log_data? table
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Check_Result = function(test_name, player_database, pet_database, battle_log_data)
     local error_count = 0
     local error_message = ""
 
@@ -327,6 +333,7 @@ Debug.Unit.Check_Result = function(test_name, player_database, pet_database)
     error_message, error_count = Debug.Unit.Check_Parse_Pet_Database(pet_database, error_message, error_count)
     error_message, error_count = Debug.Unit.Check_Unit_Player_Database(player_database, error_message, error_count)
     error_message, error_count = Debug.Unit.Check_Unit_Pet_Database(pet_database, error_message, error_count)
+    error_message, error_count = Debug.Unit.Check_Battle_Log(battle_log_data, error_message, error_count)
 
     local result = "Pass!"
     local color  = Res.Colors.Basic.GREEN
@@ -696,7 +703,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Check unit test result pet database.
 ------------------------------------------------------------------------------------------------------
----@param pet_database table
+---@param pet_database? table
 ---@param error_message string
 ---@param error_count integer
 ---@return string
@@ -814,6 +821,46 @@ Debug.Unit.Unit_Pet_Catalog = function(pet_database, index, pet_name, trackable,
                 error_count = error_count + 1
             end
         end
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check battle log nodes.
+------------------------------------------------------------------------------------------------------
+---@param expected_data? table
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Check_Battle_Log = function(expected_data, error_message, error_count)
+    if not expected_data then return error_message, error_count end
+    local entry = Blog.Log[1]
+    if expected_data.player ~= entry.Player.Value then
+        if error_count > 0 then error_message = error_message .. "\n" end
+        error_message = error_message .. "BLOG: Expected player {" .. tostring(expected_data.player) .. "} got {" .. tostring(entry.Player.Value) .. "}"
+        error_count = error_count + 1
+    end
+    if expected_data.pet ~= entry.Pet.Value then
+        if error_count > 0 then error_message = error_message .. "\n" end
+        error_message = error_message .. "BLOG: Expected pet {" .. tostring(expected_data.pet) .. "} got {" .. tostring(entry.Pet.Value) .. "}"
+        error_count = error_count + 1
+    end
+    if expected_data.damage ~= entry.Damage.Value then
+        if error_count > 0 then error_message = error_message .. "\n" end
+        error_message = error_message .. "BLOG: Expected damage {" .. tostring(expected_data.damage) .. "} got {" .. tostring(entry.Damage.Value) .. "}"
+        error_count = error_count + 1
+    end
+    if expected_data.action ~= entry.Action.Value then
+        if error_count > 0 then error_message = error_message .. "\n" end
+        error_message = error_message .. "BLOG: Expected action {" .. tostring(expected_data.action) .. "} got {" .. tostring(entry.Action.Value) .. "}"
+        error_count = error_count + 1
+    end
+    if expected_data.note ~= entry.Note.Value then
+        if error_count > 0 then error_message = error_message .. "\n" end
+        error_message = error_message .. "BLOG: Expected note {" .. tostring(expected_data.note) .. "} got {" .. tostring(entry.Note.Value) .. "}"
+        error_count = error_count + 1
     end
     return error_message, error_count
 end

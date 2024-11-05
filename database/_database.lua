@@ -79,7 +79,7 @@ DB.Initialize = function(reset)
 	for spell, threshold in pairs(DB.Enum.HEALING) do
 		DB.Healing_Max[spell] = threshold
 	end
-	if not Debug.Enabled and not Debug.Unit.Active then Blog.Reset_Log() end	-- Don't clear during unit testing.
+	Blog.Reset_Log()
 	DB.Attack_Speed.Reset()
 	Timers.Reset(Timers.Enum.Names.PARSE)
 end

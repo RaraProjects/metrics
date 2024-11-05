@@ -92,6 +92,9 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
         if add_effect_damage > 0 then H.Melee_Def.Additional_Effect(audits, add_effect_damage, effect_animation_id, effect_message_id, no_damage) end
     end
 
+    -- Set to zero for the battle log.
+    if no_damage then damage = 0 end
+
     return damage
 end
 

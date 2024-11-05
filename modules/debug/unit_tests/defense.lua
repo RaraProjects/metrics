@@ -110,8 +110,8 @@ Debug.Unit.Tests.Defense.Melee_Shadows = function()
     DB.Initialize(true)
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
-    local damage = 0
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.SHADOWS}
+    local damage = 200
+    local primary = {animation = nil, reaction = 1, message = Ashita.Enum.Message.SHADOWS}
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PLAYER.id_num, nil, damage, primary)
     H.Melee_Def.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
 
@@ -129,7 +129,15 @@ Debug.Unit.Tests.Defense.Melee_Shadows = function()
     player_database[index][DB.Enum.Trackable.DEF_CRIT] = T{}
     player_database[index][DB.Enum.Trackable.DEF_CRIT][DB.Enum.Metric.COUNT] = 1
 
-    return Debug.Unit.Check_Result("Defense - Melee > Shadows", player_database)
+    local battle_log_data = T{
+        player = Debug.Unit.Mob.ENEMY.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "0",
+        action = "Melee",
+        note   = " ",
+    }
+
+    return Debug.Unit.Check_Result("Defense - Melee > Shadows", player_database, nil, battle_log_data)
 end
 
 ------------------------------------------------------------------------------------------------------
