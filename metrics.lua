@@ -237,10 +237,10 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         -- Killing a mob.
         if data.message == Ashita.Enum.Message.MOB_KILL then
             local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.actor_index)
-            if Ashita.Party.Is_Affiliate(actor_mob.name) then
+            if Ashita.Party.Is_Affiliate(actor_mob.name) or Ashita.Mob.Pet_Owner(actor_mob) then
                 local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
                 DB.Defeated_Mob(target_mob.name)
-                Blog.Add(target_mob.name, nil, Blog.Enum.Types.MOB_DEATH, Blog.Enum.Text.MOB_DEATH)
+                Blog.Add(target_mob.name, nil, Blog.Enum.Types.MOB_DEATH, Blog.Enum.Text.MOB_DEATH, nil, "------------", DB.Enum.Trackable.DEATH)
             end
 
         -- Being defeated by a mob.
