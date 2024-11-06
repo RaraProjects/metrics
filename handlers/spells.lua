@@ -139,7 +139,7 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
         local buff = Res.Buffs.Get_Buff(damage)
         if damage == -1 then
             blog_note = "No Effect"
-        elseif buff then
+        elseif buff and spell_id == 143 then    -- Erase
             blog_note = buff.en
         end
         Blog.Add(audits.player_name, audits.pet_name, Blog.Enum.Types.DEBUFF_REMOVAL, spell_name, -1, blog_note, DB.Enum.Trackable.DEBUFF_REMOVAL, spell_data)
