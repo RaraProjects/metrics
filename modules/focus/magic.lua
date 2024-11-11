@@ -28,13 +28,13 @@ Focus.Magic.Display = function(player_name, hide_publish)
 
     if nuke_total > 0     then Focus.Magic.Single(player_name, DB.Enum.Trackable.NUKE) end
     if healing_total > 0  then Focus.Magic.Single(player_name, DB.Enum.Trackable.HEALING) end
-    if debuff_removal > 0 then Focus.Magic.Single(player_name, DB.Enum.Trackable.DEBUFF_REMOVAL) end
+    if debuff_removal > 0 then Focus.Magic.Spell_Single_Simple(player_name, DB.Enum.Trackable.DEBUFF_REMOVAL) end
     if enspell_count > 0  then Focus.Magic.Single(player_name, DB.Enum.Trackable.ENSPELL) end
     if spike_damage > 0   then Focus.Magic.Single(player_name, DB.Enum.Trackable.OUTGOING_SPIKE_DMG) end
     if melee_endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Enum.Trackable.ENDAMAGE, " (M)") end
     if range_endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Enum.Trackable.ENDAMAGE_R, " (R)") end
     if enfeeble_count > 0 then Focus.Overview.Debuff(player_name) end
-    if buff > 0           then Focus.Magic.Buff_Single(player_name) end
+    if buff > 0           then Focus.Magic.Spell_Single_Simple(player_name, DB.Enum.Trackable.BUFF_SPELL) end
     if buff_songs > 0     then Focus.Overview.Buff_Songs(player_name) end
     if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Overview.Spell(player_name) end
 
@@ -362,20 +362,24 @@ end
 -- Shows a list of buff spells for the player in the focus magic section.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param trackable string
 ------------------------------------------------------------------------------------------------------
-Focus.Magic.Buff_Single = function(player_name)
+Focus.Magic.Spell_Single_Simple = function(player_name, trackable)
     local table_flags = Window_Manager.Table.Flags.Fixed_Borders
     local col_flags = Column.Flags.None
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
     -- Error Protection
-    local focus_type = DB.Enum.Trackable.BUFF_SPELL
+    local focus_type = trackable
     if not DB.Tracking.Trackable[focus_type] then return nil end
     if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
 
+    local name = "Buff Spell"
+    if trackable == DB.Enum.Trackable.DEBUFF_REMOVAL then name = "Debuff Removal" end
+
     if UI.BeginTable(focus_type, 3, table_flags) then
-        UI.TableSetupColumn("Buff Spell", col_flags, name_width)
+        UI.TableSetupColumn(name, col_flags, name_width)
         UI.TableSetupColumn("MP-", col_flags, width)
         UI.TableSetupColumn("Casts", col_flags, width)
         UI.TableHeadersRow()
