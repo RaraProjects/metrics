@@ -151,6 +151,11 @@ Config.Section.Text_Commands = function()
             UI.TableNextColumn() UI.Text("Toggles showing numerators and denominators for percents.")
             Window_Manager.Table_Row_Color(0)
 
+            UI.TableNextColumn() UI.Text("mouse")
+            UI.TableNextColumn() UI.Text("")
+            UI.TableNextColumn() UI.Text("Toggles forcing the mouse to show over ImGui components.")
+            Window_Manager.Table_Row_Color(1)
+
             UI.EndTable()
         end
     end

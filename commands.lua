@@ -51,6 +51,8 @@ ashita.events.register('command', 'command_cb', function (e)
             Throttle.Toggle()
         elseif arg == "lurk" then
             Metrics.Parse.Lurk_Mode = not Metrics.Parse.Lurk_Mode
+        elseif arg == "mouse" then
+            Window_Manager.Toggle_Mouse()
 
         -- XP
         elseif arg == "xp" and sub_command then

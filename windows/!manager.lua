@@ -167,6 +167,14 @@ Window_Manager.Get_Scaling = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Toggles the Show Mouse option.
+------------------------------------------------------------------------------------------------------
+Window_Manager.Toggle_Mouse = function()
+    Metrics.Window.Show_Mouse = not Metrics.Window.Show_Mouse
+    Window_Manager.Show_Mouse_Refresh = true
+end
+
+------------------------------------------------------------------------------------------------------
 -- Sets the show mouse flag after a setting change or initialization.
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Check_Mouse = function()
