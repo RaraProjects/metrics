@@ -65,6 +65,7 @@ Ashita.Menu.Types = T{
     merit1   = true,    -- Merit Categories/Mode Switch
     merit2   = true,    -- Merit EXP/Limit Points
     merit3   = true,    -- Merit Raise/Lower
+    merityn  = true,    -- Yes/No on the merit upgrades
     shop     = true,    -- Setting bazaar prices
     automato = true,    -- Automaton equipment menu
     bluinven = true,    -- Automaton equipment selection
