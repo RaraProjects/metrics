@@ -79,14 +79,13 @@ Overview.Parse.Melee = function()
     local width = Column.Widths.Standard
 
     local trackable = DB.Enum.Trackable.MELEE
-    if UI.BeginTable("Melee", 10, table_flags) then
+    if UI.BeginTable("Melee", 9, table_flags) then
         UI.TableSetupColumn("Melee",    col_flags, name_width)
         UI.TableSetupColumn("Damage",   col_flags, width)
         UI.TableSetupColumn("%Party",   col_flags, width)
         UI.TableSetupColumn("Average",  col_flags, width)
         UI.TableSetupColumn("Accuracy", col_flags, width)
         UI.TableSetupColumn("%Crit",    col_flags, width)
-        UI.TableSetupColumn("%Multi",   col_flags, width)
         UI.TableSetupColumn("Swings",   col_flags, width)
         UI.TableSetupColumn("Minimum",  col_flags, width)
         UI.TableSetupColumn("Maximum",  col_flags, width)
@@ -106,7 +105,6 @@ Overview.Parse.Melee = function()
                     UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, trackable)
                     UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
                     UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, trackable)
-                    UI.TableNextColumn() Column.General.Fraction(player_name, trackable, DB.Enum.Metric.MULTI_TOTAL, DB.Enum.Metric.ROUNDS)
                     UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.COUNT)
                     UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.MIN)
                     UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.MAX)
@@ -118,7 +116,6 @@ Overview.Parse.Melee = function()
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
