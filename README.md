@@ -1,4 +1,4 @@
-Update 11/10/24: New updates coming (hopefully) in November.
+Update 11/10/24: New updates coming (hopefully) in November. You can see a preview on the Testing branch.
 
 ## Introduction
 Metrics is a DPS parsing tool at it's core, but it can take you much deeper into the data than the typical parser. There are views to keep things simple if that's all you want, but for those hungry for the most specific of data I try to provide that in the most aesthetically pleasing and usable way possible.
