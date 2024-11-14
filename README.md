@@ -1,12 +1,13 @@
 Update 11/10/24: New updates coming (hopefully) in November. You can see a preview on the Testing branch.
 
 ## Introduction
-Metrics is a DPS parsing tool at it's core, but it can take you much deeper into the data than the typical parser. There are views to keep things simple if that's all you want, but for those hungry for the most specific of data I try to provide that in the most aesthetically pleasing and usable way possible.
+![image](https://github.com/user-attachments/assets/8a158cf7-21e7-4835-b4a4-ada65169cad4)<br>
+
+Metrics is a DPS parsing tool at it's core, but it can take you much deeper into the data than the typical parser. There are views to keep things simple if that's all you want, but for those hungry for the most specific of data, Metrics tries to provide that in the most complete, aesthetically pleasing, and usable way possible.
 
 Each of the modules described below can be displayed in either a single window with each module contained within its own tab or you can enable multi window mode to show multiple modules at once and house them in different areas of the screen simultaneously. If you use multi window mode just use the hub bar to toggle certain windows on and off.
 
-[Join the Discord](https://discord.gg/u5yqUbR6R7)<br>
-Ask questions, discuss feature requests, and report bugs. I will also be using the Discord to post occassional progress updates.
+[Join the Discord](https://discord.gg/u5yqUbR6R7) to ask questions, discuss feature requests, be alerted to updates, and report bugs.
 
 ## Installation
 I have two branches you can download from 1) Release and 2) Testing. The Testing branch is where I push my changes the most frequently. The TL;DR is that if you want more frequent changes or the newest content that are tested or mostly tested then you should try downloading from the Testing branch. If you want slower / larger changes that have more field testing then you should use the Release branch. I test the changes myself to the best of my ability and I work a couple others who also do some testing for things like alliance content. Once I feel sufficient testing has been completed I will push the changes on the Testing branch to the Release branch. My number one priority is to prevent crashes because if you crash you lose your data and that's a bad feeling.
