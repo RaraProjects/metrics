@@ -9,20 +9,14 @@ Each of the modules described below can be displayed in either a single window w
 
 [Join the Discord](https://discord.gg/u5yqUbR6R7) to ask questions, discuss feature requests, be alerted to updates, and report bugs.
 
-## Installation
-I have two branches you can download from 1) Release and 2) Testing. The Testing branch is where I push my changes the most frequently. The TL;DR is that if you want more frequent changes or the newest content that are tested or mostly tested then you should try downloading from the Testing branch. If you want slower / larger changes that have more field testing then you should use the Release branch. I test the changes myself to the best of my ability and I work a couple others who also do some testing for things like alliance content. Once I feel sufficient testing has been completed I will push the changes on the Testing branch to the Release branch. My number one priority is to prevent crashes because if you crash you lose your data and that's a bad feeling.
+## How to Install
+Metrics uses Github's release feature to distribute the code. Within the Releases page you can see the current and previous releases and pre-releases. Each release should have patch notes specific to that release. I publish pre-releases in between major releases. So, if you want to try out newer features sooner you can check those out. Pre-releases are _usually_ mostly stable.
 
-<details>
-<summary>Click to see installation instructions.</summary>
-<br>Within your HorizonXI install location (mine is ~/HorizonXI/Game) you should see several folders. There is one called /addons and another called /config/addons. The plain (non config) /addons folder is the one that houses the base addons. This is the folder you want to put your addon folders.
-
-1. Download Metrics using the green Code button near the top of Metrics Github page.
-2. Unzip the folder. This will create a folder with metrics in the name. The rest of the name depends on which branch you're downloading (Release or Testing).
-3. Inside the folder you just created, there will be another folder with the same name. Put that folder in your /addons folder.
-4. Remove the "-Release" or "-Testing" from the folder name. The folder should just be called "metrics".
-5. Load the addon from inside the game by typing "/addon load metrics" in the game chat.
-6. If you get an error saying "No such file or directory" when loading, then you may have forgotten to remove the branch tag in step #4.
-</details>
+1. On the right side of the Github page (to the right of all the files) there is a section called "Releases".
+2. Click the release that is marked as "Latest".
+3. Inside the release there is a file called metrics.zip. Download that. You don't need the "Source code" files.
+5. Go to your download location and extract metrics.zip. You should end up with a folder called "rsvp".
+6. Put that "rsvp" folder in your addon folder. For Horizon it's probably something like ~/HorizonXI/Game/addons.
 
 ## Module Overview<br>
 1. [Parse](#parse)
