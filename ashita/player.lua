@@ -12,8 +12,11 @@ Ashita.Player.Buffs = T{
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.Get = function(attribute)
     local player = AshitaCore:GetMemoryManager():GetPlayer()
+    if not player then return nil end
     if attribute == Ashita.Enum.Player_Attributes.ISZONING then
         return player:GetIsZoning()
+    elseif attribute == Ashita.Enum.Player_Attributes.PET_TP then
+        return player:GetPetTP()
     end
     return player
 end
@@ -173,6 +176,15 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.Zoning = function(zoning)
     Ashita.States.Zoning = zoning
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns whether the player is zoning or not.
+-- ------------------------------------------------------------------------------------------------------
+---@return boolean
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Is_Zoning = function()
+    return Ashita.States.Zoning
 end
 
 -- ------------------------------------------------------------------------------------------------------

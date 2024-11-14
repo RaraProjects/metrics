@@ -54,6 +54,7 @@ DB.Initialize = function(reset)
 	end
 
 	DB.Parse = T{}
+	DB.Pet_Parse = T{}
 
 	DB.Tracking.Trackable = T{}
 	DB.Tracking.Pet_Trackable = T{}
@@ -79,6 +80,7 @@ DB.Initialize = function(reset)
 		DB.Healing_Max[spell] = threshold
 	end
 	Blog.Reset_Log()
+	DB.Attack_Speed.Reset()
 	Timers.Reset(Timers.Enum.Names.PARSE)
 end
 

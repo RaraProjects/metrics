@@ -12,7 +12,11 @@ DB.Data = T{}
 ------------------------------------------------------------------------------------------------------
 DB.Data.Init = function(index, player_name)
 	if not index then
-		_Debug.Error.Add("Data.Init: {" .. tostring(player_name) .. "} nil index passed in." )
+		Debug.Error.Add("Data.Init: Player name {" .. tostring(player_name) .. "} has nil index passed in.")
+		return false
+	end
+	if not player_name or player_name == "" then
+		Debug.Error.Add("Data.Init: Index {" .. tostring(index) .. "} has nil or blank player name." )
 		return false
 	end
 
@@ -22,7 +26,7 @@ DB.Data.Init = function(index, player_name)
 	-- Initialize primary node.
 	DB.Parse[index] = {}
 
-	-- Initialize data nodes
+	-- Initialize data nodes.
 	for _, trackable in pairs(DB.Enum.Trackable) do
 		DB.Parse[index][trackable] = {}
 		DB.Parse[index][trackable][DB.Enum.Values.CATALOG] = {}
@@ -31,13 +35,52 @@ DB.Data.Init = function(index, player_name)
 		end
 	end
 
-	-- Need to set minimum high manually to capture accurate minimums
+	-- Need to set minimum high manually to capture accurate minimums.
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MIN)
 	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ENSPELL, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ENDAMAGE, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ENASPIR, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_MELEE, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_MELEE_DISCRETE, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.RANGED, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ENDAMAGE_R, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.THROWING, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.WS, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.SC, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_WS, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MP_DRAIN, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ABILITY_HEALING, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ABILITY_MP_RECOVERY, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_ABILITY, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_HEAL, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.NUKE, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_NUKE, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.HEALING, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.HEALING_RECEIVED, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_DMG_TAKEN, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_PET_DMG_TAKEN, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.SPELL_DMG_TAKEN, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.SPELL_PET_DMG_TAKEN, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.TP_DMG_TAKEN, DB.Enum.Metric.MIN)
+	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_TP_DMG_TAKEN, DB.Enum.Metric.MIN)
 
-	-- Initialize tracking tables
-	if player_name and not DB.Tracking.Initialized_Players[player_name] then
+	-- Initialize tracking tables.
+	DB.Data.Init_Player(player_name)
+
+	return true
+end
+
+------------------------------------------------------------------------------------------------------
+-- Initializes a player in the player list.
+------------------------------------------------------------------------------------------------------
+---@param player_name? string
+------------------------------------------------------------------------------------------------------
+DB.Data.Init_Player = function(player_name)
+	if player_name and player_name ~= "" and not DB.Tracking.Initialized_Players[player_name] then
 		DB.Tracking.Initialized_Players[player_name] = true
 		DB.Lists.Sort.Players()
 		DB.Tracking.Running_Accuracy[player_name] = T{}
@@ -45,8 +88,6 @@ DB.Data.Init = function(index, player_name)
 		DB.Tracking.Running_Attack_Speed[player_name] = T{}
 		DB.Tracking.Multi_Attack[player_name] = T{}
 	end
-
-	return true
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -61,6 +102,12 @@ end
 ---@param metric string a trackable's metric from the metric list.
 ------------------------------------------------------------------------------------------------------
 DB.Data.Update = function(mode, value, audits, trackable, metric)
+	if audits.player_name == "" or audits.target_name == "" then
+		Debug.Error.Add("Data.Update: Empty name: " .. tostring(audits.player_name) .. " " .. tostring(audits.target_name)
+		.. " " .. tostring(trackable) .. " " .. tostring(metric))
+		return nil
+	end
+
 	local player_name = audits.player_name
 	local target_name = audits.target_name
 	local pet_name = audits.pet_name
@@ -98,9 +145,15 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Set = function(value, index, trackable, metric)
 	if not value or not index or not trackable or not metric then
-		_Debug.Error.Add("Set.Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Data.Set: Index {" .. tostring(index) .. "}; Trackable {" .. tostring(trackable) .. "}; "
+		            .. "Metric {" .. tostring(metric) .. "} nil required parameter passed in.")
 		return false
 	end
+	if not DB.Parse or not DB.Parse[index] then
+		Debug.Error.Add("Data.Set: Index {" .. tostring(index) .. "} is not initialized.")
+		return false
+	end
+
 	DB.Parse[index][trackable][metric] = value
 	return true
 end
@@ -116,9 +169,15 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Inc = function(value, index, trackable, metric)
 	if not value or not index or not trackable or not metric then
-		_Debug.Error.Add("Inc.Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Data.Set: Index {" .. tostring(index) .. "}; Trackable {" .. tostring(trackable) .. "}; "
+		            .. "Metric {" .. tostring(metric) .. "} nil required parameter passed in.")
 		return false
 	end
+	if not DB.Parse or not DB.Parse[index] or not DB.Parse[index][trackable] or not DB.Parse[index][trackable][metric] then
+		Debug.Error.Add("Data.Inc: DB.Parse uninitialized {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} {" .. tostring(metric) .. "}." )
+		return false
+	end
+
 	DB.Parse[index][trackable][metric] = DB.Parse[index][trackable][metric] + value
 	return true
 end
@@ -134,7 +193,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Get = function(player_name, trackable, metric)
 	if not player_name or not trackable or not metric then
-		_Debug.Error.Add("Get.Data: Nil player name. " .. tostring(trackable) .. " " .. tostring(metric))
+		Debug.Error.Add("Get.Data: Nil player name. Trackable {" .. tostring(trackable) .. "}; Metric {" .. tostring(metric) .. "}.")
 		return 0
 	end
 
@@ -181,12 +240,13 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Build_Index = function(actor_name, target_name)
 	if not target_name then
-		_Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil target name passed in.")
+		Debug.Error.Add("Util.Build_Index: Actor {" .. tostring(actor_name) .. "}; Target {" .. tostring(target_name) .. "} nil target name passed in.")
 		target_name = DB.Enum.Values.DEBUG
 	end
 	if not actor_name then
-		_Debug.Error.Add("Util.Build_Index: {" .. tostring(actor_name) .. "} {" .. tostring(target_name) .. "} nil actor name passed in.")
-		return DB.Enum.Values.DEBUG
+		Debug.Error.Add("Util.Build_Index: Actor {" .. tostring(actor_name) .. "}; Target {" .. tostring(target_name) .. "} nil actor name passed in.")
+		actor_name = DB.Enum.Values.DEBUG
 	end
-	return actor_name..":"..target_name
+
+	return actor_name .. ":" .. target_name
 end

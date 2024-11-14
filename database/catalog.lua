@@ -16,7 +16,7 @@ DB.Catalog = T{}
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Init = function(index, player_name, trackable, action_name, pet_name)
 	if not index or not player_name or not trackable or not action_name then
-		_Debug.Error.Add("Init.Catalog_Action: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Init.Catalog_Action: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil required parameter passed in." )
 		return false
 	end
 
@@ -64,7 +64,13 @@ end
 ---@param burst? boolean whether or not a magic burst took place.
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, action_name, pet_name, burst)
-    local index = DB.Data.Build_Index(player_name, mob_name)
+    if player_name == "" or mob_name == "" or pet_name == "" then
+		Debug.Error.Add("Catalog.Update_Damage: Empty name: {}" .. tostring(player_name) .. "} {" .. tostring(mob_name)
+		.. "} {" .. tostring(pet_name) .. "} {" .. tostring(trackable) .. "} {" .. tostring(action_name) .. "} {" .. tostring(damage) .. "}")
+		return nil
+	end
+
+	local index = DB.Data.Build_Index(player_name, mob_name)
     DB.Catalog.Init(index, player_name, trackable, action_name, pet_name)
 
 	local audits = {
@@ -86,11 +92,18 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
     DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Enum.Metric.TOTAL)
 	if burst then
 		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.MAGIC, DB.Enum.Metric.BURST_DAMAGE)
+		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Enum.Metric.BURST_DAMAGE)
 	end
 
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
-    if damage > 0 and damage < DB.Data.Get(player_name, trackable, DB.Enum.Metric.MIN) then
-		DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MIN)
+	if pet_name then
+		if damage > 0 and damage < DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Enum.Metric.MIN) then
+			DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MIN)
+		end
+	else
+		if damage > 0 and damage < DB.Data.Get(player_name, trackable, DB.Enum.Metric.MIN) then
+			DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MIN)
+		end
 	end
 
     if damage > DB.Data.Get(player_name, trackable, DB.Enum.Metric.MAX) then
@@ -100,7 +113,7 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
     -- CATALOG TOTAL, MIN, and MAX ////////////////////////////////////////////////////////////////
 	-- COUNT gets incremented in the packet handler.
     DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Enum.Metric.TOTAL)
-	if trackable == DB.Enum.Trackable.MAGIC and burst then
+	if trackable == DB.Enum.Trackable.NUKE and burst then
 		DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Enum.Metric.BURST_DAMAGE)
 	end
 
@@ -131,13 +144,20 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Update_Metric = function(mode, value, audits, trackable, action_name, metric)
+	if audits.player_name == "" or audits.target_name == "" then
+		Debug.Error.Add("Catalog.Update_Metric: Empty name: Player {" .. tostring(audits.player_name) .. "} Target {" .. tostring(audits.target_name)
+		.. "} Trackable {" .. tostring(trackable) .. "} Metric {" .. tostring(metric) .. "}")
+		return false
+	end
+
 	local player_name = audits.player_name
 	local target_name = audits.target_name
 	local pet_name = audits.pet_name
 	local index = DB.Data.Build_Index(player_name, target_name)
 
 	if not trackable or not player_name or not action_name then
-		_Debug.Error.Add("Update.Catalog_Metric: {" .. tostring(player_name) .. "} {" .. tostring(pet_name) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Catalog.Update_Metric: Player {" .. tostring(player_name) .. "} Pet {" .. tostring(pet_name) .. "} Action {" .. tostring(action_name)
+		.. "} nil required parameter passed in." )
 		return false
 	end
 	DB.Catalog.Init(index, player_name, trackable, action_name, pet_name)
@@ -182,7 +202,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Set = function(value, index, trackable, action_name, metric)
 	if not value or not index or not trackable or not action_name or not metric then
-		_Debug.Error.Add("Set.Catalog: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Set.Catalog: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
 		return false
 	end
 	DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric] = value
@@ -204,7 +224,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Inc = function(value, index, trackable, action_name, metric)
 	if not value or not index or not trackable or not action_name or not metric then
-		_Debug.Error.Add("Inc.Catalog: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Inc.Catalog: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
 		return false
 	end
 	DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric]
@@ -224,21 +244,18 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Get = function(player_name, trackable, action_name, metric)
 	if not player_name or not trackable or not action_name or not metric then
-		_Debug.Error.Add("Get.Catalog: player_name {" .. tostring(player_name) .. "} trackable {" .. tostring(trackable) .. "} action_name {" .. tostring(action_name) .. "} metric {" .. tostring(metric))
+		Debug.Error.Add("Get.Catalog: player_name {" .. tostring(player_name) .. "} trackable {" .. tostring(trackable) .. "} action_name {" .. tostring(action_name) .. "} metric {" .. tostring(metric))
 		return 0
 	end
 	local total = 0
 	if metric == DB.Enum.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
+	local search_string = player_name .. ":" .. mob_focus
+	if mob_focus == DB.Widgets.Dropdown.Enum.NONE or trackable == DB.Enum.Trackable.HEALING_RECEIVED then search_string = player_name .. ":" end
+
 	for index, _ in pairs(DB.Parse) do
-		if mob_focus == DB.Widgets.Dropdown.Enum.NONE then
-			if string.find(index, player_name) then
-				total = DB.Catalog.Calculate(total, index, trackable, action_name, metric)
-			end
-		else
-			if string.find(index, player_name .. ":" .. mob_focus) then
-				total = DB.Catalog.Calculate(total, index, trackable, action_name, metric)
-			end
+		if string.find(index, search_string) then
+			total = DB.Catalog.Calculate(total, index, trackable, action_name, metric)
 		end
 	end
 	return total
@@ -305,6 +322,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Include_Total_Damage = function(trackable)
 	if trackable == DB.Enum.Trackable.HEALING or
+	   trackable == DB.Enum.Trackable.HEALING_RECEIVED or
 	   trackable == DB.Enum.Trackable.ABILITY_HEALING or
 	   trackable == DB.Enum.Trackable.ABILITY_MP_RECOVERY or
 	   trackable == DB.Enum.Trackable.PET_HEAL or

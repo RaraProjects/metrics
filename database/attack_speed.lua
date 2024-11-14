@@ -6,13 +6,21 @@ DB.Attack_Speed.Max_Windows = 3
 DB.Attack_Speed.Timeout = 15    -- Treshold in seconds to throw away a value (in between pulls or something).
 
 ------------------------------------------------------------------------------------------------------
+-- Resets the attack speed globals.
+------------------------------------------------------------------------------------------------------
+DB.Attack_Speed.Reset = function()
+    DB.Attack_Speed.Players = T{}
+    DB.Attack_Speed.Timestamp = T{}
+end
+
+------------------------------------------------------------------------------------------------------
 -- Keeps a tally of the player's attack speed.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 DB.Attack_Speed.Update = function(player_name)
     if not DB.Tracking.Running_Attack_Speed[player_name] then
-		_Debug.Error.Add("Attack_Speed.Update: {" .. tostring(player_name) .. "} is missing in Tracking.Attack_Speed.")
+		Debug.Error.Add("Attack_Speed.Update: {" .. tostring(player_name) .. "} is missing in Tracking.Attack_Speed.")
 		return false
 	end
 

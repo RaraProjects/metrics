@@ -12,7 +12,7 @@ DB.Pet_Data = T{}
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Data.Init = function(index, player_name, pet_name)
 	if not index or not pet_name then
-		_Debug.Error.Add("Pet_Data.Init: {" .. tostring(player_name) .. " {" .. tostring(pet_name) .. "} nil index passed in." )
+		Debug.Error.Add("Pet_Data.Init: {" .. tostring(player_name) .. " {" .. tostring(pet_name) .. "} nil index passed in." )
 		return false
 	end
 
@@ -29,6 +29,15 @@ DB.Pet_Data.Init = function(index, player_name, pet_name)
 			DB.Pet_Data.Set(0, index, pet_name, trackable, metric)
 		end
 	end
+
+	-- Need to set minimum high manually to capture accurate minimums.
+	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.PET_WS, DB.Enum.Metric.MIN)
+	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.PET_ABILITY, DB.Enum.Metric.MIN)
+	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.PET_HEAL, DB.Enum.Metric.MIN)
+	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.PET_NUKE, DB.Enum.Metric.MIN)
+	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.MELEE_PET_DMG_TAKEN, DB.Enum.Metric.MIN)
+	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.SPELL_PET_DMG_TAKEN, DB.Enum.Metric.MIN)
+	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.PET_TP_DMG_TAKEN, DB.Enum.Metric.MIN)
 
 	-- Initialize pet tracking tables.
 	if player_name and not DB.Tracking.Initialized_Pets[player_name] then
@@ -51,7 +60,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Data.Set = function(value, index, pet_name, trackable, metric)
 	if not value or not index or not pet_name or not trackable or not metric then
-		_Debug.Error.Add("Set.Pet_Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Set.Pet_Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
 		return false
 	end
 	DB.Pet_Parse[index][pet_name][trackable][metric] = value
@@ -70,7 +79,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Data.Inc = function(value, index, pet_name, trackable, metric)
 	if not value or not index or not pet_name or not trackable or not metric then
-		_Debug.Error.Add("Inc.Pet_Data: {" .. tostring(index) .. "} {" .. tostring(pet_name) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add("Inc.Pet_Data: {" .. tostring(index) .. "} {" .. tostring(pet_name) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
 		return false
 	end
 	DB.Pet_Parse[index][pet_name][trackable][metric] = DB.Pet_Parse[index][pet_name][trackable][metric] + value

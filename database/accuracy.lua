@@ -10,7 +10,7 @@ DB.Accuracy = T{}
 ------------------------------------------------------------------------------------------------------
 DB.Accuracy.Update = function(player_name, hit)
 	if not DB.Tracking.Running_Accuracy[player_name] then
-		_Debug.Error.Add("Update.Running_Accuracy: {" .. tostring(player_name) .. "} is missing in Data.Running_Accuracy.")
+		Debug.Error.Add("Update.Running_Accuracy: {" .. tostring(player_name) .. "} is missing in Data.Running_Accuracy.")
 		return false
 	end
 	local max = #DB.Tracking.Running_Accuracy[player_name]
@@ -28,7 +28,7 @@ end
 DB.Accuracy.Get = function(player_name)
 	-- This error can occur in mini mode when trying to load data before the player has been initialized. Not a big deal.
 	if not DB.Tracking.Running_Accuracy[player_name] then
-		_Debug.Error.Add("Get.Running_Accuracy: Attempt to get {" .. tostring(player_name) .. "} running accuracy, but it didn't exist.")
+		Debug.Error.Add("Get.Running_Accuracy: Attempt to get {" .. tostring(player_name) .. "} running accuracy, but it didn't exist.")
 		return {0, 0}
 	end
 	local hits = 0

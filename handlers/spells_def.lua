@@ -23,25 +23,18 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
-            if target_mob.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(actor_mob.name) end
-
-            new_damage = H.Spell_Def.Parse(spell_data, result, actor_mob, target_mob, owner_mob)
-            if not new_damage then new_damage = 0 end
-
-            target_count = target_count + 1
-            damage = damage + new_damage
+            if target_mob and (Ashita.Party.Is_Affiliate(target_mob.name) or Ashita.Mob.Pet_Owner(target_mob) or Metrics.Parse.Lurk_Mode) then
+                if Ashita.Mob.Is_Monster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
+                owner_mob = Ashita.Mob.Pet_Owner(target_mob)    -- Need to recheck for AOEs.
+                new_damage = H.Spell_Def.Parse(spell_data, result, actor_mob, target_mob, owner_mob)
+                if not new_damage then new_damage = 0 end
+                target_count = target_count + 1
+                damage = damage + new_damage
+            end
         end
     end
 
-    local audits = H.Spell_Def.Audits(actor_mob, target_mob, owner_mob)
-    if Res.Spells.Get_Damaging(spell_id) then
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SPELL_DMG_TAKEN, spell_name, H.Metric.HIT_COUNT)
-    else
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.HIT_COUNT)
-    end
+    if Res.Spells.Get_Damaging(spell_id) then H.Spell_Def.Blog(actor_mob, spell_id, spell_data, spell_name, damage, target_count) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -56,8 +49,11 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob)
-    _Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Spell Def", result)
+    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Spell Def", result)
     if not spell_data then return 0 end
+
+    -- Need to double check each target in case a pet gets hit by AOE and wasn't the primary target.
+    if not owner_mob then owner_mob = Ashita.Mob.Pet_Owner(target_mob) end
 
     local spell_id = spell_data.Index
     local spell_name = Ashita.Spell.Name(spell_id, spell_data)
@@ -68,6 +64,11 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     if Res.Spells.Get_Damaging(spell_id) then
         H.Spell_Def.Nuke(audits, damage, spell_name)
         is_mapped = true
+    else
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.DEF_NO_DMG_SPELLS, spell_name, H.Metric.HIT_COUNT)
     end
 
     if Res.Spells.Get_MP_Drain(spell_id) then
@@ -81,7 +82,7 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     end
 
     if not is_mapped then
-        _Debug.Error.Add("Spell_Def.Parse: {" .. tostring(actor_mob.name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
+        Debug.Error.Add("Spell_Def.Parse: {" .. tostring(actor_mob.name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
     end
 
     return damage
@@ -123,12 +124,18 @@ end
 ---@param spell_name string
 ------------------------------------------------------------------------------------------------------
 H.Spell_Def.Nuke = function(audits, damage, spell_name)
+    local trackable = H.Trackable.SPELL_DMG_TAKEN
     if audits.pet_name then
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.SPELL_PET_DMG_TAKEN, H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DMG_TAKEN_TOTAL_PET, H.Metric.TOTAL)
+        trackable = H.Trackable.SPELL_PET_DMG_TAKEN
     else
         DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, H.Metric.TOTAL)
-        DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.SPELL_DMG_TAKEN, damage, spell_name, audits.pet_name)
     end
+    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, audits.pet_name)
+    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -152,4 +159,20 @@ H.Spell_Def.Enfeebling = function(audits)
     if not audits.pet_name then
         DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_ENFEEBLE, H.Metric.COUNT) -- Used to flag that data is availabel for show in Focus.
     end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Adds spell damage taken to the battle log.
+-- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table the mob data of the entity receiving the action.
+---@param spell_id integer
+---@param spell_data table
+---@param spell_name string
+---@param damage number
+---@param target_count integer
+-- ------------------------------------------------------------------------------------------------------
+H.Spell_Def.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, target_count)
+    local blog_note = ""
+    if Res.Spells.Get_AOE(spell_id) then blog_note = "TGTs: " .. tostring(target_count) end
+    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MOB_SPELL, spell_name, damage, blog_note, DB.Enum.Trackable.MAGIC, spell_data)
 end

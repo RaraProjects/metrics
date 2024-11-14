@@ -8,6 +8,7 @@ DB.Widgets.Dropdown.Enum = T{
     FOCUS = "Player",
     NONE  = "!NONE",
 }
+DB.Widgets.Dropdown.Width = 150
 DB.Widgets.Dropdown.Flags = ImGuiComboFlags_None
 DB.Widgets.Dropdown.Player = T{}
 DB.Widgets.Dropdown.Player.Focus = DB.Widgets.Dropdown.Enum.NONE
@@ -15,7 +16,6 @@ DB.Widgets.Dropdown.Player.Index = 1
 DB.Widgets.Dropdown.Mob = T{}
 DB.Widgets.Dropdown.Mob.Focus = DB.Widgets.Dropdown.Enum.NONE
 DB.Widgets.Dropdown.Mob.Index = 1
-DB.Widgets.Dropdown.Width = 150
 
 ------------------------------------------------------------------------------------------------------
 -- Creates a dropdown menu to show only damage done to a certain mob.
@@ -50,13 +50,20 @@ end
 -- Shows the help text for the mob filter.
 ------------------------------------------------------------------------------------------------------
 DB.Widgets.Mob_Filter_Help_Text = function()
-    UI.SameLine() Window.Widgets.HelpMarker("You can filter to show only data for actions taken against mobs with a specific name.\n"
+    UI.SameLine() Window_Manager.Widgets.HelpMarker("You can filter to show only data for actions taken against mobs with a specific name.\n"
                                         .. "Notes:\n"
                                         .. "1. The filter may not be for individual mobs. It is for mobs with that name collectively.\n"
                                         .. "2. If the mob has a unique name (like an NM) then the data will be mob specific.\n"
                                         .. "3. The filter only affects actions taken against mobs with that name.\n"
                                         .. "4. The filter does not work for healing because those actions are taken on other players.\n"
                                         .. "5. The filter does not work for abilities that are used on yourself or other players.\n")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Utility function for accessing the name of the currently focused mob.
+------------------------------------------------------------------------------------------------------
+DB.Widgets.Util.Get_Mob_Focus = function()
+    return DB.Widgets.Dropdown.Mob.Focus
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -92,11 +99,20 @@ end
 -- Shows the help text for the player filter.
 ------------------------------------------------------------------------------------------------------
 DB.Widgets.Player_Filter_Help_Text = function()
-    UI.SameLine() Window.Widgets.HelpMarker("Pick a player that you would like to see more detailed stats for.\n")
+    UI.SameLine() Window_Manager.Widgets.HelpMarker("Pick a player that you would like to see more detailed stats for.\n")
+end
+
+------------------------------------------------------------------------------------------------------
+-- Utility function for accessing the name of the currently focused entity.
+------------------------------------------------------------------------------------------------------
+DB.Widgets.Util.Get_Player_Focus = function()
+    return DB.Widgets.Dropdown.Player.Focus
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Switches to a player in the player filter based on partial matching.
+------------------------------------------------------------------------------------------------------
+---@param player_string string
 ------------------------------------------------------------------------------------------------------
 DB.Widgets.Util.Player_Switch = function(player_string)
     local list = DB.Lists.Get.Players()
@@ -110,18 +126,4 @@ DB.Widgets.Util.Player_Switch = function(player_string)
             end
         end
     end
-end
-
-------------------------------------------------------------------------------------------------------
--- Utility function for accessing the name of the currently focused entity.
-------------------------------------------------------------------------------------------------------
-DB.Widgets.Util.Get_Player_Focus = function()
-    return DB.Widgets.Dropdown.Player.Focus
-end
-
-------------------------------------------------------------------------------------------------------
--- Utility function for accessing the name of the currently focused mob.
-------------------------------------------------------------------------------------------------------
-DB.Widgets.Util.Get_Mob_Focus = function()
-    return DB.Widgets.Dropdown.Mob.Focus
 end

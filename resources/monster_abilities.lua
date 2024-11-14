@@ -1012,13 +1012,13 @@ return {
     [1275] = {id=1275,en="Empty Thrash",ja="エンプティスラッシュ"},
     [1276] = {id=1276,en="Promyvion Brume",ja="虚ろなる霧"},
     [1277] = {id=1277,en="Inferno Blast",ja="インフェルノブラスト"},
-    [1278] = {id=1278,en="Inferno Blast",ja="インフェルノブラスト"},
-    [1279] = {id=1279,en="Tebbad Wing",ja="テバッドウィング"},
+    [1278] = {id=1278,en="Inferno Blast",ja="インフェルノブラスト"},    -- Air Melee
+    [1279] = {id=1279,en="Tebbad Wing (Gr.)",ja="テバッドウィング"},
     [1280] = {id=1280,en="Spike Flail",ja="スパイクフレイル"},
     [1281] = {id=1281,en="Fiery Breath",ja="ファイリィブレス"},
     [1282] = {id=1282,en="Touchdown",ja="タッチダウン"},
-    [1283] = {id=1283,en="Inferno Blast",ja="インフェルノブラスト"},
-    [1284] = {id=1284,en="Tebbad Wing",ja="テバッドウィング"},
+    [1283] = {id=1283,en="Inferno Blast",ja="インフェルノブラスト"},    -- TP Move (Air)
+    [1284] = {id=1284,en="Tebbad Wing (Air)",ja="テバッドウィング"},
     [1285] = {id=1285,en="Absolute Terror",ja="アブソルートテラー"},
     [1286] = {id=1286,en="Horrid Roar",ja="ホリッドロア"},
     [1287] = {id=1287,en="Sleet Blast",ja="スリートブラスト"},
@@ -1118,6 +1118,7 @@ return {
     [1385] = {id=1385,en="Biotic Boomerang",ja="バイオティクブーメラン"},
     [1386] = {id=1386,en="Medusa Javelin",ja="メデューサジャベリン"},
     [1387] = {id=1387,en="Sideswipe",ja="サイドスワイプ"},
+    [1388] = {id=1388,en="Aern Ranged",ja=""},                  -- Manual add
     [1389] = {id=1389,en="Eagle Eye Shot",ja="イーグルアイ"},
     [1390] = {id=1390,en="Amatsu: Torimai",ja="天つ水影流・鳥舞",skillchain_a="Transfixion",skillchain_b="Scission",skillchain_c=""},
     [1391] = {id=1391,en="Amatsu: Kazakiri",ja="天つ水影流・風切",skillchain_a="Scission",skillchain_b="Detonation",skillchain_c=""},

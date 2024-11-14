@@ -106,7 +106,8 @@
         "ImGuiTableBgTarget_CellBg",
         "ImGuiTableBgTarget_RowBg0",
         "ImGuiCond_Once",
-        "ImGuiTableFlags_RowBg"
+        "ImGuiTableFlags_RowBg",
+        "ImGuiInputTextFlags_AutoSelectAll"
     ],
     "Lua.diagnostics.disable": [
         "undefined-field"

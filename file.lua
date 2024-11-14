@@ -67,7 +67,7 @@ File.Save_Catalog = function()
     if file ~= nil then
         -- Headers
         file:write(tostring("Actor") .. File.Delimiter .. tostring("Target") .. File.Delimiter .. tostring("Pet") .. File.Delimiter
-                .. tostring("Trackable") .. File.Delimiter .. tostring("Action") .. File.Delimiter .. tostring("Metric") .. File.Delimiter 
+                .. tostring("Trackable") .. File.Delimiter .. tostring("Action") .. File.Delimiter .. tostring("Metric") .. File.Delimiter
                 .. tostring("Value") .. "\n")
         -- Player Data
         for index, trackable_data in pairs(DB.Parse) do
@@ -77,7 +77,7 @@ File.Save_Catalog = function()
                         for action_name, action_data in pairs(catalog_data) do
                             for metric, data in pairs(action_data) do
                                 if not metric or not data then
-                                    _Debug.Error.Add("File.Save_Catalog: Nil data: Metric: " .. tostring(metric) .. " Data: " .. tostring(data))
+                                    Debug.Error.Add("File.Save_Catalog: Nil data: Metric: " .. tostring(metric) .. " Data: " .. tostring(data))
                                 elseif data > 0 then
                                     if data == 100000 and metric == DB.Enum.Metric.MIN then data = 0 end
                                     local player_target = index:gsub(":", File.Delimiter)
@@ -99,7 +99,7 @@ File.Save_Catalog = function()
                             for action_name, action_data in pairs(catalog_data) do
                                 for metric, data in pairs(action_data) do
                                     if not metric or not data then
-                                        _Debug.Error.Add("File.Save_Catalog: Nil data: Metric: " .. tostring(metric) .. " Data: " .. tostring(data))
+                                        Debug.Error.Add("File.Save_Catalog: Nil data: Metric: " .. tostring(metric) .. " Data: " .. tostring(data))
                                     elseif data > 0 then
                                         if data == 100000 and metric == DB.Enum.Metric.MIN then data = 0 end
                                         local player_target = index:gsub(":", File.Delimiter)
@@ -143,7 +143,7 @@ File.Save_Battlelog = function()
             local action      = data.Action
             local note        = data.Note
             if not time or not flag or  not player_name or not pet_name or not damage or not action or not note then
-                _Debug.Error.Add("File.Save_Battlelog: Nil data: Time " .. tostring(time) .. " Flag: " .. tostring(flag) " Player Name: " .. tostring(player_name)
+                Debug.Error.Add("File.Save_Battlelog: Nil data: Time " .. tostring(time) .. " Flag: " .. tostring(flag) " Player Name: " .. tostring(player_name)
                               .. " Pet Name: " .. tostring(pet_name) .. " Damage: " .. tostring(damage) .. " Action: " .. tostring(action) .. " Note: " .. tostring(note))
             else
                 file:write(tostring(time.Value) .. File.Delimiter .. tostring(flag.Value) .. File.Delimiter .. tostring(player_name.Value) .. File.Delimiter

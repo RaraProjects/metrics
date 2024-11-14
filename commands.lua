@@ -11,20 +11,22 @@ ashita.events.register('command', 'command_cb', function (e)
 
         -- Help Text
         if not arg then
-            if Config.Settings_Mode ~= Config.Enum.File.CONFIG and Metrics.Window.Config_Window_Visible[1] then
+            if Config.Settings_Mode ~= Config.Enum.File.CONFIG and Config.Window.Is_Visible() then
                 Config.Settings_Mode = Config.Enum.File.CONFIG
-            elseif Config.Settings_Mode ~= Config.Enum.File.CONFIG and not Metrics.Window.Config_Window_Visible[1] then
+            elseif Config.Settings_Mode ~= Config.Enum.File.CONFIG and not Config.Window.Is_Visible() then
                 Config.Settings_Mode = Config.Enum.File.CONFIG
-                Metrics.Window.Config_Window_Visible[1] = true
+                Config.Window.Show()
             elseif Config.Settings_Mode == Config.Enum.File.CONFIG then
-                Metrics.Window.Config_Window_Visible[1] = not Metrics.Window.Config_Window_Visible[1]
+                Config.Window.Toggle_Visibility()
             end
 
         -- General Settings
         elseif arg == "show" or arg == "s" then
-            Hub.Toggle_Visibility()
+            Window_Manager.Toggle_Mask()
+        elseif arg == "hub" then
+            Hub.Window.Toggle_Visibility()
         elseif arg == "debug" then
-            _Debug.Toggle()
+            Debug.Toggle()
         elseif arg == "nano" or arg == "n" then
             Parse.Nano.Toggle()
         elseif arg == "mini" or arg == "m" then
@@ -47,6 +49,10 @@ ashita.events.register('command', 'command_cb', function (e)
             Parse.Util.Calculate_Column_Flags()
         elseif arg == "throttle" then
             Throttle.Toggle()
+        elseif arg == "lurk" then
+            Metrics.Parse.Lurk_Mode = not Metrics.Parse.Lurk_Mode
+        elseif arg == "mouse" then
+            Window_Manager.Toggle_Mouse()
 
         -- XP
         elseif arg == "xp" and sub_command then
@@ -69,27 +75,17 @@ ashita.events.register('command', 'command_cb', function (e)
                 Report.Publishing.Damage_By_Type(DB.Enum.Trackable.HEALING)
             end
 
-        -- Primary tab switching.
-        elseif arg == "team" or arg == "parse" then
-            Window.Tabs.Switch[Window.Tabs.Names.PARSE] = ImGuiTabItemFlags_SetSelected
-            Parse.Window.Toggle_Visibility()
-        elseif arg == "focus" then
-            Window.Tabs.Switch[Window.Tabs.Names.FOCUS] = ImGuiTabItemFlags_SetSelected
-            Focus.Window.Toggle_Visibility()
-        elseif arg == "log" or arg == "bl" then
-            Window.Tabs.Switch[Window.Tabs.Names.BATTLELOG] = ImGuiTabItemFlags_SetSelected
-            Blog.Window.Toggle_Visibility()
-        elseif arg == "xp" then
-            Window.Tabs.Switch[Window.Tabs.Names.XP] = ImGuiTabItemFlags_SetSelected
-            XP.Window.Toggle_Visibility()
-        elseif arg == "report" or arg == "rep" then
-            Window.Tabs.Switch[Window.Tabs.Names.REPORT] = ImGuiTabItemFlags_SetSelected
-            Report.Window.Toggle_Visibility()
+        -- Primary module switching.
+        elseif arg == "team" or arg == "parse" then Parse.Window.Make_Active()
+        elseif arg == "focus" then                  Focus.Window.Make_Active()
+        elseif arg == "log" or arg == "bl" then     Blog.Window.Make_Active()
+        elseif arg == "xp" then                     XP.Window.Make_Active()
+        elseif arg == "report" or arg == "rep" then Report.Window.Make_Active()
 
         -- Player selection
         elseif arg == "player" or arg == "pl" then
             local player_string = command_args[3]
-            _Debug.Error.Add("Metrics Command: " .. tostring(arg) .. " " .. tostring(command_args[3]))
+            Debug.Error.Add("Metrics Command: " .. tostring(arg) .. " " .. tostring(command_args[3]))
             if player_string then
                 DB.Widgets.Util.Player_Switch(player_string)
             end
@@ -105,7 +101,7 @@ ashita.events.register('command', 'command_cb', function (e)
             Focus.Tabs.Switch[Focus.Tabs.Names.MAGIC] = ImGuiTabItemFlags_SetSelected
         elseif arg == "ability" or arg == "abil" then
             Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES] = ImGuiTabItemFlags_SetSelected
-        elseif (arg == "pet" or arg == "p") and Window.Tabs.Active == Window.Tabs.Names.FOCUS then
+        elseif (arg == "pet" or arg == "p") and Window_Manager.Tabs.Active == Focus.Name then
             Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = ImGuiTabItemFlags_SetSelected
         elseif arg == "defense" or arg == "def" then
             Focus.Tabs.Switch[Focus.Tabs.Names.DEFENSE] = ImGuiTabItemFlags_SetSelected
