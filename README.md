@@ -27,80 +27,56 @@ Metrics uses Github's release feature to distribute the code. Within the Release
 6. [Settings](#settings)
 
 ## Parse
+![image](https://github.com/user-attachments/assets/8a158cf7-21e7-4835-b4a4-ada65169cad4)<br>
+_Parse - Full Mode_
+
 This screen resembles your typical parser. It shows things like DPS, total damage, accuracy, and various other damage breakdown columns. There are three different modes to view the parser depending on how much detail you want to see at the time (and how much screen space you are willing to commit to that data).
 
-### General Highlights
+### Overview
 1. Members are ranked and displayed in decending order. You will always be shown even if you aren't in the visible ranks.
-2. The parser can be configured to show up to 18 members.
-3. Track your total and running accuracy. Running accuracy is your accuracy as of the last {X} amount of hits. It's beneficial to know this because you will be able to see sudden dips in accuracy (blind, food loss, etc.) much faster with the smaller lookback window. This amount of hits to look back, {X}, is configurable. The running accuracy column is called **A-{X}**.
-4. Various columns can be toggled in and out to show a breakdown of where your damage is coming from. This includes pet damage, healing, deaths, etc.
-5. The duration timer tracks how long actions have been actively taking place. If 5 seconds pass with no one affiliated with you taking an action then the duration timer will pause and restart automatically upon the next action. Data collection is not affected by this timer.
-6. A mob filter allows you to pick a mob and only see the damage that everyone did to that specific mob. The filter acts on mob name and not individual mobs. So, if you set it to "Pugil" you will see the damage that all players in the parse did to any mob named "Pugil" even if that was several individual mobs.
+2.Supports showing up to 18 party and alliance members.
+3. Track your total and recent accuracy. Recent accuracy is your accuracy as of the last {X} amount of hits. The amount of hits to look back, {X}, is configurable. It's beneficial to know this because you will be able to see sudden dips in accuracy (blind, food loss, etc.) much faster with the smaller lookback window. The running accuracy column is called **%A.{X}**.
+4. Various columns can be toggled in and out to show a breakdown of where you and your affiliates' damage is coming from. This includes pet damage, healing, deaths, etc.
+5. The duration timer tracks how long actions have been actively taking place. If 5 seconds pass with no one affiliated with you taking an action, then the duration timer will pause automatically and then subsequently restart automatically upon the next action by someone in your party or alliance. Data collection is not affected by this timer.
+6. A mob filter allows you to pick a mob and only see the damage that everyone did to that specific mob. The filter acts on mob name and not individual mobs. So, if you set it to "Pugil" you will see the damage that all players in the parse did to any mob that has "Pugil" in the name even if that was several individual mobs.
+7. Skillchain damage can be included or excluded in the parse totals. You will still be able to see skillchain damage on player specific overviews even if you exclude it from the parse data.
+8. Player names can be masked by replacing the name with the player's job to make it easier for taking screenshots with privacy in mind.
 
-### Tidbits
-
-<details>
-<summary>Click to see available column descriptions.</summary>
-  
-| Column | Description |
-|----------|----------|
-| Job | Player's main job level and sub job level. The jobs are color coded with job colors. |
-| Name | The player's name. The name is color coded with job colors. |
-| Total | The total damage the player has done. |
-| %T | The percent of total party damage the player has done. |
-| Speed | The average amount of seconds between each melee attack. The speed of your last three melee attacks is averaged together. Times longer than 15 seconds are discarded. |
-| DPS | Damage per Second. See DPS explanation for more details. |
-| %A-# | Accuracy for the last # of melee/range attempts. This  |
-| %A-T | Total accuracy of melee/range attempts since the parse has been running. |
-| Melee | Total melee damage. |
-| Crit Rate | Critical hit rate for both melee and ranged combined. |
-| Avg WS | Average weaponskill damage across all weaponskills used. |
-| WS | Total weaponskill damage. |
-| SC | Total skillchain damage. This is only available if skillchain damage is enabled. |
-| Ranged | Total ranged attack damage. |
-| Magic | Total magic damage. |
-| JA | Total job ability damage. |
-| Acc (P) | Pet melee accuracy. |
-| Melee (P) | Total pet melee damage. |
-| Ranged (P) | Total pet ranged damage. |
-| WS (P) | Total pet weaponskill damage. This would be BST pet TP moves. |
-| Ability (P) | Total pet ability damage. This would be SMN rage blood pacts. |
-| Healing | Total healing done. |
-| Deaths | Total amount of deaths for this player. |
-
-</details>
-
-<details>
-<summary>Click to see DPS calculation explanation.</summary>
-
-* Your DPS window is comprised of {Y} amount of buckets.
-* Every {X} amount of seconds a snapshot is taken of the damage you've done in that time and stored in a bucket.
-* The damage from each bucket is summed and averaged over the total DPS window (X * Y seconds).
-* Example:
-  * Snapshot taken every X = 3 seconds.
-  * A DPS window with Y = 3 buckets.
-  * Total DPS window = 9 seconds.
-  * The damage you do (or don't do) will affect your DPS every 3 seconds. If you do nothing your DPS will drop to zero in 9 seconds.
-
-</details>
-
-### Full Mode
-![image](https://github.com/user-attachments/assets/3fa174c3-f639-4cb6-ad23-e67190e49cd8)<br>
-_Sample data for the Parse tab. Additional columns are available in the settings menu._<br>
-
-This is the standard mode that allows the most columns options.
-
-### Mini Mode
-![image](https://github.com/user-attachments/assets/09db9d15-bc9a-4e59-b941-73e53ba7bf84)<br>
-_Sample data for the Parse Mini Mode (with pet data expanded)._<br>
-
-Mini mode is just like the full mode, but it's designed to be small. You can't really add any columns here with the exception of a couple pet columns. This is the mode to use if you want to just cruise in parse mode without a large investment in screen space.
-
-### Nano Mode
-![image](https://github.com/user-attachments/assets/74b3e241-1581-4dca-a5ce-a502423366dc)<br>
-_Sample data for the Parse Nano Mode._<br>
-
-Nano mode is as concise as it gets. If you really only care about what you're doing then this is the mode for you. Other players will not show up here.
+### Available Columns
+| Setting Name | Header | Description |
+|----------|----------|----------|
+| Focus Jump | Focus | Allows you to jump directly into the Focus view for that player. |
+| Show Jobs | Job | Player's main job level and sub job level. The jobs are color coded with job colors. |
+| Always Present | Name | The player's name. The name is color coded with job colors. |
+| Always Present | Total | The total damage the player has done. |
+| Always Present | %Total | The percent of total party damage the player has done. |
+| Melee Delay | s/Melee | The average amount of seconds between each melee attack. The speed of your last three melee attacks is averaged together. Delays longer than 15 seconds are discarded. |
+| DPS | DPS | Damage per Second. See DPS explanation for more details. |
+| Acc. Recent | %A.# | Recent accuracy for the last # of melee/ranged attempts.  |
+| Acc. Combined | %A-Total | Total accuracy of melee/range attempts since the parse has been running. |
+| Total Crit | %Crit | Combined melee/ranged critical hit rate. |
+| Melee Damage | Melee | Total melee damage. |
+| Acc. Melee | M.Acc | Total melee accuracy. |
+| Melee Crit | %M.Crit | Melee critical hit rate. |
+| WS Total | WS | Total weaponskill damage. |
+| WS Average | WS Avg | Average weaponskill damage across all weaponskills used. |
+| WS ~TP | WS ~TP | Average TP spent across all weaponskills used. |
+| WS Accuracy | WS Acc | Average WS accuracy across all weaponskills used. |
+| Include SC Damage | SC | Total skillchain damage. This is only available if skillchain damage is enabled. |
+| Ranged Damage | Ranged | Total ranged attack damage. |
+| Acc. Ranged | R.Acc | Total ranged accuracy. |
+| Ranged Crit | %R.Crit | Ranged critical hit rate. |
+| Shot Distance | R.Dist | Average ranged attack distance from target. |
+| Nukes | Magic | Total magic damage. |
+| Abilities | JA | Total job ability damage. |
+| Pet Accuracy | P.Acc | Pet melee accuracy. |
+| Pet Melee | P.Melee | Total pet melee damage. |
+| Pet Ranged | P.RA | Total pet ranged damage. |
+| Pet WS | P.WS | Total pet weaponskill damage. This would be BST pet TP moves. |
+| Pet Ability | P.JA | Total pet ability damage. This would be SMN rage blood pacts. |
+| Healing | Healing | Total healing done. |
+| Damage Taken | DT | Total damage taken. |
+| Deaths | Deaths | Total amount of deaths for this player. |
 
 ## Focus
 Set your attention to a specific player in the parser--including yourself--and then drill down into the various aspects of your actions such as Melee, Weaponskills, Skillchains, Magic, Abilities, Pets, Defense, etc.
@@ -256,3 +232,16 @@ Multi Window mode let's you have multiple modules open at the same time in their
 
 ![image](https://github.com/user-attachments/assets/7b4eba23-8c5f-4fc6-9aa6-13da233a7b1f)<br>
 _Example of the Settings tab._
+
+## DPS Calculations
+There are two types of DPS calculations available to you: Average and Recent. You can toggle between the two types in the Parse settings window.
+
+### Recent DPS
+* Your DPS window is comprised of {Y} amount of buckets.
+* Every {X} amount of seconds a snapshot is taken of the damage you've done in that time and stored in a bucket.
+* The damage from each bucket is summed and averaged over the total DPS window (X * Y seconds).
+* Example:
+  * Snapshot taken every X = 3 seconds.
+  * A DPS window with Y = 3 buckets.
+  * Total DPS window = 9 seconds.
+  * The damage you do (or don't do) will affect your DPS every 3 seconds. If you do nothing your DPS will drop to zero in 9 seconds.
