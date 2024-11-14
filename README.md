@@ -165,7 +165,7 @@ This tab shows how much damage you and/or your pet has taken with a breakdown of
 
 ## Battle Log
 ![image](https://github.com/user-attachments/assets/79cbe95e-7dbb-47a7-b40b-d2fd28f530c1)<br>
-_Example of Battle Log output._
+_Example of Battle Log output. I have Mask Names enabled so the mob's job shows up as NON0. It would be mob name otherwise._
 
 Maintain line of sight on the more important pieces of the battle without having to deal with the game chat. Some neat features here are that you can see the TP at which a player used a weaponskill, how many mobs were hit by an AOE spell, if a nuke was a magic burst etc, if a debuff was resisted, which debuff was dispelled, which debuff was removed with Erase, etc. The jobs are color coded. The battle log can hold up to 100,000 items before starting to overwrite the old data. You can adjust the length of the battle log and filter various actions at will.
 
