@@ -14,39 +14,39 @@ DB.Catalog = T{}
 ---@param pet_name? string
 ---@return boolean an initialization was performed.
 ------------------------------------------------------------------------------------------------------
-DB.Catalog.Init = function(index, player_name, trackable, action_name, pet_name)
+DB.Catalog.Initialize = function(index, player_name, trackable, action_name, pet_name)
 	if not index or not player_name or not trackable or not action_name then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Catalog.Init", "Player {" .. tostring(player_name) .. "} Pet {" .. tostring(pet_name) .. "}: Nil required parameter passed in." )
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Catalog.Initialize", "Player {" .. tostring(player_name) .. "} Pet {" .. tostring(pet_name) .. "}: Nil required parameter passed in." )
 		return false
 	end
 
-	DB.Data.Init(index, player_name)
-	if pet_name then DB.Pet_Data.Init(index, player_name, pet_name) end
+	DB.Data.Initialize(index, player_name)
+	if pet_name then DB.Pet_Data.Initialize(index, player_name, pet_name) end
 
-	-- Don't want to overwrite action_name node if it is already built out
-	if DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name] then
+	-- Don't want to overwrite data node if it already exists
+	if not DB.Parse_Catalog[index] then DB.Parse_Catalog[index] = T{} end
+	if not DB.Parse_Catalog[index][action_name] then DB.Parse_Catalog[index][action_name] = T{} end
+	if DB.Parse_Catalog[index][action_name][trackable] then
 		if pet_name then
-			if DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name] then return false end
-			DB.Pet_Catalog.Init(index, player_name, trackable, action_name, pet_name)
+			DB.Pet_Catalog.Initialize(index, player_name, trackable, action_name, pet_name)
 			return true
 		end
 		return false
 	end
 
-	DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name] = {}
-	if pet_name then DB.Pet_Catalog.Init(index, player_name, trackable, action_name, pet_name) end
+	DB.Parse_Catalog[index][action_name][trackable] = T{}
+	if pet_name then DB.Pet_Catalog.Initialize(index, player_name, trackable, action_name, pet_name) end
 
-	-- Initialize catalog data nodes
+	-- Populate metric nodes
+	-- Need to set minimum high manually to capture accurate minimums
 	for _, metric in pairs(DB.Enum.Metric) do
 		DB.Catalog.Set(0, index, trackable, action_name, metric)
 	end
-
-	-- Need to set minimum high manually to capture accurate minimums
 	DB.Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, trackable, action_name, DB.Enum.Metric.MIN)
 
 	-- Initialize tracking tables
-	if not DB.Tracking.Trackable[trackable] then DB.Tracking.Trackable[trackable] = {} end
-	if not DB.Tracking.Trackable[trackable][player_name] then DB.Tracking.Trackable[trackable][player_name] = {} end
+	if not DB.Tracking.Trackable[trackable] then DB.Tracking.Trackable[trackable] = T{} end
+	if not DB.Tracking.Trackable[trackable][player_name] then DB.Tracking.Trackable[trackable][player_name] = T{} end
 
 	return true
 end
@@ -70,8 +70,9 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
 		return nil
 	end
 
+	-- Double check initializations
 	local index = DB.Data.Build_Index(player_name, mob_name)
-    DB.Catalog.Init(index, player_name, trackable, action_name, pet_name)
+    DB.Catalog.Initialize(index, player_name, trackable, action_name, pet_name)
 
 	local audits = {
 		player_name = player_name,
@@ -79,48 +80,24 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
 		pet_name = pet_name,
 	}
 
-	-- GRAND TOTAL ////////////////////////////////////////////////////////////////////////////////
-	-- There is a regular track and a "no skillchains" track.
-    if DB.Catalog.Include_Total_Damage(trackable) then
-    	DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.TOTAL, DB.Enum.Metric.TOTAL)
-		if trackable ~= DB.Enum.Trackable.SC then
-			DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.TOTAL_NO_SC, DB.Enum.Metric.TOTAL)
-		end
-    end
+	-- Update the non-catalog database with the damage
+	DB.Data.Update_Damage(audits, trackable, damage, burst)
 
-    -- TRACKABLE TOTAL, MIN, and MAX //////////////////////////////////////////////////////////////
-    DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Enum.Metric.TOTAL)
-	if burst then
-		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.MAGIC, DB.Enum.Metric.BURST_DAMAGE)
-		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Enum.Metric.BURST_DAMAGE)
-	end
-
-	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
-	if pet_name then
-		if damage > 0 and damage < DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Enum.Metric.MIN) then
-			DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MIN)
-		end
-	else
-		if damage > 0 and damage < DB.Data.Get(player_name, trackable, DB.Enum.Metric.MIN) then
-			DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MIN)
-		end
-	end
-
-    if damage > DB.Data.Get(player_name, trackable, DB.Enum.Metric.MAX) then
-		DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MAX)
-	end
-
-    -- CATALOG TOTAL, MIN, and MAX ////////////////////////////////////////////////////////////////
-	-- COUNT gets incremented in the packet handler.
-    DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Enum.Metric.TOTAL)
+	-- Magic Bursts
 	if trackable == DB.Enum.Trackable.NUKE and burst then
 		DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Enum.Metric.BURST_DAMAGE)
 	end
+	-- COUNT gets incremented in the packet handler.
 
-    if damage > 0 and damage < DB.Catalog.Get(player_name, trackable, action_name, DB.Enum.Metric.MIN) then
+	-- Total Damage
+    DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Enum.Metric.TOTAL)
+
+	-- Minimum Damage
+    if damage > 0 and damage < DB.Catalog.Get(player_name, trackable, action_name, DB.Enum.Metric.MIN, audits.target_name) then
 		DB.Catalog.Update_Metric(DB.Enum.Mode.SET, damage, audits, trackable, action_name, DB.Enum.Metric.MIN)
     end
 
+	-- Maximum Damage
     if damage > DB.Catalog.Get(player_name, trackable, action_name, DB.Enum.Metric.MAX) then
     	-- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
 		if trackable == DB.Enum.Trackable.HEALING and DB.Healing_Max[action_name] then
@@ -144,26 +121,24 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Update_Metric = function(mode, value, audits, trackable, action_name, metric)
-	if audits.player_name == "" or audits.target_name == "" then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Catalog.Update_Metric", "Blank Entity: Player {" .. tostring(audits.player_name) .. "} Target {"
-		.. tostring(audits.target_name) .. "} Trackable {" .. tostring(trackable) .. "} Metric {" .. tostring(metric) .. "}.")
-		return false
-	end
-
 	local player_name = audits.player_name
 	local target_name = audits.target_name
 	local pet_name = audits.pet_name
-	local index = DB.Data.Build_Index(player_name, target_name)
 
-	if not trackable or not player_name or not action_name then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Catalog.Update_Metric", "Nil Entity: Player {" .. tostring(player_name) .. "} Pet {" .. tostring(pet_name)
-		.. "} Action {" .. tostring(action_name) .. "}." )
+	-- Input checking
+	if not trackable or not action_name or not player_name or not target_name or player_name == "" or target_name == "" then
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Catalog.Update_Metric", "Nil/Blank required parameter: Player {" .. tostring(player_name) .. "} Pet {"
+		.. tostring(pet_name) .. "} Action {" .. tostring(action_name) .. "} Target {" .. tostring(audits.target_name) .. "} Trackable {"
+		.. tostring(trackable) .. "} Metric {" .. tostring(metric) .. "}.")
 		return false
 	end
-	DB.Catalog.Init(index, player_name, trackable, action_name, pet_name)
+
+	-- Initialization
+	local index = DB.Data.Build_Index(player_name, target_name)
+	DB.Catalog.Initialize(index, player_name, trackable, action_name, pet_name)
 	if not DB.Tracking.Initialized_Players[player_name] then DB.Tracking.Initialized_Players[player_name] = true end
 
-	-- Set the data.
+	-- Set the data
 	if mode == DB.Enum.Mode.INC then
 		DB.Catalog.Inc(value, index, trackable, action_name, metric)
 		if pet_name then
@@ -179,7 +154,7 @@ DB.Catalog.Update_Metric = function(mode, value, audits, trackable, action_name,
 	-- This is used for the focus window
 	DB.Tracking.Trackable[trackable][player_name][action_name] = true
 	if pet_name then
-		local initialized = DB.Pet_Catalog.Init_Tracking(trackable, player_name, pet_name)
+		local initialized = DB.Pet_Catalog.Initialize_Tracking(trackable, player_name, pet_name)
 		if not initialized then return false end
 		DB.Tracking.Pet_Trackable[trackable][player_name][pet_name][action_name] = true
 	end
@@ -206,7 +181,14 @@ DB.Catalog.Set = function(value, index, trackable, action_name, metric)
 		.. tostring(action_name) .. "} Metric {" .. tostring(metric) .. "} nil required parameter passed in.")
 		return false
 	end
-	DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric] = value
+	if not DB.Parse_Catalog[index] or not DB.Parse_Catalog[index][action_name] then
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Catalog.Set", "Index {" .. tostring(index) .. "} Trackable {" .. tostring(trackable) .. "} Action {"
+		.. tostring(action_name) .. "} Metric {" .. tostring(metric) .. "} is not initialized.")
+		return false
+	end
+
+	DB.Parse_Catalog[index][action_name][trackable][metric] = value	-- Assumes this node exists.
+
 	return true
 end
 
@@ -229,8 +211,15 @@ DB.Catalog.Inc = function(value, index, trackable, action_name, metric)
 		.. tostring(action_name) .. "} Metric {" .. tostring(metric) .. "} nil required parameter passed in.")
 		return false
 	end
-	DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric]
-	= DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric] + value
+	if not DB.Parse_Catalog[index] or not DB.Parse_Catalog[index][action_name] then
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Catalog.Set", "Index {" .. tostring(index) .. "} Trackable {" .. tostring(trackable) .. "} Action {"
+		.. tostring(action_name) .. "} Metric {" .. tostring(metric) .. "} is not initialized.")
+		return false
+	end
+
+	DB.Parse_Catalog[index][action_name][trackable][metric]				-- Assumes this node exists.
+	= DB.Parse_Catalog[index][action_name][trackable][metric] + value
+
 	return true
 end
 
@@ -242,21 +231,24 @@ end
 ---@param trackable string a tracked item from the trackable list.
 ---@param action_name string the name of the action to be cataloged.
 ---@param metric string a trackable's metric from the metric list.
+---@param temporary_mob_focus? string used to force look for a specific mob (mainly for setting minimums for AOEs).
 ---@return number
 ------------------------------------------------------------------------------------------------------
-DB.Catalog.Get = function(player_name, trackable, action_name, metric)
+DB.Catalog.Get = function(player_name, trackable, action_name, metric, temporary_mob_focus)
 	if not player_name or not trackable or not action_name or not metric then
 		Debug.Error.Add(Debug.Error.ERROR, "DB.Catalog.Get", "Player {" .. tostring(player_name) .. "} Trackable {" .. tostring(trackable) .. "} Action {"
 		.. tostring(action_name) .. "} Metric {" .. tostring(metric) .. "} nil required parameter passed in.")
 		return 0
 	end
+
 	local total = 0
 	if metric == DB.Enum.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	local search_string = player_name .. ":" .. mob_focus
 	if mob_focus == DB.Widgets.Dropdown.Enum.NONE or trackable == DB.Enum.Trackable.HEALING_RECEIVED then search_string = player_name .. ":" end
+	if temporary_mob_focus then search_string = player_name .. ":" .. temporary_mob_focus end
 
-	for index, _ in pairs(DB.Parse) do
+	for index, _ in pairs(DB.Parse_Catalog) do
 		if string.find(index, search_string) then
 			total = DB.Catalog.Calculate(total, index, trackable, action_name, metric)
 		end
@@ -275,10 +267,10 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Calculate = function(value, index, trackable, action_name, metric)
-	if DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name] then
+	if DB.Parse_Catalog[index] and DB.Parse_Catalog[index][action_name] and DB.Parse_Catalog[index][action_name][trackable] then
 		if     metric == DB.Enum.Metric.MIN then value = DB.Catalog.Minimum(value, index, trackable, action_name, metric)
 		elseif metric == DB.Enum.Metric.MAX then value = DB.Catalog.Maximum(value, index, trackable, action_name, metric)
-		else   value = value + DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric] end
+		else   value = value + DB.Parse_Catalog[index][action_name][trackable][metric] end
 	end
 	return value
 end
@@ -294,8 +286,8 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Minimum = function(min, index, trackable, action_name, metric)
-	if min > DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric] then
-		min =  DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric]
+	if min > DB.Parse_Catalog[index][action_name][trackable][metric] then
+		min =  DB.Parse_Catalog[index][action_name][trackable][metric]
 	end
 	return min
 end
@@ -311,8 +303,8 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Maximum = function(max, index, trackable, action_name, metric)
-	if DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric] > max then
-		max = DB.Parse[index][trackable][DB.Enum.Values.CATALOG][action_name][metric]
+	if DB.Parse_Catalog[index][action_name][trackable][metric] > max then
+		max = DB.Parse_Catalog[index][action_name][trackable][metric]
 	end
 	return max
 end

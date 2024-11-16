@@ -11,19 +11,26 @@ DB.Pet_Catalog = T{}
 ---@param action_name string the name of the action to be cataloged.
 ---@param pet_name string
 ------------------------------------------------------------------------------------------------------
-DB.Pet_Catalog.Init = function(index, player_name, trackable, action_name, pet_name)
-	if DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name] then return false end
-	DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name] = {}
+DB.Pet_Catalog.Initialize = function(index, player_name, trackable, action_name, pet_name)
+	if not pet_name then return false end
 
-	-- Initialize catalog data nodes
+	-- Don't want to overwrite data node if it already exists.
+	if not DB.Pet_Parse_Catalog[index] then DB.Pet_Parse_Catalog[index] = T{} end
+	if not DB.Pet_Parse_Catalog[index][pet_name] then DB.Pet_Parse_Catalog[index][pet_name] = T{} end
+	if not DB.Pet_Parse_Catalog[index][pet_name][action_name] then DB.Pet_Parse_Catalog[index][pet_name][action_name] = T{} end
+	if DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable] then return false end
+
+	DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable] = T{}
+
+	-- Populate metric nodes
+	-- Need to set minimum high manually to capture accurate minimums
 	for _, metric in pairs(DB.Enum.Metric) do
 		DB.Pet_Catalog.Set(0, index, pet_name, trackable, action_name, metric)
 	end
-
 	DB.Pet_Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Enum.Metric.MIN)
 
 	-- Initialize tracking tables
-	DB.Pet_Catalog.Init_Tracking(trackable, player_name, pet_name)
+	DB.Pet_Catalog.Initialize_Tracking(trackable, player_name, pet_name)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -34,9 +41,9 @@ end
 ---@param pet_name string
 ---@return boolean true: successful initialization; false: error
 ------------------------------------------------------------------------------------------------------
-DB.Pet_Catalog.Init_Tracking = function(trackable, player_name, pet_name)
+DB.Pet_Catalog.Initialize_Tracking = function(trackable, player_name, pet_name)
 	if not trackable or not player_name or not pet_name then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Catalog.Init_Tracking", "Nil required parameter: Trackable {" .. tostring(trackable)
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Catalog.Initialize_Tracking", "Nil required parameter: Trackable {" .. tostring(trackable)
 		.. "} Player Name {" .. tostring(player_name) .. "} Pet Name {" .. tostring(pet_name) .. "}.")
 		return false
 	end
@@ -66,7 +73,7 @@ DB.Pet_Catalog.Set = function(value, index, pet_name, trackable, action_name, me
 		.. tostring(pet_name) .. "} Trackable {".. tostring(trackable) .. "}.")
 		return false
 	end
-	DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric] = value
+	DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric] = value	-- Assumes this node exists.
 	return true
 end
 
@@ -90,8 +97,8 @@ DB.Pet_Catalog.Inc = function(value, index, pet_name, trackable, action_name, me
 		.. "} Trackable {" .. tostring(trackable) .. "}.")
 		return false
 	end
-	DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric]
-	= DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric] + value
+	DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric]			-- Assumes this node exists.
+	= DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric] + value
 	return true
 end
 
@@ -115,7 +122,7 @@ DB.Pet_Catalog.Get = function(player_name, pet_name, trackable, action_name, met
 	local total = 0
 	if metric == DB.Enum.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
-	for index, _ in pairs(DB.Pet_Parse) do
+	for index, _ in pairs(DB.Pet_Parse_Catalog) do
 		if mob_focus == DB.Widgets.Dropdown.Enum.NONE then
 			if string.find(index, player_name .. ":") then
 				total = DB.Pet_Catalog.Calculate(total, index, pet_name, trackable, action_name, metric)
@@ -143,16 +150,16 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Calculate = function(value, index, pet_name, trackable, action_name, metric)
-	if not DB.Pet_Parse[index][pet_name] then
+	if not DB.Pet_Parse_Catalog[index][pet_name] then
 		Debug.Error.Add(Debug.Error.WARNING, "DB.Pet_Catalog.Calculate", "Tried referencing uninitialized node: Index {" .. tostring(index) .. "} Pet {"
 		.. tostring(pet_name) .. "} Action {" .. tostring(action_name) .. "}.")
 		return value
 	end
 
-	if DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name] then
+	if DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable] then
 		if     metric == DB.Enum.Metric.MIN then value = DB.Pet_Catalog.Minimum(value, index, pet_name, trackable, action_name, metric)
 		elseif metric == DB.Enum.Metric.MAX then value = DB.Pet_Catalog.Maximum(value, index, pet_name, trackable, action_name, metric)
-		else   value = value + DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric] end
+		else   value = value + DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric] end
 	end
 
 	return value
@@ -170,8 +177,8 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Minimum = function(min, index, pet_name, trackable, action_name, metric)
-	if min > DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric] then
-		min =  DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric]
+	if min > DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric] then
+		min =  DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric]
 	end
 	return min
 end
@@ -188,8 +195,8 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Maximum = function(max, index, pet_name, trackable, action_name, metric)
-	if DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric] > max then
-		max = DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric]
+	if DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric] > max then
+		max = DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric]
 	end
 	return max
 end

@@ -10,66 +10,36 @@ DB.Data = T{}
 ---@param player_name? string used for maintaining various player indexed tables. In the case of pets this will be the owner.
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Data.Init = function(index, player_name)
+DB.Data.Initialize = function(index, player_name)
 	if not index then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Init", "Nil index {" .. tostring(index) .. "} passed in.")
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Initialize", "Nil index {" .. tostring(index) .. "} passed in.")
 		return false
 	end
 	if not player_name or player_name == "" then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Init", "Nil or blank player name: {" .. tostring(index) .. "}." )
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Initialize", "Nil or blank player name: {" .. tostring(index) .. "}." )
 		return false
 	end
 
-	-- Check to see if the nodes have already been initialized for the player and the pet.
+	-- Primary player data node initialization.
 	if DB.Parse[index] then return false end
-
-	-- Initialize primary node.
-	DB.Parse[index] = {}
+	DB.Parse[index] = T{}
 
 	-- Initialize data nodes.
 	for _, trackable in pairs(DB.Enum.Trackable) do
-		DB.Parse[index][trackable] = {}
-		DB.Parse[index][trackable][DB.Enum.Values.CATALOG] = {}
+		DB.Parse[index][trackable] = T{}
 		for _, metric in pairs(DB.Enum.Metric) do
-			DB.Data.Set(0, index, trackable, metric)
+
+			-- Need to set minimum high manually to capture accurate minimums.
+			if metric == DB.Enum.Metric.MIN then
+				DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, trackable, metric)
+			else
+				DB.Data.Set(0, index, trackable, metric)
+			end
+
 		end
 	end
 
-	-- Need to set minimum high manually to capture accurate minimums.
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_MAIN, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ENSPELL, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ENDAMAGE, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ENASPIR, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_MELEE, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_MELEE_DISCRETE, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.RANGED, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ENDAMAGE_R, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.THROWING, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.WS, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.SC, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_WS, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MP_DRAIN, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ABILITY_HEALING, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.ABILITY_MP_RECOVERY, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_ABILITY, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_HEAL, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.NUKE, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_NUKE, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.HEALING, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.HEALING_RECEIVED, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_DMG_TAKEN, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.MELEE_PET_DMG_TAKEN, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.SPELL_DMG_TAKEN, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.SPELL_PET_DMG_TAKEN, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.TP_DMG_TAKEN, DB.Enum.Metric.MIN)
-	DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, DB.Enum.Trackable.PET_TP_DMG_TAKEN, DB.Enum.Metric.MIN)
-
-	-- Initialize tracking tables.
-	DB.Data.Init_Player(player_name)
+	DB.Data.Initialize_Player_Tracking_Tables(player_name)
 
 	return true
 end
@@ -79,7 +49,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name? string
 ------------------------------------------------------------------------------------------------------
-DB.Data.Init_Player = function(player_name)
+DB.Data.Initialize_Player_Tracking_Tables = function(player_name)
 	if player_name and player_name ~= "" and not DB.Tracking.Initialized_Players[player_name] then
 		DB.Tracking.Initialized_Players[player_name] = true
 		DB.Lists.Sort.Players()
@@ -112,8 +82,8 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	local target_name = audits.target_name
 	local pet_name = audits.pet_name
 	local index = DB.Data.Build_Index(player_name, target_name)
-	DB.Data.Init(index, player_name)
-	if pet_name then DB.Pet_Data.Init(index, player_name, pet_name) end
+	DB.Data.Initialize(index, player_name)
+	if pet_name then DB.Pet_Data.Initialize(index, player_name, pet_name) end
 
 	-- Peform the operation.
 	if mode == DB.Enum.Mode.INC then
@@ -131,6 +101,49 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	-- Increment the running damage count for DPS if this is a total damage increase.
 	if mode == DB.Enum.Mode.INC and trackable == DB.Enum.Trackable.TOTAL and metric == DB.Enum.Metric.TOTAL then
 		DB.DPS.Inc_Buffer(player_name, value)
+	end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Called by the catalog update damage function.
+-- Handles the regular database portion of damage updates.
+------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param trackable string a tracked item from the trackable list.
+---@param damage number damage value to be logged.
+---@param burst? boolean whether or not a magic burst took place.
+------------------------------------------------------------------------------------------------------
+DB.Data.Update_Damage = function(audits, trackable, damage, burst)
+	-- Grand Totals; There is a regular track and a "no skillchains" track.
+    if DB.Catalog.Include_Total_Damage(trackable) then
+    	DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.TOTAL, DB.Enum.Metric.TOTAL)
+		if trackable ~= DB.Enum.Trackable.SC then
+			DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.TOTAL_NO_SC, DB.Enum.Metric.TOTAL)
+		end
+    end
+
+    -- Trackable Total
+    DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Enum.Metric.TOTAL)
+	if burst then
+		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.MAGIC, DB.Enum.Metric.BURST_DAMAGE)
+		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Enum.Metric.BURST_DAMAGE)
+	end
+
+	-- Trackable Minimum
+	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
+	if audits.pet_name then
+		if damage > 0 and damage < DB.Pet_Data.Get(audits.player_name, audits.pet_name, trackable, DB.Enum.Metric.MIN) then
+			DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MIN)
+		end
+	else
+		if damage > 0 and damage < DB.Data.Get(audits.player_name, trackable, DB.Enum.Metric.MIN, audits.target_name) then
+			DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MIN)
+		end
+	end
+
+	-- Trackable Maximum
+    if damage > DB.Data.Get(audits.player_name, trackable, DB.Enum.Metric.MAX) then
+		DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Enum.Metric.MAX)
 	end
 end
 
@@ -190,9 +203,10 @@ end
 ---@param player_name string the player or entity name to search data for.
 ---@param trackable string a tracked item from the trackable list.
 ---@param metric string a trackable's metric from the metric list.
+---@param temporary_mob_focus? string used to force look for a specific mob (mainly for setting minimums for AOEs).
 ---@return number
 ------------------------------------------------------------------------------------------------------
-DB.Data.Get = function(player_name, trackable, metric)
+DB.Data.Get = function(player_name, trackable, metric, temporary_mob_focus)
 	if not player_name or not trackable or not metric then
 		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Get", "Nil required parameter: Player {" .. tostring(player_name) .. "} Trackable {"
 		.. tostring(trackable) .. "} Metric {" .. tostring(metric) .. "}.")
@@ -211,6 +225,7 @@ DB.Data.Get = function(player_name, trackable, metric)
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	local search_string = player_name .. ":" .. mob_focus
 	if mob_focus == DB.Widgets.Dropdown.Enum.NONE then search_string = player_name .. ":" end
+	if temporary_mob_focus then search_string = player_name .. ":" .. temporary_mob_focus end
 
 	for index, _ in pairs(DB.Parse) do
 		if string.find(index, search_string) then

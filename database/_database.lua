@@ -2,9 +2,9 @@ DB = T{}
 
 -- Primary Database
 DB.Parse = T{}                          -- [index][trackable][metric]
-                                        -- [index][trackable][m.Enum.Node.CATALOG][action_name][metric]
+DB.Parse_Catalog = T{}					-- [index][action_name][trackable][metric]
 DB.Pet_Parse = T{}						-- [index][pet][trackable][metric]
-										-- [index][pet][trackable][m.Enum.Node.CATALOG][action_name][metric]
+DB.Pet_Parse_Catalog = T{}				-- [index][pet][action_name][trackable][metric]
 
 -- Secondary Tracking Tables
 DB.Tracking = T{}
@@ -54,7 +54,9 @@ DB.Initialize = function(reset)
 	end
 
 	DB.Parse = T{}
+	DB.Parse_Catalog = T{}
 	DB.Pet_Parse = T{}
+	DB.Pet_Parse_Catalog = T{}
 
 	DB.Tracking.Trackable = T{}
 	DB.Tracking.Pet_Trackable = T{}

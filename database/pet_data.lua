@@ -10,39 +10,36 @@ DB.Pet_Data = T{}
 ---@param player_name? string used for maintaining various player indexed tables. In the case of pets this will be the owner.
 ---@param pet_name string used for maintaining various pet indexed tables.
 ------------------------------------------------------------------------------------------------------
-DB.Pet_Data.Init = function(index, player_name, pet_name)
+DB.Pet_Data.Initialize = function(index, player_name, pet_name)
 	if not index or not pet_name then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Data.Init", "Nil required parameter: Player {" .. tostring(player_name) .. "} Pet {"
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Data.Initialize", "Nil required parameter: Player {" .. tostring(player_name) .. "} Pet {"
 		.. tostring(pet_name) .. "}.")
 		return false
 	end
 
-	if not DB.Pet_Parse[index] then DB.Pet_Parse[index] = {} end
+	-- Primary pet data node initialization.
+	if not DB.Pet_Parse[index] then DB.Pet_Parse[index] = T{} end
 	if DB.Pet_Parse[index][pet_name] then return false end
+	DB.Pet_Parse[index][pet_name] = T{}
 
-	DB.Pet_Parse[index][pet_name] = {}
-
-	-- Initialize data nodes
+	-- Initialize data nodes.
 	for _, trackable in pairs(DB.Enum.Trackable) do
-		DB.Pet_Parse[index][pet_name][trackable] = {}
-		DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG] = {}
+		DB.Pet_Parse[index][pet_name][trackable] = T{}
 		for _, metric in pairs(DB.Enum.Metric) do
-			DB.Pet_Data.Set(0, index, pet_name, trackable, metric)
+
+			-- Need to set minimum high manually to capture accurate minimums.
+			if metric == DB.Enum.Metric.MIN then
+				DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, trackable, metric)
+			else
+				DB.Pet_Data.Set(0, index, pet_name, trackable, metric)
+			end
+
 		end
 	end
 
-	-- Need to set minimum high manually to capture accurate minimums.
-	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.PET_WS, DB.Enum.Metric.MIN)
-	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.PET_ABILITY, DB.Enum.Metric.MIN)
-	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.PET_HEAL, DB.Enum.Metric.MIN)
-	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.PET_NUKE, DB.Enum.Metric.MIN)
-	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.MELEE_PET_DMG_TAKEN, DB.Enum.Metric.MIN)
-	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.SPELL_PET_DMG_TAKEN, DB.Enum.Metric.MIN)
-	DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, DB.Enum.Trackable.PET_TP_DMG_TAKEN, DB.Enum.Metric.MIN)
-
 	-- Initialize pet tracking tables.
 	if player_name and not DB.Tracking.Initialized_Pets[player_name] then
-		DB.Tracking.Initialized_Pets[player_name] = {}
+		DB.Tracking.Initialized_Pets[player_name] = T{}
 	end
 	if player_name and not DB.Tracking.Initialized_Pets[player_name][pet_name] then
 		DB.Tracking.Initialized_Pets[player_name][pet_name] = true
