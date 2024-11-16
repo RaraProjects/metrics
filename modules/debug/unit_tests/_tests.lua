@@ -431,8 +431,15 @@ Debug.Unit.Test_Player = function(test_cases, error_message, error_count)
         else
             for trackable, _ in pairs(test_cases[index]) do
                 if not DB.Parse[index][trackable] then
-                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Player test cases had unexpected action_name: "
+                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Player test cases had unexpected trackable: "
                     .. tostring(trackable) .. " for " .. tostring(index))
+                else
+                    for metric, _ in pairs(test_cases[index][trackable]) do
+                        if not DB.Parse[index][trackable][metric] then
+                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Player test cases had unexpected metric: "
+                            .. tostring(metric) .. " for " .. tostring(index) .. "|" .. tostring(trackable))
+                        end
+                    end
                 end
             end
         end
@@ -619,12 +626,21 @@ Debug.Unit.Test_Pet_Database = function(test_cases, error_message, error_count)
                     error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet test cases had unexpected pet: "
                     .. tostring(index) .. "|" .. tostring(pet_name))
 
-                -- If the pet name exists in the databse then check the trackables.
+                -- If the pet name exists in the database then check the trackables.
                 else
                     for trackable, _ in pairs(test_cases[index][pet_name]) do
                         if not DB.Pet_Parse[index][pet_name][trackable] then
                             error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet test cases had unexpected trackable: "
-                            .. tostring(trackable) .. " for " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(trackable))
+                            .. tostring(trackable) .. " for " .. tostring(index) .. "|" .. tostring(pet_name))
+
+                        -- If the trackable exists in the database then check the metrics.
+                        else
+                            for metric, _ in pairs(test_cases[index][pet_name][trackable]) do
+                               if not DB.Pet_Parse[index][pet_name][trackable][metric] then
+                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet test cases had unexpected metric: "
+                                    .. tostring(metric) .. " for " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(trackable))
+                               end
+                            end
                         end
                     end
                 end

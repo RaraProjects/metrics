@@ -148,7 +148,6 @@ Debug.Unit.Tests.TP_Action.Skillchain = function()
     player[index][DB.Enum.Trackable.WS][DB.Enum.Metric.HIT_COUNT] = 1
     player[index][DB.Enum.Trackable.WS][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.WS][DB.Enum.Metric.TP_SPENT] = tp
-    player[index][DB.Enum.Trackable.WS][DB.Enum.Values.CATALOG] = T{}
     player[index][DB.Enum.Trackable.SC] = T{}
     player[index][DB.Enum.Trackable.SC][DB.Enum.Metric.TOTAL] = sc_damage
     player[index][DB.Enum.Trackable.SC][DB.Enum.Metric.MIN] = sc_damage
