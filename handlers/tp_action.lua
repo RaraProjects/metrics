@@ -205,7 +205,8 @@ end
 H.TP.WS_Data = function(action, actor_mob)
     local ws_data = Ashita.WS.Get_By_ID(action.param)
 	if not ws_data then
-        Debug.Error.Add("TP.WS_Data: {" .. tostring(actor_mob.name) .. "} used ws ID " .. tostring(action.param) .. " and it wasn't found.")
+        Debug.Error.Add(Debug.Error.ERROR, "H.TP.WS_Data", "Actor {" .. tostring(actor_mob.name) .. "} used WS ID {" .. tostring(action.param)
+        .. "} and it wasn't found.")
         return nil
     end
     return ws_data
@@ -221,7 +222,8 @@ end
 H.TP.Pet_Skill_Data = function(action_id, actor_mob)
     local skill_data = Res.Monster.Get_Full_List(action_id)
     if not skill_data then
-        Debug.Error.Add("TP.Pet_Skill_Data: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action_id) .. " unmapped in Pet_Skill.")
+        Debug.Error.Add(Debug.Error.ERROR, "H.TP.Pet_Skill_Data", "Actor {" .. tostring(actor_mob.name) .. "} used TP move {" .. tostring(action_id)
+        .. "} and it was unmapped.")
         skill_data = {id = action_id, en = "UNK Mon. Ability (" .. action_id .. ")"}
     end
     return skill_data
@@ -310,7 +312,8 @@ end
 H.TP.Pet_Skill_Ignore = function(owner_mob, audits, damage, ws_id, ws_name)
     if owner_mob then
         if not Res.Monster.Get_Damaging_Ability(ws_id) then
-            Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
+            Debug.Error.Add(Debug.Error.WARNING, "H.TP.Pet_Skill_Ignore", "TP Move {" .. tostring(ws_id) .. "} named {" .. tostring(ws_name)
+            .. "} is considered a non-damage pet ability.")
             damage = 0
         end
         DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)

@@ -111,7 +111,7 @@ Ashita.Party.Refresh = function(player_name, node)
                 -- Might as well grab some data while looping through.
                 if player_name and node and player_name == name then return_data = Ashita.Party.Get_Vital(data, slot, node) end
             else
-                Debug.Error.Add("Party.Refresh: nil member or blank name {" .. tostring(name) .. "}")
+                Debug.Error.Add(Debug.Error.ERROR, "Ashita.Party.Refresh", "Nil member or blank name {" .. tostring(name) .. "}")
             end
         end
     end

@@ -227,7 +227,8 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Player_Missing_Ability_Check = function(ability_data, ability_id, actor_mob)
     if not ability_data then
-        Debug.Error.Add("Ability.Player_Missing_Ability_Check: {" .. tostring(actor_mob.name) .. "} Data on ability ID " .. tostring(ability_id) .. " is unavailable.")
+        Debug.Error.Add(Debug.Error.ERROR, "H.Ability.Player_Missing_Ability_Check", "No ability data: Actor {" .. tostring(actor_mob.name)
+        .. "} Ability ID {" .. tostring(ability_id) .. "} Data on ability ID {" .. tostring(ability_id) .. "}.")
         ability_data = {Id = ability_id, Name = "UNK Ability (" .. ability_id .. ")"}
     else
         ability_data = {Id = ability_id, Name = Ashita.Ability.Name(ability_id, ability_data)}
@@ -307,7 +308,8 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Ability_Rectify = function(ability_data, ability_id, avatar, actor_mob)
     if not ability_data then
-        Debug.Error.Add("Ability.Pet_Ability_Rectify: {" .. tostring(actor_mob.name) .. "} Data on ability ID " .. tostring(ability_id) .. " is unavailable.")
+        Debug.Error.Add(Debug.Error.ERROR, "H.Ability.Pet_Ability_Rectify", "No ability data: Actor {" .. tostring(actor_mob.name)
+        .. "} Avatar {" .. tostring(avatar) .. "} Ability ID {" .. tostring(ability_id) .. "} Data on ability ID {" .. tostring(ability_id) .. "}.")
         ability_data = {Id = ability_id, Name = "UNK Ability (" .. ability_id .. ")"}
     else
         if avatar then

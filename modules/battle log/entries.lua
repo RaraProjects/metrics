@@ -131,7 +131,8 @@ Blog.Entries.Notes = function(note, action_type, is_mob)
 
     -- We passed in a note, but didn't handle it above.
     else
-        Debug.Error.Add("Entries.Notes: Unhandled battle log note. Note: {" .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "} Mob {" .. tostring(is_mob) .. "}.")
+        Debug.Error.Add(Debug.Error.WARNING, "Blog.Entries.Notes", "Unhandled battle log note. Note: {"
+        .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "} Mob {" .. tostring(is_mob) .. "}.")
         final_note.Value = " "
     end
 

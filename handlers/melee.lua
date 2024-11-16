@@ -229,7 +229,7 @@ H.Melee.Animation = function(animation_id, audits, damage, melee_type_broad, thr
         DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.RANGED, H.Metric.TOTAL)
         DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, H.Metric.COUNT)
     else
-        Debug.Error.Add("Melee.Animation: {" .. tostring(audits.player_name) .. "} Unhandled animation: " .. tostring(animation_id))
+        Debug.Error.Add(Debug.Error.ERROR, "H.Melee.Animation", "Player {" .. tostring(audits.player_name) .. "} had unhandled animation: " .. tostring(animation_id))
     end
     return throwing
 end
@@ -283,7 +283,8 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
     elseif message_id == Ashita.Enum.Message.RANGECRIT then
         H.Melee.Daken_Crit(audits, damage)
     else
-        Debug.Error.Add("Melee.Message: {" .. tostring(audits.player_name) .. "} Unhandled Melee Nuance " .. tostring(message_id))
+        Debug.Error.Add(Debug.Error.WARNING, "H.Melee.Message", "Player {" .. tostring(audits.player_name) .. "} had unhandled melee message {"
+        .. tostring(message_id) .. "}.")
     end
 end
 

@@ -20,7 +20,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Attack_Speed.Update = function(player_name)
     if not DB.Tracking.Running_Attack_Speed[player_name] then
-		Debug.Error.Add("Attack_Speed.Update: {" .. tostring(player_name) .. "} is missing in Tracking.Attack_Speed.")
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Attack_Speed.Update", "Player {" .. tostring(player_name) .. "} is missing from attack speed tracker.")
 		return false
 	end
 

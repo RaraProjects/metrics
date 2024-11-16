@@ -127,7 +127,8 @@ H.Ranged.Message = function(message_id, audits, damage, ranged_type)
     elseif message_id == Ashita.Enum.Message.SHADOWS then
         H.Ranged.Shadows(audits, damage, ranged_type)
     else
-        Debug.Error.Add("Ranged.Message: {" .. tostring(audits.player_name) .. "} Unhandled Ranged Message: " .. tostring(message_id))
+        Debug.Error.Add(Debug.Error.ERROR, "H.Ranged.Message", "Player {" .. tostring(audits.player_name) .. "} had unhandled ranged message: {"
+        .. tostring(message_id) .. "}.")
     end
 end
 

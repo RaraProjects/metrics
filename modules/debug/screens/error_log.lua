@@ -2,18 +2,24 @@ Debug.Error = {}
 Debug.Error.Log = {}   -- Error, Count
 Debug.Error.Count = 0
 Debug.Error.Util = {}
+Debug.Error.WARNING = "Warning"
+Debug.Error.ERROR   = "Error"
 
 ------------------------------------------------------------------------------------------------------
 -- Adds an entry to the error log.
 -- Example Call: _Debug.Error.Add("Function: Error")
 ------------------------------------------------------------------------------------------------------
+---@param type string the type of error.
+---@param tag string the calling function.
 ---@param error string error string and index to the error log.
 ---@return boolean whether or not this is a new error.
 ------------------------------------------------------------------------------------------------------
-Debug.Error.Add = function(error)
+Debug.Error.Add = function(type, tag, error)
     Debug.Error.Count = Debug.Error.Count + 1
     if not Debug.Error.Log[error] then
         Debug.Error.Log[error] = {
+            Type  = type,
+            Tag   = tag,
             Error = error,
             Count = 1,
         }
@@ -34,11 +40,14 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Populates the error log tab.
 ------------------------------------------------------------------------------------------------------
-Debug.Error.Populate = function()
-    if UI.BeginTable("Error Log", 2, Window_Manager.Table.Flags.Borders) then
-        Debug.Error.Headers()
+---@param type string the type of error.
+------------------------------------------------------------------------------------------------------
+Debug.Error.Populate = function(type)
+    table.sort(Debug.Error.Log, function(a, b) return a.Tag < b.Tag end)
+    if UI.BeginTable("Error Log", 3, Window_Manager.Table.Flags.Borders) then
+        Debug.Error.Headers(type)
         for _, data in pairs(Debug.Error.Log) do
-            Debug.Error.Rows(data)
+            if data.Type == type then Debug.Error.Rows(data) end
         end
         UI.EndTable()
     end
@@ -47,10 +56,13 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Handles setting up the headers for the error log.
 ------------------------------------------------------------------------------------------------------
-Debug.Error.Headers = function()
+---@param type string the type of error.
+------------------------------------------------------------------------------------------------------
+Debug.Error.Headers = function(type)
     local flags = Column.Flags.None
-    UI.TableSetupColumn("Count", flags)
-    UI.TableSetupColumn("Error", flags)
+    UI.TableSetupColumn("Tag", flags, 200)
+    UI.TableSetupColumn("Count", flags, 50)
+    UI.TableSetupColumn(tostring(type), flags, 800)
     UI.TableHeadersRow()
 end
 
@@ -61,6 +73,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Debug.Error.Rows = function(entry)
     UI.TableNextRow()
+    UI.TableNextColumn() UI.Text(tostring(entry.Tag))
     UI.TableNextColumn() UI.Text(tostring(entry.Count))
     UI.TableNextColumn() UI.Text(tostring(entry.Error))
 end

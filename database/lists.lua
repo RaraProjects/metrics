@@ -83,8 +83,9 @@ end
 ---@param focus_type string the trackable that is of interest.
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Sort.Catalog_Damage = function(player_name, focus_type)
-	if not focus_type then
-		Debug.Error.Add("Sort.Catalog_Damage: {" .. tostring(player_name) .. "} focus_type wasn't provided.")
+	if not player_name or not focus_type then
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Sort.Catalog_Damage", "Nil required parameter: Player {" .. tostring(player_name)
+		.. "} Focus Type {" .. tostring(focus_type) .. "}.")
 		return nil
 	end
 	DB.Lists.Populate.Catalog_Damage(player_name, focus_type)
@@ -136,11 +137,13 @@ end
 ---@param focus_type string the trackable that is of interest.
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Populate.Catalog_Damage = function(player_name, focus_type)
-	if not focus_type then
-		Debug.Error.Add("Util.Populate_Total_Damage_Table: {" .. tostring(player_name) .. "} focus_type wasn't provided.")
+	if not player_name or not focus_type then
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Populate.Catalog_Damage", "Nil required parameter: Player {" .. tostring(player_name)
+		.. "} Focus Type {" .. tostring(focus_type) .. "}.")
 		return nil
 	elseif not DB.Tracking.Trackable[focus_type] or not DB.Tracking.Trackable[focus_type][player_name] then
-		Debug.Error.Add("Util.Populate_Total_Damage_Table: {" .. tostring(player_name) .. "} does have data for focus type {" .. tostring(focus_type) .. "}")
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Populate.Catalog_Damage", "Tracking uninitialized: Player {" .. tostring(player_name)
+		.. "} does not have data for focus type {" .. tostring(focus_type) .. "}.")
 		return nil
 	end
 	DB.Sorted.Catalog_Damage = {}
@@ -158,11 +161,11 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Populate.Pet_Damage = function(player_name)
 	if not player_name then
-		Debug.Error.Add("Populate.Pet_Damage: player_name is nil.")
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Populate.Pet_Damage", "player_name is nil.")
 		return nil
 	end
 	if not DB or not DB.Tracking or not DB.Tracking.Initialized_Pets or not DB.Tracking.Initialized_Pets[player_name] then
-		Debug.Error.Add("Populate.Pet_Damage: Initialized_Pets is nil for player {" .. tostring(player_name) .. "}.")
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Populate.Pet_Damage", "Initialized pets is nil for player {" .. tostring(player_name) .. "}.")
 		return nil
 	end
 

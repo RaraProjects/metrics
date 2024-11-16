@@ -161,7 +161,7 @@ Focus.Pets.Single = function(player_name, pet_name)
     local width = Column.Widths.Standard
 
     if not DB.Tracking.Initialized_Pets[player_name] then
-        Debug.Error.Add("Display.Pet_Single_Data: Tried to loop through pets of unitialized player in the focus window.")
+        Debug.Error.Add(Debug.Error.ERROR, "Focus.Pets.Single", "Tried to loop through pets of unitialized player in the focus window.")
         return nil
     end
 

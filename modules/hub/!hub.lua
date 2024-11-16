@@ -33,6 +33,7 @@ Hub.Buttons = function()
     UI.SameLine() Hub.XP_Button()
     UI.SameLine() Hub.Report_Button()
     UI.SameLine() Hub.Settings_Button()
+    UI.SameLine() Hub.Debug_Button()
     UI.SameLine() Hub.Toggle_All_Button()
 end
 
@@ -184,6 +185,24 @@ Hub.Settings_Button = function()
         end
         Metrics.Window.Active_Window = Config.Name
         Config.Settings_Mode = Config.Enum.File.CONFIG
+    end
+    if not active then UI.PopStyleColor(3) end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the Debug window visibility.
+------------------------------------------------------------------------------------------------------
+Hub.Debug_Button = function()
+    if not Debug.Is_Enabled() then return nil end
+    local active = Debug.Window.Is_Visible()
+    if not active then
+        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
+    end
+    if UI.Button(Debug.Name) then
+        if Metrics.Window.Multi_Window then Debug.Window.Toggle_Visibility() end
+        Metrics.Window.Active_Window = Debug.Name
     end
     if not active then UI.PopStyleColor(3) end
 end

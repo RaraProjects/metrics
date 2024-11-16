@@ -95,7 +95,12 @@ Debug.Content = function()
     if     Debug.Active_Mode == Debug.Modes.MOB_VIEWER     then Debug.Mob.Populate(Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.TARGET))
     elseif Debug.Active_Mode == Debug.Modes.ACTION_PACKET  then Debug.Packet.Populate_Action()
     elseif Debug.Active_Mode == Debug.Modes.MESSAGE_PACKET then Debug.Packet.Populate_Message()
-    elseif Debug.Active_Mode == Debug.Modes.ERROR_LOG      then Debug.Error.Populate()
+    elseif Debug.Active_Mode == Debug.Modes.ERROR_LOG      then
+        Debug.Error.Populate(Debug.Error.ERROR)
+        if UI.CollapsingHeader("Warnings") then
+            Debug.Error.Populate(Debug.Error.WARNING)
+        end
+
     elseif Debug.Active_Mode == Debug.Modes.DATA_VIEWER    then Debug.Data_View.Populate()
     elseif Debug.Active_Mode == Debug.Modes.JOB_COLORS     then
         UI.TextColored(Res.Colors.Get_Job(1),  "Warrior")

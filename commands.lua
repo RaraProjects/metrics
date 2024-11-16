@@ -85,10 +85,7 @@ ashita.events.register('command', 'command_cb', function (e)
         -- Player selection
         elseif arg == "player" or arg == "pl" then
             local player_string = command_args[3]
-            Debug.Error.Add("Metrics Command: " .. tostring(arg) .. " " .. tostring(command_args[3]))
-            if player_string then
-                DB.Widgets.Util.Player_Switch(player_string)
-            end
+            if player_string then DB.Widgets.Util.Player_Switch(player_string) end
 
         -- Focus tab switching.
         elseif arg == "melee" then

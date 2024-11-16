@@ -36,7 +36,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Init_Tracking = function(trackable, player_name, pet_name)
 	if not trackable or not player_name or not pet_name then
-		Debug.Error.Add("Pet_Catalog.Init_Tracking:  Passed nil Trackable " .. tostring(trackable) .. " Player Name " .. tostring(player_name) .. " " .. tostring(pet_name))
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Catalog.Init_Tracking", "Nil required parameter: Trackable {" .. tostring(trackable)
+		.. "} Player Name {" .. tostring(player_name) .. "} Pet Name {" .. tostring(pet_name) .. "}.")
 		return false
 	end
 	if not DB.Tracking.Pet_Trackable[trackable] then DB.Tracking.Pet_Trackable[trackable] = {} end
@@ -61,7 +62,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Set = function(value, index, pet_name, trackable, action_name, metric)
 	if not value or not index or not pet_name or not trackable or not action_name or not metric then
-		Debug.Error.Add("Set.Pet_Catalog: {" .. tostring(index) .. "} {" .. tostring(pet_name) .. "} {".. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Catalog.Set", "Nil required parameter: Index {" .. tostring(index) .. "} Pet Name {"
+		.. tostring(pet_name) .. "} Trackable {".. tostring(trackable) .. "}.")
 		return false
 	end
 	DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric] = value
@@ -84,7 +86,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Inc = function(value, index, pet_name, trackable, action_name, metric)
 	if not value or not index or not pet_name or not trackable or not action_name or not metric then
-		Debug.Error.Add("Inc.Pet_Catalog: {" .. tostring(index) .. "} {" .. tostring(pet_name) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Catalog.Inc", "Nil required parameter: Index {" .. tostring(index) .. "} Pet Name {" .. tostring(pet_name)
+		.. "} Trackable {" .. tostring(trackable) .. "}.")
 		return false
 	end
 	DB.Pet_Parse[index][pet_name][trackable][DB.Enum.Values.CATALOG][action_name][metric]
@@ -105,7 +108,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Get = function(player_name, pet_name, trackable, action_name, metric)
 	if not player_name or not pet_name or not trackable or not action_name or not metric then
-		Debug.Error.Add("Get.Pet_Catalog: player_name {" .. tostring(player_name) .. "} pet_name {" .. tostring(pet_name) .. "} trackable {" .. tostring(trackable) .. "} action_name {" .. tostring(action_name) .. "} metric {" .. tostring(metric))
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Catalog.Get", "Nil required parameter: Player {" .. tostring(player_name) .. "} Pet {" .. tostring(pet_name)
+		.. "} Trackable {" .. tostring(trackable) .. "} Action {" .. tostring(action_name) .. "} Metric {" .. tostring(metric) .. "}.")
 		return 0
 	end
 	local total = 0
@@ -140,7 +144,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Calculate = function(value, index, pet_name, trackable, action_name, metric)
 	if not DB.Pet_Parse[index][pet_name] then
-		Debug.Error.Add("BENIGN: Pet_Catalog.Calculate: Tried referencing uninitialized node. {" .. tostring(index) .. "} {" .. tostring(pet_name) .. "} {" .. tostring(action_name) .. "}")
+		Debug.Error.Add(Debug.Error.WARNING, "DB.Pet_Catalog.Calculate", "Tried referencing uninitialized node: Index {" .. tostring(index) .. "} Pet {"
+		.. tostring(pet_name) .. "} Action {" .. tostring(action_name) .. "}.")
 		return value
 	end
 

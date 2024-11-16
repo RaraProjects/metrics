@@ -82,7 +82,8 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     end
 
     if not is_mapped then
-        Debug.Error.Add("Spell_Def.Parse: {" .. tostring(actor_mob.name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
+        Debug.Error.Add(Debug.Error.WARNING, "H.Spell_Def.Parse", "Actor {" .. tostring(actor_mob.name) .. "} cast spell {" .. tostring(spell_id)
+        .. "} named {" .. tostring(spell_name) .. "} which is unhandled.")
     end
 
     return damage

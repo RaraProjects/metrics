@@ -97,7 +97,8 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
     if Res.Spells.Get_Avatar(spell_id) then is_mapped = true end
 
     if not is_mapped then
-        Debug.Error.Add("Spell.Parse: {" .. tostring(actor_mob.name) .. "} spell " .. tostring(spell_id) .. " named " .. tostring(spell_name) .. " is unhandled.")
+        Debug.Error.Add(Debug.Error.WARNING, "H.Spell.Parse", "Actor {" .. tostring(actor_mob.name) .. "} cast spell {" .. tostring(spell_id)
+        .. "} named {" .. tostring(spell_name) .. "} which is unhandled.")
     end
 
     return damage

@@ -12,7 +12,8 @@ DB.Pet_Data = T{}
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Data.Init = function(index, player_name, pet_name)
 	if not index or not pet_name then
-		Debug.Error.Add("Pet_Data.Init: {" .. tostring(player_name) .. " {" .. tostring(pet_name) .. "} nil index passed in." )
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Data.Init", "Nil required parameter: Player {" .. tostring(player_name) .. "} Pet {"
+		.. tostring(pet_name) .. "}.")
 		return false
 	end
 
@@ -60,7 +61,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Data.Set = function(value, index, pet_name, trackable, metric)
 	if not value or not index or not pet_name or not trackable or not metric then
-		Debug.Error.Add("Set.Pet_Data: {" .. tostring(index) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Data.Set", "Nil required parameter: Index {" .. tostring(index) .. "} Pet {" .. tostring(pet_name)
+		.. "} Trackable {" .. tostring(trackable) .. "} Metric {" .. tostring(metric) .. "}.")
 		return false
 	end
 	DB.Pet_Parse[index][pet_name][trackable][metric] = value
@@ -79,7 +81,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Data.Inc = function(value, index, pet_name, trackable, metric)
 	if not value or not index or not pet_name or not trackable or not metric then
-		Debug.Error.Add("Inc.Pet_Data: {" .. tostring(index) .. "} {" .. tostring(pet_name) .. "} {" .. tostring(trackable) .. "} nil required parameter passed in." )
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Data.Inc", "Nil required parameter: Index {" .. tostring(index) .. "} Pet {" .. tostring(pet_name)
+		.. "} Trackable {" .. tostring(trackable) .. "} Metric {" .. tostring(metric) .. "}.")
 		return false
 	end
 	DB.Pet_Parse[index][pet_name][trackable][metric] = DB.Pet_Parse[index][pet_name][trackable][metric] + value

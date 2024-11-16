@@ -127,7 +127,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
 	local is_duplicate = false
 	if not packet.injected then is_duplicate = Ashita.Packets.Is_Duplicate(packet) end
     if is_duplicate then
-        Debug.Error.Add("Duplicate packet for packet " .. tostring(packet.id) .. " found.")
+        Debug.Error.Add(Debug.Error.WARNING, "Packet In", "Duplicate packet for packet {" .. tostring(packet.id) .. "} found.")
         return nil
     end
 
@@ -161,13 +161,13 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     -- Action Packet
     elseif packet.id == 0x028 then
         local action = Ashita.Packets.Build_Action(packet.data)
-        if not action then Debug.Error.Add("Packet Event: action was nil from Packets.Build_Action") return nil end
+        if not action then Debug.Error.Add(Debug.Error.ERROR, "Packet In", "action was nil from Packets.Build_Action") return nil end
 
         local actor_mob = Ashita.Mob.Get_Mob_By_ID(action.actor_id)
-        if not actor_mob then Debug.Error.Add("Packet Event: actor_mob was nil from Mob.Get_Mob_By_ID") return nil end
+        if not actor_mob then Debug.Error.Add(Debug.Error.ERROR, "Packet In", "actor_mob was nil from Mob.Get_Mob_By_ID") return nil end
 
         local target_mob = Ashita.Packets.Get_Action_Target(action)
-        if not target_mob then Debug.Error.Add("Packet Event: target_mob was nil from Mob.Get_Mob_By_ID") return nil end
+        if not target_mob then Debug.Error.Add(Debug.Error.ERROR, "Packet In", "target_mob was nil from Mob.Get_Mob_By_ID") return nil end
 
         -- Need to refresh party for pet checks.
         Ashita.Party.Refresh()
