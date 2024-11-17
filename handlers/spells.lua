@@ -223,98 +223,98 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst, target
     end
 
     -- Overall Mana Tracking
-    DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
+    DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
 
     if Res.Spells.Get_Healing(spell_id) then
         if is_pet then trackable = H.Trackable.PET_HEAL else trackable = H.Trackable.HEALING end
-        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
 
-        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
 
         -- Healing Received (Only counts non-self healing)
         if audits.player_name ~= audits.target_name and Ashita.Party.Is_Affiliate(audits.target_name) then
             local audit_swap = H.Spell.Audit_Swap(audits)
-            DB.Data.Update(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, H.Metric.COUNT)
-            DB.Data.Update(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, H.Metric.HIT_COUNT)
-            DB.Data.Update(H.Mode.INC, (mp_cost / target_count), audit_swap, H.Trackable.HEALING_RECEIVED, H.Metric.MP_SPENT)
-            DB.Catalog.Update_Metric(H.Mode.INC, (mp_cost / target_count), audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, H.Metric.MP_SPENT)
-            DB.Catalog.Update_Metric(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, H.Metric.COUNT)
-            DB.Catalog.Update_Metric(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, H.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, DB.Metric.ATTEMPTS)
+            DB.Data.Update(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, DB.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC, (mp_cost / target_count), audit_swap, H.Trackable.HEALING_RECEIVED, DB.Metric.MP_SPENT)
+            DB.Catalog.Update_Metric(H.Mode.INC, (mp_cost / target_count), audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, DB.Metric.MP_SPENT)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, DB.Metric.ATTEMPTS)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audit_swap, H.Trackable.HEALING_RECEIVED, spell_name, DB.Metric.HIT_COUNT)
         end
 
     elseif Res.Spells.Get_Debuff_Removal(spell_id) then
         trackable = H.Trackable.DEBUFF_REMOVAL
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
 
     elseif Res.Spells.Get_Buff(spell_id) then
         trackable = H.Trackable.BUFF_SPELL
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
 
     elseif Res.Spells.Get_Damaging(spell_id) then
         if is_pet then trackable = H.Trackable.PET_NUKE else trackable = H.Trackable.NUKE end
-        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
 
-        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
 
     elseif Res.Spells.Get_Enfeeble(spell_id) then
         if is_pet then trackable = H.Trackable.PET_ENFEEBLING else trackable = H.Trackable.ENFEEBLE end
-        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
 
     elseif Res.Spells.Get_Enspell(spell_id) then
         trackable = H.Trackable.ENSPELL
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
 
     elseif Res.Spells.Get_Spikes(spell_id) then
         trackable = H.Trackable.OUTGOING_SPIKE_DMG
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
 
     elseif Res.Spells.Get_MP_Drain(spell_id) then
         trackable = H.Trackable.MP_DRAIN
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Data.Update(H.Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
 
     elseif Res.Spells.Get_Buff_Song(spell_id) then
         trackable = H.Trackable.BUFF_SONG
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
 
     else
         if is_pet then trackable = H.Trackable.PET_MAGIC else trackable = H.Trackable.MAGIC end
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, H.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(H.Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
     end
 
     -- Burst Tracking
     if is_burst then
-        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MAGIC, H.Metric.BURST_COUNT)
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.BURST_COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.BURST_COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MAGIC, DB.Metric.MAGIC_BURST_COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.MAGIC_BURST_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.MAGIC_BURST_COUNT)
     end
 end
 
@@ -330,9 +330,9 @@ H.Spell.Nuke = function(audits, spell_name, damage, burst)
     local trackable = H.Trackable.NUKE
     if audits.pet_name then
         trackable = H.Trackable.PET_NUKE
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, DB.Metric.TOTAL)
     else
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.MAGIC, H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.MAGIC, DB.Metric.TOTAL)
     end
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, audits.pet_name, burst)
 end
@@ -347,18 +347,18 @@ end
 ---@param burst boolean
 ------------------------------------------------------------------------------------------------------
 H.Spell.Overcure = function(audits, spell_name, damage, burst)
-    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.ALL_HEAL, H.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.ALL_HEAL, DB.Metric.TOTAL)
 
     local trackable = H.Trackable.HEALING
     if audits.pet_name then trackable = H.Trackable.PET_HEAL end
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, audits.pet_name, burst)
 
     -- Overcure
-    local spell_max = DB.Catalog.Get(audits.player_name, trackable, spell_name, H.Metric.MAX)
+    local spell_max = DB.Catalog.Get(audits.player_name, trackable, spell_name, DB.Metric.MAX)
     local overcure = 0
     if spell_max > damage then overcure = spell_max - damage end
-    DB.Data.Update(H.Mode.INC, overcure, audits, trackable, H.Metric.OVERCURE)
-    DB.Catalog.Update_Metric(H.Mode.INC, overcure, audits, trackable, spell_name, H.Metric.OVERCURE)
+    DB.Data.Update(H.Mode.INC, overcure, audits, trackable, DB.Metric.OVERCURE)
+    DB.Catalog.Update_Metric(H.Mode.INC, overcure, audits, trackable, spell_name, DB.Metric.OVERCURE)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -388,8 +388,8 @@ H.Spell.MP_Drain = function(audits, spell_name, damage, burst)
     local trackable = H.Trackable.MP_DRAIN
     if audits.pet_name then trackable = H.Trackable.PET_MP_DRAIN end
     if damage > 0 then
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
     end
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, nil, burst)
 end
@@ -406,21 +406,21 @@ H.Spell.Enfeebling = function(audits, spell_name, message_id, damage)
     local trackable = H.Trackable.ENFEEBLE
     if audits.pet_name then trackable = H.Trackable.PET_ENFEEBLING end
 
-    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.AOE_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.AOE_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.AOE_ATTEMPTS)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.AOE_ATTEMPTS)
 
     -- These will not negatively impact resist metrics.
     if message_id == Ashita.Enum.Message.NO_EFFECT or message_id == Ashita.Enum.Message.EFFECT_FAIL or message_id == Ashita.Enum.Message.COMP_RESIST then
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
         damage = -1
     -- Resists
     elseif message_id == Ashita.Enum.Message.RESIST or message_id == Ashita.Enum.Message.RESIST_2 then
         damage = -2
     -- Effect Landed
     else
-        DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, H.Metric.HIT_COUNT)
+        DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
     end
 
     return damage

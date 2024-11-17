@@ -102,7 +102,7 @@ Focus.Content = function()
             UI.EndTabItem()
         end
 
-        if DB.Data.Get(player_name, DB.Enum.Trackable.RANGED, DB.Enum.Metric.COUNT) > 0 then
+        if DB.Data.Get(player_name, DB.Enum.Trackable.RANGED, DB.Metric.ATTEMPTS) > 0 then
             if UI.BeginTabItem(Focus.Tabs.Names.RANGED, false, Focus.Tabs.Switch[Focus.Tabs.Names.RANGED]) then
                 Focus.Tabs.Switch[Focus.Tabs.Names.RANGED] = nil
                 Focus.Ranged.Display(player_name)
@@ -110,7 +110,7 @@ Focus.Content = function()
             end
         end
 
-        if DB.Data.Get(player_name, DB.Enum.Trackable.WS, DB.Enum.Metric.TOTAL) > 0 then
+        if DB.Data.Get(player_name, DB.Enum.Trackable.WS, DB.Metric.TOTAL) > 0 then
             if UI.BeginTabItem(Focus.Tabs.Names.WS, false, Focus.Tabs.Switch[Focus.Tabs.Names.WS]) then
                 Focus.Tabs.Switch[Focus.Tabs.Names.WS] = nil
                 Focus.WS.Display(player_name)
@@ -130,7 +130,7 @@ Focus.Content = function()
             UI.EndTabItem()
         end
 
-        if DB.Data.Get(player_name, DB.Enum.Trackable.PET, DB.Enum.Metric.TOTAL) > 0 or DB.Data.Get(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET, DB.Enum.Metric.TOTAL) > 0 then
+        if DB.Data.Get(player_name, DB.Enum.Trackable.PET, DB.Metric.TOTAL) > 0 or DB.Data.Get(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET, DB.Metric.TOTAL) > 0 then
             if UI.BeginTabItem(Focus.Tabs.Names.PETS, false, Focus.Tabs.Switch[Focus.Tabs.Names.PETS]) then
                 Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = nil
                 Focus.Pets.Display(player_name)
@@ -157,13 +157,13 @@ Focus.Overall = function(player_name)
     local table_flags = Window_Manager.Table.Flags.Fixed_Borders
     local width = Column.Widths.Percent
 
-    local melee   = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE,   DB.Enum.Metric.TOTAL)
-    local ranged  = DB.Data.Get(player_name, DB.Enum.Trackable.RANGED,  DB.Enum.Metric.TOTAL)
-    local ws      = DB.Data.Get(player_name, DB.Enum.Trackable.WS,      DB.Enum.Metric.TOTAL)
-    local sc      = DB.Data.Get(player_name, DB.Enum.Trackable.SC,      DB.Enum.Metric.TOTAL)
-    local magic   = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC,   DB.Enum.Metric.TOTAL)
-    local ability = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Enum.Metric.TOTAL)
-    local pet     = DB.Data.Get(player_name, DB.Enum.Trackable.PET,     DB.Enum.Metric.TOTAL)
+    local melee   = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE,   DB.Metric.TOTAL)
+    local ranged  = DB.Data.Get(player_name, DB.Enum.Trackable.RANGED,  DB.Metric.TOTAL)
+    local ws      = DB.Data.Get(player_name, DB.Enum.Trackable.WS,      DB.Metric.TOTAL)
+    local sc      = DB.Data.Get(player_name, DB.Enum.Trackable.SC,      DB.Metric.TOTAL)
+    local magic   = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC,   DB.Metric.TOTAL)
+    local ability = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Metric.TOTAL)
+    local pet     = DB.Data.Get(player_name, DB.Enum.Trackable.PET,     DB.Metric.TOTAL)
 
     local show_sc = false
     local columns = 2

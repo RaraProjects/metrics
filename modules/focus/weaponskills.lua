@@ -33,7 +33,7 @@ Focus.WS.Display = function(player_name, hide_publish)
         UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, trackable_ws)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable_ws)
         UI.TableNextColumn() Column.Damage.Average_TP(player_name)
-        UI.TableNextColumn() Column.General.Fraction(player_name, trackable_ws, DB.Enum.Metric.TOTAL, DB.Enum.Metric.TP_SPENT, false, false, true)
+        UI.TableNextColumn() Column.General.Fraction(player_name, trackable_ws, DB.Metric.TOTAL, DB.Metric.TP_SPENT, false, false, true)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 

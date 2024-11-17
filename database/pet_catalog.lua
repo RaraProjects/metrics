@@ -24,10 +24,10 @@ DB.Pet_Catalog.Initialize = function(index, player_name, trackable, action_name,
 
 	-- Populate metric nodes
 	-- Need to set minimum high manually to capture accurate minimums
-	for _, metric in pairs(DB.Enum.Metric) do
+	for _, metric in pairs(DB.Metric) do
 		DB.Pet_Catalog.Set(0, index, pet_name, trackable, action_name, metric)
 	end
-	DB.Pet_Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Enum.Metric.MIN)
+	DB.Pet_Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Metric.MIN)
 
 	-- Initialize tracking tables
 	DB.Pet_Catalog.Initialize_Tracking(trackable, player_name, pet_name)
@@ -120,7 +120,7 @@ DB.Pet_Catalog.Get = function(player_name, pet_name, trackable, action_name, met
 		return 0
 	end
 	local total = 0
-	if metric == DB.Enum.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
+	if metric == DB.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	for index, _ in pairs(DB.Pet_Parse_Catalog) do
 		if mob_focus == DB.Widgets.Dropdown.Enum.NONE then
@@ -157,8 +157,8 @@ DB.Pet_Catalog.Calculate = function(value, index, pet_name, trackable, action_na
 	end
 
 	if DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable] then
-		if     metric == DB.Enum.Metric.MIN then value = DB.Pet_Catalog.Minimum(value, index, pet_name, trackable, action_name, metric)
-		elseif metric == DB.Enum.Metric.MAX then value = DB.Pet_Catalog.Maximum(value, index, pet_name, trackable, action_name, metric)
+		if     metric == DB.Metric.MIN then value = DB.Pet_Catalog.Minimum(value, index, pet_name, trackable, action_name, metric)
+		elseif metric == DB.Metric.MAX then value = DB.Pet_Catalog.Maximum(value, index, pet_name, trackable, action_name, metric)
 		else   value = value + DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric] end
 	end
 

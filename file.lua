@@ -79,7 +79,7 @@ File.Save_Catalog = function()
                                 if not metric or not data then
                                     Debug.Error.Add(Debug.Error.ERROR, "File.Save_Catalog", "Nil data: Metric: " .. tostring(metric) .. " Data: " .. tostring(data))
                                 elseif data > 0 then
-                                    if data == 100000 and metric == DB.Enum.Metric.MIN then data = 0 end
+                                    if data == 100000 and metric == DB.Metric.MIN then data = 0 end
                                     local player_target = index:gsub(":", File.Delimiter)
                                     file:write(tostring(player_target) .. File.Delimiter .. File.Delimiter .. tostring(trackable) .. File.Delimiter
                                         .. tostring(action_name) .. File.Delimiter .. tostring(metric) .. File.Delimiter .. tostring(data) .. "\n")
@@ -101,7 +101,7 @@ File.Save_Catalog = function()
                                     if not metric or not data then
                                         Debug.Error.Add(Debug.Error.ERROR, "File.Save_Catalog", "Nil data: Metric: " .. tostring(metric) .. " Data: " .. tostring(data))
                                     elseif data > 0 then
-                                        if data == 100000 and metric == DB.Enum.Metric.MIN then data = 0 end
+                                        if data == 100000 and metric == DB.Metric.MIN then data = 0 end
                                         local player_target = index:gsub(":", File.Delimiter)
                                         file:write(tostring(player_target) .. File.Delimiter .. tostring(pet_name) .. File.Delimiter
                                                 .. tostring(trackable) .. File.Delimiter .. tostring(action_name) .. File.Delimiter

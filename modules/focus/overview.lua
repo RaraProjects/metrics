@@ -49,7 +49,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.WAR = function(player_name)
     local ability_list = {[1] = "Berserk", [2] = "Warcry", [3] = "Aggressor", [4] = "Provoke", [5] = "Defender"}
-    local ranged_damage = DB.Data.Get(player_name, DB.Enum.Trackable.RANGED, DB.Enum.Metric.COUNT)
+    local ranged_damage = DB.Data.Get(player_name, DB.Enum.Trackable.RANGED, DB.Metric.ATTEMPTS)
     Focus.Overview.Melee(player_name)
     if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
     Focus.Overview.Weaponskill(player_name)
@@ -114,7 +114,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.THF = function(player_name)
     local ability_list = {[1] = "Sneak Attack", [2] = "Trick Attack", [3] = "Bully", [4] = "Accomplice", [5] = "Collaborator", [6] = "Mug", [7] = "Steal"}
-    local ranged_damage = DB.Data.Get(player_name, DB.Enum.Trackable.RANGED, DB.Enum.Metric.COUNT)
+    local ranged_damage = DB.Data.Get(player_name, DB.Enum.Trackable.RANGED, DB.Metric.ATTEMPTS)
     Focus.Overview.Melee(player_name)
     if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
     Focus.Overview.Weaponskill(player_name)
@@ -144,7 +144,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.DRK = function(player_name)
     local ability_list = {[1] = "Last Resort", [2] = "Souleater", [3] = "Weapon Bash"}
-    local ranged_damage = DB.Data.Get(player_name, DB.Enum.Trackable.RANGED, DB.Enum.Metric.COUNT)
+    local ranged_damage = DB.Data.Get(player_name, DB.Enum.Trackable.RANGED, DB.Metric.ATTEMPTS)
     Focus.Overview.Melee(player_name)
     if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
     Focus.Overview.Weaponskill(player_name)
@@ -305,10 +305,10 @@ Focus.Overview.Melee = function(player_name)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local off_hand = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Enum.Metric.TOTAL)
-    local kick_damage = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Enum.Metric.TOTAL)
-    local counter_damage = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.TOTAL)
-    local pet_damage = DB.Data.Get(player_name, DB.Enum.Trackable.PET_MELEE, DB.Enum.Metric.TOTAL)
+    local off_hand = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_OFFHAND, DB.Metric.TOTAL)
+    local kick_damage = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE_KICK, DB.Metric.TOTAL)
+    local counter_damage = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Metric.TOTAL)
+    local pet_damage = DB.Data.Get(player_name, DB.Enum.Trackable.PET_MELEE, DB.Metric.TOTAL)
 
     local row = 1
     if UI.BeginTable("Melee", 4, table_flags) then
@@ -469,11 +469,11 @@ Focus.Overview.Skillchains = function(player_name)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Opened")
-        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.SC, DB.Enum.Metric.SC_OPENED)
+        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.SC, DB.Metric.SKILLCHAIN_OPENED)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Closed")
-        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.SC, DB.Enum.Metric.SC_CLOSED)
+        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Enum.Trackable.SC, DB.Metric.SKILLCHAIN_CLOSED)
         Window_Manager.Table_Row_Color(0)
 
         UI.EndTable()
@@ -563,9 +563,9 @@ Focus.Overview.Nuking = function(player_name, hide_mp)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.TOTAL)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.TOTAL)
                 UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
-                if not hide_mp then UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, trackable, DB.Enum.Metric.MP_SPENT) end
+                if not hide_mp then UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, trackable, DB.Metric.MP_SPENT) end
                 UI.TableNextColumn() Column.Single.Bursts(player_name, action_name)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
@@ -613,7 +613,7 @@ Focus.Overview.Healing = function(player_name)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.TOTAL)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.TOTAL)
                 UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Overcure(player_name, action_name)
@@ -662,7 +662,7 @@ Focus.Overview.Healing_Received = function(player_name)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.TOTAL)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.TOTAL)
                 UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable)
                 Window_Manager.Table_Row_Color(row)
@@ -845,12 +845,12 @@ Focus.Overview.Phantom_Roll = function(player_name, full)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.PHANTOM_ROLL_FIRST_ROLL)
-                if full then UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.PHANTOM_ROLL_REROLL) end
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.LUCKY_COUNT)
-                if full then UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.LUCKY_11_COUNT) end
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.UNLUCKY_COUNT)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.BUST_COUNT)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.FIRST_ROLL)
+                if full then UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.REROLL) end
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.LUCKY)
+                if full then UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.LUCKY_11) end
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.UNLUCKY)
+                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.BUSTS)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
             end
@@ -975,7 +975,7 @@ Focus.Overview.Overload = function(player_name)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Overload")
-        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.OVERLOAD)
+        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.OVERLOAD)
 
         UI.EndTable()
     end
@@ -1124,7 +1124,7 @@ Focus.Overview.Defense = function(player_name)
         UI.TableSetupColumn("%DT-", col_flags, width)
         UI.TableHeadersRow()
 
-        local evade = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_EVASION, DB.Enum.Metric.HIT_COUNT)
+        local evade = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_EVASION, DB.Metric.HIT_COUNT)
         if evade > 0 then
             UI.TableNextColumn() UI.Text("Evasion")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Enum.Trackable.DEF_EVASION)
@@ -1135,7 +1135,7 @@ Focus.Overview.Defense = function(player_name)
             row = row + 1
         end
 
-        local parry = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_PARRY, DB.Enum.Metric.HIT_COUNT)
+        local parry = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_PARRY, DB.Metric.HIT_COUNT)
         if parry > 0 then
             UI.TableNextColumn() UI.Text("Parry")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Enum.Trackable.DEF_PARRY)
@@ -1146,7 +1146,7 @@ Focus.Overview.Defense = function(player_name)
             row = row + 1
         end
 
-        local shadows = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_SHADOWS, DB.Enum.Metric.HIT_COUNT)
+        local shadows = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_SHADOWS, DB.Metric.HIT_COUNT)
         if shadows > 0 then
             UI.TableNextColumn() UI.Text("Shadows")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Enum.Trackable.DEF_SHADOWS)
@@ -1157,7 +1157,7 @@ Focus.Overview.Defense = function(player_name)
             row = row + 1
         end
 
-        local counter = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.HIT_COUNT)
+        local counter = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Metric.HIT_COUNT)
         if counter > 0 then
             UI.TableNextColumn() UI.Text("Counter")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Enum.Trackable.DEF_COUNTER)
@@ -1168,7 +1168,7 @@ Focus.Overview.Defense = function(player_name)
             row = row + 1
         end
 
-        local guard = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_GUARD, DB.Enum.Metric.HIT_COUNT)
+        local guard = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_GUARD, DB.Metric.HIT_COUNT)
         if guard > 0 then
             UI.TableNextColumn() UI.Text("Guard")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Enum.Trackable.DEF_GUARD)
@@ -1179,7 +1179,7 @@ Focus.Overview.Defense = function(player_name)
             row = row + 1
         end
 
-        local shield = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_BLOCK, DB.Enum.Metric.HIT_COUNT)
+        local shield = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_BLOCK, DB.Metric.HIT_COUNT)
         if shield > 0 then
             UI.TableNextColumn() UI.Text("Shield Block")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Enum.Trackable.DEF_BLOCK)

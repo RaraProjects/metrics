@@ -257,8 +257,8 @@ end
 ---@param ws_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Attempts = function(audits, ws_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.WS, H.Metric.COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.WS, ws_name, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.WS, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.WS, ws_name, DB.Metric.ATTEMPTS)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -268,8 +268,8 @@ end
 ---@param ws_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Hit = function(audits, ws_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.WS, H.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.WS, ws_name, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.WS, DB.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.WS, ws_name, DB.Metric.HIT_COUNT)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -283,8 +283,8 @@ end
 H.TP.Weaponskill_TP = function(audits, ws_name, tp, trackable)
     if tp < 0 then tp = 0 end
     if tp > 3000 then tp = 3000 end
-    DB.Data.Update(H.Mode.INC, tp, audits, trackable, H.Metric.TP_SPENT)
-    DB.Catalog.Update_Metric(H.Mode.INC, tp, audits, trackable, ws_name, H.Metric.TP_SPENT)
+    DB.Data.Update(H.Mode.INC, tp, audits, trackable, DB.Metric.TP_SPENT)
+    DB.Catalog.Update_Metric(H.Mode.INC, tp, audits, trackable, ws_name, DB.Metric.TP_SPENT)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -295,8 +295,8 @@ end
 ---@param skill_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Attempts = function(audits, trackable, skill_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, skill_name, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, skill_name, DB.Metric.ATTEMPTS)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -316,7 +316,7 @@ H.TP.Pet_Skill_Ignore = function(owner_mob, audits, damage, ws_id, ws_name)
             .. "} is considered a non-damage pet ability.")
             damage = 0
         end
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, DB.Metric.TOTAL)
     end
     return damage
 end
@@ -329,8 +329,8 @@ end
 ---@param skill_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Hit = function(audits, trackable, skill_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, skill_name, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, skill_name, DB.Metric.HIT_COUNT)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -423,16 +423,16 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Skillchain_Hit = function(audits, sc_name)
     -- Total Attempts
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, DB.Metric.ATTEMPTS)
 
     -- Successfull SC Count
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, DB.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, DB.Metric.HIT_COUNT)
 
     -- Credit to skillchain closer.
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.SC_CLOSED)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.SC_CLOSED)
+    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, DB.Metric.SKILLCHAIN_CLOSED)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, DB.Metric.SKILLCHAIN_CLOSED)
 
     -- Credit to skillchain opener (except for multistep skillchains).
     if H.TP.SC_Step <= 2 then
@@ -440,8 +440,8 @@ H.TP.Skillchain_Hit = function(audits, sc_name)
             player_name = H.TP.SC_Opener,
             target_name = audits.target_name,
         }
-        DB.Data.Update(H.Mode.INC, 1, sc_audits, H.Trackable.SC, H.Metric.SC_OPENED)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, sc_audits, H.Trackable.SC, sc_name, H.Metric.SC_OPENED)
+        DB.Data.Update(H.Mode.INC, 1, sc_audits, H.Trackable.SC, DB.Metric.SKILLCHAIN_OPENED)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, sc_audits, H.Trackable.SC, sc_name, DB.Metric.SKILLCHAIN_OPENED)
     end
 end
 

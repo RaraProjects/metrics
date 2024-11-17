@@ -65,7 +65,7 @@ DB.Lists.Sort.Damage_By_Type = function(trackable)
 	local sorted_damage = {}
 	local damage
 	for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
-		damage = DB.Data.Get(player_name, trackable, DB.Enum.Metric.TOTAL)
+		damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
 		table.insert(sorted_damage, {player_name, damage})
 	end
 	table.sort(sorted_damage, function (a, b)
@@ -121,9 +121,9 @@ DB.Lists.Populate.Total_Damage = function()
 	local damage
 	for index, _ in pairs(DB.Tracking.Initialized_Players) do
 		if Parse.Config.Include_SC_Damage() then
-			damage = DB.Data.Get(index, DB.Enum.Trackable.TOTAL, DB.Enum.Metric.TOTAL)
+			damage = DB.Data.Get(index, DB.Enum.Trackable.TOTAL, DB.Metric.TOTAL)
 		else
-			damage = DB.Data.Get(index, DB.Enum.Trackable.TOTAL_NO_SC, DB.Enum.Metric.TOTAL)
+			damage = DB.Data.Get(index, DB.Enum.Trackable.TOTAL_NO_SC, DB.Metric.TOTAL)
 		end
 		table.insert(DB.Sorted.Total_Damage, {index, damage})
 	end
@@ -148,7 +148,7 @@ DB.Lists.Populate.Catalog_Damage = function(player_name, focus_type)
 	end
 	DB.Sorted.Catalog_Damage = {}
 	for action_name, _ in pairs(DB.Tracking.Trackable[focus_type][player_name]) do
-		table.insert(DB.Sorted.Catalog_Damage, {action_name, DB.Catalog.Get(player_name, focus_type, action_name, DB.Enum.Metric.TOTAL)})
+		table.insert(DB.Sorted.Catalog_Damage, {action_name, DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.TOTAL)})
 	end
 end
 
@@ -173,9 +173,9 @@ DB.Lists.Populate.Pet_Damage = function(player_name)
 	local damage = 0
 	for pet_name, _ in pairs(DB.Tracking.Initialized_Pets[player_name]) do
 		if Parse.Config.Include_SC_Damage() then
-			damage = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.TOTAL, DB.Enum.Metric.TOTAL)
+			damage = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.TOTAL, DB.Metric.TOTAL)
 		else
-			damage = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.TOTAL_NO_SC, DB.Enum.Metric.TOTAL)
+			damage = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.TOTAL_NO_SC, DB.Metric.TOTAL)
 		end
 		table.insert(DB.Sorted.Pet_Damage, {pet_name, damage})
 	end

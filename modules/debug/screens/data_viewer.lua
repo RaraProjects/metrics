@@ -39,7 +39,7 @@ Debug.Data_View.Node = function(stack, data)
             end
         else
             if value and value > 0 then
-                if not (index == DB.Enum.Metric.MIN and value == DB.Enum.Values.MAX_DAMAGE) then
+                if not (index == DB.Metric.MIN and value == DB.Enum.Values.MAX_DAMAGE) then
                     for _, v in ipairs(stack) do UI.Text(tostring(v)) UI.SameLine() UI.Text(" ") UI.SameLine() end
                     UI.Text(tostring(index) .. ": " .. tostring(value))
                 end

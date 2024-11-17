@@ -7,12 +7,12 @@ Focus.Abilities = T{}
 ---@param hide_publish? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Abilities.Display = function(player_name, hide_publish)
-    local ability_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Enum.Metric.COUNT)
-    local healing_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_HEALING, DB.Enum.Metric.COUNT)
-    local mp_recovery   = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, DB.Enum.Metric.COUNT)
-    local maneuvers     = DB.Data.Get(player_name, DB.Enum.Trackable.MANEUVER, DB.Enum.Metric.COUNT)
-    local rolls         = DB.Data.Get(player_name, DB.Enum.Trackable.PHANTOM_ROLL, DB.Enum.Metric.COUNT)
-    local misc_count    = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY, DB.Enum.Metric.COUNT)
+    local ability_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Metric.ATTEMPTS)
+    local healing_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_HEALING, DB.Metric.ATTEMPTS)
+    local mp_recovery   = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, DB.Metric.ATTEMPTS)
+    local maneuvers     = DB.Data.Get(player_name, DB.Enum.Trackable.MANEUVER, DB.Metric.ATTEMPTS)
+    local rolls         = DB.Data.Get(player_name, DB.Enum.Trackable.PHANTOM_ROLL, DB.Metric.ATTEMPTS)
+    local misc_count    = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY, DB.Metric.ATTEMPTS)
 
     Focus.Abilities.Total(player_name)
     UI.Separator()

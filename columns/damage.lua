@@ -11,7 +11,7 @@ Column.Damage = T{}
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Damage.By_Type = function(player_name, damage_type, percent, justify, raw)
-    local focused_damage = DB.Data.Get(player_name, damage_type, Column.Metric.TOTAL)
+    local focused_damage = DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(focused_damage)
     if percent then
         local total_damage = Column.Damage.Raw_Total_Player_Damage(player_name)
@@ -30,7 +30,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 Column.Damage.By_Type_Raw = function(player_name, damage_type)
-    return DB.Data.Get(player_name, damage_type, Column.Metric.TOTAL)
+    return DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -42,8 +42,8 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Average_By_Type = function(player_name, damage_type, justify)
-    local focused_damage = DB.Data.Get(player_name, damage_type, Column.Metric.TOTAL)
-    local focused_count  = DB.Data.Get(player_name, damage_type, Column.Metric.HIT_COUNT)
+    local focused_damage = DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
+    local focused_count  = DB.Data.Get(player_name, damage_type, DB.Metric.HIT_COUNT)
     local color = Column.String.Color_Zero(focused_damage)
     if focused_damage == 0 or focused_count == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
     return UI.TextColored(color, Column.String.Format_Percent(focused_damage, focused_count, justify, true))
@@ -56,8 +56,8 @@ end
 ---@param justify? boolean whether or not to right justify the text
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Average_TP = function(player_name, justify)
-    local tp = DB.Data.Get(player_name, Column.Trackable.WS, Column.Metric.TP_SPENT)
-    local attempts = DB.Data.Get(player_name, Column.Trackable.WS, Column.Metric.COUNT)
+    local tp = DB.Data.Get(player_name, Column.Trackable.WS, DB.Metric.TP_SPENT)
+    local attempts = DB.Data.Get(player_name, Column.Trackable.WS, DB.Metric.ATTEMPTS)
     local color = Column.String.Color_Zero(tp)
     if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
     return UI.TextColored(color, Column.String.Format_Percent(tp, attempts, justify, true))
@@ -74,7 +74,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Damage.By_Type_Metric = function(player_name, damage_type, metric, justify)
     local damage = DB.Data.Get(player_name, damage_type, metric)
-    if metric == DB.Enum.Metric.MIN and damage >= DB.Enum.Values.MAX_DAMAGE then damage = 0 end
+    if metric == DB.Metric.MIN and damage >= DB.Enum.Values.MAX_DAMAGE then damage = 0 end
     local color = Column.String.Color_Zero(damage)
     return UI.TextColored(color, Column.String.Format_Number(damage, justify))
 end
@@ -91,11 +91,11 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Pet_By_Type = function(player_name, pet_name, damage_type, percent, justify, all_total)
-    local focused_damage = DB.Pet_Data.Get(player_name, pet_name, damage_type, Column.Metric.TOTAL)
+    local focused_damage = DB.Pet_Data.Get(player_name, pet_name, damage_type, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(focused_damage)
     if percent then
-        local total_damage = DB.Data.Get(player_name, Column.Trackable.PET, Column.Metric.TOTAL)
-        if all_total then total_damage = DB.Data.Get(player_name, Column.Trackable.TOTAL, Column.Metric.TOTAL) end
+        local total_damage = DB.Data.Get(player_name, Column.Trackable.PET, DB.Metric.TOTAL)
+        if all_total then total_damage = DB.Data.Get(player_name, Column.Trackable.TOTAL, DB.Metric.TOTAL) end
         return UI.TextColored(color, Column.String.Format_Percent(focused_damage, total_damage, justify))
     end
     return UI.TextColored(color, Column.String.Format_Number(focused_damage, justify))
@@ -111,10 +111,10 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Healing_Player = function(player_name, pet_name, damage_type, justify)
-    local healing = DB.Data.Get(player_name, damage_type, Column.Metric.TOTAL)
-    if pet_name then healing = DB.Pet_Data.Get(player_name, pet_name, damage_type, Column.Metric.TOTAL) end
+    local healing = DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
+    if pet_name then healing = DB.Pet_Data.Get(player_name, pet_name, damage_type, DB.Metric.TOTAL) end
     local color = Column.String.Color_Zero(healing)
-    local player_healing = DB.Data.Get(player_name, Column.Trackable.ALL_HEAL, Column.Metric.TOTAL)
+    local player_healing = DB.Data.Get(player_name, Column.Trackable.ALL_HEAL, DB.Metric.TOTAL)
     return UI.TextColored(color, Column.String.Format_Percent(healing, player_healing, justify))
 end
 
@@ -128,12 +128,12 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Burst = function(player_name, percent, magic_only, justify)
-    local focused_damage = DB.Data.Get(player_name, Column.Trackable.MAGIC, Column.Metric.BURST_DAMAGE)
+    local focused_damage = DB.Data.Get(player_name, Column.Trackable.MAGIC, DB.Metric.MAGIC_BURST_DAMAGE)
     local color = Column.String.Color_Zero(focused_damage)
     if percent then
         local total_damage = Column.Damage.Raw_Total_Player_Damage(player_name)
         if magic_only then
-            total_damage = DB.Data.Get(player_name, Column.Trackable.MAGIC, Column.Metric.TOTAL)
+            total_damage = DB.Data.Get(player_name, Column.Trackable.MAGIC, DB.Metric.TOTAL)
         end
         return UI.TextColored(color, Column.String.Format_Percent(focused_damage, total_damage, justify))
     end
@@ -173,7 +173,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Percent_Total_By_Type = function(player_name, damage_type, justify, raw)
-    local total = DB.Data.Get(player_name, damage_type, Column.Metric.TOTAL)
+    local total = DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(total)
     local team_damage = DB.Team_Damage_By_Type(damage_type)
     if raw then return Column.String.Format_Percent(total, team_damage) end
@@ -212,9 +212,9 @@ end
 Column.Damage.Raw_Total_Player_Damage = function(player_name)
     if player_name then
         if Parse.Config.Include_SC_Damage() then
-            return DB.Data.Get(player_name, Column.Trackable.TOTAL, Column.Metric.TOTAL)
+            return DB.Data.Get(player_name, Column.Trackable.TOTAL, DB.Metric.TOTAL)
         else
-            return DB.Data.Get(player_name, Column.Trackable.TOTAL_NO_SC, Column.Metric.TOTAL)
+            return DB.Data.Get(player_name, Column.Trackable.TOTAL_NO_SC, DB.Metric.TOTAL)
         end
     end
     return 0
@@ -229,7 +229,7 @@ end
 Column.Damage.Trackable_Total = function(trackable, justify)
     local damage = 0
     for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
-        damage = damage + DB.Data.Get(player_name, trackable, Column.Metric.TOTAL)
+        damage = damage + DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
     end
     local color = Column.String.Color_Zero(damage)
     return UI.TextColored(color, Column.String.Format_Number(damage, justify))
@@ -267,9 +267,9 @@ end
 ---@param justify? boolean whether or not to right justify the text
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Shot_Distance = function(player_name, justify)
-    local shot_distance = DB.Data.Get(player_name, Column.Trackable.RANGED, Column.Metric.SHOT_DISTANCE)
+    local shot_distance = DB.Data.Get(player_name, Column.Trackable.RANGED, DB.Metric.SHOT_DISTANCE)
     if shot_distance then shot_distance = shot_distance / 100 end
-    local count = DB.Data.Get(player_name, Column.Trackable.RANGED, Column.Metric.COUNT)
+    local count = DB.Data.Get(player_name, Column.Trackable.RANGED, DB.Metric.ATTEMPTS)
     local color = Column.String.Color_Zero(shot_distance)
     return UI.TextColored(color, Column.String.Format_Percent(shot_distance, count, justify))
 end

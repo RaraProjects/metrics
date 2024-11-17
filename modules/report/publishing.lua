@@ -124,12 +124,12 @@ Report.Publishing.Catalog = function(player_name, focus_type)
         DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         for _, data in ipairs(DB.Sorted.Catalog_Damage) do
             action_name = data[1]
-            local total = Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL, false, true)
+            local total = Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL, false, true)
             local count = Column.Single.Attempts(player_name, action_name, focus_type, true)
             local average = Column.Single.Average(player_name, action_name, focus_type, true)
-            local min = Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN, false, true)
+            local min = Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MIN, false, true)
             if min == "100000" then min = "0" end
-            local max = Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX, false, true)
+            local max = Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MAX, false, true)
             local chat_string = tostring(action_name) .. ": " .. tostring(total) .. " | " .. tostring(count) .. " | " 
                                 .. tostring(average) .. " | " .. tostring(min) .. " | " .. tostring(max)
             Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)

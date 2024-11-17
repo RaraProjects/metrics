@@ -11,7 +11,7 @@ Focus.Pets.Display = function(player_name)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local pet_total = DB.Data.Get(player_name, DB.Enum.Trackable.PET, DB.Enum.Metric.TOTAL)
+    local pet_total = DB.Data.Get(player_name, DB.Enum.Trackable.PET, DB.Metric.TOTAL)
 
     local row = 1
     if UI.BeginTable("Pets Melee", 4, table_flags) then
@@ -28,7 +28,7 @@ Focus.Pets.Display = function(player_name)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
-        local melee = DB.Data.Get(player_name, DB.Enum.Trackable.PET_MELEE, DB.Enum.Metric.TOTAL)
+        local melee = DB.Data.Get(player_name, DB.Enum.Trackable.PET_MELEE, DB.Metric.TOTAL)
         if melee > 0 then
             UI.TableNextColumn() UI.Text("Melee")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_MELEE)
@@ -38,7 +38,7 @@ Focus.Pets.Display = function(player_name)
             row = row + 1
         end
 
-        local ranged = DB.Data.Get(player_name, DB.Enum.Trackable.PET_RANGED, DB.Enum.Metric.TOTAL)
+        local ranged = DB.Data.Get(player_name, DB.Enum.Trackable.PET_RANGED, DB.Metric.TOTAL)
         if ranged > 0 then
             UI.TableNextColumn() UI.Text("Ranged")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_RANGED)
@@ -48,7 +48,7 @@ Focus.Pets.Display = function(player_name)
             row = row + 1
         end
 
-        local nuke = DB.Data.Get(player_name, DB.Enum.Trackable.PET_NUKE, DB.Enum.Metric.TOTAL)
+        local nuke = DB.Data.Get(player_name, DB.Enum.Trackable.PET_NUKE, DB.Metric.TOTAL)
         if nuke > 0 then
             UI.TableNextColumn() UI.Text("Magic")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_NUKE)
@@ -58,7 +58,7 @@ Focus.Pets.Display = function(player_name)
             row = row + 1
         end
 
-        local healing = DB.Data.Get(player_name, DB.Enum.Trackable.PET_HEAL, DB.Enum.Metric.TOTAL)
+        local healing = DB.Data.Get(player_name, DB.Enum.Trackable.PET_HEAL, DB.Metric.TOTAL)
         if healing > 0 then
             UI.TableNextColumn() UI.Text("Healing")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_HEAL)
@@ -68,7 +68,7 @@ Focus.Pets.Display = function(player_name)
             row = row + 1
         end
 
-        local ws = DB.Data.Get(player_name, DB.Enum.Trackable.PET_WS, DB.Enum.Metric.TOTAL)
+        local ws = DB.Data.Get(player_name, DB.Enum.Trackable.PET_WS, DB.Metric.TOTAL)
         if ws > 0 then
             UI.TableNextColumn() UI.Text("Weaponskill")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_WS)
@@ -78,7 +78,7 @@ Focus.Pets.Display = function(player_name)
             row = row + 1
         end
 
-        local ability = DB.Data.Get(player_name, DB.Enum.Trackable.PET_ABILITY, DB.Enum.Metric.TOTAL)
+        local ability = DB.Data.Get(player_name, DB.Enum.Trackable.PET_ABILITY, DB.Metric.TOTAL)
         if ability > 0 then
             UI.TableNextColumn() UI.Text("Ability")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY)
@@ -183,7 +183,7 @@ Focus.Pets.Single = function(player_name, pet_name)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
-        local pet_melee = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_MELEE, DB.Enum.Metric.TOTAL)
+        local pet_melee = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_MELEE, DB.Metric.TOTAL)
         if pet_melee > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Melee")
@@ -195,7 +195,7 @@ Focus.Pets.Single = function(player_name, pet_name)
             row = row + 1
         end
 
-        local pet_ranged = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_RANGED, DB.Enum.Metric.TOTAL)
+        local pet_ranged = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_RANGED, DB.Metric.TOTAL)
         if pet_ranged > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Ranged")
@@ -207,7 +207,7 @@ Focus.Pets.Single = function(player_name, pet_name)
             row = row + 1
         end
 
-        local pet_ws = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_WS, DB.Enum.Metric.TOTAL)
+        local pet_ws = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_WS, DB.Metric.TOTAL)
         if pet_ws > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Weaponskill")
@@ -219,7 +219,7 @@ Focus.Pets.Single = function(player_name, pet_name)
             row = row + 1
         end
 
-        local pet_ability = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_ABILITY, DB.Enum.Metric.TOTAL)
+        local pet_ability = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_ABILITY, DB.Metric.TOTAL)
         if pet_ability > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Ability")
@@ -231,7 +231,7 @@ Focus.Pets.Single = function(player_name, pet_name)
             row = row + 1
         end
 
-        local pet_magic = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_NUKE, DB.Enum.Metric.TOTAL)
+        local pet_magic = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_NUKE, DB.Metric.TOTAL)
         if pet_magic > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Magic")
@@ -243,7 +243,7 @@ Focus.Pets.Single = function(player_name, pet_name)
             row = row + 1
         end
 
-        local pet_healing = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_HEAL, DB.Enum.Metric.TOTAL)
+        local pet_healing = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.PET_HEAL, DB.Metric.TOTAL)
         if pet_healing > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Healing")
@@ -298,20 +298,20 @@ end
 Focus.Pets.Single_Row = function(player_name, pet_name, action_name, trackable)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(action_name)
-    UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Enum.Metric.TOTAL)
+    UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Metric.TOTAL)
     UI.TableNextColumn() Column.Single.Average_Pet_TP(player_name, pet_name, trackable, action_name)
     UI.TableNextColumn() Column.Single.Pet_Acc(player_name, pet_name, action_name, trackable)
     UI.TableNextColumn() Column.Single.Pet_Attempts(player_name, pet_name, action_name, trackable)
     UI.TableNextColumn() Column.Single.Pet_Average(player_name, pet_name, action_name, trackable)
 
-    local min = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Enum.Metric.MIN)
+    local min = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.MIN)
     if min == DB.Enum.Values.MAX_DAMAGE then
         UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Enum.Values.IGNORE)
     else
-        UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Enum.Metric.MIN)
+        UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Metric.MIN)
     end
 
-    UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Enum.Metric.MAX)
+    UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Metric.MAX)
 end
 
 ------------------------------------------------------------------------------------------------------

@@ -96,7 +96,7 @@ Overview.Parse.Melee = function()
         for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
                 local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, Column.Metric.TOTAL)
+                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
                     UI.TableNextRow()
                     UI.TableNextColumn() Column.String.Format_Name(player_name)
@@ -105,9 +105,9 @@ Overview.Parse.Melee = function()
                     UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, trackable)
                     UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
                     UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.COUNT)
-                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.MIN)
-                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.MAX)
+                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.ATTEMPTS)
+                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.MIN)
+                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.MAX)
                     Window_Manager.Table_Row_Color(row)
                     row = row + 1
                 end
@@ -158,7 +158,7 @@ Overview.Parse.Ranged = function()
         for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
                 local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, Column.Metric.TOTAL)
+                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
                     UI.TableNextRow()
                     UI.TableNextColumn() Column.String.Format_Name(player_name)
@@ -168,9 +168,9 @@ Overview.Parse.Ranged = function()
                     UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
                     UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, trackable)
                     UI.TableNextColumn() Column.Damage.Shot_Distance(player_name)
-                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.COUNT)
-                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.MIN)
-                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.MAX)
+                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.ATTEMPTS)
+                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.MIN)
+                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.MAX)
                     Window_Manager.Table_Row_Color(row)
                     row = row + 1
                 end
@@ -224,7 +224,7 @@ Overview.Parse.Weaponskills = function()
         for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
                 local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, Column.Metric.TOTAL)
+                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
                     -- Player Overall
                     UI.TableNextRow()
@@ -234,8 +234,8 @@ Overview.Parse.Weaponskills = function()
                     UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, trackable)
                     UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
                     UI.TableNextColumn() Column.Damage.Average_TP(player_name)
-                    UI.TableNextColumn() Column.General.Fraction(player_name, trackable, DB.Enum.Metric.TOTAL, DB.Enum.Metric.TP_SPENT, false, false, true)
-                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.COUNT)
+                    UI.TableNextColumn() Column.General.Fraction(player_name, trackable, DB.Metric.TOTAL, DB.Metric.TP_SPENT, false, false, true)
+                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.ATTEMPTS)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     Window_Manager.Table_Row_Color(1)
@@ -249,15 +249,15 @@ Overview.Parse.Weaponskills = function()
 
                             UI.TableNextRow()
                             UI.TableNextColumn() UI.Text("> " .. tostring(action_name))
-                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.TOTAL)
+                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.TOTAL)
                             UI.TableNextColumn() Column.General.Percent_Party_Total_Action(player_name, action_name, trackable)
                             UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
                             UI.TableNextColumn() Column.Single.Acc(player_name, action_name, trackable)
                             UI.TableNextColumn() Column.Single.Average_TP(player_name, action_name)
-                            UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, trackable, DB.Enum.Metric.TP_SPENT)
+                            UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, trackable, DB.Metric.TP_SPENT)
                             UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
                             UI.TableNextColumn() Focus.Catalog.Min(player_name, action_name, trackable)
-                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.MAX)
+                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.MAX)
                             Window_Manager.Table_Row_Color(0)
                         end
                     end
@@ -310,7 +310,7 @@ Overview.Parse.Nukes = function()
         for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
                 local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, Column.Metric.TOTAL)
+                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
                     -- Player Overall
                     UI.TableNextRow()
@@ -318,9 +318,9 @@ Overview.Parse.Nukes = function()
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
                     UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
                     UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.BURST_COUNT)
+                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.MAGIC_BURST_COUNT)
                     UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.HIT_COUNT)
+                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.HIT_COUNT)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     Window_Manager.Table_Row_Color(1)
@@ -334,14 +334,14 @@ Overview.Parse.Nukes = function()
 
                             UI.TableNextRow()
                             UI.TableNextColumn() UI.Text("> " .. tostring(action_name))
-                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.TOTAL)
+                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.TOTAL)
                             UI.TableNextColumn() Column.General.Percent_Party_Total_Action(player_name, action_name, trackable)
                             UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
                             UI.TableNextColumn() Column.Single.Bursts(player_name, action_name)
-                            UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, trackable, DB.Enum.Metric.MP_SPENT)
+                            UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, trackable, DB.Metric.MP_SPENT)
                             UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
-                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.MIN)
-                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.MAX)
+                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.MIN)
+                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.MAX)
                             Window_Manager.Table_Row_Color(0)
                         end
                     end
@@ -392,7 +392,7 @@ Overview.Parse.Pets = function()
         for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
                 local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, Column.Metric.TOTAL)
+                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
                     -- Player overall pet damage.
                     UI.TableNextRow()
@@ -471,7 +471,7 @@ Overview.Parse.Healing = function()
         for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
                 local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, Column.Metric.TOTAL)
+                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
                     -- Player Overall
                     UI.TableNextRow()
@@ -481,7 +481,7 @@ Overview.Parse.Healing = function()
                     UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, trackable)
                     UI.TableNextColumn() Column.Healing.Overcure(player_name)
                     UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Enum.Metric.HIT_COUNT)
+                    UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.HIT_COUNT)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     Window_Manager.Table_Row_Color(1)
@@ -495,14 +495,14 @@ Overview.Parse.Healing = function()
 
                             UI.TableNextRow()
                             UI.TableNextColumn() UI.Text("> " .. tostring(action_name))
-                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.TOTAL)
+                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.TOTAL)
                             UI.TableNextColumn() Column.General.Percent_Party_Total_Action(player_name, action_name, trackable)
                             UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
                             UI.TableNextColumn() Column.Single.Overcure(player_name, action_name)
-                            UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, trackable, DB.Enum.Metric.MP_SPENT)
+                            UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, trackable, DB.Metric.MP_SPENT)
                             UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
-                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.MIN)
-                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Enum.Metric.MAX)
+                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.MIN)
+                            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.MAX)
                             Window_Manager.Table_Row_Color(0)
                         end
                     end
@@ -552,7 +552,7 @@ Overview.Parse.Defense = function()
         for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
                 local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, Column.Metric.TOTAL)
+                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
                     UI.TableNextRow()
                     UI.TableNextColumn() Column.String.Format_Name(player_name)

@@ -38,9 +38,9 @@ Focus.Catalog.Weaponskill = function(player_name, focus_type)
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
+            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL)
             UI.TableNextColumn() Column.Single.Average_TP(player_name, action_name)
-            UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, focus_type, DB.Enum.Metric.TP_SPENT)
+            UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, focus_type, DB.Metric.TP_SPENT)
             UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
             UI.TableNextColumn() Column.Single.Acc(player_name, action_name, focus_type)
             Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)
@@ -83,9 +83,9 @@ Focus.Catalog.Skillchains = function(player_name, focus_type)
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, H.Metric.SC_OPENED)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, H.Metric.SC_CLOSED)
+            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL)
+            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.SKILLCHAIN_OPENED)
+            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.SKILLCHAIN_CLOSED)
             Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -127,7 +127,7 @@ Focus.Catalog.Abilities = function(player_name, focus_type, action_string)
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
+            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL)
             UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
             UI.TableNextColumn() Column.Single.Acc(player_name, action_name, focus_type)
             Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)
@@ -206,7 +206,7 @@ Focus.Catalog.Endamage = function(player_name, focus_type, suffix)
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.TOTAL)
+            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL)
             UI.TableNextColumn() Column.Single.Hit_Count(player_name, focus_type, action_name)
             Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)
         end
@@ -256,11 +256,11 @@ end
 ---@param focus_type string
 ------------------------------------------------------------------------------------------------------
 Focus.Catalog.Min = function(player_name, action_name, focus_type)
-    local min = DB.Catalog.Get(player_name, focus_type, action_name, DB.Enum.Metric.MIN)
+    local min = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.MIN)
     if min == DB.Enum.Values.MAX_DAMAGE then
         Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Values.IGNORE)
     else
-        Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MIN)
+        Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MIN)
     end
 end
 
@@ -274,5 +274,5 @@ end
 Focus.Catalog.Avg_Min_Max = function(player_name, action_name, focus_type)
     UI.TableNextColumn() Column.Single.Average(player_name, action_name, focus_type)
     UI.TableNextColumn() Focus.Catalog.Min(player_name, action_name, focus_type)
-    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Metric.MAX)
+    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MAX)
 end

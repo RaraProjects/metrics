@@ -39,10 +39,10 @@ DB.Catalog.Initialize = function(index, player_name, trackable, action_name, pet
 
 	-- Populate metric nodes
 	-- Need to set minimum high manually to capture accurate minimums
-	for _, metric in pairs(DB.Enum.Metric) do
+	for _, metric in pairs(DB.Metric) do
 		DB.Catalog.Set(0, index, trackable, action_name, metric)
 	end
-	DB.Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, trackable, action_name, DB.Enum.Metric.MIN)
+	DB.Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, trackable, action_name, DB.Metric.MIN)
 
 	-- Initialize tracking tables
 	if not DB.Tracking.Trackable[trackable] then DB.Tracking.Trackable[trackable] = T{} end
@@ -85,25 +85,25 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
 
 	-- Magic Bursts
 	if trackable == DB.Enum.Trackable.NUKE and burst then
-		DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Enum.Metric.BURST_DAMAGE)
+		DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Metric.MAGIC_BURST_DAMAGE)
 	end
 	-- COUNT gets incremented in the packet handler.
 
 	-- Total Damage
-    DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Enum.Metric.TOTAL)
+    DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Metric.TOTAL)
 
 	-- Minimum Damage
-    if damage > 0 and damage < DB.Catalog.Get(player_name, trackable, action_name, DB.Enum.Metric.MIN, audits.target_name) then
-		DB.Catalog.Update_Metric(DB.Enum.Mode.SET, damage, audits, trackable, action_name, DB.Enum.Metric.MIN)
+    if damage > 0 and damage < DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MIN, audits.target_name) then
+		DB.Catalog.Update_Metric(DB.Enum.Mode.SET, damage, audits, trackable, action_name, DB.Metric.MIN)
     end
 
 	-- Maximum Damage
-    if damage > DB.Catalog.Get(player_name, trackable, action_name, DB.Enum.Metric.MAX) then
+    if damage > DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MAX) then
     	-- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
 		if trackable == DB.Enum.Trackable.HEALING and DB.Healing_Max[action_name] then
 			if damage > DB.Healing_Max[action_name] then damage = DB.Healing_Max[action_name] end
 		end
-		DB.Catalog.Update_Metric(DB.Enum.Mode.SET, damage, audits, trackable, action_name, DB.Enum.Metric.MAX)
+		DB.Catalog.Update_Metric(DB.Enum.Mode.SET, damage, audits, trackable, action_name, DB.Metric.MAX)
     end
 end
 
@@ -242,7 +242,7 @@ DB.Catalog.Get = function(player_name, trackable, action_name, metric, temporary
 	end
 
 	local total = 0
-	if metric == DB.Enum.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
+	if metric == DB.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	local search_string = player_name .. ":" .. mob_focus
 	if mob_focus == DB.Widgets.Dropdown.Enum.NONE or trackable == DB.Enum.Trackable.HEALING_RECEIVED then search_string = player_name .. ":" end
@@ -268,8 +268,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Calculate = function(value, index, trackable, action_name, metric)
 	if DB.Parse_Catalog[index] and DB.Parse_Catalog[index][action_name] and DB.Parse_Catalog[index][action_name][trackable] then
-		if     metric == DB.Enum.Metric.MIN then value = DB.Catalog.Minimum(value, index, trackable, action_name, metric)
-		elseif metric == DB.Enum.Metric.MAX then value = DB.Catalog.Maximum(value, index, trackable, action_name, metric)
+		if     metric == DB.Metric.MIN then value = DB.Catalog.Minimum(value, index, trackable, action_name, metric)
+		elseif metric == DB.Metric.MAX then value = DB.Catalog.Maximum(value, index, trackable, action_name, metric)
 		else   value = value + DB.Parse_Catalog[index][action_name][trackable][metric] end
 	end
 	return value

@@ -97,9 +97,9 @@ DB.Team_Damage = function()
 	for _, data in ipairs(DB.Sorted.Total_Damage) do
 		local player_name = data[1]
 		if Parse.Config.Include_SC_Damage() then
-			total = total + DB.Data.Get(player_name, DB.Enum.Trackable.TOTAL, DB.Enum.Metric.TOTAL)
+			total = total + DB.Data.Get(player_name, DB.Enum.Trackable.TOTAL, DB.Metric.TOTAL)
 		else
-			total = total + DB.Data.Get(player_name, DB.Enum.Trackable.TOTAL_NO_SC, DB.Enum.Metric.TOTAL)
+			total = total + DB.Data.Get(player_name, DB.Enum.Trackable.TOTAL_NO_SC, DB.Metric.TOTAL)
 		end
 	end
 	return total
@@ -116,7 +116,7 @@ DB.Team_Damage_By_Type = function(damage_type)
 	for rank, data in ipairs(DB.Sorted.Total_Damage) do
 		if rank <= Parse.Config.Rank_Cutoff() then
 			local player_name = data[1]
-			total = total + DB.Data.Get(player_name, damage_type, DB.Enum.Metric.TOTAL)
+			total = total + DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
 		end
 	end
 	return total

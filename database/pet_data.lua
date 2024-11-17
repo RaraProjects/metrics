@@ -25,10 +25,10 @@ DB.Pet_Data.Initialize = function(index, player_name, pet_name)
 	-- Initialize data nodes.
 	for _, trackable in pairs(DB.Enum.Trackable) do
 		DB.Pet_Parse[index][pet_name][trackable] = T{}
-		for _, metric in pairs(DB.Enum.Metric) do
+		for _, metric in pairs(DB.Metric) do
 
 			-- Need to set minimum high manually to capture accurate minimums.
-			if metric == DB.Enum.Metric.MIN then
+			if metric == DB.Metric.MIN then
 				DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, trackable, metric)
 			else
 				DB.Pet_Data.Set(0, index, pet_name, trackable, metric)

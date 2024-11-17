@@ -19,7 +19,7 @@ Column.Single.Damage = function(player_name, action_name, focus_type, metric, pe
 
     if percent then
         local player_total = Column.Damage.Raw_Total_Player_Damage(player_name)
-        if focus_type == DB.Enum.Trackable.HEALING then player_total = DB.Data.Get(player_name, DB.Enum.Trackable.HEALING, Column.Metric.TOTAL) end
+        if focus_type == DB.Enum.Trackable.HEALING then player_total = DB.Data.Get(player_name, DB.Enum.Trackable.HEALING, DB.Metric.TOTAL) end
         if raw then return Column.String.Format_Percent(action_total, player_total) end
         return UI.TextColored(color, Column.String.Format_Percent(action_total, player_total))
     end
@@ -39,7 +39,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Damage_Per_Unit = function(player_name, action_name, focus_type, metric_unit)
-    local single_damage = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.TOTAL)
+    local single_damage = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.TOTAL)
     local mp = DB.Catalog.Get(player_name, focus_type, action_name, metric_unit)
     local color = Column.String.Color_Zero(mp)
     if single_damage == 0 or mp == 0 then color = Res.Colors.Basic.DIM end
@@ -54,8 +54,8 @@ end
 ---@param action_name string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Average_TP = function(player_name, action_name)
-    local tp = DB.Catalog.Get(player_name, Column.Trackable.WS, action_name, Column.Metric.TP_SPENT)
-    local attempts = DB.Catalog.Get(player_name, Column.Trackable.WS, action_name, Column.Metric.COUNT)
+    local tp = DB.Catalog.Get(player_name, Column.Trackable.WS, action_name, DB.Metric.TP_SPENT)
+    local attempts = DB.Catalog.Get(player_name, Column.Trackable.WS, action_name, DB.Metric.ATTEMPTS)
     local color = Column.String.Color_Zero(tp)
     if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
     return UI.TextColored(color, Column.String.Format_Percent(tp, attempts, false, true))
@@ -69,8 +69,8 @@ end
 ---@param action_name string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Average_Pet_TP = function(player_name, pet_name, trackable, action_name)
-    local tp = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, Column.Metric.TP_SPENT)
-    local attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, Column.Metric.COUNT)
+    local tp = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.TP_SPENT)
+    local attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.ATTEMPTS)
     local color = Column.String.Color_Zero(tp)
     if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
     return UI.TextColored(color, Column.String.Format_Percent(tp, attempts, false, true))
@@ -98,7 +98,7 @@ Column.Single.Pet_Damage = function(player_name, pet_name, action_name, trackabl
     end
     local color = Column.String.Color_Zero(single_damage)
     if percent then
-        local total_damage = DB.Pet_Data.Get(player_name, pet_name, Column.Trackable.TOTAL, Column.Metric.TOTAL)
+        local total_damage = DB.Pet_Data.Get(player_name, pet_name, Column.Trackable.TOTAL, DB.Metric.TOTAL)
         return UI.TextColored(color, Column.String.Format_Percent(single_damage, total_damage))
     end
     return UI.TextColored(color, Column.String.Format_Number(single_damage))
@@ -115,7 +115,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Attempts = function(player_name, action_name, focus_type, raw)
-    local single_attempts = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.COUNT)
+    local single_attempts = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.ATTEMPTS)
     local color = Column.String.Color_Zero(single_attempts)
     if raw then return Column.String.Format_Number(single_attempts) end
     return UI.TextColored(color, Column.String.Format_Number(single_attempts))
@@ -131,7 +131,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.MP_Used = function(player_name, action_name, focus_type)
-    local mp = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.MP_SPENT)
+    local mp = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.MP_SPENT)
     local color = Column.String.Color_Zero(mp)
     return UI.TextColored(color, Column.String.Format_Number(mp))
 end
@@ -148,7 +148,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Pet_Attempts = function(player_name, pet_name, action_name, trackable)
-    local single_attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, Column.Metric.COUNT)
+    local single_attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.ATTEMPTS)
     local color = Column.String.Color_Zero(single_attempts)
     return UI.TextColored(color, Column.String.Format_Number(single_attempts))
 end
@@ -162,7 +162,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Bursts = function(player_name, action_name)
-    local burst_count = DB.Catalog.Get(player_name, Column.Trackable.NUKE, action_name, Column.Metric.BURST_COUNT)
+    local burst_count = DB.Catalog.Get(player_name, Column.Trackable.NUKE, action_name, DB.Metric.MAGIC_BURST_COUNT)
     local color = Column.String.Color_Zero(burst_count)
     return UI.TextColored(color, Column.String.Format_Number(burst_count))
 end
@@ -176,7 +176,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Overcure = function(player_name, action_name)
-    local overcure = DB.Catalog.Get(player_name, Column.Trackable.HEALING, action_name, Column.Metric.OVERCURE)
+    local overcure = DB.Catalog.Get(player_name, Column.Trackable.HEALING, action_name, DB.Metric.OVERCURE)
     local color = Column.String.Color_Zero(overcure)
     return UI.TextColored(color, Column.String.Format_Number(overcure))
 end
@@ -191,8 +191,8 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Acc = function(player_name, action_name, focus_type)
-    local single_hits = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.HIT_COUNT)
-    local single_attempts = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.COUNT)
+    local single_hits = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.HIT_COUNT)
+    local single_attempts = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.ATTEMPTS)
     local color = Column.String.Color_Zero(single_hits)
     return UI.TextColored(color, Column.String.Format_Percent(single_hits, single_attempts))
 end
@@ -207,8 +207,8 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Enfeeble_Acc = function(player_name, action_name, focus_type)
-    local single_hits = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.HIT_COUNT)
-    local single_attempts = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.AOE_COUNT)
+    local single_hits = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.HIT_COUNT)
+    local single_attempts = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.AOE_ATTEMPTS)
     local color = Column.String.Color_Zero(single_hits)
     return UI.TextColored(color, Column.String.Format_Percent(single_hits, single_attempts))
 end
@@ -225,8 +225,8 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Pet_Acc = function(player_name, pet_name, action_name, trackable)
-    local single_hits = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, Column.Metric.HIT_COUNT)
-    local single_attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, Column.Metric.COUNT)
+    local single_hits = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.HIT_COUNT)
+    local single_attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.ATTEMPTS)
     local color = Column.String.Color_Zero(single_hits)
     return UI.TextColored(color, Column.String.Format_Percent(single_hits, single_attempts))
 end
@@ -241,7 +241,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Hit_Count = function(player_name, focus_type, action_name)
-    local procs = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.HIT_COUNT)
+    local procs = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.HIT_COUNT)
     local color = Column.String.Color_Zero(procs)
     return UI.TextColored(color, Column.String.Format_Number(procs))
 end
@@ -257,13 +257,13 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Average = function(player_name, action_name, focus_type, raw)
-    local single_hits = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.HIT_COUNT)
+    local single_hits = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.HIT_COUNT)
     local color = Column.String.Color_Zero(single_hits)
     if single_hits == 0 then
         if raw then return Column.String.Format_Number(0) end
         return UI.TextColored(color, Column.String.Format_Number(0))
     end
-    local single_damage  = DB.Catalog.Get(player_name, focus_type, action_name, Column.Metric.TOTAL)
+    local single_damage  = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.TOTAL)
     color = Column.String.Color_Zero(single_damage)
     if raw then return Column.String.Format_Percent(single_damage, single_hits, false, true) end
     return UI.TextColored(color, Column.String.Format_Percent(single_damage, single_hits, false, true))
@@ -281,8 +281,8 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Pet_Average = function(player_name, pet_name, action_name, trackable)
-    local single_hits = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, Column.Metric.HIT_COUNT)
-    local single_damage  = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, Column.Metric.TOTAL)
+    local single_hits = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.HIT_COUNT)
+    local single_damage  = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(single_hits)
     if single_hits == 0 or single_damage == 0 then
         color = Res.Colors.Basic.DIM

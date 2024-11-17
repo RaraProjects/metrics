@@ -6,10 +6,10 @@ Focus.Ranged = T{}
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Ranged.Display = function(player_name)
-    local endamage = DB.Data.Get(player_name, DB.Enum.Trackable.ENDAMAGE_R, DB.Enum.Metric.TOTAL)
-    local endebuff = DB.Data.Get(player_name, DB.Enum.Trackable.ENDEBUFF_R, DB.Enum.Metric.HIT_COUNT)
-    local endrain  = DB.Data.Get(player_name, DB.Enum.Trackable.ENDRAIN_R,  DB.Enum.Metric.HIT_COUNT)
-    local enaspir  = DB.Data.Get(player_name, DB.Enum.Trackable.ENDASPIR_R, DB.Enum.Metric.HIT_COUNT)
+    local endamage = DB.Data.Get(player_name, DB.Enum.Trackable.ENDAMAGE_R, DB.Metric.TOTAL)
+    local endebuff = DB.Data.Get(player_name, DB.Enum.Trackable.ENDEBUFF_R, DB.Metric.HIT_COUNT)
+    local endrain  = DB.Data.Get(player_name, DB.Enum.Trackable.ENDRAIN_R,  DB.Metric.HIT_COUNT)
+    local enaspir  = DB.Data.Get(player_name, DB.Enum.Trackable.ENDASPIR_R, DB.Metric.HIT_COUNT)
 
     Focus.Ranged.Total(player_name)
     Focus.Ranged.Auxiliary(player_name, endamage, endrain, enaspir)
