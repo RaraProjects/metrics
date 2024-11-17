@@ -28,6 +28,8 @@ Debug.Unit.Tests.Defense.Melee_Hit = function()
     player[index][DB.Enum.Trackable.DEF_PARRY][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_SHADOWS] = T{}
     player[index][DB.Enum.Trackable.DEF_SHADOWS][DB.Enum.Metric.COUNT] = 1
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION] = T{}
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_COUNTER] = T{}
     player[index][DB.Enum.Trackable.DEF_COUNTER][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_GUARD] = T{}
@@ -141,6 +143,39 @@ Debug.Unit.Tests.Defense.Melee_Shadows = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Defense - Melee > Third Eye
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Defense.Third_Eye = function()
+    DB.Initialize(true)
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local damage = 0
+    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.THIRD_EYE_ANTICIPATION}
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PLAYER.id_num, nil, damage, primary)
+    H.Melee_Def.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+
+    local player = T{}
+    player[index] = T{}
+    player[index][DB.Enum.Trackable.MELEE_DMG_TAKEN] = T{}
+    player[index][DB.Enum.Trackable.MELEE_DMG_TAKEN][DB.Enum.Metric.COUNT] = 1
+    player[index][DB.Enum.Trackable.DEF_EVASION] = T{}
+    player[index][DB.Enum.Trackable.DEF_EVASION][DB.Enum.Metric.COUNT] = 1
+    player[index][DB.Enum.Trackable.DEF_PARRY] = T{}
+    player[index][DB.Enum.Trackable.DEF_PARRY][DB.Enum.Metric.COUNT] = 1
+    player[index][DB.Enum.Trackable.DEF_SHADOWS] = T{}
+    player[index][DB.Enum.Trackable.DEF_SHADOWS][DB.Enum.Metric.COUNT] = 1
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION] = T{}
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION][DB.Enum.Metric.HIT_COUNT] = 1
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION][DB.Enum.Metric.COUNT] = 1
+    player[index][DB.Enum.Trackable.DEF_CRIT] = T{}
+    player[index][DB.Enum.Trackable.DEF_CRIT][DB.Enum.Metric.COUNT] = 1
+
+    return Debug.Unit.Check_Result("Defense - Melee > Third Eye", player)
+end
+
+------------------------------------------------------------------------------------------------------
 -- Defense - Melee > Counter (Player countering the mob)
 ------------------------------------------------------------------------------------------------------
 ---@return table
@@ -166,6 +201,8 @@ Debug.Unit.Tests.Defense.Melee_Counter = function()
     player[index][DB.Enum.Trackable.DEF_PARRY][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_SHADOWS] = T{}
     player[index][DB.Enum.Trackable.DEF_SHADOWS][DB.Enum.Metric.COUNT] = 1
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION] = T{}
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_COUNTER] = T{}
     player[index][DB.Enum.Trackable.DEF_COUNTER][DB.Enum.Metric.TOTAL] = damage
     player[index][DB.Enum.Trackable.DEF_COUNTER][DB.Enum.Metric.HIT_COUNT] = 1
@@ -208,6 +245,8 @@ Debug.Unit.Tests.Defense.Melee_Guard = function()
     player[index][DB.Enum.Trackable.DEF_PARRY][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_SHADOWS] = T{}
     player[index][DB.Enum.Trackable.DEF_SHADOWS][DB.Enum.Metric.COUNT] = 1
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION] = T{}
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_COUNTER] = T{}
     player[index][DB.Enum.Trackable.DEF_COUNTER][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_GUARD] = T{}
@@ -250,6 +289,8 @@ Debug.Unit.Tests.Defense.Melee_Shield = function()
     player[index][DB.Enum.Trackable.DEF_PARRY][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_SHADOWS] = T{}
     player[index][DB.Enum.Trackable.DEF_SHADOWS][DB.Enum.Metric.COUNT] = 1
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION] = T{}
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_COUNTER] = T{}
     player[index][DB.Enum.Trackable.DEF_COUNTER][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_GUARD] = T{}
@@ -294,6 +335,8 @@ Debug.Unit.Tests.Defense.Melee_Crit = function()
     player[index][DB.Enum.Trackable.DEF_PARRY][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_SHADOWS] = T{}
     player[index][DB.Enum.Trackable.DEF_SHADOWS][DB.Enum.Metric.COUNT] = 1
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION] = T{}
+    player[index][DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_COUNTER] = T{}
     player[index][DB.Enum.Trackable.DEF_COUNTER][DB.Enum.Metric.COUNT] = 1
     player[index][DB.Enum.Trackable.DEF_GUARD] = T{}

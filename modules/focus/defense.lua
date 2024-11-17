@@ -184,6 +184,17 @@ Focus.Defense.Mitigation = function(player_name)
             row = row + 1
         end
 
+        local third_eye = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION, DB.Enum.Metric.HIT_COUNT)
+        if third_eye > 0 then
+            UI.TableNextColumn() UI.Text("Third Eye")
+            UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION)
+            UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_THIRD_EYE_ANTICIPATION)
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
+
         local counter = DB.Data.Get(player_name, DB.Enum.Trackable.DEF_COUNTER, DB.Enum.Metric.HIT_COUNT)
         if counter > 0 then
             UI.TableNextColumn() UI.Text("Counter")

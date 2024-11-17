@@ -82,6 +82,7 @@ Ashita.Enum.Message = T{
     MOBHEAL373  = 373,
     MISS        = 15,
     DEATH_FALL  = 20,
+    THIRD_EYE_ANTICIPATION = 30,
     SHADOWS     = 31,
     DODGE       = 32,
     COUNTER     = 33,

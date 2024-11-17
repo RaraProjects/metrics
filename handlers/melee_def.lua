@@ -73,6 +73,7 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
         if not action_taken then action_taken = H.Melee_Def.Evade(audits, message_id) end
         if not action_taken then action_taken = H.Melee_Def.Parry(audits, message_id) end
         if not action_taken then action_taken = H.Melee_Def.Shadows(audits, message_id) end
+        if not action_taken then action_taken = H.Melee_Def.Third_Eye(audits, message_id) end
         if not action_taken then action_taken = H.Melee_Def.Counter(audits, result) end
         if not action_taken then action_taken = H.Melee_Def.Guard(audits, damage, reaction_id) end
         if not action_taken then action_taken = H.Melee_Def.Block(audits, damage, reaction_id) end
@@ -195,6 +196,23 @@ H.Melee_Def.Shadows = function(audits, message_id)
         shadow = true
     end
     return shadow
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check for Third Eye.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param message_id number the ID of the entity animation when taking a hit.
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Melee_Def.Third_Eye = function(audits, message_id)
+    local anticipation = false
+    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_THIRD_EYE_ANTICIPATION, H.Metric.COUNT)
+    if message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION then
+        DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEF_THIRD_EYE_ANTICIPATION, H.Metric.HIT_COUNT)
+        anticipation = true
+    end
+    return anticipation
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -322,6 +340,7 @@ H.Melee_Def.No_Damage_Messages = function(message_id)
     return message_id == Ashita.Enum.Message.DODGE or
            message_id == Ashita.Enum.Message.MISS or
            message_id == Ashita.Enum.Message.SHADOWS or
+           message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION or
            message_id == Ashita.Enum.Message.MOBHEAL373
 end
 
