@@ -70,17 +70,7 @@ Focus.Pets.Display = function(player_name)
 
         local ws = DB.Data.Get(player_name, DB.Trackable.PET_TP, DB.Metric.TOTAL)
         if ws > 0 then
-            UI.TableNextColumn() UI.Text("Weaponskill")
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, true)
-            UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_TP)
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        local ability = DB.Data.Get(player_name, DB.Trackable.PET_TP, DB.Metric.TOTAL)
-        if ability > 0 then
-            UI.TableNextColumn() UI.Text("Ability")
+            UI.TableNextColumn() UI.Text("TP Move")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, true)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_TP)
@@ -210,19 +200,7 @@ Focus.Pets.Single = function(player_name, pet_name)
         local pet_ws = DB.Pet_Data.Get(player_name, pet_name, DB.Trackable.PET_TP, DB.Metric.TOTAL)
         if pet_ws > 0 then
             UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("Weaponskill")
-            UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP)
-            UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true, nil, true)
-            UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true)
-            UI.TableNextColumn() Column.Acc.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP)
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        local pet_ability = DB.Pet_Data.Get(player_name, pet_name, DB.Trackable.PET_TP, DB.Metric.TOTAL)
-        if pet_ability > 0 then
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("Ability")
+            UI.TableNextColumn() UI.Text("TP Move")
             UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP)
             UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true, nil, true)
             UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true)

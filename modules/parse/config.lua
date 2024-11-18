@@ -419,14 +419,8 @@ Parse.Config.Pet_Flags = function(col_flags, width)
         end
 
         UI.TableNextColumn()
-        if UI.Checkbox("Pet WS", {Metrics.Parse.Pet_WS}) then
+        if UI.Checkbox("Pet TP", {Metrics.Parse.Pet_WS}) then
             Metrics.Parse.Pet_WS = not Metrics.Parse.Pet_WS
-            Parse.Util.Calculate_Column_Flags()
-        end
-
-        UI.TableNextColumn()
-        if UI.Checkbox("Pet Ability", {Metrics.Parse.Pet_Ability}) then
-            Metrics.Parse.Pet_Ability = not Metrics.Parse.Pet_Ability
             Parse.Util.Calculate_Column_Flags()
         end
 
@@ -528,7 +522,6 @@ Parse.Config.Set_Pet_Columns = function(bool)
     Metrics.Parse.Pet_Melee = bool
     Metrics.Parse.Pet_Ranged = bool
     Metrics.Parse.Pet_WS = bool
-    Metrics.Parse.Pet_Ability = bool
     Parse.Util.Calculate_Column_Flags()
 end
 
@@ -542,7 +535,6 @@ Parse.Config.Is_Pet_Column_Enabled = function()
     or Metrics.Parse.Pet_Melee
     or Metrics.Parse.Pet_Ranged
     or Metrics.Parse.Pet_WS
-    or Metrics.Parse.Pet_Ability
 end
 
 ------------------------------------------------------------------------------------------------------

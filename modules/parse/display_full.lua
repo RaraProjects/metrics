@@ -78,8 +78,7 @@ Parse.Full.Headers = function()
     if Metrics.Parse.Pet_Acc then      UI.TableSetupColumn("P.Acc",    flags) end
     if Metrics.Parse.Pet_Melee then    UI.TableSetupColumn("P.Melee",  flags) end
     if Metrics.Parse.Pet_Ranged then   UI.TableSetupColumn("P.RA",     flags) end
-    if Metrics.Parse.Pet_WS then       UI.TableSetupColumn("P.WS",     flags) end
-    if Metrics.Parse.Pet_Ability then  UI.TableSetupColumn("P.JA",     flags) end
+    if Metrics.Parse.Pet_WS then       UI.TableSetupColumn("P.TP",     flags) end
     if Metrics.Parse.Healing then      UI.TableSetupColumn("Healing",  flags) end
     if Metrics.Parse.Damage_Taken then UI.TableSetupColumn("DT",       flags) end
     if Metrics.Parse.Deaths then       UI.TableSetupColumn("Deaths",   flags) end
@@ -125,7 +124,6 @@ Parse.Full.Rows = function(player_name)
     if Metrics.Parse.Pet_Melee then    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, false, true) end
     if Metrics.Parse.Pet_Ranged then   UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_RANGED_OVERALL, false, true) end
     if Metrics.Parse.Pet_WS then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, false, true) end
-    if Metrics.Parse.Pet_Ability then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, false, true) end
     if Metrics.Parse.Healing then      UI.TableNextColumn() Column.Healing.Total(player_name, false, true) end
     if Metrics.Parse.Damage_Taken then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, false, true) end
     if Metrics.Parse.Deaths then       UI.TableNextColumn() Column.Proc.Deaths(player_name, true) end
@@ -171,7 +169,6 @@ Parse.Full.Total_Row = function()
     if Metrics.Parse.Pet_Melee then    UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.PET_MELEE_OVERALL, true) end
     if Metrics.Parse.Pet_Ranged then   UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.PET_RANGED_OVERALL, true) end
     if Metrics.Parse.Pet_WS then       UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.PET_TP, true) end
-    if Metrics.Parse.Pet_Ability then  UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.PET_TP, true) end
     if Metrics.Parse.Healing then      UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.ALL_HEAL, true) end
     if Metrics.Parse.Damage_Taken then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, true) end
     if Metrics.Parse.Deaths then       UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.DEATH, true) end

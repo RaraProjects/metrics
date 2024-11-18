@@ -79,7 +79,6 @@ Parse.Util.Calculate_Column_Flags = function()
     if Metrics.Parse.Pet_Melee then added_columns = added_columns + 1 end
     if Metrics.Parse.Pet_Ranged then added_columns = added_columns + 1 end
     if Metrics.Parse.Pet_WS then added_columns = added_columns + 1 end
-    if Metrics.Parse.Pet_Ability then added_columns = added_columns + 1 end
     if Metrics.Parse.Healing then added_columns = added_columns + 1 end
     if Metrics.Parse.Damage_Taken then added_columns = added_columns + 1 end
     if Metrics.Parse.Deaths then added_columns = added_columns + 1 end
