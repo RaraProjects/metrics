@@ -25,7 +25,7 @@ DB.Data.Initialize = function(index, player_name)
 	DB.Parse[index] = T{}
 
 	-- Initialize data nodes.
-	for _, trackable in pairs(DB.Enum.Trackable) do
+	for _, trackable in pairs(DB.Trackable) do
 		DB.Parse[index][trackable] = T{}
 		for _, metric in pairs(DB.Metric) do
 
@@ -99,7 +99,7 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	end
 
 	-- Increment the running damage count for DPS if this is a total damage increase.
-	if mode == DB.Enum.Mode.INC and trackable == DB.Enum.Trackable.TOTAL and metric == DB.Metric.TOTAL then
+	if mode == DB.Enum.Mode.INC and trackable == DB.Trackable.TOTAL_DAMAGE and metric == DB.Metric.TOTAL then
 		DB.DPS.Inc_Buffer(player_name, value)
 	end
 end
@@ -116,16 +116,16 @@ end
 DB.Data.Update_Damage = function(audits, trackable, damage, burst)
 	-- Grand Totals; There is a regular track and a "no skillchains" track.
     if DB.Catalog.Include_Total_Damage(trackable) then
-    	DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.TOTAL, DB.Metric.TOTAL)
-		if trackable ~= DB.Enum.Trackable.SC then
-			DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.TOTAL_NO_SC, DB.Metric.TOTAL)
+    	DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+		if trackable ~= DB.Trackable.SKILLCHAIN then
+			DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
 		end
     end
 
     -- Trackable Total
     DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
 	if burst then
-		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Enum.Trackable.MAGIC, DB.Metric.MAGIC_BURST_DAMAGE)
+		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.MAGIC_BURST_DAMAGE)
 		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Metric.MAGIC_BURST_DAMAGE)
 	end
 

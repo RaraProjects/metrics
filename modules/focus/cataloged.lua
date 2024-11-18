@@ -144,7 +144,7 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Catalog.Abilities_General = function(player_name)
-    local focus_type = H.Trackable.ABILITY_GENERAL
+    local focus_type = DB.Trackable.ABILITY_GENERAL
     if not DB.Tracking.Trackable[focus_type] then return nil end
     if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
 

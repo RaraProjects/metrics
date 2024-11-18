@@ -102,7 +102,7 @@ Focus.Content = function()
             UI.EndTabItem()
         end
 
-        if DB.Data.Get(player_name, DB.Enum.Trackable.RANGED, DB.Metric.ATTEMPTS) > 0 then
+        if DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS) > 0 then
             if UI.BeginTabItem(Focus.Tabs.Names.RANGED, false, Focus.Tabs.Switch[Focus.Tabs.Names.RANGED]) then
                 Focus.Tabs.Switch[Focus.Tabs.Names.RANGED] = nil
                 Focus.Ranged.Display(player_name)
@@ -110,7 +110,7 @@ Focus.Content = function()
             end
         end
 
-        if DB.Data.Get(player_name, DB.Enum.Trackable.WS, DB.Metric.TOTAL) > 0 then
+        if DB.Data.Get(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.TOTAL) > 0 then
             if UI.BeginTabItem(Focus.Tabs.Names.WS, false, Focus.Tabs.Switch[Focus.Tabs.Names.WS]) then
                 Focus.Tabs.Switch[Focus.Tabs.Names.WS] = nil
                 Focus.WS.Display(player_name)
@@ -130,7 +130,7 @@ Focus.Content = function()
             UI.EndTabItem()
         end
 
-        if DB.Data.Get(player_name, DB.Enum.Trackable.PET, DB.Metric.TOTAL) > 0 or DB.Data.Get(player_name, DB.Enum.Trackable.DMG_TAKEN_TOTAL_PET, DB.Metric.TOTAL) > 0 then
+        if DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL) > 0 or DB.Data.Get(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL) > 0 then
             if UI.BeginTabItem(Focus.Tabs.Names.PETS, false, Focus.Tabs.Switch[Focus.Tabs.Names.PETS]) then
                 Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = nil
                 Focus.Pets.Display(player_name)
@@ -157,13 +157,13 @@ Focus.Overall = function(player_name)
     local table_flags = Window_Manager.Table.Flags.Fixed_Borders
     local width = Column.Widths.Percent
 
-    local melee   = DB.Data.Get(player_name, DB.Enum.Trackable.MELEE,   DB.Metric.TOTAL)
-    local ranged  = DB.Data.Get(player_name, DB.Enum.Trackable.RANGED,  DB.Metric.TOTAL)
-    local ws      = DB.Data.Get(player_name, DB.Enum.Trackable.WS,      DB.Metric.TOTAL)
-    local sc      = DB.Data.Get(player_name, DB.Enum.Trackable.SC,      DB.Metric.TOTAL)
-    local magic   = DB.Data.Get(player_name, DB.Enum.Trackable.MAGIC,   DB.Metric.TOTAL)
-    local ability = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Metric.TOTAL)
-    local pet     = DB.Data.Get(player_name, DB.Enum.Trackable.PET,     DB.Metric.TOTAL)
+    local melee   = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,       DB.Metric.TOTAL)
+    local ranged  = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL,   DB.Metric.TOTAL)
+    local ws      = DB.Data.Get(player_name, DB.Trackable.WEAPONSKILL,      DB.Metric.TOTAL)
+    local sc      = DB.Data.Get(player_name, DB.Trackable.SKILLCHAIN,       DB.Metric.TOTAL)
+    local magic   = DB.Data.Get(player_name, DB.Trackable.SPELLS_OVERALL,       DB.Metric.TOTAL)
+    local ability = DB.Data.Get(player_name, DB.Trackable.ABILITY_DAMAGING, DB.Metric.TOTAL)
+    local pet     = DB.Data.Get(player_name, DB.Trackable.PET_OVERALL,         DB.Metric.TOTAL)
 
     local show_sc = false
     local columns = 2
@@ -192,31 +192,31 @@ Focus.Overall = function(player_name)
         if pet > 0     then UI.TableSetupColumn("Pet", col_flags, width) end
         UI.TableHeadersRow()
 
-        local total_trackable = DB.Enum.Trackable.TOTAL_NO_SC
-        if Parse.Config.Include_SC_Damage() then total_trackable = DB.Enum.Trackable.TOTAL end
+        local total_trackable = DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN
+        if Parse.Config.Include_SC_Damage() then total_trackable = DB.Trackable.TOTAL_DAMAGE end
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Percent")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, total_trackable, true)
-        if melee > 0   then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, true) end
-        if ranged > 0  then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, true) end
-        if ws > 0      then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.WS, true) end
-        if show_sc     then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.SC, true) end
-        if magic > 0   then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, true) end
-        if ability > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, true) end
-        if pet > 0     then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET, true) end
+        if melee > 0   then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_OVERALL, true) end
+        if ranged > 0  then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL, true) end
+        if ws > 0      then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL, true) end
+        if show_sc     then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, true) end
+        if magic > 0   then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, true) end
+        if ability > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING, true) end
+        if pet > 0     then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL, true) end
         Window_Manager.Table_Row_Color(1)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Raw")
         UI.TableNextColumn() Column.Damage.Total(player_name)
-        if melee > 0   then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE) end
-        if ranged > 0  then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED) end
-        if ws > 0      then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.WS) end
-        if show_sc     then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.SC) end
-        if magic > 0   then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC) end
-        if ability > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_DAMAGING) end
-        if pet > 0     then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET) end
+        if melee > 0   then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_OVERALL) end
+        if ranged > 0  then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL) end
+        if ws > 0      then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL) end
+        if show_sc     then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN) end
+        if magic > 0   then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL) end
+        if ability > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING) end
+        if pet > 0     then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL) end
         Window_Manager.Table_Row_Color(0)
 
         UI.EndTable()
@@ -232,13 +232,13 @@ end
 Focus.Graph = function(player_name)
     local total = Column.Damage.Raw_Total_Player_Damage(player_name)
     if total <= 0 then return nil end
-    local melee   = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.MELEE) / total
-    local ranged  = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.RANGED) / total
-    local ws      = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.WS) / total
-    local sc      = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.SC) / total
-    local magic   = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.MAGIC) / total
-    local ability = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.ABILITY) / total
-    local pet     = Column.Damage.By_Type_Raw(player_name, DB.Enum.Trackable.PET) / total
+    local melee   = Column.Damage.By_Type_Raw(player_name, DB.Trackable.MELEE_OVERALL) / total
+    local ranged  = Column.Damage.By_Type_Raw(player_name, DB.Trackable.RANGED_OVERALL) / total
+    local ws      = Column.Damage.By_Type_Raw(player_name, DB.Trackable.WEAPONSKILL) / total
+    local sc      = Column.Damage.By_Type_Raw(player_name, DB.Trackable.SKILLCHAIN) / total
+    local magic   = Column.Damage.By_Type_Raw(player_name, DB.Trackable.SPELLS_OVERALL) / total
+    local ability = Column.Damage.By_Type_Raw(player_name, DB.Trackable.ABILITY_OVERALL) / total
+    local pet     = Column.Damage.By_Type_Raw(player_name, DB.Trackable.PET_OVERALL) / total
     local graph_data = {melee, ranged, ws, sc, magic, ability, pet}
     UI.PlotHistogram("Damage Distribution", graph_data, #graph_data, 0, nil, 0, nil, {0, 30})
 end

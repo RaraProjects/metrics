@@ -56,7 +56,7 @@ H.TP.Action = function(action, actor_mob, log_offense)
     if not tp then tp = 0 end
 
     H.TP.Weaponskill_Attempts(audits, ws_name)
-    H.TP.Weaponskill_TP(audits, ws_name, tp, H.Trackable.WS)
+    H.TP.Weaponskill_TP(audits, ws_name, tp, DB.Trackable.WEAPONSKILL)
     if damage > 0 then H.TP.Weaponskill_Hit(audits, ws_name) end
     if sc_name ~= DB.Enum.Values.DEBUG then H.TP.Skillchain_Hit(audits, sc_name) end
 
@@ -81,7 +81,7 @@ H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
     local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
 
     local target_mob, result, action_id, skill_data, skill_name
-    local trackable = H.Trackable.PET_WS
+    local trackable = DB.Trackable.PET_TP
     for target_index, target_value in pairs(action.targets) do
         target_mob = Ashita.Mob.Get_Mob_By_ID(target_value.id)
         if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
@@ -94,14 +94,14 @@ H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
 
             -- Avatar and wyvern abilities go through here too.
             if Res.Avatar.Get_Healing(action_id) then
-                trackable = H.Trackable.PET_HEAL
+                trackable = DB.Trackable.PET_HEALING
             elseif Res.Avatar.Get_Rage(action_id) or Res.Avatar.Get_Ward(action_id) then
-                trackable = H.Trackable.PET_ABILITY
+                trackable = DB.Trackable.PET_TP
             elseif Res.Pets.Get_Damaging_Wyvern_Breath(action_id) then
-                trackable = H.Trackable.PET_ABILITY
+                trackable = DB.Trackable.PET_TP
                 skill_name = Res.Pets.Get_Damaging_Wyvern_Breath(action_id).en
             elseif Res.Pets.Get_Healing_Wyvern_Breath(action_id) then
-                trackable = H.Trackable.PET_HEAL
+                trackable = DB.Trackable.PET_HEALING
                 skill_name = Res.Pets.Get_Healing_Wyvern_Breath(action_id).en
             elseif not Res.Monster.Get_Damaging_Ability(action_id) then
                 return nil
@@ -257,8 +257,8 @@ end
 ---@param ws_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Attempts = function(audits, ws_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.WS, DB.Metric.ATTEMPTS)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.WS, ws_name, DB.Metric.ATTEMPTS)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, ws_name, DB.Metric.ATTEMPTS)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -268,8 +268,8 @@ end
 ---@param ws_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Hit = function(audits, ws_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.WS, DB.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.WS, ws_name, DB.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, DB.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, ws_name, DB.Metric.HIT_COUNT)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -316,7 +316,7 @@ H.TP.Pet_Skill_Ignore = function(owner_mob, audits, damage, ws_id, ws_name)
             .. "} is considered a non-damage pet ability.")
             damage = 0
         end
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, DB.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     end
     return damage
 end
@@ -342,7 +342,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.MP_Drain = function(audits, ws_id)
     if Res.WS.Get_MP_Drain(ws_id) then
-        audits.trackable = DB.Enum.Trackable.MP_DRAIN
+        audits.trackable = DB.Trackable.SPELLS_MP_DRAIN
     end
     return audits
 end
@@ -359,12 +359,12 @@ H.TP.Audits = function(actor_mob, owner_mob, target_mob)
     -- Initialize on case where this is a trust or regular monster.
     local player_name = actor_mob.name
     local pet_name = nil
-    local trackable = H.Trackable.WS
+    local trackable = DB.Trackable.WEAPONSKILL
     -- Case where this is a player's pet using an ability.
     if owner_mob then
         player_name = owner_mob.name
         pet_name = actor_mob.name
-        trackable = H.Trackable.PET_WS
+        trackable = DB.Trackable.PET_TP
     end
     local audits = {
         player_name = player_name,
@@ -411,7 +411,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.TP.Skillchain_Damage = function(result, player_name, target_name, sc_name)
     local damage = result.add_effect_param
-    DB.Catalog.Update_Damage(player_name, target_name, H.Trackable.SC, damage, sc_name)
+    DB.Catalog.Update_Damage(player_name, target_name, DB.Trackable.SKILLCHAIN, damage, sc_name)
     return damage
 end
 
@@ -423,16 +423,16 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Skillchain_Hit = function(audits, sc_name)
     -- Total Attempts
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, DB.Metric.ATTEMPTS)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, DB.Metric.ATTEMPTS)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.ATTEMPTS)
 
     -- Successfull SC Count
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, DB.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, DB.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.HIT_COUNT)
 
     -- Credit to skillchain closer.
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, DB.Metric.SKILLCHAIN_CLOSED)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, DB.Metric.SKILLCHAIN_CLOSED)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_CLOSED)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.SKILLCHAIN_CLOSED)
 
     -- Credit to skillchain opener (except for multistep skillchains).
     if H.TP.SC_Step <= 2 then
@@ -440,8 +440,8 @@ H.TP.Skillchain_Hit = function(audits, sc_name)
             player_name = H.TP.SC_Opener,
             target_name = audits.target_name,
         }
-        DB.Data.Update(H.Mode.INC, 1, sc_audits, H.Trackable.SC, DB.Metric.SKILLCHAIN_OPENED)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, sc_audits, H.Trackable.SC, sc_name, DB.Metric.SKILLCHAIN_OPENED)
+        DB.Data.Update(H.Mode.INC, 1, sc_audits, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_OPENED)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, sc_audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.SKILLCHAIN_OPENED)
     end
 end
 
@@ -455,7 +455,7 @@ end
 ---@param tp integer
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_WS = function(actor_mob, damage, ws_data, ws_name, tp)
-    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.WS, ws_name, damage, tp, H.Trackable.WS, ws_data)
+    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.WS, ws_name, damage, tp, DB.Trackable.WEAPONSKILL, ws_data)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -467,7 +467,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_SC = function(actor_mob, sc_damage, sc_name)
     if sc_damage > 0 then
-        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.SC, sc_name, sc_damage, nil, DB.Enum.Trackable.SC)
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.SC, sc_name, sc_damage, nil, DB.Trackable.SKILLCHAIN)
     end
 end
 

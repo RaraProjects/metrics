@@ -10,8 +10,8 @@ Column.Healing = T{}
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Healing.Total = function(player_name, percent, justify, raw)
-    local spell_healing = DB.Data.Get(player_name, DB.Enum.Trackable.HEALING, DB.Metric.TOTAL)
-    local ability_healing = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_HEALING, DB.Metric.TOTAL)
+    local spell_healing = DB.Data.Get(player_name, DB.Trackable.SPELLS_HEALING, DB.Metric.TOTAL)
+    local ability_healing = DB.Data.Get(player_name, DB.Trackable.ABILITY_HEALING, DB.Metric.TOTAL)
     local total_healing = spell_healing + ability_healing
     local color = Column.String.Color_Zero(total_healing)
     if percent then
@@ -31,7 +31,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Healing.Overcure = function(player_name, justify)
-    local overcure = DB.Data.Get(player_name, Column.Trackable.HEALING, DB.Metric.OVERCURE)
+    local overcure = DB.Data.Get(player_name, DB.Trackable.SPELLS_HEALING, DB.Metric.OVERCURE)
     local color = Column.String.Color_Zero(overcure)
     return UI.TextColored(color, Column.String.Format_Number(overcure, justify))
 end

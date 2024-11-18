@@ -76,7 +76,7 @@ Report.Publishing.Damage_By_Type = function(trackable)
         Report.Publishing.Lock = true
         local found = false
         local suffix = " Damage"
-        if trackable == DB.Enum.Trackable.HEALING then suffix = "" end
+        if trackable == DB.Trackable.SPELLS_HEALING then suffix = "" end
         Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Total " .. tostring(trackable) .. tostring(suffix)) coroutine.sleep(Report.Publishing.Delay)
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         for rank, data in ipairs(sorted_damage) do
@@ -109,7 +109,7 @@ Report.Publishing.Catalog = function(player_name, focus_type)
         Ashita.Chat.Message("There was an error trying to publish: No player name provided.")
         return nil
     end
-    if not focus_type then focus_type = DB.Enum.Trackable.WS end
+    if not focus_type then focus_type = DB.Trackable.WEAPONSKILL end
     if not DB.Lists.Check.Catalog_Exists(player_name, focus_type) then
         Ashita.Chat.Message(tostring(player_name) .. " doesn't have " .. tostring(focus_type) .. " data to publish.")
         return nil

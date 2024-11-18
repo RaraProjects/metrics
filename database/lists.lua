@@ -121,9 +121,9 @@ DB.Lists.Populate.Total_Damage = function()
 	local damage
 	for index, _ in pairs(DB.Tracking.Initialized_Players) do
 		if Parse.Config.Include_SC_Damage() then
-			damage = DB.Data.Get(index, DB.Enum.Trackable.TOTAL, DB.Metric.TOTAL)
+			damage = DB.Data.Get(index, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
 		else
-			damage = DB.Data.Get(index, DB.Enum.Trackable.TOTAL_NO_SC, DB.Metric.TOTAL)
+			damage = DB.Data.Get(index, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
 		end
 		table.insert(DB.Sorted.Total_Damage, {index, damage})
 	end
@@ -173,9 +173,9 @@ DB.Lists.Populate.Pet_Damage = function(player_name)
 	local damage = 0
 	for pet_name, _ in pairs(DB.Tracking.Initialized_Pets[player_name]) do
 		if Parse.Config.Include_SC_Damage() then
-			damage = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.TOTAL, DB.Metric.TOTAL)
+			damage = DB.Pet_Data.Get(player_name, pet_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
 		else
-			damage = DB.Pet_Data.Get(player_name, pet_name, DB.Enum.Trackable.TOTAL_NO_SC, DB.Metric.TOTAL)
+			damage = DB.Pet_Data.Get(player_name, pet_name, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
 		end
 		table.insert(DB.Sorted.Pet_Damage, {pet_name, damage})
 	end

@@ -6,17 +6,17 @@ Focus.Ranged = T{}
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Ranged.Display = function(player_name)
-    local endamage = DB.Data.Get(player_name, DB.Enum.Trackable.ENDAMAGE_R, DB.Metric.TOTAL)
-    local endebuff = DB.Data.Get(player_name, DB.Enum.Trackable.ENDEBUFF_R, DB.Metric.HIT_COUNT)
-    local endrain  = DB.Data.Get(player_name, DB.Enum.Trackable.ENDRAIN_R,  DB.Metric.HIT_COUNT)
-    local enaspir  = DB.Data.Get(player_name, DB.Enum.Trackable.ENDASPIR_R, DB.Metric.HIT_COUNT)
+    local endamage = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDAMAGE, DB.Metric.TOTAL)
+    local endebuff = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDEBUFF, DB.Metric.HIT_COUNT)
+    local endrain  = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDRAIN,  DB.Metric.HIT_COUNT)
+    local enaspir  = DB.Data.Get(player_name, DB.Trackable.RANGED_ENASPIR, DB.Metric.HIT_COUNT)
 
     Focus.Ranged.Total(player_name)
     Focus.Ranged.Auxiliary(player_name, endamage, endrain, enaspir)
 
     if endebuff > 0 or endamage > 0 then UI.Separator() end
-    if endebuff > 0 then Focus.Catalog.Endebuff(player_name, DB.Enum.Trackable.ENDEBUFF_R) end
-    if endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Enum.Trackable.ENDAMAGE_R) end
+    if endebuff > 0 then Focus.Catalog.Endebuff(player_name, DB.Trackable.RANGED_ENDEBUFF) end
+    if endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Trackable.RANGED_ENDAMAGE) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ Focus.Ranged.Total = function(player_name)
     local table_flags = Focus.Table_Flags
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
-    local trackable = DB.Enum.Trackable.RANGED
+    local trackable = DB.Trackable.RANGED_OVERALL
 
     local row = 1
     if UI.BeginTable("Ranged", 6, table_flags) then
@@ -45,7 +45,7 @@ Focus.Ranged.Total = function(player_name)
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, true)
-        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.RANGED)
+        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_OVERALL)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         Window_Manager.Table_Row_Color(row)
@@ -53,21 +53,21 @@ Focus.Ranged.Total = function(player_name)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Square Hit")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED_SQUARE)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED_SQUARE, true)
-        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.RANGED_SQUARE)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_SQUARE_HIT)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_SQUARE_HIT, true)
+        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_SQUARE_HIT)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        UI.TableNextColumn() Column.Proc.Distance_Correction(player_name, DB.Enum.Trackable.RANGED_SQUARE)
+        UI.TableNextColumn() Column.Proc.Distance_Correction(player_name, DB.Trackable.RANGED_SQUARE_HIT)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("True Strike")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED_TRUE)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED_TRUE, true)
-        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name,DB.Enum.Trackable.RANGED_TRUE)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_TRUE_STRIKE)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_TRUE_STRIKE, true)
+        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name,DB.Trackable.RANGED_TRUE_STRIKE)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        UI.TableNextColumn() Column.Proc.Distance_Correction(player_name, DB.Enum.Trackable.RANGED_TRUE)
+        UI.TableNextColumn() Column.Proc.Distance_Correction(player_name, DB.Trackable.RANGED_TRUE_STRIKE)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -88,7 +88,7 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
     local table_flags = Focus.Table_Flags
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
-    local trackable = DB.Enum.Trackable.RANGED
+    local trackable = DB.Trackable.RANGED_OVERALL
 
     local row = 1
     if UI.BeginTable("Aux. Ranged", 5, table_flags) then
@@ -112,8 +112,8 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("En-Damage")
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(endamage))
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ENDAMAGE_R, true)
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.ENDAMAGE_R)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_ENDAMAGE, true)
+            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_ENDAMAGE)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -124,7 +124,7 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
             UI.TableNextColumn() UI.Text("En-Drain")
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(endrain))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.ENDRAIN_R)
+            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_ENDRAIN)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -135,7 +135,7 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
             UI.TableNextColumn() UI.Text("En-Aspir")
             UI.TableNextColumn() UI.Text(Column.String.Format_Number(enaspir))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.ENDASPIR_R)
+            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_ENASPIR)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
             row = row + 1

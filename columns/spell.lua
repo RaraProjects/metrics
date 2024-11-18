@@ -9,15 +9,15 @@ Column.Spell = T{}
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Spell.MP = function(player_name, magic_type, justify)
-    if not magic_type then magic_type = Column.Trackable.MAGIC end
+    if not magic_type then magic_type = DB.Trackable.SPELLS_OVERALL end
     local mp = 0
     if magic_type == "Other" then
-        local total = DB.Data.Get(player_name, Column.Trackable.MAGIC, DB.Metric.MP_SPENT)
-        local healing = DB.Data.Get(player_name, Column.Trackable.HEALING, DB.Metric.MP_SPENT)
-        local nuke = DB.Data.Get(player_name, Column.Trackable.NUKE, DB.Metric.MP_SPENT)
-        local enfeeble = DB.Data.Get(player_name, Column.Trackable.ENFEEBLE, DB.Metric.MP_SPENT)
-        local enspell = DB.Data.Get(player_name, Column.Trackable.ENSPELL, DB.Metric.MP_SPENT)
-        local mp_drain = DB.Data.Get(player_name, Column.Trackable.MP_DRAIN, DB.Metric.MP_SPENT)
+        local total = DB.Data.Get(player_name, DB.Trackable.SPELLS_OVERALL, DB.Metric.MP_SPENT)
+        local healing = DB.Data.Get(player_name, DB.Trackable.SPELLS_HEALING, DB.Metric.MP_SPENT)
+        local nuke = DB.Data.Get(player_name, DB.Trackable.SPELLS_NUKING, DB.Metric.MP_SPENT)
+        local enfeeble = DB.Data.Get(player_name, DB.Trackable.SPELLS_ENFEEBLING, DB.Metric.MP_SPENT)
+        local enspell = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL, DB.Metric.MP_SPENT)
+        local mp_drain = DB.Data.Get(player_name, DB.Trackable.SPELLS_MP_DRAIN, DB.Metric.MP_SPENT)
         mp = total - healing - nuke - enfeeble - enspell - mp_drain
     else
         mp = DB.Data.Get(player_name, magic_type, DB.Metric.MP_SPENT)

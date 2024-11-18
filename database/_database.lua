@@ -97,9 +97,9 @@ DB.Team_Damage = function()
 	for _, data in ipairs(DB.Sorted.Total_Damage) do
 		local player_name = data[1]
 		if Parse.Config.Include_SC_Damage() then
-			total = total + DB.Data.Get(player_name, DB.Enum.Trackable.TOTAL, DB.Metric.TOTAL)
+			total = total + DB.Data.Get(player_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
 		else
-			total = total + DB.Data.Get(player_name, DB.Enum.Trackable.TOTAL_NO_SC, DB.Metric.TOTAL)
+			total = total + DB.Data.Get(player_name, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
 		end
 	end
 	return total

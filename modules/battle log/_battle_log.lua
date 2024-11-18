@@ -133,7 +133,7 @@ Blog.Add = function(player_name, pet_name, action_flag, action_name, damage, not
     local is_mob = not Ashita.Party.Jobs[player_name]
     if Metrics.Parse.Lurk_Mode then is_mob = false end  -- Prevent everything from being dim in Lurk mode.
     if action_type and action_data then
-        if action_type == DB.Enum.Trackable.MAGIC then
+        if action_type == DB.Trackable.SPELLS_OVERALL then
             local element = action_data.Element
             color = Res.Colors.Get_Element(element)
         end

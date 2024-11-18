@@ -12,8 +12,8 @@ Focus.WS.Display = function(player_name, hide_publish)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local trackable_ws = DB.Enum.Trackable.WS
-    local trackable_sc = DB.Enum.Trackable.SC
+    local trackable_ws = DB.Trackable.WEAPONSKILL
+    local trackable_sc = DB.Trackable.SKILLCHAIN
 
     local row = 1
     if UI.BeginTable("WS and SC", 7, table_flags) then
@@ -56,13 +56,13 @@ Focus.WS.Display = function(player_name, hide_publish)
     -- Cataloged data
     local show_ws_publish = false
     local show_sc_publish = false
-    if DB.Tracking.Trackable[DB.Enum.Trackable.WS] and DB.Tracking.Trackable[DB.Enum.Trackable.WS][player_name] then
-        Focus.Catalog.Weaponskill(player_name, DB.Enum.Trackable.WS)
+    if DB.Tracking.Trackable[DB.Trackable.WEAPONSKILL] and DB.Tracking.Trackable[DB.Trackable.WEAPONSKILL][player_name] then
+        Focus.Catalog.Weaponskill(player_name, DB.Trackable.WEAPONSKILL)
         show_ws_publish = true
     end
 
-    if DB.Tracking.Trackable[DB.Enum.Trackable.SC] and DB.Tracking.Trackable[DB.Enum.Trackable.SC][player_name] then
-        Focus.Catalog.Skillchains(player_name, DB.Enum.Trackable.SC)
+    if DB.Tracking.Trackable[DB.Trackable.SKILLCHAIN] and DB.Tracking.Trackable[DB.Trackable.SKILLCHAIN][player_name] then
+        Focus.Catalog.Skillchains(player_name, DB.Trackable.SKILLCHAIN)
         show_sc_publish = true
     end
 

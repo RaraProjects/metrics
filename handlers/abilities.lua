@@ -57,7 +57,7 @@ H.Ability.Pet_Action = function(action, actor_mob, log_offense)
     local ability_id = action.param
     local ability_data = T{}
     local avatar = false
-    local trackable = H.Trackable.PET_ABILITY
+    local trackable = DB.Trackable.PET_TP
 
     -- Handle offset for Blood Pacts. I don't know why they are all out of order.
     ability_data, avatar, trackable = H.Ability.Pet_Ability_Mapping(ability_id, trackable)
@@ -103,11 +103,11 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
     local ability_id = ability_data.Id
     local ability_name = ability_data.Name
     local damage = result.param
-    local ability_type = H.Trackable.ABILITY
+    local ability_type = DB.Trackable.ABILITY_OVERALL
 
     local pet_name = nil
     if owner_mob then
-        ability_type = H.Trackable.PET_ABILITY
+        ability_type = DB.Trackable.PET_TP
         pet_name = owner_mob.name
     end
 
@@ -124,19 +124,19 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
         end
     else
         if Res.Abilities.Get_Damaging(ability_id) then
-            ability_type = H.Trackable.ABILITY_DAMAGING
+            ability_type = DB.Trackable.ABILITY_DAMAGING
             H.Ability.Catalog(audits, damage, ability_type, ability_name)
         elseif Res.Abilities.Get_Player_Healing(ability_id) or Res.Abilities.Get_Pet_Healing(ability_id) then
-            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.ALL_HEAL, DB.Metric.TOTAL)
-            ability_type = H.Trackable.ABILITY_HEALING
+            DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.ALL_HEAL, DB.Metric.TOTAL)
+            ability_type = DB.Trackable.ABILITY_HEALING
             H.Ability.Catalog(audits, damage, ability_type, ability_name)
         elseif Res.Abilities.Get_MP_Recovery(ability_id) then
-            ability_type = H.Trackable.ABILITY_MP_RECOVERY
+            ability_type = DB.Trackable.ABILITY_MP_RECOVERY
             H.Ability.Catalog(audits, damage, ability_type, ability_name)
         elseif (ability_id - H.Enum.Offsets.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_id - H.Enum.Offsets.ABILITY) then
-            DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MANEUVER, DB.Metric.ATTEMPTS)
-            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.MANEUVER, ability_name, DB.Metric.HIT_COUNT)
-            if result.message == Ashita.Enum.Message.OVERLOAD then DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MANEUVER, DB.Metric.OVERLOAD) end
+            DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.MANEUVER, DB.Metric.ATTEMPTS)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.MANEUVER, ability_name, DB.Metric.HIT_COUNT)
+            if result.message == Ashita.Enum.Message.OVERLOAD then DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.MANEUVER, DB.Metric.OVERLOAD) end
         elseif (ability_id - H.Enum.Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_id - H.Enum.Offsets.ABILITY) then
             H.Ability.Phantom_Roll(audits, result, damage, ability_id, ability_name)
         end
@@ -186,7 +186,7 @@ H.Ability.Blog = function(actor_mob, ability_data, ability_id, damage)
         elseif damage > 11 then
             suffix = " BUST!"
         end
-        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.COR_ROLLS, ability_data.Name, nil, "Roll: " .. tostring(damage) .. suffix, DB.Enum.Trackable.PHANTOM_ROLL, ability_data)
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.COR_ROLLS, ability_data.Name, nil, "Roll: " .. tostring(damage) .. suffix, DB.Trackable.PHANTOM_ROLL, ability_data)
     else
         Blog.Add(actor_mob.name, nil, Blog.Enum.Types.ABILITY, ability_data.Name)
     end
@@ -212,7 +212,7 @@ H.Ability.Pet_Blog = function(actor_mob, owner_mob, ability_data, ability_id, da
             Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_HEAL, ability_data.Name, damage)
         elseif Res.Avatar.Get_Ward(ability_id) then
             local note = "TGTs: " .. tostring(target_count)
-            Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_TP, ability_data.Name, nil, note, DB.Enum.Trackable.PET_ABILITY, ability_data)
+            Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_TP, ability_data.Name, nil, note, DB.Trackable.PET_TP, ability_data)
         end
     end
 end
@@ -247,23 +247,23 @@ H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data)
     local audits = H.Ability.Audits(actor_mob.name, target_mob.name)
 
     -- Overall ability tracking.
-    local trackable = H.Trackable.ABILITY
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ABILITY, ability_data.Name, DB.Metric.ATTEMPTS)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.ABILITY, DB.Metric.ATTEMPTS)
+    local trackable = DB.Trackable.ABILITY_OVERALL
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.ABILITY_OVERALL, ability_data.Name, DB.Metric.ATTEMPTS)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.ABILITY_OVERALL, DB.Metric.ATTEMPTS)
 
     -- Some abilities need to also have counts to tag them for pickup by listing functions.
     if Res.Abilities.Get_Damaging(ability_data.Id) then
-        trackable = H.Trackable.ABILITY_DAMAGING
+        trackable = DB.Trackable.ABILITY_DAMAGING
     elseif Res.Abilities.Get_Player_Healing(ability_data.Id) or Res.Abilities.Get_Pet_Healing(ability_data.Id) then
-        trackable = H.Trackable.ABILITY_HEALING
+        trackable = DB.Trackable.ABILITY_HEALING
     elseif Res.Abilities.Get_MP_Recovery(ability_data.Id) then
-        trackable = H.Trackable.ABILITY_MP_RECOVERY
+        trackable = DB.Trackable.ABILITY_MP_RECOVERY
     elseif (ability_data.Id - H.Enum.Offsets.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_data.Id - H.Enum.Offsets.ABILITY) then
-        trackable = H.Trackable.MANEUVER
+        trackable = DB.Trackable.MANEUVER
     elseif (ability_data.Id - H.Enum.Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_data.Id - H.Enum.Offsets.ABILITY) then
-        trackable = H.Trackable.PHANTOM_ROLL
+        trackable = DB.Trackable.PHANTOM_ROLL
     else
-        trackable = H.Trackable.ABILITY_GENERAL
+        trackable = DB.Trackable.ABILITY_GENERAL
     end
     DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, ability_data.Name, DB.Metric.ATTEMPTS)
     DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
@@ -287,11 +287,11 @@ H.Ability.Pet_Ability_Mapping = function(ability_id, trackable)
         avatar = true
     elseif Res.Avatar.Get_Ward(ability_id) then
         ability_data = Res.Avatar.Get_Ward(ability_id)
-        if Res.Avatar.Get_Healing(ability_id) then trackable = H.Trackable.PET_HEAL end
+        if Res.Avatar.Get_Healing(ability_id) then trackable = DB.Trackable.PET_HEALING end
         avatar = true
     else
         ability_data = Ashita.Ability.Get_By_ID(ability_id + H.Enum.Offsets.PET)
-        if Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then trackable = H.Trackable.PET_HEAL end
+        if Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then trackable = DB.Trackable.PET_HEALING end
     end
     return ability_data, avatar, trackable
 end
@@ -350,7 +350,7 @@ end
 ---@param ability_name string
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Rage = function(audits, owner_mob, damage, ability_type, ability_name)
-    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, DB.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
     if damage > 0 then
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HIT_COUNT)
@@ -367,8 +367,8 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Healing = function(audits, owner_mob, damage, ability_name)
-    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.ALL_HEAL, DB.Metric.TOTAL)
-    local ability_type = H.Trackable.PET_HEAL
+    DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.ALL_HEAL, DB.Metric.TOTAL)
+    local ability_type = DB.Trackable.PET_HEALING
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
     if damage > 0 then DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HIT_COUNT) end
     return ability_type
@@ -384,7 +384,7 @@ end
 ---@param ability_name string
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Breath = function(audits, owner_mob, damage, ability_type, ability_name)
-    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, DB.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
     if damage > 0 then
         DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HIT_COUNT)
@@ -417,7 +417,7 @@ end
 ---@param ability_name string
 ------------------------------------------------------------------------------------------------------
 H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.ATTEMPTS)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.ATTEMPTS)
     local roll_id = ability_id - H.Enum.Offsets.ABILITY
 
     -- First Roll
@@ -427,12 +427,12 @@ H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_na
         H.Ability.Active_Phantom_Roll_Was_Lucky = false
         H.Ability.Active_Phantom_Roll_Was_Lucky_11 = false
         H.Ability.Active_Phantom_Roll_Was_Unlucky = false
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.FIRST_ROLL)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.FIRST_ROLL)
 
     -- Re-Rolls
     else
         H.Ability.Active_Phantom_Roll_Number = damage
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.REROLL)
+        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.REROLL)
     end
 
     -- Lucky, Unlucky, and Busts.
@@ -440,21 +440,21 @@ H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_na
     if lucky_details then
         -- Busts
         if result.message == Ashita.Enum.Message.COR_BUST then
-            DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.BUSTS)
-            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.BUSTS)
+            DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.BUSTS)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.BUSTS)
 
             -- Undo lucky and unluckies
             if H.Ability.Active_Phantom_Roll_Was_Lucky then
-                DB.Data.Update(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY)
-                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY)
+                DB.Data.Update(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY)
+                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY)
             end
             if H.Ability.Active_Phantom_Roll_Was_Lucky_11 then
-                DB.Data.Update(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY_11)
-                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY_11)
+                DB.Data.Update(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY_11)
+                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY_11)
             end
             if H.Ability.Active_Phantom_Roll_Was_Unlucky then
-                DB.Data.Update(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.UNLUCKY)
-                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.UNLUCKY)
+                DB.Data.Update(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.UNLUCKY)
+                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.UNLUCKY)
             end
             H.Ability.Active_Phantom_Roll_Was_Lucky = false
             H.Ability.Active_Phantom_Roll_Was_Lucky_11 = false
@@ -462,8 +462,8 @@ H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_na
 
         -- Lucky comes first so shouldn't need to undo any unluckies.
         elseif damage == lucky_details.lucky then
-            DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY)
-            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY)
+            DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY)
             H.Ability.Active_Phantom_Roll_Was_Lucky = true
             H.Ability.Active_Phantom_Roll_Was_Unlucky = false
             H.Ability.Active_Phantom_Roll_Was_Lucky_11 = false
@@ -471,11 +471,11 @@ H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_na
         -- Unlucky -- need to undo any luckies.
         elseif damage == lucky_details.unlucky then
             if H.Ability.Active_Phantom_Roll_Was_Lucky then
-                DB.Data.Update(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY)
-                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY)
+                DB.Data.Update(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY)
+                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY)
             end
-            DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.UNLUCKY)
-            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.UNLUCKY)
+            DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.UNLUCKY)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.UNLUCKY)
             H.Ability.Active_Phantom_Roll_Was_Lucky = false
             H.Ability.Active_Phantom_Roll_Was_Unlucky = true
             H.Ability.Active_Phantom_Roll_Was_Lucky_11 = false
@@ -483,15 +483,15 @@ H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_na
         -- Lucky 11 -- undo any unluckies; don't double count general lucky.
         elseif damage == 11 then
             if H.Ability.Active_Phantom_Roll_Was_Unlucky then
-                DB.Data.Update(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.UNLUCKY)
-                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.UNLUCKY)
+                DB.Data.Update(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.UNLUCKY)
+                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.UNLUCKY)
             end
             if not H.Ability.Active_Phantom_Roll_Was_Lucky then
-                DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY)
-                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY)
+                DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY)
+                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY)
             end
-            DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY_11)
-            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY_11)
+            DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY_11)
+            DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY_11)
             H.Ability.Active_Phantom_Roll_Was_Lucky = true
             H.Ability.Active_Phantom_Roll_Was_Lucky_11 = true
             H.Ability.Active_Phantom_Roll_Was_Unlucky = false
@@ -500,16 +500,16 @@ H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_na
         else
             -- Undo lucky and unluckies
             if H.Ability.Active_Phantom_Roll_Was_Lucky then
-                DB.Data.Update(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY)
-                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY)
+                DB.Data.Update(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY)
+                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY)
             end
             if H.Ability.Active_Phantom_Roll_Was_Lucky_11 then
-                DB.Data.Update(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY_11)
-                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY_11)
+                DB.Data.Update(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.LUCKY_11)
+                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.LUCKY_11)
             end
             if H.Ability.Active_Phantom_Roll_Was_Unlucky then
-                DB.Data.Update(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, DB.Metric.UNLUCKY)
-                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.UNLUCKY)
+                DB.Data.Update(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.UNLUCKY)
+                DB.Catalog.Update_Metric(H.Mode.INC, -1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.UNLUCKY)
             end
             H.Ability.Active_Phantom_Roll_Was_Lucky = false
             H.Ability.Active_Phantom_Roll_Was_Lucky_11 = false
@@ -517,6 +517,6 @@ H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_na
         end
     end
 
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.ATTEMPTS)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.HIT_COUNT)
 end

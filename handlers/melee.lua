@@ -49,8 +49,8 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
                 DB.Tracking.Multi_Attack[details.audits.player_name][metric] = true
                 DB.Data.Update(H.Mode.INC, 1, details.audits, type, metric)
                 DB.Data.Update(H.Mode.INC, 1, details.audits, type, DB.Metric.MELEE_STRIKES)
-                DB.Data.Update(H.Mode.INC, 1, details.audits, DB.Enum.Trackable.MELEE, DB.Metric.MELEE_STRIKES)
-                if number > 1 then DB.Data.Update(H.Mode.INC, 1, details.audits, DB.Enum.Trackable.MELEE, DB.Metric.MULTI_ATTACK_TOTAL) end
+                DB.Data.Update(H.Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MELEE_STRIKES)
+                if number > 1 then DB.Data.Update(H.Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_TOTAL) end
             end
         end
     end
@@ -59,7 +59,7 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
     if not owner_mob then DB.Attack_Speed.Update(actor_mob.name) end
 
     -- Keeps track of how many melee cycles have occurred (1 per packet).
-    if not owner_mob then DB.Data.Update(DB.Enum.Mode.INC, 1, details.audits, DB.Enum.Trackable.MELEE, DB.Metric.MELEE_ROUNDS) end
+    if not owner_mob then DB.Data.Update(DB.Enum.Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MELEE_ROUNDS) end
 
     H.Melee.Blog(actor_mob, owner_mob, damage)
 end
@@ -94,14 +94,14 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     local message_id = result.message
     local throwing = false
 
-    local melee_type_broad = DB.Enum.Trackable.MELEE
+    local melee_type_broad = DB.Trackable.MELEE_OVERALL
     local melee_type_discrete = H.Melee.Melee_Type(animation_id)
 
     -- Need special handling for pets
     local pet_name
     if owner_mob then
-        melee_type_broad = DB.Enum.Trackable.PET_MELEE
-        melee_type_discrete = DB.Enum.Trackable.PET_MELEE_DISCRETE
+        melee_type_broad = DB.Trackable.PET_MELEE_OVERALL
+        melee_type_discrete = DB.Trackable.PET_MELEE_DISCRETE
         pet_name = player_name
         player_name = owner_mob.name
     end
@@ -134,9 +134,9 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.Melee.Blog = function(actor_mob, owner_mob, damage)
     if owner_mob then
-        Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_MELEE, DB.Enum.Trackable.PET_MELEE, damage)
+        Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_MELEE, DB.Trackable.PET_MELEE_OVERALL, damage)
     else
-        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MELEE, DB.Enum.Trackable.MELEE, damage)
+        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MELEE, DB.Trackable.MELEE_OVERALL, damage)
     end
 end
 
@@ -148,15 +148,15 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Melee.Melee_Type = function(animation_id)
     if animation_id == Ashita.Enum.Animation.MELEE_MAIN then
-        return H.Trackable.MELEE_MAIN
+        return DB.Trackable.MELEE_MAIN_HAND
     elseif animation_id == Ashita.Enum.Animation.MELEE_OFFHAND then
-        return H.Trackable.MELEE_OFFHAND
+        return DB.Trackable.MELEE_OFF_HAND
     elseif animation_id == Ashita.Enum.Animation.MELEE_KICK or animation_id == Ashita.Enum.Animation.MELEE_KICK2 then
-        return H.Trackable.MELEE_KICK
+        return DB.Trackable.MELEE_KICK_ATTACKS
     elseif animation_id == Ashita.Enum.Animation.DAKEN then
-        return H.Trackable.THROWING
+        return DB.Trackable.RANGED_THROWING
     else
-        return H.Trackable.DEFAULT
+        return DB.Trackable.DEFAULT
     end
 end
 
@@ -187,8 +187,8 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Melee.Totals = function(audits, damage, melee_type_discrete, no_damage)
     if no_damage then damage = 0 end
-    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.TOTAL, DB.Metric.TOTAL)
-    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.TOTAL_NO_SC, DB.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+    DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
     DB.Data.Update(H.Mode.INC, damage, audits, melee_type_discrete, DB.Metric.TOTAL)
     DB.Data.Update(H.Mode.INC,      1, audits, melee_type_discrete, DB.Metric.ATTEMPTS)
 end
@@ -204,7 +204,7 @@ end
 H.Melee.Pet_Total = function(owner_mob, audits, damage, no_damage)
     if no_damage then damage = 0 end
     if owner_mob then
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, DB.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     end
 end
 
@@ -226,8 +226,8 @@ H.Melee.Animation = function(animation_id, audits, damage, melee_type_broad, thr
         DB.Data.Update(H.Mode.INC,      1, audits, melee_type_broad, DB.Metric.ATTEMPTS)
     elseif animation_id == Ashita.Enum.Animation.DAKEN then
         throwing = true
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.RANGED, DB.Metric.TOTAL)
-        DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, DB.Metric.ATTEMPTS)
+        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC,      1, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS)
     else
         Debug.Error.Add(Debug.Error.ERROR, "H.Melee.Animation", "Player {" .. tostring(audits.player_name) .. "} had unhandled animation: " .. tostring(animation_id))
     end
@@ -298,7 +298,7 @@ end
 H.Melee.Hit = function(audits, melee_type_broad, melee_type_discrete)
     DB.Data.Update(H.Mode.INC,      1, audits, melee_type_broad,    DB.Metric.HIT_COUNT)
     DB.Data.Update(H.Mode.INC,      1, audits, melee_type_discrete, DB.Metric.HIT_COUNT)
-    if melee_type_broad ~= H.Trackable.PET_MELEE then DB.Accuracy.Update(audits.player_name, true) end
+    if melee_type_broad ~= DB.Trackable.PET_MELEE_OVERALL then DB.Accuracy.Update(audits.player_name, true) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -308,7 +308,7 @@ end
 ---@param melee_type_broad string player melee or pet melee.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Miss = function(audits, melee_type_broad)
-    if melee_type_broad ~= H.Trackable.PET_MELEE then DB.Accuracy.Update(audits.player_name, false) end
+    if melee_type_broad ~= DB.Trackable.PET_MELEE_OVERALL then DB.Accuracy.Update(audits.player_name, false) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -326,7 +326,7 @@ H.Melee.Crit = function(audits, damage, melee_type_broad, melee_type_discrete)
     DB.Data.Update(H.Mode.INC,      1, audits, melee_type_discrete, DB.Metric.HIT_COUNT)
     DB.Data.Update(H.Mode.INC,      1, audits, melee_type_discrete, DB.Metric.CRITICAL_COUNT)
     DB.Data.Update(H.Mode.INC, damage, audits, melee_type_discrete, DB.Metric.CRITICAL_DAMAGE)
-    if melee_type_broad ~= H.Trackable.PET_MELEE then DB.Accuracy.Update(audits.player_name, true) end
+    if melee_type_broad ~= DB.Trackable.PET_MELEE_OVERALL then DB.Accuracy.Update(audits.player_name, true) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -381,8 +381,8 @@ end
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Daken_Hit = function(audits)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.RANGED, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.THROWING, DB.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.RANGED_THROWING, DB.Metric.HIT_COUNT)
     DB.Accuracy.Update(audits.player_name, true)
 end
 
@@ -392,8 +392,8 @@ end
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Daken_Square = function(audits)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.RANGED, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.THROWING, DB.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.RANGED_THROWING, DB.Metric.HIT_COUNT)
     DB.Accuracy.Update(audits.player_name, true)
 end
 
@@ -403,8 +403,8 @@ end
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Daken_Truestrike = function(audits)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.RANGED, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.THROWING, DB.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.RANGED_THROWING, DB.Metric.HIT_COUNT)
     DB.Accuracy.Update(audits.player_name, true)
 end
 
@@ -424,12 +424,12 @@ end
 ---@param damage number
 ------------------------------------------------------------------------------------------------------
 H.Melee.Daken_Crit = function(audits, damage)
-    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.RANGED, DB.Metric.CRITICAL_COUNT)
-    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.RANGED, DB.Metric.CRITICAL_DAMAGE)
-    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.THROWING, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC,      1, audits, H.Trackable.THROWING, DB.Metric.CRITICAL_COUNT)
-    DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.THROWING, DB.Metric.CRITICAL_DAMAGE)
+    DB.Data.Update(H.Mode.INC,      1, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.CRITICAL_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.CRITICAL_DAMAGE)
+    DB.Data.Update(H.Mode.INC,      1, audits, DB.Trackable.RANGED_THROWING, DB.Metric.HIT_COUNT)
+    DB.Data.Update(H.Mode.INC,      1, audits, DB.Trackable.RANGED_THROWING, DB.Metric.CRITICAL_COUNT)
+    DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.RANGED_THROWING, DB.Metric.CRITICAL_DAMAGE)
     DB.Accuracy.Update(audits.player_name, true)
 end
 
@@ -446,10 +446,10 @@ end
 H.Melee.Min_Max = function(throwing, damage, audits, melee_type_broad, melee_type_discrete, no_damage)
     if no_damage then damage = 0 end
     if throwing then
-        if damage > 0 and (damage < DB.Data.Get(audits.player_name, H.Trackable.RANGED, DB.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.RANGED, DB.Metric.MIN) end
-        if damage > DB.Data.Get(audits.player_name, H.Trackable.RANGED, DB.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.RANGED, DB.Metric.MAX) end
-        if damage > 0 and (damage < DB.Data.Get(audits.player_name, H.Trackable.THROWING, DB.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.THROWING, DB.Metric.MIN) end
-        if damage > DB.Data.Get(audits.player_name, H.Trackable.THROWING, DB.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, H.Trackable.THROWING, DB.Metric.MAX) end
+        if damage > 0 and (damage < DB.Data.Get(audits.player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.MIN) end
+        if damage > DB.Data.Get(audits.player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.MAX) end
+        if damage > 0 and (damage < DB.Data.Get(audits.player_name, DB.Trackable.RANGED_THROWING, DB.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, DB.Trackable.RANGED_THROWING, DB.Metric.MIN) end
+        if damage > DB.Data.Get(audits.player_name, DB.Trackable.RANGED_THROWING, DB.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, DB.Trackable.RANGED_THROWING, DB.Metric.MAX) end
     else
         if damage > 0 and (damage < DB.Data.Get(audits.player_name, melee_type_discrete, DB.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_discrete, DB.Metric.MIN) end
         if damage > DB.Data.Get(audits.player_name, melee_type_discrete, DB.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_discrete, DB.Metric.MAX) end
@@ -474,35 +474,35 @@ H.Melee.Additional_Effect = function(audits, result, no_damage)
 
         if message_id == Ashita.Enum.Message.ENSPELL then
             if no_damage then param = 0 end
-            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.MAGIC,   DB.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.ENSPELL, DB.Metric.HIT_COUNT)
-            DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.MAGIC,   DB.Metric.ATTEMPTS)       -- Used to flag that data is availabel for show in Focus.
+            DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,   DB.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC,     1, audits, DB.Trackable.MELEE_ENSPELL, DB.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC,     1, audits, DB.Trackable.SPELLS_OVERALL,   DB.Metric.ATTEMPTS)       -- Used to flag that data is availabel for show in Focus.
             if Res.Spells.Get_Enspell_Type(animation_id) then
                 local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
-                DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.ENSPELL, param, enspell_name)
-                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENSPELL, enspell_name, DB.Metric.HIT_COUNT)
+                DB.Catalog.Update_Damage(audits.player_name, audits.target_name, DB.Trackable.MELEE_ENSPELL, param, enspell_name)
+                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.MELEE_ENSPELL, enspell_name, DB.Metric.HIT_COUNT)
             end
         elseif message_id == Ashita.Enum.Message.ENDAMAGE then
             local effect_name = Res.Game.Get_Additional_Effect_Animation(animation_id)
             if animation_id then
-                DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.MAGIC,    DB.Metric.TOTAL)
-                DB.Data.Update(H.Mode.INC,     1, audits, H.Trackable.ENDAMAGE, DB.Metric.HIT_COUNT)
-                DB.Catalog.Update_Damage(audits.player_name, audits.target_name, H.Trackable.ENDAMAGE, param, effect_name)
-                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENDAMAGE, effect_name, DB.Metric.HIT_COUNT)
+                DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,    DB.Metric.TOTAL)
+                DB.Data.Update(H.Mode.INC,     1, audits, DB.Trackable.MELEE_ENDAMAGE, DB.Metric.HIT_COUNT)
+                DB.Catalog.Update_Damage(audits.player_name, audits.target_name, DB.Trackable.MELEE_ENDAMAGE, param, effect_name)
+                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.MELEE_ENDAMAGE, effect_name, DB.Metric.HIT_COUNT)
             end
         elseif message_id == Ashita.Enum.Message.ENDEBUFF then
             local buff = Res.Buffs.Get_Buff(param)
             if buff then
-                DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.ENDEBUFF, DB.Metric.HIT_COUNT)
-                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.ENDEBUFF, buff.en, DB.Metric.HIT_COUNT)
+                DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.MELEE_ENDEBUFF, DB.Metric.HIT_COUNT)
+                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.MELEE_ENDEBUFF, buff.en, DB.Metric.HIT_COUNT)
             end
         elseif message_id == Ashita.Enum.Message.ENDRAIN then
             -- Drain Samba and Blood Weapon do not contribute to net new damage.
-            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENDRAIN, DB.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.ENDRAIN, DB.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.MELEE_ENDRAIN, DB.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.MELEE_ENDRAIN, DB.Metric.HIT_COUNT)
         elseif message_id == Ashita.Enum.Message.ENASPIR then
-            DB.Data.Update(H.Mode.INC, param, audits, H.Trackable.ENASPIR, DB.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.ENASPIR, DB.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.MELEE_ENASPIR, DB.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.MELEE_ENASPIR, DB.Metric.HIT_COUNT)
         end
     end
 end
@@ -517,21 +517,21 @@ end
 H.Melee.Spikes = function(audits, result, owner_mob)
     if owner_mob or result.animation == Ashita.Enum.Animation.DAKEN then return nil end
 
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.MELEE_COUNTERED, DB.Metric.ATTEMPTS)
+    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.DEF_COUNTERED, DB.Metric.ATTEMPTS)
     local spike_effect = result.has_spike_effect
     if spike_effect and not audits.pet_name then
         local damage = result.spike_effect_param
         local spike_message = result.spike_effect_message
         if spike_message == Ashita.Enum.Message.SPIKE_DMG then
-            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.SPELL_DMG_TAKEN, DB.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.INCOMING_SPIKE_DMG, DB.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, 1     , audits, H.Trackable.INCOMING_SPIKE_DMG, DB.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_NUKING, DB.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_SPIKES, DB.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, 1     , audits, DB.Trackable.DEF_SPIKES, DB.Metric.HIT_COUNT)
         elseif spike_message == Ashita.Enum.Message.COUNTER then
-            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.MELEE_DMG_TAKEN, DB.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.MELEE_COUNTERED, DB.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, 1     , audits, H.Trackable.MELEE_COUNTERED, DB.Metric.HIT_COUNT)
+            DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_MELEE, DB.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_COUNTERED, DB.Metric.TOTAL)
+            DB.Data.Update(H.Mode.INC, 1     , audits, DB.Trackable.DEF_COUNTERED, DB.Metric.HIT_COUNT)
         end
     end
 end

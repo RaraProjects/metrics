@@ -1,7 +1,6 @@
 H = {}
 
 H.Mode = DB.Enum.Mode
-H.Trackable = DB.Enum.Trackable
 
 H.Enum = {}
 

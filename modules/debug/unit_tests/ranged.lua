@@ -16,20 +16,20 @@ Debug.Unit.Tests.Ranged.Hit = function()
 
     local player = T{}
     player[index] = T{}
-    player[index][DB.Enum.Trackable.RANGED] = T{}
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MIN] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MAX] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_SQUARE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_TRUE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.TOTAL] = T{}
-    player[index][DB.Enum.Trackable.TOTAL][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL] = T{}
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
     return Debug.Unit.Check_Result("Ranged > Hit", player)
 end
@@ -50,22 +50,22 @@ Debug.Unit.Tests.Ranged.Square = function()
 
     local player = T{}
     player[index] = T{}
-    player[index][DB.Enum.Trackable.RANGED] = T{}
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MIN] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MAX] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_SQUARE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_TRUE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.TOTAL] = T{}
-    player[index][DB.Enum.Trackable.TOTAL][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL] = T{}
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
     return Debug.Unit.Check_Result("Ranged > Square Hit", player)
 end
@@ -86,22 +86,22 @@ Debug.Unit.Tests.Ranged.Truestrike = function()
 
     local player = T{}
     player[index] = T{}
-    player[index][DB.Enum.Trackable.RANGED] = T{}
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MIN] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MAX] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_SQUARE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_TRUE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.TOTAL] = T{}
-    player[index][DB.Enum.Trackable.TOTAL][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL] = T{}
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
     return Debug.Unit.Check_Result("Ranged > Truestrike", player)
 end
@@ -122,12 +122,12 @@ Debug.Unit.Tests.Ranged.Miss = function()
 
     local player = T{}
     player[index] = T{}
-    player[index][DB.Enum.Trackable.RANGED] = T{}
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_SQUARE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_TRUE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_OVERALL] = T{}
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
 
     return Debug.Unit.Check_Result("Ranged > Miss", player)
 end
@@ -148,22 +148,22 @@ Debug.Unit.Tests.Ranged.Crit = function()
 
     local player = T{}
     player[index] = T{}
-    player[index][DB.Enum.Trackable.RANGED] = T{}
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MIN] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MAX] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.CRITICAL_DAMAGE] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.CRITICAL_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_SQUARE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_TRUE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.TOTAL] = T{}
-    player[index][DB.Enum.Trackable.TOTAL][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL] = T{}
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_DAMAGE] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_COUNT] = 1
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
     return Debug.Unit.Check_Result("Ranged > Crit", player)
 end
@@ -184,14 +184,14 @@ Debug.Unit.Tests.Ranged.Shadows = function()
 
     local player = T{}
     player[index] = T{}
-    player[index][DB.Enum.Trackable.RANGED] = T{}
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.SHADOW_ABSORPTION] = 1
-    player[index][DB.Enum.Trackable.RANGED_SQUARE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_TRUE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_OVERALL] = T{}
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.SHADOW_ABSORPTION] = 1
+    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
 
     return Debug.Unit.Check_Result("Ranged > Shadows", player)
 end
@@ -216,36 +216,36 @@ Debug.Unit.Tests.Ranged.Endamage = function()
 
     local player = T{}
     player[index] = T{}
-    player[index][DB.Enum.Trackable.RANGED] = T{}
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MIN] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MAX] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_SQUARE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_TRUE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.MAGIC] = T{}
-    player[index][DB.Enum.Trackable.MAGIC][DB.Metric.TOTAL] = additional_damage
-    player[index][DB.Enum.Trackable.ENDAMAGE_R] = T{}
-    player[index][DB.Enum.Trackable.ENDAMAGE_R][DB.Metric.TOTAL] = additional_damage
-    player[index][DB.Enum.Trackable.ENDAMAGE_R][DB.Metric.MIN] = additional_damage
-    player[index][DB.Enum.Trackable.ENDAMAGE_R][DB.Metric.MAX] = additional_damage
-    player[index][DB.Enum.Trackable.ENDAMAGE_R][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.TOTAL] = T{}
-    player[index][DB.Enum.Trackable.TOTAL][DB.Metric.TOTAL] = damage + additional_damage
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Metric.TOTAL] = damage + additional_damage
+    player[index][DB.Trackable.RANGED_OVERALL] = T{}
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.SPELLS_OVERALL] = T{}
+    player[index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = additional_damage
+    player[index][DB.Trackable.RANGED_ENDAMAGE] = T{}
+    player[index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.TOTAL] = additional_damage
+    player[index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MIN] = additional_damage
+    player[index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MAX] = additional_damage
+    player[index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + additional_damage
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + additional_damage
 
     local player_catalog = T{}
     player_catalog[index] = T{}
     player_catalog[index][add_effect_name] = T{}
-    player_catalog[index][add_effect_name][DB.Enum.Trackable.ENDAMAGE_R] = T{}
-    player_catalog[index][add_effect_name][DB.Enum.Trackable.ENDAMAGE_R][DB.Metric.TOTAL] = additional_damage
-    player_catalog[index][add_effect_name][DB.Enum.Trackable.ENDAMAGE_R][DB.Metric.MIN] = additional_damage
-    player_catalog[index][add_effect_name][DB.Enum.Trackable.ENDAMAGE_R][DB.Metric.MAX] = additional_damage
-    player_catalog[index][add_effect_name][DB.Enum.Trackable.ENDAMAGE_R][DB.Metric.HIT_COUNT] = 1
+    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE] = T{}
+    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.TOTAL] = additional_damage
+    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MIN] = additional_damage
+    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MAX] = additional_damage
+    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.HIT_COUNT] = 1
 
     return Debug.Unit.Check_Result("Ranged > Endamage", player, player_catalog)
 end
@@ -269,28 +269,28 @@ Debug.Unit.Tests.Ranged.Endebuff = function()
 
     local player = T{}
     player[index] = T{}
-    player[index][DB.Enum.Trackable.RANGED] = T{}
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MIN] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MAX] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_SQUARE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_TRUE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.ENDEBUFF_R] = T{}
-    player[index][DB.Enum.Trackable.ENDEBUFF_R][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.TOTAL] = T{}
-    player[index][DB.Enum.Trackable.TOTAL][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL] = T{}
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_ENDEBUFF] = T{}
+    player[index][DB.Trackable.RANGED_ENDEBUFF][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
     local player_catalog = T{}
     player_catalog[index] = T{}
     player_catalog[index][add_effect_name] = T{}
-    player_catalog[index][add_effect_name][DB.Enum.Trackable.ENDEBUFF_R] = T{}
-    player_catalog[index][add_effect_name][DB.Enum.Trackable.ENDEBUFF_R][DB.Metric.HIT_COUNT] = 1
+    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDEBUFF] = T{}
+    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDEBUFF][DB.Metric.HIT_COUNT] = 1
 
     return Debug.Unit.Check_Result("Ranged > Endebuff", player, player_catalog)
 end
@@ -313,25 +313,25 @@ Debug.Unit.Tests.Ranged.Endrain = function()
 
     local player = T{}
     player[index] = T{}
-    player[index][DB.Enum.Trackable.RANGED] = T{}
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MIN] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MAX] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_SQUARE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_TRUE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.MAGIC] = T{}
-    player[index][DB.Enum.Trackable.MAGIC][DB.Metric.TOTAL] = additional_damage
-    player[index][DB.Enum.Trackable.ENDRAIN_R] = T{}
-    player[index][DB.Enum.Trackable.ENDRAIN_R][DB.Metric.TOTAL] = additional_damage
-    player[index][DB.Enum.Trackable.ENDRAIN_R][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.TOTAL] = T{}
-    player[index][DB.Enum.Trackable.TOTAL][DB.Metric.TOTAL] = damage + additional_damage
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Metric.TOTAL] = damage + additional_damage
+    player[index][DB.Trackable.RANGED_OVERALL] = T{}
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.SPELLS_OVERALL] = T{}
+    player[index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = additional_damage
+    player[index][DB.Trackable.RANGED_ENDRAIN] = T{}
+    player[index][DB.Trackable.RANGED_ENDRAIN][DB.Metric.TOTAL] = additional_damage
+    player[index][DB.Trackable.RANGED_ENDRAIN][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + additional_damage
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + additional_damage
 
     return Debug.Unit.Check_Result("Ranged > Endrain", player)
 end
@@ -352,20 +352,20 @@ Debug.Unit.Tests.Ranged.PUP = function()
 
     local player = T{}
     player[index] = T{}
-    player[index][DB.Enum.Trackable.RANGED] = T{}
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MIN] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.MAX] = damage
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Enum.Trackable.RANGED][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_SQUARE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_SQUARE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.RANGED_TRUE] = T{}
-    player[index][DB.Enum.Trackable.RANGED_TRUE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Enum.Trackable.TOTAL] = T{}
-    player[index][DB.Enum.Trackable.TOTAL][DB.Metric.TOTAL] = damage
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC] = T{}
-    player[index][DB.Enum.Trackable.TOTAL_NO_SC][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL] = T{}
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
+    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
+    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
+    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
     return Debug.Unit.Check_Result("Ranged - PUP > Hit", player)
 end

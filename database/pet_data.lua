@@ -23,7 +23,7 @@ DB.Pet_Data.Initialize = function(index, player_name, pet_name)
 	DB.Pet_Parse[index][pet_name] = T{}
 
 	-- Initialize data nodes.
-	for _, trackable in pairs(DB.Enum.Trackable) do
+	for _, trackable in pairs(DB.Trackable) do
 		DB.Pet_Parse[index][pet_name][trackable] = T{}
 		for _, metric in pairs(DB.Metric) do
 

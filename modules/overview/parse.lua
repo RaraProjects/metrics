@@ -78,7 +78,7 @@ Overview.Parse.Melee = function()
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local trackable = DB.Enum.Trackable.MELEE
+    local trackable = DB.Trackable.MELEE_OVERALL
     if UI.BeginTable("Melee", 9, table_flags) then
         UI.TableSetupColumn("Melee",    col_flags, name_width)
         UI.TableSetupColumn("Damage",   col_flags, width)
@@ -139,7 +139,7 @@ Overview.Parse.Ranged = function()
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local trackable = DB.Enum.Trackable.RANGED
+    local trackable = DB.Trackable.RANGED_OVERALL
     if UI.BeginTable("Ranged", 10, table_flags) then
         UI.TableSetupColumn("Ranged",    col_flags, name_width)
         UI.TableSetupColumn("Damage",    col_flags, width)
@@ -203,7 +203,7 @@ Overview.Parse.Weaponskills = function()
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local trackable = DB.Enum.Trackable.WS
+    local trackable = DB.Trackable.WEAPONSKILL
     local action_name
 
     if UI.BeginTable("WS", 10, table_flags) then
@@ -290,7 +290,7 @@ Overview.Parse.Nukes = function()
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local trackable = DB.Enum.Trackable.NUKE
+    local trackable = DB.Trackable.SPELLS_NUKING
     local action_name
 
     if UI.BeginTable("Nuke", 9, table_flags) then
@@ -374,7 +374,7 @@ Overview.Parse.Pets = function()
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local trackable = DB.Enum.Trackable.PET
+    local trackable = DB.Trackable.PET_OVERALL
 
     if UI.BeginTable("Pets", 8, table_flags) then
         UI.TableSetupColumn("Pet",      col_flags, name_width)
@@ -399,11 +399,11 @@ Overview.Parse.Pets = function()
                     UI.TableNextColumn() Column.String.Format_Name(player_name)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
                     UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
-                    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
+                    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_MELEE_DISCRETE)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_MELEE, true)
-                    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_WS, true)
-                    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY, true)
+                    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, true)
+                    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, true)
+                    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, true)
                     Window_Manager.Table_Row_Color(1)
                     row = row + 1
 
@@ -416,11 +416,11 @@ Overview.Parse.Pets = function()
                         UI.TableNextColumn() UI.Text("> " .. tostring(pet_name))
                         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable)
                         UI.TableNextColumn() Column.General.Percent_Party_Total_Pet(player_name, pet_name, trackable)
-                        UI.TableNextColumn() Column.Acc.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_MELEE_DISCRETE)
+                        UI.TableNextColumn() Column.Acc.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_MELEE_DISCRETE)
                         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable, true)
-                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_MELEE, true)
-                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_WS, true)
-                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Enum.Trackable.PET_ABILITY, true)
+                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_MELEE_OVERALL, true)
+                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true)
+                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true)
                         Window_Manager.Table_Row_Color(0)
                     end
                 end
@@ -451,7 +451,7 @@ Overview.Parse.Healing = function()
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local trackable = DB.Enum.Trackable.HEALING
+    local trackable = DB.Trackable.SPELLS_HEALING
     local action_name
 
     if UI.BeginTable("Healing Magic", 9, table_flags) then
@@ -535,7 +535,7 @@ Overview.Parse.Defense = function()
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local trackable = DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL
+    local trackable = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL
     if UI.BeginTable("Defense", 8, table_flags) then
         UI.TableSetupColumn("Damage Taken", col_flags, name_width)
         UI.TableSetupColumn("HP-",      col_flags, width)
@@ -556,13 +556,13 @@ Overview.Parse.Defense = function()
                 if damage > 0 then
                     UI.TableNextRow()
                     UI.TableNextColumn() Column.String.Format_Name(player_name)
-                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL)
+                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL)
                     UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Enum.Trackable.HEALING_RECEIVED)
-                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.MELEE_DMG_TAKEN, true)
-                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.SPELL_DMG_TAKEN, true)
-                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.TP_DMG_TAKEN, true)
-                    UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Enum.Trackable.DEF_EVASION)
+                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Trackable.DEF_HEALING_RECEIVED)
+                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_MELEE, true)
+                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_NUKING, true)
+                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_TP_MOVE, true)
+                    UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Trackable.DEF_EVASION)
                     Window_Manager.Table_Row_Color(row)
                     row = row + 1
                 end

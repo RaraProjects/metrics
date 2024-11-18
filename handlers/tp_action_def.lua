@@ -80,9 +80,9 @@ H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws
 
     -- Totals need to be updated manually here because Update_Damage isn't set up for defense metrics totals.
     if owner_mob then
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DMG_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
     else
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
+        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
     end
 
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, audits.trackable, damage, ws_name, audits.pet_name)
@@ -108,12 +108,12 @@ H.TP_Def.Audits = function(actor_mob, owner_mob, target_mob)
     local player_name = actor_mob.name
     local target_name = target_mob.name
     local pet_name = nil
-    local trackable = H.Trackable.TP_DMG_TAKEN
+    local trackable = DB.Trackable.DEF_TP_MOVE
 
     if owner_mob then
         pet_name = target_mob.name
         target_name = owner_mob.name
-        trackable = H.Trackable.PET_TP_DMG_TAKEN
+        trackable = DB.Trackable.DEF_TP_MOVE_PET
     end
 
     -- These are switched compared to offense.
@@ -157,5 +157,5 @@ end
 H.TP_Def.Blog = function(actor_mob, damage, skill_name, target_count)
     local note = nil
     if target_count > 1 then note = "TGTs: " .. tostring(target_count) end
-    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MOB_TP, skill_name, damage, note, DB.Enum.Trackable.TP_DMG_TAKEN)
+    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MOB_TP, skill_name, damage, note, DB.Trackable.DEF_TP_MOVE)
 end

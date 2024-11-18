@@ -19,7 +19,7 @@ Column.Single.Damage = function(player_name, action_name, focus_type, metric, pe
 
     if percent then
         local player_total = Column.Damage.Raw_Total_Player_Damage(player_name)
-        if focus_type == DB.Enum.Trackable.HEALING then player_total = DB.Data.Get(player_name, DB.Enum.Trackable.HEALING, DB.Metric.TOTAL) end
+        if focus_type == DB.Trackable.SPELLS_HEALING then player_total = DB.Data.Get(player_name, DB.Trackable.SPELLS_HEALING, DB.Metric.TOTAL) end
         if raw then return Column.String.Format_Percent(action_total, player_total) end
         return UI.TextColored(color, Column.String.Format_Percent(action_total, player_total))
     end
@@ -54,8 +54,8 @@ end
 ---@param action_name string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Average_TP = function(player_name, action_name)
-    local tp = DB.Catalog.Get(player_name, Column.Trackable.WS, action_name, DB.Metric.TP_SPENT)
-    local attempts = DB.Catalog.Get(player_name, Column.Trackable.WS, action_name, DB.Metric.ATTEMPTS)
+    local tp = DB.Catalog.Get(player_name, DB.Trackable.WEAPONSKILL, action_name, DB.Metric.TP_SPENT)
+    local attempts = DB.Catalog.Get(player_name, DB.Trackable.WEAPONSKILL, action_name, DB.Metric.ATTEMPTS)
     local color = Column.String.Color_Zero(tp)
     if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
     return UI.TextColored(color, Column.String.Format_Percent(tp, attempts, false, true))
@@ -98,7 +98,7 @@ Column.Single.Pet_Damage = function(player_name, pet_name, action_name, trackabl
     end
     local color = Column.String.Color_Zero(single_damage)
     if percent then
-        local total_damage = DB.Pet_Data.Get(player_name, pet_name, Column.Trackable.TOTAL, DB.Metric.TOTAL)
+        local total_damage = DB.Pet_Data.Get(player_name, pet_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
         return UI.TextColored(color, Column.String.Format_Percent(single_damage, total_damage))
     end
     return UI.TextColored(color, Column.String.Format_Number(single_damage))
@@ -162,7 +162,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Bursts = function(player_name, action_name)
-    local burst_count = DB.Catalog.Get(player_name, Column.Trackable.NUKE, action_name, DB.Metric.MAGIC_BURST_COUNT)
+    local burst_count = DB.Catalog.Get(player_name, DB.Trackable.SPELLS_NUKING, action_name, DB.Metric.MAGIC_BURST_COUNT)
     local color = Column.String.Color_Zero(burst_count)
     return UI.TextColored(color, Column.String.Format_Number(burst_count))
 end
@@ -176,7 +176,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Single.Overcure = function(player_name, action_name)
-    local overcure = DB.Catalog.Get(player_name, Column.Trackable.HEALING, action_name, DB.Metric.OVERCURE)
+    local overcure = DB.Catalog.Get(player_name, DB.Trackable.SPELLS_HEALING, action_name, DB.Metric.OVERCURE)
     local color = Column.String.Color_Zero(overcure)
     return UI.TextColored(color, Column.String.Format_Number(overcure))
 end

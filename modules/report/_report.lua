@@ -55,33 +55,33 @@ Report.Section.Chat_Reports = function()
         --
         UI.TableNextColumn()
         if UI.Button("Melee       ") then
-            Report.Publishing.Damage_By_Type(DB.Enum.Trackable.MELEE)
+            Report.Publishing.Damage_By_Type(DB.Trackable.MELEE_OVERALL)
             return nil
         end
         UI.TableNextColumn()
         if UI.Button("Weaponskills") then
-            Report.Publishing.Damage_By_Type(DB.Enum.Trackable.WS)
+            Report.Publishing.Damage_By_Type(DB.Trackable.WEAPONSKILL)
             return nil
         end
         UI.TableNextColumn()
         if UI.Button("Magic       ") then
-            Report.Publishing.Damage_By_Type(DB.Enum.Trackable.MAGIC)
+            Report.Publishing.Damage_By_Type(DB.Trackable.SPELLS_OVERALL)
             return nil
         end
         UI.TableNextColumn()
         if UI.Button("Pet         ") then
-            Report.Publishing.Damage_By_Type(DB.Enum.Trackable.PET)
+            Report.Publishing.Damage_By_Type(DB.Trackable.PET_OVERALL)
             return nil
         end
         --
         UI.TableNextColumn()
         if UI.Button("Abilities   ") then
-            Report.Publishing.Damage_By_Type(DB.Enum.Trackable.ABILITY_DAMAGING)
+            Report.Publishing.Damage_By_Type(DB.Trackable.ABILITY_DAMAGING)
             return nil
         end
         UI.TableNextColumn()
         if UI.Button("Healing     ") then
-            Report.Publishing.Damage_By_Type(DB.Enum.Trackable.ALL_HEAL)
+            Report.Publishing.Damage_By_Type(DB.Trackable.ALL_HEAL)
             return nil
         end
         UI.EndTable()

@@ -107,27 +107,27 @@ Parse.Full.Rows = function(player_name)
     if Metrics.Parse.Running_Acc then  UI.TableNextColumn() Column.Acc.Running(player_name, true) end
     if Metrics.Parse.Total_Acc then    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Values.COMBINED, true) end
     if Metrics.Parse.Crit then         UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Values.COMBINED, true) end
-    if Metrics.Parse.Melee then        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MELEE, false, true) end
-    if Metrics.Parse.Melee_Acc then    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.MELEE, true) end
-    if Metrics.Parse.Melee_Crit then   UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Trackable.MELEE, true) end
-    if Metrics.Parse.Weaponskill then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.WS, false, true) end
-    if Metrics.Parse.Average_WS then   UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Enum.Trackable.WS, true) end
+    if Metrics.Parse.Melee then        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_OVERALL, false, true) end
+    if Metrics.Parse.Melee_Acc then    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OVERALL, true) end
+    if Metrics.Parse.Melee_Crit then   UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Trackable.MELEE_OVERALL, true) end
+    if Metrics.Parse.Weaponskill then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL, false, true) end
+    if Metrics.Parse.Average_WS then   UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.WEAPONSKILL, true) end
     if Metrics.Parse.WS_TP then        UI.TableNextColumn() Column.Damage.Average_TP(player_name, true) end
-    if Metrics.Parse.WS_Accuracy then  UI.TableNextColumn() Column.General.Fraction(player_name, DB.Enum.Trackable.WS, DB.Metric.HIT_COUNT, DB.Metric.ATTEMPTS, true) end
-    if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.SC, false, true) end
-    if Metrics.Parse.Ranged then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.RANGED, false, true) end
-    if Metrics.Parse.Ranged_Acc then   UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.RANGED, true) end
-    if Metrics.Parse.Ranged_Crit then  UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Enum.Trackable.RANGED, true) end
+    if Metrics.Parse.WS_Accuracy then  UI.TableNextColumn() Column.General.Fraction(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.HIT_COUNT, DB.Metric.ATTEMPTS, true) end
+    if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, false, true) end
+    if Metrics.Parse.Ranged then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL, false, true) end
+    if Metrics.Parse.Ranged_Acc then   UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, true) end
+    if Metrics.Parse.Ranged_Crit then  UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Trackable.RANGED_OVERALL, true) end
     if Metrics.Parse.Ranged_Dist then  UI.TableNextColumn() Column.Damage.Shot_Distance(player_name, true) end
-    if Metrics.Parse.Magic then        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.MAGIC, false, true) end
-    if Metrics.Parse.Ability then      UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, false, true) end
-    if Metrics.Parse.Pet_Acc then      UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.Trackable.PET_MELEE_DISCRETE, true) end
-    if Metrics.Parse.Pet_Melee then    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_MELEE, false, true) end
-    if Metrics.Parse.Pet_Ranged then   UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_RANGED, false, true) end
-    if Metrics.Parse.Pet_WS then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_WS, false, true) end
-    if Metrics.Parse.Pet_Ability then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.PET_ABILITY, false, true) end
+    if Metrics.Parse.Magic then        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, false, true) end
+    if Metrics.Parse.Ability then      UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING, false, true) end
+    if Metrics.Parse.Pet_Acc then      UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_MELEE_DISCRETE, true) end
+    if Metrics.Parse.Pet_Melee then    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, false, true) end
+    if Metrics.Parse.Pet_Ranged then   UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_RANGED_OVERALL, false, true) end
+    if Metrics.Parse.Pet_WS then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, false, true) end
+    if Metrics.Parse.Pet_Ability then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, false, true) end
     if Metrics.Parse.Healing then      UI.TableNextColumn() Column.Healing.Total(player_name, false, true) end
-    if Metrics.Parse.Damage_Taken then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL, false, true) end
+    if Metrics.Parse.Damage_Taken then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, false, true) end
     if Metrics.Parse.Deaths then       UI.TableNextColumn() Column.Proc.Deaths(player_name, true) end
 
 end
@@ -153,28 +153,28 @@ Parse.Full.Total_Row = function()
     if Metrics.Parse.Running_Acc then  UI.TableNextColumn() UI.Text(" ") end
     if Metrics.Parse.Total_Acc then    UI.TableNextColumn() UI.Text(" ") end
     if Metrics.Parse.Crit then         UI.TableNextColumn() UI.Text(" ") end
-    if Metrics.Parse.Melee then        UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.MELEE, true) end
+    if Metrics.Parse.Melee then        UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.MELEE_OVERALL, true) end
     if Metrics.Parse.Melee_Acc then    UI.TableNextColumn() UI.Text(" ") end
     if Metrics.Parse.Melee_Crit then   UI.TableNextColumn() UI.Text(" ") end
-    if Metrics.Parse.Weaponskill then  UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.WS, true) end
+    if Metrics.Parse.Weaponskill then  UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.WEAPONSKILL, true) end
     if Metrics.Parse.Average_WS then   UI.TableNextColumn() UI.Text(" ") end
     if Metrics.Parse.WS_TP then        UI.TableNextColumn() UI.Text(" ") end
     if Metrics.Parse.WS_Accuracy then  UI.TableNextColumn() UI.Text(" ") end
-    if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.SC, true) end
-    if Metrics.Parse.Ranged then       UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.RANGED, true) end
+    if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.SKILLCHAIN, true) end
+    if Metrics.Parse.Ranged then       UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.RANGED_OVERALL, true) end
     if Metrics.Parse.Ranged_Acc then   UI.TableNextColumn() UI.Text(" ") end
     if Metrics.Parse.Ranged_Crit then  UI.TableNextColumn() UI.Text(" ") end
     if Metrics.Parse.Ranged_Dist then  UI.TableNextColumn() UI.Text(" ") end
-    if Metrics.Parse.Magic then        UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.MAGIC, true) end
-    if Metrics.Parse.Ability then      UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.ABILITY_DAMAGING, true) end
+    if Metrics.Parse.Magic then        UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.SPELLS_OVERALL, true) end
+    if Metrics.Parse.Ability then      UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.ABILITY_DAMAGING, true) end
     if Metrics.Parse.Pet_Acc then      UI.TableNextColumn() UI.Text(" ") end
-    if Metrics.Parse.Pet_Melee then    UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET_MELEE, true) end
-    if Metrics.Parse.Pet_Ranged then   UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET_RANGED, true) end
-    if Metrics.Parse.Pet_WS then       UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET_WS, true) end
-    if Metrics.Parse.Pet_Ability then  UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.PET_ABILITY, true) end
-    if Metrics.Parse.Healing then      UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.ALL_HEAL, true) end
-    if Metrics.Parse.Damage_Taken then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.DAMAGE_TAKEN_TOTAL, true) end
-    if Metrics.Parse.Deaths then       UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Enum.Trackable.DEATH, true) end
+    if Metrics.Parse.Pet_Melee then    UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.PET_MELEE_OVERALL, true) end
+    if Metrics.Parse.Pet_Ranged then   UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.PET_RANGED_OVERALL, true) end
+    if Metrics.Parse.Pet_WS then       UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.PET_TP, true) end
+    if Metrics.Parse.Pet_Ability then  UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.PET_TP, true) end
+    if Metrics.Parse.Healing then      UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.ALL_HEAL, true) end
+    if Metrics.Parse.Damage_Taken then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, true) end
+    if Metrics.Parse.Deaths then       UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.DEATH, true) end
 end
 
 ------------------------------------------------------------------------------------------------------

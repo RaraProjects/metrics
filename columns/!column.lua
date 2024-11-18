@@ -17,7 +17,6 @@ Column.Widths = T{
 }
 
 Column.Mode = DB.Enum.Mode
-Column.Trackable = DB.Enum.Trackable
 
 -- Load dependencies
 require("columns.string")

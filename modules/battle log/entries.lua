@@ -74,9 +74,9 @@ Blog.Entries.Damage_Threshold = function(action_type)
     local threshold = DB.Enum.Values.MAX_DAMAGE
     if not action_type then
         return threshold
-    elseif action_type == DB.Enum.Trackable.WS then
+    elseif action_type == DB.Trackable.WEAPONSKILL then
         return Metrics.Blog.WS_THRESHOLD
-    elseif action_type == DB.Enum.Trackable.MAGIC then
+    elseif action_type == DB.Trackable.SPELLS_OVERALL then
         return Metrics.Blog.MAGIC_THRESHOLD
     else
         return threshold
@@ -113,19 +113,19 @@ Blog.Entries.Notes = function(note, action_type, is_mob)
     if not note or note == "" then return final_note end
 
     -- A note should be passed in with these actions. Just use that.
-    if action_type == DB.Enum.Trackable.MAGIC or action_type == DB.Enum.Trackable.HEALING
-    or action_type == DB.Enum.Trackable.TP_DMG_TAKEN or action_type == Blog.Enum.Flags.IGNORE
-    or action_type == DB.Enum.Trackable.ENFEEBLE or action_type == DB.Enum.Trackable.BUFF_SONG
-    or action_type == DB.Enum.Trackable.PET_ABILITY or action_type == DB.Enum.Trackable.PHANTOM_ROLL
-    or action_type == DB.Enum.Trackable.DEBUFF_REMOVAL or action_type == DB.Enum.Trackable.DEATH then
+    if action_type == DB.Trackable.SPELLS_OVERALL or action_type == DB.Trackable.SPELLS_HEALING
+    or action_type == DB.Trackable.DEF_TP_MOVE or action_type == Blog.Enum.Flags.IGNORE
+    or action_type == DB.Trackable.SPELLS_ENFEEBLING or action_type == DB.Trackable.SPELLS_BUFF_SONG
+    or action_type == DB.Trackable.PET_TP or action_type == DB.Trackable.PHANTOM_ROLL
+    or action_type == DB.Trackable.SPELLS_DEBUFF_REMOVAL or action_type == DB.Trackable.DEATH then
         final_note.Value = tostring(note)
 
     -- If the player died then show who killed them.
-    elseif action_type == DB.Enum.Trackable.DEATH then
+    elseif action_type == DB.Trackable.DEATH then
         if note then final_note.Value = "by " .. tostring(note) end
 
     -- Show the TP of the weaponskill.
-    elseif action_type == DB.Enum.Trackable.WS then
+    elseif action_type == DB.Trackable.WEAPONSKILL then
         ---@diagnostic disable-next-line: param-type-mismatch
         if note then final_note.Value = "TP: " .. Column.String.Format_Number(note) .. " " end
 

@@ -84,7 +84,7 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
 	DB.Data.Update_Damage(audits, trackable, damage, burst)
 
 	-- Magic Bursts
-	if trackable == DB.Enum.Trackable.NUKE and burst then
+	if trackable == DB.Trackable.SPELLS_NUKING and burst then
 		DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Metric.MAGIC_BURST_DAMAGE)
 	end
 	-- COUNT gets incremented in the packet handler.
@@ -100,7 +100,7 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
 	-- Maximum Damage
     if damage > DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MAX) then
     	-- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
-		if trackable == DB.Enum.Trackable.HEALING and DB.Healing_Max[action_name] then
+		if trackable == DB.Trackable.SPELLS_HEALING and DB.Healing_Max[action_name] then
 			if damage > DB.Healing_Max[action_name] then damage = DB.Healing_Max[action_name] end
 		end
 		DB.Catalog.Update_Metric(DB.Enum.Mode.SET, damage, audits, trackable, action_name, DB.Metric.MAX)
@@ -245,7 +245,7 @@ DB.Catalog.Get = function(player_name, trackable, action_name, metric, temporary
 	if metric == DB.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	local search_string = player_name .. ":" .. mob_focus
-	if mob_focus == DB.Widgets.Dropdown.Enum.NONE or trackable == DB.Enum.Trackable.HEALING_RECEIVED then search_string = player_name .. ":" end
+	if mob_focus == DB.Widgets.Dropdown.Enum.NONE or trackable == DB.Trackable.DEF_HEALING_RECEIVED then search_string = player_name .. ":" end
 	if temporary_mob_focus then search_string = player_name .. ":" .. temporary_mob_focus end
 
 	for index, _ in pairs(DB.Parse_Catalog) do
@@ -316,19 +316,19 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Include_Total_Damage = function(trackable)
-	if trackable == DB.Enum.Trackable.HEALING or
-	   trackable == DB.Enum.Trackable.HEALING_RECEIVED or
-	   trackable == DB.Enum.Trackable.ABILITY_HEALING or
-	   trackable == DB.Enum.Trackable.ABILITY_MP_RECOVERY or
-	   trackable == DB.Enum.Trackable.PET_HEAL or
-	   trackable == DB.Enum.Trackable.MP_DRAIN or
-	   trackable == DB.Enum.Trackable.SPELL_DMG_TAKEN or
-	   trackable == DB.Enum.Trackable.SPELL_PET_DMG_TAKEN or
-	   trackable == DB.Enum.Trackable.INCOMING_SPIKE_DMG or
-	   trackable == DB.Enum.Trackable.TP_DMG_TAKEN or
-	   trackable == DB.Enum.Trackable.PET_TP_DMG_TAKEN or
-	   trackable == DB.Enum.Trackable.MELEE_DMG_TAKEN or
-	   trackable == DB.Enum.Trackable.MELEE_PET_DMG_TAKEN then
+	if trackable == DB.Trackable.SPELLS_HEALING or
+	   trackable == DB.Trackable.DEF_HEALING_RECEIVED or
+	   trackable == DB.Trackable.ABILITY_HEALING or
+	   trackable == DB.Trackable.ABILITY_MP_RECOVERY or
+	   trackable == DB.Trackable.PET_HEALING or
+	   trackable == DB.Trackable.SPELLS_MP_DRAIN or
+	   trackable == DB.Trackable.DEF_NUKING or
+	   trackable == DB.Trackable.DEF_NUKING_PET or
+	   trackable == DB.Trackable.DEF_SPIKES or
+	   trackable == DB.Trackable.DEF_TP_MOVE or
+	   trackable == DB.Trackable.DEF_TP_MOVE_PET or
+	   trackable == DB.Trackable.DEF_MELEE or
+	   trackable == DB.Trackable.DEF_MELEE_PET then
 		return false
 	end
 	return true

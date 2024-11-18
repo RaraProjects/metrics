@@ -7,12 +7,12 @@ Focus.Abilities = T{}
 ---@param hide_publish? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Abilities.Display = function(player_name, hide_publish)
-    local ability_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, DB.Metric.ATTEMPTS)
-    local healing_total = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_HEALING, DB.Metric.ATTEMPTS)
-    local mp_recovery   = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, DB.Metric.ATTEMPTS)
-    local maneuvers     = DB.Data.Get(player_name, DB.Enum.Trackable.MANEUVER, DB.Metric.ATTEMPTS)
-    local rolls         = DB.Data.Get(player_name, DB.Enum.Trackable.PHANTOM_ROLL, DB.Metric.ATTEMPTS)
-    local misc_count    = DB.Data.Get(player_name, DB.Enum.Trackable.ABILITY, DB.Metric.ATTEMPTS)
+    local ability_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_DAMAGING, DB.Metric.ATTEMPTS)
+    local healing_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_HEALING, DB.Metric.ATTEMPTS)
+    local mp_recovery   = DB.Data.Get(player_name, DB.Trackable.ABILITY_MP_RECOVERY, DB.Metric.ATTEMPTS)
+    local maneuvers     = DB.Data.Get(player_name, DB.Trackable.MANEUVER, DB.Metric.ATTEMPTS)
+    local rolls         = DB.Data.Get(player_name, DB.Trackable.PHANTOM_ROLL, DB.Metric.ATTEMPTS)
+    local misc_count    = DB.Data.Get(player_name, DB.Trackable.ABILITY_OVERALL, DB.Metric.ATTEMPTS)
 
     Focus.Abilities.Total(player_name)
     UI.Separator()
@@ -22,9 +22,9 @@ Focus.Abilities.Display = function(player_name, hide_publish)
         Focus.Overview.Overload(player_name)
         Focus.Overview.Maneuvers(player_name)
     end
-    if ability_total > 0 then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, "Damaging") end
-    if healing_total > 0 then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY_HEALING, "Healing") end
-    if mp_recovery > 0   then Focus.Catalog.Abilities(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY, "MP Recover") end
+    if ability_total > 0 then Focus.Catalog.Abilities(player_name, DB.Trackable.ABILITY_DAMAGING, "Damaging") end
+    if healing_total > 0 then Focus.Catalog.Abilities(player_name, DB.Trackable.ABILITY_HEALING, "Healing") end
+    if mp_recovery > 0   then Focus.Catalog.Abilities(player_name, DB.Trackable.ABILITY_MP_RECOVERY, "MP Recover") end
     if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Catalog.Abilities_General(player_name) end
 
     if not hide_publish then Focus.Abilities.Publish(player_name, ability_total, healing_total) end
@@ -49,19 +49,19 @@ Focus.Abilities.Total = function(player_name)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Damaging")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_DAMAGING)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
         UI.TableNextRow()
         UI.TableNextColumn()UI.Text("Healing")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_HEALING)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_HEALING)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
         UI.TableNextRow()
         UI.TableNextColumn()UI.Text("MP Recovery")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Enum.Trackable.ABILITY_MP_RECOVERY)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_MP_RECOVERY)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -78,10 +78,10 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Abilities.Publish = function(player_name, ability_total, healing_total)
     if ability_total > 0 then
-        Report.Widgets.Button(player_name, DB.Enum.Trackable.ABILITY_DAMAGING, "Publish Abilities")
+        Report.Widgets.Button(player_name, DB.Trackable.ABILITY_DAMAGING, "Publish Abilities")
     end
     if healing_total > 0 then
         if ability_total > 0 then UI.SameLine() UI.Text(" ") UI.SameLine() end
-        Report.Widgets.Button(player_name, DB.Enum.Trackable.ABILITY_HEALING, "Publish Healing")
+        Report.Widgets.Button(player_name, DB.Trackable.ABILITY_HEALING, "Publish Healing")
     end
 end

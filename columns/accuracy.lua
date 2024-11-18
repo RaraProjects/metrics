@@ -15,10 +15,10 @@ Column.Acc.By_Type = function(player_name, acc_type, justify, count_type, raw)
     local hits, attempts
     if not count_type then count_type = DB.Metric.HIT_COUNT end
     if acc_type == DB.Enum.Values.COMBINED then
-        local melee_hits = DB.Data.Get(player_name, Column.Trackable.MELEE, DB.Metric.HIT_COUNT)
-        local melee_attempts = DB.Data.Get(player_name, Column.Trackable.MELEE, DB.Metric.ATTEMPTS)
-        local ranged_hits = DB.Data.Get(player_name, Column.Trackable.RANGED, DB.Metric.HIT_COUNT)
-        local ranged_attempts = DB.Data.Get(player_name, Column.Trackable.RANGED, DB.Metric.ATTEMPTS)
+        local melee_hits = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.HIT_COUNT)
+        local melee_attempts = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.ATTEMPTS)
+        local ranged_hits = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.HIT_COUNT)
+        local ranged_attempts = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS)
         hits = melee_hits + ranged_hits
         attempts = melee_attempts + ranged_attempts
     else
