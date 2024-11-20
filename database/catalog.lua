@@ -43,6 +43,7 @@ DB.Catalog.Initialize = function(index, player_name, trackable, action_name, pet
 		DB.Catalog.Set(0, index, trackable, action_name, metric)
 	end
 	DB.Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, trackable, action_name, DB.Metric.MIN)
+	DB.Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, trackable, action_name, DB.Metric.CRITICAL_MIN)
 
 	-- Initialize tracking tables
 	if not DB.Tracking.Trackable[trackable] then DB.Tracking.Trackable[trackable] = T{} end

@@ -28,6 +28,7 @@ DB.Pet_Catalog.Initialize = function(index, player_name, trackable, action_name,
 		DB.Pet_Catalog.Set(0, index, pet_name, trackable, action_name, metric)
 	end
 	DB.Pet_Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Metric.MIN)
+	DB.Pet_Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Metric.CRITICAL_MIN)
 
 	-- Initialize tracking tables
 	DB.Pet_Catalog.Initialize_Tracking(trackable, player_name, pet_name)

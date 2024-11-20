@@ -34,7 +34,7 @@ Column.Damage.By_Type_Raw = function(player_name, damage_type)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Shows the average damage for a trackable (like weaponskills)
+-- Shows the average damage for a trackable (like weaponskills).
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param damage_type string a trackable from the model.
@@ -47,6 +47,26 @@ Column.Damage.Average_By_Type = function(player_name, damage_type, justify)
     local color = Column.String.Color_Zero(focused_damage)
     if focused_damage == 0 or focused_count == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
     return UI.TextColored(color, Column.String.Format_Percent(focused_damage, focused_count, justify, true))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Shows the average damage for a non-critical melee hit.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param damage_type string a trackable from the model.
+---@param justify? boolean whether or not to right justify the text
+---@return number
+------------------------------------------------------------------------------------------------------
+Column.Damage.Average_Non_Critical_Melee_By_Type = function(player_name, damage_type, justify)
+    local total_damage = DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
+    local crit_damage = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_DAMAGE)
+    local total_hit_count = DB.Data.Get(player_name, damage_type, DB.Metric.HIT_COUNT)
+    local crit_count = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_COUNT)
+    local non_crit_damage = total_damage - crit_damage
+    local non_crit_count = total_hit_count - crit_count
+    local color = Column.String.Color_Zero(non_crit_damage)
+    if non_crit_damage == 0 or non_crit_count == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
+    return UI.TextColored(color, Column.String.Format_Percent(non_crit_damage, non_crit_count, justify, true))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -74,7 +94,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Damage.By_Type_Metric = function(player_name, damage_type, metric, justify)
     local damage = DB.Data.Get(player_name, damage_type, metric)
-    if metric == DB.Metric.MIN and damage >= DB.Enum.Values.MAX_DAMAGE then damage = 0 end
+    if (metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and damage >= DB.Enum.Values.MAX_DAMAGE then damage = 0 end
     local color = Column.String.Color_Zero(damage)
     return UI.TextColored(color, Column.String.Format_Number(damage, justify))
 end

@@ -93,8 +93,10 @@ Debug.Unit.Populate = function()
         UI.TableSetupColumn("Error Message", col_flags)
         UI.TableHeadersRow()
 
+        local errors_found = false
         for _, result in ipairs(Debug.Unit.Results) do
             if result.count > 0 then
+                errors_found = true
                 UI.TableNextColumn() UI.Text(result.test)
                 UI.TableNextColumn() UI.TextColored(result.color, result.result)
                 UI.TableNextColumn() UI.Text(tostring(result.count))
@@ -102,6 +104,13 @@ Debug.Unit.Populate = function()
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
             end
+        end
+
+        if not errors_found then
+            UI.TableNextColumn() UI.Text("No errors found.")
+            UI.TableNextColumn() UI.Text("---")
+            UI.TableNextColumn() UI.Text("---")
+            UI.TableNextColumn() UI.Text("---")
         end
 
         UI.EndTable()
@@ -392,7 +401,7 @@ Debug.Unit.Test_Player = function(test_cases, error_message, error_count)
                     if test_cases[index][trackable] and test_cases[index][trackable][metric] then
                         if test_cases[index][trackable][metric] == value then
                             -- Pass
-                        elseif metric == DB.Metric.MIN and test_cases[index][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
+                        elseif (metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and test_cases[index][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
                             -- Pass
                         elseif test_cases[index][trackable][metric] == 0 then
                             -- Pass
@@ -402,7 +411,7 @@ Debug.Unit.Test_Player = function(test_cases, error_message, error_count)
                             .. " for " .. tostring(index) .. "|" .. tostring(trackable) .. "|" .. tostring(metric))
                         end
 
-                    elseif metric == DB.Metric.MIN then
+                    elseif metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
                         if value == DB.Enum.Values.MAX_DAMAGE then
                             -- Pass
                         else
@@ -486,7 +495,7 @@ Debug.Unit.Test_Player_Catalog = function(test_cases, error_message, error_count
                                 if test_cases[index][action_name][trackable][metric] then
                                     if test_cases[index][action_name][trackable][metric] == value then
                                         -- Pass
-                                    elseif metric == DB.Metric.MIN and test_cases[index][action_name][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
+                                    elseif (metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and test_cases[index][action_name][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
                                         -- Pass
                                     elseif test_cases[index][action_name][trackable][metric] == 0 then
                                         -- Pass
@@ -496,7 +505,7 @@ Debug.Unit.Test_Player_Catalog = function(test_cases, error_message, error_count
                                         .. " for " .. tostring(index) .. "|" .. tostring(action_name) .. "|" .. tostring(trackable) .. "|" .. tostring(metric))
                                     end
 
-                                elseif metric == DB.Metric.MIN then
+                                elseif metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
                                     if value == DB.Enum.Values.MAX_DAMAGE then
                                         -- Pass
                                     else
@@ -578,7 +587,7 @@ Debug.Unit.Test_Pet_Database = function(test_cases, error_message, error_count)
                             if test_cases[index][pet_name][trackable] and test_cases[index][pet_name][trackable][metric] then
                                 if test_cases[index][pet_name][trackable][metric] == value then
                                     -- Pass
-                                elseif metric == DB.Metric.MIN and test_cases[index][pet_name][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
+                                elseif (metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and test_cases[index][pet_name][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
                                     -- Pass
                                 elseif test_cases[index][pet_name][trackable][metric] == 0 then
                                     -- Pass
@@ -588,7 +597,7 @@ Debug.Unit.Test_Pet_Database = function(test_cases, error_message, error_count)
                                     .. " for " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(trackable) .. "|" .. tostring(metric))
                                 end
 
-                            elseif metric == DB.Metric.MIN then
+                            elseif metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
                                 if value == DB.Enum.Values.MAX_DAMAGE then
                                     -- Pass
                                 else
@@ -696,7 +705,7 @@ Debug.Unit.Test_Pet_Catalog_Database = function(test_cases, error_message, error
                                         if test_cases[index][pet_name][action_name][trackable][metric] then
                                             if test_cases[index][pet_name][action_name][trackable][metric] == value then
                                                 -- Pass
-                                            elseif metric == DB.Metric.MIN and test_cases[index][pet_name][action_name][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
+                                            elseif (metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and test_cases[index][pet_name][action_name][trackable][metric] == DB.Enum.Values.MAX_DAMAGE then
                                                 -- Pass
                                             elseif test_cases[index][pet_name][action_name][trackable][metric] == 0 then
                                                 -- Pass
@@ -707,7 +716,7 @@ Debug.Unit.Test_Pet_Catalog_Database = function(test_cases, error_message, error
                                                 .. "|" .. tostring(metric))
                                             end
 
-                                        elseif metric == DB.Metric.MIN then
+                                        elseif metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
                                             if value == DB.Enum.Values.MAX_DAMAGE then
                                                 -- Pass
                                             else

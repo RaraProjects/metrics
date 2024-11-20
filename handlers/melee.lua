@@ -115,10 +115,10 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     local no_damage = H.Melee.No_Damage_Messages(result)            -- No damage Messages
     H.Melee.Totals(audits, damage, melee_type_discrete, no_damage)  -- Totals
     H.Melee.Pet_Total(owner_mob, audits, damage, no_damage)         -- Pet Totals
-    throwing = H.Melee.Animation(animation_id, audits, damage, melee_type_broad, throwing, no_damage)   -- Melee or Throwing Totals and Counts
-    H.Melee.Min_Max(throwing, damage, audits, melee_type_broad, melee_type_discrete, no_damage)         -- Min/Max
-    H.Melee.Additional_Effect(audits, result, no_damage)                                                -- Additional effects like enspell.
-    H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete)                  -- Accuracy, crits, absorbed by shadows, etc.
+    throwing = H.Melee.Animation(animation_id, audits, damage, melee_type_broad, throwing, no_damage)       -- Melee or Throwing Totals and Counts
+    H.Melee.Min_Max(throwing, damage, audits, melee_type_broad, melee_type_discrete, message_id, no_damage) -- Min/Max
+    H.Melee.Additional_Effect(audits, result, no_damage)                                                    -- Additional effects like enspell.
+    H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete)                      -- Accuracy, crits, absorbed by shadows, etc.
     H.Melee.Reaction(result, audits, melee_type_broad)              -- Guard
     H.Melee.Spikes(audits, result, owner_mob)                       -- Spike damage
 
@@ -441,20 +441,39 @@ end
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param melee_type_broad string player melee or pet melee.
 ---@param melee_type_discrete string player melee or pet melee.
+---@param message_id integer
 ---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
 ------------------------------------------------------------------------------------------------------
-H.Melee.Min_Max = function(throwing, damage, audits, melee_type_broad, melee_type_discrete, no_damage)
+H.Melee.Min_Max = function(throwing, damage, audits, melee_type_broad, melee_type_discrete, message_id, no_damage)
     if no_damage then damage = 0 end
+    local metric_min = DB.Metric.MIN
+    local metric_max = DB.Metric.MAX
+    local trackable_broad = melee_type_broad
+    local trackable_discrete = melee_type_discrete
+
+    if message_id == Ashita.Enum.Message.CRIT then
+        metric_min = DB.Metric.CRITICAL_MIN
+        metric_max = DB.Metric.CRITICAL_MAX
+    end
     if throwing then
-        if damage > 0 and (damage < DB.Data.Get(audits.player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.MIN) end
-        if damage > DB.Data.Get(audits.player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, DB.Trackable.RANGED_OVERALL, DB.Metric.MAX) end
-        if damage > 0 and (damage < DB.Data.Get(audits.player_name, DB.Trackable.RANGED_THROWING, DB.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, DB.Trackable.RANGED_THROWING, DB.Metric.MIN) end
-        if damage > DB.Data.Get(audits.player_name, DB.Trackable.RANGED_THROWING, DB.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, DB.Trackable.RANGED_THROWING, DB.Metric.MAX) end
-    else
-        if damage > 0 and (damage < DB.Data.Get(audits.player_name, melee_type_discrete, DB.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_discrete, DB.Metric.MIN) end
-        if damage > DB.Data.Get(audits.player_name, melee_type_discrete, DB.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_discrete, DB.Metric.MAX) end
-        if damage > 0 and (damage < DB.Data.Get(audits.player_name, melee_type_broad, DB.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_broad, DB.Metric.MIN) end
-        if damage > DB.Data.Get(audits.player_name, melee_type_broad, DB.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, melee_type_broad, DB.Metric.MAX) end
+        trackable_broad = DB.Trackable.RANGED_OVERALL
+        trackable_discrete = DB.Trackable.RANGED_THROWING
+    end
+
+    -- Discrete Min/Max
+    if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable_discrete, metric_min)) then
+        DB.Data.Update(H.Mode.SET, damage, audits, trackable_discrete, metric_min)
+    end
+    if damage > DB.Data.Get(audits.player_name, trackable_discrete, metric_max) then
+        DB.Data.Update(H.Mode.SET, damage, audits, trackable_discrete, metric_max)
+    end
+
+    -- Broad Min/Max
+    if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable_broad, metric_min)) then
+        DB.Data.Update(H.Mode.SET, damage, audits, trackable_broad, metric_min)
+    end
+    if damage > DB.Data.Get(audits.player_name, trackable_broad, metric_max) then
+        DB.Data.Update(H.Mode.SET, damage, audits, trackable_broad, metric_max)
     end
 end
 

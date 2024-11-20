@@ -28,7 +28,7 @@ DB.Pet_Data.Initialize = function(index, player_name, pet_name)
 		for _, metric in pairs(DB.Metric) do
 
 			-- Need to set minimum high manually to capture accurate minimums.
-			if metric == DB.Metric.MIN then
+			if metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
 				DB.Pet_Data.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, trackable, metric)
 			else
 				DB.Pet_Data.Set(0, index, pet_name, trackable, metric)

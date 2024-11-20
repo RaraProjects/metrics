@@ -135,7 +135,7 @@ Debug.Unit.Tests.Defense.Melee_Shadows = function()
         player = Debug.Unit.Mob.ENEMY.name,
         pet    = Blog.Enum.Text.NO_PET,
         damage = "0",
-        action = "Melee Overall",
+        action = "Melee",
         note   = " ",
     }
 

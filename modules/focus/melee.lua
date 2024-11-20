@@ -117,11 +117,11 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
-    local mob_heal = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,       DB.Metric.MOB_HEALING)
-    local shadows  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,       DB.Metric.SHADOW_ABSORPTION)
-    local enspell  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL,     DB.Metric.TOTAL)
-    local endrain  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDRAIN,     DB.Metric.TOTAL)
-    local enaspir  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENASPIR,     DB.Metric.TOTAL)
+    local mob_heal = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.MOB_HEALING)
+    local shadows  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.SHADOW_ABSORPTION)
+    local enspell  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL, DB.Metric.TOTAL)
+    local endrain  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDRAIN, DB.Metric.TOTAL)
+    local enaspir  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENASPIR, DB.Metric.TOTAL)
     local counter  = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER, DB.Metric.TOTAL)
 
     local row = 1
@@ -247,18 +247,34 @@ Focus.Melee.Min_Max = function(player_name)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Main-Hand")
-        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.MELEE_MAIN_HAND)
+        UI.TableNextColumn() Column.Damage.Average_Non_Critical_Melee_By_Type(player_name, DB.Trackable.MELEE_MAIN_HAND)
         UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MIN)
         UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MAX)
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
+
+        UI.TableNextRow()
+        UI.TableNextColumn() UI.Text("Main-Hand Crits")
+        UI.TableNextColumn() Column.Proc.Crit_Average(player_name, DB.Trackable.MELEE_MAIN_HAND)
+        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.CRITICAL_MIN)
+        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.CRITICAL_MAX)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
         if off_hand > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Off-Hand")
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.MELEE_OFF_HAND)
+            UI.TableNextColumn() Column.Damage.Average_Non_Critical_Melee_By_Type(player_name, DB.Trackable.MELEE_OFF_HAND)
             UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.MIN)
             UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.MAX)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Off-Hand Crits")
+            UI.TableNextColumn() Column.Proc.Crit_Average(player_name, DB.Trackable.MELEE_OFF_HAND)
+            UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.CRITICAL_MIN)
+            UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.CRITICAL_MAX)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -266,9 +282,17 @@ Focus.Melee.Min_Max = function(player_name)
         if kick_damage > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Kick Attacks")
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.MELEE_KICK_ATTACKS)
+            UI.TableNextColumn() Column.Damage.Average_Non_Critical_Melee_By_Type(player_name, DB.Trackable.MELEE_KICK_ATTACKS)
             UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.MIN)
             UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.MAX)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text("Kick Attacks Crits")
+            UI.TableNextColumn() Column.Proc.Crit_Average(player_name, DB.Trackable.MELEE_KICK_ATTACKS)
+            UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.CRITICAL_MIN)
+            UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.CRITICAL_MAX)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end

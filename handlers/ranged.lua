@@ -69,7 +69,7 @@ H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
     H.Ranged.Pet_Total(owner_mob, audits, damage)                   -- Pet Totals
     H.Ranged.Message(message_id, audits, damage, ranged_type)       -- Accuracy and misc. traits.
     H.Ranged.Additional_Effect(audits, result)                      -- Additional Effects
-    H.Ranged.Min_Max(damage, audits, ranged_type)                   -- Min/Max
+    H.Ranged.Min_Max(damage, audits, ranged_type, message_id)       -- Min/Max
     H.Ranged.Distance(audits, actor_mob, target_mob, ranged_type)   -- Shot Distance
 
     return damage
@@ -276,10 +276,17 @@ end
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param damage number
 ---@param ranged_type string player ranged or melee ranged.
+---@param message_id integer
 ------------------------------------------------------------------------------------------------------
-H.Ranged.Min_Max = function(damage, audits, ranged_type)
-    if damage > 0 and (damage < DB.Data.Get(audits.player_name, ranged_type, DB.Metric.MIN)) then DB.Data.Update(H.Mode.SET, damage, audits, ranged_type, DB.Metric.MIN) end
-    if damage > DB.Data.Get(audits.player_name, ranged_type, DB.Metric.MAX) then DB.Data.Update(H.Mode.SET, damage, audits, ranged_type, DB.Metric.MAX) end
+H.Ranged.Min_Max = function(damage, audits, ranged_type, message_id)
+    local min_metric = DB.Metric.MIN
+    local max_metric = DB.Metric.MAX
+    if message_id == Ashita.Enum.Message.RANGECRIT then
+       min_metric = DB.Metric.CRITICAL_MIN
+       max_metric = DB.Metric.CRITICAL_MAX
+    end
+    if damage > 0 and (damage < DB.Data.Get(audits.player_name, ranged_type, min_metric)) then DB.Data.Update(H.Mode.SET, damage, audits, ranged_type, min_metric) end
+    if damage > DB.Data.Get(audits.player_name, ranged_type, max_metric) then DB.Data.Update(H.Mode.SET, damage, audits, ranged_type, max_metric) end
 end
 
 ------------------------------------------------------------------------------------------------------

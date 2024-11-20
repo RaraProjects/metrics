@@ -30,7 +30,7 @@ DB.Data.Initialize = function(index, player_name)
 		for _, metric in pairs(DB.Metric) do
 
 			-- Need to set minimum high manually to capture accurate minimums.
-			if metric == DB.Metric.MIN then
+			if metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
 				DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, trackable, metric)
 			else
 				DB.Data.Set(0, index, trackable, metric)
@@ -221,7 +221,7 @@ DB.Data.Get = function(player_name, trackable, metric, temporary_mob_focus)
 	end
 
 	local total = 0
-	if metric == DB.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
+	if metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then total = DB.Enum.Values.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	local search_string = player_name .. ":" .. mob_focus
 	if mob_focus == DB.Widgets.Dropdown.Enum.NONE then search_string = player_name .. ":" end
@@ -230,7 +230,7 @@ DB.Data.Get = function(player_name, trackable, metric, temporary_mob_focus)
 	for index, _ in pairs(DB.Parse) do
 		if string.find(index, search_string) then
 			local value = DB.Parse[index][trackable][metric]
-			if metric == DB.Metric.MIN then
+			if metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
 				if value < total then total = value end
 			elseif metric == DB.Metric.MAX then
 				if value > total then total = value end
