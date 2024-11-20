@@ -147,7 +147,7 @@ Blog.Add = function(player_name, pet_name, action_flag, action_name, damage, not
         Pet    = Blog.Entries.Pet_Name(pet_name),
         Damage = Blog.Entries.Damage(damage, action_type, color),
         Action = Blog.Entries.Action(action_name, color),
-        Note   = Blog.Entries.Notes(note, action_type, is_mob)
+        Note   = Blog.Entries.Notes(note, action_type)
     }
     -- Gray out mob deaths for better visual parsing of the battle.
     if action_name == Blog.Enum.Text.MOB_DEATH then

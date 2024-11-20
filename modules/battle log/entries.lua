@@ -8,6 +8,7 @@ Blog.Entries = T{}
 ---@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
 Blog.Entries.Name = function(player_name, is_mob)
+    if not player_name then player_name = "Unknown" end
     local color = Res.Colors.Basic.WHITE
     if not is_mob and Metrics.Parse.Name_Colors and Ashita.Party.Jobs[player_name] then
         local job = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
@@ -95,13 +96,10 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param note? string|number how much TP was used by the weaponskill
 ---@param action_type? string a trackable from the data model.
----@param is_mob? boolean
 ---@return table
 ------------------------------------------------------------------------------------------------------
-Blog.Entries.Notes = function(note, action_type, is_mob)
+Blog.Entries.Notes = function(note, action_type)
     local color = Res.Colors.Basic.WHITE
-    if is_mob then color = Res.Colors.Basic.MOB end
-
     local final_note = {Value = " ", Color = color}
     if not note or note == "" then return final_note end
 
@@ -125,7 +123,7 @@ Blog.Entries.Notes = function(note, action_type, is_mob)
     -- We passed in a note, but didn't handle it above.
     else
         Debug.Error.Add(Debug.Error.WARNING, "Blog.Entries.Notes", "Unhandled battle log note. Note: {"
-        .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "} Mob {" .. tostring(is_mob) .. "}.")
+        .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "}.")
         final_note.Value = " "
     end
 
