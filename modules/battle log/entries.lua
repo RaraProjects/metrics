@@ -9,9 +9,7 @@ Blog.Entries = T{}
 ------------------------------------------------------------------------------------------------------
 Blog.Entries.Name = function(player_name, is_mob)
     local color = Res.Colors.Basic.WHITE
-    if is_mob then
-        color = Res.Colors.Basic.MOB
-    elseif Metrics.Parse.Name_Colors and Ashita.Party.Jobs[player_name] then
+    if not is_mob and Metrics.Parse.Name_Colors and Ashita.Party.Jobs[player_name] then
         local job = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
         if not job then job = Res.Jobs.List[0] end
         color = Res.Colors.Get_Job(job.id)
@@ -37,10 +35,9 @@ end
 ---@param damage? number
 ---@param action_type? string a trackable from the data model.
 ---@param color? table
----@param is_mob? boolean
 ---@return table {Damage, Color}
 ------------------------------------------------------------------------------------------------------
-Blog.Entries.Damage = function(damage, action_type, color, is_mob)
+Blog.Entries.Damage = function(damage, action_type, color)
     if action_type == Blog.Enum.Flags.IGNORE then return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.WHITE} end
 
     local default_color = Res.Colors.Basic.WHITE
@@ -52,8 +49,6 @@ Blog.Entries.Damage = function(damage, action_type, color, is_mob)
     -- Generate damage string.
     if not damage then
         return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
-    elseif is_mob then
-        return {Value = Column.String.Format_Number(damage), Color = Res.Colors.Basic.MOB}
     elseif damage < 0 then  -- Enfeeble
         return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
     elseif damage == 0 then
@@ -88,11 +83,9 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param action_name string
 ---@param color table
----@param is_mob? boolean
 ---@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
-Blog.Entries.Action = function(action_name, color, is_mob)
-    if is_mob then color = Res.Colors.Basic.MOB end
+Blog.Entries.Action = function(action_name, color)
     return {Value = action_name, Color = color}
 end
 

@@ -145,8 +145,8 @@ Blog.Add = function(player_name, pet_name, action_flag, action_name, damage, not
         Flag   = {Value = action_flag, Color = Res.Colors.Basic.WHITE},
         Player = Blog.Entries.Name(player_name, is_mob),
         Pet    = Blog.Entries.Pet_Name(pet_name),
-        Damage = Blog.Entries.Damage(damage, action_type, color, is_mob),
-        Action = Blog.Entries.Action(action_name, color, is_mob),
+        Damage = Blog.Entries.Damage(damage, action_type, color),
+        Action = Blog.Entries.Action(action_name, color),
         Note   = Blog.Entries.Notes(note, action_type, is_mob)
     }
     -- Gray out mob deaths for better visual parsing of the battle.
@@ -254,8 +254,23 @@ Blog.Display.Rows = function(entry)
     if damage == "-1" then damage = "---" end
     damage = Blog.Columns.Damage(damage)
 
-
     UI.TableNextRow()
+    if entry.Flag.Value == Blog.Enum.Types.MOB_TP or entry.Flag.Value == Blog.Enum.Types.MOB_SPELL then
+        local r = 0.46
+        local g = 0.07
+        local b = 0.00
+        local a = 1.00
+        local row_bg_color = UI.GetColorU32({r, g, b, a})
+        UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color)
+    elseif entry.Flag.Value == Blog.Enum.Types.MOB_MELEE then
+        local r = 0.46
+        local g = 0.07
+        local b = 0.00
+        local a = 0.25
+        local row_bg_color = UI.GetColorU32({r, g, b, a})
+        UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color)
+    end
+
     if Metrics.Blog.Timestamp then UI.TableNextColumn() UI.Text(entry.Time.Value) end
     UI.TableNextColumn() UI.TextColored(entry.Player.Color, name)
     UI.TableNextColumn() UI.TextColored(entry.Damage.Color, damage)
