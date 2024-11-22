@@ -178,7 +178,15 @@ Debug.Unit.Tests.Melee.Enspell = function()
     player_catalog[index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.MAX] = additional_damage
     player_catalog[index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.HIT_COUNT] = 1
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Enspell", player, player_catalog)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage + additional_damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Enspell", player, player_catalog, nil, nil, battle_log)
 end
 
 ------------------------------------------------------------------------------------------------------

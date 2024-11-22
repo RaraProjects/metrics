@@ -151,7 +151,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Calculate = function(value, index, pet_name, trackable, action_name, metric)
-	if not DB.Pet_Parse_Catalog[index][pet_name] then
+	if not DB.Pet_Parse_Catalog[index][pet_name] or not DB.Pet_Parse_Catalog[index][pet_name][action_name] then
 		Debug.Error.Add(Debug.Error.WARNING, "DB.Pet_Catalog.Calculate", "Tried referencing uninitialized node: Index {" .. tostring(index) .. "} Pet {"
 		.. tostring(pet_name) .. "} Action {" .. tostring(action_name) .. "}.")
 		return value

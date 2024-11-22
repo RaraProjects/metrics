@@ -117,7 +117,7 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     H.Melee.Pet_Total(owner_mob, audits, damage, no_damage)         -- Pet Totals
     throwing = H.Melee.Animation(animation_id, audits, damage, melee_type_broad, throwing, no_damage)       -- Melee or Throwing Totals and Counts
     H.Melee.Min_Max(throwing, damage, audits, melee_type_broad, melee_type_discrete, message_id, no_damage) -- Min/Max
-    H.Melee.Additional_Effect(audits, result, no_damage)                                                    -- Additional effects like enspell.
+    damage = damage + H.Melee.Additional_Effect(audits, result, no_damage)                                  -- Additional effects like enspell.
     H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete)                      -- Accuracy, crits, absorbed by shadows, etc.
     H.Melee.Reaction(result, audits, melee_type_broad)              -- Guard
     H.Melee.Spikes(audits, result, owner_mob)                       -- Spike damage
@@ -483,9 +483,12 @@ end
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param result table
 ---@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
+---@return integer
 ------------------------------------------------------------------------------------------------------
 H.Melee.Additional_Effect = function(audits, result, no_damage)
-    if not result then return nil end
+    if not result then return 0 end
+    local additional_damage = 0
+
     if result.has_add_effect then
         local message_id = result.add_effect_message
         local animation_id = result.add_effect_animation
@@ -493,6 +496,7 @@ H.Melee.Additional_Effect = function(audits, result, no_damage)
 
         if message_id == Ashita.Enum.Message.ENSPELL then
             if no_damage then param = 0 end
+            additional_damage = param
             DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,   DB.Metric.TOTAL)
             DB.Data.Update(H.Mode.INC,     1, audits, DB.Trackable.MELEE_ENSPELL, DB.Metric.HIT_COUNT)
             DB.Data.Update(H.Mode.INC,     1, audits, DB.Trackable.SPELLS_OVERALL,   DB.Metric.ATTEMPTS)       -- Used to flag that data is availabel for show in Focus.
@@ -503,6 +507,7 @@ H.Melee.Additional_Effect = function(audits, result, no_damage)
             end
         elseif message_id == Ashita.Enum.Message.ENDAMAGE then
             local effect_name = Res.Game.Get_Additional_Effect_Animation(animation_id)
+            additional_damage = param
             if animation_id then
                 DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,    DB.Metric.TOTAL)
                 DB.Data.Update(H.Mode.INC,     1, audits, DB.Trackable.MELEE_ENDAMAGE, DB.Metric.HIT_COUNT)
@@ -524,6 +529,8 @@ H.Melee.Additional_Effect = function(audits, result, no_damage)
             DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.MELEE_ENASPIR, DB.Metric.HIT_COUNT)
         end
     end
+
+    return additional_damage
 end
 
 ------------------------------------------------------------------------------------------------------
