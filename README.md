@@ -15,8 +15,8 @@ Metrics uses Github's release feature to distribute the code. Within the Release
 1. On the right side of the Github page (to the right of all the files) there is a section called "Releases".
 2. Click the release that is marked as "Latest".
 3. Inside the release there is a file called metrics.zip. Download that. You don't need the "Source code" files.
-5. Go to your download location and extract metrics.zip. You should end up with a folder called "rsvp".
-6. Put that "rsvp" folder in your addon folder. For Horizon it's probably something like ~/HorizonXI/Game/addons.
+5. Go to your download location and extract metrics.zip. You should end up with a folder called "metrics".
+6. Put that "metrics" folder in your addon folder. For Horizon it's probably something like ~/HorizonXI/Game/addons.
 
 ## Module Overview<br>
 1. [Parse](#parse)
