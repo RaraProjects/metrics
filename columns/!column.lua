@@ -1,11 +1,11 @@
 Column = T{}
 
-Column.Flags = T{
+Column.Flags = {
     None = bit.bor(ImGuiTableColumnFlags_None),
     Expandable = bit.bor(ImGuiTableColumnFlags_WidthStretch),
 }
 
-Column.Widths = T{
+Column.Widths = {
     Name = 150,
     Parse = 60,
     Percent = 60,

@@ -52,7 +52,7 @@ Parse.Full.Headers = function()
     if Metrics.Parse.Focus then        UI.TableSetupColumn("Focus", flags) end
     if Metrics.Parse.Jobs then         UI.TableSetupColumn("Job",   flags) end
 
-    UI.TableSetupColumn("Name",   flags)
+    UI.TableSetupColumn("Name",   flags, Column.Widths.Name)
     UI.TableSetupColumn("Total",  flags)
     UI.TableSetupColumn("%Total", flags)
 
