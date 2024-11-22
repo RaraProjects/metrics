@@ -33,7 +33,7 @@ end
 ---@param damage number
 -- ------------------------------------------------------------------------------------------------------
 H.Ranged.Blog = function(actor_mob, damage)
-    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.RANGED, DB.Trackable.RANGED_OVERALL, damage)
+    Blog.Add(actor_mob.name, nil, Blog.Action_Type.RANGED, DB.Trackable.RANGED_OVERALL, damage)
 end
 
 ------------------------------------------------------------------------------------------------------

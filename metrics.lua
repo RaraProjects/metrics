@@ -240,7 +240,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             if Ashita.Party.Is_Affiliate(actor_mob.name) or Ashita.Mob.Pet_Owner(actor_mob) then
                 local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
                 DB.Defeated_Mob(target_mob.name)
-                Blog.Add(target_mob.name, nil, Blog.Enum.Types.MOB_DEATH, Blog.Enum.Text.MOB_DEATH, nil, "------------", DB.Trackable.DEATH)
+                Blog.Add(target_mob.name, nil, Blog.Action_Type.MOB_DEATH, Blog.Enum.Text.MOB_DEATH, nil, "------------", DB.Trackable.DEATH)
             end
 
         -- Being defeated by a mob.

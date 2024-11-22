@@ -134,9 +134,9 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.Melee.Blog = function(actor_mob, owner_mob, damage)
     if owner_mob then
-        Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_MELEE, DB.Trackable.PET_MELEE_OVERALL, damage)
+        Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.PET_MELEE, DB.Trackable.PET_MELEE_OVERALL, damage)
     else
-        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MELEE, DB.Trackable.MELEE_OVERALL, damage)
+        Blog.Add(actor_mob.name, nil, Blog.Action_Type.MELEE, DB.Trackable.MELEE_OVERALL, damage)
     end
 end
 

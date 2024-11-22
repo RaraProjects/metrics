@@ -157,5 +157,5 @@ end
 H.TP_Def.Blog = function(actor_mob, damage, skill_name, target_count)
     local note = nil
     if target_count > 1 then note = "TGTs: " .. tostring(target_count) end
-    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MOB_TP, skill_name, damage, note, DB.Trackable.DEF_TP_MOVE)
+    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_TP, skill_name, damage, note, DB.Trackable.DEF_TP_MOVE)
 end

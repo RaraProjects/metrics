@@ -106,7 +106,7 @@ end
 ---@param damage number
 -- ------------------------------------------------------------------------------------------------------
 H.Melee_Def.Blog = function(actor_mob, damage)
-    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MOB_MELEE, DB.Trackable.MELEE_OVERALL, damage)
+    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_MELEE, DB.Trackable.MELEE_OVERALL, damage)
 end
 
 ------------------------------------------------------------------------------------------------------

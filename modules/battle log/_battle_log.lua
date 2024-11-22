@@ -26,28 +26,35 @@ Blog.Enum.Text = T{
 Blog.Enum.Flags = T{
     IGNORE = "ignore",
 }
-Blog.Enum.Types = T{
-    HEALING   = "Healing",
+
+Blog.Action_Type = {
+    MELEE          = "Melee",
+    RANGED         = "Ranged",
+    WS             = "WS",
+    SC             = "SC",
+    MAGIC          = "Magic",
+    ENFEEBLE       = "Enfeeble",
+    DISPEL         = "Dispel",
+    HEALING        = "Healing",
     DEBUFF_REMOVAL = "Debuff Removal",
-    PET       = "Pet",
-    PET_MELEE = "Pet Melee",
-    PET_TP    = "Pet Weaponskill",
-    PET_HEAL  = "Pet Heal",
-    MOB_MELEE = "Mob Melee",
-    MOB_TP    = "Mob TP",
-    MOB_SPELL = "Mob Spell",
-    MOB_DEATH = "Mob Death",
-    DEATH     = "Death",
-    MELEE     = "Melee",
-    RANGED    = "Ranged",
-    MAGIC     = "Magic",
-    BRD_BUFFS = "Bard Song Buffs",
-    COR_ROLLS = "Phantom_Rolls",
-    WS        = "WS",
-    SC        = "SC",
-    ABILITY   = "Ability",
-    ENFEEBLE  = "Enfeeble",
-    PET_COMMAND = "Pet Command",
+    BRD_BUFFS      = "Bard Song Buffs",
+    ABILITY        = "Ability",
+    COR_ROLLS      = "Phantom_Rolls",
+    PET            = "Pet",
+    PET_MELEE      = "Pet Melee",
+    PET_TP         = "Pet Weaponskill",
+    PET_HEAL       = "Pet Heal",
+    PET_COMMAND    = "Pet Command",
+    MOB_MELEE      = "Mob Melee",
+    MOB_TP         = "Mob TP",
+    MOB_SPELL      = "Mob Spell",
+    MOB_DEATH      = "Mob Death",
+    DEATH          = "Death",
+}
+
+Blog.Notes = {
+    RESIST    = "Resist!",
+    NO_EFFECT = "No Effect",
 }
 
 Blog.Page = 1
@@ -163,25 +170,26 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 Blog.Action_Filter = function(action_flag)
-    if     action_flag == Blog.Enum.Types.HEALING or action_flag == Blog.Enum.Types.DEBUFF_REMOVAL then return Metrics.Blog.Healing
-    elseif action_flag == Blog.Enum.Types.PET_MELEE then return Metrics.Blog.Pet_Melee
-    elseif action_flag == Blog.Enum.Types.PET_TP    then return Metrics.Blog.Pet_TP
-    elseif action_flag == Blog.Enum.Types.PET_HEAL  then return Metrics.Blog.Pet_Heal
-    elseif action_flag == Blog.Enum.Types.DEATH     then return Metrics.Blog.Deaths
-    elseif action_flag == Blog.Enum.Types.MOB_MELEE then return Metrics.Blog.Mob_Melee
-    elseif action_flag == Blog.Enum.Types.MOB_TP    then return Metrics.Blog.Mob_TP
-    elseif action_flag == Blog.Enum.Types.MOB_SPELL then return Metrics.Blog.Mob_Spell
-    elseif action_flag == Blog.Enum.Types.MOB_DEATH then return Metrics.Blog.Mob_Death
-    elseif action_flag == Blog.Enum.Types.MELEE     then return Metrics.Blog.Melee
-    elseif action_flag == Blog.Enum.Types.RANGED    then return Metrics.Blog.Ranged
-    elseif action_flag == Blog.Enum.Types.MAGIC     then return Metrics.Blog.Magic
-    elseif action_flag == Blog.Enum.Types.BRD_BUFFS then return Metrics.Blog.BRD_Buffs
-    elseif action_flag == Blog.Enum.Types.COR_ROLLS then return Metrics.Blog.COR_Rolls
-    elseif action_flag == Blog.Enum.Types.WS        then return Metrics.Blog.WS
-    elseif action_flag == Blog.Enum.Types.SC        then return Metrics.Blog.SC
-    elseif action_flag == Blog.Enum.Types.ABILITY   then return Metrics.Blog.Ability
-    elseif action_flag == Blog.Enum.Types.PET_COMMAND then return Metrics.Blog.Pet_Command
-    elseif action_flag == Blog.Enum.Types.ENFEEBLE  then return Metrics.Blog.Enfeeble
+    if     action_flag == Blog.Action_Type.HEALING or action_flag == Blog.Action_Type.DEBUFF_REMOVAL then return Metrics.Blog.Healing
+    elseif action_flag == Blog.Action_Type.PET_MELEE then return Metrics.Blog.Pet_Melee
+    elseif action_flag == Blog.Action_Type.PET_TP    then return Metrics.Blog.Pet_TP
+    elseif action_flag == Blog.Action_Type.PET_HEAL  then return Metrics.Blog.Pet_Heal
+    elseif action_flag == Blog.Action_Type.DEATH     then return Metrics.Blog.Deaths
+    elseif action_flag == Blog.Action_Type.MOB_MELEE then return Metrics.Blog.Mob_Melee
+    elseif action_flag == Blog.Action_Type.MOB_TP    then return Metrics.Blog.Mob_TP
+    elseif action_flag == Blog.Action_Type.MOB_SPELL then return Metrics.Blog.Mob_Spell
+    elseif action_flag == Blog.Action_Type.MOB_DEATH then return Metrics.Blog.Mob_Death
+    elseif action_flag == Blog.Action_Type.MELEE     then return Metrics.Blog.Melee
+    elseif action_flag == Blog.Action_Type.RANGED    then return Metrics.Blog.Ranged
+    elseif action_flag == Blog.Action_Type.MAGIC     then return Metrics.Blog.Magic
+    elseif action_flag == Blog.Action_Type.BRD_BUFFS then return Metrics.Blog.BRD_Buffs
+    elseif action_flag == Blog.Action_Type.COR_ROLLS then return Metrics.Blog.COR_Rolls
+    elseif action_flag == Blog.Action_Type.WS        then return Metrics.Blog.WS
+    elseif action_flag == Blog.Action_Type.SC        then return Metrics.Blog.SC
+    elseif action_flag == Blog.Action_Type.ABILITY   then return Metrics.Blog.Ability
+    elseif action_flag == Blog.Action_Type.PET_COMMAND then return Metrics.Blog.Pet_Command
+    elseif action_flag == Blog.Action_Type.ENFEEBLE  then return Metrics.Blog.Enfeeble
+    elseif action_flag == Blog.Action_Type.DISPEL    then return Metrics.Blog.Enfeeble
     else return false end
 end
 
@@ -255,18 +263,25 @@ Blog.Display.Rows = function(entry)
     damage = Blog.Columns.Damage(damage)
 
     UI.TableNextRow()
-    if entry.Flag.Value == Blog.Enum.Types.MOB_TP or entry.Flag.Value == Blog.Enum.Types.MOB_SPELL then
+    if entry.Flag.Value == Blog.Action_Type.MOB_TP or entry.Flag.Value == Blog.Action_Type.MOB_SPELL then
         local r = 0.46
         local g = 0.07
         local b = 0.00
         local a = 1.00
         local row_bg_color = UI.GetColorU32({r, g, b, a})
         UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color)
-    elseif entry.Flag.Value == Blog.Enum.Types.MOB_MELEE then
+    elseif entry.Flag.Value == Blog.Action_Type.MOB_MELEE then
         local r = 0.46
         local g = 0.07
         local b = 0.00
         local a = 0.25
+        local row_bg_color = UI.GetColorU32({r, g, b, a})
+        UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color)
+    elseif entry.Flag.Value == Blog.Action_Type.DISPEL and (note and (note ~= Blog.Notes.NO_EFFECT and note ~= Blog.Notes.RESIST)) then
+        local r = 1.00
+        local g = 1.00
+        local b = 1.00
+        local a = 0.10
         local row_bg_color = UI.GetColorU32({r, g, b, a})
         UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color)
     end

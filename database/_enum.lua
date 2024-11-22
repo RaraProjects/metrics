@@ -1,4 +1,4 @@
-DB.Trackable = T{
+DB.Trackable = {
     TOTAL_DAMAGE               = "Total Damage",
     TOTAL_DAMAGE_NO_SKILLCHAIN = "Total Damage No Skillchain",
     ALL_HEAL                   = "All Sources Healing",
@@ -74,7 +74,7 @@ DB.Trackable = T{
     DEFAULT                    = "Unknown Melee Type",
 }
 
-DB.Metric = T{
+DB.Metric = {
     TOTAL              = "Total",
     ATTEMPTS           = "Attempts",
     AOE_ATTEMPTS       = "AOE Attempts",            -- Used primarily for AOE debuff tracking.
