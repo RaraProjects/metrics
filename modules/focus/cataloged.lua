@@ -257,8 +257,8 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Catalog.Min = function(player_name, action_name, focus_type)
     local min = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.MIN)
-    if min == DB.Enum.Values.MAX_DAMAGE then
-        Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Values.IGNORE)
+    if min == DB.Enum.MAX_DAMAGE then
+        Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.IGNORE)
     else
         Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MIN)
     end

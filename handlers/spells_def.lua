@@ -65,10 +65,10 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
         H.Spell_Def.Nuke(audits, damage, spell_name)
         is_mapped = true
     else
-        DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, DB.Metric.ATTEMPTS)
-        DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, DB.Metric.HIT_COUNT)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, spell_name, DB.Metric.ATTEMPTS)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, spell_name, DB.Metric.HIT_COUNT)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, DB.Metric.ATTEMPTS)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, spell_name, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, spell_name, DB.Metric.HIT_COUNT)
     end
 
     if Res.Spells.Get_MP_Drain(spell_id) then
@@ -127,16 +127,16 @@ end
 H.Spell_Def.Nuke = function(audits, damage, spell_name)
     local trackable = DB.Trackable.DEF_NUKING
     if audits.pet_name then
-        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
+        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
         trackable = DB.Trackable.DEF_NUKING_PET
     else
-        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
+        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
     end
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, audits.pet_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
-    DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -147,7 +147,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Spell_Def.MP_Drain = function(audits, damage)
     if not audits.pet_name then
-        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_MP_DRAIN, DB.Metric.TOTAL)
+        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_MP_DRAIN, DB.Metric.TOTAL)
     end
 end
 
@@ -158,7 +158,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Spell_Def.Enfeebling = function(audits)
     if not audits.pet_name then
-        DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.DEF_ENFEEBLING, DB.Metric.ATTEMPTS) -- Used to flag that data is availabel for show in Focus.
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_ENFEEBLING, DB.Metric.ATTEMPTS) -- Used to flag that data is availabel for show in Focus.
     end
 end
 

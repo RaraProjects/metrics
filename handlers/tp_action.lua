@@ -58,7 +58,7 @@ H.TP.Action = function(action, actor_mob, log_offense)
     H.TP.Weaponskill_Attempts(audits, ws_name)
     H.TP.Weaponskill_TP(audits, ws_name, tp, DB.Trackable.WEAPONSKILL)
     if damage > 0 then H.TP.Weaponskill_Hit(audits, ws_name) end
-    if sc_name ~= DB.Enum.Values.DEBUG then H.TP.Skillchain_Hit(audits, sc_name) end
+    if sc_name ~= DB.Enum.DEBUG then H.TP.Skillchain_Hit(audits, sc_name) end
 
     -- Update the battle log.
     H.TP.Blog_WS(actor_mob, damage, ws_data, ws_name, tp)
@@ -84,7 +84,7 @@ H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
     local trackable = DB.Trackable.PET_TP
     for target_index, target_value in pairs(action.targets) do
         target_mob = Ashita.Mob.Get_Mob_By_ID(target_value.id)
-        if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
+        if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
             action_id = result.param
@@ -139,7 +139,7 @@ H.TP.Monster_Action = function(action, actor_mob, log_offense)
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
+            if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
 
             -- Puppet ranged attack
             -- This needs to be inside the result loop in order to send the data to the ranged handler.
@@ -257,8 +257,8 @@ end
 ---@param ws_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Attempts = function(audits, ws_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, DB.Metric.ATTEMPTS)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, ws_name, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, ws_name, DB.Metric.ATTEMPTS)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -268,8 +268,8 @@ end
 ---@param ws_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Hit = function(audits, ws_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, DB.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, ws_name, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, DB.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, ws_name, DB.Metric.HIT_COUNT)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -283,8 +283,8 @@ end
 H.TP.Weaponskill_TP = function(audits, ws_name, tp, trackable)
     if tp < 0 then tp = 0 end
     if tp > 3000 then tp = 3000 end
-    DB.Data.Update(H.Mode.INC, tp, audits, trackable, DB.Metric.TP_SPENT)
-    DB.Catalog.Update_Metric(H.Mode.INC, tp, audits, trackable, ws_name, DB.Metric.TP_SPENT)
+    DB.Data.Update(DB.Update_Mode.INC, tp, audits, trackable, DB.Metric.TP_SPENT)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, tp, audits, trackable, ws_name, DB.Metric.TP_SPENT)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -295,8 +295,8 @@ end
 ---@param skill_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Attempts = function(audits, trackable, skill_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, skill_name, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, skill_name, DB.Metric.ATTEMPTS)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -316,7 +316,7 @@ H.TP.Pet_Skill_Ignore = function(owner_mob, audits, damage, ws_id, ws_name)
             .. "} is considered a non-damage pet ability.")
             damage = 0
         end
-        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
+        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     end
     return damage
 end
@@ -329,8 +329,8 @@ end
 ---@param skill_name string
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Pet_Skill_Hit = function(audits, trackable, skill_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, skill_name, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, skill_name, DB.Metric.HIT_COUNT)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -387,7 +387,7 @@ end
 H.TP.Skillchain_Parse = function(result, actor_mob, target_mob, ws_name)
     local sc_id = result.add_effect_message
     local sc_damage = 0
-    local sc_name = DB.Enum.Values.DEBUG
+    local sc_name = DB.Enum.DEBUG
     if sc_id > 0 then
         sc_name    = Res.WS.Get_Skillchain(sc_id)
         sc_damage  = sc_damage + H.TP.Skillchain_Damage(result, actor_mob.name, target_mob.name, sc_name)
@@ -423,16 +423,16 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Skillchain_Hit = function(audits, sc_name)
     -- Total Attempts
-    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.ATTEMPTS)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.ATTEMPTS)
 
     -- Successfull SC Count
-    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.HIT_COUNT)
 
     -- Credit to skillchain closer.
-    DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_CLOSED)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.SKILLCHAIN_CLOSED)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_CLOSED)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.SKILLCHAIN_CLOSED)
 
     -- Credit to skillchain opener (except for multistep skillchains).
     if H.TP.SC_Step <= 2 then
@@ -440,8 +440,8 @@ H.TP.Skillchain_Hit = function(audits, sc_name)
             player_name = H.TP.SC_Opener,
             target_name = audits.target_name,
         }
-        DB.Data.Update(H.Mode.INC, 1, sc_audits, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_OPENED)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, sc_audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.SKILLCHAIN_OPENED)
+        DB.Data.Update(DB.Update_Mode.INC, 1, sc_audits, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_OPENED)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, sc_audits, DB.Trackable.SKILLCHAIN, sc_name, DB.Metric.SKILLCHAIN_OPENED)
     end
 end
 
@@ -486,7 +486,7 @@ end
 H.TP.Blog_Pet_Skill = function(owner_mob, actor_mob, action_id, damage, skill_name)
     if owner_mob then
         local ignore = nil
-        if not Res.Monster.Get_Damaging_Ability(action_id) then ignore = H.Enum.Flags.IGNORE end
-        Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.PET_TP, skill_name, damage, H.Enum.Text.BLANK, ignore)
+        if not Res.Monster.Get_Damaging_Ability(action_id) then ignore = DB.Enum.IGNORE end
+        Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.PET_TP, skill_name, damage, DB.Enum.BLANK, ignore)
     end
 end

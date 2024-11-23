@@ -14,7 +14,7 @@ Column.Single = T{}
 ------------------------------------------------------------------------------------------------------
 Column.Single.Damage = function(player_name, action_name, focus_type, metric, percent, raw)
     local action_total = 0
-    if metric ~= DB.Enum.Values.IGNORE then action_total = DB.Catalog.Get(player_name, focus_type, action_name, metric) end
+    if metric ~= DB.Enum.IGNORE then action_total = DB.Catalog.Get(player_name, focus_type, action_name, metric) end
     local color = Column.String.Color_Zero(action_total)
 
     if percent then
@@ -91,7 +91,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Single.Pet_Damage = function(player_name, pet_name, action_name, trackable, metric, percent)
     local single_damage
-    if metric == DB.Enum.Values.IGNORE then
+    if metric == DB.Enum.IGNORE then
         single_damage = 0
     else
         single_damage = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, metric)

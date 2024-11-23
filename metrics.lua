@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author = "Metra"
 addon.name = "Metrics"
-addon.version = "11.21.24.00"
+addon.version = "11.23.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -87,8 +87,8 @@ ashita.events.register('d3d_present', 'present_cb', function()
     if not Ashita.Player.Is_Logged_In() then return nil end
     if Debug.Is_Enabled() and Debug.Show_Demo then UI.ShowDemoWindow() end
 
-    Throttle.Throttle()     -- Throttling for performance.
-    XP.Initialize()         -- Need to initialize here because some things aren't ready when addon loads.
+    Throttle.Throttle()                     -- Throttling for performance.
+    XP.Initialize()                         -- Need to initialize here because some things aren't ready when addon loads.
     Ashita.Party.Check_Refresh_Time()
     Ashita.Party.Refresh()
     Window_Manager.Check_Mouse()
@@ -131,9 +131,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         return nil
     end
 
-    -- Start Zone
-    if packet.id == 0x00B then
-        Ashita.Player.Zoning(true)
+    if packet.id == 0x00B then Ashita.Player.Zoning(true)                               -- Start Zone
 
     -- End Zone
     elseif packet.id == 0x00A then
@@ -142,91 +140,11 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         Window_Manager.Set_Bar_Delay()
         XP.Chains.End()
 
-    -- 200 0xC8 Alliance Update
-    elseif packet.id == 0x0C8 then
-        Ashita.Party.Need_Refresh = true
-
-    -- 221 0xDD Party Member Update
-    elseif packet.id == 0x0DD then
-        Ashita.Party.Need_Refresh = true
-
-    -- Experience Points
-    elseif packet.id == 0x02D then
-        XP.Parse(packet.data)
-
-    -- Player Update
-    elseif packet.id == 0x037 then
-        if XP.Is_Initialized then XP.Dedication.Check() end
-
-    -- Action Packet
-    elseif packet.id == 0x028 then
-        local action = Ashita.Packets.Build_Action(packet.data)
-        if not action then Debug.Error.Add(Debug.Error.ERROR, "Packet In", "action was nil from Packets.Build_Action") return nil end
-
-        local actor_mob = Ashita.Mob.Get_Mob_By_ID(action.actor_id)
-        if not actor_mob then Debug.Error.Add(Debug.Error.ERROR, "Packet In", "actor_mob was nil from Mob.Get_Mob_By_ID") return nil end
-
-        local target_mob = Ashita.Packets.Get_Action_Target(action)
-        if not target_mob then Debug.Error.Add(Debug.Error.ERROR, "Packet In", "target_mob was nil from Mob.Get_Mob_By_ID") return nil end
-
-        -- Need to refresh party for pet checks.
-        Ashita.Party.Refresh()
-        local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)           -- Is the actor the pet of someone in the party/alliance?
-        local target_owner_mob = Ashita.Mob.Pet_Owner(target_mob)   -- Is the target the pet of someone in the party/alliance?
-
-        local log_offense = false
-        local log_defense = false
-        local mob_buff    = false
-
-        -- OFFENSE: The actor is an affiliate or the pet of an affiliate.
-        if owner_mob or Ashita.Party.Is_Affiliate(actor_mob.name) then
-            log_offense = true
-            Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
-            Timers.Unpause(Timers.Enum.Names.PARSE)
-
-        -- DEFENSE: The actor is not another player and the target is an affiliate or the pet of an affiliate.
-        elseif not Ashita.Mob.Is_Player(actor_mob) and (target_owner_mob or Ashita.Party.Is_Affiliate(target_mob.name)) then
-            log_defense = true
-            Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
-            Timers.Unpause(Timers.Enum.Names.PARSE)
-
-        -- The actor is a mob claimed by the party and is doing something that is targetting itself.
-        elseif Ashita.Mob.Claimed_By_Affiliate(actor_mob) and actor_mob.name == target_mob.name then
-            mob_buff = true
-
-        -- Lurk mode detects all actions.
-        elseif Metrics.Parse.Lurk_Mode then
-            -- If the actor is player so log offense.
-            if Ashita.Mob.Is_Player(actor_mob) then
-                log_offense = true
-            -- This must be a mob. If it's targetting itself then it's a buff. If not, log a defensive action.
-            else
-                if actor_mob.name == target_mob.name then mob_buff = true
-                else log_defense = true end
-            end
-        end
-
-        if (action.category ==  1) then
-            if log_offense then H.Melee.Action(action, actor_mob, owner_mob, log_offense)
-            elseif log_defense then H.Melee_Def.Action(action, actor_mob, target_owner_mob, log_defense) end
-        elseif (action.category ==  2) then H.Ranged.Action(action, actor_mob, log_offense)
-        elseif (action.category ==  3) then H.TP.Action(action, actor_mob, log_offense)
-        elseif (action.category ==  4) then
-            if log_offense then H.Spell.Action(action, actor_mob, owner_mob, log_offense)
-            elseif log_defense then H.Spell_Def.Action(action, actor_mob, target_owner_mob, log_defense) end
-        elseif (action.category ==  5) then H.Item.Action(action, actor_mob)
-        elseif (action.category ==  6) then H.Ability.Action(action, actor_mob, log_offense)
-        elseif (action.category ==  7) then H.TP.Begin_Monster_Action(action, actor_mob, log_offense)
-        elseif (action.category ==  8) then -- Do nothing (Begin Spellcasting)
-        elseif (action.category ==  9) then -- Do nothing (Begin or Interrupt Item Usage)
-        elseif (action.category == 11) then
-            if log_offense then H.TP.Monster_Action(action, actor_mob, log_offense)
-            elseif log_defense then H.TP_Def.Monster_Action(action, actor_mob, owner_mob, log_defense)
-            elseif mob_buff then H.TP_Def.Mob_Self_Target(action, actor_mob) end
-        elseif (action.category == 12) then -- Do nothing (Begin Ranged Attack)
-        elseif (action.category == 13) then H.Ability.Pet_Action(action, actor_mob, log_offense)
-        elseif (action.category == 14) then -- Do nothing (Unblinkable Job Ability); Waltz
-        end
+    elseif packet.id == 0x0C8 then Ashita.Party.Need_Refresh = true                     -- 200 0xC8 Alliance Update
+    elseif packet.id == 0x0DD then Ashita.Party.Need_Refresh = true                     -- 221 0xDD Party Member Update
+    elseif packet.id == 0x02D then XP.Parse(packet.data)                                -- Experience Points
+    elseif packet.id == 0x037 then if XP.Is_Initialized then XP.Dedication.Check() end  -- Player Update
+    elseif packet.id == 0x028 then H.Start_Action_Packet(packet)                        -- Action Packet
 
     -- Action Messages
     elseif packet.id == 0x029 then

@@ -67,7 +67,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 Blog.Entries.Damage_Threshold = function(action_type)
-    local threshold = DB.Enum.Values.MAX_DAMAGE
+    local threshold = DB.Enum.MAX_DAMAGE
     if not action_type then
         return threshold
     elseif action_type == DB.Trackable.WEAPONSKILL then

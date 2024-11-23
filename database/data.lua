@@ -31,7 +31,7 @@ DB.Data.Initialize = function(index, player_name)
 
 			-- Need to set minimum high manually to capture accurate minimums.
 			if metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
-				DB.Data.Set(DB.Enum.Values.MAX_DAMAGE, index, trackable, metric)
+				DB.Data.Set(DB.Enum.MAX_DAMAGE, index, trackable, metric)
 			else
 				DB.Data.Set(0, index, trackable, metric)
 			end
@@ -86,12 +86,12 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	if pet_name then DB.Pet_Data.Initialize(index, player_name, pet_name) end
 
 	-- Peform the operation.
-	if mode == DB.Enum.Mode.INC then
+	if mode == DB.Update_Mode.INC then
 		DB.Data.Inc(value, index, trackable, metric)
 		if pet_name then
 			DB.Pet_Data.Inc(value, index, pet_name, trackable, metric)
 		end
-	elseif mode == DB.Enum.Mode.SET then
+	elseif mode == DB.Update_Mode.SET then
 		DB.Data.Set(value, index, trackable, metric)
 		if pet_name then
 			DB.Pet_Data.Set(value, index, pet_name, trackable, metric)
@@ -99,7 +99,7 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	end
 
 	-- Increment the running damage count for DPS if this is a total damage increase.
-	if mode == DB.Enum.Mode.INC and trackable == DB.Trackable.TOTAL_DAMAGE and metric == DB.Metric.TOTAL then
+	if mode == DB.Update_Mode.INC and trackable == DB.Trackable.TOTAL_DAMAGE and metric == DB.Metric.TOTAL then
 		DB.DPS.Inc_Buffer(player_name, value)
 	end
 end
@@ -116,34 +116,34 @@ end
 DB.Data.Update_Damage = function(audits, trackable, damage, burst)
 	-- Grand Totals; There is a regular track and a "no skillchains" track.
     if DB.Catalog.Include_Total_Damage(trackable) then
-    	DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+    	DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
 		if trackable ~= DB.Trackable.SKILLCHAIN then
-			DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
+			DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
 		end
     end
 
     -- Trackable Total
-    DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
 	if burst then
-		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.MAGIC_BURST_DAMAGE)
-		DB.Data.Update(DB.Enum.Mode.INC, damage, audits, trackable, DB.Metric.MAGIC_BURST_DAMAGE)
+		DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.MAGIC_BURST_DAMAGE)
+		DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.MAGIC_BURST_DAMAGE)
 	end
 
 	-- Trackable Minimum
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
 	if audits.pet_name then
 		if damage > 0 and damage < DB.Pet_Data.Get(audits.player_name, audits.pet_name, trackable, DB.Metric.MIN) then
-			DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Metric.MIN)
+			DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN)
 		end
 	else
 		if damage > 0 and damage < DB.Data.Get(audits.player_name, trackable, DB.Metric.MIN, audits.target_name) then
-			DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Metric.MIN)
+			DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN)
 		end
 	end
 
 	-- Trackable Maximum
     if damage > DB.Data.Get(audits.player_name, trackable, DB.Metric.MAX) then
-		DB.Data.Update(DB.Enum.Mode.SET, damage, audits, trackable, DB.Metric.MAX)
+		DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MAX)
 	end
 end
 
@@ -221,7 +221,7 @@ DB.Data.Get = function(player_name, trackable, metric, temporary_mob_focus)
 	end
 
 	local total = 0
-	if metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then total = DB.Enum.Values.MAX_DAMAGE end
+	if metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then total = DB.Enum.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	local search_string = player_name .. ":" .. mob_focus
 	if mob_focus == DB.Widgets.Dropdown.Enum.NONE then search_string = player_name .. ":" end
@@ -259,12 +259,12 @@ DB.Data.Build_Index = function(actor_name, target_name)
 	if not target_name then
 		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Build_Index", "Nil target name: Actor {" .. tostring(actor_name) .. "} Target {"
 		.. tostring(target_name) .. "}.")
-		target_name = DB.Enum.Values.DEBUG
+		target_name = DB.Enum.DEBUG
 	end
 	if not actor_name then
 		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Build_Index", "Nil actor name: Actor {" .. tostring(actor_name) .. "} Target {"
 		.. tostring(target_name) .. "}.")
-		actor_name = DB.Enum.Values.DEBUG
+		actor_name = DB.Enum.DEBUG
 	end
 
 	return actor_name .. ":" .. target_name

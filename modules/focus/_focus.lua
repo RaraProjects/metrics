@@ -58,7 +58,7 @@ require("modules.focus.overview")
 ------------------------------------------------------------------------------------------------------
 Focus.Reset_Settings = function()
     for index, _ in pairs(DB.Healing_Max) do
-        DB.Healing_Max[index] = DB.Enum.HEALING[index]
+        DB.Healing_Max[index] = DB.Healing_Max_Defaults[index]
     end
 end
 

@@ -42,8 +42,8 @@ DB.Catalog.Initialize = function(index, player_name, trackable, action_name, pet
 	for _, metric in pairs(DB.Metric) do
 		DB.Catalog.Set(0, index, trackable, action_name, metric)
 	end
-	DB.Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, trackable, action_name, DB.Metric.MIN)
-	DB.Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, trackable, action_name, DB.Metric.CRITICAL_MIN)
+	DB.Catalog.Set(DB.Enum.MAX_DAMAGE, index, trackable, action_name, DB.Metric.MIN)
+	DB.Catalog.Set(DB.Enum.MAX_DAMAGE, index, trackable, action_name, DB.Metric.CRITICAL_MIN)
 
 	-- Initialize tracking tables
 	if not DB.Tracking.Trackable[trackable] then DB.Tracking.Trackable[trackable] = T{} end
@@ -86,16 +86,16 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
 
 	-- Magic Bursts
 	if trackable == DB.Trackable.SPELLS_NUKING and burst then
-		DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Metric.MAGIC_BURST_DAMAGE)
+		DB.Catalog.Update_Metric(DB.Update_Mode.INC, damage, audits, trackable, action_name, DB.Metric.MAGIC_BURST_DAMAGE)
 	end
 	-- COUNT gets incremented in the packet handler.
 
 	-- Total Damage
-    DB.Catalog.Update_Metric(DB.Enum.Mode.INC, damage, audits, trackable, action_name, DB.Metric.TOTAL)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, damage, audits, trackable, action_name, DB.Metric.TOTAL)
 
 	-- Minimum Damage
     if damage > 0 and damage < DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MIN, audits.target_name) then
-		DB.Catalog.Update_Metric(DB.Enum.Mode.SET, damage, audits, trackable, action_name, DB.Metric.MIN)
+		DB.Catalog.Update_Metric(DB.Update_Mode.SET, damage, audits, trackable, action_name, DB.Metric.MIN)
     end
 
 	-- Maximum Damage
@@ -104,7 +104,7 @@ DB.Catalog.Update_Damage = function(player_name, mob_name, trackable, damage, ac
 		if trackable == DB.Trackable.SPELLS_HEALING and DB.Healing_Max[action_name] then
 			if damage > DB.Healing_Max[action_name] then damage = DB.Healing_Max[action_name] end
 		end
-		DB.Catalog.Update_Metric(DB.Enum.Mode.SET, damage, audits, trackable, action_name, DB.Metric.MAX)
+		DB.Catalog.Update_Metric(DB.Update_Mode.SET, damage, audits, trackable, action_name, DB.Metric.MAX)
     end
 end
 
@@ -140,12 +140,12 @@ DB.Catalog.Update_Metric = function(mode, value, audits, trackable, action_name,
 	if not DB.Tracking.Initialized_Players[player_name] then DB.Tracking.Initialized_Players[player_name] = true end
 
 	-- Set the data
-	if mode == DB.Enum.Mode.INC then
+	if mode == DB.Update_Mode.INC then
 		DB.Catalog.Inc(value, index, trackable, action_name, metric)
 		if pet_name then
 			DB.Pet_Catalog.Inc(value, index, pet_name, trackable, action_name, metric)
 		end
-	elseif mode == DB.Enum.Mode.SET then
+	elseif mode == DB.Update_Mode.SET then
 		DB.Catalog.Set(value, index, trackable, action_name, metric)
 		if pet_name then
 			DB.Pet_Catalog.Set(value, index, pet_name, trackable, action_name, metric)
@@ -243,7 +243,7 @@ DB.Catalog.Get = function(player_name, trackable, action_name, metric, temporary
 	end
 
 	local total = 0
-	if metric == DB.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
+	if metric == DB.Metric.MIN then total = DB.Enum.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	local search_string = player_name .. ":" .. mob_focus
 	if mob_focus == DB.Widgets.Dropdown.Enum.NONE or trackable == DB.Trackable.DEF_HEALING_RECEIVED then search_string = player_name .. ":" end

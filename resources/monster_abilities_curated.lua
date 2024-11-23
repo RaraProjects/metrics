@@ -1421,154 +1421,155 @@ Res.Monster.Damaging_Abilities = T{
     [1696] = {id=1696,en="Seismic Tail",ja="セイズミックテール"},   -- Orobon
     [1697] = {id=1697,en="Seaspray",ja="潮泡"}, -- Orobon
     [1698] = {id=1698,en="Leeching Current",ja="渦潮"}, -- Orobon
-    [1699] = {id=1699,en="Pecking Flurry",ja="ペッキングフラリー"},
-    [1700] = {id=1700,en="Snatch Morsel",ja="スナッチモースル"},
-    [1701] = {id=1701,en="Feather Tickle",ja="フェザーティックル"},
-    [1702] = {id=1702,en="Wisecrack",ja="漫談"},
-    [1703] = {id=1703,en="Barrier Tusk",ja="牙門"},
-    [1704] = {id=1704,en="Onrush",ja="オンラッシュ"},
-    [1705] = {id=1705,en="Stampede",ja="轟足"},
-    [1706] = {id=1706,en="Flailing Trunk",ja="薙鼻"},
-    [1707] = {id=1707,en="Voracious Trunk",ja="吸印"},
-    [1708] = {id=1708,en="Proboscis Shower",ja="プロバシスシャワー"},
-    [1709] = {id=1709,en="Abrasive Tantara",ja="アブレーシブタンタラ"},
-    [1710] = {id=1710,en="Deafening Tantara",ja="デフェニングタンタラ"},
-    [1711] = {id=1711,en="Frenetic Rip",ja="フレネティクリップ"},
-    [1712] = {id=1712,en="Bugle Call",ja="ビューグルコール"},
-    [1713] = {id=1713,en="Yawn",ja="ヤーン"},
-    [1714] = {id=1714,en="Wing Slap",ja="ウィングスラップ"},
-    [1715] = {id=1715,en="Beak Lunge",ja="ビークランジ"},
-    [1716] = {id=1716,en="Frigid Shuffle",ja="クールダンス"},
-    [1717] = {id=1717,en="Wing Whirl",ja="貝独楽"},
-    [1718] = {id=1718,en="Crosswind",ja="クロスウィンド"},
-    [1720] = {id=1720,en="Wind Shear",ja="ウィンドシアー"},
-    [1721] = {id=1721,en="Obfuscate",ja="粉塵"},
-    [1722] = {id=1722,en="Zephyr Mantle",ja="ゼファーマント"},
-    [1723] = {id=1723,en="Ill Wind",ja="イルウィンド"},
-    [1724] = {id=1724,en="White Wind",ja="ホワイトウィンド"},
-    [1725] = {id=1725,en="Kibosh",ja="カイボッシュ"},
-    [1726] = {id=1726,en="Cutpurse",ja="カットパース"},
-    [1727] = {id=1727,en="Sandspray",ja="サンドスプレー"},
-    [1728] = {id=1728,en="Faze",ja="猫だまし"},
-    [1729] = {id=1729,en="Bowshot",ja="ボウショット"},
-    [1730] = {id=1730,en="Deadeye",ja="デッドアイ"},
-    [1731] = {id=1731,en="Forceful Blow",ja="フォースフルブロー"},
-    [1732] = {id=1732,en="Somersault Kick",ja="サマーソルトキック"},
-    [1733] = {id=1733,en="Firespit",ja="ファイアースピット"},
-    [1734] = {id=1734,en="Warm-Up",ja="ワームアップ"},
-    [1735] = {id=1735,en="Javelin Throw",ja="ジャベリンスロー"},
-    [1736] = {id=1736,en="Axe Throw",ja="アックススロー"},
-    [1737] = {id=1737,en="Vorpal Blade",ja="ボーパルブレード",skillchain_a="Scission",skillchain_b="Impaction",skillchain_c=""},
-    [1738] = {id=1738,en="Groundburst",ja="グランドバースト"},
-    [1741] = {id=1741,en="Potent Lunge",ja="ポテントランジ"},
-    [1742] = {id=1742,en="Overthrow",ja="オーバースロー"},
-    [1743] = {id=1743,en="Rock Smash",ja="ロックスマッシュ"},
-    [1744] = {id=1744,en="Diamondhide",ja="金剛身"},
-    [1745] = {id=1745,en="Enervation",ja="吶喊"},
-    [1746] = {id=1746,en="Quake Stomp",ja="クェークストンプ"},
-    [1747] = {id=1747,en="Zarraqa",ja="ザッラーカ"},
-    [1748] = {id=1748,en="Zarbzan",ja="ザルブザン"},
-    [1749] = {id=1749,en="Healing Stomp",ja="力足"},
-    [1752] = {id=1752,en="Gusting Gouge",ja="ガスティンググージ"},
-    [1753] = {id=1753,en="Hysteric Barrage",ja="ヒステリックバラージ"},
-    [1754] = {id=1754,en="Dukkeripen",ja="ドゥッケリペン"},
-    [1755] = {id=1755,en="Dukkeripen",ja="ドゥッケリペン"},
-    [1756] = {id=1756,en="Dukkeripen",ja="ドゥッケリペン"},
-    [1757] = {id=1757,en="Dukkeripen",ja="ドゥッケリペン"},
-    [1758] = {id=1758,en="Tail Slap",ja="テールスラップ"},
-    [1759] = {id=1759,en="Hypnotic Sway",ja="恍惚のダンス"},
+    -- Treasures of Aht Urghan --------------------------------------------------------------------------------
+    [1699] = {id=1699,en="Pecking Flurry",ja="ペッキングフラリー"}, -- Colibri
+    -- [1700] = {id=1700,en="Snatch Morsel",ja="スナッチモースル"}, -- Colibri
+    -- [1701] = {id=1701,en="Feather Tickle",ja="フェザーティックル"},  -- Colibri
+    -- [1702] = {id=1702,en="Wisecrack",ja="漫談"}, -- Colibri
+    -- [1703] = {id=1703,en="Barrier Tusk",ja="牙門"},  -- Marid
+    [1704] = {id=1704,en="Onrush",ja="オンラッシュ"},   -- Marid
+    [1705] = {id=1705,en="Stampede",ja="轟足"}, -- Marid
+    [1706] = {id=1706,en="Flailing Trunk",ja="薙鼻"},   -- Marid
+    -- [1707] = {id=1707,en="Voracious Trunk",ja="吸印"},   -- Marid
+    -- [1708] = {id=1708,en="Proboscis Shower",ja="プロバシスシャワー"},    -- Marid
+    -- [1709] = {id=1709,en="Abrasive Tantara",ja="アブレーシブタンタラ"}, -- Imp
+    -- [1710] = {id=1710,en="Deafening Tantara",ja="デフェニングタンタラ"}, -- Imp
+    [1711] = {id=1711,en="Frenetic Rip",ja="フレネティクリップ"},   -- Imp
+    -- [1712] = {id=1712,en="Bugle Call",ja="ビューグルコール"},   -- ???
+    -- [1713] = {id=1713,en="Yawn",ja="ヤーン"},   -- Apkallu
+    [1714] = {id=1714,en="Wing Slap",ja="ウィングスラップ"},    -- Apkallu
+    [1715] = {id=1715,en="Beak Lunge",ja="ビークランジ"},   -- Apkallu
+    -- [1716] = {id=1716,en="Frigid Shuffle",ja="クールダンス"},    -- Apkallu
+    [1717] = {id=1717,en="Wing Whirl",ja="貝独楽"}, -- Apkallu
+    [1718] = {id=1718,en="Crosswind",ja="クロスウィンド"},  -- Puk
+    [1720] = {id=1720,en="Wind Shear",ja="ウィンドシアー"}, -- Puk
+    -- [1721] = {id=1721,en="Obfuscate",ja="粉塵"}, -- Puk
+    -- [1722] = {id=1722,en="Zephyr Mantle",ja="ゼファーマント"},   -- Puk
+    [1723] = {id=1723,en="Ill Wind",ja="イルウィンド"}, -- Puk
+    -- [1724] = {id=1724,en="White Wind",ja="ホワイトウィンド"},    -- Puk
+    -- [1725] = {id=1725,en="Kibosh",ja="カイボッシュ"},   -- Qiqirn
+    -- [1726] = {id=1726,en="Cutpurse",ja="カットパース"},  -- Qiqirn
+    -- [1727] = {id=1727,en="Sandspray",ja="サンドスプレー"},   -- Qiqirn
+    -- [1728] = {id=1728,en="Faze",ja="猫だまし"},  -- Qiqirn
+    [1729] = {id=1729,en="Bowshot",ja="ボウショット"},  -- Qiqirn
+    -- [1730] = {id=1730,en="Deadeye",ja="デッドアイ"}, -- Qiqirn
+    [1731] = {id=1731,en="Forceful Blow",ja="フォースフルブロー"},  -- Mamool Ja
+    [1732] = {id=1732,en="Somersault Kick",ja="サマーソルトキック"},    -- Mamool Ja
+    [1733] = {id=1733,en="Firespit",ja="ファイアースピット"},   -- Mamool Ja
+    -- [1734] = {id=1734,en="Warm-Up",ja="ワームアップ"},  -- Mamool Ja
+    [1735] = {id=1735,en="Javelin Throw",ja="ジャベリンスロー"},    -- Mamool Ja
+    [1736] = {id=1736,en="Axe Throw",ja="アックススロー"},  -- Mamool Ja
+    [1737] = {id=1737,en="Vorpal Blade",ja="ボーパルブレード",skillchain_a="Scission",skillchain_b="Impaction",skillchain_c=""},    -- Mamool Ja
+    [1738] = {id=1738,en="Groundburst",ja="グランドバースト"},  -- Mamool Ja
+    [1741] = {id=1741,en="Potent Lunge",ja="ポテントランジ"},   -- Troll
+    [1742] = {id=1742,en="Overthrow",ja="オーバースロー"},  -- Troll
+    [1743] = {id=1743,en="Rock Smash",ja="ロックスマッシュ"},   -- Troll
+    -- [1744] = {id=1744,en="Diamondhide",ja="金剛身"}, -- Troll
+    -- [1745] = {id=1745,en="Enervation",ja="吶喊"},    -- Troll
+    -- [1746] = {id=1746,en="Quake Stomp",ja="クェークストンプ"},   -- Troll
+    [1747] = {id=1747,en="Zarraqa",ja="ザッラーカ"},    -- Troll
+    [1748] = {id=1748,en="Zarbzan",ja="ザルブザン"},    -- Troll
+    -- [1749] = {id=1749,en="Healing Stomp",ja="力足"}, -- Troll
+    [1752] = {id=1752,en="Gusting Gouge",ja="ガスティンググージ"},  -- Lamia
+    [1753] = {id=1753,en="Hysteric Barrage",ja="ヒステリックバラージ"}, -- Lamia
+    -- [1754] = {id=1754,en="Dukkeripen",ja="ドゥッケリペン"},  -- Lamia
+    -- [1755] = {id=1755,en="Dukkeripen",ja="ドゥッケリペン"},  -- Lamia
+    -- [1756] = {id=1756,en="Dukkeripen",ja="ドゥッケリペン"},  -- Lamia
+    -- [1757] = {id=1757,en="Dukkeripen",ja="ドゥッケリペン"},  -- Lamia
+    [1758] = {id=1758,en="Tail Slap",ja="テールスラップ"},  -- Lamia
+    -- [1759] = {id=1759,en="Hypnotic Sway",ja="恍惚のダンス"}, -- Lamia
     [1760] = {id=1760,en="Swift Shot",ja="羽羽矢"},
-    [1761] = {id=1761,en="Arrow Deluge",ja="矢衾"},
-    [1762] = {id=1762,en="Belly Dance",ja="ベリーダンス"},
-    [1765] = {id=1765,en="Gusting Gouge",ja="ガスティンググージ"},
-    [1766] = {id=1766,en="Hysteric Barrage",ja="ヒステリックバラージ"},
-    [1767] = {id=1767,en="Dukkeripen",ja="ドゥッケリペン"},
-    [1768] = {id=1768,en="Dukkeripen",ja="ドゥッケリペン"},
-    [1769] = {id=1769,en="Dukkeripen",ja="ドゥッケリペン"},
-    [1770] = {id=1770,en="Dukkeripen",ja="ドゥッケリペン"},
-    [1771] = {id=1771,en="Tail Slap",ja="テールスラップ"},
-    [1772] = {id=1772,en="Torrent",ja="脱衣のダンス"},
-    [1773] = {id=1773,en="Swift Shot",ja="羽羽矢"},
-    [1774] = {id=1774,en="Arrow Deluge",ja="矢衾"},
-    [1775] = {id=1775,en="Rising Swell",ja="スプリッシュスプラッシュ"},
-    [1778] = {id=1778,en="Spinal Cleave",ja="スパイナルクリーブ"},
-    [1779] = {id=1779,en="Mangle",ja="マングル"},
-    [1780] = {id=1780,en="Leaping Cleave",ja="一刀両断"},
-    [1781] = {id=1781,en="Hex Palm",ja="落掌"},
-    [1782] = {id=1782,en="Animating Wail",ja="鯨波"},
-    [1783] = {id=1783,en="Fortifying Wail",ja="大喝"},
-    [1784] = {id=1784,en="Unblest Jambiya",ja="アンブレストジャンビア"},
-    [1785] = {id=1785,en="Lava Spit",ja="ラヴァスピット"},
-    [1786] = {id=1786,en="Sulfurous Breath",ja="サルファラスブレス"},
-    [1787] = {id=1787,en="Scorching Lash",ja="スコーチングラッシュ"},
-    [1788] = {id=1788,en="Ululation",ja="ユルレーション"},
-    [1789] = {id=1789,en="Magma Hoplon",ja="マグマホプロン"},
-    [1790] = {id=1790,en="Gates of Hades",ja="ゲーツオブハデス"},
-    [1791] = {id=1791,en="Incinerate",ja="インシナレート"},
-    [1792] = {id=1792,en="Nullsong",ja="負の歌"},
+    [1761] = {id=1761,en="Arrow Deluge",ja="矢衾"}, -- Lamia
+    -- [1762] = {id=1762,en="Belly Dance",ja="ベリーダンス"},   -- Lamia
+    [1765] = {id=1765,en="Gusting Gouge",ja="ガスティンググージ"},  -- Lamia
+    [1766] = {id=1766,en="Hysteric Barrage",ja="ヒステリックバラージ"}, -- Lamia
+    -- [1767] = {id=1767,en="Dukkeripen",ja="ドゥッケリペン"},  -- Lamia
+    -- [1768] = {id=1768,en="Dukkeripen",ja="ドゥッケリペン"},  -- Lamia
+    -- [1769] = {id=1769,en="Dukkeripen",ja="ドゥッケリペン"},  -- Lamia
+    -- [1770] = {id=1770,en="Dukkeripen",ja="ドゥッケリペン"},  -- Lamia
+    [1771] = {id=1771,en="Tail Slap",ja="テールスラップ"},  -- Lamia
+    -- [1772] = {id=1772,en="Torrent",ja="脱衣のダンス"},  -- Lamia
+    [1773] = {id=1773,en="Swift Shot",ja="羽羽矢"}, -- Lamia
+    [1774] = {id=1774,en="Arrow Deluge",ja="矢衾"}, -- Lamia
+    -- [1775] = {id=1775,en="Rising Swell",ja="スプリッシュスプラッシュ"}, -- Lamia
+    [1778] = {id=1778,en="Spinal Cleave",ja="スパイナルクリーブ"},  -- Qutrub
+    [1779] = {id=1779,en="Mangle",ja="マングル"},   -- Qutrub
+    [1780] = {id=1780,en="Leaping Cleave",ja="一刀両断"},   -- Qutrub
+    [1781] = {id=1781,en="Hex Palm",ja="落掌"}, -- Qutrub
+    -- [1782] = {id=1782,en="Animating Wail",ja="鯨波"},    -- Qutrub
+    -- [1783] = {id=1783,en="Fortifying Wail",ja="大喝"},   -- Qutrub
+    [1784] = {id=1784,en="Unblest Jambiya",ja="アンブレストジャンビア"},    -- Qutrub
+    [1785] = {id=1785,en="Lava Spit",ja="ラヴァスピット"},  -- Cerberus
+    [1786] = {id=1786,en="Sulfurous Breath",ja="サルファラスブレス"},   -- Cerberus
+    [1787] = {id=1787,en="Scorching Lash",ja="スコーチングラッシュ"},   -- Cerberus
+    -- [1788] = {id=1788,en="Ululation",ja="ユルレーション"},   -- Cerberus
+    -- [1789] = {id=1789,en="Magma Hoplon",ja="マグマホプロン"},    -- Cerberus
+    [1790] = {id=1790,en="Gates of Hades",ja="ゲーツオブハデス"},   -- Cerberus
+    [1791] = {id=1791,en="Incinerate",ja="インシナレート"}, -- Crawler
+    [1792] = {id=1792,en="Nullsong",ja="負の歌"},   -- Dragon
     [1793] = {id=1793,en="Vampiric Root",ja="ヴァンピリックルート"},            -- Morbol
     -- [1794] = {id=1794,en="Perdition",ja="パーディション"},   -- Ghost
-    [1795] = {id=1795,en="Malediction",ja="屍毒"},
-    [1796] = {id=1796,en="Piercing Shriek",ja="ピアシングシュリーク"},
-    [1797] = {id=1797,en="Rushing Slash",ja="ラッシングスラッシュ"},
-    [1798] = {id=1798,en="Decussate",ja="デカセート"},
-    [1799] = {id=1799,en="Tyrannic Blare",ja="タイラニックブレー"},
-    [1800] = {id=1800,en="Miasma",ja="マイアズマ"},
-    [1801] = {id=1801,en="Vorpal Wheel",ja="ボーパルホイール"},
-    [1802] = {id=1802,en="Sledgehammer",ja="スレッジハンマー"},
-    [1803] = {id=1803,en="Head Snatch",ja="ヘッドスナッチ"},
-    [1804] = {id=1804,en="Haymaker",ja="ヘイメーカー"},
-    [1805] = {id=1805,en="Incessant Fists",ja="金剛断鎖拳"},
-    [1806] = {id=1806,en="Arcane Stomp",ja="大力足"},
-    [1807] = {id=1807,en="Pleiades Ray",ja="プレアデスレイ"},
-    [1808] = {id=1808,en="Petrifaction",ja="ペトリファクション"},
-    [1809] = {id=1809,en="Shadow Thrust",ja="シャドウスラスト"},
-    [1810] = {id=1810,en="Tail Slap",ja="テールスラップ"},
-    [1812] = {id=1812,en="Pinning Shot",ja="天の羽羽矢"},
-    [1813] = {id=1813,en="Calcifying Deluge",ja="石火矢"},
-    [1814] = {id=1814,en="Gorgon Dance",ja="産石のダンス"},
-    [1815] = {id=1815,en="Amber Scutum",ja="アンバースクトゥム"},
-    [1816] = {id=1816,en="Vitriolic Spray",ja="ヴィットリアリクスプレー"},
-    [1817] = {id=1817,en="Thermal Pulse",ja="サーマルパルス"},
-    [1818] = {id=1818,en="Cannonball",ja="キャノンボール"},
-    [1819] = {id=1819,en="Heat Barrier",ja="ヒートバリア"},
-    [1820] = {id=1820,en="Vitriolic Shower",ja="ヴィットリアリクシャワー"},
-    [1821] = {id=1821,en="Amplification",ja="ねたみ種"},
-    [1822] = {id=1822,en="Boiling Point",ja="罵詈雑言"},
-    [1823] = {id=1823,en="Xenoglossia",ja="自画自賛"},
-    [1824] = {id=1824,en="Amorphic Spikes",ja="槍玉"},
-    [1825] = {id=1825,en="Amorphic Scythe",ja="鎌かけ"},
-    [1826] = {id=1826,en="Synergism",ja="悪平等"},
-    [1827] = {id=1827,en="Metastasis",ja="メタスターシス"},
-    [1828] = {id=1828,en="Pyric Blast",ja="パイリックブラスト"},
-    [1829] = {id=1829,en="Pyric Bulwark",ja="パイリックブルワーク"},
-    [1830] = {id=1830,en="Polar Blast",ja="ポーラーブラスト"},
-    [1831] = {id=1831,en="Polar Bulwark",ja="ポーラーブルワーク"},
-    [1832] = {id=1832,en="Barofield",ja="バロフィールド"},
-    [1834] = {id=1834,en="Trembling",ja="トレンブリング"},
-    [1835] = {id=1835,en="Serpentine Tail",ja="サーペンタインテール"},
-    [1836] = {id=1836,en="Nerve Gas",ja="ナーブガス"},
-    [1837] = {id=1837,en="Feeble Bleat",ja="小咆哮"},
-    [1838] = {id=1838,en="Mine Blast",ja="マインブラスト"},
-    [1839] = {id=1839,en="Rushing Slash",ja="ラッシングスラッシュ"},
-    [1840] = {id=1840,en="Rushing Stab",ja="ラッシングスタッブ"},
-    [1841] = {id=1841,en="Sandblast",ja="サンドブラスト"},
-    [1842] = {id=1842,en="Sandpit",ja="サンドピット"},
-    [1843] = {id=1843,en="Venom Spray",ja="ベノムスプレー"},
-    [1844] = {id=1844,en="Pit Ambush",ja="ピットアンブッシュ"},
-    [1845] = {id=1845,en="Mandibular Bite",ja="マンディビュラバイト"},
+    [1795] = {id=1795,en="Malediction",ja="屍毒"},  -- Skeleton
+    -- [1796] = {id=1796,en="Piercing Shriek",ja="ピアシングシュリーク"},   -- Hippogryph?
+    [1797] = {id=1797,en="Rushing Slash",ja="ラッシングスラッシュ"},    -- Mamool
+    [1798] = {id=1798,en="Decussate",ja="デカセート"},  -- Mamool
+    [1799] = {id=1799,en="Tyrannic Blare",ja="タイラニックブレー"}, -- Mamool
+    -- [1800] = {id=1800,en="Miasma",ja="マイアズマ"},  -- Mamool
+    -- [1801] = {id=1801,en="Vorpal Wheel",ja="ボーパルホイール"},  -- Mamool
+    [1802] = {id=1802,en="Sledgehammer",ja="スレッジハンマー"}, -- Troll
+    [1803] = {id=1803,en="Head Snatch",ja="ヘッドスナッチ"},    -- Troll
+    [1804] = {id=1804,en="Haymaker",ja="ヘイメーカー"}, -- Troll
+    [1805] = {id=1805,en="Incessant Fists",ja="金剛断鎖拳"},    -- Troll
+    -- [1806] = {id=1806,en="Arcane Stomp",ja="大力足"},   -- Troll
+    [1807] = {id=1807,en="Pleiades Ray",ja="プレアデスレイ"},   -- Troll
+    -- [1808] = {id=1808,en="Petrifaction",ja="ペトリファクション"},   -- Lamia
+    [1809] = {id=1809,en="Shadow Thrust",ja="シャドウスラスト"},    -- Lamia
+    [1810] = {id=1810,en="Tail Slap",ja="テールスラップ"},  -- Lamia
+    [1812] = {id=1812,en="Pinning Shot",ja="天の羽羽矢"},   -- Lamia
+    [1813] = {id=1813,en="Calcifying Deluge",ja="石火矢"},  -- Lamia
+    -- [1814] = {id=1814,en="Gorgon Dance",ja="産石のダンス"},  -- Lamia
+    -- [1815] = {id=1815,en="Amber Scutum",ja="アンバースクトゥム"},    -- Wamouracampa
+    [1816] = {id=1816,en="Vitriolic Spray",ja="ヴィットリアリクスプレー"},  -- Wamouracampa
+    [1817] = {id=1817,en="Thermal Pulse",ja="サーマルパルス"},  -- Wamouracampa
+    [1818] = {id=1818,en="Cannonball",ja="キャノンボール"}, -- Wamouracampa
+    -- [1819] = {id=1819,en="Heat Barrier",ja="ヒートバリア"},  -- Wamouracampa
+    [1820] = {id=1820,en="Vitriolic Shower",ja="ヴィットリアリクシャワー"}, -- Wamouracampa?
+    -- [1821] = {id=1821,en="Amplification",ja="ねたみ種"},    -- Flan
+    -- [1822] = {id=1822,en="Boiling Point",ja="罵詈雑言"}, -- Flan
+    -- [1823] = {id=1823,en="Xenoglossia",ja="自画自賛"},   -- Flan
+    [1824] = {id=1824,en="Amorphic Spikes",ja="槍玉"},  -- Flan
+    [1825] = {id=1825,en="Amorphic Scythe",ja="鎌かけ"},    -- Flan
+    -- [1826] = {id=1826,en="Synergism",ja="悪平等"},   -- Flan
+    [1827] = {id=1827,en="Metastasis",ja="メタスターシス"}, -- Qutrub?
+    [1828] = {id=1828,en="Pyric Blast",ja="パイリックブラスト"},    -- Hydra
+    -- [1829] = {id=1829,en="Pyric Bulwark",ja="パイリックブルワーク"}, -- Hydra
+    [1830] = {id=1830,en="Polar Blast",ja="ポーラーブラスト"},  -- Hydra
+    -- [1831] = {id=1831,en="Polar Bulwark",ja="ポーラーブルワーク"},  -- Hydra
+    [1832] = {id=1832,en="Barofield",ja="バロフィールド"},  -- Hydra
+    [1834] = {id=1834,en="Trembling",ja="トレンブリング"},  -- Hydra
+    [1835] = {id=1835,en="Serpentine Tail",ja="サーペンタインテール"},  -- Hydra
+    -- [1836] = {id=1836,en="Nerve Gas",ja="ナーブガス"},   -- Hydra
+    -- [1837] = {id=1837,en="Feeble Bleat",ja="小咆哮"},    -- Sheep
+    [1838] = {id=1838,en="Mine Blast",ja="マインブラスト"}, -- Mines
+    [1839] = {id=1839,en="Rushing Slash",ja="ラッシングスラッシュ"},    -- Mamool
+    [1840] = {id=1840,en="Rushing Stab",ja="ラッシングスタッブ"},   -- Mamool
+    -- [1841] = {id=1841,en="Sandblast",ja="サンドブラスト"},  -- Antlion
+    -- [1842] = {id=1842,en="Sandpit",ja="サンドピット"},   -- Antlion
+    -- [1843] = {id=1843,en="Venom Spray",ja="ベノムスプレー"}, -- Antlion
+    [1844] = {id=1844,en="Pit Ambush",ja="ピットアンブッシュ"}, -- Antlion
+    [1845] = {id=1845,en="Mandibular Bite",ja="マンディビュラバイト"},  -- Antlion
     [1846] = {id=1846,en="Sharp Sting",ja="シャープスティング"},                -- Bee
     -- [1847] = {id=1847,en="Frenzy Pollen",ja="フレンジーポレン"},             -- Bee
     [1848] = {id=1848,en="Final Sting",ja="ファイナルスピア"},                  -- Bee
-    [1849] = {id=1849,en="Sling Bomb",ja="スリングボム"},
-    [1850] = {id=1850,en="Formation Attack",ja="フォーメーションアタック"},
-    [1851] = {id=1851,en="Refueling",ja="リフュエリング"},
-    [1852] = {id=1852,en="Circle of Flames",ja="サークルオブフレイム"},
-    [1853] = {id=1853,en="Self-Destruct",ja="自爆"},
-    [1854] = {id=1854,en="Stellar Burst",ja="ステラバースト",skillchain_a="Darkness",skillchain_b="Gravitation",skillchain_c=""},
-    [1855] = {id=1855,en="Self-Destruct",ja="自爆"},
-    [1856] = {id=1856,en="Omega Javelin",ja="オメガジャベリン"},
-    [1857] = {id=1857,en="Self-Destruct",ja="自爆"},
+    [1849] = {id=1849,en="Sling Bomb",ja="スリングボム"},   -- Cluster
+    [1850] = {id=1850,en="Formation Attack",ja="フォーメーションアタック"}, -- Cluster
+    -- [1851] = {id=1851,en="Refueling",ja="リフュエリング"},   -- Cluster
+    [1852] = {id=1852,en="Circle of Flames",ja="サークルオブフレイム"}, -- Cluster
+    [1853] = {id=1853,en="Self-Destruct",ja="自爆"},    -- Cluster
+    [1854] = {id=1854,en="Stellar Burst",ja="ステラバースト",skillchain_a="Darkness",skillchain_b="Gravitation",skillchain_c=""},   -- Humanoid
+    [1855] = {id=1855,en="Self-Destruct",ja="自爆"},    -- ???
+    [1856] = {id=1856,en="Omega Javelin",ja="オメガジャベリン"},    -- Humanoid
+    [1857] = {id=1857,en="Self-Destruct",ja="自爆"},    -- ???
     [1858] = {id=1858,en="Tail Roll",ja="テールロール"},    -- Bugard
     [1859] = {id=1859,en="Tusk",ja="タスク"},   -- Bugard
     -- [1860] = {id=1860,en="Scutum",ja="スクトゥム"},  -- Bugard
@@ -1581,15 +1582,15 @@ Res.Monster.Damaging_Abilities = T{
     [1867] = {id=1867,en="Screwdriver",ja="スクリュードライバー"},  -- Pugil
     -- [1868] = {id=1868,en="Water Wall",ja="ウォーターウォール"},  -- Pugil
     -- [1869] = {id=1869,en="Water Shield",ja="ウォーターシールド"},    -- Pugil
-    [1870] = {id=1870,en="Recoil Dive",ja="リコイルダイブ"},
-    [1871] = {id=1871,en="Suction",ja="吸着"},
-    [1872] = {id=1872,en="Acid Mist",ja="アシッドミスト"},
-    [1873] = {id=1873,en="Sand Breath",ja="サンドブレス"},
-    [1874] = {id=1874,en="Drainkiss",ja="ドレインキッス"},
-    [1875] = {id=1875,en="Regeneration",ja="リジェネレーション"},
-    [1876] = {id=1876,en="TP Drainkiss",ja="TP吸収キッス"},
-    [1877] = {id=1877,en="MP Drainkiss",ja="MP吸収キッス"},
-    [1878] = {id=1878,en="Brain Drain",ja="ブレインドレイン"},
+    [1870] = {id=1870,en="Recoil Dive",ja="リコイルダイブ"},    -- Pugil
+    [1871] = {id=1871,en="Suction",ja="吸着"},  -- Leech
+    [1872] = {id=1872,en="Acid Mist",ja="アシッドミスト"},  -- Leech
+    [1873] = {id=1873,en="Sand Breath",ja="サンドブレス"},  -- Leech
+    [1874] = {id=1874,en="Drainkiss",ja="ドレインキッス"},  -- Leech
+    -- [1875] = {id=1875,en="Regeneration",ja="リジェネレーション"},    -- Leech
+    -- [1876] = {id=1876,en="TP Drainkiss",ja="TP吸収キッス"},  -- Leech
+    -- [1877] = {id=1877,en="MP Drainkiss",ja="MP吸収キッス"},  -- Leech
+    [1878] = {id=1878,en="Brain Drain",ja="ブレインドレイン"},  -- Leech
     [1879] = {id=1879,en="Triclip",ja="トライクリップ"},    -- Taurus
     [1880] = {id=1880,en="Back Swish",ja="バックスウィッシュ"}, -- Taurus
     [1881] = {id=1881,en="Mow",ja="モウ"},  -- Taurus
@@ -1602,15 +1603,15 @@ Res.Monster.Damaging_Abilities = T{
     [1888] = {id=1888,en="Tremors",ja="震動"},  -- Worm
     -- [1889] = {id=1889,en="Spirit Vacuum",ja="スピリットバキューム"}, -- Worm
     -- [1890] = {id=1890,en="Sound Vacuum",ja="サウンドバキューム"},    -- Worm
-    [1891] = {id=1891,en="Provoke",ja="挑発"},
-    [1893] = {id=1893,en="Spirit Surge",ja="竜剣"},
-    [1894] = {id=1894,en="Potent Lunge",ja="ポテントランジ"},
-    [1895] = {id=1895,en="Overthrow",ja="オーバースロー"},
-    [1896] = {id=1896,en="Rock Smash",ja="ロックスマッシュ"},
-    [1897] = {id=1897,en="Diamondhide",ja="金剛身"},
-    [1898] = {id=1898,en="Enervation",ja="吶喊"},
-    [1899] = {id=1899,en="Quake Stomp",ja="クェークストンプ"},
-    [1900] = {id=1900,en="Healing Stomp",ja="力足"},
+    -- [1891] = {id=1891,en="Provoke",ja="挑発"},   -- ???
+    -- [1893] = {id=1893,en="Spirit Surge",ja="竜剣"}, -- ???
+    [1894] = {id=1894,en="Potent Lunge",ja="ポテントランジ"},   -- Troll
+    [1895] = {id=1895,en="Overthrow",ja="オーバースロー"},  -- Troll
+    [1896] = {id=1896,en="Rock Smash",ja="ロックスマッシュ"},   -- Troll
+    -- [1897] = {id=1897,en="Diamondhide",ja="金剛身"}, -- Troll
+    -- [1898] = {id=1898,en="Enervation",ja="吶喊"},    -- Troll
+    -- [1899] = {id=1899,en="Quake Stomp",ja="クェークストンプ"},   -- Troll
+    -- [1900] = {id=1900,en="Healing Stomp",ja="力足"}, -- Troll
     [1903] = {id=1903,en="Camisado",ja="カミサドー"},   -- Diabolos
     [1904] = {id=1904,en="Somnolence",ja="ソムノレンス"},   -- Diabolos
     -- [1905] = {id=1905,en="Noctoshield",ja="ノクトシールド"}, -- Diabolos
@@ -1620,279 +1621,280 @@ Res.Monster.Damaging_Abilities = T{
     -- [1909] = {id=1909,en="Cacodemonia",ja="カコデモニア"},   -- Diabolos
     [1910] = {id=1910,en="Nether Blast",ja="ネザーブラスト"},   -- Diabolos
     [1911] = {id=1911,en="Ruinous Omen",ja="ルイナスオーメン"}, -- Diabolos
-    [1912] = {id=1912,en="Hypnogenesis",ja="ヒュプノジェネシス"},
-    [1913] = {id=1913,en="Stunbolt",ja="スタンボルト"},
-    [1914] = {id=1914,en="Great Wheel",ja="大風車",skillchain_a="Fragmentation",skillchain_b="Scission",skillchain_c=""},
+    [1912] = {id=1912,en="Hypnogenesis",ja="ヒュプノジェネシス"},   -- Diabolos
+    -- [1913] = {id=1913,en="Stunbolt",ja="スタンボルト"}, -- Spheroid
+    [1914] = {id=1914,en="Great Wheel",ja="大風車",skillchain_a="Fragmentation",skillchain_b="Scission",skillchain_c=""},   -- Humanoid
     [1916] = {id=1916,en="Blessed Radiance",ja="ブレスドレイディアンス"},
     [1917] = {id=1917,en="Sweeping Somnolence",ja="スウィーピングソムノレンス"},
-    [1918] = {id=1918,en="Nether Tempest",ja="ネザーテンペスト"},
-    [1919] = {id=1919,en="Daydream",ja="デイドリーム"},
-    [1920] = {id=1920,en="Rushing Drub",ja="ラッシングドラブ"},
-    [1921] = {id=1921,en="Forceful Blow",ja="フォースフルブロー"},
-    [1922] = {id=1922,en="Somersault Kick",ja="サマーソルトキック"},
-    [1923] = {id=1923,en="Firespit",ja="ファイアースピット"},
-    [1924] = {id=1924,en="Warm-Up",ja="ワームアップ"},
-    [1925] = {id=1925,en="Stave Toss",ja="ステーヴトス"},
-    [1926] = {id=1926,en="Groundburst",ja="グランドバースト"},
-    [1929] = {id=1929,en="Pole Swing",ja="ポールスウィング"},
-    [1930] = {id=1930,en="Tidal Slash",ja="タイダルスラッシュ"},
-    [1931] = {id=1931,en="Eagle Eye Shot",ja="イーグルアイ"},
-    [1932] = {id=1932,en="Eagle Eye Shot",ja="イーグルアイ"},
-    [1933] = {id=1933,en="Azure Lore",ja="アジュールロー"},
-    [1934] = {id=1934,en="Wild Card",ja="ワイルドカード"},
-    [1935] = {id=1935,en="Overdrive",ja="オーバードライヴ"},
-    [1936] = {id=1936,en="Shibaraku",ja="暫",skillchain_a="Darkness",skillchain_b="Gravitation",skillchain_c=""},
-    [1940] = {id=1940,en="Chimera Ripper",ja="キメラリパー",skillchain_a="Induration",skillchain_b="Detonation",skillchain_c=""},
-    [1941] = {id=1941,en="String Clipper",ja="ストリングクリッパー",skillchain_a="Scission",skillchain_b="Impaction",skillchain_c=""},
-    [1942] = {id=1942,en="Arcuballista",ja="アルクバリスタ",skillchain_a="Liquefaction",skillchain_b="Transfixion",skillchain_c=""},
-    [1943] = {id=1943,en="Slapstick",ja="スラップスティック",skillchain_a="Reverberation",skillchain_b="Impaction",skillchain_c=""},
-    [1944] = {id=1944,en="Shield Bash",ja="シールドバッシュ"},
-    [1945] = {id=1945,en="Provoke",ja="挑発"},
-    [1946] = {id=1946,en="Shock Absorber",ja="Ｓ．アブソーバー"},
-    [1947] = {id=1947,en="Flashbulb",ja="フラッシュバルブ"},
-    [1948] = {id=1948,en="Mana Converter",ja="マナコンバーター"},
-    [1949] = {id=1949,en="Ranged Attack",ja="遠隔攻撃"},
-    [1950] = {id=1950,en="Belly Dance",ja="ベリーダンス"},
-    [1951] = {id=1951,en="Magma Fan",ja="マグマファン"},
-    [1952] = {id=1952,en="Erratic Flutter",ja="エラチックフラッター"},
-    [1953] = {id=1953,en="Proboscis",ja="プロボシス"},
-    [1954] = {id=1954,en="Erosion Dust",ja="妖鱗粉"},
-    [1955] = {id=1955,en="Exuviation",ja="イグジュビエーション"},
-    [1956] = {id=1956,en="Fire Break",ja="ファイアブレーク"},
-    [1957] = {id=1957,en="Frog Song",ja="カエルの歌"},
-    [1958] = {id=1958,en="Magic Hammer",ja="マジックハンマー"},
-    [1959] = {id=1959,en="Water Bomb",ja="水風船爆弾"},
-    [1960] = {id=1960,en="Frog Cheer",ja="カエルの応援"},
-    [1961] = {id=1961,en="Providence",ja="天乞い"},
-    [1962] = {id=1962,en="Frog Chorus",ja="カエルの大合唱"},
-    [1963] = {id=1963,en="Mind Blast",ja="マインドブラスト"},
-    [1964] = {id=1964,en="Immortal Mind",ja="イモータルマインド"},
-    [1965] = {id=1965,en="Immortal Shield",ja="イモータルシールド"},
-    [1966] = {id=1966,en="Mind Purge",ja="マインドパージ"},
-    [1967] = {id=1967,en="Tribulation",ja="トリビュレーション"},
-    [1968] = {id=1968,en="Immortal Anathema",ja="イモータルアナテーマ"},
-    [1969] = {id=1969,en="Reprobation",ja="レプロベーション"},
-    [1970] = {id=1970,en="Eclosion",ja="イクローション"},
-    [1977] = {id=1977,en="Deathgnash",ja="デスナッシュ"},
-    [1978] = {id=1978,en="Abominable Belch",ja="長大息"},
-    [1980] = {id=1980,en="Boreas Mantle",ja="ボレアースマント"},
-    [1982] = {id=1982,en="Nullifying Dropkick",ja="崑崙八象脚",skillchain_a="Induration",skillchain_b="Detonation",skillchain_c="Impaction"},
-    [1983] = {id=1983,en="Auroral Uppercut",ja="羅刹七星拳",skillchain_a="Light",skillchain_b="Fragmentation",skillchain_c=""},
-    [1984] = {id=1984,en="Wisecrack",ja="漫談"},
-    [1985] = {id=1985,en="Fighter's Roll",ja="ファイターズロール"},
-    [1986] = {id=1986,en="Rogue's Roll",ja="ローグズロール"},
-    [1987] = {id=1987,en="Gallant's Roll",ja="ガランツロール"},
-    [1988] = {id=1988,en="Chaos Roll",ja="カオスロール"},
-    [1989] = {id=1989,en="Hunter's Roll",ja="ハンターズロール"},
-    [1990] = {id=1990,en="Ninja Roll",ja="ニンジャロール"},
-    [1991] = {id=1991,en="Double-Up",ja="ダブルアップ"},
-    [1992] = {id=1992,en="Fire Maneuver",ja="ファイアマニューバ"},
-    [1993] = {id=1993,en="Ice Maneuver",ja="アイスマニューバ"},
-    [1994] = {id=1994,en="Wind Maneuver",ja="ウィンドマニューバ"},
-    [1995] = {id=1995,en="Earth Maneuver",ja="アースマニューバ"},
-    [1996] = {id=1996,en="Thunder Maneuver",ja="サンダーマニューバ"},
-    [1997] = {id=1997,en="Water Maneuver",ja="ウォータマニューバ"},
-    [1998] = {id=1998,en="Hane Fubuki",ja="羽根乱吹",skillchain_a="Transfixion",skillchain_b="",skillchain_c=""},
-    [1999] = {id=1999,en="Hiden Sokyaku",ja="飛電双脚"},
-    [2000] = {id=2000,en="Shiko no Mitate",ja="醜の御楯"},
-    [2001] = {id=2001,en="Happobarai",ja="八方払い",skillchain_a="Reverberation",skillchain_b="Impaction",skillchain_c=""},
-    [2002] = {id=2002,en="Rinpyotosha",ja="臨兵闘者皆陣烈在前"},
-    [2003] = {id=2003,en="Grating Tantara",ja="グレーティングタンタラ"},
-    [2004] = {id=2004,en="Stifling Tantara",ja="スタイフリングタンタラ"},
-    [2005] = {id=2005,en="Reward",ja="いたわる"},
-    [2006] = {id=2006,en="Azure Lore",ja="アジュールロー"},
-    [2007] = {id=2007,en="Wild Card",ja="ワイルドカード"},
-    [2008] = {id=2008,en="Overdrive",ja="オーバードライヴ"},
-    [2009] = {id=2009,en="Fire Shot",ja="ファイアショット"},
-    [2010] = {id=2010,en="Ice Shot",ja="アイスショット"},
-    [2011] = {id=2011,en="Wind Shot",ja="ウィンドショット"},
-    [2012] = {id=2012,en="Earth Shot",ja="アースショット"},
+    [1918] = {id=1918,en="Nether Tempest",ja="ネザーテンペスト"},   -- Diabolos
+    -- [1919] = {id=1919,en="Daydream",ja="デイドリーム"},  -- Diabolos
+    [1920] = {id=1920,en="Rushing Drub",ja="ラッシングドラブ"}, -- Mamool
+    [1921] = {id=1921,en="Forceful Blow",ja="フォースフルブロー"},  -- Mamool Ja
+    [1922] = {id=1922,en="Somersault Kick",ja="サマーソルトキック"},    -- Mamool Ja
+    [1923] = {id=1923,en="Firespit",ja="ファイアースピット"},   -- Mamool Ja
+    -- [1924] = {id=1924,en="Warm-Up",ja="ワームアップ"},   -- Mamool Ja
+    [1925] = {id=1925,en="Stave Toss",ja="ステーヴトス"},   -- Mamool Ja
+    [1926] = {id=1926,en="Groundburst",ja="グランドバースト"},  -- Mamool Ja
+    [1929] = {id=1929,en="Pole Swing",ja="ポールスウィング"}, -- Lamia
+    [1930] = {id=1930,en="Tidal Slash",ja="タイダルスラッシュ"},    -- Lamia
+    [1931] = {id=1931,en="Eagle Eye Shot",ja="イーグルアイ"},   -- Lamia?
+    [1932] = {id=1932,en="Eagle Eye Shot",ja="イーグルアイ"},   -- Lamia?
+    -- [1933] = {id=1933,en="Azure Lore",ja="アジュールロー"},  -- ???
+    -- [1934] = {id=1934,en="Wild Card",ja="ワイルドカード"},   -- ???
+    -- [1935] = {id=1935,en="Overdrive",ja="オーバードライヴ"}, -- ???
+    [1936] = {id=1936,en="Shibaraku",ja="暫",skillchain_a="Darkness",skillchain_b="Gravitation",skillchain_c=""},   -- Yagudo
+    [1940] = {id=1940,en="Chimera Ripper",ja="キメラリパー",skillchain_a="Induration",skillchain_b="Detonation",skillchain_c=""},   -- Automaton
+    [1941] = {id=1941,en="String Clipper",ja="ストリングクリッパー",skillchain_a="Scission",skillchain_b="Impaction",skillchain_c=""},  -- Automaton
+    [1942] = {id=1942,en="Arcuballista",ja="アルクバリスタ",skillchain_a="Liquefaction",skillchain_b="Transfixion",skillchain_c=""},    -- Automaton
+    [1943] = {id=1943,en="Slapstick",ja="スラップスティック",skillchain_a="Reverberation",skillchain_b="Impaction",skillchain_c=""},    -- Automaton
+    [1944] = {id=1944,en="Shield Bash",ja="シールドバッシュ"},  -- Automaton
+    -- [1945] = {id=1945,en="Provoke",ja="挑発"},   -- Automaton
+    -- [1946] = {id=1946,en="Shock Absorber",ja="Ｓ．アブソーバー"},    -- Automaton
+    -- [1947] = {id=1947,en="Flashbulb",ja="フラッシュバルブ"}, -- Automaton
+    -- [1948] = {id=1948,en="Mana Converter",ja="マナコンバーター"},    -- Automaton
+    [1949] = {id=1949,en="Ranged Attack",ja="遠隔攻撃"},    -- Automaton
+    -- [1950] = {id=1950,en="Belly Dance",ja="ベリーダンス"},   -- Lamia
+    [1951] = {id=1951,en="Magma Fan",ja="マグマファン"},    -- Wamoura
+    [1952] = {id=1952,en="Erratic Flutter",ja="エラチックフラッター"},  -- Wamoura
+    [1953] = {id=1953,en="Proboscis",ja="プロボシス"},  -- Wamoura
+    -- [1954] = {id=1954,en="Erosion Dust",ja="妖鱗粉"},    -- Wamoura
+    -- [1955] = {id=1955,en="Exuviation",ja="イグジュビエーション"},    -- Wamoura
+    [1956] = {id=1956,en="Fire Break",ja="ファイアブレーク"},   -- Wamoura
+    -- [1957] = {id=1957,en="Frog Song",ja="カエルの歌"},  -- Poroggo
+    [1958] = {id=1958,en="Magic Hammer",ja="マジックハンマー"}, -- Poroggo
+    [1959] = {id=1959,en="Water Bomb",ja="水風船爆弾"}, -- Poroggo
+    -- [1960] = {id=1960,en="Frog Cheer",ja="カエルの応援"},    -- Poroggo
+    -- [1961] = {id=1961,en="Providence",ja="天乞い"},  -- Poroggo
+    -- [1962] = {id=1962,en="Frog Chorus",ja="カエルの大合唱"}, -- Poroggo
+    [1963] = {id=1963,en="Mind Blast",ja="マインドブラスト"},   -- Soulflayer
+    -- [1964] = {id=1964,en="Immortal Mind",ja="イモータルマインド"},   -- Soulflayer
+    -- [1965] = {id=1965,en="Immortal Shield",ja="イモータルシールド"}, -- Soulflayer
+    -- [1966] = {id=1966,en="Mind Purge",ja="マインドパージ"},  -- Soulflayer
+    -- [1967] = {id=1967,en="Tribulation",ja="トリビュレーション"}, -- Soulflayer
+    -- [1968] = {id=1968,en="Immortal Anathema",ja="イモータルアナテーマ"}, -- Soulflayer
+    -- [1969] = {id=1969,en="Reprobation",ja="レプロベーション"},   -- Soulflayer
+    [1970] = {id=1970,en="Eclosion",ja="イクローション"},   -- Chigre
+    [1977] = {id=1977,en="Deathgnash",ja="デスナッシュ"},   -- Orobon
+    -- [1978] = {id=1978,en="Abominable Belch",ja="長大息"},  -- Orobon
+    -- [1980] = {id=1980,en="Boreas Mantle",ja="ボレアースマント"}, -- Puk
+    [1982] = {id=1982,en="Nullifying Dropkick",ja="崑崙八象脚",skillchain_a="Induration",skillchain_b="Detonation",skillchain_c="Impaction"},   -- Prishe
+    [1983] = {id=1983,en="Auroral Uppercut",ja="羅刹七星拳",skillchain_a="Light",skillchain_b="Fragmentation",skillchain_c=""}, -- Prishe
+    -- [1984] = {id=1984,en="Wisecrack",ja="漫談"}, -- Colibri
+    -- [1985] = {id=1985,en="Fighter's Roll",ja="ファイターズロール"},  -- ???
+    -- [1986] = {id=1986,en="Rogue's Roll",ja="ローグズロール"},    -- ???
+    -- [1987] = {id=1987,en="Gallant's Roll",ja="ガランツロール"},  -- ???
+    -- [1988] = {id=1988,en="Chaos Roll",ja="カオスロール"},    -- ???
+    -- [1989] = {id=1989,en="Hunter's Roll",ja="ハンターズロール"}, -- ???
+    -- [1990] = {id=1990,en="Ninja Roll",ja="ニンジャロール"},  -- ???
+    -- [1991] = {id=1991,en="Double-Up",ja="ダブルアップ"}, -- ???
+    -- [1992] = {id=1992,en="Fire Maneuver",ja="ファイアマニューバ"},   -- ???
+    -- [1993] = {id=1993,en="Ice Maneuver",ja="アイスマニューバ"},  -- ???
+    -- [1994] = {id=1994,en="Wind Maneuver",ja="ウィンドマニューバ"},   -- ???
+    -- [1995] = {id=1995,en="Earth Maneuver",ja="アースマニューバ"},    -- ???
+    -- [1996] = {id=1996,en="Thunder Maneuver",ja="サンダーマニューバ"},    -- ???
+    -- [1997] = {id=1997,en="Water Maneuver",ja="ウォータマニューバ"},  -- ???
+    [1998] = {id=1998,en="Hane Fubuki",ja="羽根乱吹",skillchain_a="Transfixion",skillchain_b="",skillchain_c=""},   -- Yagudo
+    [1999] = {id=1999,en="Hiden Sokyaku",ja="飛電双脚"},    -- Yagudo
+    -- [2000] = {id=2000,en="Shiko no Mitate",ja="醜の御楯"},   -- Yagudo
+    [2001] = {id=2001,en="Happobarai",ja="八方払い",skillchain_a="Reverberation",skillchain_b="Impaction",skillchain_c=""}, -- Yagudo
+    -- [2002] = {id=2002,en="Rinpyotosha",ja="臨兵闘者皆陣烈在前"}, -- Yagudo
+    [2003] = {id=2003,en="Grating Tantara",ja="グレーティングタンタラ"},    -- Imp
+    [2004] = {id=2004,en="Stifling Tantara",ja="スタイフリングタンタラ"},   -- Imp
+    -- [2005] = {id=2005,en="Reward",ja="いたわる"},    -- ???
+    -- [2006] = {id=2006,en="Azure Lore",ja="アジュールロー"},  -- ???
+    -- [2007] = {id=2007,en="Wild Card",ja="ワイルドカード"},   -- ???
+    -- [2008] = {id=2008,en="Overdrive",ja="オーバードライヴ"}, -- ???
+    [2009] = {id=2009,en="Fire Shot",ja="ファイアショット"},    -- ???
+    [2010] = {id=2010,en="Ice Shot",ja="アイスショット"},   -- ???
+    [2011] = {id=2011,en="Wind Shot",ja="ウィンドショット"},    -- ???
+    [2012] = {id=2012,en="Earth Shot",ja="アースショット"}, -- ???
     [2013] = {id=2013,en="Thunder Shot",ja="サンダーショット"},
-    [2014] = {id=2014,en="Water Shot",ja="ウォータショット"},
-    [2015] = {id=2015,en="Light Shot",ja="ライトショット"},
-    [2016] = {id=2016,en="Dark Shot",ja="ダークショット"},
-    [2020] = {id=2020,en="Hundred Fists",ja="百烈拳"},
-    [2021] = {id=2021,en="Eraser",ja="イレーザー"},
-    [2022] = {id=2022,en="Tenebrous Mist",ja="テネブラスミスト"},
-    [2023] = {id=2023,en="Thunderstrike",ja="サンダーストライク"},
-    [2024] = {id=2024,en="Tourbillion",ja="トゥールビヨン"},
-    [2025] = {id=2025,en="Dreadstorm",ja="ドレッドストーム"},
-    [2026] = {id=2026,en="Fossilizing Breath",ja="岩息"},
-    [2027] = {id=2027,en="Plague Swipe",ja="プレイグスワイプ"},
-    [2028] = {id=2028,en="Fulmination",ja="フルミネーション"},
-    [2031] = {id=2031,en="Reactive Shield",ja="Ｒ．シールド"},
-    [2032] = {id=2032,en="Roller Chain",ja="ローラーチェーン"},
-    [2033] = {id=2033,en="Choke Chain",ja="チョークチェーン"},
-    [2034] = {id=2034,en="Reinforcements",ja="来訪"},
-    [2035] = {id=2035,en="Biomagnet",ja="招来"},
-    [2036] = {id=2036,en="Astral Gate",ja="アストラルゲート"},
-    [2037] = {id=2037,en="Warp",ja="ワープ"},
-    [2038] = {id=2038,en="Artificial Gravity",ja="A.グラビティ"},
-    [2039] = {id=2039,en="Antigravity",ja="アンチグラビティ"},
-    [2040] = {id=2040,en="Rail Cannon",ja="レールキャノン"},
-    [2041] = {id=2041,en="Restoral",ja="レストラル"},
-    [2042] = {id=2042,en="Armature",ja="アーマチュア"},
-    [2043] = {id=2043,en="Artificial Gravity",ja="A.グラビティ"},
-    [2044] = {id=2044,en="Antigravity",ja="アンチグラビティ"},
-    [2045] = {id=2045,en="Rail Cannon",ja="レールキャノン"},
-    [2046] = {id=2046,en="Artificial Gravity",ja="A.グラビティ"},
-    [2047] = {id=2047,en="Antigravity",ja="アンチグラビティ"},
-    [2048] = {id=2048,en="Rail Cannon",ja="レールキャノン"},
-    [2049] = {id=2049,en="Artificial Gravity",ja="A.グラビティ"},
-    [2050] = {id=2050,en="Antigravity",ja="アンチグラビティ"},
-    [2051] = {id=2051,en="Rail Cannon",ja="レールキャノン"},
-    [2052] = {id=2052,en="Restoral",ja="レストラル"},
-    [2053] = {id=2053,en="Heavy Armature",ja="ヘヴィアーマチュア"},
-    [2054] = {id=2054,en="Diffusion Ray",ja="ディフュージョンレイ"},
-    [2055] = {id=2055,en="Inertia Stream",ja="イナーシャストリーム"},
-    [2056] = {id=2056,en="Discharge",ja="ディスチャージ"},
-    [2057] = {id=2057,en="Mortal Revolution",ja="モータルレボリューション"},
-    [2058] = {id=2058,en="Homing Missile",ja="ホーミングミサイル"},
-    [2059] = {id=2059,en="Discoid",ja="ディスコイド"},
-    [2060] = {id=2060,en="Brainjack",ja="ブレインジャック"},
-    [2061] = {id=2061,en="Restoral",ja="レストラル"},
-    [2062] = {id=2062,en="Restoral",ja="レストラル"},
-    [2063] = {id=2063,en="Heavy Armature",ja="ヘヴィアーマチュア"},
-    [2064] = {id=2064,en="Heavy Armature",ja="ヘヴィアーマチュア"},
-    [2065] = {id=2065,en="Cannibal Blade",ja="カニバルブレード",skillchain_a="Compression",skillchain_b="Reverberation",skillchain_c=""},
-    [2066] = {id=2066,en="Daze",ja="デイズ",skillchain_a="Impaction",skillchain_b="Transfixion",skillchain_c=""},
-    [2067] = {id=2067,en="Knockout",ja="ノックアウト",skillchain_a="Scission",skillchain_b="Detonation",skillchain_c=""},
-    [2068] = {id=2068,en="Economizer",ja="エコノマイザー"},
-    [2069] = {id=2069,en="Tribulation",ja="トリビュレーション"},
-    [2070] = {id=2070,en="Dismemberment",ja="ディスメンバーメント"},
-    [2071] = {id=2071,en="Dire Straight",ja="ダイアストレート"},
-    [2072] = {id=2072,en="Earthshatter",ja="アースシャッター"},
-    [2073] = {id=2073,en="Sinker Drill",ja="シンカードリル"},
-    [2074] = {id=2074,en="Detonating Grip",ja="デトネーティンググリップ"},
-    [2075] = {id=2075,en="Overthrow",ja="オーバースロー"},
-    [2076] = {id=2076,en="Rock Smash",ja="ロックスマッシュ"},
-    [2077] = {id=2077,en="Diamondhide",ja="金剛身"},
-    [2078] = {id=2078,en="Enervation",ja="吶喊"},
-    [2079] = {id=2079,en="Quake Stomp",ja="クェークストンプ"},
-    [2080] = {id=2080,en="Potent Lunge",ja="ポテントランジ"},
-    [2081] = {id=2081,en="Hammer-Go-Round",ja="ハンマーゴーラウンド"},
-    [2082] = {id=2082,en="Hammerblow",ja="ハンマーブロー"},
-    [2083] = {id=2083,en="Drop Hammer",ja="ドロップハンマー"},
-    [2084] = {id=2084,en="Seismohammer",ja="サイズモハンマー"},
-    [2085] = {id=2085,en="Venomous Tail",ja="ベノモステール"},
-    [2086] = {id=2086,en="Grim Reaper",ja="グリムリパー"},
-    [2088] = {id=2088,en="Victory Beacon",ja="ビクトリービーコン",skillchain_a="Light",skillchain_b="Distortion",skillchain_c=""},
-    [2089] = {id=2089,en="Salamander Flame",ja="サラマンダーフレイム",skillchain_a="Light",skillchain_b="Fusion",skillchain_c=""},
-    [2090] = {id=2090,en="Typhonic Arrow",ja="タイフォニックアロー",skillchain_a="Light",skillchain_b="Fragmentation",skillchain_c=""},
-    [2091] = {id=2091,en="Meteoric Impact",ja="陰流砕巌衝",skillchain_a="Darkness",skillchain_b="Fragmentation",skillchain_c=""},
-    [2092] = {id=2092,en="Scouring Bubbles",ja="スカウリングバブル",skillchain_a="Darkness",skillchain_b="Distortion",skillchain_c=""},
-    [2094] = {id=2094,en="Fire Angon",ja="ファイアアンゴン"},
-    [2095] = {id=2095,en="Batterhorn",ja="バッターホーン"},
-    [2096] = {id=2096,en="Clobber",ja="クロッバー"},
-    [2097] = {id=2097,en="Granite Skin",ja="グラニットスキン"},
-    [2098] = {id=2098,en="Blazing Angon",ja="ブレージングアンゴン"},
-    [2099] = {id=2099,en="Batterhorn",ja="バッターホーン"},
-    [2100] = {id=2100,en="Clobber",ja="クロッバー"},
-    [2101] = {id=2101,en="Demoralizing Roar",ja="デモラライジングロア"},
-    [2102] = {id=2102,en="Boiling Blood",ja="ボイリングブラッド"},
-    [2103] = {id=2103,en="Granite Skin",ja="グラニットスキン"},
-    [2104] = {id=2104,en="Crippling Slam",ja="クリップリングスラム"},
-    [2105] = {id=2105,en="Mijin Gakure",ja="微塵がくれ"},
-    [2106] = {id=2106,en="Bloodrake",ja="ブラッドレイク"},
-    [2107] = {id=2107,en="Decollation",ja="デコレーション"},
-    [2108] = {id=2108,en="Nosferatu's Kiss",ja="ノスフェラトゥキス"},
-    [2109] = {id=2109,en="Heliovoid",ja="ヒリオヴォイド"},
-    [2110] = {id=2110,en="Wings of Gehenna",ja="ウイング・オブ・ゲヘナ"},
-    [2111] = {id=2111,en="Eternal Damnation",ja="断罪の瞳"},
-    [2112] = {id=2112,en="Nocturnal Servitude",ja="ノクトサービチュード"},
-    [2113] = {id=2113,en="Hellsnap",ja="ヘルスナップ"},
-    [2114] = {id=2114,en="Hellclap",ja="ヘルクラップ"},
-    [2115] = {id=2115,en="Cackle",ja="カックル"},
-    [2116] = {id=2116,en="Necrobane",ja="ネクロベイン"},
-    [2117] = {id=2117,en="Necropurge",ja="ネクロパージ"},
-    [2118] = {id=2118,en="Bilgestorm",ja="ビルジストーム"},
-    [2119] = {id=2119,en="Thundris Shriek",ja="鮮血の饗宴"},
-    [2120] = {id=2120,en="Ofnir",ja="オヴニル"},
-    [2121] = {id=2121,en="Valfodr",ja="ヴァルファズル"},
-    [2122] = {id=2122,en="Yggr",ja="ユッグ"},
-    [2123] = {id=2123,en="Gagnrath",ja="ガグンラーズ"},
-    [2124] = {id=2124,en="Sanngetall",ja="サンゲタル"},
-    [2125] = {id=2125,en="Geirrothr",ja="ゲイルレズ"},
-    [2126] = {id=2126,en="Zantetsuken",ja="斬鉄剣"},
-    [2130] = {id=2130,en="Proboscis Shower",ja="プロバシスシャワー"},
-    [2132] = {id=2132,en="Replicator",ja="レプリケーター"},
-    [2133] = {id=2133,en="Liar's Dice",ja="ライアーズダイス"},
-    [2134] = {id=2134,en="Victory Beacon",ja="ビクトリービーコン",skillchain_a="Light",skillchain_b="Distortion",skillchain_c=""},
-    [2135] = {id=2135,en="Salamander Flame",ja="サラマンダーフレイム",skillchain_a="Light",skillchain_b="Fusion",skillchain_c=""},
-    [2136] = {id=2136,en="Typhonic Arrow",ja="タイフォニックアロー",skillchain_a="Light",skillchain_b="Fragmentation",skillchain_c=""},
-    [2137] = {id=2137,en="Meteoric Impact",ja="陰流砕巌衝",skillchain_a="Darkness",skillchain_b="Fragmentation",skillchain_c=""},
-    [2138] = {id=2138,en="Scouring Bubbles",ja="スカウリングバブル",skillchain_a="Darkness",skillchain_b="Distortion",skillchain_c=""},
-    [2139] = {id=2139,en="Doom",ja="死の宣告"},
-    [2140] = {id=2140,en="Peacebreaker",ja="ピースブレイカー",skillchain_a="Distortion",skillchain_b="Reverberation",skillchain_c=""},
-    [2141] = {id=2141,en="Radiant Sacrament",ja="拝火の秘蹟"},
-    [2142] = {id=2142,en="Mega Holy",ja="メガホーリー"},
-    [2143] = {id=2143,en="Perfect Defense",ja="絶対防御"},
-    [2144] = {id=2144,en="Divine Spear",ja="聖なる炎"},
-    [2145] = {id=2145,en="Gospel of the Lost",ja="万霊の福音"},
-    [2146] = {id=2146,en="Void of Repentance",ja="懺悔の間"},
-    [2147] = {id=2147,en="Divine Judgment",ja="聖なる審判"},
-    [2148] = {id=2148,en="Eagle Eye Shot",ja="イーグルアイ"},
-    [2149] = {id=2149,en="Chi Blast",ja="気孔弾"},
-    [2150] = {id=2150,en="Snatch Morsel",ja="スナッチモースル"},
+    [2014] = {id=2014,en="Water Shot",ja="ウォータショット"},   -- ???
+    -- [2015] = {id=2015,en="Light Shot",ja="ライトショット"},  -- ???
+    -- [2016] = {id=2016,en="Dark Shot",ja="ダークショット"},   -- ???
+    -- [2020] = {id=2020,en="Hundred Fists",ja="百烈拳"},   -- ???
+    -- [2021] = {id=2021,en="Eraser",ja="イレーザー"},  -- ???
+    -- [2022] = {id=2022,en="Tenebrous Mist",ja="テネブラスミスト"},   -- Khimaira
+    [2023] = {id=2023,en="Thunderstrike",ja="サンダーストライク"},  -- Khimaira
+    [2024] = {id=2024,en="Tourbillion",ja="トゥールビヨン"},    -- Khimaira
+    [2025] = {id=2025,en="Dreadstorm",ja="ドレッドストーム"},   -- Khimaira
+    -- [2026] = {id=2026,en="Fossilizing Breath",ja="岩息"},   -- Khimaira
+    [2027] = {id=2027,en="Plague Swipe",ja="プレイグスワイプ"}, -- Khimaira
+    [2028] = {id=2028,en="Fulmination",ja="フルミネーション"},  -- Khimaira
+    -- [2031] = {id=2031,en="Reactive Shield",ja="Ｒ．シールド"},   -- Spheroid?
+    [2032] = {id=2032,en="Roller Chain",ja="ローラーチェーン"}, -- Rampart
+    -- [2033] = {id=2033,en="Choke Chain",ja="チョークチェーン"},   -- Rampart
+    -- [2034] = {id=2034,en="Reinforcements",ja="来訪"},    -- Rampart
+    -- [2035] = {id=2035,en="Biomagnet",ja="招来"}, -- Rampart
+    [2036] = {id=2036,en="Astral Gate",ja="アストラルゲート"},  -- Rampart
+    -- [2037] = {id=2037,en="Warp",ja="ワープ"},    -- ???
+    [2038] = {id=2038,en="Artificial Gravity",ja="A.グラビティ"}, -- Gears
+    [2039] = {id=2039,en="Antigravity",ja="アンチグラビティ"},  -- Gears
+    [2040] = {id=2040,en="Rail Cannon",ja="レールキャノン"},    -- Gears
+    -- [2041] = {id=2041,en="Restoral",ja="レストラル"},    -- Gears
+    -- [2042] = {id=2042,en="Armature",ja="アーマチュア"},  -- Gears?
+    [2043] = {id=2043,en="Artificial Gravity",ja="A.グラビティ"},   -- Gears
+    [2044] = {id=2044,en="Antigravity",ja="アンチグラビティ"},  -- Gears
+    [2045] = {id=2045,en="Rail Cannon",ja="レールキャノン"},    -- Gears
+    [2046] = {id=2046,en="Artificial Gravity",ja="A.グラビティ"},   -- Gears
+    [2047] = {id=2047,en="Antigravity",ja="アンチグラビティ"},  -- Gears
+    [2048] = {id=2048,en="Rail Cannon",ja="レールキャノン"},    -- Gears
+    [2049] = {id=2049,en="Artificial Gravity",ja="A.グラビティ"},   -- Gears
+    [2050] = {id=2050,en="Antigravity",ja="アンチグラビティ"},  -- Gears
+    [2051] = {id=2051,en="Rail Cannon",ja="レールキャノン"},    -- Gears
+    -- [2052] = {id=2052,en="Restoral",ja="レストラル"},    -- Gears
+    -- [2053] = {id=2053,en="Heavy Armature",ja="ヘヴィアーマチュア"},  -- Gears
+    [2054] = {id=2054,en="Diffusion Ray",ja="ディフュージョンレイ"},    -- Chariot
+    [2055] = {id=2055,en="Inertia Stream",ja="イナーシャストリーム"},   -- Chariot
+    [2056] = {id=2056,en="Discharge",ja="ディスチャージ"},  -- Chariot
+    [2057] = {id=2057,en="Mortal Revolution",ja="モータルレボリューション"},    -- Chariot
+    [2058] = {id=2058,en="Homing Missile",ja="ホーミングミサイル"}, -- Chariot
+    [2059] = {id=2059,en="Discoid",ja="ディスコイド"},  -- Chariot
+    -- [2060] = {id=2060,en="Brainjack",ja="ブレインジャック"}, -- Chariot
+    -- [2061] = {id=2061,en="Restoral",ja="レストラル"},    -- Gears
+    -- [2062] = {id=2062,en="Restoral",ja="レストラル"},    -- Gears
+    -- [2063] = {id=2063,en="Heavy Armature",ja="ヘヴィアーマチュア"},  -- Gears
+    -- [2064] = {id=2064,en="Heavy Armature",ja="ヘヴィアーマチュア"},  -- Gears
+    [2065] = {id=2065,en="Cannibal Blade",ja="カニバルブレード",skillchain_a="Compression",skillchain_b="Reverberation",skillchain_c=""},   -- Automaton
+    [2066] = {id=2066,en="Daze",ja="デイズ",skillchain_a="Impaction",skillchain_b="Transfixion",skillchain_c=""},   -- Automaton
+    [2067] = {id=2067,en="Knockout",ja="ノックアウト",skillchain_a="Scission",skillchain_b="Detonation",skillchain_c=""},   -- Automaton
+    -- [2068] = {id=2068,en="Economizer",ja="エコノマイザー"},  -- Automaton
+    -- [2069] = {id=2069,en="Tribulation",ja="トリビュレーション"}, -- Soulflayer
+    [2070] = {id=2070,en="Dismemberment",ja="ディスメンバーメント"},    -- Acrolith
+    [2071] = {id=2071,en="Dire Straight",ja="ダイアストレート"},    -- Acrolith
+    [2072] = {id=2072,en="Earthshatter",ja="アースシャッター"}, -- Acrolith
+    [2073] = {id=2073,en="Sinker Drill",ja="シンカードリル"},   -- Acrolith
+    [2074] = {id=2074,en="Detonating Grip",ja="デトネーティンググリップ"},  -- Acrolith
+    [2075] = {id=2075,en="Overthrow",ja="オーバースロー"},  -- Troll
+    [2076] = {id=2076,en="Rock Smash",ja="ロックスマッシュ"},   -- Troll
+    -- [2077] = {id=2077,en="Diamondhide",ja="金剛身"}, -- Troll
+    -- [2078] = {id=2078,en="Enervation",ja="吶喊"},    -- Troll
+    -- [2079] = {id=2079,en="Quake Stomp",ja="クェークストンプ"},   -- Troll
+    [2080] = {id=2080,en="Potent Lunge",ja="ポテントランジ"},   -- Troll
+    [2081] = {id=2081,en="Hammer-Go-Round",ja="ハンマーゴーラウンド"},  -- Troll
+    [2082] = {id=2082,en="Hammerblow",ja="ハンマーブロー"}, -- Troll
+    [2083] = {id=2083,en="Drop Hammer",ja="ドロップハンマー"},  -- Troll
+    [2084] = {id=2084,en="Seismohammer",ja="サイズモハンマー"}, -- Troll
+    [2085] = {id=2085,en="Venomous Tail",ja="ベノモステール"},   -- Lamia?
+    [2086] = {id=2086,en="Grim Reaper",ja="グリムリパー"},  -- Lamia?
+    [2088] = {id=2088,en="Victory Beacon",ja="ビクトリービーコン",skillchain_a="Light",skillchain_b="Distortion",skillchain_c=""},  -- Human?
+    [2089] = {id=2089,en="Salamander Flame",ja="サラマンダーフレイム",skillchain_a="Light",skillchain_b="Fusion",skillchain_c=""},  -- Human?
+    [2090] = {id=2090,en="Typhonic Arrow",ja="タイフォニックアロー",skillchain_a="Light",skillchain_b="Fragmentation",skillchain_c=""}, -- Human?
+    [2091] = {id=2091,en="Meteoric Impact",ja="陰流砕巌衝",skillchain_a="Darkness",skillchain_b="Fragmentation",skillchain_c=""},   -- Human?
+    [2092] = {id=2092,en="Scouring Bubbles",ja="スカウリングバブル",skillchain_a="Darkness",skillchain_b="Distortion",skillchain_c=""}, -- Human?
+    [2094] = {id=2094,en="Fire Angon",ja="ファイアアンゴン"},   -- Mamool Knight
+    [2095] = {id=2095,en="Batterhorn",ja="バッターホーン"}, -- Mamool Knight
+    [2096] = {id=2096,en="Clobber",ja="クロッバー"},    -- Mamool Knight
+    -- [2097] = {id=2097,en="Granite Skin",ja="グラニットスキン"},
+    [2098] = {id=2098,en="Blazing Angon",ja="ブレージングアンゴン"},    -- Mamool Knight
+    [2099] = {id=2099,en="Batterhorn",ja="バッターホーン"}, -- Mamool Knight
+    [2100] = {id=2100,en="Clobber",ja="クロッバー"},    -- Mamool Knight
+    -- [2101] = {id=2101,en="Demoralizing Roar",ja="デモラライジングロア"}, -- Wivre
+    -- [2102] = {id=2102,en="Boiling Blood",ja="ボイリングブラッド"},   -- Wivre
+    -- [2103] = {id=2103,en="Granite Skin",ja="グラニットスキン"},  -- Wivre
+    [2104] = {id=2104,en="Crippling Slam",ja="クリップリングスラム"},   -- Wivre
+    [2105] = {id=2105,en="Mijin Gakure",ja="微塵がくれ"}, -- ???
+    [2106] = {id=2106,en="Bloodrake",ja="ブラッドレイク"},  -- Vampyr
+    [2107] = {id=2107,en="Decollation",ja="デコレーション"},    -- Vampyr
+    [2108] = {id=2108,en="Nosferatu's Kiss",ja="ノスフェラトゥキス"},   -- Vampyr
+    -- [2109] = {id=2109,en="Heliovoid",ja="ヒリオヴォイド"},   -- Vampyr
+    [2110] = {id=2110,en="Wings of Gehenna",ja="ウイング・オブ・ゲヘナ"},   -- Vampyr
+    -- [2111] = {id=2111,en="Eternal Damnation",ja="断罪の瞳"}, -- Vampyr
+    -- [2112] = {id=2112,en="Nocturnal Servitude",ja="ノクトサービチュード"},   -- Vampyr
+    -- [2113] = {id=2113,en="Hellsnap",ja="ヘルスナップ"}, -- Dvergar
+    [2114] = {id=2114,en="Hellclap",ja="ヘルクラップ"}, -- Dvergar
+    -- [2115] = {id=2115,en="Cackle",ja="カックル"},    -- Dvergar
+    -- [2116] = {id=2116,en="Necrobane",ja="ネクロベイン"}, -- Dvergar
+    [2117] = {id=2117,en="Necropurge",ja="ネクロパージ"},   -- Dvergar
+    [2118] = {id=2118,en="Bilgestorm",ja="ビルジストーム"}, -- Dvergar
+    [2119] = {id=2119,en="Thundris Shriek",ja="鮮血の饗宴"},    -- Dvergar
+    [2120] = {id=2120,en="Ofnir",ja="オヴニル"},    -- Odin
+    [2121] = {id=2121,en="Valfodr",ja="ヴァルファズル"},    -- Odin
+    -- [2122] = {id=2122,en="Yggr",ja="ユッグ"},    -- Odin
+    [2123] = {id=2123,en="Gagnrath",ja="ガグンラーズ"}, -- Odin
+    -- [2124] = {id=2124,en="Sanngetall",ja="サンゲタル"},  -- Odin
+    [2125] = {id=2125,en="Geirrothr",ja="ゲイルレズ"},  -- Odin
+    [2126] = {id=2126,en="Zantetsuken",ja="斬鉄剣"},    -- Odin
+    -- [2130] = {id=2130,en="Proboscis Shower",ja="プロバシスシャワー"},    -- Marid
+    -- [2132] = {id=2132,en="Replicator",ja="レプリケーター"}, -- Automaton?
+    -- [2133] = {id=2133,en="Liar's Dice",ja="ライアーズダイス"}, -- ???
+    [2134] = {id=2134,en="Victory Beacon",ja="ビクトリービーコン",skillchain_a="Light",skillchain_b="Distortion",skillchain_c=""},  -- ???
+    [2135] = {id=2135,en="Salamander Flame",ja="サラマンダーフレイム",skillchain_a="Light",skillchain_b="Fusion",skillchain_c=""},  -- ???
+    [2136] = {id=2136,en="Typhonic Arrow",ja="タイフォニックアロー",skillchain_a="Light",skillchain_b="Fragmentation",skillchain_c=""}, -- ???
+    [2137] = {id=2137,en="Meteoric Impact",ja="陰流砕巌衝",skillchain_a="Darkness",skillchain_b="Fragmentation",skillchain_c=""},   -- ???
+    [2138] = {id=2138,en="Scouring Bubbles",ja="スカウリングバブル",skillchain_a="Darkness",skillchain_b="Distortion",skillchain_c=""}, -- ???
+    -- [2139] = {id=2139,en="Doom",ja="死の宣告"},  -- ???
+    [2140] = {id=2140,en="Peacebreaker",ja="ピースブレイカー",skillchain_a="Distortion",skillchain_b="Reverberation",skillchain_c=""},  -- ???
+    [2141] = {id=2141,en="Radiant Sacrament",ja="拝火の秘蹟"},  -- Alexander
+    [2142] = {id=2142,en="Mega Holy",ja="メガホーリー"},    -- Alexander
+    -- [2143] = {id=2143,en="Perfect Defense",ja="絶対防御"},   -- Alexander
+    [2144] = {id=2144,en="Divine Spear",ja="聖なる炎"}, -- Alexander
+    -- [2145] = {id=2145,en="Gospel of the Lost",ja="万霊の福音"},  -- Alexander
+    -- [2146] = {id=2146,en="Void of Repentance",ja="懺悔の間"},    -- Alexander
+    [2147] = {id=2147,en="Divine Judgment",ja="聖なる審判"},    -- Alexander
+    [2148] = {id=2148,en="Eagle Eye Shot",ja="イーグルアイ"}, -- ???
+    [2149] = {id=2149,en="Chi Blast",ja="気孔弾"},  -- ???
+    -- [2150] = {id=2150,en="Snatch Morsel",ja="スナッチモースル"}, -- Colibri
     [2151] = {id=2151,en="1,000 Needles",ja="針千本"},                  -- Sabotender
-    [2152] = {id=2152,en="Aqua Fortis",ja="アクアフォーティス"},
-    [2153] = {id=2153,en="Regurgitation",ja="リガージテーション"},
-    [2154] = {id=2154,en="Delta Thrust",ja="デルタスラスト"},
-    [2155] = {id=2155,en="Torpefying Charge",ja="トーピファイングチャージ"},
-    [2156] = {id=2156,en="Grim Glower",ja="グリムグラワー"},
-    [2157] = {id=2157,en="Calcifying Mist",ja="カルシファイングミスト"},
-    [2158] = {id=2158,en="Insipid Nip",ja="インシピッドニップ"},
-    [2159] = {id=2159,en="Pandemic Nip",ja="パンデミックニップ"},
-    [2160] = {id=2160,en="Bombilation",ja="ボンビレーション"},
-    [2161] = {id=2161,en="Cimicine Discharge",ja="シミサインディスチャージ"},
-    [2162] = {id=2162,en="Emetic Discharge",ja="エメティックディスチャージ"},
-    [2163] = {id=2163,en="Seedspray",ja="シードスプレー"},
-    [2164] = {id=2164,en="Viscid Emission",ja="ヴィシドエミッション"},
-    [2165] = {id=2165,en="Rotten Stench",ja="ロトンステンチ"},
-    [2166] = {id=2166,en="Floral Bouquet",ja="フローラルブーケ"},
-    [2167] = {id=2167,en="Bloody Caress",ja="ブラッディカレス"},
-    [2168] = {id=2168,en="Bloody Caress",ja="ブラッディカレス"},
-    [2169] = {id=2169,en="Soothing Aroma",ja="スージングアロマ"},
-    [2170] = {id=2170,en="Fevered Pitch",ja="フィーバードピッチ"},
-    [2171] = {id=2171,en="Call of the Moon",ja="コールオブザムーン"},
-    [2172] = {id=2172,en="Call of the Moon",ja="コールオブザムーン"},
-    [2173] = {id=2173,en="Plenilune Embrace",ja="プリナルーンエンブレイス"},
-    [2174] = {id=2174,en="Plenilune Embrace",ja="プリナルーンエンブレイス"},
-    [2175] = {id=2175,en="Nox Blast",ja="ノックスブラスト"},
-    [2176] = {id=2176,en="Asuran Claws",ja="アシュラクロー"},
-    [2177] = {id=2177,en="Cacophony",ja="カコフォニー"},
-    [2178] = {id=2178,en="Sudden Lunge",ja="サドンランジ"},
-    [2179] = {id=2179,en="Noisome Powder",ja="ノイサムパウダー"},
-    [2180] = {id=2180,en="Nepenthean Hum",ja="ネペンシアンハム"},
-    [2181] = {id=2181,en="Spiral Spin",ja="スパイラルスピン"},
-    [2182] = {id=2182,en="Spiral Burst",ja="スパイラルバースト"},
-    [2183] = {id=2183,en="Fuscous Ooze",ja="ファスカスウーズ"},
-    [2184] = {id=2184,en="Purulent Ooze",ja="ピュルラントウーズ"},
-    [2185] = {id=2185,en="Corrosive Ooze",ja="コローシブウーズ"},
-    [2186] = {id=2186,en="Mucilaginous Ooze",ja="ミュシラジナスウーズ"},
-    [2187] = {id=2187,en="Dustvoid",ja="ダストヴォイド"},
-    [2188] = {id=2188,en="Slaverous Gale",ja="スラヴェラスゲイル"},
-    [2189] = {id=2189,en="Aeolian Void",ja="イオリアンヴォイド"},
-    [2190] = {id=2190,en="Extreme Purgation",ja="エクストリームパーゲーション"},
-    [2191] = {id=2191,en="Desiccation",ja="デシケーション"},
-    [2192] = {id=2192,en="Doomvoid",ja="ドゥームヴォイド"},
-    [2193] = {id=2193,en="Zephyr Arrow",ja="ゼファーアロー"},
-    [2194] = {id=2194,en="Lethe Arrows",ja="レーテアロー"},
-    [2195] = {id=2195,en="Spring Breeze",ja="スプリングブリーズ"},
-    [2196] = {id=2196,en="Summer Breeze",ja="サマーブリーズ"},
-    [2197] = {id=2197,en="Autumn Breeze",ja="オータムブリーズ"},
-    [2198] = {id=2198,en="Winter Breeze",ja="ウィンターブリーズ"},
-    [2199] = {id=2199,en="Cyclonic Turmoil",ja="サイクロニックターモイル"},
-    [2200] = {id=2200,en="Cyclonic Torrent",ja="サイクロニックトレント"},
-    [2201] = {id=2201,en="Orcish Counterstance",ja="カウンタースタンス"},
-    [2202] = {id=2202,en="Berserker Dance",ja="バーサーカーダンス"},
-    [2203] = {id=2203,en="Diamond Shell",ja="ダイヤモンドシェル"},
-    [2204] = {id=2204,en="Ore Lob",ja="炸裂岩投げ"},
-    [2205] = {id=2205,en="Feathered Furore",ja="羽根竜巻"},
-    [2206] = {id=2206,en="Dark Invocation",ja="闇の呪詛"},
-    [2207] = {id=2207,en="Disorienting Waul",ja="魂の咆哮"},
+    -- Wings of the Goddess ---------------------------------------------------------------------------------
+    [2152] = {id=2152,en="Aqua Fortis",ja="アクアフォーティス"},    -- Peiste
+    [2153] = {id=2153,en="Regurgitation",ja="リガージテーション"},  -- Peiste
+    [2154] = {id=2154,en="Delta Thrust",ja="デルタスラスト"},   -- Peiste
+    -- [2155] = {id=2155,en="Torpefying Charge",ja="トーピファイングチャージ"}, -- Peiste
+    -- [2156] = {id=2156,en="Grim Glower",ja="グリムグラワー"}, -- Peiste
+    [2157] = {id=2157,en="Calcifying Mist",ja="カルシファイングミスト"},    -- Peiste
+    [2158] = {id=2158,en="Insipid Nip",ja="インシピッドニップ"},    -- Gnat
+    [2159] = {id=2159,en="Pandemic Nip",ja="パンデミックニップ"},   -- Gnat
+    -- [2160] = {id=2160,en="Bombilation",ja="ボンビレーション"},   -- Gnat
+    -- [2161] = {id=2161,en="Cimicine Discharge",ja="シミサインディスチャージ"},    -- Gnat
+    -- [2162] = {id=2162,en="Emetic Discharge",ja="エメティックディスチャージ"},    -- Gnat
+    [2163] = {id=2163,en="Seedspray",ja="シードスプレー"},  -- Rafflesia
+    -- [2164] = {id=2164,en="Viscid Emission",ja="ヴィシドエミッション"},   -- Rafflesia
+    -- [2165] = {id=2165,en="Rotten Stench",ja="ロトンステンチ"},   -- Rafflesia
+    -- [2166] = {id=2166,en="Floral Bouquet",ja="フローラルブーケ"},    -- Rafflesia
+    [2167] = {id=2167,en="Bloody Caress",ja="ブラッディカレス"},    -- Rafflesia
+    [2168] = {id=2168,en="Bloody Caress",ja="ブラッディカレス"},    -- Rafflesia
+    -- [2169] = {id=2169,en="Soothing Aroma",ja="スージングアロマ"},    -- Rafflesia
+    [2170] = {id=2170,en="Fevered Pitch",ja="フィーバードピッチ"},  -- Gnole
+    -- [2171] = {id=2171,en="Call of the Moon",ja="コールオブザムーン"},    -- Gnole
+    -- [2172] = {id=2172,en="Call of the Moon",ja="コールオブザムーン"},    -- Gnole
+    -- [2173] = {id=2173,en="Plenilune Embrace",ja="プリナルーンエンブレイス"}, -- Gnole
+    -- [2174] = {id=2174,en="Plenilune Embrace",ja="プリナルーンエンブレイス"}, -- Gnole
+    [2175] = {id=2175,en="Nox Blast",ja="ノックスブラスト"},    -- Gnole
+    [2176] = {id=2176,en="Asuran Claws",ja="アシュラクロー"},   -- Gnole
+    -- [2177] = {id=2177,en="Cacophony",ja="カコフォニー"}, -- Gnole
+    [2178] = {id=2178,en="Sudden Lunge",ja="サドンランジ"}, -- Ladybug
+    -- [2179] = {id=2179,en="Noisome Powder",ja="ノイサムパウダー"},    -- Ladybug
+    -- [2180] = {id=2180,en="Nepenthean Hum",ja="ネペンシアンハム"},    -- Ladybug
+    [2181] = {id=2181,en="Spiral Spin",ja="スパイラルスピン"},  -- Ladybug
+    [2182] = {id=2182,en="Spiral Burst",ja="スパイラルバースト"},   -- Ladybug
+    [2183] = {id=2183,en="Fuscous Ooze",ja="ファスカスウーズ"}, -- Slug
+    [2184] = {id=2184,en="Purulent Ooze",ja="ピュルラントウーズ"},  -- Slug
+    [2185] = {id=2185,en="Corrosive Ooze",ja="コローシブウーズ"},   -- Slug
+    -- [2186] = {id=2186,en="Mucilaginous Ooze",ja="ミュシラジナスウーズ"}, -- Slug
+    [2187] = {id=2187,en="Dustvoid",ja="ダストヴォイド"},   -- Sandworm
+    [2188] = {id=2188,en="Slaverous Gale",ja="スラヴェラスゲイル"},     -- Sandworm
+    [2189] = {id=2189,en="Aeolian Void",ja="イオリアンヴォイド"},   -- Sandworm
+    -- [2190] = {id=2190,en="Extreme Purgation",ja="エクストリームパーゲーション"}, -- Sandworm
+    -- [2191] = {id=2191,en="Desiccation",ja="デシケーション"}, -- Sandworm
+    -- [2192] = {id=2192,en="Doomvoid",ja="ドゥームヴォイド"},  -- Sandworm
+    [2193] = {id=2193,en="Zephyr Arrow",ja="ゼファーアロー"},   -- Pixie
+    [2194] = {id=2194,en="Lethe Arrows",ja="レーテアロー"}, -- Pixie
+    -- [2195] = {id=2195,en="Spring Breeze",ja="スプリングブリーズ"},   -- Pixie
+    -- [2196] = {id=2196,en="Summer Breeze",ja="サマーブリーズ"},   -- Pixie
+    -- [2197] = {id=2197,en="Autumn Breeze",ja="オータムブリーズ"}, -- Pixie
+    -- [2198] = {id=2198,en="Winter Breeze",ja="ウィンターブリーズ"},   -- Pixie
+    [2199] = {id=2199,en="Cyclonic Turmoil",ja="サイクロニックターモイル"}, -- Pixie
+    [2200] = {id=2200,en="Cyclonic Torrent",ja="サイクロニックトレント"},   -- Pixie
+    -- [2201] = {id=2201,en="Orcish Counterstance",ja="カウンタースタンス"},   -- Orc
+    -- [2202] = {id=2202,en="Berserker Dance",ja="バーサーカーダンス"},    -- Orc
+    -- [2203] = {id=2203,en="Diamond Shell",ja="ダイヤモンドシェル"},   -- Quadav
+    [2204] = {id=2204,en="Ore Lob",ja="炸裂岩投げ"},    -- Quadav
+    -- [2205] = {id=2205,en="Feathered Furore",ja="羽根竜巻"}, -- Yagudo
+    [2206] = {id=2206,en="Dark Invocation",ja="闇の呪詛"},  -- Yagudo
+    -- [2207] = {id=2207,en="Disorienting Waul",ja="魂の咆哮"},    -- Tiger
     -- [2208] = {id=2208,en="Microspores",ja="マイクロスポア"},             -- Funguar
-    [2209] = {id=2209,en="Blink of Peril",ja="ブリンクオブペリル"},
+    [2209] = {id=2209,en="Blink of Peril",ja="ブリンクオブペリル"}, -- Coeurl
     -- [2210] = {id=2210,en="Petal Pirouette",ja="ペタルピルエット"},       -- Mandragora
     [2213] = {id=2213,en="Dark Mist",ja="ダークミスト"},
     [2216] = {id=2216,en="Nocturnal Combustion",ja="闇炎爆"},
@@ -1912,8 +1914,8 @@ Res.Monster.Damaging_Abilities = T{
     [2230] = {id=2230,en="Poison Sting",ja="ポイズンスティング"},           -- Scorpion
     [2231] = {id=2231,en="Venom",ja="毒液"},
     [2232] = {id=2232,en="Queasyshroom",ja="マヨイタケ"},
-    [2233] = {id=2233,en="Diamond Shell",ja="ダイヤモンドシェル"},
-    [2234] = {id=2234,en="Ore Lob",ja="炸裂岩投げ"},
+    -- [2233] = {id=2233,en="Diamond Shell",ja="ダイヤモンドシェル"},   -- Quadav
+    [2234] = {id=2234,en="Ore Lob",ja="炸裂岩投げ"},    -- Quadav
     [2235] = {id=2235,en="Paralyzing Blast",ja="パラライジングブラスト"},
     [2236] = {id=2236,en="Silencing Blast",ja="サイレンシングブラスト"},
     [2237] = {id=2237,en="Binding Blast",ja="バインディングブラスト"},
@@ -1921,26 +1923,26 @@ Res.Monster.Damaging_Abilities = T{
     [2239] = {id=2239,en="Volant Angon",ja="神速のアンゴン"},
     [2240] = {id=2240,en="Warden of Terror",ja="ウォーデンオブテラー"},
     [2241] = {id=2241,en="Call to Arms",ja="コールトゥアームズ"},
-    [2242] = {id=2242,en="Mighty Strikes",ja="マイティストライク"},
-    [2243] = {id=2243,en="Hundred Fists",ja="百烈拳"},
-    [2244] = {id=2244,en="Benediction",ja="女神の祝福"},
-    [2245] = {id=2245,en="Manafont",ja="魔力の泉"},
-    [2246] = {id=2246,en="Chainspell",ja="連続魔"},
-    [2247] = {id=2247,en="Perfect Dodge",ja="絶対回避"},
-    [2248] = {id=2248,en="Invincible",ja="インビンシブル"},
-    [2249] = {id=2249,en="Blood Weapon",ja="ブラッドウェポン"},
-    [2250] = {id=2250,en="Familiar",ja="使い魔"},
-    [2251] = {id=2251,en="Soul Voice",ja="ソウルボイス"},
+    -- [2242] = {id=2242,en="Mighty Strikes",ja="マイティストライク"},  -- ???
+    -- [2243] = {id=2243,en="Hundred Fists",ja="百烈拳"},   -- ???
+    -- [2244] = {id=2244,en="Benediction",ja="女神の祝福"}, -- ???
+    -- [2245] = {id=2245,en="Manafont",ja="魔力の泉"},  -- ???
+    -- [2246] = {id=2246,en="Chainspell",ja="連続魔"},  -- ???
+    -- [2247] = {id=2247,en="Perfect Dodge",ja="絶対回避"}, -- ???
+    -- [2248] = {id=2248,en="Invincible",ja="インビンシブル"},  -- ???
+    -- [2249] = {id=2249,en="Blood Weapon",ja="ブラッドウェポン"},  -- ???
+    -- [2250] = {id=2250,en="Familiar",ja="使い魔"},    -- ???
+    -- [2251] = {id=2251,en="Soul Voice",ja="ソウルボイス"},    -- ???
     [2252] = {id=2252,en="Eagle Eye Shot",ja="イーグルアイ"},
-    [2253] = {id=2253,en="Meikyo Shisui",ja="明鏡止水"},
+    -- [2253] = {id=2253,en="Meikyo Shisui",ja="明鏡止水"}, -- ???
     [2254] = {id=2254,en="Mijin Gakure",ja="微塵がくれ"},
-    [2255] = {id=2255,en="Spirit Surge",ja="竜剣"},
-    [2256] = {id=2256,en="Astral Flow",ja="アストラルフロウ"},
-    [2257] = {id=2257,en="Azure Lore",ja="アジュールロー"},
-    [2258] = {id=2258,en="Wild Card",ja="ワイルドカード"},
-    [2259] = {id=2259,en="Overdrive",ja="オーバードライヴ"},
-    [2260] = {id=2260,en="Trance",ja="トランス"},
-    [2261] = {id=2261,en="Tabula Rasa",ja="連環計"},
+    -- [2255] = {id=2255,en="Spirit Surge",ja="竜剣"},  -- ???
+    -- [2256] = {id=2256,en="Astral Flow",ja="アストラルフロウ"},   -- ???
+    -- [2257] = {id=2257,en="Azure Lore",ja="アジュールロー"},  -- ???
+    -- [2258] = {id=2258,en="Wild Card",ja="ワイルドカード"},   -- ???
+    -- [2259] = {id=2259,en="Overdrive",ja="オーバードライヴ"}, -- ???
+    -- [2260] = {id=2260,en="Trance",ja="トランス"},    -- ???
+    -- [2261] = {id=2261,en="Tabula Rasa",ja="連環計"}, -- ???
     [2263] = {id=2263,en="Tornado Edge",ja="トルネードエッジ"},
     [2264] = {id=2264,en="Shoulder Charge",ja="ショルダーチャージ"},
     [2265] = {id=2265,en="Skull Smash",ja="スカルスマッシュ"},
@@ -1967,11 +1969,11 @@ Res.Monster.Damaging_Abilities = T{
     [2286] = {id=2286,en="Leonine Legflail",ja="獅爪旋風腿"},
     [2287] = {id=2287,en="Soulfetter Arrow",ja="射影の鋒矢"},
     [2288] = {id=2288,en="Heavy Artillery",ja="ヘヴィアーティレリー"},
-    [2289] = {id=2289,en="Immortal Shield",ja="イモータルシールド"},
-    [2290] = {id=2290,en="Restoral",ja="レストラル"},
-    [2291] = {id=2291,en="Restoral",ja="レストラル"},
-    [2292] = {id=2292,en="Restoral",ja="レストラル"},
-    [2293] = {id=2293,en="Restoral",ja="レストラル"},
+    -- [2289] = {id=2289,en="Immortal Shield",ja="イモータルシールド"}, -- Soulflayer
+    -- [2290] = {id=2290,en="Restoral",ja="レストラル"},    -- Gears
+    -- [2291] = {id=2291,en="Restoral",ja="レストラル"},    -- Gears
+    -- [2292] = {id=2292,en="Restoral",ja="レストラル"},    -- Gears
+    -- [2293] = {id=2293,en="Restoral",ja="レストラル"},    -- Gears
     [2294] = {id=2294,en="Basilisk Cannon",ja="バジリスクキャノン"},
     [2295] = {id=2295,en="Beaked Bomber",ja="ビークボンバー"},
     [2299] = {id=2299,en="Bone Crusher",ja="ボーンクラッシャー",skillchain_a="Fragmentation",skillchain_b="",skillchain_c=""},
@@ -2007,7 +2009,7 @@ Res.Monster.Damaging_Abilities = T{
     [2336] = {id=2336,en="Acheron Kick",ja="アケロンキック"},
     [2337] = {id=2337,en="Damsel Memento",ja="ダムゼルメメント"},
     [2338] = {id=2338,en="Rampant Stance",ja="ランパントスタンス"},
-    [2340] = {id=2340,en="Extreme Purgation",ja="エクストリームパーゲーション"},
+    -- [2340] = {id=2340,en="Extreme Purgation",ja="エクストリームパーゲーション"}, -- Sandworm
     [2348] = {id=2348,en="Glacial Bellow",ja="グレイシャルベロー"},
     [2349] = {id=2349,en="Daunting Hurl",ja="ドンティングハール"},
     [2350] = {id=2350,en="Scatter Shell",ja="スキャッターシェル"},
@@ -2015,9 +2017,9 @@ Res.Monster.Damaging_Abilities = T{
     [2352] = {id=2352,en="Sticky Grenade",ja="スティッキーグレネード"},
     [2358] = {id=2358,en="Tabula Rasa",ja="連環計"},
     [2359] = {id=2359,en="Strap Cutter",ja="ストラップカッター"},
-    [2360] = {id=2360,en="Wind Shear",ja="ウィンドシアー"},
+    [2360] = {id=2360,en="Wind Shear",ja="ウィンドシアー"}, -- Puk
     [2361] = {id=2361,en="Stave Toss",ja="ステーヴトス"},
-    [2364] = {id=2364,en="Unblest Jambiya",ja="アンブレストジャンビア"},
+    [2364] = {id=2364,en="Unblest Jambiya",ja="アンブレストジャンビア"},    -- Qutrub
     [2365] = {id=2365,en="Goddess's Shield",ja="ゴッデスシールド"},
     [2366] = {id=2366,en="Mine Blast",ja="マインブラスト"},
     [2367] = {id=2367,en="Moribund Hack",ja="モリバンドハック"},
@@ -2031,7 +2033,7 @@ Res.Monster.Damaging_Abilities = T{
     [2375] = {id=2375,en="Vorticose Sands",ja="ヴォーティコスサンズ"},
     [2376] = {id=2376,en="Paroxysm",ja="パロクシスム"},
     [2377] = {id=2377,en="Reviviscence",ja="レヴィヴィセンス"},
-    [2378] = {id=2378,en="Diamond Shell",ja="ダイヤモンドシェル"},
+    -- [2378] = {id=2378,en="Diamond Shell",ja="ダイヤモンドシェル"},   -- Quadav
     [2379] = {id=2379,en="Invincible",ja="インビンシブル"},
     [2380] = {id=2380,en="Monocular Scowl",ja="モノキュラースカウル"},
     [2381] = {id=2381,en="Double Kick",ja="飛燕双脚"},
@@ -2176,12 +2178,12 @@ Res.Monster.Damaging_Abilities = T{
     -- [2551] = {id=2551,en="Mucus Spread",ja="ミューカススプレッド"},  -- Slime
     -- [2552] = {id=2552,en="Epoxy Spread",ja="イポクシースプレッド"},  -- Slime
     [2553] = {id=2553,en="Rice Ball",ja="おにぎり"},
-    [2556] = {id=2556,en="Ofnir",ja="オヴニル"},
-    [2557] = {id=2557,en="Valfodr",ja="ヴァルファズル"},
-    [2558] = {id=2558,en="Yggr",ja="ユッグ"},
-    [2559] = {id=2559,en="Gagnrath",ja="ガグンラーズ"},
-    [2560] = {id=2560,en="Sanngetall",ja="サンゲタル"},
-    [2561] = {id=2561,en="Geirrothr",ja="ゲイルレズ"},
+    [2556] = {id=2556,en="Ofnir",ja="オヴニル"},    -- Odin
+    [2557] = {id=2557,en="Valfodr",ja="ヴァルファズル"},    -- Odin
+    -- [2558] = {id=2558,en="Yggr",ja="ユッグ"},    -- Odin
+    [2559] = {id=2559,en="Gagnrath",ja="ガグンラーズ"}, -- Odin
+    -- [2560] = {id=2560,en="Sanngetall",ja="サンゲタル"},  -- Odin
+    [2561] = {id=2561,en="Geirrothr",ja="ゲイルレズ"},  -- Odin
     [2562] = {id=2562,en="Acrid Stream",ja="アクリッドストリーム"},
     [2563] = {id=2563,en="Rime Spray",ja="ライムスプレー"},
     [2564] = {id=2564,en="Blazing Bound",ja="ブレーズバウンド"},
@@ -2226,8 +2228,8 @@ Res.Monster.Damaging_Abilities = T{
     [2610] = {id=2610,en="Vacant Gaze",ja="ベイカントゲイズ"},
     [2611] = {id=2611,en="Blaster",ja="ブラスター"},
     -- [2612] = {id=2612,en="Wild Carrot",ja="ワイルドカロット"},           -- Rabbit
-    [2613] = {id=2613,en="Spiral Spin",ja="スパイラルスピン"},
-    [2614] = {id=2614,en="Noisome Powder",ja="ノイサムパウダー"},
+    [2613] = {id=2613,en="Spiral Spin",ja="スパイラルスピン"},  -- Ladybug
+    -- [2614] = {id=2614,en="Noisome Powder",ja="ノイサムパウダー"},    -- Ladybug
     [2615] = {id=2615,en="Stag's Cry",ja="スタッグクライ"},
     [2619] = {id=2619,en="Turbine Cyclone",ja="タービンハリケーン"},
     [2620] = {id=2620,en="Seismic Impact",ja="サイズミクインパクト"},
@@ -2295,7 +2297,7 @@ Res.Monster.Damaging_Abilities = T{
     [2702] = {id=2702,en="Terra Wing",ja="テラウィング"},
     [2703] = {id=2703,en="Dread Wind",ja="ドレッドウィンド"},
     [2704] = {id=2704,en="??? Needles",ja="針？本"},
-    [2705] = {id=2705,en="White Wind",ja="ホワイトウィンド"},
+    -- [2705] = {id=2705,en="White Wind",ja="ホワイトウィンド"},    -- Puk
     [2706] = {id=2706,en="Smokebomb",ja="スモークスクリーン"},
     [2707] = {id=2707,en="Paralysis Shower",ja="パラライズシャワー"},
     [2708] = {id=2708,en="Cosmic Breath",ja="コズミックブレス"},
@@ -2347,7 +2349,7 @@ Res.Monster.Damaging_Abilities = T{
     -- [2763] = {id=2763,en="Horror Cloud",ja="ホラークラウド"},    -- Skeleton
     [2764] = {id=2764,en="Black Cloud",ja="ブラッククラウド"},  -- Skeleton
     [2765] = {id=2765,en="Blood Saber",ja="ブラッドセイバー"},  -- Skeleton
-    [2766] = {id=2766,en="Malediction",ja="屍毒"},
+    [2766] = {id=2766,en="Malediction",ja="屍毒"},  -- Skeleton
     [2767] = {id=2767,en="Crepuscule Blade",ja="クレパスキュルブレイド"},
     [2768] = {id=2768,en="Deathly Glare",ja="デスリーグレア"},
     [2769] = {id=2769,en="Blighted Bouquet",ja="ブライテッドブーケ"},
@@ -2357,7 +2359,7 @@ Res.Monster.Damaging_Abilities = T{
     [2775] = {id=2775,en="Tabbiyaa Gambit",ja="タビヤガンビット"},
     [2776] = {id=2776,en="Shah Mat",ja="シャーマット"},
     [2777] = {id=2777,en="Benediction",ja="女神の祝福"},
-    [2778] = {id=2778,en="Reactive Shield",ja="Ｒ．シールド"},
+    -- [2778] = {id=2778,en="Reactive Shield",ja="Ｒ．シールド"}, -- Spheroid?
     [2779] = {id=2779,en="Shock Absorber",ja="Ｓ．アブソーバー"},
     [2780] = {id=2780,en="Replicator",ja="レプリケーター"},
     [2784] = {id=2784,en="Diluvial Wake",ja="ディルビアルウェーク"},
@@ -2383,11 +2385,11 @@ Res.Monster.Damaging_Abilities = T{
     [2811] = {id=2811,en="Keraunos Quill",ja="ケラウノスクイル"},
     [2812] = {id=2812,en="Bilrost Squall",ja="ビルロストスコール"},
     [2813] = {id=2813,en="Dunur Strike",ja="デゥヌルストライク"},
-    [2814] = {id=2814,en="Yawn",ja="ヤーン"},
-    [2815] = {id=2815,en="Wing Slap",ja="ウィングスラップ"},
-    [2816] = {id=2816,en="Beak Lunge",ja="ビークランジ"},
-    [2817] = {id=2817,en="Frigid Shuffle",ja="クールダンス"},
-    [2818] = {id=2818,en="Wing Whirl",ja="貝独楽"},
+    -- [2814] = {id=2814,en="Yawn",ja="ヤーン"},    -- Apkallu
+    [2815] = {id=2815,en="Wing Slap",ja="ウィングスラップ"},    -- Apkallu
+    [2816] = {id=2816,en="Beak Lunge",ja="ビークランジ"},   -- Apkallu
+    -- [2817] = {id=2817,en="Frigid Shuffle",ja="クールダンス"},    -- Apkallu
+    [2818] = {id=2818,en="Wing Whirl",ja="貝独楽"}, -- Apkallu
     [2819] = {id=2819,en="Whiteout",ja="ホワイトアウト"},
     [2820] = {id=2820,en="Keratinous Crush",ja="ケラチナスクラッシュ"},
     [2821] = {id=2821,en="Accurst Spear",ja="アッカストスピア"},
@@ -2396,7 +2398,7 @@ Res.Monster.Damaging_Abilities = T{
     [2824] = {id=2824,en="Cloudscourge",ja="クラウドスカージ"},
     [2825] = {id=2825,en="Louring Skies",ja="ロアリングスカイズ"},
     [2826] = {id=2826,en="Exponential Burst",ja="エクスポネントバースト"},
-    [2827] = {id=2827,en="Sudden Lunge",ja="サドンランジ"},
+    [2827] = {id=2827,en="Sudden Lunge",ja="サドンランジ"}, -- Ladybug
     -- [2828] = {id=2828,en="Jettatura",ja="ジェタチュラ"}, -- Hippogryph
     [2829] = {id=2829,en="Aqua Breath",ja="アクアブレス"},
     [2830] = {id=2830,en="Royal Decree",ja="ロイヤルデクリー"},
@@ -2453,8 +2455,8 @@ Res.Monster.Damaging_Abilities = T{
     [2904] = {id=2904,en="Final Eternal Heart",ja="ファイナル・エターナル・ハート"},
     [2905] = {id=2905,en="Shah's Decree",ja="シャーデクリー"},
     [2906] = {id=2906,en="False Promises",ja="フォルスプロミス"},
-    [2907] = {id=2907,en="Frog Song",ja="カエルの歌"},
-    [2908] = {id=2908,en="Frog Chorus",ja="カエルの大合唱"},
+    -- [2907] = {id=2907,en="Frog Song",ja="カエルの歌"},   -- Poroggo
+    -- [2908] = {id=2908,en="Frog Chorus",ja="カエルの大合唱"}, -- Poroggo
     [2909] = {id=2909,en="Level 3 Petrify",ja="レベル3石化"},
     [2910] = {id=2910,en="Citadel Siege",ja="シタデルシージ"},
     [2911] = {id=2911,en="Catastrophic Malfunction",ja="カタストロフィック・マルファンクション"},
@@ -2953,8 +2955,8 @@ Res.Monster.Damaging_Abilities = T{
     [3518] = {id=3518,en="Bloody Mist",ja="ブラッディーミスト"},
     [3519] = {id=3519,en="Tendril Curse",ja="テンドリルカース"},
     [3520] = {id=3520,en="Frigid Pulse",ja="フリジッドパルス"},
-    [3521] = {id=3521,en="Gates of Hades",ja="ゲーツオブハデス"},
-    [3522] = {id=3522,en="Magma Hoplon",ja="マグマホプロン"},
+    [3521] = {id=3521,en="Gates of Hades",ja="ゲーツオブハデス"},   -- Cerberus
+    -- [3522] = {id=3522,en="Magma Hoplon",ja="マグマホプロン"},    -- Cerberus
     -- [3523] = {id=3523,en="Bad Breath",ja="臭い息"},                  -- Morbol
     [3524] = {id=3524,en="Meteor",ja="メテオ"},
     [3525] = {id=3525,en="Meteor",ja="メテオ"},
@@ -3067,10 +3069,10 @@ Res.Monster.Damaging_Abilities = T{
     [3664] = {id=3664,en="Dryad's Kiss",ja="ドライアドキス"},
     [3665] = {id=3665,en="Depraved Dandia",ja="デプレイブダンディア"},
     [3666] = {id=3666,en="Matriarchal Fiat",ja="メイトリアークフィアット"},
-    [3667] = {id=3667,en="Wings of Gehenna",ja="ウイング・オブ・ゲヘナ"},
-    [3668] = {id=3668,en="Decollation",ja="デコレーション"},
-    [3669] = {id=3669,en="Nosferatu's Kiss",ja="ノスフェラトゥキス"},
-    [3670] = {id=3670,en="Heliovoid",ja="ヒリオヴォイド"},
+    [3667] = {id=3667,en="Wings of Gehenna",ja="ウイング・オブ・ゲヘナ"},   -- Vampyr
+    [3668] = {id=3668,en="Decollation",ja="デコレーション"},    -- Vampyr
+    [3669] = {id=3669,en="Nosferatu's Kiss",ja="ノスフェラトゥキス"},   -- Vampyr
+    -- [3670] = {id=3670,en="Heliovoid",ja="ヒリオヴォイド"},   -- Vampyr
     [3671] = {id=3671,en="Deep Sea Dirge",ja="ディープシーダージ"},
     [3672] = {id=3672,en="Illustrious Aid",ja="イラストリアスアイド"},
     [3676] = {id=3676,en="Vehement Resolution",ja="ヴェヒーメントレゾリューション"},
@@ -3117,7 +3119,7 @@ Res.Monster.Damaging_Abilities = T{
     [3724] = {id=3724,en="Dragonfall",ja="亢竜天鎚落"},
     [3725] = {id=3725,en="Tachi: Kasha",ja="九之太刀・花車",skillchain_a="Fusion",skillchain_b="Compression",skillchain_c=""},
     [3726] = {id=3726,en="Tachi: Fudo",ja="祖之太刀・不動",skillchain_a="Light",skillchain_b="Distortion",skillchain_c=""},
-    [3727] = {id=3727,en="Disorienting Waul",ja="魂の咆哮"},
+    -- [3727] = {id=3727,en="Disorienting Waul",ja="魂の咆哮"}, -- Tiger
     [3728] = {id=3728,en="Arrogance Incarnate",ja="アロガンズインカーネイト"},
     [3729] = {id=3729,en="Amon Drive",ja="アモンドライブ"},
     [3730] = {id=3730,en="Self-Destruct",ja="自爆"},
@@ -3178,7 +3180,7 @@ Res.Monster.Damaging_Abilities = T{
     [3789] = {id=3789,en="Charm",ja="あやつる"},
     [3790] = {id=3790,en="Mog Shrapnel",ja="モグシュラプネル"},
     [3791] = {id=3791,en="Royal Decree",ja="ロイヤルデクリー"},
-    [3793] = {id=3793,en="Doomvoid",ja="ドゥームヴォイド"},
+    -- [3793] = {id=3793,en="Doomvoid",ja="ドゥームヴォイド"},  -- Sandworm
     [3794] = {id=3794,en="Leaf Dagger",ja="リーフダガー"},
     [3795] = {id=3795,en="Raksha: Vengeance",ja="羅刹之断・黒牙"},
     [3796] = {id=3796,en="Demonic Flower",ja="夢狂花"},                 -- Mandragora
@@ -3194,9 +3196,9 @@ Res.Monster.Damaging_Abilities = T{
     [3806] = {id=3806,en="Great Whirlwind",ja="大旋風"},    -- Manticore
     [3807] = {id=3807,en="Shin Zantetsuken",ja="真・斬鉄剣"},
     [3808] = {id=3808,en="Zantetsuken Jin",ja="斬鉄剣・迅"},
-    [3809] = {id=3809,en="Gospel of the Lost",ja="万霊の福音"},
-    [3810] = {id=3810,en="Void of Repentance",ja="懺悔の間"},
-    [3811] = {id=3811,en="Perfect Defense",ja="絶対防御"},
+    -- [3809] = {id=3809,en="Gospel of the Lost",ja="万霊の福音"},  -- Alexander
+    -- [3810] = {id=3810,en="Void of Repentance",ja="懺悔の間"},    -- Alexander
+    -- [3811] = {id=3811,en="Perfect Defense",ja="絶対防御"},   -- Alexander
     [3812] = {id=3812,en="Sacred Caper",ja="セイクリッドケーパー"},
     [3813] = {id=3813,en="Phototrophic Blessing",ja="フォトトロフブレッシング"},
     [3814] = {id=3814,en="Phototrophic Wrath",ja="フォトトロフラース"},
@@ -3256,10 +3258,10 @@ Res.Monster.Damaging_Abilities = T{
     -- [3879] = {id=3879,en="Spoil",ja="スポイル"},                         -- Beetle
     [3880] = {id=3880,en="Cursed Sphere",ja="カースドスフィア"},    -- Fly
     [3881] = {id=3881,en="Venom",ja="毒液"},    -- Fly
-    [3882] = {id=3882,en="Sandblast",ja="サンドブラスト"},
-    [3883] = {id=3883,en="Sandpit",ja="サンドピット"},
-    [3884] = {id=3884,en="Venom Spray",ja="ベノムスプレー"},
-    [3885] = {id=3885,en="Mandibular Bite",ja="マンディビュラバイト",skillchain_a="Detonation",skillchain_b="",skillchain_c=""},
+    -- [3882] = {id=3882,en="Sandblast",ja="サンドブラスト"},  -- Antlion
+    -- [3883] = {id=3883,en="Sandpit",ja="サンドピット"},   -- Antlion
+    -- [3884] = {id=3884,en="Venom Spray",ja="ベノムスプレー"}, -- Antlion
+    [3885] = {id=3885,en="Mandibular Bite",ja="マンディビュラバイト",skillchain_a="Detonation",skillchain_b="",skillchain_c=""},    -- Antlion
     -- [3886] = {id=3886,en="Soporific",ja="サペリフィック"},   -- Flytrap
     -- [3887] = {id=3887,en="Gloeosuccus",ja="グロオーサケス"}, -- Flytrap
     -- [3888] = {id=3888,en="Palsy Pollen",ja="パルジィパレン"},    -- Flytrap
@@ -3274,21 +3276,21 @@ Res.Monster.Damaging_Abilities = T{
     [3897] = {id=3897,en="Spinning Top",ja="スピニングトップ",skillchain_a="Impaction",skillchain_b="",skillchain_c=""}, -- Diremite
     [3898] = {id=3898,en="Chaotic Eye",ja="カオティックアイ"},
     [3899] = {id=3899,en="Blaster",ja="ブラスター"},
-    [3900] = {id=3900,en="Suction",ja="吸着",skillchain_a="Compression",skillchain_b="",skillchain_c=""},
-    [3901] = {id=3901,en="Drainkiss",ja="ドレインキッス"},
+    [3900] = {id=3900,en="Suction",ja="吸着",skillchain_a="Compression",skillchain_b="",skillchain_c=""},   -- Leech
+    [3901] = {id=3901,en="Drainkiss",ja="ドレインキッス"},  -- Leech
     [3902] = {id=3902,en="Snow Cloud",ja="雪煙"},   -- Rabbit
     -- [3903] = {id=3903,en="Wild Carrot",ja="ワイルドカロット"},           -- Rabbit
-    [3904] = {id=3904,en="Sudden Lunge",ja="サドンランジ",skillchain_a="Impaction",skillchain_b="",skillchain_c=""},
-    [3905] = {id=3905,en="Spiral Spin",ja="スパイラルスピン",skillchain_a="Scission",skillchain_b="",skillchain_c=""},
-    [3906] = {id=3906,en="Noisome Powder",ja="ノイサムパウダー"},
-    [3907] = {id=3907,en="Acid Mist",ja="アシッドミスト"},
+    [3904] = {id=3904,en="Sudden Lunge",ja="サドンランジ",skillchain_a="Impaction",skillchain_b="",skillchain_c=""},    -- Ladybug
+    [3905] = {id=3905,en="Spiral Spin",ja="スパイラルスピン",skillchain_a="Scission",skillchain_b="",skillchain_c=""},  -- Ladybug
+    -- [3906] = {id=3906,en="Noisome Powder",ja="ノイサムパウダー"},    -- Ladybug
+    [3907] = {id=3907,en="Acid Mist",ja="アシッドミスト"},  -- Leech
     [3908] = {id=3908,en="TP Drainkiss",ja="TP吸収キッス"},
     [3909] = {id=3909,en="Scythe Tail",ja="サイズテール",skillchain_a="Liquefaction",skillchain_b="",skillchain_c=""},  -- Raptor
     [3910] = {id=3910,en="Ripper Fang",ja="リッパーファング",skillchain_a="Induration",skillchain_b="",skillchain_c=""},    -- Raptor
     [3911] = {id=3911,en="Chomp Rush",ja="噛みつきラッシュ",skillchain_a="Darkness",skillchain_b="Gravitation",skillchain_c=""},     -- Raptor
     [3912] = {id=3912,en="Charged Whisker",ja="チャージドホイスカー"},
-    [3913] = {id=3913,en="Purulent Ooze",ja="ピュルラントウーズ"},
-    [3914] = {id=3914,en="Corrosive Ooze",ja="コローシブウーズ"},
+    [3913] = {id=3913,en="Purulent Ooze",ja="ピュルラントウーズ"},  -- Slug
+    [3914] = {id=3914,en="Corrosive Ooze",ja="コローシブウーズ"},   -- Slug
     [3915] = {id=3915,en="Back Heel",ja="バックヒール",skillchain_a="Reverberation",skillchain_b="",skillchain_c=""},   -- Hippogryph
     -- [3916] = {id=3916,en="Jettatura",ja="ジェタチュラ"}, -- Hippogryph
     [3917] = {id=3917,en="Choke Breath",ja="チョークブレス"},   -- Hippogryph
@@ -3296,8 +3298,8 @@ Res.Monster.Damaging_Abilities = T{
     [3919] = {id=3919,en="Tortoise Stomp",ja="トータスストンプ",skillchain_a="Liquefaction",skillchain_b="",skillchain_c=""},
     [3920] = {id=3920,en="Harden Shell",ja="甲羅強化"},
     [3921] = {id=3921,en="Aqua Breath",ja="アクアブレス"},
-    [3922] = {id=3922,en="Wing Slap",ja="ウィングスラップ",skillchain_a="Gravitation",skillchain_b="Liquefaction",skillchain_c=""},
-    [3923] = {id=3923,en="Beak Lunge",ja="ビークランジ",skillchain_a="Scission",skillchain_b="",skillchain_c=""},
+    [3922] = {id=3922,en="Wing Slap",ja="ウィングスラップ",skillchain_a="Gravitation",skillchain_b="Liquefaction",skillchain_c=""}, -- Apkallu
+    [3923] = {id=3923,en="Beak Lunge",ja="ビークランジ",skillchain_a="Scission",skillchain_b="",skillchain_c=""},   -- Apkallu
     -- [3924] = {id=3924,en="Intimidate",ja="威嚇"},    -- Pugil
     [3925] = {id=3925,en="Recoil Dive",ja="リコイルダイブ",skillchain_a="Transfixion",skillchain_b="",skillchain_c=""}, -- Pugil
     -- [3926] = {id=3926,en="Water Wall",ja="ウォーターウォール"}, -- Pugil
@@ -3315,15 +3317,15 @@ Res.Monster.Damaging_Abilities = T{
     [3938] = {id=3938,en="Somersault",ja="サマーソルト",skillchain_a="Compression",skillchain_b="",skillchain_c=""},    -- Damselfly
     [3939] = {id=3939,en="Foul Waters",ja="ファウルウォーター"},
     [3940] = {id=3940,en="Pestilent Plume",ja="ペステレントプルーム"},
-    [3941] = {id=3941,en="Pecking Flurry",ja="ペッキングフラリー",skillchain_a="Transfixion",skillchain_b="",skillchain_c=""},
+    [3941] = {id=3941,en="Pecking Flurry",ja="ペッキングフラリー",skillchain_a="Transfixion",skillchain_b="",skillchain_c=""},  -- Colibri
     [3942] = {id=3942,en="Sickle Slash",ja="シックルスラッシュ",skillchain_a="Transfixion",skillchain_b="",skillchain_c=""},    -- Spider
     [3943] = {id=3943,en="Acid Spray",ja="アシッドスプレー"},   -- Spider
     -- [3944] = {id=3944,en="Spider Web",ja="スパイダーウェブ"},    -- Spider
     [3945] = {id=3945,en="Infected Leech",ja="インフェクティドサッカー"},
     [3946] = {id=3946,en="Gloom Spray",ja="グルームスプレー"},
-    [3947] = {id=3947,en="Insipid Nip",ja="インシピッドニップ"},
-    [3948] = {id=3948,en="Pandemic Nip",ja="パンデミックニップ"},
-    [3949] = {id=3949,en="Cimicine Discharge",ja="シミサインディスチャージ"},
+    [3947] = {id=3947,en="Insipid Nip",ja="インシピッドニップ"},    -- Gnat
+    [3948] = {id=3948,en="Pandemic Nip",ja="パンデミックニップ"},   -- Gnat
+    -- [3949] = {id=3949,en="Cimicine Discharge",ja="シミサインディスチャージ"},    -- Gnat
     [3950] = {id=3950,en="Disembowel",ja="ディスエンバウエル"},
     [3951] = {id=3951,en="Extirpating Salvo",ja="エクティアパーチングサルヴォ"},
     [3952] = {id=3952,en="Venom Shower",ja="ベノムシャワー"},
@@ -3428,11 +3430,11 @@ Res.Monster.Damaging_Abilities = T{
     [4167] = {id=4167,en="Ka-thwack",ja="カスワック"},
     [4168] = {id=4168,en="Slam",ja="スラム"},
     [4169] = {id=4169,en="Booby Prize",ja="ブビープライズ"},
-    [4170] = {id=4170,en="Ofnir",ja="オヴニル"},
-    [4171] = {id=4171,en="Valfodr",ja="ヴァルファズル"},
-    [4172] = {id=4172,en="Yggr",ja="ユッグ"},
-    [4173] = {id=4173,en="Sanngetall",ja="サンゲタル"},
-    [4174] = {id=4174,en="Geirrothr",ja="ゲイルレズ"},
+    [4170] = {id=4170,en="Ofnir",ja="オヴニル"},    -- Odin
+    [4171] = {id=4171,en="Valfodr",ja="ヴァルファズル"},    -- Odin
+    -- [4172] = {id=4172,en="Yggr",ja="ユッグ"},    -- Odin
+    -- [4173] = {id=4173,en="Sanngetall",ja="サンゲタル"},  -- Odin
+    [4174] = {id=4174,en="Geirrothr",ja="ゲイルレズ"},  -- Odin
     [4175] = {id=4175,en="Zantetsuken X",ja="斬鉄剣・剛"},
     [4176] = {id=4176,en="HP ? Holy",ja="HP？ホーリー"},
     [4177] = {id=4177,en="HP ? Holy",ja="HP？ホーリー"},
@@ -3440,12 +3442,12 @@ Res.Monster.Damaging_Abilities = T{
     [4179] = {id=4179,en="HP ? Holy",ja="HP？ホーリー"},
     [4180] = {id=4180,en="HP ? Holy",ja="HP？ホーリー"},
     [4181] = {id=4181,en="HP ? Holy",ja="HP？ホーリー"},
-    [4182] = {id=4182,en="Gospel of the Lost",ja="万霊の福音"},
-    [4183] = {id=4183,en="Void of Repentance",ja="懺悔の間"},
-    [4184] = {id=4184,en="Divine Spear",ja="聖なる炎"},
-    [4185] = {id=4185,en="Mega Holy",ja="メガホーリー"},
-    [4186] = {id=4186,en="Radiant Sacrament",ja="拝火の秘蹟"},
-    [4187] = {id=4187,en="Divine Judgment",ja="聖なる審判"},
+    -- [4182] = {id=4182,en="Gospel of the Lost",ja="万霊の福音"},  -- Alexander
+    -- [4183] = {id=4183,en="Void of Repentance",ja="懺悔の間"},    -- Alexander
+    [4184] = {id=4184,en="Divine Spear",ja="聖なる炎"}, -- Alexander
+    [4185] = {id=4185,en="Mega Holy",ja="メガホーリー"},    -- Alexander
+    [4186] = {id=4186,en="Radiant Sacrament",ja="拝火の秘蹟"},  -- Alexander
+    [4187] = {id=4187,en="Divine Judgment",ja="聖なる審判"},    -- Alexander
     [4188] = {id=4188,en="Dark Thorn",ja="ダークソーン"},
     [4189] = {id=4189,en="Petaline Tempest",ja="ペタラインテンペスト"},
     [4190] = {id=4190,en="Durance Whip",ja="デュランスウィップ"},

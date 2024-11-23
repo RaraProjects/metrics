@@ -94,7 +94,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Damage.By_Type_Metric = function(player_name, damage_type, metric, justify)
     local damage = DB.Data.Get(player_name, damage_type, metric)
-    if (metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and damage >= DB.Enum.Values.MAX_DAMAGE then damage = 0 end
+    if (metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and damage >= DB.Enum.MAX_DAMAGE then damage = 0 end
     local color = Column.String.Color_Zero(damage)
     return UI.TextColored(color, Column.String.Format_Number(damage, justify))
 end

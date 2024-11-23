@@ -78,7 +78,7 @@ DB.Initialize = function(reset)
 	DB.Widgets.Dropdown.Player.Index = 1
 	DB.Widgets.Dropdown.Mob.Focus = DB.Widgets.Dropdown.Enum.NONE
 	DB.Widgets.Dropdown.Mob.Index = 1
-	for spell, threshold in pairs(DB.Enum.HEALING) do
+	for spell, threshold in pairs(DB.Healing_Max_Defaults) do
 		DB.Healing_Max[spell] = threshold
 	end
 	Blog.Reset_Log()

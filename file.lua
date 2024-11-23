@@ -25,7 +25,7 @@ File.Save_Data = function()
         for index, trackable_data in pairs(DB.Parse) do
             for trackable, metric_data in pairs(trackable_data) do
                 for metric, data in pairs(metric_data) do
-                    if metric ~= DB.Enum.Values.CATALOG and data > 0 then
+                    if metric ~= DB.Enum.CATALOG and data > 0 then
                         local player_target = index:gsub(":", File.Delimiter)
                         file:write(tostring(player_target) .. File.Delimiter .. File.Delimiter .. tostring(trackable) .. File.Delimiter
                                 .. tostring(metric) .. File.Delimiter .. tostring(data) .. "\n")
@@ -38,7 +38,7 @@ File.Save_Data = function()
             for pet_name, trackable_data in pairs(pet_data) do
                 for trackable, metric_data in pairs(trackable_data) do
                     for metric, data in pairs(metric_data) do
-                        if metric ~= DB.Enum.Values.CATALOG and data > 0 then
+                        if metric ~= DB.Enum.CATALOG and data > 0 then
                             local player_target = index:gsub(":", File.Delimiter)
                             file:write(tostring(player_target) .. File.Delimiter .. tostring(pet_name) .. File.Delimiter
                                     .. tostring(trackable) .. File.Delimiter .. tostring(metric) .. File.Delimiter .. tostring(data) .. "\n")
@@ -73,7 +73,7 @@ File.Save_Catalog = function()
         for index, trackable_data in pairs(DB.Parse) do
             for trackable, metric_data in pairs(trackable_data) do
                 for catalog_metric, catalog_data in pairs(metric_data) do
-                    if catalog_metric == DB.Enum.Values.CATALOG then
+                    if catalog_metric == DB.Enum.CATALOG then
                         for action_name, action_data in pairs(catalog_data) do
                             for metric, data in pairs(action_data) do
                                 if not metric or not data then
@@ -95,7 +95,7 @@ File.Save_Catalog = function()
             for pet_name, trackable_data in pairs(pet_data) do
                 for trackable, metric_data in pairs(trackable_data) do
                     for catalog_metric, catalog_data in pairs(metric_data) do
-                        if catalog_metric == DB.Enum.Values.CATALOG then
+                        if catalog_metric == DB.Enum.CATALOG then
                             for action_name, action_data in pairs(catalog_data) do
                                 for metric, data in pairs(action_data) do
                                     if not metric or not data then

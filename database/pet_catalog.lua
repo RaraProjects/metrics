@@ -27,8 +27,8 @@ DB.Pet_Catalog.Initialize = function(index, player_name, trackable, action_name,
 	for _, metric in pairs(DB.Metric) do
 		DB.Pet_Catalog.Set(0, index, pet_name, trackable, action_name, metric)
 	end
-	DB.Pet_Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Metric.MIN)
-	DB.Pet_Catalog.Set(DB.Enum.Values.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Metric.CRITICAL_MIN)
+	DB.Pet_Catalog.Set(DB.Enum.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Metric.MIN)
+	DB.Pet_Catalog.Set(DB.Enum.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Metric.CRITICAL_MIN)
 
 	-- Initialize tracking tables
 	DB.Pet_Catalog.Initialize_Tracking(trackable, player_name, pet_name)
@@ -121,7 +121,7 @@ DB.Pet_Catalog.Get = function(player_name, pet_name, trackable, action_name, met
 		return 0
 	end
 	local total = 0
-	if metric == DB.Metric.MIN then total = DB.Enum.Values.MAX_DAMAGE end
+	if metric == DB.Metric.MIN then total = DB.Enum.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	for index, _ in pairs(DB.Pet_Parse_Catalog) do
 		if mob_focus == DB.Widgets.Dropdown.Enum.NONE then

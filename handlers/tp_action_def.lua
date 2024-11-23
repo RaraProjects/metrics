@@ -80,17 +80,17 @@ H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws
 
     -- Totals need to be updated manually here because Update_Damage isn't set up for defense metrics totals.
     if owner_mob then
-        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
+        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
     else
-        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
+        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
     end
 
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, audits.trackable, damage, ws_name, audits.pet_name)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, audits.trackable, ws_name, DB.Metric.ATTEMPTS)
-    DB.Data.Update(H.Mode.INC, 1, audits, audits.trackable, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, audits.trackable, ws_name, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, audits.trackable, DB.Metric.ATTEMPTS)
     if damage > 0 then
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, audits.trackable, ws_name, DB.Metric.HIT_COUNT)
-        DB.Data.Update(H.Mode.INC, 1, audits, audits.trackable, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, audits.trackable, ws_name, DB.Metric.HIT_COUNT)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, audits.trackable, DB.Metric.HIT_COUNT)
     end
 
     return damage

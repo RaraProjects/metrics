@@ -283,8 +283,8 @@ Focus.Pets.Single_Row = function(player_name, pet_name, action_name, trackable)
     UI.TableNextColumn() Column.Single.Pet_Average(player_name, pet_name, action_name, trackable)
 
     local min = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.MIN)
-    if min == DB.Enum.Values.MAX_DAMAGE then
-        UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Enum.Values.IGNORE)
+    if min == DB.Enum.MAX_DAMAGE then
+        UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Enum.IGNORE)
     else
         UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Metric.MIN)
     end

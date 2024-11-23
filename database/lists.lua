@@ -190,7 +190,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Populate.Pet_Catalog_Damage = function(player_name, pet_name)
 	DB.Sorted.Pet_Catalog_Damage = {}
-	for _, trackable in pairs(DB.Enum.Pet_Single_Trackable) do
+	for _, trackable in pairs(DB.Pet_Single_Trackable) do
 		if DB.Lists.Check.Pet_Catalog_Exists(trackable, player_name, pet_name) then
 			for action_name, _ in pairs(DB.Tracking.Pet_Trackable[trackable][player_name][pet_name]) do
 				table.insert(DB.Sorted.Pet_Catalog_Damage, {action_name, 999, trackable})
@@ -205,7 +205,7 @@ end
 ---@param target_name string
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Check.Mob_Exists = function(target_name)
-	if target_name ~= DB.Enum.Values.DEBUG and not DB.Tracking.Initialized_Mobs[target_name] then
+	if target_name ~= DB.Enum.DEBUG and not DB.Tracking.Initialized_Mobs[target_name] then
 		DB.Tracking.Initialized_Mobs[target_name] = true
 		table.insert(DB.Sorted.Mobs, target_name)
 		table.sort(DB.Sorted.Mobs)

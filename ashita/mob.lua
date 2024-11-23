@@ -72,7 +72,7 @@ Ashita.Mob.Data = function(id, convert_id)
     entity.name = entity_manager:GetName(index)
     if entity.name == "" then
         Debug.Error.Add(Debug.Error.ERROR, "Ashita.Mob.Data", "Encountered a blank mob name. ID {" .. tostring(id) .. "}.")
-        entity.name = DB.Enum.Values.DEBUG
+        entity.name = DB.Enum.DEBUG
     end
 
     entity.id = string.sub(string.format("0x%X", entity_manager:GetServerId(index)), -3) -- This came from HXUI

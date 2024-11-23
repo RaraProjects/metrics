@@ -1,4 +1,4 @@
-Column = T{}
+Column = {}
 
 Column.Flags = {
     None = bit.bor(ImGuiTableColumnFlags_None),
@@ -15,8 +15,6 @@ Column.Widths = {
     Report = 110,
     Catalog = 65,
 }
-
-Column.Mode = DB.Enum.Mode
 
 -- Load dependencies
 require("columns.string")

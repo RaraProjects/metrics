@@ -11,7 +11,7 @@ Column.Proc = T{}
 ------------------------------------------------------------------------------------------------------
 Column.Proc.Crit_Rate = function(player_name, damage_type, justify)
     local crits, attempts
-    if damage_type == DB.Enum.Values.COMBINED then
+    if damage_type == DB.Enum.COMBINED then
         local melee_crits     = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.CRITICAL_COUNT)
         local melee_hits  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.HIT_COUNT)
         local ranged_crits    = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.CRITICAL_COUNT)
@@ -38,7 +38,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Proc.Crit_Damage = function(player_name, damage_type, percent, justify)
     local crit_damage
-    if damage_type == DB.Enum.Values.COMBINED then
+    if damage_type == DB.Enum.COMBINED then
         local melee_crits  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  DB.Metric.CRITICAL_DAMAGE)
         local ranged_crits = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.CRITICAL_DAMAGE)
         crit_damage = melee_crits + ranged_crits
@@ -64,7 +64,7 @@ end
 Column.Proc.Crit_Average = function(player_name, damage_type, justify)
     local crit_damage = 0
     local crit_count = 0
-    if damage_type == DB.Enum.Values.COMBINED then
+    if damage_type == DB.Enum.COMBINED then
         local melee_crits       = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  DB.Metric.CRITICAL_DAMAGE)
         local melee_crit_count  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  DB.Metric.CRITICAL_COUNT)
         local ranged_crits      = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.CRITICAL_DAMAGE)

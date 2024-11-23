@@ -1,3 +1,13 @@
+DB.Enum = {
+    CATALOG     = "catalog",
+	PET_CATALOG = "pet_catalog",
+    DEBUG       = "Debug",
+    IGNORE      = "ignore",
+	COMBINED    = "combined",
+    BLANK       = "",
+    MAX_DAMAGE  = 100000,
+}
+
 DB.Trackable = {
     TOTAL_DAMAGE               = "Total Damage",
     TOTAL_DAMAGE_NO_SKILLCHAIN = "Total Damage No Skillchain",
@@ -116,14 +126,13 @@ DB.Metric = {
     GUARD              = "Guard",                -- Delete this?
 }
 
-DB.Enum = T{}
-
-DB.Enum.Mode = T{
+DB.Update_Mode = {
     INC = "inc",
-	SET = "set",
+    SET = "set",
 }
 
-DB.Enum.Pet_Single_Trackable = T{
+-- Used in lists to find all the actions that pets have done.
+DB.Pet_Single_Trackable = {
 	PET_WS         = DB.Trackable.PET_TP,
 	PET_HEAL       = DB.Trackable.PET_HEALING,
 	PET_NUKE       = DB.Trackable.PET_NUKING,
@@ -132,16 +141,7 @@ DB.Enum.Pet_Single_Trackable = T{
 	PET_MAGIC      = DB.Trackable.PET_GENERAL_MAGIC,
 }
 
-DB.Enum.Values = T{
-    CATALOG     = "catalog",
-	PET_CATALOG = "pet_catalog",
-    DEBUG       = "Debug",
-    IGNORE      = 'ignore',
-	COMBINED    = 'combined',
-    MAX_DAMAGE  = 100000,
-}
-
-DB.Enum.HEALING = T{
+DB.Healing_Max_Defaults = {
     ["Cure"]       = 50,	-- 35
     ["Cure II"]    = 150, 	-- 102
     ["Cure III"]   = 250, 	-- 212
@@ -155,7 +155,8 @@ DB.Enum.HEALING = T{
     ["Curaga V"]   = 800,
 }
 
-DB.Healing_Max = T{
+-- This is the configurable healing max used for overcure.
+DB.Healing_Max = {
     ["Cure"]       = 50,
     ["Cure II"]    = 150,
     ["Cure III"]   = 250,

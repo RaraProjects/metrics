@@ -408,7 +408,7 @@ Overview.Parse.Pets = function()
                     row = row + 1
 
                     -- Specific Pets
-                    local pet_name = DB.Enum.Values.DEBUG
+                    local pet_name = DB.Enum.DEBUG
                     DB.Lists.Populate.Pet_Damage(player_name)
                     for _, pet_data in ipairs(DB.Sorted.Pet_Damage) do
                         pet_name = pet_data[1]

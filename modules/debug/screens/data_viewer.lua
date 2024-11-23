@@ -32,14 +32,14 @@ end
 Debug.Data_View.Node = function(stack, data)
     for index, value in pairs(data) do
         if type(value) == "table" then
-            if index ~= DB.Enum.Values.CATALOG then
+            if index ~= DB.Enum.CATALOG then
                 table.insert(stack, index)
                 Debug.Data_View.Node(stack, value)
                 table.remove(stack)
             end
         else
             if value and value > 0 then
-                if not (index == DB.Metric.MIN and value == DB.Enum.Values.MAX_DAMAGE) then
+                if not (index == DB.Metric.MIN and value == DB.Enum.MAX_DAMAGE) then
                     for _, v in ipairs(stack) do UI.Text(tostring(v)) UI.SameLine() UI.Text(" ") UI.SameLine() end
                     UI.Text(tostring(index) .. ": " .. tostring(value))
                 end

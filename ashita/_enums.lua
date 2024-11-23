@@ -1,25 +1,30 @@
-Ashita.Enum = T{}
+Ashita.Enum = {}
 
-Ashita.Enum.Chat = T{
+Ashita.Enum.Chat = {
     PARTY      = 1,
     LINKSHELL  = 2,
     LINKSHELL2 = 3,
     SAY        = 4,
 }
 
-Ashita.Enum.Player_Attributes = T{
+Ashita.Enum.Player_Attributes = {
     TP       = "TP",
     PET_TP   = "Pet TP",
     ISZONING = "IsZoning",
 }
 
-Ashita.Enum.Targets = T{
+Ashita.Enum.Targets = {
     ME       = "me",
     TARGET   = "t",
     PET      = "pet",
 }
 
-Ashita.Enum.Spawn_Flags = T{
+Ashita.Enum.Ability_Offsets = {
+    ABILITY = 512,
+    PET  = 512,
+}
+
+Ashita.Enum.Spawn_Flags = {
     MAINPLAYER  = 525,
     OTHERPLAYER = 1,
     NPC         = 2,
@@ -30,7 +35,7 @@ Ashita.Enum.Spawn_Flags = T{
     PET         = 258,
 }
 
-Ashita.Enum.Ability = T{
+Ashita.Enum.Ability = {
     NORMAL        = 1,  -- Type: Normal Ability
     PETLOGISTICS  = 2,  -- Type: Fight, Heel, Stay, etc.
     BLOODPACTRAGE = 6,  -- Type:
@@ -39,7 +44,7 @@ Ashita.Enum.Ability = T{
 }
 
 -- Animation IDs from incoming packet 0x028 (Action Packet).
-Ashita.Enum.Animation = T{
+Ashita.Enum.Animation = {
     MELEE_MAIN    = 0,
     MELEE_OFFHAND = 1,
     MELEE_KICK    = 2,
@@ -47,12 +52,12 @@ Ashita.Enum.Animation = T{
     DAKEN         = 4,
 }
 
-Ashita.Enum.Reaction = T{
+Ashita.Enum.Reaction = {
     GUARD        = 2,
     SHIELD_BLOCK = 4,
 }
 
-Ashita.Enum.Effect_Animation = T{
+Ashita.Enum.Effect_Animation = {
     FIRE     = 1,
     ICE      = 2,
     WIND     = 3,
@@ -75,7 +80,7 @@ Ashita.Enum.Effect_Animation = T{
 }
 
 -- Message IDs from incoming packet 0x029 (Action Message).
-Ashita.Enum.Message = T{
+Ashita.Enum.Message = {
     HIT         = 1,
     MOBHEAL3    = 3,
     MOB_KILL    = 6,

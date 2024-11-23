@@ -83,11 +83,11 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Totals = function(audits, damage, ranged_type)
-    DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE,  DB.Metric.TOTAL)
-    DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, DB.Metric.ATTEMPTS)
-    DB.Data.Update(H.Mode.INC,      1, audits, DB.Trackable.RANGED_SQUARE_HIT, DB.Metric.ATTEMPTS)
-    DB.Data.Update(H.Mode.INC,      1, audits, DB.Trackable.RANGED_TRUE_STRIKE, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE,  DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_SQUARE_HIT, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_TRUE_STRIKE, DB.Metric.ATTEMPTS)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -99,7 +99,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Pet_Total = function(owner_mob, audits, damage)
     if owner_mob then
-        DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
+        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     end
 end
 
@@ -140,8 +140,8 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Hit = function(audits, damage, ranged_type)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
     DB.Accuracy.Update(audits.player_name, true)
 end
 
@@ -153,10 +153,10 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Square = function(audits, damage, ranged_type)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
-    DB.Data.Update(H.Mode.INC,      1, audits, DB.Trackable.RANGED_SQUARE_HIT, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.RANGED_SQUARE_HIT, DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_SQUARE_HIT, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.RANGED_SQUARE_HIT, DB.Metric.TOTAL)
     DB.Accuracy.Update(audits.player_name, true)
 end
 
@@ -168,10 +168,10 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Truestrike = function(audits, damage, ranged_type)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
-    DB.Data.Update(H.Mode.INC,      1, audits, DB.Trackable.RANGED_TRUE_STRIKE, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC, damage, audits, DB.Trackable.RANGED_TRUE_STRIKE, DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_TRUE_STRIKE, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.RANGED_TRUE_STRIKE, DB.Metric.TOTAL)
     DB.Accuracy.Update(audits.player_name, true)
 end
 
@@ -183,10 +183,10 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Crit = function(audits, damage, ranged_type)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, DB.Metric.CRITICAL_COUNT)
-    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, DB.Metric.CRITICAL_DAMAGE)
-    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.CRITICAL_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.CRITICAL_DAMAGE)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
     DB.Accuracy.Update(audits.player_name, true)
 end
 
@@ -207,26 +207,26 @@ H.Ranged.Additional_Effect = function(audits, result)
         if message_id == Ashita.Enum.Message.ENDAMAGE then
             local effect_name = Res.Game.Get_Additional_Effect_Animation(animation_id)
             if animation_id then
-                DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,    DB.Metric.TOTAL)
-                DB.Data.Update(H.Mode.INC,     1, audits, DB.Trackable.RANGED_ENDAMAGE, DB.Metric.HIT_COUNT)
+                DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,    DB.Metric.TOTAL)
+                DB.Data.Update(DB.Update_Mode.INC,     1, audits, DB.Trackable.RANGED_ENDAMAGE, DB.Metric.HIT_COUNT)
                 DB.Catalog.Update_Damage(audits.player_name, audits.target_name, DB.Trackable.RANGED_ENDAMAGE, param, effect_name)
-                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.RANGED_ENDAMAGE, effect_name, DB.Metric.HIT_COUNT)
+                DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.RANGED_ENDAMAGE, effect_name, DB.Metric.HIT_COUNT)
             end
         elseif message_id == Ashita.Enum.Message.ENDEBUFF then
             local buff = Res.Buffs.Get_Buff(param)
             if buff then
-                DB.Data.Update(H.Mode.INC, 1, audits, DB.Trackable.RANGED_ENDEBUFF, DB.Metric.HIT_COUNT)
-                DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, DB.Trackable.RANGED_ENDEBUFF, buff.en, DB.Metric.HIT_COUNT)
+                DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.RANGED_ENDEBUFF, DB.Metric.HIT_COUNT)
+                DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.RANGED_ENDEBUFF, buff.en, DB.Metric.HIT_COUNT)
             end
         elseif message_id == Ashita.Enum.Message.ENDRAIN then
-            DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,       DB.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
-            DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.TOTAL_DAMAGE,       DB.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
-            DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
-            DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.RANGED_ENDRAIN,   DB.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, 1,     audits, DB.Trackable.RANGED_ENDRAIN,   DB.Metric.HIT_COUNT)
+            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,       DB.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
+            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.TOTAL_DAMAGE,       DB.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
+            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
+            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.RANGED_ENDRAIN,   DB.Metric.TOTAL)
+            DB.Data.Update(DB.Update_Mode.INC, 1,     audits, DB.Trackable.RANGED_ENDRAIN,   DB.Metric.HIT_COUNT)
         elseif message_id == Ashita.Enum.Message.ENASPIR then
-            DB.Data.Update(H.Mode.INC, param, audits, DB.Trackable.RANGED_ENASPIR, DB.Metric.TOTAL)
-            DB.Data.Update(H.Mode.INC, 1,     audits, DB.Trackable.RANGED_ENASPIR, DB.Metric.HIT_COUNT)
+            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.RANGED_ENASPIR, DB.Metric.TOTAL)
+            DB.Data.Update(DB.Update_Mode.INC, 1,     audits, DB.Trackable.RANGED_ENASPIR, DB.Metric.HIT_COUNT)
         end
 
     end
@@ -240,8 +240,8 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.PUP_Hit = function(audits, damage, ranged_type)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
     DB.Accuracy.Update(audits.player_name, true)
 end
 
@@ -265,8 +265,8 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Shadows = function(audits, damage, ranged_type)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(H.Mode.INC,      1, audits, ranged_type, DB.Metric.SHADOW_ABSORPTION)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.SHADOW_ABSORPTION)
     return damage
 end
 
@@ -285,8 +285,8 @@ H.Ranged.Min_Max = function(damage, audits, ranged_type, message_id)
        min_metric = DB.Metric.CRITICAL_MIN
        max_metric = DB.Metric.CRITICAL_MAX
     end
-    if damage > 0 and (damage < DB.Data.Get(audits.player_name, ranged_type, min_metric)) then DB.Data.Update(H.Mode.SET, damage, audits, ranged_type, min_metric) end
-    if damage > DB.Data.Get(audits.player_name, ranged_type, max_metric) then DB.Data.Update(H.Mode.SET, damage, audits, ranged_type, max_metric) end
+    if damage > 0 and (damage < DB.Data.Get(audits.player_name, ranged_type, min_metric)) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, ranged_type, min_metric) end
+    if damage > DB.Data.Get(audits.player_name, ranged_type, max_metric) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, ranged_type, max_metric) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -302,5 +302,5 @@ H.Ranged.Distance = function(audits, actor_mob, target_mob, ranged_type)
     local distance = Ashita.Mob.Distance(actor_mob, target_mob)
     if distance < 0 then return nil end
     if distance > 30 then distance = 30 end
-    DB.Data.Update(H.Mode.INC, distance, audits, ranged_type, DB.Metric.SHOT_DISTANCE)
+    DB.Data.Update(DB.Update_Mode.INC, distance, audits, ranged_type, DB.Metric.SHOT_DISTANCE)
 end

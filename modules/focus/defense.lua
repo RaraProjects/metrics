@@ -300,7 +300,7 @@ Focus.Defense.Single_Row = function(player_name, action_name, focus_type)
     UI.TableNextColumn() Column.Single.Average(player_name, action_name, focus_type)
     local min = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.MIN)
     if min == 100000 then
-        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.Values.IGNORE)
+        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.IGNORE)
     else
         UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MIN)
     end
