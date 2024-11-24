@@ -12,6 +12,7 @@ H.Melee_Def.Action = function(action, actor_mob, owner_mob, log_defense)
 	if not log_defense then return nil end
 	local result, target_mob
 	local damage = 0
+    local counter_damage = 0
 
 	for target_index, target_value in pairs(action.targets) do
 		for action_index, _ in pairs(target_value.actions) do
@@ -19,12 +20,14 @@ H.Melee_Def.Action = function(action, actor_mob, owner_mob, log_defense)
 			target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if target_mob then
                 if Ashita.Mob.Is_Monster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
-			    damage = damage + H.Melee_Def.Parse(result, actor_mob.name, target_mob.name, owner_mob)
+			    local new_damage, new_counter_damage = H.Melee_Def.Parse(result, actor_mob.name, target_mob.name, owner_mob)
+                damage = damage + new_damage
+                counter_damage = counter_damage + new_counter_damage
             end
 		end
 	end
 
-    H.Melee_Def.Blog(actor_mob, damage)
+    H.Melee_Def.Blog(actor_mob, damage, counter_damage)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -34,7 +37,7 @@ end
 ---@param actor_name string name of the player that did the action.
 ---@param target_name string name of the target that received the action.
 ---@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
----@return number
+---@return integer, integer
 ------------------------------------------------------------------------------------------------------
 H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
     Debug.Packet.Add_Action(actor_name, target_name, "Melee Def.", result)
@@ -43,6 +46,7 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
     local message_id = result.message
     local effect_message_id = result.add_effect_message
     local effect_animation_id = result.add_effect_animation
+    local counter_damage = 0
 
     -- Need special handling for pets
     local pet_name = nil
@@ -74,7 +78,7 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
         if not action_taken then action_taken = H.Melee_Def.Parry(audits, message_id) end
         if not action_taken then action_taken = H.Melee_Def.Shadows(audits, message_id) end
         if not action_taken then action_taken = H.Melee_Def.Third_Eye(audits, message_id) end
-        if not action_taken then action_taken = H.Melee_Def.Counter(audits, result) end
+        if not action_taken then action_taken, counter_damage = H.Melee_Def.Counter(audits, result) end
         if not action_taken then action_taken = H.Melee_Def.Guard(audits, damage, reaction_id) end
         if not action_taken then action_taken = H.Melee_Def.Block(audits, damage, reaction_id) end
 
@@ -93,20 +97,22 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
         if add_effect_damage > 0 then H.Melee_Def.Additional_Effect(audits, add_effect_damage, effect_animation_id, effect_message_id, no_damage) end
     end
 
-    -- Set to zero for the battle log.
-    if no_damage then damage = 0 end
+    if no_damage or counter_damage > 0 then damage = -1 end
 
-    return damage
+    return damage, counter_damage
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Adds melee damage to the battle log.
 -- ------------------------------------------------------------------------------------------------------
 ---@param actor_mob table the mob data of the entity performing the action.
----@param damage number
+---@param damage integer
+---@param counter_damage integer
 -- ------------------------------------------------------------------------------------------------------
-H.Melee_Def.Blog = function(actor_mob, damage)
-    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_MELEE, DB.Trackable.MELEE_OVERALL, damage)
+H.Melee_Def.Blog = function(actor_mob, damage, counter_damage)
+    local note = ""
+    if counter_damage and counter_damage > 0 then note = "Counter: " .. tostring(counter_damage) end
+    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_MELEE, DB.Trackable.MELEE_OVERALL, damage, note, DB.Trackable.DEF_MELEE)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -220,10 +226,11 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param result table the ID of the entity animation when taking a hit.
----@return boolean
+---@return boolean, integer
 ------------------------------------------------------------------------------------------------------
 H.Melee_Def.Counter = function(audits, result)
     local counter = false
+    local counter_damage = 0
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.MELEE_COUNTER, DB.Metric.ATTEMPTS)
     local spike_effect = result.has_spike_effect
     if spike_effect then
@@ -236,9 +243,10 @@ H.Melee_Def.Counter = function(audits, result)
             DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.MELEE_COUNTER, DB.Metric.TOTAL)
             DB.Data.Update(DB.Update_Mode.INC, 1     , audits, DB.Trackable.MELEE_COUNTER, DB.Metric.HIT_COUNT)
             counter = true
+            counter_damage = damage
         end
     end
-    return counter
+    return counter, counter_damage
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -339,7 +347,9 @@ end
 H.Melee_Def.No_Damage_Messages = function(message_id)
     return message_id == Ashita.Enum.Message.DODGE or
            message_id == Ashita.Enum.Message.MISS or
+           message_id == Ashita.Enum.Message.PARRY or
            message_id == Ashita.Enum.Message.SHADOWS or
+           message_id == Ashita.Enum.Message.COUNTER or
            message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION or
            message_id == Ashita.Enum.Message.MOBHEAL373
 end

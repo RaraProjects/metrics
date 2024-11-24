@@ -108,7 +108,8 @@ Blog.Entries.Notes = function(note, action_type)
     or action_type == DB.Trackable.DEF_TP_MOVE or action_type == Blog.Enum.Flags.IGNORE
     or action_type == DB.Trackable.SPELLS_ENFEEBLING or action_type == DB.Trackable.SPELLS_BUFF_SONG
     or action_type == DB.Trackable.PET_TP or action_type == DB.Trackable.PHANTOM_ROLL
-    or action_type == DB.Trackable.SPELLS_DEBUFF_REMOVAL or action_type == DB.Trackable.DEATH then
+    or action_type == DB.Trackable.SPELLS_DEBUFF_REMOVAL or action_type == DB.Trackable.DEATH
+    or action_type == DB.Trackable.DEF_MELEE then
         final_note.Value = tostring(note)
 
     -- If the player died then show who killed them.

@@ -69,7 +69,6 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Action = function(action_name)
     action_name = Column.String.Truncate(action_name, Blog.Settings.Action_Truncate_Length)
-    action_name = Column.String.Set_Length(action_name, Blog.Settings.Action_Truncate_Length)
     return action_name
 end
 
