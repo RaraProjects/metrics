@@ -51,7 +51,7 @@ Blog.Entries.Damage = function(damage, action_type, color)
     if not damage then
         return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
     elseif damage < 0 then  -- Enfeeble
-        return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
+        return {Value = Blog.Enum.Text.NA, Color = default_color}
     elseif damage == 0 then
         return {Value = Column.String.Format_Number(0), Color = default_color, Note = Blog.Enum.Text.MISS}
     elseif damage >= threshold then

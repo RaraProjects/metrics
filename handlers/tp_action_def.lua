@@ -36,7 +36,7 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
         end
     end
 
-    H.TP_Def.Blog(actor_mob, damage, skill_name, count)
+    H.TP_Def.Blog(actor_mob, damage, action_id, skill_name, count)
 
     return true
 end
@@ -50,8 +50,7 @@ end
 H.TP_Def.Mob_Self_Target = function(action, actor_mob)
     local skill_data = H.TP.Pet_Skill_Data(action.param, actor_mob)
     if not skill_data then return nil end
-    local skill_name = skill_data.en
-    H.TP_Def.Blog(actor_mob, 0, skill_name, 1)
+    H.TP_Def.Blog(actor_mob, 0, skill_data.id, skill_data.en, 1)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -151,11 +150,14 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@param actor_mob table
 ---@param damage integer
+---@param action_id? integer
 ---@param skill_name string
 ---@param target_count integer
 -- ------------------------------------------------------------------------------------------------------
-H.TP_Def.Blog = function(actor_mob, damage, skill_name, target_count)
+H.TP_Def.Blog = function(actor_mob, damage, action_id, skill_name, target_count)
     local note = nil
     if target_count > 1 then note = "TGTs: " .. tostring(target_count) end
+    -- Flag non damaging abilities to have "---" for damage.
+    if action_id and not Res.Monster.Get_Damaging_Ability(action_id) then damage = -1 end
     Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_TP, skill_name, damage, note, DB.Trackable.DEF_TP_MOVE)
 end

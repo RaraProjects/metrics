@@ -98,20 +98,18 @@ Blog.Content = function()
         local count = 1
         Blog.Filtered_Count = 0
         for i = start, 100000, 1 do
-            if count > Metrics.Blog.Visible_Length then break end
             local entry = Blog.Log[i]
-            if entry then
-                if entry.Flag and Blog.Action_Filter(entry.Flag.Value) and Blog.Player_Filter(entry) and Blog.Action_Name_Filter(entry) then
-                    count = count + 1
-                    Blog.Display.Rows(entry)
-                else
-                    Blog.Filtered_Count = Blog.Filtered_Count + 1
-                end
+            if (count > Metrics.Blog.Visible_Length) or not entry then break end
+            if entry.Flag and Blog.Action_Filter(entry.Flag.Value) and Blog.Player_Filter(entry) and Blog.Action_Name_Filter(entry) then
+                count = count + 1
+                Blog.Display.Rows(entry)
+            else
+                Blog.Filtered_Count = Blog.Filtered_Count + 1
             end
         end
-
         UI.EndTable()
 
+        -- Need this in the table scope so that I have access to start/stop/count.
         if Debug.Is_Enabled() then
             UI.Text("Start: " ..tostring(start)) UI.SameLine() UI.Text(" ") UI.SameLine()
             UI.Text("Stop: " ..tostring(stop)) UI.SameLine() UI.Text(" ") UI.SameLine()
@@ -263,7 +261,7 @@ Blog.Display.Rows = function(entry)
     damage = Blog.Columns.Damage(damage)
 
     UI.TableNextRow()
-    if entry.Flag.Value == Blog.Action_Type.MOB_TP or entry.Flag.Value == Blog.Action_Type.MOB_SPELL then
+    if (entry.Flag.Value == Blog.Action_Type.MOB_TP or entry.Flag.Value == Blog.Action_Type.MOB_SPELL) and action ~= "Ranged Attack" then
         local r = 0.46
         local g = 0.07
         local b = 0.00
