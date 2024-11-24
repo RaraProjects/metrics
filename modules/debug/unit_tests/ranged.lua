@@ -31,7 +31,19 @@ Debug.Unit.Tests.Ranged.Hit = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Ranged > Hit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Ranged",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Ranged > Hit", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -67,7 +79,19 @@ Debug.Unit.Tests.Ranged.Square = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Ranged > Square Hit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Ranged",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Ranged > Square Hit", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -103,7 +127,19 @@ Debug.Unit.Tests.Ranged.Truestrike = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Ranged > Truestrike", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Ranged",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Ranged > Truestrike", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -129,7 +165,19 @@ Debug.Unit.Tests.Ranged.Miss = function()
     player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
     player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("Ranged > Miss", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = "Ranged",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Ranged > Miss", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -165,7 +213,19 @@ Debug.Unit.Tests.Ranged.Crit = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Ranged > Crit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Ranged",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Ranged > Crit", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -193,7 +253,19 @@ Debug.Unit.Tests.Ranged.Shadows = function()
     player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
     player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("Ranged > Shadows", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = "Ranged",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Ranged > Shadows", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -247,7 +319,19 @@ Debug.Unit.Tests.Ranged.Endamage = function()
     player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MAX] = additional_damage
     player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.HIT_COUNT] = 1
 
-    return Debug.Unit.Check_Result("Ranged > Endamage", player, player_catalog)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage + additional_damage),
+        action = "Ranged",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage + additional_damage
+    misc["Total Damage No Skillchain"] = damage + additional_damage
+
+    return Debug.Unit.Check_Result("Ranged > Endamage", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -292,7 +376,19 @@ Debug.Unit.Tests.Ranged.Endebuff = function()
     player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDEBUFF] = T{}
     player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDEBUFF][DB.Metric.HIT_COUNT] = 1
 
-    return Debug.Unit.Check_Result("Ranged > Endebuff", player, player_catalog)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Ranged",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Ranged > Endebuff", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -333,7 +429,19 @@ Debug.Unit.Tests.Ranged.Endrain = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + additional_damage
 
-    return Debug.Unit.Check_Result("Ranged > Endrain", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage + additional_damage),
+        action = "Ranged",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage + additional_damage
+    misc["Total Damage No Skillchain"] = damage + additional_damage
+
+    return Debug.Unit.Check_Result("Ranged > Endrain", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -367,5 +475,17 @@ Debug.Unit.Tests.Ranged.PUP = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Ranged - PUP > Hit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Ranged",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Ranged - PUP > Hit", player, nil, nil, nil, battle_log, misc)
 end

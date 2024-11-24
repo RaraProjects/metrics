@@ -65,14 +65,34 @@ H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
         target_name = target_mob.name,
     }
 
+    local no_damage = H.Ranged.No_Damage_Messages(result)
     H.Ranged.Totals(audits, damage, ranged_type)                    -- Totals
     H.Ranged.Pet_Total(owner_mob, audits, damage)                   -- Pet Totals
     H.Ranged.Message(message_id, audits, damage, ranged_type)       -- Accuracy and misc. traits.
-    H.Ranged.Additional_Effect(audits, result)                      -- Additional Effects
     H.Ranged.Min_Max(damage, audits, ranged_type, message_id)       -- Min/Max
+    damage = damage + H.Ranged.Additional_Effect(audits, result)    -- Additional Effects
     H.Ranged.Distance(audits, actor_mob, target_mob, ranged_type)   -- Shot Distance
+    if no_damage then damage = -1 end
 
     return damage
+end
+
+------------------------------------------------------------------------------------------------------
+-- Certain messages may come in with damage, but it's not actually damage.
+-- Need to set the damage to zero for these cases.
+------------------------------------------------------------------------------------------------------
+---@param result table
+---@return boolean whether or not the damage from this should be treated as actual damage or not.
+------------------------------------------------------------------------------------------------------
+H.Ranged.No_Damage_Messages = function(result)
+    local message_id = result.message
+    local add_effect_message_id = result.add_effect_message
+    return message_id == Ashita.Enum.Message.DODGE or
+           message_id == Ashita.Enum.Message.MISS or
+           message_id == Ashita.Enum.Message.RANGEMISS or
+           message_id == Ashita.Enum.Message.SHADOWS or
+           message_id == Ashita.Enum.Message.MOBHEAL373 or
+           add_effect_message_id == Ashita.Enum.Message.ENASPIR
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -83,11 +103,13 @@ end
 ---@param ranged_type string player ranged or melee ranged.
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Totals = function(audits, damage, ranged_type)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE,  DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE,               DB.Metric.TOTAL)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.ATTEMPTS)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_SQUARE_HIT, DB.Metric.ATTEMPTS)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_TRUE_STRIKE, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type,                             DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_SQUARE_HIT,          DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_TRUE_STRIKE,         DB.Metric.ATTEMPTS)
+    DB.Total_Damage = DB.Total_Damage + damage
+    DB.Total_Damage_No_Skillchain = DB.Total_Damage_No_Skillchain + damage
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -196,40 +218,56 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param result table
+---@return integer
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Additional_Effect = function(audits, result)
-    if not result then return nil end
+    if not result then return 0 end
+    local additional_damage = 0
+
     if result.has_add_effect then
         local message_id = result.add_effect_message
         local animation_id = result.add_effect_animation
         local param = result.add_effect_param   -- This is either damage or the type of debuff applied.
 
+        -- Additional elemental damage from ammunition.
         if message_id == Ashita.Enum.Message.ENDAMAGE then
             local effect_name = Res.Game.Get_Additional_Effect_Animation(animation_id)
             if animation_id then
-                DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,    DB.Metric.TOTAL)
+                additional_damage = param
+                DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,  DB.Metric.TOTAL)
                 DB.Data.Update(DB.Update_Mode.INC,     1, audits, DB.Trackable.RANGED_ENDAMAGE, DB.Metric.HIT_COUNT)
                 DB.Catalog.Update_Damage(audits.player_name, audits.target_name, DB.Trackable.RANGED_ENDAMAGE, param, effect_name)
                 DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.RANGED_ENDAMAGE, effect_name, DB.Metric.HIT_COUNT)
             end
+
+        -- Debuff effect from ammunition.
         elseif message_id == Ashita.Enum.Message.ENDEBUFF then
             local buff = Res.Buffs.Get_Buff(param)
             if buff then
                 DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.RANGED_ENDEBUFF, DB.Metric.HIT_COUNT)
                 DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.RANGED_ENDEBUFF, buff.en, DB.Metric.HIT_COUNT)
             end
+
+        -- Additional damage from bloody bolts.
         elseif message_id == Ashita.Enum.Message.ENDRAIN then
-            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,       DB.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
-            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.TOTAL_DAMAGE,       DB.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
-            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)    -- Bloody Bolt is net additional damage.
-            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.RANGED_ENDRAIN,   DB.Metric.TOTAL)
-            DB.Data.Update(DB.Update_Mode.INC, 1,     audits, DB.Trackable.RANGED_ENDRAIN,   DB.Metric.HIT_COUNT)
+            additional_damage = param
+            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.TOTAL)             -- Bloody Bolt is net additional damage.
+            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.TOTAL_DAMAGE,   DB.Metric.TOTAL)             -- Bloody Bolt is net additional damage.
+            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL) -- Bloody Bolt is net additional damage.
+            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.RANGED_ENDRAIN, DB.Metric.TOTAL)
+            DB.Data.Update(DB.Update_Mode.INC, 1,     audits, DB.Trackable.RANGED_ENDRAIN, DB.Metric.HIT_COUNT)
+            DB.Total_Damage = DB.Total_Damage + additional_damage
+            DB.Total_Damage_No_Skillchain = DB.Total_Damage_No_Skillchain + additional_damage
+
+        -- Not sure if aspir bolts exist, but have this just in case.
         elseif message_id == Ashita.Enum.Message.ENASPIR then
             DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.RANGED_ENASPIR, DB.Metric.TOTAL)
             DB.Data.Update(DB.Update_Mode.INC, 1,     audits, DB.Trackable.RANGED_ENASPIR, DB.Metric.HIT_COUNT)
         end
 
     end
+
+    return additional_damage
 end
 
 ------------------------------------------------------------------------------------------------------

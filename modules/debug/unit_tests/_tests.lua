@@ -351,9 +351,10 @@ end
 ---@param pet? table
 ---@param pet_catalog? table
 ---@param battle_log_data? table
+---@param misc_data? table
 ---@return table
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Check_Result = function(test_name, player, player_catalog, pet, pet_catalog, battle_log_data)
+Debug.Unit.Check_Result = function(test_name, player, player_catalog, pet, pet_catalog, battle_log_data, misc_data)
     local error_count = 0
     local error_message = ""
 
@@ -366,6 +367,7 @@ Debug.Unit.Check_Result = function(test_name, player, player_catalog, pet, pet_c
     error_message, error_count = Debug.Unit.Test_Pet_Database(pet, error_message, error_count)
     error_message, error_count = Debug.Unit.Test_Pet_Catalog_Database(pet_catalog, error_message, error_count)
     error_message, error_count = Debug.Unit.Check_Battle_Log(battle_log_data, error_message, error_count)
+    error_message, error_count = Debug.Unit.Check_Misc_Data(misc_data, error_message, error_count)
 
     local result = "Pass!"
     local color  = Res.Colors.Basic.GREEN
@@ -818,6 +820,28 @@ Debug.Unit.Check_Battle_Log = function(expected_data, error_message, error_count
         if error_count > 0 then error_message = error_message .. "\n" end
         error_message = error_message .. "BLOG: Expected note {" .. tostring(expected_data.note) .. "} got {" .. tostring(entry.Note.Value) .. "}"
         error_count = error_count + 1
+    end
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check miscellaneous nodes.
+------------------------------------------------------------------------------------------------------
+---@param expected_data? table
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Check_Misc_Data = function(expected_data, error_message, error_count)
+    if not expected_data then return error_message, error_count end
+    if expected_data["Total Damage"] and expected_data["Total Damage"] ~= DB.Total_Damage then
+        error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Misc - Total Damage: Expected {"
+        .. tostring(expected_data["Total Damage"]) .. "} got {" .. tostring(DB.Total_Damage) .. "}.")
+    end
+    if expected_data["Total Damage No Skillchain"] and expected_data["Total Damage No Skillchain"] ~= DB.Total_Damage_No_Skillchain then
+        error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Misc - Total Damage No Skillchain: Expected {"
+        .. tostring(expected_data["Total Damage No Skillchain"]) .. "} got {" .. tostring(DB.Total_Damage_No_Skillchain) .. "}.")
     end
     return error_message, error_count
 end

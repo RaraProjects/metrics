@@ -242,6 +242,14 @@ DB.Catalog.Get = function(player_name, trackable, action_name, metric, temporary
 		return 0
 	end
 
+	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
+	if Throttle.Is_Enabled() and not Throttle.Allow_Calculation() then
+		if DB.Catalog_Cache[player_name] and DB.Catalog_Cache[player_name][action_name] and DB.Catalog_Cache[player_name][action_name][trackable]
+		and DB.Catalog_Cache[player_name][action_name][trackable][metric] then
+			return DB.Catalog_Cache[player_name][action_name][trackable][metric]
+		end
+	end
+
 	local total = 0
 	if metric == DB.Metric.MIN then total = DB.Enum.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
@@ -254,6 +262,13 @@ DB.Catalog.Get = function(player_name, trackable, action_name, metric, temporary
 			total = DB.Catalog.Calculate(total, index, trackable, action_name, metric)
 		end
 	end
+
+	-- Cache for performance.
+	if not DB.Catalog_Cache[player_name] then DB.Catalog_Cache[player_name] = {} end
+	if not DB.Catalog_Cache[player_name][action_name] then DB.Catalog_Cache[player_name][action_name] = {} end
+	if not DB.Catalog_Cache[player_name][action_name][trackable] then DB.Catalog_Cache[player_name][action_name][trackable] = {} end
+	DB.Catalog_Cache[player_name][action_name][trackable][metric] = total
+
 	return total
 end
 

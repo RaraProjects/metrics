@@ -1,6 +1,6 @@
-Debug.Perf = T{}
+Debug.Performance = {}
 
-Debug.Perf.Players = T{
+Debug.Performance.Players = {
     "Player1",
     "Player2",
     "Player3",
@@ -21,7 +21,7 @@ Debug.Perf.Players = T{
     "Player18",
 }
 
-Debug.Perf.Mobs = T{
+Debug.Performance.Mobs = {
     "Mob1",
     "Mob2",
     "Mob3",
@@ -40,9 +40,9 @@ Debug.Perf.Mobs = T{
 ------------------------------------------------------------------------------------------------------
 -- Adds a lot of players and mobs that need to be sorted through to test performance.
 ------------------------------------------------------------------------------------------------------
-Debug.Perf.Add_Load = function()
-    for _, player in pairs(Debug.Perf.Players) do
-        for _, mob in pairs(Debug.Perf.Mobs) do
+Debug.Performance.Add_Load = function()
+    for _, player in pairs(Debug.Performance.Players) do
+        for _, mob in pairs(Debug.Performance.Mobs) do
             DB.Data.Update("inc", 25, {player_name = player,  target_name = mob}, "No SC Total", "Total")
         end
     end

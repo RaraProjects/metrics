@@ -39,7 +39,19 @@ Debug.Unit.Tests.Melee.Main_Hit = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Hit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Hit", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -69,7 +81,19 @@ Debug.Unit.Tests.Melee.Main_Miss = function()
     player[index][DB.Trackable.DEF_COUNTERED] = T{}
     player[index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Miss", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Miss", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -115,7 +139,19 @@ Debug.Unit.Tests.Melee.Crit = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Crit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Crit", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -186,7 +222,11 @@ Debug.Unit.Tests.Melee.Enspell = function()
         note   = " ",
     }
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Enspell", player, player_catalog, nil, nil, battle_log)
+    local misc = T{}
+    misc["Total Damage"] = damage + additional_damage
+    misc["Total Damage No Skillchain"] = damage + additional_damage
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Enspell", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -220,7 +260,19 @@ Debug.Unit.Tests.Melee.Shadows = function()
     player[index][DB.Trackable.DEF_COUNTERED] = T{}
     player[index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Shadows", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Shadows", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -254,7 +306,19 @@ Debug.Unit.Tests.Melee.Mob_Heal = function()
     player[index][DB.Trackable.DEF_COUNTERED] = T{}
     player[index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Mob Heal", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Mob Heal", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -296,7 +360,19 @@ Debug.Unit.Tests.Melee.Off_Hand_Hit = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Off-Hand > Hit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Off-Hand > Hit", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -326,7 +402,19 @@ Debug.Unit.Tests.Melee.Off_Hand_Miss = function()
     player[index][DB.Trackable.DEF_COUNTERED] = T{}
     player[index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("Melee - Off-Hand > Miss", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Melee - Off-Hand > Miss", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -387,7 +475,19 @@ Debug.Unit.Tests.Melee.Pet_Hit = function()
     pet[index][pet_name][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     pet[index][pet_name][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Pet > Hit", player, nil, pet)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Debug.Unit.Mob.PET.name,
+        damage = tostring(damage),
+        action = "Pet Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Pet > Hit", player, nil, pet, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -420,7 +520,19 @@ Debug.Unit.Tests.Melee.Pet_Miss = function()
     pet[index][pet_name][DB.Trackable.PET_MELEE_DISCRETE] = T{}
     pet[index][pet_name][DB.Trackable.PET_MELEE_DISCRETE][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("Melee - Pet > Miss", player, nil, pet)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Debug.Unit.Mob.PET.name,
+        damage = "---",
+        action = "Pet Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Melee - Pet > Miss", player, nil, pet, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -489,7 +601,19 @@ Debug.Unit.Tests.Melee.Pet_Crit = function()
     pet[index][pet_name][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     pet[index][pet_name][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Pet > Crit", player, nil, pet)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Debug.Unit.Mob.PET.name,
+        damage = tostring(damage),
+        action = "Pet Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Pet > Crit", player, nil, pet, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -530,7 +654,19 @@ Debug.Unit.Tests.Melee.Pet_Shadows = function()
     pet[index][pet_name][DB.Trackable.PET_MELEE_DISCRETE][DB.Metric.HIT_COUNT] = 1
     pet[index][pet_name][DB.Trackable.PET_MELEE_DISCRETE][DB.Metric.SHADOW_ABSORPTION] = 1
 
-    return Debug.Unit.Check_Result("Melee - Pet > Shadows", player, nil, pet)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Debug.Unit.Mob.PET.name,
+        damage = "---",
+        action = "Pet Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Melee - Pet > Shadows", player, nil, pet, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -571,7 +707,19 @@ Debug.Unit.Tests.Melee.Pet_Mob_Heal = function()
     pet[index][pet_name][DB.Trackable.PET_MELEE_DISCRETE][DB.Metric.HIT_COUNT] = 1
     pet[index][pet_name][DB.Trackable.PET_MELEE_DISCRETE][DB.Metric.MOB_HEALING] = damage
 
-    return Debug.Unit.Check_Result("Melee - Pet > Mob Heal", player, nil, pet)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Debug.Unit.Mob.PET.name,
+        damage = "---",
+        action = "Pet Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Melee - Pet > Mob Heal", player, nil, pet, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -612,7 +760,19 @@ Debug.Unit.Tests.Melee.Daken_Hit = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Daken > Hit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Daken > Hit", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -653,7 +813,19 @@ Debug.Unit.Tests.Melee.Daken_Square = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Daken > Square Hit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Daken > Square Hit", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -694,7 +866,19 @@ Debug.Unit.Tests.Melee.Daken_Truestrike = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Daken > Truestrike", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Daken > Truestrike", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -723,7 +907,19 @@ Debug.Unit.Tests.Melee.Daken_Miss = function()
     player[index][DB.Trackable.RANGED_THROWING][DB.Metric.MELEE_STRIKES] = 1
     player[index][DB.Trackable.RANGED_THROWING][DB.Metric.MULTI_ATTACK_1] = 1
 
-    return Debug.Unit.Check_Result("Melee - Daken > Miss", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Melee - Daken > Miss", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -768,7 +964,19 @@ Debug.Unit.Tests.Melee.Daken_Crit = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Daken > Crit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Daken > Crit", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -810,7 +1018,19 @@ Debug.Unit.Tests.Melee.Kick_Hit = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Kick > Hit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Kick > Hit", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -840,7 +1060,19 @@ Debug.Unit.Tests.Melee.Kick_Miss = function()
     player[index][DB.Trackable.DEF_COUNTERED] = T{}
     player[index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("Melee - Kick > Miss", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Melee - Kick > Miss", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -886,7 +1118,19 @@ Debug.Unit.Tests.Melee.Kick_Crit = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Kick > Crit", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Kick > Crit", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -948,7 +1192,19 @@ Debug.Unit.Tests.Melee.Endamage = function()
     player_catalog[index][add_effect_name][DB.Trackable.MELEE_ENDAMAGE][DB.Metric.MAX] = additional_damage
     player_catalog[index][add_effect_name][DB.Trackable.MELEE_ENDAMAGE][DB.Metric.HIT_COUNT] = 1
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Endamage", player, player_catalog)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage + additional_damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage + additional_damage
+    misc["Total Damage No Skillchain"] = damage + additional_damage
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Endamage", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -1001,7 +1257,19 @@ Debug.Unit.Tests.Melee.Endebuff = function()
     player_catalog[index][add_effect_name][DB.Trackable.MELEE_ENDEBUFF] = T{}
     player_catalog[index][add_effect_name][DB.Trackable.MELEE_ENDEBUFF][DB.Metric.HIT_COUNT] = 1
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Endebuff", player, player_catalog)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Endebuff", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -1048,7 +1316,19 @@ Debug.Unit.Tests.Melee.Endrain = function()
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
     player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Endrain", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Endrain", player, nil, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -1085,5 +1365,17 @@ Debug.Unit.Tests.Melee.Enaspir = function()
     player[index][DB.Trackable.MELEE_ENASPIR][DB.Metric.TOTAL] = additional_damage
     player[index][DB.Trackable.MELEE_ENASPIR][DB.Metric.HIT_COUNT] = 1
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Enaspir", player)
+    local battle_log = T{
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Enaspir", player, nil, nil, nil, battle_log, misc)
 end

@@ -117,7 +117,9 @@ DB.Data.Update_Damage = function(audits, trackable, damage, burst)
 	-- Grand Totals; There is a regular track and a "no skillchains" track.
     if DB.Catalog.Include_Total_Damage(trackable) then
     	DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+		DB.Total_Damage = DB.Total_Damage + damage
 		if trackable ~= DB.Trackable.SKILLCHAIN then
+    		DB.Total_Damage_No_Skillchain = DB.Total_Damage_No_Skillchain + damage
 			DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
 		end
     end
@@ -241,8 +243,8 @@ DB.Data.Get = function(player_name, trackable, metric, temporary_mob_focus)
 	end
 
 	-- Cache for performance.
-	if not DB.Cache[player_name] then DB.Cache[player_name] = T{} end
-	if not DB.Cache[player_name][trackable] then DB.Cache[player_name][trackable] = T{} end
+	if not DB.Cache[player_name] then DB.Cache[player_name] = {} end
+	if not DB.Cache[player_name][trackable] then DB.Cache[player_name][trackable] = {} end
 	DB.Cache[player_name][trackable][metric] = total
 
 	return total

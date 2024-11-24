@@ -98,6 +98,20 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Data.Get = function(player_name, pet_name, trackable, metric)
+	if not player_name or not pet_name or not trackable or not metric then
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Data.Get", "Nil required parameter: Player {" .. tostring(player_name) .. "} Pet {" .. tostring(pet_name)
+		.. "} Trackable {" .. tostring(trackable) .. "} Metric {" .. tostring(metric) .. "}.")
+		return 0
+	end
+
+	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
+	if Throttle.Is_Enabled() and not Throttle.Allow_Calculation() then
+		if DB.Pet_Cache[player_name] and DB.Pet_Cache[player_name][pet_name] and DB.Pet_Cache[player_name][pet_name][trackable]
+		and DB.Pet_Cache[player_name][pet_name][trackable][metric] then
+			return DB.Pet_Cache[player_name][pet_name][trackable][metric]
+		end
+	end
+
 	local total = 0
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	for index, _ in pairs(DB.Pet_Parse) do
@@ -115,5 +129,12 @@ DB.Pet_Data.Get = function(player_name, pet_name, trackable, metric)
 			end
 		end
 	end
+
+	-- Cache for performance.
+	if not DB.Pet_Cache[player_name] then DB.Pet_Cache[player_name] = {} end
+	if not DB.Pet_Cache[player_name][pet_name] then DB.Pet_Cache[player_name][pet_name] = {} end
+	if not DB.Pet_Cache[player_name][pet_name][trackable] then DB.Pet_Cache[player_name][pet_name][trackable] = {} end
+	DB.Pet_Cache[player_name][pet_name][trackable][metric] = total
+
 	return total
 end

@@ -120,6 +120,15 @@ DB.Pet_Catalog.Get = function(player_name, pet_name, trackable, action_name, met
 		.. "} Trackable {" .. tostring(trackable) .. "} Action {" .. tostring(action_name) .. "} Metric {" .. tostring(metric) .. "}.")
 		return 0
 	end
+
+	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
+	if Throttle.Is_Enabled() and not Throttle.Allow_Calculation() then
+		if DB.Pet_Catalog_Cache[player_name] and DB.Pet_Catalog_Cache[player_name][pet_name] and DB.Pet_Catalog_Cache[player_name][pet_name][action_name]
+		and DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable] and DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable][metric] then
+			return DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable][metric]
+		end
+	end
+
 	local total = 0
 	if metric == DB.Metric.MIN then total = DB.Enum.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
@@ -134,6 +143,14 @@ DB.Pet_Catalog.Get = function(player_name, pet_name, trackable, action_name, met
 			end
 		end
 	end
+
+	-- Cache for performance.
+	if not DB.Pet_Catalog_Cache[player_name] then DB.Pet_Catalog_Cache[player_name] = {} end
+	if not DB.Pet_Catalog_Cache[player_name][pet_name] then DB.Pet_Catalog_Cache[player_name][pet_name] = {} end
+	if not DB.Pet_Catalog_Cache[player_name][pet_name][action_name] then DB.Pet_Catalog_Cache[player_name][pet_name][action_name] = {} end
+	if not DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable] then DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable] = {} end
+	DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable][metric] = total
+
 	return total
 end
 

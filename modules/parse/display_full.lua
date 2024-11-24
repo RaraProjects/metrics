@@ -26,7 +26,7 @@ Parse.Full.Populate = function()
     if UI.BeginTable(Parse.Full.Name, Parse.Columns.Current, Parse.Full.Table_Flags) then
         Parse.Full.Headers()
 
-        local player_name = "Debug"
+        local player_name = DB.Enum.DEBUG
         DB.Lists.Sort.Total_Damage()
         for rank, data in ipairs(DB.Sorted.Total_Damage) do
             if rank <= Parse.Config.Rank_Cutoff() then

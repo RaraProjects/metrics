@@ -1,32 +1,37 @@
-DB = T{}
+DB = {}
 
 -- Primary Database
-DB.Parse = T{}                          -- [index][trackable][metric]
-DB.Parse_Catalog = T{}					-- [index][action_name][trackable][metric]
-DB.Pet_Parse = T{}						-- [index][pet][trackable][metric]
-DB.Pet_Parse_Catalog = T{}				-- [index][pet][action_name][trackable][metric]
+DB.Parse = {}                          	-- [index][trackable][metric]
+DB.Parse_Catalog = {}					-- [index][action_name][trackable][metric]
+DB.Pet_Parse = {}						-- [index][pet][trackable][metric]
+DB.Pet_Parse_Catalog = {}				-- [index][pet][action_name][trackable][metric]
+DB.Total_Damage = 0
+DB.Total_Damage_No_Skillchain = 0
 
 -- Secondary Tracking Tables
-DB.Tracking = T{}
-DB.Tracking.Trackable = T{}             -- [trackable][player_name]
-DB.Tracking.Pet_Trackable = T{}         -- [trackable][player_name][pet_name]
-DB.Tracking.Initialized_Players = T{}   -- [player_name]
-DB.Tracking.Initialized_Pets = T{}      -- [player_name][pet_name]
-DB.Tracking.Initialized_Mobs = T{}      -- [mob_name]
-DB.Tracking.Running_Accuracy = T{}		-- [player_name]
-DB.Tracking.Running_Attack_Speed = T{}  -- [player_name]
-DB.Tracking.Running_Damage = T{}		-- [player_name]
-DB.Tracking.Multi_Attack = T{}			-- [player_name][multi-rank]
-DB.Tracking.Defeated_Mobs = T{}			-- [mob_name]
+DB.Tracking = {}
+DB.Tracking.Trackable = {}             	-- [trackable][player_name]
+DB.Tracking.Pet_Trackable = {}         	-- [trackable][player_name][pet_name]
+DB.Tracking.Initialized_Players = {}   	-- [player_name]
+DB.Tracking.Initialized_Pets = {}      	-- [player_name][pet_name]
+DB.Tracking.Initialized_Mobs = {}      	-- [mob_name]
+DB.Tracking.Running_Accuracy = {}		-- [player_name]
+DB.Tracking.Running_Attack_Speed = {}  	-- [player_name]
+DB.Tracking.Running_Damage = {}			-- [player_name]
+DB.Tracking.Multi_Attack = {}			-- [player_name][multi-rank]
+DB.Tracking.Defeated_Mobs = {}			-- [mob_name]
 
 -- Used to hold column data for performance improvements.
-DB.Cache = T{}							-- [player_name][trackable][metric]
+DB.Cache = {}							-- [player_name][trackable][metric]
+DB.Catalog_Cache = {}					-- [player_name][action_name][trackable][metric]
+DB.Pet_Cache = {}						-- [player_name][pet_name][trackable][metric]
+DB.Pet_Catalog_Cache = {}				-- [player_name][pet_name][action_name][trackable][metric]
 
-DB.Settings = T{}
+DB.Settings = {}
 DB.Settings.Accuracy_Warning = 0.80
 
 -- These are used for user saved settings.
-DB.Defaults = T{
+DB.Defaults = {
 	Running_Accuracy_Limit = 25
 }
 
@@ -53,25 +58,27 @@ DB.Initialize = function(reset)
 		File.Save_Battlelog()
 	end
 
-	DB.Parse = T{}
-	DB.Parse_Catalog = T{}
-	DB.Pet_Parse = T{}
-	DB.Pet_Parse_Catalog = T{}
+	DB.Parse = {}
+	DB.Parse_Catalog = {}
+	DB.Pet_Parse = {}
+	DB.Pet_Parse_Catalog = {}
+	DB.Total_Damage = 0
+	DB.Total_Damage_No_Skillchain = 0
 
-	DB.Tracking.Trackable = T{}
-	DB.Tracking.Pet_Trackable = T{}
-	DB.Tracking.Initialized_Players = T{}
-    DB.Tracking.Initialized_Pets = T{}
-    DB.Tracking.Initialized_Mobs = T{[DB.Widgets.Dropdown.Enum.NONE] = true}
-    DB.Tracking.Running_Accuracy = T{}
-	DB.Tracking.Running_Damage = T{}
-	DB.Tracking.Multi_Attack = T{}
-    DB.Tracking.Defeated_Mobs = T{}
+	DB.Tracking.Trackable = {}
+	DB.Tracking.Pet_Trackable = {}
+	DB.Tracking.Initialized_Players = {}
+    DB.Tracking.Initialized_Pets = {}
+    DB.Tracking.Initialized_Mobs = {[DB.Widgets.Dropdown.Enum.NONE] = true}
+    DB.Tracking.Running_Accuracy = {}
+	DB.Tracking.Running_Damage = {}
+	DB.Tracking.Multi_Attack = {}
+    DB.Tracking.Defeated_Mobs = {}
 
-	DB.Sorted.Players = T{[1] = DB.Widgets.Dropdown.Enum.NONE}
-	DB.Sorted.Mobs = T{[1] = DB.Widgets.Dropdown.Enum.NONE}
-	DB.Sorted.Total_Damage = T{}
-	DB.Sorted.Catalog_Damage = T{}
+	DB.Sorted.Players = {[1] = DB.Widgets.Dropdown.Enum.NONE}
+	DB.Sorted.Mobs = {[1] = DB.Widgets.Dropdown.Enum.NONE}
+	DB.Sorted.Total_Damage = {}
+	DB.Sorted.Catalog_Damage = {}
 
 	DB.Healing_Max = {}
 	DB.Widgets.Dropdown.Player.Focus = DB.Widgets.Dropdown.Enum.NONE
@@ -92,17 +99,9 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Team_Damage = function()
-	local total = 0
-	DB.Lists.Sort.Total_Damage()
-	for _, data in ipairs(DB.Sorted.Total_Damage) do
-		local player_name = data[1]
-		if Parse.Config.Include_SC_Damage() then
-			total = total + DB.Data.Get(player_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
-		else
-			total = total + DB.Data.Get(player_name, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
-		end
-	end
-	return total
+	local damage = DB.Total_Damage_No_Skillchain
+    if Parse.Config.Include_SC_Damage() then damage = DB.Total_Damage end
+	return damage
 end
 
 ------------------------------------------------------------------------------------------------------

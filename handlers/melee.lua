@@ -121,6 +121,7 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete)                      -- Accuracy, crits, absorbed by shadows, etc.
     H.Melee.Reaction(result, audits, melee_type_broad)              -- Guard
     H.Melee.Spikes(audits, result, owner_mob)                       -- Spike damage
+    if no_damage then damage = -1 end
 
     return {damage = damage, type = melee_type_discrete, audits = audits}
 end
@@ -191,6 +192,8 @@ H.Melee.Totals = function(audits, damage, melee_type_discrete, no_damage)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, melee_type_discrete, DB.Metric.TOTAL)
     DB.Data.Update(DB.Update_Mode.INC,      1, audits, melee_type_discrete, DB.Metric.ATTEMPTS)
+    DB.Total_Damage = DB.Total_Damage + damage
+    DB.Total_Damage_No_Skillchain = DB.Total_Damage_No_Skillchain + damage
 end
 
 ------------------------------------------------------------------------------------------------------
