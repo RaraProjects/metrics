@@ -44,7 +44,19 @@ Debug.Unit.Tests.Spells.Nuke = function()
     player_catalog[index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
     player_catalog[index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells > Nuke", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Spells > Nuke", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -115,7 +127,19 @@ Debug.Unit.Tests.Spells.Nuke_AOE = function()
     player_catalog[index_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
     player_catalog[index_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells > Nuke AOE", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage + damage_two),
+        action = action_name,
+        note   = "TGTs: 2",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage + damage_two
+    misc["Total Damage No Skillchain"] = damage + damage_two
+
+    return Debug.Unit.Check_Result("Spells > Nuke AOE", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -169,7 +193,19 @@ Debug.Unit.Tests.Spells.Nuke_Burst = function()
     player_catalog[index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
     player_catalog[index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells > Nuke Burst", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = action_name,
+        note   = Blog.Enum.Text.MB,
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Spells > Nuke Burst", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -249,7 +285,19 @@ Debug.Unit.Tests.Spells.Pet_Nuke = function()
     pet_catalog[index][pet_name][action_name][DB.Trackable.PET_NUKING][DB.Metric.ATTEMPTS] = 1
     pet_catalog[index][pet_name][action_name][DB.Trackable.PET_NUKING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells > Pet Nuke", player, player_catalog, pet, pet_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Debug.Unit.Mob.PET.name,
+        damage = tostring(damage),
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Spells > Pet Nuke", player, player_catalog, pet, pet_catalog, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -311,7 +359,19 @@ Debug.Unit.Tests.Spells.Healing = function()
     player_catalog[index_two][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS] = 1
     player_catalog[index_two][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells > Healing", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Spells > Healing", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -376,7 +436,19 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     player_catalog[index_two][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS] = 1
     player_catalog[index_two][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells > Healing AOE", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage + damage_two),
+        action = action_name,
+        note   = "TGTs: 2",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Spells > Healing AOE", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -448,7 +520,19 @@ Debug.Unit.Tests.Spells.Pet_Heal = function()
     pet_catalog[index][pet_name][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
     pet_catalog[index][pet_name][action_name][DB.Trackable.PET_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells > Pet Heal", player, player_catalog, pet, pet_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Debug.Unit.Mob.PET.name,
+        damage = tostring(damage),
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Spells > Pet Heal", player, player_catalog, pet, pet_catalog, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -484,7 +568,19 @@ Debug.Unit.Tests.Spells.DoT_No_Damage = function()
     player_catalog[index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
     player_catalog[index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells - DoT > No Damage", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Spells - DoT > No Damage", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -531,7 +627,19 @@ Debug.Unit.Tests.Spells.DoT_Damage = function()
     player_catalog[index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
     player_catalog[index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells - DoT > Damage", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("Spells - DoT > Damage", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -573,7 +681,19 @@ Debug.Unit.Tests.Spells.Aspir = function()
     player_catalog[index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.ATTEMPTS] = 1
     player_catalog[index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells - Aspir", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Spells - Aspir", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -612,7 +732,19 @@ Debug.Unit.Tests.Spells.Enfeeble_Land = function()
     player_catalog[index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
     player_catalog[index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells - Enfeeble > Land", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Spells - Enfeeble > Land", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -649,7 +781,19 @@ Debug.Unit.Tests.Spells.Enfeeble_Resist = function()
     player_catalog[index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
     player_catalog[index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells - Enfeeble > Resist", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = action_name,
+        note   = Blog.Notes.RESIST,
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Spells - Enfeeble > Resist", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -688,7 +832,19 @@ Debug.Unit.Tests.Spells.Enfeeble_No_Effect = function()
     player_catalog[index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
     player_catalog[index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells - Enfeeble > No Effect", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = action_name,
+        note   = Blog.Notes.NO_EFFECT,
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Spells - Enfeeble > No Effect", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -742,7 +898,19 @@ Debug.Unit.Tests.Spells.Enfeeble_AOE_Land = function()
     player_catalog[index_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
     player_catalog[index_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells - Enfeeble > AOE Land", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Spells - Enfeeble > AOE Land", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -771,7 +939,19 @@ Debug.Unit.Tests.Spells.Song = function()
     player_catalog[index][action_name][DB.Trackable.SPELLS_BUFF_SONG] = T{}
     player_catalog[index][action_name][DB.Trackable.SPELLS_BUFF_SONG][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("Spells - Song", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = action_name,
+        note   = "TGTs: 1",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Spells - Song", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -784,6 +964,7 @@ Debug.Unit.Tests.Spells.Status_Removal = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.PLAYER_TWO.name
     local damage = 128      -- Burn
+    local debuff_name = "Burn"
     local action_id = 143
     local action_name = "Erase"
     local mp_cost = 18
@@ -805,5 +986,17 @@ Debug.Unit.Tests.Spells.Status_Removal = function()
     player_catalog[index][action_name][DB.Trackable.SPELLS_DEBUFF_REMOVAL][DB.Metric.ATTEMPTS] = 1
     player_catalog[index][action_name][DB.Trackable.SPELLS_DEBUFF_REMOVAL][DB.Metric.MP_SPENT] = mp_cost
 
-    return Debug.Unit.Check_Result("Spells - Status_Removal", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = "---",
+        action = action_name,
+        note   = debuff_name,
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("Spells - Status_Removal", player, player_catalog, nil, nil, battle_log, misc)
 end

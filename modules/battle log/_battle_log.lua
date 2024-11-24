@@ -9,12 +9,12 @@ Blog.Window = Window:New({
     Module = Blog.Module,
 })
 
-Blog.Log = T{}          -- Primary Data Node
-Blog.Display = T{}
-Blog.Util = T{}
+Blog.Log = {}          -- Primary Data Node
+Blog.Display = {}
+Blog.Util = {}
 
-Blog.Enum = T{}
-Blog.Enum.Text = T{
+Blog.Enum = {}
+Blog.Enum.Text = {
     MISS         = "MISS!",
     NA           = "---",
     MB           = "BURST!",
@@ -23,7 +23,7 @@ Blog.Enum.Text = T{
     PLAYER_DEATH = "Died",
     NO_PET       = "NONE",
 }
-Blog.Enum.Flags = T{
+Blog.Enum.Flags = {
     IGNORE = "ignore",
 }
 

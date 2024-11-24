@@ -41,7 +41,19 @@ Debug.Unit.Tests.TP_Action.Hit = function()
     player_catalog[index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.ATTEMPTS] = 1
     player_catalog[index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.TP_SPENT] = tp
 
-    return Debug.Unit.Check_Result("TP - Weaponskill > Hit", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = action_name,
+        note   = "TP: 0 ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("TP - Weaponskill > Hit", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -73,7 +85,19 @@ Debug.Unit.Tests.TP_Action.Miss = function()
     player_catalog[index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.ATTEMPTS] = 1
     player_catalog[index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.TP_SPENT] = tp
 
-    return Debug.Unit.Check_Result("TP - Weaponskill > Miss", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = action_name,
+        note   = "TP: 0 ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("TP - Weaponskill > Miss", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -115,7 +139,19 @@ Debug.Unit.Tests.TP_Action.Energy_Steal = function()
     player_catalog[index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MIN] = damage
     player_catalog[index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MAX] = damage
 
-    return Debug.Unit.Check_Result("TP - Weaponskill > Energy Steal", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(damage),
+        action = action_name,
+        note   = "TP: 0 ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("TP - Weaponskill > Energy Steal", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -181,7 +217,19 @@ Debug.Unit.Tests.TP_Action.Skillchain = function()
     player_catalog[index][sc_name][DB.Trackable.SKILLCHAIN][DB.Metric.SKILLCHAIN_OPENED] = 1  -- Gets set due to run-time nuance.
     player_catalog[index][sc_name][DB.Trackable.SKILLCHAIN][DB.Metric.SKILLCHAIN_CLOSED] = 1
 
-    return Debug.Unit.Check_Result("TP - Weaponskill > Skillchain", player, player_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = Blog.Enum.Text.NO_PET,
+        damage = tostring(sc_damage),
+        action = sc_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage + sc_damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("TP - Weaponskill > Skillchain", player, player_catalog, nil, nil, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -254,7 +302,19 @@ Debug.Unit.Tests.TP_Action.Pet_Hit = function()
     pet_catalog[index][pet_name][action_name][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
     pet_catalog[index][pet_name][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("TP - Pet > Hit", player, player_catalog, pet, pet_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = pet_name,
+        damage = tostring(damage),
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    return Debug.Unit.Check_Result("TP - Pet > Hit", player, player_catalog, pet, pet_catalog, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -299,7 +359,19 @@ Debug.Unit.Tests.TP_Action.Pet_Miss = function()
     pet_catalog[index][pet_name][action_name][DB.Trackable.PET_TP] = T{}
     pet_catalog[index][pet_name][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("TP - Pet > Miss", player, player_catalog, pet, pet_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = pet_name,
+        damage = tostring(damage),
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("TP - Pet > Miss", player, player_catalog, pet, pet_catalog, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -422,7 +494,19 @@ Debug.Unit.Tests.TP_Action.Pet_Hit_AOE = function()
     pet_catalog[index_two][pet_name][action_name][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
     pet_catalog[index_two][pet_name][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("TP - Pet > AOE Hit", player, player_catalog, pet, pet_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = pet_name,
+        damage = tostring(damage + damage_two),
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = damage + damage_two
+    misc["Total Damage No Skillchain"] = damage + damage_two
+
+    return Debug.Unit.Check_Result("TP - Pet > AOE Hit", player, player_catalog, pet, pet_catalog, battle_log, misc)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -467,5 +551,17 @@ Debug.Unit.Tests.TP_Action.Pet_No_Damage = function()
     pet_catalog[index][pet_name][action_name][DB.Trackable.PET_TP] = T{}
     pet_catalog[index][pet_name][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
 
-    return Debug.Unit.Check_Result("TP - Pet > No Damage", player, player_catalog, pet, pet_catalog)
+    local battle_log = T{
+        player = player_name,
+        pet    = pet_name,
+        damage = "---",
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = T{}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    return Debug.Unit.Check_Result("TP - Pet > No Damage", player, player_catalog, pet, pet_catalog, battle_log, misc)
 end

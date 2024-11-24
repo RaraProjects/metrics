@@ -796,7 +796,13 @@ end
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Check_Battle_Log = function(expected_data, error_message, error_count)
     if not expected_data then return error_message, error_count end
+
     local entry = Blog.Log[1]
+    if not entry then
+        error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "BLOG: No entry for {" .. tostring(expected_data.player) .. "}.")
+        return error_message, error_count
+    end
+
     if expected_data.player ~= entry.Player.Value then
         if error_count > 0 then error_message = error_message .. "\n" end
         error_message = error_message .. "BLOG: Expected player {" .. tostring(expected_data.player) .. "} got {" .. tostring(entry.Player.Value) .. "}"
