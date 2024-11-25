@@ -65,9 +65,6 @@ require("modules.battle log.columns")
 require("modules.battle log.entries")
 require("modules.battle log.widgets")
 
--- FUTURE CONSIDERATIONS
--- Highlight damage if the damage is higher than the average for that weaponskill.
-
 ------------------------------------------------------------------------------------------------------
 -- Resets the battle log.
 ------------------------------------------------------------------------------------------------------
@@ -90,6 +87,7 @@ Blog.Content = function()
         if Blog.Filtered_Count > 0 then UI.Text("Filtered Rows: " .. tostring(Blog.Filtered_Count)) end
     end
 
+    -- Primary content loop.
     if UI.BeginTable("Blog", columns, Window_Manager.Table.Flags.Scrollable, table_size) then
         Blog.Display.Headers()
         local start = ((Blog.Page - 1) * Metrics.Blog.Visible_Length) + 1

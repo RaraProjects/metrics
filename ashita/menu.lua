@@ -75,6 +75,8 @@ Ashita.Menu.Types = T{
     miss00   = true,    -- Mission submenu
     faqsub   = true,    -- Help Desk
     cmbhlst  = true,    -- Synthesis History
+    mapv2    = true,    -- Map marker creation
+    mapv3    = true,    -- Map markers
 }
 
 -- ------------------------------------------------------------------------------------------------------

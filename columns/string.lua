@@ -102,9 +102,9 @@ Column.String.Format_Percent = function(numerator, denominator, justify, no_scal
 
     if Focus.Config.Show_Percent_Details and not Report.Publishing.Lock then
         format = "%d"
-        local top = "N: " .. string.format(format, numerator)
-        local bottom = "D: " .. string.format(format, denominator)
-        return tostring(ret_value) .. "\n" .. tostring(top) .. "\n" .. tostring(bottom)
+        local top = string.format(format, numerator)
+        local bottom = string.format(format, denominator)
+        return Column.String.Set_Length(tostring(top) .. "/" .. tostring(bottom), 8)
     end
 
     return ret_value
