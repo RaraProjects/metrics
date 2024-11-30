@@ -72,7 +72,7 @@ ashita.events.register('command', 'command_cb', function (e)
             elseif report_type == "ws" then
                 Report.Publishing.Damage_By_Type(DB.Trackable.WEAPONSKILL)
             elseif report_type == "healing" then
-                Report.Publishing.Damage_By_Type(DB.Trackable.SPELLS_HEALING)
+                Report.Publishing.Damage_By_Type(DB.Trackable.ALL_HEAL)
             end
 
         -- Primary module switching.

@@ -11,7 +11,6 @@ Report.Window = Window:New({
 
 Report.Section = T{}
 
--- Load dependencies
 require("modules.report.config")
 require("modules.report.publishing")
 require("modules.report.widgets")
