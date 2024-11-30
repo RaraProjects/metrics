@@ -1,9 +1,9 @@
-Window = T{}
+Window = {}
 
 function Window:New(settings)
 
-    local self = T{}
-    settings = settings or T{}
+    local self = {}
+    settings = settings or {}
 
     local name       = settings.Name       or "Default"
     local title      = settings.Title      or "Default Title"
@@ -32,14 +32,14 @@ function Window:New(settings)
         visible[1] = Window_Manager.Get_Visibility(module)
         if Ashita.Player.Is_Zoning() or not visible[1] then return nil end
 
-        UI.PushStyleVar(ImGuiStyleVar_Alpha, Metrics.Window.Alpha)
+        UI.PushStyleVar(ImGuiStyleVar_Alpha, Window_Manager.Settings.Window.Alpha)
         UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})
         UI.PushStyleVar(ImGuiStyleVar_WindowPadding, {7, 3})
         UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
         UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
 
         local flags = flags_default
-        if not Metrics.Window.Show_Title and not show_title then flags = bit.bor(flags, ImGuiWindowFlags_NoTitleBar) end
+        if not Window_Manager.Settings.Window.Show_Title and not show_title then flags = bit.bor(flags, ImGuiWindowFlags_NoTitleBar) end
         if not show_bg then flags = bit.bor(flags, ImGuiWindowFlags_NoBackground) end
         self.Check_Position()
 

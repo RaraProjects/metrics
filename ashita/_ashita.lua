@@ -30,4 +30,3 @@ require("ashita.weaponskill")   -- Getting data related to weaponskills.
 require("ashita.item")          -- Getting data related to items.
 require("ashita.chat")          -- Chat functions.
 require("ashita.packets")       -- Packet functions.
-require("ashita.menu")          -- Memory and Menus.

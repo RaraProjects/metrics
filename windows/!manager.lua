@@ -1,11 +1,13 @@
-Window_Manager = T{}
+Window_Manager = {}
 
-Window_Manager.Window_List = T{}
+Window_Manager.Window_List = {}
 Window_Manager.Mask = false         -- Hides all windows.
-
+Window_Manager.Settings = T{}       -- Keep the "T" on this. Each module contains its own settings.
+                                    -- This is a pointer to the larger addon settings global.
+                                    -- Window_Manager.Settings[module_name]~
 Window_Manager.Tabs = {}
 Window_Manager.Tabs.Flags = ImGuiTabBarFlags_None
-Window_Manager.Tabs.Switches = T{}
+Window_Manager.Tabs.Switches = {}
 Window_Manager.Tabs.Active = nil
 
 Window_Manager.Table = {}
@@ -28,6 +30,16 @@ Window_Manager.IO.MouseDrawCursor = false
 require("windows.themes")
 require("windows.widgets")
 require("windows.config")
+require("windows.menu")
+
+------------------------------------------------------------------------------------------------------
+-- Initializes the window manager.
+------------------------------------------------------------------------------------------------------
+---@param settings_pointer table
+------------------------------------------------------------------------------------------------------
+Window_Manager.Initialize = function(settings_pointer)
+    Window_Manager.Settings = settings_pointer
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Adds a window to be tracked by the Window Manager.
@@ -82,8 +94,8 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Get_Visibility = function(module)
-    if not module or not Metrics[module] then return false end
-    if Metrics[module].Visible then return Metrics[module].Visible[1] end
+    if not module or not Window_Manager.Settings[module] then return false end
+    if Window_Manager.Settings[module].Visible then return Window_Manager.Settings[module].Visible[1] end
     return false
 end
 
@@ -94,8 +106,8 @@ end
 ---@param visible boolean
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Save_Visibility = function(module, visible)
-    if not module or not Metrics[module] then return nil end
-    Metrics[module].Visible[1] = visible
+    if not module or not Window_Manager.Settings[module] then return nil end
+    Window_Manager.Settings[module].Visible[1] = visible
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -105,8 +117,8 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Get_Position = function(module)
-    if not module or not Metrics[module] then return {100, 100} end
-    if Metrics[module].X and Metrics[module].Y then return {Metrics[module].X, Metrics[module].Y} end
+    if not module or not Window_Manager.Settings[module] then return {100, 100} end
+    if Window_Manager.Settings[module].X and Window_Manager.Settings[module].Y then return {Window_Manager.Settings[module].X, Window_Manager.Settings[module].Y} end
     return {100, 100}
 end
 
@@ -118,11 +130,11 @@ end
 ---@param y integer
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Save_Position = function(module, x, y)
-    if not module or not Metrics[module] then return nil end
+    if not module or not Window_Manager.Settings[module] then return nil end
     if not x then x = 100 end
     if not y then y = 100 end
-    Metrics[module].X = x
-    Metrics[module].Y = y
+    Window_Manager.Settings[module].X = x
+    Window_Manager.Settings[module].Y = y
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -163,14 +175,14 @@ end
 -- Returns the window scaling.
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Get_Scaling = function()
-    return Metrics.Window.Window_Scaling
+    return Window_Manager.Settings.Window.Window_Scaling
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles the Show Mouse option.
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Toggle_Mouse = function()
-    Metrics.Window.Show_Mouse = not Metrics.Window.Show_Mouse
+    Window_Manager.Settings.Window.Show_Mouse = not Window_Manager.Settings.Window.Show_Mouse
     Window_Manager.Show_Mouse_Refresh = true
 end
 
@@ -179,7 +191,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Check_Mouse = function()
     if Window_Manager.Show_Mouse_Refresh then
-        Window_Manager.IO.MouseDrawCursor = Metrics.Window.Show_Mouse
+        Window_Manager.IO.MouseDrawCursor = Window_Manager.Settings.Window.Show_Mouse
         Window_Manager.Show_Mouse_Refresh = false
     end
 end

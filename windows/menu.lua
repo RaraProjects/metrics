@@ -1,9 +1,9 @@
-Ashita.Menu = T{}
+Window_Manager.Menu = {}
 
-Ashita.Menu.Module  = "FFXiMain.dll"
-Ashita.Menu.Pattern = "8B480C85C974??8B510885D274??3B05"
+Window_Manager.Menu.Module  = "FFXiMain.dll"
+Window_Manager.Menu.Pattern = "8B480C85C974??8B510885D274??3B05"
 
-Ashita.Menu.Types = T{
+Window_Manager.Menu.Types = T{
     fulllog  = true,    -- Expanded chat log
     equip    = true,    -- Equipment menu
     inventor = true,    -- Inventory
@@ -87,8 +87,8 @@ Ashita.Menu.Types = T{
 -- ------------------------------------------------------------------------------------------------------
 ---@return string, integer
 -- ------------------------------------------------------------------------------------------------------
-function Ashita.Menu.Get_Menu_Name()
-    local menu = ashita.memory.find(Ashita.Menu.Module, 0, Ashita.Menu.Pattern, 16, 0)
+function Window_Manager.Menu.Get_Menu_Name()
+    local menu = ashita.memory.find(Window_Manager.Menu.Module, 0, Window_Manager.Menu.Pattern, 16, 0)
     local pointer = ashita.memory.read_uint32(menu)
     local pointer_value = ashita.memory.read_uint32(pointer)
     if pointer_value == 0 then return "", 0 end
@@ -102,13 +102,13 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-function Ashita.Menu.Hide()
-    local menu_name = Ashita.Menu.Get_Menu_Name()
+function Window_Manager.Menu.Hide()
+    local menu_name = Window_Manager.Menu.Get_Menu_Name()
     if not menu_name then return true end
 
     -- Get rid of prefix junk and clip off trailing spaces.
     menu_name = string.sub(menu_name, 9)
     menu_name = string.gsub(menu_name, " ", "")
 
-    return Ashita.Menu.Types[menu_name]
+    return Window_Manager.Menu.Types[menu_name]
 end

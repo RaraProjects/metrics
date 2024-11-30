@@ -115,6 +115,7 @@ ashita.events.register('load', 'load_cb', function()
     DB.Initialize()
     Parse.Initialize()
     Ashita.Party.Need_Refresh = true
+    Window_Manager.Initialize(Metrics)
     Window_Manager.Show_Mouse_Refresh = true
     XP.Window.Set_Background(Metrics.XP.Show_Background)
 
@@ -132,7 +133,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Save settings when the addon is unloaded.
 ------------------------------------------------------------------------------------------------------
-ashita.events.register('unload', 'unload_cb', function ()
+ashita.events.register('unload', 'unload_cb', function()
     Settings_File.save(Config.Enum.File.DATABASE)
     Settings_File.save(Config.Enum.File.PARSE)
     Settings_File.save(Config.Enum.File.FOCUS)

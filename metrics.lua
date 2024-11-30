@@ -94,7 +94,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
     Timers.Cycle(Timers.Enum.Names.DPS)
     Timers.Cycle(Timers.Enum.Names.EXP)
 
-    if not Ashita.Menu.Hide() and not Window_Manager.Is_Masked() then
+    if not Window_Manager.Menu.Hide() and not Window_Manager.Is_Masked() then
         Hub.Window.Populate(Hub.Content)
         Overview.Window.Populate(Overview.Content)
         Config.Window.Populate(Config.Content)

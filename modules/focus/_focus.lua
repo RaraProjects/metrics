@@ -79,7 +79,7 @@ Focus.Content = function()
     if unselected then
         UI.Separator()
         UI.Text("No player selected.")
-        if Debug.Is_Enabled() then UI.SameLine() UI.Text(Ashita.Menu.Get_Menu_Name()) end
+        if Debug.Is_Enabled() then UI.SameLine() UI.Text(Window_Manager.Menu.Get_Menu_Name()) end
         return nil
     end
     UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.Percent_Details()
