@@ -159,5 +159,5 @@ H.TP_Def.Blog = function(actor_mob, damage, action_id, skill_name, target_count)
     if target_count > 1 then note = "TGTs: " .. tostring(target_count) end
     -- Flag non damaging abilities to have "---" for damage.
     if action_id and not Res.Monster.Get_Damaging_Ability(action_id) then damage = -1 end
-    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_TP, skill_name, damage, note, DB.Trackable.DEF_TP_MOVE)
+    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_TP, skill_name, damage, note)
 end

@@ -46,7 +46,7 @@ Debug.Unit.Tests.Defense.Melee_Hit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -85,7 +85,7 @@ Debug.Unit.Tests.Defense.Melee_Miss = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",
@@ -126,7 +126,7 @@ Debug.Unit.Tests.Defense.Melee_Parry = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",
@@ -169,7 +169,7 @@ Debug.Unit.Tests.Defense.Melee_Shadows = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",
@@ -214,7 +214,7 @@ Debug.Unit.Tests.Defense.Third_Eye = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",
@@ -268,7 +268,7 @@ Debug.Unit.Tests.Defense.Melee_Counter = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = "Counter: " .. tostring(damage),
@@ -324,7 +324,7 @@ Debug.Unit.Tests.Defense.Melee_Guard = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -382,7 +382,7 @@ Debug.Unit.Tests.Defense.Melee_Shield = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -443,7 +443,7 @@ Debug.Unit.Tests.Defense.Melee_Crit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -498,7 +498,7 @@ Debug.Unit.Tests.Defense.Melee_Pet_Hit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -541,7 +541,7 @@ Debug.Unit.Tests.Defense.Melee_Pet_Miss = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",
@@ -593,7 +593,7 @@ Debug.Unit.Tests.Defense.Ranged_Hit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -644,7 +644,7 @@ Debug.Unit.Tests.Defense.Nuke = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -714,7 +714,7 @@ Debug.Unit.Tests.Defense.Nuke_AOE = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + damage_two),
         action = action_name,
         note   = "TGTs: 2",
@@ -791,7 +791,7 @@ Debug.Unit.Tests.Defense.Nuke_Pet = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -883,7 +883,7 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + damage_two),
         action = action_name,
         note   = "TGTs: 2",
@@ -975,7 +975,7 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + damage_two),
         action = action_name,
         note   = "TGTs: 2",
@@ -1026,7 +1026,7 @@ Debug.Unit.Tests.Defense.TP = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -1096,7 +1096,7 @@ Debug.Unit.Tests.Defense.TP_AOE = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + damage_two),
         action = action_name,
         note   = "TGTs: 2",
@@ -1173,7 +1173,7 @@ Debug.Unit.Tests.Defense.TP_Pet = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -1265,7 +1265,7 @@ Debug.Unit.Tests.Defense.TP_Pet_AOE_Primary = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + damage_two),
         action = action_name,
         note   = "TGTs: 2",
@@ -1357,7 +1357,7 @@ Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.ENEMY.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + damage_two),
         action = action_name,
         note   = "TGTs: 2",

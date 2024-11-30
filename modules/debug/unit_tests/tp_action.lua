@@ -43,7 +43,7 @@ Debug.Unit.Tests.TP_Action.Hit = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = "TP: 0 ",
@@ -87,7 +87,7 @@ Debug.Unit.Tests.TP_Action.Miss = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = "TP: 0 ",
@@ -141,7 +141,7 @@ Debug.Unit.Tests.TP_Action.Energy_Steal = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = "TP: 0 ",
@@ -219,7 +219,7 @@ Debug.Unit.Tests.TP_Action.Skillchain = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(sc_damage),
         action = sc_name,
         note   = " ",

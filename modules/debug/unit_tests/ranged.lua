@@ -33,7 +33,7 @@ Debug.Unit.Tests.Ranged.Hit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Ranged",
         note   = " ",
@@ -81,7 +81,7 @@ Debug.Unit.Tests.Ranged.Square = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Ranged",
         note   = " ",
@@ -129,7 +129,7 @@ Debug.Unit.Tests.Ranged.Truestrike = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Ranged",
         note   = " ",
@@ -167,7 +167,7 @@ Debug.Unit.Tests.Ranged.Miss = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Ranged",
         note   = " ",
@@ -215,7 +215,7 @@ Debug.Unit.Tests.Ranged.Crit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Ranged",
         note   = " ",
@@ -255,7 +255,7 @@ Debug.Unit.Tests.Ranged.Shadows = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Ranged",
         note   = " ",
@@ -321,7 +321,7 @@ Debug.Unit.Tests.Ranged.Endamage = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + additional_damage),
         action = "Ranged",
         note   = " ",
@@ -378,7 +378,7 @@ Debug.Unit.Tests.Ranged.Endebuff = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Ranged",
         note   = " ",
@@ -431,7 +431,7 @@ Debug.Unit.Tests.Ranged.Endrain = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + additional_damage),
         action = "Ranged",
         note   = " ",
@@ -477,7 +477,7 @@ Debug.Unit.Tests.Ranged.PUP = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Ranged",
         note   = " ",

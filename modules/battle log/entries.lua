@@ -26,7 +26,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Entries.Pet_Name = function(pet_name)
     local color = Res.Colors.Basic.WHITE
-    if not pet_name then pet_name = Blog.Enum.Text.NO_PET end
+    if not pet_name then pet_name = Blog.Enum.NO_PET end
     return {Value = pet_name, Color = color}
 end
 
@@ -34,12 +34,12 @@ end
 -- Format the damage component of the battle log.
 ------------------------------------------------------------------------------------------------------
 ---@param damage? number
----@param action_type? string a trackable from the data model.
+---@param action_type? string a battle log action type.
 ---@param color? table
 ---@return table {Damage, Color}
 ------------------------------------------------------------------------------------------------------
 Blog.Entries.Damage = function(damage, action_type, color)
-    if action_type == Blog.Enum.Flags.IGNORE then return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.WHITE} end
+    if action_type == Blog.Enum.IGNORE then return {Value = Blog.Enum.NOT_APPLICABLE, Color = Res.Colors.Basic.WHITE} end
 
     local default_color = Res.Colors.Basic.WHITE
     if color then default_color = color end
@@ -49,13 +49,13 @@ Blog.Entries.Damage = function(damage, action_type, color)
 
     -- Generate damage string.
     if not damage then
-        return {Value = Blog.Enum.Text.NA, Color = Res.Colors.Basic.DIM}
+        return {Value = Blog.Enum.NOT_APPLICABLE, Color = Res.Colors.Basic.DIM}
     elseif damage < 0 then  -- Enfeeble
-        return {Value = Blog.Enum.Text.NA, Color = default_color}
+        return {Value = Blog.Enum.NOT_APPLICABLE, Color = default_color}
     elseif damage == 0 then
-        return {Value = Column.String.Format_Number(0), Color = default_color, Note = Blog.Enum.Text.MISS}
+        return {Value = Column.String.Format_Number(0), Color = default_color, Note = Blog.Enum.MISS}
     elseif damage >= threshold then
-        return {Value = Column.String.Format_Number(damage), Color = default_color, Note = Blog.Enum.Text.HIGH_DAMAGE}
+        return {Value = Column.String.Format_Number(damage), Color = default_color, Note = Blog.Enum.HIGH_DAMAGE}
     end
     return {Value = Column.String.Format_Number(damage), Color = default_color}
 end
@@ -63,17 +63,22 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Helper function for calculating a damage threshold for highlighting.
 ------------------------------------------------------------------------------------------------------
----@param action_type? string a trackable from the data model.
+---@param action_type? string a battle log action type.
 ---@return number
 ------------------------------------------------------------------------------------------------------
 Blog.Entries.Damage_Threshold = function(action_type)
     local threshold = DB.Enum.MAX_DAMAGE
+
+    -- Default to max damage to block damage notifications.
     if not action_type then
         return threshold
-    elseif action_type == DB.Trackable.WEAPONSKILL then
+
+    elseif action_type == Blog.Action_Type.WEAPONSKILL then
         return Metrics.Blog.WS_THRESHOLD
-    elseif action_type == DB.Trackable.SPELLS_OVERALL then
+
+    elseif action_type == Blog.Action_Type.MAGIC_OFFENSIVE then
         return Metrics.Blog.MAGIC_THRESHOLD
+
     else
         return threshold
     end
@@ -94,38 +99,29 @@ end
 -- Format the TP component of the battle log.
 -- Will also show if a spell cast is a magic burst.
 ------------------------------------------------------------------------------------------------------
----@param note? string|number how much TP was used by the weaponskill
----@param action_type? string a trackable from the data model.
+---@param note? number|string a note passed in from the handler; could be TP, BURST!, etc.
+---@param action_type? string a blog action type
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Blog.Entries.Notes = function(note, action_type)
     local color = Res.Colors.Basic.WHITE
     local final_note = {Value = " ", Color = color}
+
+    -- Don't do anything if a note wasn't passed in or is blank.
     if not note or note == "" then return final_note end
 
-    -- A note should be passed in with these actions. Just use that.
-    if action_type == DB.Trackable.SPELLS_OVERALL or action_type == DB.Trackable.SPELLS_HEALING
-    or action_type == DB.Trackable.DEF_TP_MOVE or action_type == Blog.Enum.Flags.IGNORE
-    or action_type == DB.Trackable.SPELLS_ENFEEBLING or action_type == DB.Trackable.SPELLS_BUFF_SONG
-    or action_type == DB.Trackable.PET_TP or action_type == DB.Trackable.PHANTOM_ROLL
-    or action_type == DB.Trackable.SPELLS_DEBUFF_REMOVAL or action_type == DB.Trackable.DEATH
-    or action_type == DB.Trackable.DEF_MELEE then
-        final_note.Value = tostring(note)
-
     -- If the player died then show who killed them.
-    elseif action_type == DB.Trackable.DEATH then
-        if note then final_note.Value = "by " .. tostring(note) end
+    if action_type == Blog.Action_Type.PLAYER_DEATH then
+        final_note.Value = "by " .. tostring(note)
 
     -- Show the TP of the weaponskill.
-    elseif action_type == DB.Trackable.WEAPONSKILL then
-        ---@diagnostic disable-next-line: param-type-mismatch
-        if note then final_note.Value = "TP: " .. Column.String.Format_Number(note) .. " " end
+    elseif action_type == Blog.Action_Type.WEAPONSKILL then
+        local tp_value = tonumber(note)
+        if tp_value then final_note.Value = "TP: " .. Column.String.Format_Number(tp_value) .. " " end
 
-    -- We passed in a note, but didn't handle it above.
+    -- No special handling; just use the note.
     else
-        Debug.Error.Add(Debug.Error.WARNING, "Blog.Entries.Notes", "Unhandled battle log note. Note: {"
-        .. tostring(note) .. "} Type: {" .. tostring(action_type) .. "}.")
-        final_note.Value = " "
+        final_note.Value = tostring(note)
     end
 
     return final_note

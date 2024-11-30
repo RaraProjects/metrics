@@ -1,6 +1,6 @@
 Blog.Config = T{}
 
-Blog.Config.Defaults = T{
+Blog.Config.Defaults = {
     X         = 100,
     Y         = 100,
     Visible   = {true},
@@ -16,7 +16,6 @@ Blog.Config.Defaults = T{
     Ability   = true,
     Pet_TP    = true,
     Pet_Melee = true,
-    Pet_Heal  = true,
     Pet       = true,
     Healing   = true,
     Deaths    = false,
@@ -116,6 +115,10 @@ Blog.Config.Column_Settings = function()
         if UI.Checkbox("Enfeeble", {Metrics.Blog.Enfeeble}) then
             Metrics.Blog.Enfeeble = not Metrics.Blog.Enfeeble
         end
+        UI.TableNextColumn()
+        if UI.Checkbox("Healing", {Metrics.Blog.Healing}) then
+            Metrics.Blog.Healing = not Metrics.Blog.Healing
+        end
         UI.EndTable()
     end
 
@@ -144,10 +147,6 @@ Blog.Config.Column_Settings = function()
         UI.TableNextColumn()
         if UI.Checkbox("Nukes", {Metrics.Blog.Magic}) then
             Metrics.Blog.Magic = not Metrics.Blog.Magic
-        end
-        UI.TableNextColumn()
-        if UI.Checkbox("Healing", {Metrics.Blog.Healing}) then
-            Metrics.Blog.Healing = not Metrics.Blog.Healing
         end
         UI.TableNextColumn()
         if UI.Checkbox("Song Buffs", {Metrics.Blog.BRD_Buffs}) then
@@ -181,10 +180,6 @@ Blog.Config.Column_Settings = function()
         UI.TableNextColumn()
         if UI.Checkbox("TP/Abilities", {Metrics.Blog.Pet_TP}) then
             Metrics.Blog.Pet_TP = not Metrics.Blog.Pet_TP
-        end
-        UI.TableNextColumn()
-        if UI.Checkbox("Healing", {Metrics.Blog.Pet_Heal}) then
-            Metrics.Blog.Pet_Heal = not Metrics.Blog.Pet_Heal
         end
         UI.TableNextColumn()
         if UI.Checkbox("Commands", {Metrics.Blog.Pet_Command}) then

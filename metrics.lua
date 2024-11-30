@@ -25,14 +25,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -- Horizon Approved Addon 0457
 
-addon.author = "Metra"
-addon.name = "Metrics"
-addon.version = "11.24.24.00"
+addon.author  = "Metra"
+addon.name    = "Metrics"
+addon.version = "11.30.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
+
+
 Settings_File = require("settings")
-Socket = require("socket")              -- Needed for millisecond precision on timestamps for attack speed.
+Socket        = require("socket")   -- Needed for millisecond precision on timestamps for attack speed.
+Timers        = require("timers")
+UI            = require("imgui")
+
+-- This holds all of the settings for the various Metrics modules.
+-- It needs to be initialized after requiring "settings" because "settings" contains the definition for the "T" table modifier.
+-- The "T" table modifier is needed for the settings to save correctly without crashing on initial load.
 Metrics = T{}
 
 -- Duplicate packet checking from Thorny by way of the parse addon.
@@ -44,24 +52,15 @@ FFI.cdef[[
 Last_Chunk_Buffer = T{}
 Current_Chunk_Buffer = T{}
 
--- Resources
 require("resources._resource")
-
--- Core Modules
 require("database._database")
 require("file")
-Timers = require("timers")
 require("throttling")
 require("ashita._ashita")
 require("handlers._handler")
-
--- GUI
-UI = require("imgui")
 require("windows.!manager")
 require("windows.!window")
 require("columns.!column")
-
--- Modules
 require("modules.config._config")
 require("modules.exp._exp")
 require("modules.parse._parse")
@@ -71,9 +70,7 @@ require("modules.report._report")
 require("modules.overview._overview")
 require("modules.hub.!hub")
 require("modules.debug.!debug")
-
 require("commands")
-
 require("initialization")
 
 ------------------------------------------------------------------------------------------------------
@@ -158,7 +155,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             if Ashita.Party.Is_Affiliate(actor_mob.name) or Ashita.Mob.Pet_Owner(actor_mob) then
                 local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
                 DB.Defeated_Mob(target_mob.name)
-                Blog.Add(target_mob.name, nil, Blog.Action_Type.MOB_DEATH, Blog.Enum.Text.MOB_DEATH, nil, "------------", DB.Trackable.DEATH)
+                Blog.Add(target_mob.name, nil, Blog.Action_Type.MOB_DEATH, Blog.Enum.MOB_DEATH, nil, "------------")
             end
 
         -- Being defeated by a mob.

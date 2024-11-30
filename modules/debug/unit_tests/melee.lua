@@ -41,7 +41,7 @@ Debug.Unit.Tests.Melee.Main_Hit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -83,7 +83,7 @@ Debug.Unit.Tests.Melee.Main_Miss = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",
@@ -141,7 +141,7 @@ Debug.Unit.Tests.Melee.Crit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -216,7 +216,7 @@ Debug.Unit.Tests.Melee.Enspell = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + additional_damage),
         action = "Melee",
         note   = " ",
@@ -262,7 +262,7 @@ Debug.Unit.Tests.Melee.Shadows = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",
@@ -308,7 +308,7 @@ Debug.Unit.Tests.Melee.Mob_Heal = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",
@@ -362,7 +362,7 @@ Debug.Unit.Tests.Melee.Off_Hand_Hit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -404,7 +404,7 @@ Debug.Unit.Tests.Melee.Off_Hand_Miss = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",
@@ -762,7 +762,7 @@ Debug.Unit.Tests.Melee.Daken_Hit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -815,7 +815,7 @@ Debug.Unit.Tests.Melee.Daken_Square = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -868,7 +868,7 @@ Debug.Unit.Tests.Melee.Daken_Truestrike = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -909,7 +909,7 @@ Debug.Unit.Tests.Melee.Daken_Miss = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",
@@ -966,7 +966,7 @@ Debug.Unit.Tests.Melee.Daken_Crit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -1020,7 +1020,7 @@ Debug.Unit.Tests.Melee.Kick_Hit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -1062,7 +1062,7 @@ Debug.Unit.Tests.Melee.Kick_Miss = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",
@@ -1120,7 +1120,7 @@ Debug.Unit.Tests.Melee.Kick_Crit = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -1194,7 +1194,7 @@ Debug.Unit.Tests.Melee.Endamage = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + additional_damage),
         action = "Melee",
         note   = " ",
@@ -1259,7 +1259,7 @@ Debug.Unit.Tests.Melee.Endebuff = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -1318,7 +1318,7 @@ Debug.Unit.Tests.Melee.Endrain = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = "Melee",
         note   = " ",
@@ -1367,7 +1367,7 @@ Debug.Unit.Tests.Melee.Enaspir = function()
 
     local battle_log = T{
         player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = "Melee",
         note   = " ",

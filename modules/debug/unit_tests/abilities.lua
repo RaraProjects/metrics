@@ -44,7 +44,7 @@ Debug.Unit.Tests.Ability.Damaging_Hit = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -89,8 +89,8 @@ Debug.Unit.Tests.Ability.Damaging_Miss = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
-        damage = "---",
+        pet    = Blog.Enum.NO_PET,
+        damage = "0",
         action = action_name,
         note   = " ",
     }
@@ -146,7 +146,7 @@ Debug.Unit.Tests.Ability.Damaging_Hit_TP = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -191,8 +191,8 @@ Debug.Unit.Tests.Ability.Damaging_Miss_TP = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
-        damage = "---",
+        pet    = Blog.Enum.NO_PET,
+        damage = "0",
         action = action_name,
         note   = " ",
     }
@@ -246,7 +246,7 @@ Debug.Unit.Tests.Ability.Healing = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -299,7 +299,7 @@ Debug.Unit.Tests.Ability.MP = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -344,7 +344,7 @@ Debug.Unit.Tests.Ability.No_Damage = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = action_name,
         note   = " ",

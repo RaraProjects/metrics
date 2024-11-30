@@ -167,14 +167,18 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Blog = function(actor_mob, ability_data, ability_id, damage)
     if not ability_data or not ability_id then return nil end
+
     if Res.Abilities.Get_Damaging(ability_id) or Res.Abilities.Get_MP_Recovery(ability_id) then
         local note = nil
         if ability_id == Res.Abilities.CHIVALRY then note = Ashita.Party.Refresh(actor_mob.name, Ashita.Enum.Player_Attributes.TP) end
         Blog.Add(actor_mob.name, nil, Blog.Action_Type.ABILITY, ability_data.Name, damage, note)
+
     elseif Res.Abilities.Get_Player_Healing(ability_id) or Res.Abilities.Get_Pet_Healing(ability_id) then
-        Blog.Add(actor_mob.name, nil, Blog.Action_Type.HEALING, ability_data.Name, damage)
+        Blog.Add(actor_mob.name, nil, Blog.Action_Type.MAGIC_HEALING, ability_data.Name, damage)
+
     elseif (ability_id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Pet_Command(ability_id - Ashita.Enum.Ability_Offsets.ABILITY) then
         Blog.Add(actor_mob.name, nil, Blog.Action_Type.PET_COMMAND, ability_data.Name, damage)
+
     elseif (ability_id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_id - Ashita.Enum.Ability_Offsets.ABILITY) then
         local lucky_details = Res.Abilities.Get_Roll_Lucky(ability_id - Ashita.Enum.Ability_Offsets.ABILITY)
         if not lucky_details then return nil end
@@ -186,7 +190,8 @@ H.Ability.Blog = function(actor_mob, ability_data, ability_id, damage)
         elseif damage > 11 then
             suffix = " BUST!"
         end
-        Blog.Add(actor_mob.name, nil, Blog.Action_Type.COR_ROLLS, ability_data.Name, nil, "Roll: " .. tostring(damage) .. suffix, DB.Trackable.PHANTOM_ROLL, ability_data)
+        Blog.Add(actor_mob.name, nil, Blog.Action_Type.PHANTOM_ROLL, ability_data.Name, nil, "Roll: " .. tostring(damage) .. suffix, ability_data)
+
     else
         Blog.Add(actor_mob.name, nil, Blog.Action_Type.ABILITY, ability_data.Name)
     end
@@ -207,12 +212,12 @@ H.Ability.Pet_Blog = function(actor_mob, owner_mob, ability_data, ability_id, da
         if Res.Avatar.Get_Rage(ability_id) or Res.Pets.Get_Damaging_Wyvern_Breath(ability_id) then
             Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.PET_TP, ability_data.Name, damage)
         elseif Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then
-            Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.PET_HEAL, ability_data.Name, damage)
+            Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.ALL_HEALING, ability_data.Name, damage)
         elseif Res.Avatar.Get_Healing(ability_id) then
-            Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.PET_HEAL, ability_data.Name, damage)
+            Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.ALL_HEALING, ability_data.Name, damage)
         elseif Res.Avatar.Get_Ward(ability_id) then
             local note = "TGTs: " .. tostring(target_count)
-            Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.PET_TP, ability_data.Name, nil, note, DB.Trackable.PET_TP, ability_data)
+            Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.PET_TP, ability_data.Name, nil, note, ability_data)
         end
     end
 end

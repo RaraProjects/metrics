@@ -9,7 +9,7 @@ Blog.Columns = T{}
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Name = function(player_name, pet_name)
     if Metrics.Parse.Hide_Name then player_name = Blog.Columns.Job(player_name) end
-    if pet_name ~= Blog.Enum.Text.NO_PET then
+    if pet_name ~= Blog.Enum.NO_PET then
         local combined_string = player_name .. " (" .. pet_name .. ")"
         if string.len(combined_string) > Blog.Settings.Truncate_Length then
             local truncated_pet = Column.String.Truncate(pet_name, Blog.Settings.Pet_Name_Truncate_Length, true)

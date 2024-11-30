@@ -455,7 +455,7 @@ end
 ---@param tp integer
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_WS = function(actor_mob, damage, ws_data, ws_name, tp)
-    Blog.Add(actor_mob.name, nil, Blog.Action_Type.WS, ws_name, damage, tp, DB.Trackable.WEAPONSKILL, ws_data)
+    Blog.Add(actor_mob.name, nil, Blog.Action_Type.WEAPONSKILL, ws_name, damage, tp, ws_data)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -467,7 +467,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_SC = function(actor_mob, sc_damage, sc_name)
     if sc_damage > 0 then
-        Blog.Add(actor_mob.name, nil, Blog.Action_Type.SC, sc_name, sc_damage, nil, DB.Trackable.SKILLCHAIN)
+        Blog.Add(actor_mob.name, nil, Blog.Action_Type.SKILLCHAIN, sc_name, sc_damage)
     end
 end
 
@@ -485,8 +485,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.Blog_Pet_Skill = function(owner_mob, actor_mob, action_id, damage, skill_name)
     if owner_mob then
-        local ignore = nil
-        if not Res.Monster.Get_Damaging_Ability(action_id) then ignore = DB.Enum.IGNORE end
-        Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.PET_TP, skill_name, damage, DB.Enum.BLANK, ignore)
+        if not Res.Monster.Get_Damaging_Ability(action_id) then damage = -1 end
+        Blog.Add(owner_mob.name, actor_mob.name, Blog.Action_Type.PET_TP, skill_name, damage)
     end
 end

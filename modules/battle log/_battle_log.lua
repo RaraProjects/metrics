@@ -9,52 +9,45 @@ Blog.Window = Window:New({
     Module = Blog.Module,
 })
 
-Blog.Log = {}          -- Primary Data Node
+Blog.Log = {}       -- Primary Data Node
 Blog.Display = {}
 Blog.Util = {}
 
-Blog.Enum = {}
-Blog.Enum.Text = {
-    MISS         = "MISS!",
-    NA           = "---",
-    MB           = "BURST!",
-    HIGH_DAMAGE  = "!!!",
-    MOB_DEATH    = "Defeated",
-    PLAYER_DEATH = "Died",
-    NO_PET       = "NONE",
-}
-Blog.Enum.Flags = {
-    IGNORE = "ignore",
+Blog.Enum = {
+    HIGH_DAMAGE    = "!!!",
+    IGNORE         = "ignore",
+    MAGIC_BURST    = "BURST!",
+    MISS           = "MISS!",
+    MOB_DEATH      = "Defeated",
+    NO_EFFECT      = "No Effect",
+    NO_PET         = "No Pet",
+    NOT_APPLICABLE = "---",
+    PLAYER_DEATH   = "Died",
+    RESIST         = "Resist!",
 }
 
+-- Used for blog filtering.
 Blog.Action_Type = {
-    MELEE          = "Melee",
-    RANGED         = "Ranged",
-    WS             = "WS",
-    SC             = "SC",
-    MAGIC          = "Magic",
-    ENFEEBLE       = "Enfeeble",
-    DISPEL         = "Dispel",
-    HEALING        = "Healing",
-    DEBUFF_REMOVAL = "Debuff Removal",
-    BRD_BUFFS      = "Bard Song Buffs",
-    ABILITY        = "Ability",
-    COR_ROLLS      = "Phantom_Rolls",
-    PET            = "Pet",
-    PET_MELEE      = "Pet Melee",
-    PET_TP         = "Pet Weaponskill",
-    PET_HEAL       = "Pet Heal",
-    PET_COMMAND    = "Pet Command",
-    MOB_MELEE      = "Mob Melee",
-    MOB_TP         = "Mob TP",
-    MOB_SPELL      = "Mob Spell",
-    MOB_DEATH      = "Mob Death",
-    DEATH          = "Death",
-}
-
-Blog.Notes = {
-    RESIST    = "Resist!",
-    NO_EFFECT = "No Effect",
+    ABILITY         = "Ability",
+    ALL_HEALING     = "Healing",
+    DEBUFF_REMOVAL  = "Debuff Removal",
+    DISPEL          = "Dispel",
+    MAGIC_OFFENSIVE = "Offensive Magic",
+    MAGIC_ENFEEBLE  = "Enfeeble",
+    MELEE           = "Melee",
+    MOB_DEATH       = "Mob Death",
+    MOB_MELEE       = "Mob Melee",
+    MOB_TP          = "Mob TP",
+    MOB_SPELL       = "Mob Spell",
+    PET_COMMAND     = "Pet Command",
+    PET_MELEE       = "Pet Melee",
+    PET_TP          = "Pet Weaponskill",
+    PHANTOM_ROLL    = "Phantom_Rolls",
+    PLAYER_DEATH    = "Death",
+    RANGED          = "Ranged",
+    SKILLCHAIN      = "Skillchain",
+    SONG_BUFFS      = "Bard Song Buffs",
+    WEAPONSKILL     = "Weaponskill",
 }
 
 Blog.Page = 1
@@ -76,10 +69,12 @@ end
 -- Loads the battle log data to the screen.
 ------------------------------------------------------------------------------------------------------
 Blog.Content = function()
+    -- Table dimensions.
     local table_size = {0, Metrics.Blog.Line_Height * (Metrics.Blog.Visible_Length + 1)}    -- One for header row.
     local columns = 4
     if Metrics.Blog.Timestamp then columns = columns + 1 end
 
+    -- Things to display above the table.
     Blog.Widgets.Settings_Button() UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Show_Page()
     if Metrics.Parse.Lurk_Mode then UI.SameLine() UI.Text(" Lurking...") end
     if Metrics.Blog.Paging then
@@ -121,31 +116,28 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string name of the player that took the action.
 ---@param pet_name? string name of the pet (if applicable)
----@param action_flag string the type of action being taken. This is specific to the blog and not the database.
+---@param action_type string the type of action being taken. This is specific to the blog and not the database.
 ---@param action_name string name of the action the player took (like a weaponskill or ability).
 ---@param damage? number usually how much damage the action did.
 ---@param note? number|string how much TP was used by the weaponskill.
----@param action_type? string a trackable from the data model.
 ---@param action_data? table additional information about the action to help with text formatting.
 ------------------------------------------------------------------------------------------------------
-Blog.Add = function(player_name, pet_name, action_flag, action_name, damage, note, action_type, action_data)
+Blog.Add = function(player_name, pet_name, action_type, action_name, damage, note, action_data)
     -- If the blog is at max length then we will need to remove the last element
     if #Blog.Log >= Blog.Settings.Max_Length then table.remove(Blog.Log, Blog.Settings.Length) end
 
     local color = Res.Colors.Basic.WHITE
     local is_mob = not Ashita.Party.Jobs[player_name]
     if Metrics.Parse.Lurk_Mode then is_mob = false end  -- Prevent everything from being dim in Lurk mode.
-    if action_type and action_data then
-        if action_type == DB.Trackable.SPELLS_OVERALL then
-            local element = action_data.Element
-            color = Res.Colors.Get_Element(element)
-        end
+    if action_data and action_type and action_type == Blog.Action_Type.MAGIC_OFFENSIVE then
+        local element = action_data.Element
+        color = Res.Colors.Get_Element(element)
     end
-    if not pet_name then pet_name = "NONE" end
+    if not pet_name then pet_name = Blog.Enum.NO_PET end
 
     local entry = {
         Time   = {Value = os.date("%X"), Color = Res.Colors.Basic.WHITE},
-        Flag   = {Value = action_flag, Color = Res.Colors.Basic.WHITE},
+        Flag   = {Value = action_type, Color = Res.Colors.Basic.WHITE},
         Player = Blog.Entries.Name(player_name, is_mob),
         Pet    = Blog.Entries.Pet_Name(pet_name),
         Damage = Blog.Entries.Damage(damage, action_type, color),
@@ -153,7 +145,7 @@ Blog.Add = function(player_name, pet_name, action_flag, action_name, damage, not
         Note   = Blog.Entries.Notes(note, action_type)
     }
     -- Gray out mob deaths for better visual parsing of the battle.
-    if action_name == Blog.Enum.Text.MOB_DEATH then
+    if action_name == Blog.Enum.MOB_DEATH then
         Blog.Util.Set_Row_Color(entry, Res.Colors.Basic.DIM)
     end
     table.insert(Blog.Log, 1, entry)
@@ -166,26 +158,26 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 Blog.Action_Filter = function(action_flag)
-    if     action_flag == Blog.Action_Type.HEALING or action_flag == Blog.Action_Type.DEBUFF_REMOVAL then return Metrics.Blog.Healing
-    elseif action_flag == Blog.Action_Type.PET_MELEE then return Metrics.Blog.Pet_Melee
-    elseif action_flag == Blog.Action_Type.PET_TP    then return Metrics.Blog.Pet_TP
-    elseif action_flag == Blog.Action_Type.PET_HEAL  then return Metrics.Blog.Pet_Heal
-    elseif action_flag == Blog.Action_Type.DEATH     then return Metrics.Blog.Deaths
-    elseif action_flag == Blog.Action_Type.MOB_MELEE then return Metrics.Blog.Mob_Melee
-    elseif action_flag == Blog.Action_Type.MOB_TP    then return Metrics.Blog.Mob_TP
-    elseif action_flag == Blog.Action_Type.MOB_SPELL then return Metrics.Blog.Mob_Spell
-    elseif action_flag == Blog.Action_Type.MOB_DEATH then return Metrics.Blog.Mob_Death
-    elseif action_flag == Blog.Action_Type.MELEE     then return Metrics.Blog.Melee
-    elseif action_flag == Blog.Action_Type.RANGED    then return Metrics.Blog.Ranged
-    elseif action_flag == Blog.Action_Type.MAGIC     then return Metrics.Blog.Magic
-    elseif action_flag == Blog.Action_Type.BRD_BUFFS then return Metrics.Blog.BRD_Buffs
-    elseif action_flag == Blog.Action_Type.COR_ROLLS then return Metrics.Blog.COR_Rolls
-    elseif action_flag == Blog.Action_Type.WS        then return Metrics.Blog.WS
-    elseif action_flag == Blog.Action_Type.SC        then return Metrics.Blog.SC
-    elseif action_flag == Blog.Action_Type.ABILITY   then return Metrics.Blog.Ability
-    elseif action_flag == Blog.Action_Type.PET_COMMAND then return Metrics.Blog.Pet_Command
-    elseif action_flag == Blog.Action_Type.ENFEEBLE  then return Metrics.Blog.Enfeeble
-    elseif action_flag == Blog.Action_Type.DISPEL    then return Metrics.Blog.Enfeeble
+    if     action_flag == Blog.Action_Type.ABILITY         then return Metrics.Blog.Ability
+    elseif action_flag == Blog.Action_Type.ALL_HEALING
+    or action_flag == Blog.Action_Type.DEBUFF_REMOVAL      then return Metrics.Blog.Healing
+    elseif action_flag == Blog.Action_Type.DISPEL          then return Metrics.Blog.Enfeeble
+    elseif action_flag == Blog.Action_Type.MAGIC_OFFENSIVE then return Metrics.Blog.Magic
+    elseif action_flag == Blog.Action_Type.MAGIC_ENFEEBLE  then return Metrics.Blog.Enfeeble
+    elseif action_flag == Blog.Action_Type.MELEE           then return Metrics.Blog.Melee
+    elseif action_flag == Blog.Action_Type.MOB_MELEE       then return Metrics.Blog.Mob_Melee
+    elseif action_flag == Blog.Action_Type.MOB_DEATH       then return Metrics.Blog.Mob_Death
+    elseif action_flag == Blog.Action_Type.MOB_TP          then return Metrics.Blog.Mob_TP
+    elseif action_flag == Blog.Action_Type.MOB_SPELL       then return Metrics.Blog.Mob_Spell
+    elseif action_flag == Blog.Action_Type.PET_COMMAND     then return Metrics.Blog.Pet_Command
+    elseif action_flag == Blog.Action_Type.PET_MELEE       then return Metrics.Blog.Pet_Melee
+    elseif action_flag == Blog.Action_Type.PET_TP          then return Metrics.Blog.Pet_TP
+    elseif action_flag == Blog.Action_Type.PLAYER_DEATH    then return Metrics.Blog.Deaths
+    elseif action_flag == Blog.Action_Type.PHANTOM_ROLL    then return Metrics.Blog.COR_Rolls
+    elseif action_flag == Blog.Action_Type.RANGED          then return Metrics.Blog.Ranged
+    elseif action_flag == Blog.Action_Type.SKILLCHAIN      then return Metrics.Blog.SC
+    elseif action_flag == Blog.Action_Type.SONG_BUFFS      then return Metrics.Blog.BRD_Buffs
+    elseif action_flag == Blog.Action_Type.WEAPONSKILL     then return Metrics.Blog.WS
     else return false end
 end
 
@@ -273,7 +265,7 @@ Blog.Display.Rows = function(entry)
         local a = 0.25
         local row_bg_color = UI.GetColorU32({r, g, b, a})
         UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color)
-    elseif entry.Flag.Value == Blog.Action_Type.DISPEL and (note and (note ~= Blog.Notes.NO_EFFECT and note ~= Blog.Notes.RESIST)) then
+    elseif entry.Flag.Value == Blog.Action_Type.DISPEL and (note and (note ~= Blog.Enum.NO_EFFECT and note ~= Blog.Enum.RESIST)) then
         local r = 1.00
         local g = 1.00
         local b = 1.00

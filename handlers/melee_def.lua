@@ -112,7 +112,7 @@ end
 H.Melee_Def.Blog = function(actor_mob, damage, counter_damage)
     local note = ""
     if counter_damage and counter_damage > 0 then note = "Counter: " .. tostring(counter_damage) end
-    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_MELEE, DB.Trackable.MELEE_OVERALL, damage, note, DB.Trackable.DEF_MELEE)
+    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_MELEE, DB.Trackable.MELEE_OVERALL, damage, note)
 end
 
 ------------------------------------------------------------------------------------------------------

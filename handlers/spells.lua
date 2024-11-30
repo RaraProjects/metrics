@@ -121,46 +121,46 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
     if (Res.Spells.Get_Damaging(spell_id) or Res.Spells.Get_MP_Drain(spell_id)) and not Res.Spells.Get_DoT(spell_id) then
         -- Show magic burst message.
         if is_burst then
-            blog_note = Blog.Enum.Text.MB
+            blog_note = Blog.Enum.MAGIC_BURST
             space = " "
         end
         -- Show how many targets were hit on the ga-spell.
         if Res.Spells.Get_AOE(spell_id) then
             blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
         end
-        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.MAGIC, spell_name, damage, blog_note, DB.Trackable.SPELLS_OVERALL, spell_data)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.MAGIC_OFFENSIVE, spell_name, damage, blog_note, spell_data)
 
     elseif Res.Spells.Get_Healing(spell_id) then
         if Res.Spells.Get_AOE(spell_id) then
             blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
         end
-        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.HEALING, spell_name, damage, blog_note, DB.Trackable.SPELLS_HEALING, spell_data)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.ALL_HEALING, spell_name, damage, blog_note, spell_data)
 
     elseif Res.Spells.Get_Debuff_Removal(spell_id) then
         local buff = Res.Buffs.Get_Buff(damage)
         if damage == -1 then
-            blog_note = Blog.Notes.NO_EFFECT
+            blog_note = Blog.Enum.NO_EFFECT
         elseif buff and spell_id == 143 then    -- Erase
             blog_note = buff.en
         end
-        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.DEBUFF_REMOVAL, spell_name, -1, blog_note, DB.Trackable.SPELLS_DEBUFF_REMOVAL, spell_data)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.DEBUFF_REMOVAL, spell_name, -1, blog_note, spell_data)
 
     elseif Res.Spells.Get_Enfeeble(spell_id) then
-        local action_type = Blog.Action_Type.ENFEEBLE
+        local action_type = Blog.Action_Type.MAGIC_ENFEEBLE
         if damage == -1 then
-            blog_note = Blog.Notes.NO_EFFECT
+            blog_note = Blog.Enum.NO_EFFECT
         elseif damage == -2 then
-            blog_note = Blog.Notes.RESIST
+            blog_note = Blog.Enum.RESIST
         elseif Res.Spells.Get_Dispel(spell_id) then
             local buff = Res.Buffs.Get_Buff(damage)
             if buff then blog_note = buff.en end
             action_type = Blog.Action_Type.DISPEL
         end
-        Blog.Add(audits.player_name, audits.pet_name, action_type, spell_name, -1, blog_note, DB.Trackable.SPELLS_ENFEEBLING, spell_data)
+        Blog.Add(audits.player_name, audits.pet_name, action_type, spell_name, -1, blog_note, spell_data)
 
     elseif Res.Spells.Get_Buff_Song(spell_id) then
         blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
-        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.BRD_BUFFS, spell_name, nil, blog_note, DB.Trackable.SPELLS_BUFF_SONG, spell_data)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.SONG_BUFFS, spell_name, nil, blog_note, spell_data)
 
     end
 end

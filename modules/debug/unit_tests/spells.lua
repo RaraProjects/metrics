@@ -46,7 +46,7 @@ Debug.Unit.Tests.Spells.Nuke = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -129,7 +129,7 @@ Debug.Unit.Tests.Spells.Nuke_AOE = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + damage_two),
         action = action_name,
         note   = "TGTs: 2",
@@ -195,10 +195,10 @@ Debug.Unit.Tests.Spells.Nuke_Burst = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
-        note   = Blog.Enum.Text.MB,
+        note   = Blog.Enum.MAGIC_BURST,
     }
 
     local misc = T{}
@@ -361,7 +361,7 @@ Debug.Unit.Tests.Spells.Healing = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -438,7 +438,7 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + damage_two),
         action = action_name,
         note   = "TGTs: 2",
@@ -570,7 +570,7 @@ Debug.Unit.Tests.Spells.DoT_No_Damage = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -629,7 +629,7 @@ Debug.Unit.Tests.Spells.DoT_Damage = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -683,7 +683,7 @@ Debug.Unit.Tests.Spells.Aspir = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
         note   = " ",
@@ -734,7 +734,7 @@ Debug.Unit.Tests.Spells.Enfeeble_Land = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = action_name,
         note   = " ",
@@ -783,10 +783,10 @@ Debug.Unit.Tests.Spells.Enfeeble_Resist = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = action_name,
-        note   = Blog.Notes.RESIST,
+        note   = Blog.Enum.RESIST,
     }
 
     local misc = T{}
@@ -834,10 +834,10 @@ Debug.Unit.Tests.Spells.Enfeeble_No_Effect = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = action_name,
-        note   = Blog.Notes.NO_EFFECT,
+        note   = Blog.Enum.NO_EFFECT,
     }
 
     local misc = T{}
@@ -900,7 +900,7 @@ Debug.Unit.Tests.Spells.Enfeeble_AOE_Land = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = action_name,
         note   = " ",
@@ -941,7 +941,7 @@ Debug.Unit.Tests.Spells.Song = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = action_name,
         note   = "TGTs: 1",
@@ -988,7 +988,7 @@ Debug.Unit.Tests.Spells.Status_Removal = function()
 
     local battle_log = T{
         player = player_name,
-        pet    = Blog.Enum.Text.NO_PET,
+        pet    = Blog.Enum.NO_PET,
         damage = "---",
         action = action_name,
         note   = debuff_name,
