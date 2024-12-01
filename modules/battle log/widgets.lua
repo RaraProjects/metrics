@@ -6,32 +6,6 @@ Blog.Widgets.Player_Index = 1
 Blog.Widgets.Action_Buffer = T{}
 
 ------------------------------------------------------------------------------------------------------
--- Set the battle log damage highlighting threshold for weaponskills.
-------------------------------------------------------------------------------------------------------
-Blog.Widgets.WS_Threshold = function()
-    local ws_threshold = {[1] = Metrics.Blog.WS_THRESHOLD}
-    UI.SetNextItemWidth(Blog.Config.Slider_Width)
-    if UI.DragInt("Weaponskill", ws_threshold, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
-        Metrics.Blog.WS_THRESHOLD = ws_threshold[1]
-    end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("Weaponskill damage over this amount will be highlighted "
-                                    .. "in the battle log.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Set the battle log damage highlighting threshold for magic.
-------------------------------------------------------------------------------------------------------
-Blog.Widgets.Magic_Threshold = function()
-    local magic_threshold = {[1] = Metrics.Blog.MAGIC_THRESHOLD}
-    UI.SetNextItemWidth(Blog.Config.Slider_Width)
-    if UI.DragInt("Spell", magic_threshold, 1, 0, 99999, "%d", ImGuiSliderFlags_None) then
-        Metrics.Blog.MAGIC_THRESHOLD = magic_threshold[1]
-    end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("Magic damage over this amount will be highlighted "
-                                    .. "in the battle log.")
-end
-
-------------------------------------------------------------------------------------------------------
 -- Toggles the settings showing for the battle log.
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.Settings_Button = function()
@@ -45,7 +19,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.Show_Page = function()
     if UI.SmallButton("Paging") then
-        Metrics.Blog.Paging = not Metrics.Blog.Paging
+        Metrics.Blog.Is_Paging_Enabled = not Metrics.Blog.Is_Paging_Enabled
     end
 end
 
@@ -66,7 +40,7 @@ end
 Blog.Widgets.Page = function()
     local last_page = Blog.Max_Page()
     local page = {[1] = Blog.Page}
-    UI.SetNextItemWidth(Blog.Config.Page_Slider_Width)
+    UI.SetNextItemWidth(Blog.Enum.SLIDER_WIDTH_PAGE)
     if UI.DragInt("Page", page, 0.1, 1, last_page, "%d", ImGuiSliderFlags_None) then
         if last_page > 1 then Blog.Page = page[1] end
     end

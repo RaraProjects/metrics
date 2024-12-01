@@ -36,7 +36,6 @@ _Globals.Initialized = false
 Settings_File = require("settings")
 Socket        = require("socket")   -- Needed for millisecond precision on timestamps for attack speed.
 Timers        = require("timers")
-UI            = require("imgui")
 
 -- This holds all of the settings for the various Metrics modules.
 -- It needs to be initialized after requiring "settings" because "settings" contains the definition for the "T" table modifier.

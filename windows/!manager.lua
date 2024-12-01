@@ -1,3 +1,5 @@
+UI = require("imgui")
+
 Window_Manager = {}
 
 Window_Manager.Window_List = {}

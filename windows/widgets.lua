@@ -17,6 +17,23 @@ Window_Manager.Widgets.HelpMarker = function(text)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Creates a checkbox that can toggle a setting.
+-- I'm trying to take advantage of Lua passing tables by reference, but I have send the setting name via string.
+------------------------------------------------------------------------------------------------------
+---@param caption string
+---@param settings_pointer table
+---@param setting_name string
+------------------------------------------------------------------------------------------------------
+Window_Manager.Widgets.Toggle_Checkbox = function(caption, settings_pointer, setting_name)
+    if not caption or not settings_pointer or not setting_name then return nil end
+    if settings_pointer[setting_name] == nil then return nil end
+
+    if UI.Checkbox(tostring(caption), {settings_pointer[setting_name]}) then
+        settings_pointer[setting_name] = not settings_pointer[setting_name]
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Sets screen alpha.
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Widgets.Alpha = function()

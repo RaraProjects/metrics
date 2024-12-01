@@ -40,20 +40,27 @@ Config.Desc_Width = 300
 
 ------------------------------------------------------------------------------------------------------
 -- Loads the settings data to the screen.
+-- There is a single settings window that is shared between all modules.
+-- Each module provides its own settings content.
 ------------------------------------------------------------------------------------------------------
 Config.Content = function()
     local tab_flags = Window_Manager.Tabs.Flags
 
     if Config.Settings_Mode == Config.Enum.File.PARSE then
         Parse.Config.Display()
+
     elseif Config.Settings_Mode == Config.Enum.File.FOCUS then
         Focus.Config.Display()
+
     elseif Config.Settings_Mode == Config.Enum.File.BLOG then
         Blog.Config.Display()
+
     elseif Config.Settings_Mode == Config.Enum.File.EXP then
         XP.Config.Populate()
+
     elseif Config.Settings_Mode == Config.Enum.File.REPORT then
         Report.Config.Display()
+
     elseif Config.Settings_Mode == Config.Enum.File.CONFIG then
         if UI.BeginTabBar("Focus Tabs", tab_flags) then
             if UI.BeginTabItem("Help", tab_flags) then

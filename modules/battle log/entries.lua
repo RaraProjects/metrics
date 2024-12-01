@@ -8,7 +8,7 @@ Blog.Entries = T{}
 ---@return table {Name, Color}
 ------------------------------------------------------------------------------------------------------
 Blog.Entries.Name = function(player_name, is_mob)
-    if not player_name then player_name = "Unknown" end
+    if not player_name then player_name = Blog.Enum.UNKNOWN end
     local color = Res.Colors.Basic.WHITE
     if not is_mob and Metrics.Parse.Name_Colors and Ashita.Party.Jobs[player_name] then
         local job = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
@@ -44,44 +44,16 @@ Blog.Entries.Damage = function(damage, action_type, color)
     local default_color = Res.Colors.Basic.WHITE
     if color then default_color = color end
 
-    -- Change the color of the text if the damage is over a certain threshold.
-    local threshold = Blog.Entries.Damage_Threshold(action_type)
-
     -- Generate damage string.
     if not damage then
-        return {Value = Blog.Enum.NOT_APPLICABLE, Color = Res.Colors.Basic.DIM}
+        return {Value = Blog.Enum.NOT_APPLICABLE,            Color = Res.Colors.Basic.DIM}
     elseif damage < 0 then  -- Enfeeble
-        return {Value = Blog.Enum.NOT_APPLICABLE, Color = default_color}
+        return {Value = Blog.Enum.NOT_APPLICABLE,            Color = default_color}
     elseif damage == 0 then
-        return {Value = Column.String.Format_Number(0), Color = default_color, Note = Blog.Enum.MISS}
-    elseif damage >= threshold then
-        return {Value = Column.String.Format_Number(damage), Color = default_color, Note = Blog.Enum.HIGH_DAMAGE}
+        return {Value = Column.String.Format_Number(0),      Color = default_color}
     end
+
     return {Value = Column.String.Format_Number(damage), Color = default_color}
-end
-
-------------------------------------------------------------------------------------------------------
--- Helper function for calculating a damage threshold for highlighting.
-------------------------------------------------------------------------------------------------------
----@param action_type? string a battle log action type.
----@return number
-------------------------------------------------------------------------------------------------------
-Blog.Entries.Damage_Threshold = function(action_type)
-    local threshold = DB.Enum.MAX_DAMAGE
-
-    -- Default to max damage to block damage notifications.
-    if not action_type then
-        return threshold
-
-    elseif action_type == Blog.Action_Type.WEAPONSKILL then
-        return Metrics.Blog.WS_THRESHOLD
-
-    elseif action_type == Blog.Action_Type.MAGIC_OFFENSIVE then
-        return Metrics.Blog.MAGIC_THRESHOLD
-
-    else
-        return threshold
-    end
 end
 
 ------------------------------------------------------------------------------------------------------

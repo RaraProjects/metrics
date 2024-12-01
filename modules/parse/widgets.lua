@@ -65,6 +65,7 @@ end
 Parse.Widgets.Reset_Confirmation_Button = function()
     if UI.SmallButton("I'm sure.") then
         DB.Initialize(true)
+        Blog.Initialize()
         Parse.Confirmation = false
     end
 end

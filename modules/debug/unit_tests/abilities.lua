@@ -6,7 +6,7 @@ Debug.Unit.Tests.Ability = {}
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.Damaging_Hit = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -63,7 +63,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.Damaging_Miss = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 0
@@ -108,7 +108,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.Damaging_Hit_TP = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -165,7 +165,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.Damaging_Miss_TP = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 0
@@ -210,7 +210,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.Healing = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -265,7 +265,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.MP = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -318,7 +318,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.No_Damage = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -363,7 +363,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.Avatar_Rage = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -448,7 +448,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.Avatar_Ward = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -507,7 +507,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.Avatar_Healing = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -584,7 +584,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.Wyvern_Breath_Damage = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -669,7 +669,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ability.Wyvern_Breath_Healing = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name

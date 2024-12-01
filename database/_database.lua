@@ -49,10 +49,10 @@ require("database.widgets")
 ------------------------------------------------------------------------------------------------------
 -- Resets the parsing data and clears the battle log.
 ------------------------------------------------------------------------------------------------------
----@param reset? boolean true: manual reset; false: normal initialization
+---@param manual_reset? boolean true: manual reset; false: normal initialization
 ------------------------------------------------------------------------------------------------------
-DB.Initialize = function(reset)
-	if Metrics.Report.Auto_Save and reset then
+DB.Initialize = function(manual_reset)
+	if Metrics.Report.Auto_Save and manual_reset then
 		File.Save_Data()
 		File.Save_Catalog()
 		File.Save_Battlelog()
@@ -88,7 +88,6 @@ DB.Initialize = function(reset)
 	for spell, threshold in pairs(DB.Healing_Max_Defaults) do
 		DB.Healing_Max[spell] = threshold
 	end
-	Blog.Reset_Log()
 	DB.Attack_Speed.Reset()
 	Timers.Reset(Timers.Enum.Names.PARSE)
 end

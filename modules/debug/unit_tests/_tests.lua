@@ -64,23 +64,16 @@ Debug.Unit.Mob.PET_TWO = {
     in_alliance = false,
 }
 
--- Melee Attacks
--- Pet Melee Attacks
--- Ranged Attacks
--- Avatar Rage Blood Pact
--- Avatar Ward Blood Pact
--- BST Ability
--- Spell Cast
--- Weaponskill
--- Skillchain
--- Spell Cast MB
--- Spell Cast Ga
--- Healing
--- Curaga
-
+------------------------------------------------------------------------------------------------------
+-- Resets modules between each test.
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Reset = function()
+    DB.Initialize(true)
+    Blog.Initialize()
+end
 
 ------------------------------------------------------------------------------------------------------
--- Poulates the Unit Test Window.
+-- Populates the Unit Test Window.
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Populate = function()
     local col_flags = Focus.Column_Flags

@@ -6,7 +6,7 @@ Debug.Unit.Tests.TP_Action = {}
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.TP_Action.Hit = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -62,7 +62,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.TP_Action.Miss = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 0
@@ -106,7 +106,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.TP_Action.Energy_Steal = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -161,7 +161,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.TP_Action.Skillchain = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -238,7 +238,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.TP_Action.Pet_Hit = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local pet_name = Debug.Unit.Mob.PET.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
@@ -323,7 +323,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.TP_Action.Pet_Miss = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local pet_name = Debug.Unit.Mob.PET.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
@@ -380,7 +380,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.TP_Action.Pet_Hit_AOE = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local pet_name = Debug.Unit.Mob.PET.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
@@ -515,7 +515,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.TP_Action.Pet_No_Damage = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local pet_name = Debug.Unit.Mob.PET.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name

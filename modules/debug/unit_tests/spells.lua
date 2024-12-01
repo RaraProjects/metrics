@@ -6,7 +6,7 @@ Debug.Unit.Tests.Spells = {}
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Nuke = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -65,7 +65,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Nuke_AOE = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local index_two = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY_TWO.name
@@ -148,7 +148,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Nuke_Burst = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -214,7 +214,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Pet_Nuke = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -306,7 +306,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Healing = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.PLAYER_TWO.name
     local index_two = Debug.Unit.Mob.PLAYER_TWO.name .. ":" .. tostring(player_name)
@@ -380,7 +380,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Healing_AOE = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local index_two = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY_TWO.name
@@ -457,7 +457,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Pet_Heal = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -541,7 +541,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.DoT_No_Damage = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 0
@@ -589,7 +589,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.DoT_Damage = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 1
@@ -648,7 +648,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Aspir = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -702,7 +702,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Enfeeble_Land = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -753,7 +753,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Enfeeble_Resist = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -802,7 +802,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Enfeeble_No_Effect = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -853,7 +853,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Enfeeble_AOE_Land = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local index_two = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY_TWO.name
@@ -919,7 +919,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Song = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. tostring(player_name)
     local damage = 0
@@ -960,7 +960,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Spells.Status_Removal = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.PLAYER_TWO.name
     local damage = 128      -- Burn

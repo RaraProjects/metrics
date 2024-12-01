@@ -6,7 +6,7 @@ Debug.Unit.Tests.Ranged = {}
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ranged.Hit = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -52,7 +52,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ranged.Square = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -100,7 +100,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ranged.Truestrike = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -148,7 +148,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ranged.Miss = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 0
@@ -186,7 +186,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ranged.Crit = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -234,7 +234,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ranged.Shadows = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 0
@@ -274,7 +274,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ranged.Endamage = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -340,7 +340,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ranged.Endebuff = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -397,7 +397,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ranged.Endrain = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -450,7 +450,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Ranged.PUP = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100

@@ -6,7 +6,7 @@ Debug.Unit.Tests.Defense = {}
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Melee_Hit = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -65,7 +65,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Melee_Miss = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 0
@@ -104,7 +104,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Melee_Parry = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -145,7 +145,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Melee_Shadows = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 200
@@ -188,7 +188,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Third_Eye = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 0
@@ -233,7 +233,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Melee_Counter = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -287,7 +287,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Melee_Guard = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -343,7 +343,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Melee_Shield = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -401,7 +401,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Melee_Crit = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -462,7 +462,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Melee_Pet_Hit = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -517,7 +517,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Melee_Pet_Miss = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -560,7 +560,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Ranged_Hit = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -612,7 +612,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Nuke = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -663,7 +663,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Nuke_AOE = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local index_two = tostring(Debug.Unit.Mob.PLAYER_TWO.name) .. ":" .. Debug.Unit.Mob.ENEMY.name
@@ -733,7 +733,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Nuke_Pet = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -810,7 +810,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -902,7 +902,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -994,7 +994,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.TP = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local damage = 100
@@ -1045,7 +1045,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.TP_AOE = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local index_two = tostring(Debug.Unit.Mob.PLAYER_TWO.name) .. ":" .. Debug.Unit.Mob.ENEMY.name
@@ -1115,7 +1115,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.TP_Pet = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -1192,7 +1192,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.TP_Pet_AOE_Primary = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
@@ -1284,7 +1284,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary = function()
-    DB.Initialize(true)
+    Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name

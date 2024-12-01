@@ -33,6 +33,7 @@ ashita.events.register('command', 'command_cb', function (e)
             Parse.Mini.Toggle()
         elseif arg == "reset" or arg == "r" then
             DB.Initialize(true)
+            Blog.Initialize()
         elseif arg == "full" or arg == "f" then
             Parse.Full.Enable()
         elseif (arg == "pet" or arg == "p") then

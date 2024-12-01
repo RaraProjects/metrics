@@ -11,14 +11,14 @@ Blog.Columns.Name = function(player_name, pet_name)
     if Metrics.Parse.Hide_Name then player_name = Blog.Columns.Job(player_name) end
     if pet_name ~= Blog.Enum.NO_PET then
         local combined_string = player_name .. " (" .. pet_name .. ")"
-        if string.len(combined_string) > Blog.Settings.Truncate_Length then
-            local truncated_pet = Column.String.Truncate(pet_name, Blog.Settings.Pet_Name_Truncate_Length, true)
-            local truncated_player = Column.String.Truncate(player_name, Blog.Settings.Player_Name_Truncate_Length)
+        if string.len(combined_string) > Blog.Enum.TRUNCATE_TOTAL then
+            local truncated_pet = Column.String.Truncate(pet_name, Blog.Enum.TRUNCATE_PET, true)
+            local truncated_player = Column.String.Truncate(player_name, Blog.Enum.TRUNCATE_PLAYER)
             combined_string = truncated_player .. " (" .. truncated_pet .. ")"
         end
-        return Column.String.Set_Length(combined_string, Blog.Settings.Truncate_Length)
+        return Column.String.Set_Length(combined_string, Blog.Enum.TRUNCATE_TOTAL)
     end
-    player_name = Column.String.Set_Length(player_name, Blog.Settings.Truncate_Length)
+    player_name = Column.String.Set_Length(player_name, Blog.Enum.TRUNCATE_TOTAL)
     return player_name
 end
 
@@ -58,7 +58,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Damage = function(damage)
-    return Column.String.Set_Length(damage, Blog.Settings.Damage_Truncate_Length)
+    return Column.String.Set_Length(damage, Blog.Enum.TRUNCATE_DAMAGE)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -68,7 +68,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Action = function(action_name)
-    action_name = Column.String.Truncate(action_name, Blog.Settings.Action_Truncate_Length)
+    action_name = Column.String.Truncate(action_name, Blog.Enum.TRUNCATE_ACTION)
     return action_name
 end
 
@@ -79,7 +79,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Notes = function(note)
-    note = Column.String.Truncate(note, Blog.Settings.Action_Truncate_Length)
-    note = Column.String.Set_Length(note, Blog.Settings.Action_Truncate_Length)
+    note = Column.String.Truncate(note, Blog.Enum.TRUNCATE_ACTION)
+    note = Column.String.Set_Length(note, Blog.Enum.TRUNCATE_ACTION)
     return note
 end
