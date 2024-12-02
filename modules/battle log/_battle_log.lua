@@ -26,7 +26,7 @@ Blog.Enum = {
     UNKNOWN           = "Unknown",
     MAX_BLOG_ENTRIES  = 100000,
     TRUNCATE_TOTAL    = 15,
-    TRUNCATE_PLAYER   = 11,              -- Length needed to show the JOB##/JOB## string.
+    TRUNCATE_PLAYER   = 11,             -- Length needed to show the JOB##/JOB## string.
     TRUNCATE_PET      = 3,
     TRUNCATE_ACTION   = 16,
     TRUNCATE_DAMAGE   = 5,
@@ -59,6 +59,7 @@ Blog.Action_Type = {
 }
 
 Blog.Is_Initialized = false
+Blog.Settings = T{}                     -- Keep the "T" on this.
 Blog.Page = 1
 Blog.Filtered_Count = 0
 
@@ -69,10 +70,22 @@ require("modules.battle log.widgets")
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the battle log.
+-- Required dependencies:
+-- * Ashita:         Used for accessing game data like party and job composition.
+-- * Res:            Basic resources like jobs and colors.
+-- * Window_Manager: Necessary for displaying screen elements.
+-- * UI:             This should come with Window_Manager, but its the base ImGui tool.
+-- * Column:         Provides some unique string formatting.
 ------------------------------------------------------------------------------------------------------
-Blog.Initialize = function()
+---@param settings_pointer? table you only need to set this once on initial addon load.
+------------------------------------------------------------------------------------------------------
+Blog.Initialize = function(settings_pointer)
     Blog.Log = {}
-    Blog.Is_Initialized = true
+    -- Check for necessary settings and dependencies.
+    if settings_pointer and Ashita and Res and Window_Manager and UI and Column then
+        Blog.Settings = settings_pointer
+        Blog.Is_Initialized = true
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -82,14 +95,14 @@ Blog.Content = function()
     if not Blog.Is_Initialized then return nil end
 
     -- Table dimensions.
-    local table_size = {0, Metrics.Blog.Line_Height * (Metrics.Blog.Visible_Length + 1)}    -- One for header row.
+    local table_size = {0, Blog.Settings.Line_Height * (Blog.Settings.Visible_Length + 1)}    -- One for header row.
     local columns = 4
-    if Metrics.Blog.Show_Timestamp then columns = columns + 1 end
+    if Blog.Settings.Show_Timestamp then columns = columns + 1 end
 
     -- Things to display above the table.
     Blog.Widgets.Settings_Button() UI.SameLine() UI.Text(" ") UI.SameLine() Blog.Widgets.Show_Page()
-    if Metrics.Parse.Lurk_Mode then UI.SameLine() UI.Text(" Lurking...") end
-    if Metrics.Blog.Is_Paging_Enabled then
+    if Blog.Settings.Is_Lurking_Enabled then UI.SameLine() UI.Text(" Lurking...") end
+    if Blog.Settings.Is_Paging_Enabled then
         Blog.Widgets.Page_Buttons()
         if Blog.Filtered_Count > 0 then UI.Text("Filtered Rows: " .. tostring(Blog.Filtered_Count)) end
     end
@@ -97,14 +110,14 @@ Blog.Content = function()
     -- Primary content loop.
     if UI.BeginTable("Blog", columns, Window_Manager.Table.Flags.Scrollable, table_size) then
         Blog.Display.Headers()
-        local start = ((Blog.Page - 1) * Metrics.Blog.Visible_Length) + 1
-        local stop = Blog.Page * Metrics.Blog.Visible_Length
+        local start = ((Blog.Page - 1) * Blog.Settings.Visible_Length) + 1
+        local stop = Blog.Page * Blog.Settings.Visible_Length
 
         local count = 1
         Blog.Filtered_Count = 0
         for i = start, 100000, 1 do
             local entry = Blog.Log[i]
-            if (count > Metrics.Blog.Visible_Length) or not entry then break end
+            if (count > Blog.Settings.Visible_Length) or not entry then break end
             if entry.Flag and Blog.Action_Filter(entry.Flag.Value) and Blog.Player_Filter(entry) and Blog.Action_Name_Filter(entry) then
                 count = count + 1
                 Blog.Display.Rows(entry)
@@ -140,7 +153,7 @@ Blog.Add = function(player_name, pet_name, action_type, action_name, damage, not
 
     local color = Res.Colors.Basic.WHITE
     local is_mob = not Ashita.Party.Jobs[player_name]
-    if Metrics.Parse.Lurk_Mode then is_mob = false end  -- Prevent everything from being dim in Lurk mode.
+    if Blog.Settings.Is_Lurking_Enabled then is_mob = false end  -- Prevent everything from being dim in Lurk mode.
     if action_data and action_type and action_type == Blog.Action_Type.MAGIC_OFFENSIVE then
         local element = action_data.Element
         color = Res.Colors.Get_Element(element)
@@ -170,26 +183,26 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 Blog.Action_Filter = function(action_flag)
-    if     action_flag == Blog.Action_Type.ABILITY         then return Metrics.Blog.Show_Ability
+    if     action_flag == Blog.Action_Type.ABILITY         then return Blog.Settings.Show_Ability
     elseif action_flag == Blog.Action_Type.ALL_HEALING
-    or action_flag == Blog.Action_Type.DEBUFF_REMOVAL      then return Metrics.Blog.Show_Healing
-    elseif action_flag == Blog.Action_Type.DISPEL          then return Metrics.Blog.Show_Enfeebling
-    elseif action_flag == Blog.Action_Type.MAGIC_OFFENSIVE then return Metrics.Blog.Show_Spells
-    elseif action_flag == Blog.Action_Type.MAGIC_ENFEEBLE  then return Metrics.Blog.Show_Enfeebling
-    elseif action_flag == Blog.Action_Type.MELEE           then return Metrics.Blog.Show_Melee
-    elseif action_flag == Blog.Action_Type.MOB_MELEE       then return Metrics.Blog.Show_Mob_Melee
-    elseif action_flag == Blog.Action_Type.MOB_DEATH       then return Metrics.Blog.Show_Mob_Deaths
-    elseif action_flag == Blog.Action_Type.MOB_TP          then return Metrics.Blog.Show_Mob_TP
-    elseif action_flag == Blog.Action_Type.MOB_SPELL       then return Metrics.Blog.Show_Mob_Spells
-    elseif action_flag == Blog.Action_Type.PET_COMMAND     then return Metrics.Blog.Show_Pet_Command
-    elseif action_flag == Blog.Action_Type.PET_MELEE       then return Metrics.Blog.Show_Pet_Melee
-    elseif action_flag == Blog.Action_Type.PET_TP          then return Metrics.Blog.Show_Pet_TP
-    elseif action_flag == Blog.Action_Type.PLAYER_DEATH    then return Metrics.Blog.Show_Player_Deaths
-    elseif action_flag == Blog.Action_Type.PHANTOM_ROLL    then return Metrics.Blog.Show_Phantom_Roll
-    elseif action_flag == Blog.Action_Type.RANGED          then return Metrics.Blog.Show_Ranged
-    elseif action_flag == Blog.Action_Type.SKILLCHAIN      then return Metrics.Blog.Show_Skillchain
-    elseif action_flag == Blog.Action_Type.SONG_BUFFS      then return Metrics.Blog.Show_Song_Buffs
-    elseif action_flag == Blog.Action_Type.WEAPONSKILL     then return Metrics.Blog.Show_Weaponskill
+    or action_flag == Blog.Action_Type.DEBUFF_REMOVAL      then return Blog.Settings.Show_Healing
+    elseif action_flag == Blog.Action_Type.DISPEL          then return Blog.Settings.Show_Enfeebling
+    elseif action_flag == Blog.Action_Type.MAGIC_OFFENSIVE then return Blog.Settings.Show_Spells
+    elseif action_flag == Blog.Action_Type.MAGIC_ENFEEBLE  then return Blog.Settings.Show_Enfeebling
+    elseif action_flag == Blog.Action_Type.MELEE           then return Blog.Settings.Show_Melee
+    elseif action_flag == Blog.Action_Type.MOB_MELEE       then return Blog.Settings.Show_Mob_Melee
+    elseif action_flag == Blog.Action_Type.MOB_DEATH       then return Blog.Settings.Show_Mob_Deaths
+    elseif action_flag == Blog.Action_Type.MOB_TP          then return Blog.Settings.Show_Mob_TP
+    elseif action_flag == Blog.Action_Type.MOB_SPELL       then return Blog.Settings.Show_Mob_Spells
+    elseif action_flag == Blog.Action_Type.PET_COMMAND     then return Blog.Settings.Show_Pet_Command
+    elseif action_flag == Blog.Action_Type.PET_MELEE       then return Blog.Settings.Show_Pet_Melee
+    elseif action_flag == Blog.Action_Type.PET_TP          then return Blog.Settings.Show_Pet_TP
+    elseif action_flag == Blog.Action_Type.PLAYER_DEATH    then return Blog.Settings.Show_Player_Deaths
+    elseif action_flag == Blog.Action_Type.PHANTOM_ROLL    then return Blog.Settings.Show_Phantom_Roll
+    elseif action_flag == Blog.Action_Type.RANGED          then return Blog.Settings.Show_Ranged
+    elseif action_flag == Blog.Action_Type.SKILLCHAIN      then return Blog.Settings.Show_Skillchain
+    elseif action_flag == Blog.Action_Type.SONG_BUFFS      then return Blog.Settings.Show_Song_Buffs
+    elseif action_flag == Blog.Action_Type.WEAPONSKILL     then return Blog.Settings.Show_Weaponskill
     else return false end
 end
 
@@ -239,7 +252,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Display.Headers = function()
     local no_flags = Column.Flags.None
-    if Metrics.Blog.Show_Timestamp then UI.TableSetupColumn("Time", no_flags) end
+    if Blog.Settings.Show_Timestamp then UI.TableSetupColumn("Time", no_flags) end
     UI.TableSetupColumn("Name", no_flags, Column.Widths.Name)
     UI.TableSetupColumn("Damage", no_flags)
     UI.TableSetupColumn("Action", no_flags, Column.Widths.Name)
@@ -286,7 +299,7 @@ Blog.Display.Rows = function(entry)
         UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color)
     end
 
-    if Metrics.Blog.Show_Timestamp then UI.TableNextColumn() UI.Text(entry.Time.Value) end
+    if Blog.Settings.Show_Timestamp then UI.TableNextColumn() UI.Text(entry.Time.Value) end
     UI.TableNextColumn() UI.TextColored(entry.Player.Color, name)
     UI.TableNextColumn() UI.TextColored(entry.Damage.Color, damage)
     UI.TableNextColumn() UI.TextColored(action_color, action)
@@ -297,7 +310,7 @@ end
 -- Returns the last page of the battle log.
 ------------------------------------------------------------------------------------------------------
 Blog.Max_Page = function()
-    local last_page = math.ceil(#Blog.Log / Metrics.Blog.Visible_Length)
+    local last_page = math.ceil(#Blog.Log / Blog.Settings.Visible_Length)
     if last_page == 0 then last_page = 1 end
     return last_page
 end

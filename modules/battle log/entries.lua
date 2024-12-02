@@ -10,7 +10,7 @@ Blog.Entries = T{}
 Blog.Entries.Name = function(player_name, is_mob)
     if not player_name then player_name = Blog.Enum.UNKNOWN end
     local color = Res.Colors.Basic.WHITE
-    if not is_mob and Metrics.Parse.Name_Colors and Ashita.Party.Jobs[player_name] then
+    if not is_mob and Blog.Settings.Show_Job_Colors and Ashita.Party.Jobs[player_name] then
         local job = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
         if not job then job = Res.Jobs.List[0] end
         color = Res.Colors.Get_Job(job.id)

@@ -114,7 +114,7 @@ ashita.events.register('load', 'load_cb', function()
     -- Initialize Modules
     DB.Initialize()
     Parse.Initialize()
-    Blog.Initialize()
+    Blog.Initialize(Metrics.Blog)
     Ashita.Party.Need_Refresh = true
     Window_Manager.Initialize(Metrics)
     Window_Manager.Show_Mouse_Refresh = true

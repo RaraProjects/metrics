@@ -8,7 +8,7 @@ Blog.Columns = T{}
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Name = function(player_name, pet_name)
-    if Metrics.Parse.Hide_Name then player_name = Blog.Columns.Job(player_name) end
+    if Blog.Settings.Mask_Names then player_name = Blog.Columns.Job(player_name) end
     if pet_name ~= Blog.Enum.NO_PET then
         local combined_string = player_name .. " (" .. pet_name .. ")"
         if string.len(combined_string) > Blog.Enum.TRUNCATE_TOTAL then
@@ -31,7 +31,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Job = function(player_name)
     local anon_string = "NON0/NON0"
-    local hide_subjob = Metrics.Parse.Hide_Subjob
+    local hide_subjob = Blog.Settings.Hide_Subjobs
     if hide_subjob then anon_string = "NON0" end
     if not player_name or not Ashita.Party.Jobs[player_name] then return anon_string end
 

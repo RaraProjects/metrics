@@ -24,6 +24,10 @@ Blog.Config.Defaults = {                -- Default values that populate the Metr
     Show_Mob_Spells       = false,
     Show_Mob_Deaths       = true,
     Is_Paging_Enabled     = false,
+    Is_Lurking_Enabled    = false,      -- This is linked with the settings of other modules.
+    Mask_Names            = false,      -- This is linked with the settings of other modules.
+    Hide_Subjobs          = false,      -- This is linked with the settings of other modules.
+    Show_Job_Colors       = true,       -- This is linked with the settings of other modules.
     Visible_Length        = 8,
     Line_Height           = 20,
 }
@@ -33,7 +37,7 @@ Blog.Config.Defaults = {                -- Default values that populate the Metr
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Reset = function()
     for setting, value in pairs(Blog.Config.Defaults) do
-        Metrics.Blog[setting] = value
+        Blog.Settings[setting] = value
     end
 end
 
@@ -60,7 +64,7 @@ Blog.Config.General_Settings = function()
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Show Timestamps", Metrics.Blog, "Show_Timestamp")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Show Timestamps", Blog.Settings, "Show_Timestamp")
         UI.TableNextColumn()
         UI.TableNextColumn()
         UI.EndTable()
@@ -81,8 +85,8 @@ Blog.Config.Column_Settings = function()
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Enfeebles", Metrics.Blog, "Show_Enfeebling")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Healing",   Metrics.Blog, "Show_Healing")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Enfeebles", Blog.Settings, "Show_Enfeebling")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Healing",   Blog.Settings, "Show_Healing")
         UI.EndTable()
     end
 
@@ -92,15 +96,15 @@ Blog.Config.Column_Settings = function()
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Melee",        Metrics.Blog, "Show_Melee")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Ranged",       Metrics.Blog, "Show_Ranged")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Weaponskills", Metrics.Blog, "Show_Weaponskill")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Skillchains",  Metrics.Blog, "Show_Skillchain")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Nukes",        Metrics.Blog, "Show_Spells")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Song Buffs",   Metrics.Blog, "Show_Song_Buffs")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Phantom Roll", Metrics.Blog, "Show_Phantom_Roll")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Abilities",    Metrics.Blog, "Show_Ability")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Deaths",       Metrics.Blog, "Show_Player_Deaths")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Melee",        Blog.Settings, "Show_Melee")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Ranged",       Blog.Settings, "Show_Ranged")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Weaponskills", Blog.Settings, "Show_Weaponskill")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Skillchains",  Blog.Settings, "Show_Skillchain")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Nukes",        Blog.Settings, "Show_Spells")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Song Buffs",   Blog.Settings, "Show_Song_Buffs")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Phantom Roll", Blog.Settings, "Show_Phantom_Roll")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Abilities",    Blog.Settings, "Show_Ability")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Deaths",       Blog.Settings, "Show_Player_Deaths")
         UI.EndTable()
     end
 
@@ -110,9 +114,9 @@ Blog.Config.Column_Settings = function()
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Melee",        Metrics.Blog, "Show_Pet_Melee")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("TP/Abilities", Metrics.Blog, "Show_Pet_TP")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Commands",     Metrics.Blog, "Show_Pet_Command")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Melee",        Blog.Settings, "Show_Pet_Melee")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("TP/Abilities", Blog.Settings, "Show_Pet_TP")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Commands",     Blog.Settings, "Show_Pet_Command")
         UI.EndTable()
     end
 
@@ -122,10 +126,10 @@ Blog.Config.Column_Settings = function()
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Melee",        Metrics.Blog, "Show_Mob_Melee")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("TP/Abilities", Metrics.Blog, "Show_Mob_TP")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Spells",       Metrics.Blog, "Show_Mob_Spells")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Deaths",       Metrics.Blog, "Show_Mob_Deaths")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Melee",        Blog.Settings, "Show_Mob_Melee")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("TP/Abilities", Blog.Settings, "Show_Mob_TP")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Spells",       Blog.Settings, "Show_Mob_Spells")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Deaths",       Blog.Settings, "Show_Mob_Deaths")
         UI.EndTable()
     end
 end
@@ -152,14 +156,14 @@ end
 Blog.Config.Length = function()
     UI.Text("Battle Log Length")
     if UI.Button("Default") then
-        Metrics.Blog.Visible_Length = Blog.Config.Defaults.Visible_Length
+        Blog.Settings.Visible_Length = Blog.Config.Defaults.Visible_Length
     end
     UI.SameLine() UI.Text(" ") UI.SameLine()
 
-    local length = {[1] = Metrics.Blog.Visible_Length}
+    local length = {[1] = Blog.Settings.Visible_Length}
     UI.SetNextItemWidth(50)
     if UI.DragInt("Lines", length, 0.1, Blog.Config.Defaults.Visible_Length, 50, "%d", ImGuiSliderFlags_None) then
-        Metrics.Blog.Visible_Length = length[1]
+        Blog.Settings.Visible_Length = length[1]
         local last_page = Blog.Max_Page()
         if Blog.Page > last_page then Blog.Page = last_page end
     end

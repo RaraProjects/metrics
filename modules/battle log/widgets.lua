@@ -19,7 +19,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.Show_Page = function()
     if UI.SmallButton("Paging") then
-        Metrics.Blog.Is_Paging_Enabled = not Metrics.Blog.Is_Paging_Enabled
+        Blog.Settings.Is_Paging_Enabled = not Blog.Settings.Is_Paging_Enabled
     end
 end
 
