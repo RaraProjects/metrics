@@ -63,6 +63,13 @@ Blog.Settings = T{}                     -- Keep the "T" on this.
 Blog.Page = 1
 Blog.Filtered_Count = 0
 
+Blog.Tables = {
+    Width_Name        = 150,
+    Width_Settings    = 175,
+    Column_Flags_None = ImGuiTableColumnFlags_None,
+}
+
+require("modules.battle log.dependencies")
 require("modules.battle log.config")
 require("modules.battle log.columns")
 require("modules.battle log.entries")
@@ -151,18 +158,19 @@ Blog.Add = function(player_name, pet_name, action_type, action_name, damage, not
     -- If the blog is at max length then we will need to remove the last element
     if #Blog.Log >= Blog.Enum.MAX_BLOG_ENTRIES then table.remove(Blog.Log) end
 
-    local color = Res.Colors.Basic.WHITE
-    local is_mob = not Ashita.Party.Jobs[player_name]
+    local white = Blog.Dependencies.White()
+    local color = white
+    local is_mob = not Blog.Dependencies.Check_Party(player_name)
     if Blog.Settings.Is_Lurking_Enabled then is_mob = false end  -- Prevent everything from being dim in Lurk mode.
     if action_data and action_type and action_type == Blog.Action_Type.MAGIC_OFFENSIVE then
         local element = action_data.Element
-        color = Res.Colors.Get_Element(element)
+        color = Blog.Dependencies.Element_Color(element)
     end
     if not pet_name then pet_name = Blog.Enum.NO_PET end
 
     local entry = {
-        Time   = {Value = os.date("%X"), Color = Res.Colors.Basic.WHITE},
-        Flag   = {Value = action_type,   Color = Res.Colors.Basic.WHITE},
+        Time   = {Value = os.date("%X"), Color = white},
+        Flag   = {Value = action_type,   Color = white},
         Player = Blog.Entries.Name(player_name, is_mob),
         Pet    = Blog.Entries.Pet_Name(pet_name),
         Damage = Blog.Entries.Damage(damage, action_type, color),
@@ -171,7 +179,7 @@ Blog.Add = function(player_name, pet_name, action_type, action_name, damage, not
     }
     -- Gray out mob deaths for better visual parsing of the battle.
     if action_name == Blog.Enum.MOB_DEATH then
-        Blog.Util.Set_Row_Color(entry, Res.Colors.Basic.DIM)
+        Blog.Util.Set_Row_Color(entry, Blog.Dependencies.Dim())
     end
     table.insert(Blog.Log, 1, entry)
 end
@@ -251,12 +259,13 @@ end
 -- Build the header component of the battle log table.
 ------------------------------------------------------------------------------------------------------
 Blog.Display.Headers = function()
-    local no_flags = Column.Flags.None
+    local no_flags = Blog.Tables.Column_Flags_None
+    local width = Blog.Tables.Width_Name
     if Blog.Settings.Show_Timestamp then UI.TableSetupColumn("Time", no_flags) end
-    UI.TableSetupColumn("Name", no_flags, Column.Widths.Name)
+    UI.TableSetupColumn("Name",   no_flags, width)
     UI.TableSetupColumn("Damage", no_flags)
-    UI.TableSetupColumn("Action", no_flags, Column.Widths.Name)
-    UI.TableSetupColumn("Notes", no_flags, Column.Widths.Name)
+    UI.TableSetupColumn("Action", no_flags, width)
+    UI.TableSetupColumn("Notes",  no_flags, width)
     UI.TableHeadersRow()
 end
 

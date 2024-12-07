@@ -73,6 +73,17 @@ Ashita.Party.Get = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Returns player party data.
+-- ------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@return nil|table
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Party.Get_Member = function(player_name)
+    if not player_name then return nil end
+    return Ashita.Party.Jobs[player_name]
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Refreshes the party list.
 -- This is a lighter version than Party() for just caching who is in the party.
 -- It avoids stack overflow by not computing mob structure.

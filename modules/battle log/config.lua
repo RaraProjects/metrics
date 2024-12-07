@@ -55,8 +55,8 @@ end
 -- Shows general settings that affect the Battle Log screen.
 ------------------------------------------------------------------------------------------------------
 Blog.Config.General_Settings = function()
-    local col_flags = Column.Flags.None
-    local width = Column.Widths.Settings
+    local col_flags = Blog.Tables.Column_Flags_None
+    local width = Blog.Tables.Width_Settings
 
     UI.Text("Additional Columns")
     if UI.BeginTable("Battle Log", 3) then
@@ -75,8 +75,8 @@ end
 -- Shows column settings that affect the Battle Log screen.
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Column_Settings = function()
-    local col_flags = Column.Flags.None
-    local width = Column.Widths.Settings
+    local col_flags = Blog.Tables.Column_Flags_None
+    local width = Blog.Tables.Width_Settings
     local column_count = 3
 
     UI.Text("General")

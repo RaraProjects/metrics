@@ -12,13 +12,13 @@ Blog.Columns.Name = function(player_name, pet_name)
     if pet_name ~= Blog.Enum.NO_PET then
         local combined_string = player_name .. " (" .. pet_name .. ")"
         if string.len(combined_string) > Blog.Enum.TRUNCATE_TOTAL then
-            local truncated_pet = Column.String.Truncate(pet_name, Blog.Enum.TRUNCATE_PET, true)
-            local truncated_player = Column.String.Truncate(player_name, Blog.Enum.TRUNCATE_PLAYER)
+            local truncated_pet = Blog.Dependencies.String_Truncate(pet_name, Blog.Enum.TRUNCATE_PET, true)
+            local truncated_player = Blog.Dependencies.String_Truncate(player_name, Blog.Enum.TRUNCATE_PLAYER)
             combined_string = truncated_player .. " (" .. truncated_pet .. ")"
         end
-        return Column.String.Set_Length(combined_string, Blog.Enum.TRUNCATE_TOTAL)
+        return Blog.Dependencies.String_Set_Length(combined_string, Blog.Enum.TRUNCATE_TOTAL)
     end
-    player_name = Column.String.Set_Length(player_name, Blog.Enum.TRUNCATE_TOTAL)
+    player_name = Blog.Dependencies.String_Set_Length(player_name, Blog.Enum.TRUNCATE_TOTAL)
     return player_name
 end
 
@@ -32,19 +32,21 @@ end
 Blog.Columns.Job = function(player_name)
     local anon_string = "NON0/NON0"
     local hide_subjob = Blog.Settings.Hide_Subjobs
+    local player_info = Blog.Dependencies.Check_Party(player_name)
     if hide_subjob then anon_string = "NON0" end
-    if not player_name or not Ashita.Party.Jobs[player_name] then return anon_string end
 
-    local main = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
-    local main_level = Ashita.Party.Jobs[player_name].main_level
-    if not main then main = Res.Jobs.List[0] end
+    if not player_name or not player_info then return anon_string end
+
+    local main = Blog.Dependencies.Job_Data(player_info.main)
+    local main_level = player_info.main_level
+    if not main then main = Blog.Dependencies.Job_Data(0) end
     local main_string = string.format("%s%02d", main.ens, main_level)
 
     local sub_string = ""
     if not hide_subjob then
-        local sub = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].sub)
-        local sub_level = Ashita.Party.Jobs[player_name].sub_level
-        if not sub then sub = Res.Jobs.List[0] end
+        local sub = Blog.Dependencies.Job_Data(player_info.sub)
+        local sub_level = player_info.sub_level
+        if not sub then sub = Blog.Dependencies.Job_Data(0) end
         sub_string = "/" .. string.format("%s%02d", sub.ens, sub_level)
     end
 
@@ -58,7 +60,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Damage = function(damage)
-    return Column.String.Set_Length(damage, Blog.Enum.TRUNCATE_DAMAGE)
+    return Blog.Dependencies.String_Set_Length(damage, Blog.Enum.TRUNCATE_DAMAGE)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -68,7 +70,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Action = function(action_name)
-    action_name = Column.String.Truncate(action_name, Blog.Enum.TRUNCATE_ACTION)
+    action_name = Blog.Dependencies.String_Truncate(action_name, Blog.Enum.TRUNCATE_ACTION)
     return action_name
 end
 
@@ -79,7 +81,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Notes = function(note)
-    note = Column.String.Truncate(note, Blog.Enum.TRUNCATE_ACTION)
-    note = Column.String.Set_Length(note, Blog.Enum.TRUNCATE_ACTION)
+    note = Blog.Dependencies.String_Truncate(note, Blog.Enum.TRUNCATE_ACTION)
+    note = Blog.Dependencies.String_Set_Length(note, Blog.Enum.TRUNCATE_ACTION)
     return note
 end
