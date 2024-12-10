@@ -13,40 +13,34 @@ File.Save_Data = function()
 
     local player = Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
     if not player then return nil end
-    local filename = tostring(os.date("%m-%d-%Y %H-%M-%S Basic ", os.time()) .. " " .. tostring(player.name) .. ".csv")
+    local filename = tostring(os.date("%m-%d-%Y %H-%M-%S Database ", os.time()) .. " " .. tostring(player.name) .. ".csv")
 
     ---@diagnostic disable-next-line: undefined-field
     local file = io.open(('%s/%s'):fmt(path, filename), "w")
     if file ~= nil then
         -- Headers
-        file:write(tostring("Actor") .. File.Delimiter .. tostring("Target") .. File.Delimiter .. tostring("Pet") .. File.Delimiter
-        .. tostring("Trackable") .. File.Delimiter .. tostring("Metric") .. File.Delimiter .. tostring("Value") .. "\n")
+        file:write(tostring("Player")    .. File.Delimiter ..
+                   tostring("Pet")       .. File.Delimiter ..
+                   tostring("Target")    .. File.Delimiter ..
+                   tostring("Action")    .. File.Delimiter ..
+                   tostring("Trackable") .. File.Delimiter ..
+                   tostring("Metric")    .. File.Delimiter ..
+                   tostring("Value") .. "\n")
 
         -- Basic Player Data
-        for index, _ in pairs(DB.Parse) do
-            for trackable, _ in pairs(DB.Parse[index]) do
-                for metric, data in pairs(DB.Parse[index][trackable]) do
-                    if data and data > 0 then
-                        if not ((metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and data >= DB.Enum.MAX_DAMAGE) then
-                            local player_target = index:gsub(":", File.Delimiter)
-                            file:write(tostring(player_target) .. File.Delimiter .. File.Delimiter .. tostring(trackable) .. File.Delimiter
-                            .. tostring(metric) .. File.Delimiter .. tostring(data) .. "\n")
-                        end
-                    end
-                end
-            end
-        end
-
-        -- Basic Pet Data
-        for index, _ in pairs(DB.Pet_Parse) do
-            for pet_name, _ in pairs(DB.Pet_Parse[index]) do
-                for trackable, _ in pairs(DB.Pet_Parse[index][pet_name]) do
-                    for metric, data in pairs(DB.Pet_Parse[index][pet_name][trackable]) do
+        for player_name, _ in pairs(DB.Parse) do
+            for target_name, _ in pairs(DB.Parse[player_name]) do
+                for trackable, _ in pairs(DB.Parse[player_name][target_name]) do
+                    for metric, data in pairs(DB.Parse[player_name][target_name][trackable]) do
                         if data and data > 0 then
-                            if not ((metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and data >= DB.Enum.MAX_DAMAGE) then
-                                local player_target = index:gsub(":", File.Delimiter)
-                                file:write(tostring(player_target) .. File.Delimiter .. tostring(pet_name) .. File.Delimiter
-                                .. tostring(trackable) .. File.Delimiter .. tostring(metric) .. File.Delimiter .. tostring(data) .. "\n")
+                            if not (DB.Metric_Needs_Max_Value(metric) and data >= DB.Enum.MAX_DAMAGE) then
+                                file:write(tostring(player_name) .. File.Delimiter ..
+                                           tostring("")          .. File.Delimiter ..
+                                           tostring(target_name) .. File.Delimiter ..
+                                           tostring("")          .. File.Delimiter ..
+                                           tostring(trackable)   .. File.Delimiter ..
+                                           tostring(metric)      .. File.Delimiter ..
+                                           tostring(data) .. "\n")
                             end
                         end
                     end
@@ -54,39 +48,45 @@ File.Save_Data = function()
             end
         end
 
-        file:close()
-    end
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Write to file for cataloged data.
--- ------------------------------------------------------------------------------------------------------
-File.Save_Catalog = function()
-    local path = File.Path()
-    File.File_Exists(path)
-
-    local player = Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
-    if not player then return nil end
-    local filename = tostring(os.date("%m-%d-%Y %H-%M-%S Catalog ", os.time()) .. tostring(player.name) .. ".csv")
-
-    ---@diagnostic disable-next-line: undefined-field
-    local file = io.open(('%s/%s'):fmt(path, filename), "w")
-    if file ~= nil then
-        -- Headers
-        file:write(tostring("Actor") .. File.Delimiter .. tostring("Target") .. File.Delimiter .. tostring("Pet") .. File.Delimiter
-        .. tostring("Trackable") .. File.Delimiter .. tostring("Action") .. File.Delimiter .. tostring("Metric") .. File.Delimiter
-        .. tostring("Value") .. "\n")
+        -- Basic Pet Data
+        for player_name, _ in pairs(DB.Pet_Parse) do
+            for pet_name, _ in pairs(DB.Pet_Parse[player_name]) do
+                for target_name, _ in pairs(DB.Pet_Parse[player_name][pet_name]) do
+                    for trackable, _ in pairs(DB.Pet_Parse[player_name][pet_name][target_name]) do
+                        for metric, data in pairs(DB.Pet_Parse[player_name][pet_name][target_name][trackable]) do
+                            if data and data > 0 then
+                                if not (DB.Metric_Needs_Max_Value(metric) and data >= DB.Enum.MAX_DAMAGE) then
+                                    file:write(tostring(player_name) .. File.Delimiter ..
+                                               tostring(pet_name)    .. File.Delimiter ..
+                                               tostring(target_name) .. File.Delimiter ..
+                                               tostring("")          .. File.Delimiter ..
+                                               tostring(trackable)   .. File.Delimiter ..
+                                               tostring(metric)      .. File.Delimiter ..
+                                               tostring(data) .. "\n")
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
 
         -- Catalog Player Data
-        for index, _ in pairs(DB.Parse_Catalog) do
-            for action_name, _ in pairs(DB.Parse_Catalog[index]) do
-                for trackable, _ in pairs(DB.Parse_Catalog[index][action_name]) do
-                    for metric, data in pairs(DB.Parse_Catalog[index][action_name][trackable]) do
-                        if data and data > 0 then
-                            if not ((metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and data >= DB.Enum.MAX_DAMAGE) then
-                                local player_target = index:gsub(":", File.Delimiter)
-                                file:write(tostring(player_target) .. File.Delimiter .. File.Delimiter .. tostring(trackable) .. File.Delimiter
-                                .. tostring(action_name) .. File.Delimiter .. tostring(metric) .. File.Delimiter .. tostring(data) .. "\n")
+        for player_name, _ in pairs(DB.Parse_Catalog) do
+            for target_name, _ in pairs(DB.Parse_Catalog[player_name]) do
+                for action_name, _ in pairs(DB.Parse_Catalog[player_name][target_name]) do
+                    for trackable, _ in pairs(DB.Parse_Catalog[player_name][target_name][action_name]) do
+                        for metric, data in pairs(DB.Parse_Catalog[player_name][target_name][action_name][trackable]) do
+                            if data and data > 0 then
+                                if not (DB.Metric_Needs_Max_Value(metric) and data >= DB.Enum.MAX_DAMAGE) then
+                                    file:write(tostring(player_name)  .. File.Delimiter ..
+                                                tostring("")          .. File.Delimiter ..
+                                                tostring(target_name) .. File.Delimiter ..
+                                                tostring(action_name) .. File.Delimiter ..
+                                                tostring(trackable)   .. File.Delimiter ..
+                                                tostring(metric)      .. File.Delimiter ..
+                                                tostring(data) .. "\n")
+                                end
                             end
                         end
                     end
@@ -95,17 +95,22 @@ File.Save_Catalog = function()
         end
 
         -- Catalog Pet Data
-        for index, _ in pairs(DB.Pet_Parse_Catalog) do
-            for pet_name, _ in pairs(DB.Pet_Parse_Catalog[index]) do
-                for action_name, _ in pairs(DB.Pet_Parse_Catalog[index][pet_name]) do
-                    for trackable, _ in pairs(DB.Pet_Parse_Catalog[index][pet_name][action_name]) do
-                        for metric, data in pairs(DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable]) do
-                            if data and data > 0 then
-                                if not ((metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and data >= DB.Enum.MAX_DAMAGE) then
-                                    local player_target = index:gsub(":", File.Delimiter)
-                                    file:write(tostring(player_target) .. File.Delimiter .. tostring(pet_name) .. File.Delimiter
-                                    .. tostring(trackable) .. File.Delimiter .. tostring(action_name) .. File.Delimiter
-                                    .. tostring(metric) .. File.Delimiter .. tostring(data) .. "\n")
+        for player_name, _ in pairs(DB.Pet_Parse_Catalog) do
+            for pet_name, _ in pairs(DB.Pet_Parse_Catalog[player_name]) do
+                for target_name, _ in pairs(DB.Pet_Parse_Catalog[player_name][pet_name]) do
+                    for action_name, _ in pairs(DB.Pet_Parse_Catalog[player_name][pet_name][target_name]) do
+                        for trackable, _ in pairs(DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name]) do
+                            for metric, data in pairs(DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable]) do
+                                if data and data > 0 then
+                                    if not (DB.Metric_Needs_Max_Value(metric) and data >= DB.Enum.MAX_DAMAGE) then
+                                        file:write(tostring(player_name)  .. File.Delimiter ..
+                                                    tostring(pet_name)    .. File.Delimiter ..
+                                                    tostring(target_name) .. File.Delimiter ..
+                                                    tostring(action_name) .. File.Delimiter ..
+                                                    tostring(trackable)   .. File.Delimiter ..
+                                                    tostring(metric)      .. File.Delimiter ..
+                                                    tostring(data) .. "\n")
+                                    end
                                 end
                             end
                         end

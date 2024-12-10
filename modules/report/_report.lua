@@ -112,7 +112,6 @@ Report.Section.File = function()
         UI.TableNextColumn()
         if UI.Button("Database    ") then
             File.Save_Data()
-            File.Save_Catalog()
             return nil
         end
         UI.TableNextColumn()

@@ -54,7 +54,6 @@ require("database.widgets")
 DB.Initialize = function(manual_reset)
 	if Metrics.Report.Auto_Save and manual_reset then
 		File.Save_Data()
-		File.Save_Catalog()
 		File.Save_Battlelog()
 	end
 
