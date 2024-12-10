@@ -8,30 +8,35 @@ Debug.Unit.Tests.Ranged = {}
 Debug.Unit.Tests.Ranged.Hit = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGEHIT}
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
-    local player = T{}
-    player[index] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
-    local battle_log = T{
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
@@ -39,11 +44,17 @@ Debug.Unit.Tests.Ranged.Hit = function()
         note   = " ",
     }
 
-    local misc = T{}
+    local misc = {}
     misc["Total Damage"] = damage
     misc["Total Damage No Skillchain"] = damage
 
-    return Debug.Unit.Check_Result("Ranged > Hit", player, nil, nil, nil, battle_log, misc)
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Ranged > Hit", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -54,32 +65,37 @@ end
 Debug.Unit.Tests.Ranged.Square = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.SQUARE}
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
-    local player = T{}
-    player[index] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
-    local battle_log = T{
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
@@ -87,11 +103,17 @@ Debug.Unit.Tests.Ranged.Square = function()
         note   = " ",
     }
 
-    local misc = T{}
+    local misc = {}
     misc["Total Damage"] = damage
     misc["Total Damage No Skillchain"] = damage
 
-    return Debug.Unit.Check_Result("Ranged > Square Hit", player, nil, nil, nil, battle_log, misc)
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Ranged > Square Hit", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -102,32 +124,37 @@ end
 Debug.Unit.Tests.Ranged.Truestrike = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.TRUE}
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
-    local player = T{}
-    player[index] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
-    local battle_log = T{
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
@@ -135,11 +162,17 @@ Debug.Unit.Tests.Ranged.Truestrike = function()
         note   = " ",
     }
 
-    local misc = T{}
+    local misc = {}
     misc["Total Damage"] = damage
     misc["Total Damage No Skillchain"] = damage
 
-    return Debug.Unit.Check_Result("Ranged > Truestrike", player, nil, nil, nil, battle_log, misc)
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Ranged > Truestrike", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -150,22 +183,27 @@ end
 Debug.Unit.Tests.Ranged.Miss = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 0
     local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGEMISS}
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
-    local player = T{}
-    player[index] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
-    local battle_log = T{
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    end
+
+    local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
         damage = "---",
@@ -173,11 +211,17 @@ Debug.Unit.Tests.Ranged.Miss = function()
         note   = " ",
     }
 
-    local misc = T{}
+    local misc = {}
     misc["Total Damage"] = 0
     misc["Total Damage No Skillchain"] = 0
 
-    return Debug.Unit.Check_Result("Ranged > Miss", player, nil, nil, nil, battle_log, misc)
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Ranged > Miss", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -188,32 +232,37 @@ end
 Debug.Unit.Tests.Ranged.Crit = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGECRIT}
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
-    local player = T{}
-    player[index] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_DAMAGE] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_COUNT] = 1
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_MIN] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_MAX] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
-    local battle_log = T{
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_DAMAGE] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
@@ -221,11 +270,17 @@ Debug.Unit.Tests.Ranged.Crit = function()
         note   = " ",
     }
 
-    local misc = T{}
+    local misc = {}
     misc["Total Damage"] = damage
     misc["Total Damage No Skillchain"] = damage
 
-    return Debug.Unit.Check_Result("Ranged > Crit", player, nil, nil, nil, battle_log, misc)
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Ranged > Crit", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -236,24 +291,29 @@ end
 Debug.Unit.Tests.Ranged.Shadows = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 0
     local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.SHADOWS}
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
-    local player = T{}
-    player[index] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.SHADOW_ABSORPTION] = 1
-    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
-    local battle_log = T{
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.SHADOW_ABSORPTION] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+    end
+
+    local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
         damage = "---",
@@ -261,11 +321,17 @@ Debug.Unit.Tests.Ranged.Shadows = function()
         note   = " ",
     }
 
-    local misc = T{}
+    local misc = {}
     misc["Total Damage"] = 0
     misc["Total Damage No Skillchain"] = 0
 
-    return Debug.Unit.Check_Result("Ranged > Shadows", player, nil, nil, nil, battle_log, misc)
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Ranged > Shadows", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -276,7 +342,7 @@ end
 Debug.Unit.Tests.Ranged.Endamage = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local additional_damage = 200
     local add_effect_animation = 1
@@ -286,40 +352,46 @@ Debug.Unit.Tests.Ranged.Endamage = function()
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
-    local player = T{}
-    player[index] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.SPELLS_OVERALL] = T{}
-    player[index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = additional_damage
-    player[index][DB.Trackable.RANGED_ENDAMAGE] = T{}
-    player[index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.TOTAL] = additional_damage
-    player[index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MIN] = additional_damage
-    player[index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MAX] = additional_damage
-    player[index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + additional_damage
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + additional_damage
+    local player = {}
+    local player_catalog = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
-    local player_catalog = T{}
-    player_catalog[index] = T{}
-    player_catalog[index][add_effect_name] = T{}
-    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE] = T{}
-    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.TOTAL] = additional_damage
-    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MIN] = additional_damage
-    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MAX] = additional_damage
-    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.HIT_COUNT] = 1
+    player[player_name] = {}
+    player_catalog[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = additional_damage
+        player[player_name][target_index][DB.Trackable.RANGED_ENDAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.TOTAL] = additional_damage
+        player[player_name][target_index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MIN] = additional_damage
+        player[player_name][target_index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MAX] = additional_damage
+        player[player_name][target_index][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + additional_damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + additional_damage
 
-    local battle_log = T{
+        player_catalog[player_name][target_index] = {}
+        player_catalog[player_name][target_index][add_effect_name] = {}
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE] = {}
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.TOTAL] = additional_damage
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MIN] = additional_damage
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.MAX] = additional_damage
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.RANGED_ENDAMAGE][DB.Metric.HIT_COUNT] = 1
+    end
+
+    local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + additional_damage),
@@ -327,11 +399,18 @@ Debug.Unit.Tests.Ranged.Endamage = function()
         note   = " ",
     }
 
-    local misc = T{}
+    local misc = {}
     misc["Total Damage"] = damage + additional_damage
     misc["Total Damage No Skillchain"] = damage + additional_damage
 
-    return Debug.Unit.Check_Result("Ranged > Endamage", player, player_catalog, nil, nil, battle_log, misc)
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Ranged > Endamage", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -342,7 +421,7 @@ end
 Debug.Unit.Tests.Ranged.Endebuff = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local additional_damage = 5
     local add_effect_name = "Blind"
@@ -351,32 +430,38 @@ Debug.Unit.Tests.Ranged.Endebuff = function()
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
-    local player = T{}
-    player[index] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_ENDEBUFF] = T{}
-    player[index][DB.Trackable.RANGED_ENDEBUFF][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    local player = {}
+    local player_catalog = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
-    local player_catalog = T{}
-    player_catalog[index] = T{}
-    player_catalog[index][add_effect_name] = T{}
-    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDEBUFF] = T{}
-    player_catalog[index][add_effect_name][DB.Trackable.RANGED_ENDEBUFF][DB.Metric.HIT_COUNT] = 1
+    player[player_name] = {}
+    player_catalog[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_ENDEBUFF] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_ENDEBUFF][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
-    local battle_log = T{
+        player_catalog[player_name][target_index] = {}
+        player_catalog[player_name][target_index][add_effect_name] = {}
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.RANGED_ENDEBUFF] = {}
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.RANGED_ENDEBUFF][DB.Metric.HIT_COUNT] = 1
+    end
+
+    local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
@@ -384,11 +469,18 @@ Debug.Unit.Tests.Ranged.Endebuff = function()
         note   = " ",
     }
 
-    local misc = T{}
+    local misc = {}
     misc["Total Damage"] = damage
     misc["Total Damage No Skillchain"] = damage
 
-    return Debug.Unit.Check_Result("Ranged > Endebuff", player, player_catalog, nil, nil, battle_log, misc)
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Ranged > Endebuff", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -399,7 +491,7 @@ end
 Debug.Unit.Tests.Ranged.Endrain = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local additional_damage = 200
     local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGEHIT}
@@ -407,29 +499,34 @@ Debug.Unit.Tests.Ranged.Endrain = function()
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
-    local player = T{}
-    player[index] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.SPELLS_OVERALL] = T{}
-    player[index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = additional_damage
-    player[index][DB.Trackable.RANGED_ENDRAIN] = T{}
-    player[index][DB.Trackable.RANGED_ENDRAIN][DB.Metric.TOTAL] = additional_damage
-    player[index][DB.Trackable.RANGED_ENDRAIN][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + additional_damage
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + additional_damage
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
-    local battle_log = T{
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = additional_damage
+        player[player_name][target_index][DB.Trackable.RANGED_ENDRAIN] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_ENDRAIN][DB.Metric.TOTAL] = additional_damage
+        player[player_name][target_index][DB.Trackable.RANGED_ENDRAIN][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + additional_damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + additional_damage
+    end
+
+    local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
         damage = tostring(damage + additional_damage),
@@ -437,11 +534,17 @@ Debug.Unit.Tests.Ranged.Endrain = function()
         note   = " ",
     }
 
-    local misc = T{}
+    local misc = {}
     misc["Total Damage"] = damage + additional_damage
     misc["Total Damage No Skillchain"] = damage + additional_damage
 
-    return Debug.Unit.Check_Result("Ranged > Endrain", player, nil, nil, nil, battle_log, misc)
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Ranged > Endrain", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -452,30 +555,35 @@ end
 Debug.Unit.Tests.Ranged.PUP = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local index = tostring(player_name) .. ":" .. Debug.Unit.Mob.ENEMY.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGEPUP}
     local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
-    local player = T{}
-    player[index] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL] = T{}
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
-    player[index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_SQUARE_HIT] = T{}
-    player[index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE] = T{}
-    player[index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
-    player[index][DB.Trackable.TOTAL_DAMAGE] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = T{}
-    player[index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
-    local battle_log = T{
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
@@ -483,9 +591,15 @@ Debug.Unit.Tests.Ranged.PUP = function()
         note   = " ",
     }
 
-    local misc = T{}
+    local misc = {}
     misc["Total Damage"] = damage
     misc["Total Damage No Skillchain"] = damage
 
-    return Debug.Unit.Check_Result("Ranged - PUP > Hit", player, nil, nil, nil, battle_log, misc)
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Ranged - PUP > Hit", test_package)
 end

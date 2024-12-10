@@ -1,20 +1,20 @@
-DB.Widgets = T{}
+DB.Widgets = {}
 
-DB.Widgets.Util = T{}
+DB.Widgets.Util = {}
 
-DB.Widgets.Dropdown = T{}
-DB.Widgets.Dropdown.Enum = T{
+DB.Widgets.Dropdown = {}
+DB.Widgets.Dropdown.Enum = {
     MOB   = "Mob Filter",
     FOCUS = "Player",
     NONE  = "!NONE",
 }
 DB.Widgets.Dropdown.Width = 150
 DB.Widgets.Dropdown.Flags = ImGuiComboFlags_None
-DB.Widgets.Dropdown.Player = T{}
+DB.Widgets.Dropdown.Player = {}
 DB.Widgets.Dropdown.Player.Focus = DB.Widgets.Dropdown.Enum.NONE
 DB.Widgets.Dropdown.Player.Index = 1
-DB.Widgets.Dropdown.Mob = T{}
-DB.Widgets.Dropdown.Mob.Focus = DB.Widgets.Dropdown.Enum.NONE
+DB.Widgets.Dropdown.Mob = {}
+DB.Widgets.Dropdown.Mob.Focus = DB.Enum.ALL_MOBS
 DB.Widgets.Dropdown.Mob.Index = 1
 
 ------------------------------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ DB.Widgets.Mob_Filter = function()
             UI.EndCombo()
         end
     else
-        if UI.BeginCombo(DB.Widgets.Dropdown.Enum.MOB, DB.Widgets.Dropdown.Enum.NONE, flags) then
+        if UI.BeginCombo(DB.Widgets.Dropdown.Enum.MOB, DB.Enum.ALL_MOBS, flags) then
             UI.EndCombo()
         end
     end

@@ -355,6 +355,11 @@ H.Spell.Overcure = function(audits, spell_name, damage, burst)
     if audits.pet_name then trackable = DB.Trackable.PET_HEALING end
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, audits.pet_name, burst)
 
+    -- AOE attempts are target specific attempts. If there is just one target then this will just be one.
+    -- Need these because spell cast counts are handled outside of the target loop.
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.AOE_ATTEMPTS)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.AOE_ATTEMPTS)
+
     -- Overcure
     local spell_max = DB.Catalog.Get(audits.player_name, trackable, spell_name, DB.Metric.MAX)
     local overcure = 0
@@ -408,6 +413,8 @@ H.Spell.Enfeebling = function(audits, spell_name, message_id, damage)
     local trackable = DB.Trackable.SPELLS_ENFEEBLING
     if audits.pet_name then trackable = DB.Trackable.PET_ENFEEBLING end
 
+    -- AOE attempts are target specific attempts. If there is just one target then this will just be one.
+    -- Need these because spell cast counts are handled outside of the target loop.
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.AOE_ATTEMPTS)
     DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.AOE_ATTEMPTS)
 

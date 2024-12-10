@@ -65,25 +65,30 @@ DB.Initialize = function(manual_reset)
 	DB.Total_Damage = 0
 	DB.Total_Damage_No_Skillchain = 0
 
+	DB.Cache = {}
+	DB.Catalog_Cache = {}
+	DB.Pet_Cache = {}
+	DB.Pet_Catalog_Cache = {}
+
 	DB.Tracking.Trackable = {}
 	DB.Tracking.Pet_Trackable = {}
 	DB.Tracking.Initialized_Players = {}
     DB.Tracking.Initialized_Pets = {}
-    DB.Tracking.Initialized_Mobs = {[DB.Widgets.Dropdown.Enum.NONE] = true}
+    DB.Tracking.Initialized_Mobs = {[DB.Enum.ALL_MOBS] = true}
     DB.Tracking.Running_Accuracy = {}
 	DB.Tracking.Running_Damage = {}
 	DB.Tracking.Multi_Attack = {}
     DB.Tracking.Defeated_Mobs = {}
 
 	DB.Sorted.Players = {[1] = DB.Widgets.Dropdown.Enum.NONE}
-	DB.Sorted.Mobs = {[1] = DB.Widgets.Dropdown.Enum.NONE}
+	DB.Sorted.Mobs = {[1] = DB.Enum.ALL_MOBS}
 	DB.Sorted.Total_Damage = {}
 	DB.Sorted.Catalog_Damage = {}
 
 	DB.Healing_Max = {}
 	DB.Widgets.Dropdown.Player.Focus = DB.Widgets.Dropdown.Enum.NONE
 	DB.Widgets.Dropdown.Player.Index = 1
-	DB.Widgets.Dropdown.Mob.Focus = DB.Widgets.Dropdown.Enum.NONE
+	DB.Widgets.Dropdown.Mob.Focus = DB.Enum.ALL_MOBS
 	DB.Widgets.Dropdown.Mob.Index = 1
 	for spell, threshold in pairs(DB.Healing_Max_Defaults) do
 		DB.Healing_Max[spell] = threshold
@@ -128,4 +133,57 @@ end
 DB.Defeated_Mob = function(mob_name)
 	if not DB.Tracking.Defeated_Mobs[mob_name] then DB.Tracking.Defeated_Mobs[mob_name] = 0 end
 	DB.Tracking.Defeated_Mobs[mob_name] = DB.Tracking.Defeated_Mobs[mob_name] + 1
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if a trackable should update total metrics or not.
+------------------------------------------------------------------------------------------------------
+---@param trackable string a tracked item from the trackable list.
+---@return boolean
+------------------------------------------------------------------------------------------------------
+DB.Is_Total_Damage_Trackable = function(trackable)
+	if trackable == DB.Trackable.SPELLS_HEALING or
+	   trackable == DB.Trackable.DEF_HEALING_RECEIVED or
+	   trackable == DB.Trackable.ALL_HEAL or
+	   trackable == DB.Trackable.ABILITY_HEALING or
+	   trackable == DB.Trackable.ABILITY_MP_RECOVERY or
+	   trackable == DB.Trackable.PET_HEALING or
+	   trackable == DB.Trackable.SPELLS_MP_DRAIN or
+	   trackable == DB.Trackable.DEF_NUKING or
+	   trackable == DB.Trackable.DEF_NUKING_PET or
+	   trackable == DB.Trackable.DEF_SPIKES or
+	   trackable == DB.Trackable.DEF_TP_MOVE or
+	   trackable == DB.Trackable.DEF_TP_MOVE_PET or
+	   trackable == DB.Trackable.DEF_MELEE or
+	   trackable == DB.Trackable.DEF_MELEE_PET then
+		return false
+	end
+	return true
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if a metric requires its base value to be MAX_VALUE instead of zero.
+------------------------------------------------------------------------------------------------------
+---@param metric string
+---@return boolean
+------------------------------------------------------------------------------------------------------
+DB.Metric_Needs_Max_Value = function(metric)
+	if not metric then return false end
+	return metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if a value nil.
+------------------------------------------------------------------------------------------------------
+---@param caller string
+---@param value any
+---@param value_name string
+---@return boolean
+------------------------------------------------------------------------------------------------------
+DB.Is_Value_Empty = function(caller, value, value_name)
+	if not value or value == "" then
+		Debug.Error.Add(Debug.Error.ERROR, caller, tostring(value_name) .. " is empty {" .. tostring(value) .. "}.")
+		return true
+	end
+	return false
 end

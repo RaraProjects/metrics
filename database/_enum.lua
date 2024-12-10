@@ -1,10 +1,11 @@
 DB.Enum = {
+    ALL_MOBS    = "!All Mobs",
+    BLANK       = "",
     CATALOG     = "catalog",
-	PET_CATALOG = "pet_catalog",
+    COMBINED    = "combined",
     DEBUG       = "Debug",
     IGNORE      = "ignore",
-	COMBINED    = "combined",
-    BLANK       = "",
+	PET_CATALOG = "pet_catalog",
     MAX_DAMAGE  = 100000,
 }
 
@@ -77,7 +78,7 @@ DB.Trackable = {
     DEF_ENFEEBLING             = "Defense Enfeebling",
     DEF_MP_DRAIN               = "Defense MP Drain",
     DEF_SPIKES                 = "Defense Spikes",
-    DEF_HEALING_RECEIVED       = "Defense Healing Received",
+    DEF_HEALING_RECEIVED       = "Defense Healing Received",    -- Self healing is ignored.
     DEATH                      = "Death",
     DEF_NO_DAMAGE_SPELLS       = "Defense No Damage Spells",    -- Unsure of the purpose for this.
     DEF_CRITICAL               = "Defense Critical Hit",        -- This might not be necessary with DEF_MELEE

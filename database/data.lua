@@ -1,39 +1,47 @@
-DB.Data = T{}
+DB.Data = {}
 
 ------------------------------------------------------------------------------------------------------
--- Initializes an "actor:target" combination in the primary data and catalog data nodes.
--- Also initializes separate tracking globals for Running Accuracy.
--- If the "actor:target" combo has already been initialized then this will quit out early.
--- CALLED BY: Init.Catalog, Update.Data, and Get.Total_Party_Damage
+-- Initializes the primary player data nodes and other tracking globals.
+-- The core nodes for initialization are [player_name][target_name].
 ------------------------------------------------------------------------------------------------------
----@param index string "actor_name:target_name"
----@param player_name? string used for maintaining various player indexed tables. In the case of pets this will be the owner.
+---@param player_name string In the case of pets this will be the owner. This will never be a mob name.
+---@param target_name string The entity receiving the action of the player.
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Data.Initialize = function(index, player_name)
-	if not index then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Initialize", "Nil index {" .. tostring(index) .. "} passed in.")
-		return false
-	end
-	if not player_name or player_name == "" then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Initialize", "Nil or blank player name: {" .. tostring(index) .. "}." )
-		return false
+DB.Data.Initialize = function(player_name, target_name)
+	-- Early quit out to prevent crashing.
+	local caller = "DB.Data.Initialize"
+	if DB.Is_Value_Empty(caller, player_name, "Player") then return false end
+	if DB.Is_Value_Empty(caller, target_name, "Target") then return false end
+
+	-- Don't want to overwrite data node if it already exists. This is for mob specfic data.
+	local initialization_list = {}
+	if not DB.Parse[player_name] then DB.Parse[player_name] = {} end
+	if not DB.Parse[player_name][target_name] then
+		DB.Parse[player_name][target_name] = {}
+		table.insert(initialization_list, target_name)
 	end
 
-	-- Primary player data node initialization.
-	if DB.Parse[index] then return false end
-	DB.Parse[index] = T{}
+	-- Don't want to overwrite data node if it already exists. This is for all mob data.
+	local all_mobs = DB.Enum.ALL_MOBS
+	if not DB.Parse[player_name][all_mobs] then
+		DB.Parse[player_name][all_mobs] = {}
+		table.insert(initialization_list, all_mobs)
+	end
 
 	-- Initialize data nodes.
-	for _, trackable in pairs(DB.Trackable) do
-		DB.Parse[index][trackable] = T{}
-		for _, metric in pairs(DB.Metric) do
+	-- Need to set minimum high manually to capture accurate minimums.
+	if #initialization_list == 0 then return false end
+	for _, initialization_target in ipairs(initialization_list) do
+		for _, trackable in pairs(DB.Trackable) do
 
-			-- Need to set minimum high manually to capture accurate minimums.
-			if metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
-				DB.Data.Set(DB.Enum.MAX_DAMAGE, index, trackable, metric)
-			else
-				DB.Data.Set(0, index, trackable, metric)
+			DB.Parse[player_name][initialization_target][trackable] = {}
+			for _, metric in pairs(DB.Metric) do
+				if DB.Metric_Needs_Max_Value(metric) then
+					DB.Data.Set(DB.Enum.MAX_DAMAGE, player_name, initialization_target, trackable, metric)
+				else
+					DB.Data.Set(0, player_name, initialization_target, trackable, metric)
+				end
 			end
 
 		end
@@ -45,25 +53,24 @@ DB.Data.Initialize = function(index, player_name)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Initializes a player in the player list.
+-- Initializes various parallel tracking globals based on the player.
 ------------------------------------------------------------------------------------------------------
----@param player_name? string
+---@param player_name string
 ------------------------------------------------------------------------------------------------------
 DB.Data.Initialize_Player_Tracking_Tables = function(player_name)
 	if player_name and player_name ~= "" and not DB.Tracking.Initialized_Players[player_name] then
 		DB.Tracking.Initialized_Players[player_name] = true
 		DB.Lists.Sort.Players()
-		DB.Tracking.Running_Accuracy[player_name] = T{}
+		DB.Tracking.Running_Accuracy[player_name] = {}
 		DB.Tracking.Running_Damage[player_name] = 0
-		DB.Tracking.Running_Attack_Speed[player_name] = T{}
-		DB.Tracking.Multi_Attack[player_name] = T{}
+		DB.Tracking.Running_Attack_Speed[player_name] = {}
+		DB.Tracking.Multi_Attack[player_name] = {}
 	end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- A handler function that makes sure the data is set appropriately.
 -- This does not set data directly. Rather, it calls the Set~ or Inc~ functions.
--- This is called by the functions that perform the action handling.
 ------------------------------------------------------------------------------------------------------
 ---@param mode string flag calling out whether the data should be set or incremented.
 ---@param value number the value to set or increment the node to/by.
@@ -72,41 +79,40 @@ end
 ---@param metric string a trackable's metric from the metric list.
 ------------------------------------------------------------------------------------------------------
 DB.Data.Update = function(mode, value, audits, trackable, metric)
-	if audits.player_name == "" or audits.target_name == "" then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Update", "Empty name: Player {" .. tostring(audits.player_name) .. "} Target {"
-		.. tostring(audits.target_name) .. "} Trackable {" .. tostring(trackable) .. "} Metric {" .. tostring(metric) .. "}.")
-		return nil
-	end
-
 	local player_name = audits.player_name
 	local target_name = audits.target_name
-	local pet_name = audits.pet_name
-	local index = DB.Data.Build_Index(player_name, target_name)
-	DB.Data.Initialize(index, player_name)
-	if pet_name then DB.Pet_Data.Initialize(index, player_name, pet_name) end
+	local pet_name    = audits.pet_name
 
-	-- Peform the operation.
-	if mode == DB.Update_Mode.INC then
-		DB.Data.Inc(value, index, trackable, metric)
-		if pet_name then
-			DB.Pet_Data.Inc(value, index, pet_name, trackable, metric)
-		end
-	elseif mode == DB.Update_Mode.SET then
-		DB.Data.Set(value, index, trackable, metric)
-		if pet_name then
-			DB.Pet_Data.Set(value, index, pet_name, trackable, metric)
+	local caller = "DB.Data.Update"
+	if DB.Is_Value_Empty(caller, player_name, "Player") then return nil end
+	if DB.Is_Value_Empty(caller, target_name, "Target") then return nil end
+
+	DB.Data.Initialize(player_name, target_name)
+	if pet_name then DB.Pet_Data.Initialize(player_name, pet_name, target_name) end
+
+	-- Set the data; loop once for mob-specific data and a second time for all mob data.
+	local update_list = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+	for _, update_target in ipairs(update_list) do
+		if mode == DB.Update_Mode.INC then
+			DB.Data.Inc(value, player_name, update_target, trackable, metric)
+			if pet_name then
+				DB.Pet_Data.Inc(value, player_name, pet_name, update_target, trackable, metric)
+			end
+		elseif mode == DB.Update_Mode.SET then
+			DB.Data.Set(value, player_name, update_target, trackable, metric)
+			if pet_name then
+				DB.Pet_Data.Set(value, player_name, pet_name, update_target, trackable, metric)
+			end
 		end
 	end
 
 	-- Increment the running damage count for DPS if this is a total damage increase.
-	if mode == DB.Update_Mode.INC and trackable == DB.Trackable.TOTAL_DAMAGE and metric == DB.Metric.TOTAL then
-		DB.DPS.Inc_Buffer(player_name, value)
-	end
+	if mode == DB.Update_Mode.INC and trackable == DB.Trackable.TOTAL_DAMAGE and metric == DB.Metric.TOTAL then DB.DPS.Inc_Buffer(player_name, value) end
 end
 
 ------------------------------------------------------------------------------------------------------
--- Called by the catalog update damage function.
--- Handles the regular database portion of damage updates.
+-- Handles the primary database portion of damage updates.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table
 ---@param trackable string a tracked item from the trackable list.
@@ -114,36 +120,37 @@ end
 ---@param burst? boolean whether or not a magic burst took place.
 ------------------------------------------------------------------------------------------------------
 DB.Data.Update_Damage = function(audits, trackable, damage, burst)
-	-- Grand Totals; There is a regular track and a "no skillchains" track.
-    if DB.Catalog.Include_Total_Damage(trackable) then
+	-- Increment grand totals if necessary. There is an all damage track and a no-skillchain track.
+    if DB.Is_Total_Damage_Trackable(trackable) then
     	DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
 		DB.Total_Damage = DB.Total_Damage + damage
 		if trackable ~= DB.Trackable.SKILLCHAIN then
-    		DB.Total_Damage_No_Skillchain = DB.Total_Damage_No_Skillchain + damage
 			DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
+			DB.Total_Damage_No_Skillchain = DB.Total_Damage_No_Skillchain + damage
 		end
     end
 
-    -- Trackable Total
+    -- Increment the trackable specific totals.
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
 	if burst then
 		DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.MAGIC_BURST_DAMAGE)
 		DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.MAGIC_BURST_DAMAGE)
 	end
 
-	-- Trackable Minimum
-	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
-	if audits.pet_name then
-		if damage > 0 and damage < DB.Pet_Data.Get(audits.player_name, audits.pet_name, trackable, DB.Metric.MIN) then
-			DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN)
-		end
-	else
-		if damage > 0 and damage < DB.Data.Get(audits.player_name, trackable, DB.Metric.MIN, audits.target_name) then
-			DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN)
+	-- Set trackable minimums; We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
+	if damage > 0 then
+		if audits.pet_name then
+			if damage < DB.Pet_Data.Get(audits.player_name, audits.pet_name, trackable, DB.Metric.MIN) then
+				DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN)
+			end
+		else
+			if damage < DB.Data.Get(audits.player_name, trackable, DB.Metric.MIN, audits.target_name) then
+				DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN)
+			end
 		end
 	end
 
-	-- Trackable Maximum
+	-- Set trackable maximums
     if damage > DB.Data.Get(audits.player_name, trackable, DB.Metric.MAX) then
 		DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MAX)
 	end
@@ -151,25 +158,36 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- Directly sets a trackable's metric to a specified value.
+-- This is primarily used for initialization and minimum/maximum metrics.
 ------------------------------------------------------------------------------------------------------
 ---@param value number the value to set the node to.
----@param index string "actor_name:target_name".
+---@param player_name string
+---@param target_name string
 ---@param trackable string a tracked item from the trackable list.
 ---@param metric string a trackable's metric from the metric
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Data.Set = function(value, index, trackable, metric)
-	if not value or not index or not trackable or not metric then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Set", "Index {" .. tostring(index) .. "} Trackable {" .. tostring(trackable) .. "} Metric {"
-		.. tostring(metric) .. "} nil required parameter passed in.")
-		return false
-	end
-	if not DB.Parse or not DB.Parse[index] then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Set", "Index {" .. tostring(index) .. "} is not initialized.")
+DB.Data.Set = function(value, player_name, target_name, trackable, metric)
+	-- Early quit out to prevent crashing.
+	-- Can't quit out early for blank metric nodes because this is used for initialization.
+	local caller = "DB.Data.Set"
+	if DB.Is_Value_Empty(caller, player_name, "Player")    then return false end
+	if DB.Is_Value_Empty(caller, target_name, "Target")    then return false end
+	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return false end
+	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return false end
+	if DB.Is_Value_Empty(caller, value,       "Value")     then return false end
+	if not DB.Data.Is_Index_Node_Initialized(caller, true, player_name, target_name) then return false end
+
+	-- Don't set an unfiltered minimum if the mob specific minimum isn't less than the unfiltered one.
+	if DB.Metric_Needs_Max_Value(metric) and target_name == DB.Enum.ALL_MOBS
+	and DB.Parse[player_name][target_name][trackable][metric]
+	and value >= DB.Parse[player_name][target_name][trackable][metric] then
 		return false
 	end
 
-	DB.Parse[index][trackable][metric] = value
+	-- Apply the change.
+	DB.Parse[player_name][target_name][trackable][metric] = value
+
 	return true
 end
 
@@ -177,24 +195,26 @@ end
 -- Increments a trackable's metric by a specified amount.
 ------------------------------------------------------------------------------------------------------
 ---@param value number the value to increment the node by.
----@param index string "player_name:mob_name"
+---@param player_name string
+---@param target_name string
 ---@param trackable string a tracked item from the trackable list.
 ---@param metric string a trackable's metric from the metric list.
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Data.Inc = function(value, index, trackable, metric)
-	if not value or not index or not trackable or not metric then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Inc", "Index {" .. tostring(index) .. "} Trackable {" .. tostring(trackable) .. "} Metric {"
-		.. tostring(metric) .. "} nil required parameter passed in.")
-		return false
-	end
-	if not DB.Parse or not DB.Parse[index] or not DB.Parse[index][trackable] or not DB.Parse[index][trackable][metric] then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Inc", "DB.Parse uninitialized: Index {" .. tostring(index) .. "} Trackable {" .. tostring(trackable)
-		.. "} Metric {" .. tostring(metric) .. "}." )
-		return false
-	end
+DB.Data.Inc = function(value, player_name, target_name, trackable, metric)
+	-- Early quit out to prevent crashing.
+	local caller = "DB.Data.Inc"
+	if DB.Is_Value_Empty(caller, player_name, "Player")    then return false end
+	if DB.Is_Value_Empty(caller, target_name, "Target")    then return false end
+	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return false end
+	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return false end
+	if DB.Is_Value_Empty(caller, value,       "Value")     then return false end
+	if not DB.Data.Is_Index_Node_Initialized(caller, true, player_name, target_name) then return false end
+	if not DB.Data.Is_Metric_Node_Initialized(caller, true, player_name, target_name, trackable, metric) then return false end
 
-	DB.Parse[index][trackable][metric] = DB.Parse[index][trackable][metric] + value
+	-- Apply the change.
+	DB.Parse[player_name][target_name][trackable][metric] = DB.Parse[player_name][target_name][trackable][metric] + value
+
 	return true
 end
 
@@ -209,11 +229,10 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Data.Get = function(player_name, trackable, metric, temporary_mob_focus)
-	if not player_name or not trackable or not metric then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Get", "Nil required parameter: Player {" .. tostring(player_name) .. "} Trackable {"
-		.. tostring(trackable) .. "} Metric {" .. tostring(metric) .. "}.")
-		return 0
-	end
+	local caller = "DB.Data.Get"
+	if DB.Is_Value_Empty(caller, player_name, "Player")    then return 0 end
+	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return 0 end
+	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return 0 end
 
 	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
 	if Throttle.Is_Enabled() and not Throttle.Allow_Calculation() then
@@ -222,52 +241,66 @@ DB.Data.Get = function(player_name, trackable, metric, temporary_mob_focus)
 		end
 	end
 
-	local total = 0
-	if metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then total = DB.Enum.MAX_DAMAGE end
+	-- The target index will just be the mob focus unless a temporary focus is passed in.
+	-- The mob focus will handle the ALL_MOBS too.
+	local value = 0
+	if DB.Metric_Needs_Max_Value(metric) then value = DB.Enum.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
-	local search_string = player_name .. ":" .. mob_focus
-	if mob_focus == DB.Widgets.Dropdown.Enum.NONE then search_string = player_name .. ":" end
-	if temporary_mob_focus then search_string = player_name .. ":" .. temporary_mob_focus end
+	local target_index = mob_focus
+	if temporary_mob_focus then target_index = temporary_mob_focus end
 
-	for index, _ in pairs(DB.Parse) do
-		if string.find(index, search_string) then
-			local value = DB.Parse[index][trackable][metric]
-			if metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
-				if value < total then total = value end
-			elseif metric == DB.Metric.MAX then
-				if value > total then total = value end
-			else
-				total = total + value
-			end
+	-- Get the data.
+	if DB.Data.Is_Index_Node_Initialized(caller, false, player_name, target_index) then
+		if DB.Data.Is_Metric_Node_Initialized(caller, false, player_name, target_index, trackable, metric) then
+			value = DB.Parse[player_name][target_index][trackable][metric]
 		end
 	end
 
 	-- Cache for performance.
 	if not DB.Cache[player_name] then DB.Cache[player_name] = {} end
 	if not DB.Cache[player_name][trackable] then DB.Cache[player_name][trackable] = {} end
-	DB.Cache[player_name][trackable][metric] = total
+	DB.Cache[player_name][trackable][metric] = value
 
-	return total
+	return value
 end
 
 ------------------------------------------------------------------------------------------------------
--- Builds the primary index in the form player_name:mob_name
+-- Checks if the [player_name][target_name] nodes are initialized in the primary database.
 ------------------------------------------------------------------------------------------------------
----@param actor_name string name of the player or entity performing the action
----@param target_name? string name of the mob or entity receiving the action
----@return string [actor_name:target_name]
+---@param caller string
+---@param write_error boolean
+---@param player_name string
+---@param target_name string
+---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Data.Build_Index = function(actor_name, target_name)
-	if not target_name then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Build_Index", "Nil target name: Actor {" .. tostring(actor_name) .. "} Target {"
-		.. tostring(target_name) .. "}.")
-		target_name = DB.Enum.DEBUG
+DB.Data.Is_Index_Node_Initialized = function(caller, write_error, player_name, target_name)
+	if not DB.Parse or not DB.Parse[player_name] or not DB.Parse[player_name][target_name] then
+		if write_error then
+			Debug.Error.Add(Debug.Error.ERROR, caller, "Not initialized in DB.Parse[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "].")
+		end
+		return false
 	end
-	if not actor_name then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Data.Build_Index", "Nil actor name: Actor {" .. tostring(actor_name) .. "} Target {"
-		.. tostring(target_name) .. "}.")
-		actor_name = DB.Enum.DEBUG
-	end
+	return true
+end
 
-	return actor_name .. ":" .. target_name
+------------------------------------------------------------------------------------------------------
+-- Checks if the [player_name][target_name][trackable][metric] nodes are initialized in the primary database.
+------------------------------------------------------------------------------------------------------
+---@param caller string
+---@param write_error boolean
+---@param player_name string
+---@param target_name string
+---@param trackable string
+---@param metric string
+---@return boolean
+------------------------------------------------------------------------------------------------------
+DB.Data.Is_Metric_Node_Initialized = function(caller, write_error, player_name, target_name, trackable, metric)
+	if not DB.Parse or not DB.Parse[player_name] or not DB.Parse[player_name][target_name] then
+		if write_error then
+			Debug.Error.Add(Debug.Error.ERROR, caller, "Metric not initialized in DB.Parse[" .. tostring(player_name)
+			.. "][" .. tostring(target_name) .. "][" .. tostring(trackable) .. "][" .. tostring(metric) .. "].")
+		end
+		return false
+	end
+	return true
 end

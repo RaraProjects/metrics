@@ -1,36 +1,59 @@
-DB.Pet_Catalog = T{}
+DB.Pet_Catalog = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Initializes a pet cataloged action.
 -- If the action has already been initialized then this will quit out early.
 -- Also initializes Trackable_Data which is used in the Focus Window.
 ------------------------------------------------------------------------------------------------------
----@param index string "actor_name:target_name"
 ---@param player_name string
----@param trackable string a tracked item from the trackable list.
----@param action_name string the name of the action to be cataloged.
 ---@param pet_name string
+---@param target_name string
+---@param action_name string the name of the action to be cataloged.
+---@param trackable string a tracked item from the trackable list.
 ------------------------------------------------------------------------------------------------------
-DB.Pet_Catalog.Initialize = function(index, player_name, trackable, action_name, pet_name)
-	if not pet_name then return false end
+DB.Pet_Catalog.Initialize = function(player_name, pet_name, target_name, action_name, trackable)
+	-- Early quit out to prevent crashing.
+	local caller = "DB.Pet_Catalog.Initialize"
+	if DB.Is_Value_Empty(caller, player_name, "Player") then return false end
+	if DB.Is_Value_Empty(caller, target_name, "Target") then return false end
+	if DB.Is_Value_Empty(caller, pet_name,    "Pet")    then return false end
 
-	-- Don't want to overwrite data node if it already exists.
-	if not DB.Pet_Parse_Catalog[index] then DB.Pet_Parse_Catalog[index] = T{} end
-	if not DB.Pet_Parse_Catalog[index][pet_name] then DB.Pet_Parse_Catalog[index][pet_name] = T{} end
-	if not DB.Pet_Parse_Catalog[index][pet_name][action_name] then DB.Pet_Parse_Catalog[index][pet_name][action_name] = T{} end
-	if DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable] then return false end
-
-	DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable] = T{}
-
-	-- Populate metric nodes
-	-- Need to set minimum high manually to capture accurate minimums
-	for _, metric in pairs(DB.Metric) do
-		DB.Pet_Catalog.Set(0, index, pet_name, trackable, action_name, metric)
+	-- Don't want to overwrite data node if it already exists. This is for mob specfic data.
+	local initialization_list = {}
+	if not DB.Pet_Parse_Catalog[player_name] then DB.Pet_Parse_Catalog[player_name] = {} end
+	if not DB.Pet_Parse_Catalog[player_name][pet_name] then DB.Pet_Parse_Catalog[player_name][pet_name] = {} end
+	if not DB.Pet_Parse_Catalog[player_name][pet_name][target_name] then DB.Pet_Parse_Catalog[player_name][pet_name][target_name] = {} end
+	if not DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name] then DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name] = {} end
+	if not DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable] then
+		DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable] = {}
+		table.insert(initialization_list, target_name)
 	end
-	DB.Pet_Catalog.Set(DB.Enum.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Metric.MIN)
-	DB.Pet_Catalog.Set(DB.Enum.MAX_DAMAGE, index, pet_name, trackable, action_name, DB.Metric.CRITICAL_MIN)
 
-	-- Initialize tracking tables
+	-- Don't want to overwrite data node if it already exists. This is for all mob data.
+	local all_mobs = DB.Enum.ALL_MOBS
+	if not DB.Pet_Parse_Catalog[player_name] then DB.Pet_Parse_Catalog[player_name] = {} end
+	if not DB.Pet_Parse_Catalog[player_name][pet_name] then DB.Pet_Parse_Catalog[player_name][pet_name] = {} end
+	if not DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs] then DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs] = {} end
+	if not DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs][action_name] then DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs][action_name] = {} end
+	if not DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs][action_name][trackable] then
+		DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs][action_name][trackable] = {}
+		table.insert(initialization_list, all_mobs)
+	end
+
+	-- Initialize data nodes.
+	-- Need to set minimum high manually to capture accurate minimums.
+	if #initialization_list == 0 then return nil end
+	for _, initialization_target in ipairs(initialization_list) do
+		for _, metric in pairs(DB.Metric) do
+			if DB.Metric_Needs_Max_Value(metric) then
+				DB.Pet_Catalog.Set(DB.Enum.MAX_DAMAGE, player_name, pet_name, initialization_target, action_name, trackable, metric)
+			else
+				DB.Pet_Catalog.Set(0, player_name, pet_name, initialization_target, action_name, trackable, metric)
+			end
+		end
+	end
+
+	-- Initialize tracking tables.
 	DB.Pet_Catalog.Initialize_Tracking(trackable, player_name, pet_name)
 end
 
@@ -43,11 +66,12 @@ end
 ---@return boolean true: successful initialization; false: error
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Initialize_Tracking = function(trackable, player_name, pet_name)
-	if not trackable or not player_name or not pet_name then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Catalog.Initialize_Tracking", "Nil required parameter: Trackable {" .. tostring(trackable)
-		.. "} Player Name {" .. tostring(player_name) .. "} Pet Name {" .. tostring(pet_name) .. "}.")
-		return false
-	end
+	-- Early quit out to prevent crashing.
+	local caller = "DB.Pet_Catalog.Initialize_Tracking"
+	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return false end
+	if DB.Is_Value_Empty(caller, player_name, "Player")    then return false end
+	if DB.Is_Value_Empty(caller, pet_name,    "Pet")       then return false end
+
 	if not DB.Tracking.Pet_Trackable[trackable] then DB.Tracking.Pet_Trackable[trackable] = {} end
 	if not DB.Tracking.Pet_Trackable[trackable][player_name] then DB.Tracking.Pet_Trackable[trackable][player_name] = {} end
 	if not DB.Tracking.Pet_Trackable[trackable][player_name][pet_name] then DB.Tracking.Pet_Trackable[trackable][player_name][pet_name] = {} end
@@ -61,20 +85,38 @@ end
 -- The discrete tracking happens in the "catalog" node under each trackable.
 ------------------------------------------------------------------------------------------------------
 ---@param value number the value to set the node to
----@param index string "player_name:mob_name"
+---@param player_name string
 ---@param pet_name string
----@param trackable string a tracked item from the trackable list.
+---@param target_name string
 ---@param action_name string the name of the action to be cataloged.
+---@param trackable string a tracked item from the trackable list.
 ---@param metric string a trackable's metric from the metric list.
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Pet_Catalog.Set = function(value, index, pet_name, trackable, action_name, metric)
-	if not value or not index or not pet_name or not trackable or not action_name or not metric then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Catalog.Set", "Nil required parameter: Index {" .. tostring(index) .. "} Pet Name {"
-		.. tostring(pet_name) .. "} Trackable {".. tostring(trackable) .. "}.")
+DB.Pet_Catalog.Set = function(value, player_name, pet_name, target_name, action_name, trackable, metric)
+	-- Early quit out to prevent crashing.
+	-- Can't quit out early for blank metric nodes because this is used for initialization.
+	local caller = "DB.Pet_Catalog.Set"
+	if DB.Is_Value_Empty(caller, player_name, "Player")    then return false end
+	if DB.Is_Value_Empty(caller, target_name, "Target")    then return false end
+	if DB.Is_Value_Empty(caller, pet_name,    "Pet")       then return false end
+	if DB.Is_Value_Empty(caller, action_name, "Action")    then return false end
+	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return false end
+	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return false end
+	if DB.Is_Value_Empty(caller, value,       "Value")     then return false end
+	if not DB.Pet_Catalog.Is_Index_Node_Initialized(caller, true, player_name, pet_name, target_name, action_name) then return false end
+
+	-- Don't set an unfiltered minimum if the mob specific minimum isn't less than the unfiltered one.
+	if DB.Metric_Needs_Max_Value(metric) and target_name == DB.Enum.ALL_MOBS
+	and DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable]
+	and DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric]
+	and value >= DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric] then
 		return false
 	end
-	DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric] = value	-- Assumes this node exists.
+
+	-- Apply the change.
+	DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric] = value
+
 	return true
 end
 
@@ -85,21 +127,31 @@ end
 -- The discrete tracking happens in the "catalog" node under each trackable.
 ------------------------------------------------------------------------------------------------------
 ---@param value number the value to increment the node by.
----@param index string "player_name:mob_name"
+---@param player_name string
 ---@param pet_name string
----@param trackable string a tracked item from the trackable list.
+---@param target_name string
 ---@param action_name string the name of the action to be cataloged.
+---@param trackable string a tracked item from the trackable list.
 ---@param metric string a trackable's metric from the metric list.
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Pet_Catalog.Inc = function(value, index, pet_name, trackable, action_name, metric)
-	if not value or not index or not pet_name or not trackable or not action_name or not metric then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Catalog.Inc", "Nil required parameter: Index {" .. tostring(index) .. "} Pet Name {" .. tostring(pet_name)
-		.. "} Trackable {" .. tostring(trackable) .. "}.")
-		return false
-	end
-	DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric]			-- Assumes this node exists.
-	= DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric] + value
+DB.Pet_Catalog.Inc = function(value, player_name, pet_name, target_name, action_name, trackable, metric)
+	-- Early quit out to prevent crashing.
+	-- Can't quit out early for blank metric nodes because this is used for initialization.
+	local caller = "DB.Pet_Catalog.Inc"
+	if DB.Is_Value_Empty(caller, player_name, "Player")    then return false end
+	if DB.Is_Value_Empty(caller, target_name, "Target")    then return false end
+	if DB.Is_Value_Empty(caller, pet_name,    "Pet")       then return false end
+	if DB.Is_Value_Empty(caller, action_name, "Action")    then return false end
+	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return false end
+	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return false end
+	if DB.Is_Value_Empty(caller, value,       "Value")     then return false end
+	if not DB.Pet_Catalog.Is_Index_Node_Initialized(caller, true, player_name, pet_name, target_name, action_name) then return false end
+	if not DB.Pet_Catalog.Is_Metric_Node_Initialized(caller, true, player_name, pet_name, target_name, action_name, trackable, metric) then return false end
+
+	DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric]
+	= DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric] + value
+
 	return true
 end
 
@@ -115,11 +167,12 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Get = function(player_name, pet_name, trackable, action_name, metric)
-	if not player_name or not pet_name or not trackable or not action_name or not metric then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Pet_Catalog.Get", "Nil required parameter: Player {" .. tostring(player_name) .. "} Pet {" .. tostring(pet_name)
-		.. "} Trackable {" .. tostring(trackable) .. "} Action {" .. tostring(action_name) .. "} Metric {" .. tostring(metric) .. "}.")
-		return 0
-	end
+	local caller = "DB.Pet_Catalog.Inc"
+	if DB.Is_Value_Empty(caller, player_name, "Player")    then return 0 end
+	if DB.Is_Value_Empty(caller, pet_name,    "Pet")       then return 0 end
+	if DB.Is_Value_Empty(caller, action_name, "Action")    then return 0 end
+	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return 0 end
+	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return 0 end
 
 	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
 	if Throttle.Is_Enabled() and not Throttle.Allow_Calculation() then
@@ -129,18 +182,15 @@ DB.Pet_Catalog.Get = function(player_name, pet_name, trackable, action_name, met
 		end
 	end
 
-	local total = 0
-	if metric == DB.Metric.MIN then total = DB.Enum.MAX_DAMAGE end
+	local value = 0
+	if DB.Metric_Needs_Max_Value(metric) then value = DB.Enum.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
-	for index, _ in pairs(DB.Pet_Parse_Catalog) do
-		if mob_focus == DB.Widgets.Dropdown.Enum.NONE then
-			if string.find(index, player_name .. ":") then
-				total = DB.Pet_Catalog.Calculate(total, index, pet_name, trackable, action_name, metric)
-			end
-		else
-			if string.find(index, player_name .. ":" .. mob_focus) then
-				total = DB.Pet_Catalog.Calculate(total, index, pet_name, trackable, action_name, metric)
-			end
+	local target_index = mob_focus
+
+	-- Get the data.
+	if DB.Pet_Catalog.Is_Index_Node_Initialized(caller, false, player_name, pet_name, target_index, action_name) then
+		if DB.Pet_Catalog.Is_Metric_Node_Initialized(caller, false, player_name, pet_name, target_index, action_name, trackable, metric) then
+			value = DB.Pet_Parse_Catalog[player_name][pet_name][target_index][action_name][trackable][metric]
 		end
 	end
 
@@ -149,72 +199,57 @@ DB.Pet_Catalog.Get = function(player_name, pet_name, trackable, action_name, met
 	if not DB.Pet_Catalog_Cache[player_name][pet_name] then DB.Pet_Catalog_Cache[player_name][pet_name] = {} end
 	if not DB.Pet_Catalog_Cache[player_name][pet_name][action_name] then DB.Pet_Catalog_Cache[player_name][pet_name][action_name] = {} end
 	if not DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable] then DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable] = {} end
-	DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable][metric] = total
-
-	return total
-end
-
-------------------------------------------------------------------------------------------------------
--- Helper function for getting pet cataloged data.
--- Using an BST pet job ability like Razor Fang will create and index of player:pet with a nil pet node.
--- The actual damage will come later in the monster TP packet.
--- Data.Parse[index][pet_name] gets initialized in m.Init.Pet_Data.
-------------------------------------------------------------------------------------------------------
----@param value number the value to increment the node by.
----@param index string "player_name:mob_name"
----@param trackable string a tracked item from the trackable list.
----@param action_name string the name of the action to be cataloged.
----@param metric string a trackable's metric from the metric list.
----@return number
-------------------------------------------------------------------------------------------------------
-DB.Pet_Catalog.Calculate = function(value, index, pet_name, trackable, action_name, metric)
-	if not DB.Pet_Parse_Catalog[index][pet_name] or not DB.Pet_Parse_Catalog[index][pet_name][action_name] then
-		Debug.Error.Add(Debug.Error.WARNING, "DB.Pet_Catalog.Calculate", "Tried referencing uninitialized node: Index {" .. tostring(index) .. "} Pet {"
-		.. tostring(pet_name) .. "} Action {" .. tostring(action_name) .. "}.")
-		return value
-	end
-
-	if DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable] then
-		if     metric == DB.Metric.MIN then value = DB.Pet_Catalog.Minimum(value, index, pet_name, trackable, action_name, metric)
-		elseif metric == DB.Metric.MAX then value = DB.Pet_Catalog.Maximum(value, index, pet_name, trackable, action_name, metric)
-		else   value = value + DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric] end
-	end
+	DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable][metric] = value
 
 	return value
 end
 
 ------------------------------------------------------------------------------------------------------
--- Helper function for getting pet cataloged data for minimum metric.
+-- Checks if the [player_name][target_name] nodes are initialized in the pet primary database.
 ------------------------------------------------------------------------------------------------------
----@param min number current observed minimum value.
----@param index string "player_name:mob_name"
+---@param caller string
+---@param write_error boolean
+---@param player_name string
 ---@param pet_name string
----@param trackable string a tracked item from the trackable list.
----@param action_name string the name of the action to be cataloged.
----@param metric string a trackable's metric from the metric list.
----@return number
+---@param target_name string
+---@param action_name string
+---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Pet_Catalog.Minimum = function(min, index, pet_name, trackable, action_name, metric)
-	if min > DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric] then
-		min =  DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric]
+DB.Pet_Catalog.Is_Index_Node_Initialized = function(caller, write_error, player_name, pet_name, target_name, action_name)
+	if not DB.Pet_Parse_Catalog or not DB.Pet_Parse_Catalog[player_name] or not DB.Pet_Parse_Catalog[player_name][pet_name]
+	or not DB.Pet_Parse_Catalog[player_name][pet_name][target_name] then
+		if write_error then
+			Debug.Error.Add(Debug.Error.ERROR, caller, "Not initialized in DB.Pet_Parse_Catalog[" .. tostring(player_name) .. "]["
+			.. tostring(pet_name) .. "][" .. tostring(target_name) .. "][" .. tostring(action_name) .. "].")
+		end
+		return false
 	end
-	return min
+	return true
 end
 
 ------------------------------------------------------------------------------------------------------
--- Helper function for getting pet cataloged data for maximum metric.
+-- Checks if the [player_name][target_name][trackable][metric] nodes are initialized in the pet primary database.
 ------------------------------------------------------------------------------------------------------
----@param max number current observed maximum value.
----@param index string "player_name:mob_name"
+---@param caller string
+---@param write_error boolean
+---@param player_name string
 ---@param pet_name string
----@param trackable string a tracked item from the trackable list.
----@param action_name string the name of the action to be cataloged.
----@param metric string a trackable's metric from the metric list.
----@return number
+---@param target_name string
+---@param action_name string
+---@param trackable string
+---@param metric string
+---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Pet_Catalog.Maximum = function(max, index, pet_name, trackable, action_name, metric)
-	if DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric] > max then
-		max = DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable][metric]
+DB.Pet_Catalog.Is_Metric_Node_Initialized = function(caller, write_error, player_name, pet_name, target_name, action_name, trackable, metric)
+	if not DB.Pet_Parse_Catalog or not DB.Pet_Parse_Catalog[player_name] or not DB.Pet_Parse_Catalog[player_name][pet_name] or not DB.Pet_Parse_Catalog[player_name][pet_name][target_name]
+	or not DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name] or not DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable]
+	or not DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric] then
+		if write_error then
+			Debug.Error.Add(Debug.Error.ERROR, caller, "Metric not initialized in DB.Pet_Parse_Catalog[" .. tostring(player_name)
+			.. "][" .. tostring(pet_name) .. "][" .. tostring(target_name) .. "][" .. tostring(action_name) .. "][" .. tostring(trackable)
+			.. "][" .. tostring(metric) .. "].")
+		end
+		return false
 	end
-	return max
+	return true
 end

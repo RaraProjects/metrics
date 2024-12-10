@@ -183,6 +183,12 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
     local damage = result.param
     local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
 
+    -- AOE attempts are target specific attempts. If there is just one target then this will just be one.
+    -- Need these because TP move counts are handled outside of the target loop.
+    -- This needs to be before the MP Drain check because the trackable gets changed.
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, audits.trackable, DB.Metric.AOE_ATTEMPTS)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, audits.trackable, ws_name, DB.Metric.AOE_ATTEMPTS)
+
     -- A lot of pet abilities just land a status effect and it carries in a value as if it were damage.
     damage = H.TP.Pet_Skill_Ignore(owner_mob, audits, damage, ws_id, ws_name)
 

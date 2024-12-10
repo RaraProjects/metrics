@@ -3,21 +3,21 @@ Debug.Unit.Action_Data = {}
 Debug.Unit.Action_Data.Player = {}
 Debug.Unit.Util = {}
 Debug.Unit.Tests = {}
-Debug.Unit.Results = T{}
+Debug.Unit.Results = {}
 Debug.Unit.Mob = {}
 Debug.Unit.Active = false
 Debug.Unit.Has_Pet = false
 
-Debug.Unit.Mob.Target_ID = 3
-Debug.Unit.Mob.Target_ID_Two = 4
+Debug.Unit.Mob.Target_ID = 3333333
+Debug.Unit.Mob.Target_ID_Two = 4444444
 
-Debug.Unit.Mob.PLAYER = T{} -- Gets populated dynamically when running the tests.
+Debug.Unit.Mob.PLAYER = {} -- Gets populated dynamically when running the tests.
 
 Debug.Unit.Mob.PET = {
     name = "Pet Name",
-    id = 2,
-    index = 2,
-    target_index = 2,
+    id = 2222222,
+    index = 2222222,
+    target_index = 2222222,
     spawn_flags = Ashita.Enum.Spawn_Flags.PET,
     in_party = true,
     in_alliance = false,
@@ -25,9 +25,9 @@ Debug.Unit.Mob.PET = {
 
 Debug.Unit.Mob.ENEMY = {
     name = "Enemy",
-    id = 3,
-    index = 3,
-    target_index = 3,
+    id = 3333333,
+    index = 3333333,
+    target_index = 3333333,
     spawn_flags = Ashita.Enum.Spawn_Flags.MOB,
     in_party = false,
     in_alliance = false,
@@ -35,9 +35,9 @@ Debug.Unit.Mob.ENEMY = {
 
 Debug.Unit.Mob.ENEMY_TWO = {
     name = "Enemy Two",
-    id = 4,
-    index = 4,
-    target_index = 4,
+    id = 4444444,
+    index = 4444444,
+    target_index = 4444444,
     spawn_flags = Ashita.Enum.Spawn_Flags.MOB,
     in_party = false,
     in_alliance = false,
@@ -45,10 +45,10 @@ Debug.Unit.Mob.ENEMY_TWO = {
 
 Debug.Unit.Mob.PLAYER_TWO = {
     name = "Player Two",
-    id = 5,
-    index = 5,
-    target_index = 5,
-    pet_index = 6,
+    id = 5555555,
+    index = 5555555,
+    target_index = 5555555,
+    pet_index = 6666666,
     spawn_flags = Ashita.Enum.Spawn_Flags.OTHERPLAYER,
     in_party = true,
     in_alliance = true,
@@ -56,9 +56,9 @@ Debug.Unit.Mob.PLAYER_TWO = {
 
 Debug.Unit.Mob.PET_TWO = {
     name = "Pet Two",
-    id = 6,
-    index = 6,
-    target_index = 6,
+    id = 6666666,
+    index = 6666666,
+    target_index = 6666666,
     spawn_flags = Ashita.Enum.Spawn_Flags.PET,
     in_party = false,
     in_alliance = false,
@@ -115,16 +115,18 @@ end
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Get_Mob = function(mob_id)
     if Debug.Enabled and Debug.Unit.Active then
-        if mob_id == 2 then
+        if mob_id == 2222222 then
             return Debug.Unit.Mob.PET
-        elseif mob_id == 3 then
+        elseif mob_id == 3333333 then
             return Debug.Unit.Mob.ENEMY
-        elseif mob_id == 4 then
+        elseif mob_id == 4444444 then
             return Debug.Unit.Mob.ENEMY_TWO
-        elseif mob_id == 5 then
+        elseif mob_id == 5555555 then
             return Debug.Unit.Mob.PLAYER_TWO
-        elseif mob_id == 6 then
+        elseif mob_id == 6666666 then
             return Debug.Unit.Mob.PET_TWO
+        else
+            if Debug.Unit.Mob.PLAYER.id then return Debug.Unit.Mob.PLAYER end
         end
     end
 end
@@ -142,7 +144,6 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Crit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Enspell())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Shadows())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Third_Eye())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Mob_Heal())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Off_Hand_Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Off_Hand_Miss())
@@ -224,6 +225,7 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Parry())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shadows())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Third_Eye())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Counter())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Guard())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shield())
@@ -340,28 +342,26 @@ end
 -- Check test results.
 ------------------------------------------------------------------------------------------------------
 ---@param test_name string
----@param player table
----@param player_catalog? table
----@param pet? table
----@param pet_catalog? table
----@param battle_log_data? table
----@param misc_data? table
+---@param package table
 ---@return table
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Check_Result = function(test_name, player, player_catalog, pet, pet_catalog, battle_log_data, misc_data)
+Debug.Unit.Check_Result = function(test_name, package)
     local error_count = 0
     local error_message = ""
 
-    if not player_catalog then player_catalog = T{} end
-    if not pet then pet = T{} end
-    if not pet_catalog then pet_catalog = T{} end
+    local player                     = package.player or {}
+    local player_catalog             = package.player_catalog or {}
+    local pet                        = package.pet or {}
+    local pet_catalog                = package.pet_catalog or {}
+    local battle_log                 = package.battle_log or {}
+    local misc                       = package.misc or {}
 
-    error_message, error_count = Debug.Unit.Test_Player(player, error_message, error_count)
-    error_message, error_count = Debug.Unit.Test_Player_Catalog(player_catalog, error_message, error_count)
-    error_message, error_count = Debug.Unit.Test_Pet_Database(pet, error_message, error_count)
-    error_message, error_count = Debug.Unit.Test_Pet_Catalog_Database(pet_catalog, error_message, error_count)
-    error_message, error_count = Debug.Unit.Check_Battle_Log(battle_log_data, error_message, error_count)
-    error_message, error_count = Debug.Unit.Check_Misc_Data(misc_data, error_message, error_count)
+    error_message, error_count = Debug.Unit.Test_Player("DB.Parse", DB.Parse, player, error_message, error_count)
+    error_message, error_count = Debug.Unit.Test_Player_Catalog("DB.Parse_Catalog", DB.Parse_Catalog, player_catalog, error_message, error_count)
+    error_message, error_count = Debug.Unit.Test_Pet_Database("DB.Pet_Parse", DB.Pet_Parse, pet, error_message, error_count)
+    error_message, error_count = Debug.Unit.Test_Pet_Catalog_Database("DB.Pet_Parse_Catalog", DB.Pet_Parse_Catalog, pet_catalog, error_message, error_count)
+    error_message, error_count = Debug.Unit.Check_Battle_Log(battle_log, error_message, error_count)
+    error_message, error_count = Debug.Unit.Check_Misc_Data(misc, error_message, error_count)
 
     local result = "Pass!"
     local color  = Res.Colors.Basic.GREEN
@@ -374,242 +374,71 @@ Debug.Unit.Check_Result = function(test_name, player, player_catalog, pet, pet_c
 end
 
 ------------------------------------------------------------------------------------------------------
--- Check DB.Parse player nodes.
+-- Check database player nodes.
 ------------------------------------------------------------------------------------------------------
+---@param name string
+---@param database table
 ---@param test_cases table
 ---@param error_message string
 ---@param error_count integer
 ---@return string
 ---@return integer
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Test_Player = function(test_cases, error_message, error_count)
-    -- Look for values in Parse that we aren't expecting.
-    for index, _ in pairs(DB.Parse) do
-        if not test_cases[index] then
-            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Player Parse had unexpected index: " .. tostring(index))
+Debug.Unit.Test_Player = function(name, database, test_cases, error_message, error_count)
+    local error = nil
 
-        -- If the index exists in the database and the test case then check the trackables and metrics.
+    -- Look for values in the database that we aren't expecting.
+    for player_name, _ in pairs(database) do
+        if not test_cases[player_name] then
+            error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "]"
+            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+
         else
-            for trackable, _ in pairs(DB.Parse[index]) do
-                for metric, value in pairs(DB.Parse[index][trackable]) do
+            for target_name, _ in pairs(database[player_name]) do
+                if not test_cases[player_name][target_name] then
+                    error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]"
+                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
 
-                    -- Test data that exists in both the Parse and player test cases.
-                    if test_cases[index][trackable] and test_cases[index][trackable][metric] then
-                        if test_cases[index][trackable][metric] == value then
-                            -- Pass
-                        elseif (metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and test_cases[index][trackable][metric] == DB.Enum.MAX_DAMAGE then
-                            -- Pass
-                        elseif test_cases[index][trackable][metric] == 0 then
-                            -- Pass
-                        else
-                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Parse Mismatch! "
-                            .. "Expected " .. tostring(test_cases[index][trackable][metric]) .. " Observed " .. tostring(value)
-                            .. " for " .. tostring(index) .. "|" .. tostring(trackable) .. "|" .. tostring(metric))
-                        end
-
-                    elseif metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
-                        if value == DB.Enum.MAX_DAMAGE then
-                            -- Pass
-                        else
-                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Parse Mismatch! "
-                            .. "Unexpected Parse value: " .. tostring(index) .. "|" .. tostring(trackable) .. "|" .. tostring(metric) .. "|" .. tostring(value))
-                        end
-
-                    -- Look for data that exists in Parse, but not the test cases.
-                    elseif value == 0 then
-                        -- Pass
-
-                    else
-                        error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Parse Mismatch! "
-                        .. "Unexpected Parse value: " .. tostring(index) .. "|" .. tostring(trackable) .. "|" .. tostring(metric) .. "|" .. tostring(value))
-
-                    end
-
-                end
-            end
-        end
-    end
-
-    -- Look for expected values that didn't make it into Parse.
-    for index, _ in pairs(test_cases) do
-        if not DB.Parse[index] then
-            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Player test cases had unexpected index: " .. tostring(index))
-        else
-            for trackable, _ in pairs(test_cases[index]) do
-                if not DB.Parse[index][trackable] then
-                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Player test cases had unexpected trackable: "
-                    .. tostring(trackable) .. " for " .. tostring(index))
+                -- If the index exists in the database and the test case then check the trackables and metrics.
                 else
-                    for metric, _ in pairs(test_cases[index][trackable]) do
-                        if not DB.Parse[index][trackable][metric] then
-                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Player test cases had unexpected metric: "
-                            .. tostring(metric) .. " for " .. tostring(index) .. "|" .. tostring(trackable))
-                        end
-                    end
-                end
-            end
-        end
-    end
+                    for trackable, _ in pairs(database[player_name][target_name]) do
+                        for metric, database_value in pairs(database[player_name][target_name][trackable]) do
 
-    return error_message, error_count
-end
-
-------------------------------------------------------------------------------------------------------
--- Check DB.Parse_Catalog nodes.
-------------------------------------------------------------------------------------------------------
----@param test_cases table
----@param error_message string
----@param error_count integer
----@return string
----@return integer
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Test_Player_Catalog = function(test_cases, error_message, error_count)
-    -- Look for values in Parse_Catalog that we aren't expecting.
-    for index, _ in pairs(DB.Parse_Catalog) do
-        if not test_cases[index] then
-            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Parse_Catalog had unexpected index: " .. tostring(index))
-
-        -- If the index exists in the database and the test case then check the action.
-        else
-            for action_name, _ in pairs(DB.Parse_Catalog[index]) do
-                if not test_cases[index][action_name] then
-                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Parse_Catalog had unexpected action: " .. tostring(action_name)
-                    .. " for " .. tostring(index))
-
-                -- If the action exists in the database and the test case then check the trackable.
-                else
-                    for trackable, _ in pairs(DB.Parse_Catalog[index][action_name]) do
-                        if not test_cases[index][action_name][trackable] then
-                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Parse_Catalog had unexpected trackable: "
-                            .. tostring(trackable) .. " for " .. tostring(index) .. "|" .. tostring(action_name))
-
-                        -- If the trackable exists in the database and the test case then check the metric.
-                        else
-                            for metric, value in pairs(DB.Parse_Catalog[index][action_name][trackable]) do
-
-                                -- Don't need check every metric in the test catalog because it will only have a select few metrics.
-                                if test_cases[index][action_name][trackable][metric] then
-                                    if test_cases[index][action_name][trackable][metric] == value then
-                                        -- Pass
-                                    elseif (metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and test_cases[index][action_name][trackable][metric] == DB.Enum.MAX_DAMAGE then
-                                        -- Pass
-                                    elseif test_cases[index][action_name][trackable][metric] == 0 then
-                                        -- Pass
-                                    else
-                                        error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Parse_Catalog Mismatch! "
-                                        .. "Expected " .. tostring(test_cases[index][action_name][trackable][metric]) .. " Observed " .. tostring(value)
-                                        .. " for " .. tostring(index) .. "|" .. tostring(action_name) .. "|" .. tostring(trackable) .. "|" .. tostring(metric))
-                                    end
-
-                                elseif metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
-                                    if value == DB.Enum.MAX_DAMAGE then
-                                        -- Pass
-                                    else
-                                        error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Parse_Catalog Mismatch! "
-                                        .. "Unexpected Parse value: " .. tostring(index) .. "|" .. tostring(action_name) .. "|" .. tostring(trackable)
-                                        .. "|" .. tostring(metric).. "|" .. tostring(value))
-                                    end
-
-                                -- Look for data that exists in Parse, but not the test cases.
-                                elseif value == 0 then
-                                    -- Pass
-
+                            -- Test data that the database data exists in the test cases.
+                            -- If the test data exists.
+                            if test_cases[player_name][target_name][trackable] and test_cases[player_name][target_name][trackable][metric] then
+                                local test_case_value = test_cases[player_name][target_name][trackable][metric]
+                                if test_case_value == database_value then
+                                    -- Pass (Match)
+                                elseif DB.Metric_Needs_Max_Value(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
+                                    -- Pass (Default Minimum)
+                                elseif test_case_value == 0 then
+                                    -- Pass (Default Zero)
                                 else
-                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Parse_Catalog Mismatch! "
-                                    .. "Unexpected Parse value: " .. tostring(index) .. "|" .. tostring(action_name) .. "|" .. tostring(trackable)
-                                    .. "|" .. tostring(metric).. "|" .. tostring(value))
+                                    error = "Mismatch: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]["
+                                    .. tostring(trackable) .. "][" .. tostring(metric) .. "] = " .. tostring(database_value) .. ". Expected: " .. tostring(test_case_value)
+                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
                                 end
 
-                            end
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    -- Look for expected values that didn't make it into Parse_Catalog.
-    for index, _ in pairs(test_cases) do
-        if not DB.Parse_Catalog[index] then
-            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Player Catalog test cases had unexpected index: " .. tostring(index))
-        else
-            for action_name, _ in pairs(test_cases[index]) do
-                if not DB.Parse_Catalog[index][action_name] then
-                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Player Catalog test cases had unexpected action_name: "
-                    .. tostring(action_name) .. " for " .. tostring(index))
-                else
-                    for trackable, _ in pairs(test_cases[index][action_name]) do
-                        if not DB.Parse_Catalog[index][action_name][trackable] then
-                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Player Catalog test cases had unexpected trackable: "
-                            .. tostring(trackable) .. " for " .. tostring(index) .. "|" .. tostring(action_name))
-                        end
-                    end
-                end
-            end
-        end
-    end
-
-    return error_message, error_count
-end
-
-------------------------------------------------------------------------------------------------------
--- Check DB.Pet_Parse database.
-------------------------------------------------------------------------------------------------------
----@param test_cases table
----@param error_message string
----@param error_count integer
----@return string
----@return integer
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Test_Pet_Database = function(test_cases, error_message, error_count)
-    -- Look for values in Parse that we aren't expecting.
-    for index, _ in pairs(DB.Pet_Parse) do
-        if not test_cases[index] then
-            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse had unexpected index: " .. tostring(index))
-
-        -- If the index exists in the database and the test case then check the pet name.
-        else
-            for pet_name, _ in pairs(DB.Pet_Parse[index]) do
-                if not test_cases[index][pet_name] then
-                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse had unexpected pet for: "
-                    .. tostring(index) .. "|" .. tostring(pet_name))
-
-                -- If the pet exists in the database and the test case then check the trackables and metrics.
-                else
-                    for trackable, _ in pairs(DB.Pet_Parse[index][pet_name]) do
-                        for metric, value in pairs(DB.Pet_Parse[index][pet_name][trackable]) do
-
-                            -- Test data that exists in both the database test cases.
-                            if test_cases[index][pet_name][trackable] and test_cases[index][pet_name][trackable][metric] then
-                                if test_cases[index][pet_name][trackable][metric] == value then
-                                    -- Pass
-                                elseif (metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and test_cases[index][pet_name][trackable][metric] == DB.Enum.MAX_DAMAGE then
-                                    -- Pass
-                                elseif test_cases[index][pet_name][trackable][metric] == 0 then
-                                    -- Pass
+                            -- I don't set minimums for every metric in the unit tests. Filter out defaulted minimums if not explicitly stated in the test case.
+                            elseif DB.Metric_Needs_Max_Value(metric) then
+                                if database_value == DB.Enum.MAX_DAMAGE then
+                                    -- Pass (Default Minimum)
                                 else
-                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse Mismatch! "
-                                    .. "Expected " .. tostring(test_cases[index][pet_name][trackable][metric]) .. " Observed " .. tostring(value)
-                                    .. " for " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(trackable) .. "|" .. tostring(metric))
+                                    error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]["
+                                    .. tostring(trackable) .. "][" .. tostring(metric) .. "] = " .. tostring(database_value)
+                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
                                 end
 
-                            elseif metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
-                                if value == DB.Enum.MAX_DAMAGE then
-                                    -- Pass
-                                else
-                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse Mismatch! "
-                                    .. "Unexpected value: " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(trackable) .. "|"
-                                    .. tostring(metric) .. "|" .. tostring(value))
-                                end
+                            -- I don't set zeroes for every metric in the unit tests. Filter out defaulted zeroes if not explicitly stated in the test case.
+                            elseif database_value == 0 then
+                                -- Pass (Default Zero)
 
-                            -- Look for data that exists in the database, but not the test cases.
-                            elseif value == 0 then
-                                -- Pass
-
+                            -- Found some data that was set in the database but is unaccounted for in the test cases.
                             else
-                                error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse Mismatch! "
-                                .. "Unexpected value: " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(trackable) .. "|"
-                                .. tostring(metric) .. "|" .. tostring(value))
+                                error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]["
+                                .. tostring(trackable) .. "][" .. tostring(metric) .. "] = " .. tostring(database_value)
+                                error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
 
                             end
 
@@ -620,32 +449,282 @@ Debug.Unit.Test_Pet_Database = function(test_cases, error_message, error_count)
         end
     end
 
-    -- Look for expected values that didn't make it into the database.
-    for index, _ in pairs(test_cases) do
-        if not DB.Pet_Parse[index] then
-            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet test cases had unexpected index: " .. tostring(index))
-
-        -- If the index exists in the database then check the pet name.
+    -- Look for test values that didn't get set in the database.
+    for player_name, _ in pairs(test_cases) do
+        if not database[player_name] then
+            error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "]"
+            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
         else
-            for pet_name, _ in pairs(test_cases[index]) do
-                if not DB.Pet_Parse[index][pet_name] then
-                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet test cases had unexpected pet: "
-                    .. tostring(index) .. "|" .. tostring(pet_name))
-
-                -- If the pet name exists in the database then check the trackables.
+            for target_name, _ in pairs(test_cases[player_name]) do
+                if not database[player_name][target_name] then
+                    error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]"
+                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
                 else
-                    for trackable, _ in pairs(test_cases[index][pet_name]) do
-                        if not DB.Pet_Parse[index][pet_name][trackable] then
-                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet test cases had unexpected trackable: "
-                            .. tostring(trackable) .. " for " .. tostring(index) .. "|" .. tostring(pet_name))
-
-                        -- If the trackable exists in the database then check the metrics.
+                    for trackable, _ in pairs(test_cases[player_name][target_name]) do
+                        if not database[player_name][target_name][trackable] then
+                            error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(target_name)
+                            .. "][" .. tostring(trackable) .. "]"
+                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
                         else
-                            for metric, _ in pairs(test_cases[index][pet_name][trackable]) do
-                               if not DB.Pet_Parse[index][pet_name][trackable][metric] then
-                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet test cases had unexpected metric: "
-                                    .. tostring(metric) .. " for " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(trackable))
-                               end
+                            for metric, _ in pairs(test_cases[player_name][target_name][trackable]) do
+                                if not database[player_name][target_name][trackable][metric] then
+                                    error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(target_name)
+                                    .. "][" .. tostring(trackable) .. "][" .. tostring(metric) .. "]"
+                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check player catalog nodes.
+------------------------------------------------------------------------------------------------------
+---@param name string
+---@param database table
+---@param test_cases table
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Test_Player_Catalog = function(name, database, test_cases, error_message, error_count)
+    local error = nil
+
+    -- Look for values in the database that we aren't expecting.
+    for player_name, _ in pairs(database) do
+        if not test_cases[player_name] then
+            error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "]"
+            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+
+        -- If the player exists in the database and the test case then check the target.
+        else
+            for target_name, _ in pairs(database[player_name]) do
+                if not test_cases[player_name][target_name] then
+                    error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]"
+                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+
+                -- If the target exists in the database and the test case then check the action.
+                else
+                    for action_name, _ in pairs(database[player_name][target_name]) do
+                        if not test_cases[player_name][target_name][action_name] then
+                            error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "][" .. tostring(action_name) .. "]"
+                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+
+                        -- If the action exists in the database and the test case then check the trackable.
+                        else
+                            for trackable, _ in pairs(database[player_name][target_name][action_name]) do
+                                if not test_cases[player_name][target_name][action_name][trackable] then
+                                    error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]["
+                                    .. tostring(action_name) .. "][" .. tostring(trackable) .. "]"
+                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+
+                                -- If the trackable exists in the database and the test case then check the metric.
+                                else
+                                    for metric, database_value in pairs(database[player_name][target_name][action_name][trackable]) do
+
+                                        -- Don't need check every metric in the test catalog because it will only have a select few metrics.
+                                        if test_cases[player_name][target_name][action_name][trackable][metric] then
+                                            local test_case_value = test_cases[player_name][target_name][action_name][trackable][metric]
+                                            if test_case_value == database_value then
+                                                -- Pass (Match)
+                                            elseif DB.Metric_Needs_Max_Value(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
+                                                -- Pass (Default Minimum)
+                                            elseif test_case_value == 0 then
+                                                -- Pass (Default Zero)
+                                            else
+                                                error = "Mismatch: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]["
+                                                .. tostring(action_name) .. "][" .. tostring(trackable) .. "][" .. tostring(metric) .. "] = "
+                                                .. tostring(database_value) .. ". Expected: " .. tostring(test_case_value)
+                                                error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                            end
+
+                                        -- I don't set minimums for every metric in the unit tests. Filter out defaulted minimums if not explicitly stated in the test case.
+                                        elseif DB.Metric_Needs_Max_Value(metric) then
+                                            if database_value == DB.Enum.MAX_DAMAGE then
+                                                -- Pass (Default Minimum)
+                                            else
+                                                error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]["
+                                                .. tostring(action_name) .. "][" .. tostring(trackable) .. "][" .. tostring(metric) .. "] = " .. tostring(database_value)
+                                                error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                            end
+
+                                        -- I don't set zeroes for every metric in the unit tests. Filter out defaulted zeroes if not explicitly stated in the test case.
+                                        elseif database_value == 0 then
+                                            -- Pass (Default Zero)
+
+                                        -- Found some data that was set in the database but is unaccounted for in the test cases.
+                                        else
+                                            error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]["
+                                            .. tostring(action_name) .. "][" .. tostring(trackable) .. "][" .. tostring(metric) .. "] = " .. tostring(database_value)
+                                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    -- Look for test values that didn't get set in the database.
+    for player_name, _ in pairs(test_cases) do
+        if not database[player_name] then
+            error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "]"
+            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+        else
+            for target_name, _ in pairs(test_cases[player_name]) do
+                if not database[player_name][target_name] then
+                    error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]"
+                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                else
+                    for action_name, _ in pairs(test_cases[player_name][target_name]) do
+                        if not database[player_name][target_name][action_name] then
+                            error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(target_name)
+                            .. "][" .. tostring(action_name) .. "]"
+                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                        else
+                            for trackable, _ in pairs(test_cases[player_name][target_name][action_name]) do
+                                if not database[player_name][target_name][action_name][trackable] then
+                                    error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(target_name) .. "]["
+                                    .. tostring(action_name) .. "][" .. tostring(trackable) .. "]"
+                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    return error_message, error_count
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check the pet database.
+------------------------------------------------------------------------------------------------------
+---@param name string
+---@param database table
+---@param test_cases table
+---@param error_message string
+---@param error_count integer
+---@return string
+---@return integer
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Test_Pet_Database = function(name, database, test_cases, error_message, error_count)
+    local error = nil
+
+    -- Look for values in the database that we aren't expecting.
+    for player_name, _ in pairs(database) do
+        if not test_cases[player_name] then
+            error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "]"
+            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+
+        -- If the player exists in the database and the test case then check the pet name.
+        else
+            for pet_name, _ in pairs(database[player_name]) do
+                if not test_cases[player_name][pet_name] then
+                    error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]"
+                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+
+                -- If the pet exists in the database and the test case then check the target name.
+                else
+                    for target_name, _ in pairs(database[player_name][pet_name]) do
+                        if not test_cases[player_name][pet_name][target_name] then
+                            error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "][" .. tostring(target_name) .. "]"
+                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+
+                        -- If the target exists in the database and the test case then check the trackables and metrics.
+                        else
+                            for trackable, _ in pairs(database[player_name][pet_name][target_name]) do
+                                for metric, database_value in pairs(database[player_name][pet_name][target_name][trackable]) do
+
+                                    -- Test data that the database data exists in the test cases.
+                                    -- If the test data exists.
+                                    if test_cases[player_name][pet_name][target_name][trackable] and test_cases[player_name][pet_name][target_name][trackable][metric] then
+                                        local test_case_value = test_cases[player_name][pet_name][target_name][trackable][metric]
+                                        if test_case_value == database_value then
+                                            -- Pass (Match)
+                                        elseif DB.Metric_Needs_Max_Value(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
+                                            -- Pass (Default Minimum)
+                                        elseif test_case_value == 0 then
+                                            -- Pass (Default Zero)
+                                        else
+                                            error = "Mismatch: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                            .. tostring(target_name) .. "][" .. tostring(trackable) .. "][" .. tostring(metric) .. "] = " .. tostring(database_value)
+                                            .. ". Expected: " .. tostring(test_case_value)
+                                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                        end
+
+                                    -- I don't set minimums for every metric in the unit tests. Filter out defaulted minimums if not explicitly stated in the test case.
+                                    elseif DB.Metric_Needs_Max_Value(metric) then
+                                        if database_value == DB.Enum.MAX_DAMAGE then
+                                            -- Pass (Default Minimum)
+                                        else
+                                            error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                            .. tostring(target_name) .. "][" .. tostring(trackable) .. "][" .. tostring(metric) .. "] = " .. tostring(database_value)
+                                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                        end
+
+                                    -- I don't set zeroes for every metric in the unit tests. Filter out defaulted zeroes if not explicitly stated in the test case.
+                                    elseif database_value == 0 then
+                                        -- Pass (Default Zero)
+
+                                    -- Found some data that was set in the database but is unaccounted for in the test cases.
+                                    else
+                                        error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                        .. tostring(target_name) .. "][" .. tostring(trackable) .. "][" .. tostring(metric) .. "] = " .. tostring(database_value)
+                                        error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                    end
+
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    -- Look for test values that didn't get set in the database.
+    for player_name, _ in pairs(test_cases) do
+        if not database[player_name] then
+            error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "]"
+            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+        else
+            for pet_name, _ in pairs(test_cases[player_name]) do
+                if not database[player_name][pet_name] then
+                    error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]"
+                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                else
+                    for target_name, _ in pairs(test_cases[player_name][pet_name]) do
+                        if not database[player_name][pet_name][target_name] then
+                            error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "][" .. tostring(target_name) .. "]"
+                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                        else
+                            for trackable, _ in pairs(test_cases[player_name][pet_name][target_name]) do
+                                if not database[player_name][pet_name][target_name][trackable] then
+                                    error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                    .. tostring(target_name) .. "][" .. tostring(trackable) .. "]"
+                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                else
+                                    for metric, _ in pairs(test_cases[player_name][pet_name][target_name][trackable]) do
+                                        if not database[player_name][pet_name][target_name][trackable][metric] then
+                                            error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                            .. tostring(target_name) .. "][" .. tostring(trackable) .. "][" .. tostring(metric) .. "]"
+                                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                        end
+                                    end
+                                end
                             end
                         end
                     end
@@ -666,71 +745,93 @@ end
 ---@return string
 ---@return integer
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Test_Pet_Catalog_Database = function(test_cases, error_message, error_count)
+Debug.Unit.Test_Pet_Catalog_Database = function(name, database, test_cases, error_message, error_count)
+    local error = nil
+
     -- Look for values in the database that we aren't expecting.
-    for index, _ in pairs(DB.Pet_Parse_Catalog) do
-        if not test_cases[index] then
-            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse_Catalog had unexpected index: " .. tostring(index))
+    for player_name, _ in pairs(database) do
+        if not test_cases[player_name] then
+            error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "]"
+            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
 
-        -- If the index exists in the database and the test case then check the pet name.
+        -- If the player exists in the database and the test case then check the pet name.
         else
-            for pet_name, _ in pairs(DB.Pet_Parse_Catalog[index]) do
-                if not test_cases[index][pet_name] then
-                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse_Catalog had unexpected pet name: "
-                    .. tostring(index .. "|" .. tostring(pet_name)))
+            for pet_name, _ in pairs(database[player_name]) do
+                if not test_cases[player_name][pet_name] then
+                    error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]"
+                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
 
-                -- If the pet name exists in the database and the test case then check the action.
+                -- If the pet name exists in the database and the test case then check the target name.
                 else
-                    for action_name, _ in pairs(DB.Pet_Parse_Catalog[index][pet_name]) do
-                        if not test_cases[index][pet_name][action_name] then
-                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse_Catalog had unexpected action: " .. tostring(action_name)
-                            .. " for " .. tostring(index) .. "|" .. tostring(pet_name))
+                    for target_name, _ in pairs(database[player_name][pet_name]) do
+                        if not test_cases[player_name][pet_name][target_name] then
+                            error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "][" .. tostring(target_name) .. "]"
+                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
 
-                        -- If the action exists in the database and the test case then check the trackable.
+                        -- If the target name exists in the database and the test case then check the action name.
                         else
-                            for trackable, _ in pairs(DB.Pet_Parse_Catalog[index][pet_name][action_name]) do
-                                if not test_cases[index][pet_name][action_name][trackable] then
-                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse_Catalog had unexpected trackable: "
-                                    .. tostring(trackable) .. " for " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(action_name))
+                            for action_name, _ in pairs(database[player_name][pet_name][target_name]) do
+                                if not test_cases[player_name][pet_name][target_name][action_name] then
+                                    error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                    .. tostring(target_name) .. "][" .. tostring(action_name) .. "]"
+                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
 
-                                -- If the trackable exists in the database and the test case then check the metric.
+                                -- If the action exists in the database and the test case then check the trackable.
                                 else
-                                    for metric, value in pairs(DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable]) do
+                                    for trackable, _ in pairs(database[player_name][pet_name][target_name][action_name]) do
+                                        if not test_cases[player_name][pet_name][target_name][action_name][trackable] then
+                                            error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                            .. tostring(target_name) .. "][" .. tostring(action_name) .. "][" .. tostring(trackable) .. "]"
+                                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
 
-                                        -- Don't need check every metric in the test catalog because it will only have a select few metrics.
-                                        if test_cases[index][pet_name][action_name][trackable][metric] then
-                                            if test_cases[index][pet_name][action_name][trackable][metric] == value then
-                                                -- Pass
-                                            elseif (metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN) and test_cases[index][pet_name][action_name][trackable][metric] == DB.Enum.MAX_DAMAGE then
-                                                -- Pass
-                                            elseif test_cases[index][pet_name][action_name][trackable][metric] == 0 then
-                                                -- Pass
-                                            else
-                                                error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse_Catalog Mismatch! "
-                                                .. "Expected " .. tostring(test_cases[index][pet_name][action_name][trackable][metric]) .. " Observed ".. tostring(value)
-                                                .. " for " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(action_name) .. "|" .. tostring(trackable)
-                                                .. "|" .. tostring(metric))
-                                            end
-
-                                        elseif metric == DB.Metric.MIN or metric == DB.Metric.CRITICAL_MIN then
-                                            if value == DB.Enum.MAX_DAMAGE then
-                                                -- Pass
-                                            else
-                                                error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse_Catalog Mismatch! "
-                                                .. "Unexpected Parse value: " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(action_name)
-                                                .. "|" .. tostring(trackable) .. "|" .. tostring(metric).. "|" .. tostring(value))
-                                            end
-
-                                        -- Look for data that exists in Parse, but not the test cases.
-                                        elseif value == 0 then
-                                            -- Pass
-
+                                        -- If the trackable exists in the database and the test case then check the metric.
                                         else
-                                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet_Parse_Catalog Mismatch! "
-                                            .. "Unexpected Parse value: " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(action_name)
-                                            .. "|" .. tostring(trackable) .. "|" .. tostring(metric).. "|" .. tostring(value))
-                                        end
+                                            for metric, database_value in pairs(DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable]) do
 
+                                                -- Test data that the database data exists in the test cases.
+                                                -- If the test data exists.
+                                                if test_cases[player_name][pet_name][target_name][action_name][trackable]
+                                                and test_cases[player_name][pet_name][target_name][action_name][trackable][metric] then
+                                                    local test_case_value = test_cases[player_name][pet_name][target_name][action_name][trackable][metric]
+                                                    if test_case_value == database_value then
+                                                        -- Pass (Match)
+                                                    elseif DB.Metric_Needs_Max_Value(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
+                                                        -- Pass (Default Minimum)
+                                                    elseif test_case_value == 0 then
+                                                        -- Pass (Default Zero)
+                                                    else
+                                                        error = "Mismatch: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                                        .. tostring(target_name) .. "][" .. tostring(action_name) .. "][ " .. tostring(trackable) .. "]["
+                                                        .. tostring(metric) .. "] = " .. tostring(database_value)
+                                                        .. ". Expected: " .. tostring(test_case_value)
+                                                        error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                                    end
+
+                                                -- I don't set minimums for every metric in the unit tests. Filter out defaulted minimums if not explicitly stated in the test case.
+                                                elseif DB.Metric_Needs_Max_Value(metric) then
+                                                    if database_value == DB.Enum.MAX_DAMAGE then
+                                                        -- Pass (Default Minimum)
+                                                    else
+                                                        error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                                        .. tostring(target_name) .. "][" .. tostring(action_name) .. "][" .. tostring(trackable) .. "]["
+                                                        .. tostring(metric) .. "] = " .. tostring(database_value)
+                                                        error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                                    end
+
+                                                -- I don't set zeroes for every metric in the unit tests. Filter out defaulted zeroes if not explicitly stated in the test case.
+                                                elseif database_value == 0 then
+                                                    -- Pass (Default Zero)
+
+                                                -- Found some data that was set in the database but is unaccounted for in the test cases.
+                                                else
+                                                    error = "Unexpected: " .. tostring(name) .. "[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                                    .. tostring(target_name) .. "][" .. tostring(action_name) .. "][" .. tostring(trackable) .. "]["
+                                                    .. tostring(metric) .. "] = " .. tostring(database_value)
+                                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                                end
+
+                                            end
+                                        end
                                     end
                                 end
                             end
@@ -741,31 +842,44 @@ Debug.Unit.Test_Pet_Catalog_Database = function(test_cases, error_message, error
         end
     end
 
-    -- Look for expected values that didn't make it into Pet_Parse_Catalog.
-    for index, _ in pairs(test_cases) do
-        if not DB.Pet_Parse_Catalog[index] then
-            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet Catalog test cases had unexpected index: " .. tostring(index))
-
-        -- If the index exists in the database then check for pet names.
+    -- Look for test values that didn't get set in the database.
+    for player_name, _ in pairs(test_cases) do
+        if not database[player_name] then
+            error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "]"
+            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
         else
-            for pet_name, _ in pairs(test_cases[index]) do
-                if not DB.Pet_Parse_Catalog[index][pet_name] then
-                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet Catalog test cases had unexpected pet: "
-                    .. tostring(index) .. "|" .. tostring(pet_name))
-
-                -- If the pet name exists in the database then check for actions.
+            for pet_name, _ in pairs(test_cases[player_name]) do
+                if not database[player_name][pet_name] then
+                    error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]"
+                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
                 else
-                    for action_name, _ in pairs(test_cases[index][pet_name]) do
-                        if not DB.Pet_Parse_Catalog[index][pet_name][action_name] then
-                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet Catalog test cases had unexpected action_name: "
-                            .. tostring(action_name) .. " for " .. tostring(index) .. "|" .. tostring(pet_name))
-
-                        -- If the action name exists in the database then check for trackables.
+                    for target_name, _ in pairs(test_cases[player_name][pet_name]) do
+                        if not database[player_name][pet_name][target_name] then
+                            error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "][" .. tostring(target_name) .. "]"
+                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
                         else
-                            for trackable, _ in pairs(test_cases[index][pet_name][action_name]) do
-                                if not DB.Pet_Parse_Catalog[index][pet_name][action_name][trackable] then
-                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Pet Catalog test cases had unexpected trackable: "
-                                    .. tostring(trackable) .. " for " .. tostring(index) .. "|" .. tostring(pet_name) .. "|" .. tostring(action_name))
+                            for action_name, _ in pairs(test_cases[player_name][pet_name][target_name]) do
+                                if not database[player_name][pet_name][target_name][action_name] then
+                                    error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                    .. tostring(target_name) .. "][" .. tostring(action_name) .. "]"
+                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                else
+                                    for trackable, _ in pairs(test_cases[player_name][pet_name][target_name][action_name]) do
+                                        if not database[player_name][pet_name][target_name][action_name][trackable] then
+                                            error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                            .. tostring(target_name) .. "][" .. tostring(action_name) .. "][" .. tostring(trackable) .. "]"
+                                            error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                        else
+                                            for metric, _ in pairs(test_cases[player_name][pet_name][target_name][action_name][trackable]) do
+                                                if not database[player_name][pet_name][target_name][action_name][trackable][metric] then
+                                                    error = tostring(name) .. " Unexpected: Test_Case[" .. tostring(player_name) .. "][" .. tostring(pet_name) .. "]["
+                                                    .. tostring(target_name) .. "][" .. tostring(action_name) .. "][" .. tostring(trackable) .. "]["
+                                                    .. tostring(metric) .. "]"
+                                                    error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, error)
+                                                end
+                                            end
+                                        end
+                                    end
                                 end
                             end
                         end
