@@ -243,8 +243,8 @@ Overview.Parse.Weaponskills = function()
 
                     -- Specific Weaponskills
                     if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-                        DB.Lists.Sort.Catalog_Damage(player_name, trackable)
-                        for _, single_data in ipairs(DB.Sorted.Catalog_Damage) do
+                        local sorted_catalog_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+                        for _, single_data in ipairs(sorted_catalog_damage) do
                             action_name = single_data[1]
 
                             UI.TableNextRow()
@@ -328,8 +328,8 @@ Overview.Parse.Nukes = function()
 
                     -- Specific Nuke Spells
                     if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-                        DB.Lists.Sort.Catalog_Damage(player_name, trackable)
-                        for _, single_data in ipairs(DB.Sorted.Catalog_Damage) do
+                        local sorted_catalog_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+                        for _, single_data in ipairs(sorted_catalog_damage) do
                             action_name = single_data[1]
 
                             UI.TableNextRow()
@@ -489,8 +489,8 @@ Overview.Parse.Healing = function()
 
                     -- Specific Healing Spells
                     if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-                        DB.Lists.Sort.Catalog_Damage(player_name, trackable)
-                        for _, single_data in ipairs(DB.Sorted.Catalog_Damage) do
+                        local sorted_catalog_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+                        for _, single_data in ipairs(sorted_catalog_damage) do
                             action_name = single_data[1]
 
                             UI.TableNextRow()

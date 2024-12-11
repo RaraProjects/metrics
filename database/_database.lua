@@ -81,8 +81,6 @@ DB.Initialize = function(manual_reset)
 
 	DB.Sorted.Players = {[1] = DB.Widgets.Dropdown.Enum.NONE}
 	DB.Sorted.Mobs = {[1] = DB.Enum.ALL_MOBS}
-	DB.Sorted.Total_Damage = {}
-	DB.Sorted.Catalog_Damage = {}
 
 	DB.Healing_Max = {}
 	DB.Widgets.Dropdown.Player.Focus = DB.Widgets.Dropdown.Enum.NONE
@@ -114,8 +112,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Team_Damage_By_Type = function(damage_type)
 	local total = 0
-	DB.Lists.Sort.Total_Damage()
-	for rank, data in ipairs(DB.Sorted.Total_Damage) do
+	local sorted_damage = DB.Lists.Sort.Total_Damage()
+	for rank, data in ipairs(sorted_damage) do
 		if rank <= Parse.Config.Rank_Cutoff() then
 			local player_name = data[1]
 			total = total + DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)

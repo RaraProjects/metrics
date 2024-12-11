@@ -21,20 +21,20 @@ Focus.Catalog.Weaponskill = function(player_name, focus_type)
 
     if UI.BeginTable(focus_type, 9, table_flags) then
         UI.TableSetupColumn("Weaponskill", col_flags, name_width)
-        UI.TableSetupColumn("Total", col_flags, width)
-        UI.TableSetupColumn("~TP", col_flags, width)
-        UI.TableSetupColumn("DMG/TP", col_flags, width)
-        UI.TableSetupColumn("Attempts", col_flags, width)
-        UI.TableSetupColumn("Accuracy", col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("Minimum", col_flags, width)
-        UI.TableSetupColumn("Maximum", col_flags, width)
+        UI.TableSetupColumn("Total",       col_flags, width)
+        UI.TableSetupColumn("~TP",         col_flags, width)
+        UI.TableSetupColumn("DMG/TP",      col_flags, width)
+        UI.TableSetupColumn("Attempts",    col_flags, width)
+        UI.TableSetupColumn("Accuracy",    col_flags, width)
+        UI.TableSetupColumn("Average",     col_flags, width)
+        UI.TableSetupColumn("Minimum",     col_flags, width)
+        UI.TableSetupColumn("Maximum",     col_flags, width)
         UI.TableHeadersRow()
 
-        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         local action_name
         local row = 1
-        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+        for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
@@ -68,18 +68,18 @@ Focus.Catalog.Skillchains = function(player_name, focus_type)
 
     if UI.BeginTable(focus_type, 7, table_flags) then
         UI.TableSetupColumn("Skillchain", col_flags, name_width)
-        UI.TableSetupColumn("Total", col_flags, width)
-        UI.TableSetupColumn("Opened", col_flags, width)
-        UI.TableSetupColumn("Closed", col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("Minimum", col_flags, width)
-        UI.TableSetupColumn("Maximum", col_flags, width)
+        UI.TableSetupColumn("Total",      col_flags, width)
+        UI.TableSetupColumn("Opened",     col_flags, width)
+        UI.TableSetupColumn("Closed",     col_flags, width)
+        UI.TableSetupColumn("Average",    col_flags, width)
+        UI.TableSetupColumn("Minimum",    col_flags, width)
+        UI.TableSetupColumn("Maximum",    col_flags, width)
         UI.TableHeadersRow()
 
-        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         local action_name
         local row = 1
-        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+        for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
@@ -113,17 +113,17 @@ Focus.Catalog.Abilities = function(player_name, focus_type, action_string)
     if UI.BeginTable(focus_type, 7, table_flags) then
         UI.TableSetupColumn(action_string, col_flags, name_width)
         UI.TableSetupColumn("Total",       col_flags, width)
-        UI.TableSetupColumn("Uses",    col_flags, width)
-        UI.TableSetupColumn("Accuracy",  col_flags, width)
+        UI.TableSetupColumn("Uses",        col_flags, width)
+        UI.TableSetupColumn("Accuracy",    col_flags, width)
         UI.TableSetupColumn("Average",     col_flags, width)
         UI.TableSetupColumn("Minimum",     col_flags, width)
         UI.TableSetupColumn("Maximum",     col_flags, width)
         UI.TableHeadersRow()
 
-        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         local action_name
         local row = 1
-        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+        for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
@@ -158,10 +158,10 @@ Focus.Catalog.Abilities_General = function(player_name)
         UI.TableSetupColumn("Uses",    col_flags, width)
         UI.TableHeadersRow()
 
-        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         local action_name
         local row = 1
-        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+        for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
@@ -200,9 +200,9 @@ Focus.Catalog.Endamage = function(player_name, focus_type, suffix)
         UI.TableSetupColumn("Maximum", col_flags, width)
         UI.TableHeadersRow()
 
-        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         local action_name
-        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+        for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
@@ -236,9 +236,9 @@ Focus.Catalog.Endebuff = function(player_name, focus_type, suffix)
         UI.TableSetupColumn("Procs", col_flags, width)
         UI.TableHeadersRow()
 
-        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         local action_name
-        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+        for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)

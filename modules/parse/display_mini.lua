@@ -20,8 +20,8 @@ Parse.Mini.Populate = function()
         if not player then return nil end
 
         local player_name = "Debug"
-        DB.Lists.Sort.Total_Damage()
-        for rank, data in ipairs(DB.Sorted.Total_Damage) do
+        local sorted_damage = DB.Lists.Sort.Total_Damage()
+        for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
                 player_name = data[1]
                 Parse.Mini.Rows(player_name)
@@ -29,7 +29,7 @@ Parse.Mini.Populate = function()
                 Parse.Mini.Rows(player.name)
             end
         end
-        if Metrics.Parse.Grand_Totals and #DB.Sorted.Total_Damage > 0 then Parse.Mini.Total_Row() end
+        if Metrics.Parse.Grand_Totals and #sorted_damage > 0 then Parse.Mini.Total_Row() end
 
         UI.EndTable()
     end

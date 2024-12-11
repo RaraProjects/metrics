@@ -1,4 +1,4 @@
-Report.Widgets = T{}
+Report.Widgets = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles the settings showing for the battle log.

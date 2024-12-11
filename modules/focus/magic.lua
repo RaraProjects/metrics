@@ -316,12 +316,10 @@ Focus.Magic.Single = function(player_name, focus_type)
         UI.TableSetupColumn("Maximum", col_flags, width)
         UI.TableHeadersRow()
 
-        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
-
-        -- Data
+        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         local action_name
         local row = 1
-        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+        for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             Focus.Magic.Single_Row(player_name, action_name, focus_type)
             Window_Manager.Table_Row_Color(row)
@@ -384,10 +382,10 @@ Focus.Magic.Spell_Single_Simple = function(player_name, trackable)
         UI.TableSetupColumn("Casts", col_flags, width)
         UI.TableHeadersRow()
 
-        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
         local action_name
         local row = 1
-        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+        for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)

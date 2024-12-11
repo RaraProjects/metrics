@@ -425,9 +425,9 @@ Focus.Overview.Weaponskill = function(player_name)
         local trackable = DB.Trackable.WEAPONSKILL
         local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
-            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            for _, data in ipairs(sorted_damage) do
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
@@ -557,9 +557,9 @@ Focus.Overview.Nuking = function(player_name, hide_mp)
         local trackable = DB.Trackable.SPELLS_NUKING
         local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
-            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            for _, data in ipairs(sorted_damage) do
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
@@ -607,9 +607,9 @@ Focus.Overview.Healing = function(player_name)
         local trackable = DB.Trackable.SPELLS_HEALING
         local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
-            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            for _, data in ipairs(sorted_damage) do
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
@@ -656,9 +656,9 @@ Focus.Overview.Healing_Received = function(player_name)
         local trackable = DB.Trackable.DEF_HEALING_RECEIVED
         local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
-            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            for _, data in ipairs(sorted_damage) do
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
@@ -745,9 +745,9 @@ Focus.Overview.Debuff = function(player_name, hide_mp)
         local trackable = DB.Trackable.SPELLS_ENFEEBLING
         local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
-            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            for _, data in ipairs(sorted_damage) do
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
@@ -790,9 +790,9 @@ Focus.Overview.Buff_Songs = function(player_name)
         local trackable = DB.Trackable.SPELLS_BUFF_SONG
         local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
-            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            for _, data in ipairs(sorted_damage) do
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
@@ -839,9 +839,9 @@ Focus.Overview.Phantom_Roll = function(player_name, full)
 
         local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
-            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            for _, data in ipairs(sorted_damage) do
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
@@ -891,9 +891,9 @@ Focus.Overview.Quick_Shot = function(player_name)
 
         local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
-            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            for _, data in ipairs(sorted_damage) do
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
@@ -934,9 +934,9 @@ Focus.Overview.Maneuvers = function(player_name)
 
         local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
-            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            for _, data in ipairs(sorted_damage) do
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
@@ -1004,9 +1004,9 @@ Focus.Overview.Spell = function(player_name)
         local trackable = DB.Trackable.SPELLS_OVERALL
         local row = 1
         if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
             local action_name
-            for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+            for _, data in ipairs(sorted_damage) do
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)

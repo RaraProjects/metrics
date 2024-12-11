@@ -1,4 +1,4 @@
-Report.Publishing = T{}
+Report.Publishing = {}
 
 Report.Publishing.Delay = 1.80
 Report.Publishing.Lock = false  -- Stops multiple reports from being pushed to chat at the same time.
@@ -16,8 +16,8 @@ Report.Publishing.Total_Damage = function()
         Report.Publishing.Lock = true
         local found = false
         Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Total Damage") coroutine.sleep(Report.Publishing.Delay)
-        DB.Lists.Sort.Total_Damage()
-        for rank, data in ipairs(DB.Sorted.Total_Damage) do
+        local sorted_damage = DB.Lists.Sort.Total_Damage()
+        for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
                 local player_name = data[1]
                 local player_total = Column.Damage.Total(player_name, false, false, true)
@@ -43,20 +43,28 @@ Report.Publishing.Accuracy = function()
     if not Report.Publishing.Lock then
         Report.Publishing.Lock = true
         local found = false
+
+        -- Header
         Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Total Accuracy") coroutine.sleep(Report.Publishing.Delay)
-        DB.Lists.Sort.Total_Damage()
-        for rank, data in ipairs(DB.Sorted.Total_Damage) do
+
+        -- Loop through the data.
+        local sorted_damage = DB.Lists.Sort.Total_Damage()
+        for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
+
                 local player_name = data[1]
                 local player_acc = Column.Acc.By_Type(player_name, DB.Enum.COMBINED, false, nil, true)
                 local chat_string = tostring(player_name) .. ": " .. tostring(player_acc) .. "%"
                 Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
                 found = true
+
             end
         end
+
         if not found then
             Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(Report.Publishing.Delay)
         end
+
         Report.Publishing.Lock = false
     end
 end
@@ -77,10 +85,15 @@ Report.Publishing.Damage_By_Type = function(trackable)
         local found = false
         local suffix = " Damage"
         if trackable == DB.Trackable.SPELLS_HEALING then suffix = "" end
+
+        -- Header
         Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Total " .. tostring(trackable) .. tostring(suffix)) coroutine.sleep(Report.Publishing.Delay)
+
+        -- Loop through the data.
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
+
                 local player_name = data[1]
                 local player_damage = Column.Damage.By_Type(player_name, trackable, false, nil, true)
                 local player_percent = Column.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)
@@ -89,11 +102,14 @@ Report.Publishing.Damage_By_Type = function(trackable)
                     Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
                     found = true
                 end
+
             end
         end
+
         if not found then
             Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(Report.Publishing.Delay)
         end
+
         Report.Publishing.Lock = false
     end
 end
@@ -109,6 +125,7 @@ Report.Publishing.Catalog = function(player_name, focus_type)
         Ashita.Chat.Message("There was an error trying to publish: No player name provided.")
         return nil
     end
+
     if not focus_type then focus_type = DB.Trackable.WEAPONSKILL end
     if not DB.Lists.Check.Catalog_Exists(player_name, focus_type) then
         Ashita.Chat.Message(tostring(player_name) .. " doesn't have " .. tostring(focus_type) .. " data to publish.")
@@ -118,26 +135,38 @@ Report.Publishing.Catalog = function(player_name, focus_type)
     if not Report.Publishing.Lock then
         Report.Publishing.Lock = true
         local found = false
+
+        -- Headers
         Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, tostring(focus_type) .. " for " .. tostring(player_name)) coroutine.sleep(Report.Publishing.Delay)
-        Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Total | Count | Average | Min | Max") coroutine.sleep(Report.Publishing.Delay)
+        Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "WS: Total (Count) ~Average Min<Max") coroutine.sleep(Report.Publishing.Delay)
+
+        -- Loop through weaponskill data.
         local action_name
-        DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
-        for _, data in ipairs(DB.Sorted.Catalog_Damage) do
+        local sorted_catalog_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        for _, data in ipairs(sorted_catalog_damage) do
             action_name = data[1]
             local total = Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL, false, true)
             local count = Column.Single.Attempts(player_name, action_name, focus_type, true)
             local average = Column.Single.Average(player_name, action_name, focus_type, true)
             local min = Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MIN, false, true)
-            if min == "100000" then min = "0" end
+            if min == tostring(DB.Enum.MAX_DAMAGE) then min = "0" end
             local max = Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MAX, false, true)
-            local chat_string = tostring(action_name) .. ": " .. tostring(total) .. " | " .. tostring(count) .. " | " 
-                                .. tostring(average) .. " | " .. tostring(min) .. " | " .. tostring(max)
+
+            local chat_string = tostring(action_name) .. ": " ..
+                                tostring(total) ..
+                                " (" .. tostring(count) .. ") " ..
+                                " ~" .. tostring(average) ..
+                                " "  .. tostring(min) ..
+                                "<"  .. tostring(max)
             Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
+
             found = true
         end
+
         if not found then
             Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(Report.Publishing.Delay)
         end
+
         Report.Publishing.Lock = false
     end
 end

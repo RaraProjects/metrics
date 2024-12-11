@@ -27,8 +27,8 @@ Parse.Full.Populate = function()
         Parse.Full.Headers()
 
         local player_name = DB.Enum.DEBUG
-        DB.Lists.Sort.Total_Damage()
-        for rank, data in ipairs(DB.Sorted.Total_Damage) do
+        local sorted_damage = DB.Lists.Sort.Total_Damage()
+        for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.Rank_Cutoff() then
                 player_name = data[1]
                 Parse.Full.Rows(player_name)
@@ -37,7 +37,7 @@ Parse.Full.Populate = function()
             end
             Window_Manager.Table_Row_Color(rank)
         end
-        if Metrics.Parse.Grand_Totals and #DB.Sorted.Total_Damage > 0 then Parse.Full.Total_Row() end
+        if Metrics.Parse.Grand_Totals and #sorted_damage > 0 then Parse.Full.Total_Row() end
 
         UI.EndTable()
     end

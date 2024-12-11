@@ -1,19 +1,17 @@
-DB.Lists = T{}
+DB.Lists = {}
 
 -- Sorted Lists
-DB.Sorted = T{}
-DB.Sorted.Players = T{}
-DB.Sorted.Mobs = T{}
-DB.Sorted.Total_Damage = T{}
-DB.Sorted.Pet_Damage = T{}
-DB.Sorted.Catalog_Damage = T{}
-DB.Sorted.Pet_Catalog_Damage = T{}
+DB.Sorted = {}
+DB.Sorted.Players = {}
+DB.Sorted.Mobs = {}
+DB.Sorted.Pet_Damage = {}
+DB.Sorted.Pet_Catalog_Damage = {}
 
 -- Function Containers
-DB.Lists.Get = T{}
-DB.Lists.Sort = T{}
-DB.Lists.Populate = T{}
-DB.Lists.Check = T{}
+DB.Lists.Get = {}
+DB.Lists.Sort = {}
+DB.Lists.Populate = {}
+DB.Lists.Check = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Retrieval function to get the list of mobs that have been acted upon.
@@ -45,13 +43,30 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sorting function for the sorting the total damage table.
 ------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
 DB.Lists.Sort.Total_Damage = function()
-	DB.Lists.Populate.Total_Damage()
-	table.sort(DB.Sorted.Total_Damage, function (a, b)
+	local sorted_damage = {}
+	local damage = nil
+
+	-- Loop through players to get their total damage.
+	for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
+		if Parse.Config.Include_SC_Damage() then
+			damage = DB.Data.Get(player_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+		else
+			damage = DB.Data.Get(player_name, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
+		end
+		table.insert(sorted_damage, {player_name, damage})
+	end
+
+	-- Sort the total damage.
+	table.sort(sorted_damage, function (a, b)
 		local a_damage = a[2]
 		local b_damage = b[2]
 		return (a_damage > b_damage)
 	end)
+
+	return sorted_damage
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -62,17 +77,23 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Sort.Damage_By_Type = function(trackable)
 	if not trackable then return {} end
+
 	local sorted_damage = {}
-	local damage
+	local damage = nil
+
+	-- Loop through players to get their total trackable damage.
 	for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
 		damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
 		table.insert(sorted_damage, {player_name, damage})
 	end
+
+	-- Sort the total trackable damage.
 	table.sort(sorted_damage, function (a, b)
 		local a_damage = a[2]
 		local b_damage = b[2]
 		return (a_damage > b_damage)
 	end)
+
 	return sorted_damage
 end
 
@@ -81,19 +102,32 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string name of the player that did the cataloged action
 ---@param focus_type string the trackable that is of interest.
+---@return table
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Sort.Catalog_Damage = function(player_name, focus_type)
 	if not player_name or not focus_type then
 		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Sort.Catalog_Damage", "Nil required parameter: Player {" .. tostring(player_name)
 		.. "} Focus Type {" .. tostring(focus_type) .. "}.")
-		return nil
+		return {}
 	end
-	DB.Lists.Populate.Catalog_Damage(player_name, focus_type)
-	table.sort(DB.Sorted.Catalog_Damage, function (a, b)
+	if not DB.Tracking.Trackable[focus_type] or not DB.Tracking.Trackable[focus_type][player_name] then
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Sort.Catalog_Damage", "Tracking uninitialized: Player {" .. tostring(player_name)
+		.. "} does not have data for focus type {" .. tostring(focus_type) .. "}.")
+		return {}
+	end
+
+	local sorted_damage = {}
+	for action_name, _ in pairs(DB.Tracking.Trackable[focus_type][player_name]) do
+		table.insert(sorted_damage, {action_name, DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.TOTAL)})
+	end
+
+	table.sort(sorted_damage, function (a, b)
 		local a_damage = a[2]
 		local b_damage = b[2]
 		return (a_damage > b_damage)
 	end)
+
+	return sorted_damage
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -109,47 +143,6 @@ DB.Lists.Sort.Pet_Catalog_Damage = function(player_name, pet_name)
 		local b_damage = b[2]
 		return (a_damage > b_damage)
 	end)
-end
-
-------------------------------------------------------------------------------------------------------
--- Builds the sorted total damage table.
--- This table contains the total amount of damage that each recognized player has done.
--- Capable of filtering out skillchain damage.
-------------------------------------------------------------------------------------------------------
-DB.Lists.Populate.Total_Damage = function()
-	DB.Sorted.Total_Damage = {}
-	local damage
-	for index, _ in pairs(DB.Tracking.Initialized_Players) do
-		if Parse.Config.Include_SC_Damage() then
-			damage = DB.Data.Get(index, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
-		else
-			damage = DB.Data.Get(index, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
-		end
-		table.insert(DB.Sorted.Total_Damage, {index, damage})
-	end
-end
-
-------------------------------------------------------------------------------------------------------
--- Builds the sorted cataloged damage table.
--- This table contains the total amount of damage that each recognized player has done for a cataloged action.
-------------------------------------------------------------------------------------------------------
----@param player_name string name of the player that did the cataloged action
----@param focus_type string the trackable that is of interest.
-------------------------------------------------------------------------------------------------------
-DB.Lists.Populate.Catalog_Damage = function(player_name, focus_type)
-	if not player_name or not focus_type then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Populate.Catalog_Damage", "Nil required parameter: Player {" .. tostring(player_name)
-		.. "} Focus Type {" .. tostring(focus_type) .. "}.")
-		return nil
-	elseif not DB.Tracking.Trackable[focus_type] or not DB.Tracking.Trackable[focus_type][player_name] then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Populate.Catalog_Damage", "Tracking uninitialized: Player {" .. tostring(player_name)
-		.. "} does not have data for focus type {" .. tostring(focus_type) .. "}.")
-		return nil
-	end
-	DB.Sorted.Catalog_Damage = {}
-	for action_name, _ in pairs(DB.Tracking.Trackable[focus_type][player_name]) do
-		table.insert(DB.Sorted.Catalog_Damage, {action_name, DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.TOTAL)})
-	end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -169,7 +162,7 @@ DB.Lists.Populate.Pet_Damage = function(player_name)
 		return nil
 	end
 
-	DB.Sorted.Pet_Damage = T{}
+	DB.Sorted.Pet_Damage = {}
 	local damage = 0
 	for pet_name, _ in pairs(DB.Tracking.Initialized_Pets[player_name]) do
 		if Parse.Config.Include_SC_Damage() then

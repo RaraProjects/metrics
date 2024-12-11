@@ -1,4 +1,4 @@
-Report = T{}
+Report = {}
 
 Report.Name   = "Report"
 Report.Title  = "Metrics - Reporting"
@@ -9,7 +9,7 @@ Report.Window = Window:New({
     Module = Report.Module,
 })
 
-Report.Section = T{}
+Report.Section = {}
 
 require("modules.report.config")
 require("modules.report.publishing")
@@ -38,51 +38,23 @@ Report.Section.Chat_Reports = function()
         UI.TableSetupColumn("Col 3", col_flags, width)
         UI.TableSetupColumn("Col 4", col_flags, width)
 
+        -- The early returns are necessary for crash prevention.
         UI.TableNextRow()
-        UI.TableNextColumn()
-        if UI.Button("Total Damage") then
-            Report.Publishing.Total_Damage()
-            return nil
-        end
-        UI.TableNextColumn()
-        if UI.Button("Accuracy    ") then
-            Report.Publishing.Accuracy()
-            return nil
-        end
+        UI.TableNextColumn() if UI.Button("Total Damage") then Report.Publishing.Total_Damage() return nil end
+        UI.TableNextColumn() if UI.Button("Accuracy    ") then Report.Publishing.Accuracy() return nil end
         UI.TableNextColumn()
         UI.TableNextColumn()
         --
-        UI.TableNextColumn()
-        if UI.Button("Melee       ") then
-            Report.Publishing.Damage_By_Type(DB.Trackable.MELEE_OVERALL)
-            return nil
-        end
-        UI.TableNextColumn()
-        if UI.Button("Weaponskills") then
-            Report.Publishing.Damage_By_Type(DB.Trackable.WEAPONSKILL)
-            return nil
-        end
-        UI.TableNextColumn()
-        if UI.Button("Magic       ") then
-            Report.Publishing.Damage_By_Type(DB.Trackable.SPELLS_OVERALL)
-            return nil
-        end
-        UI.TableNextColumn()
-        if UI.Button("Pet         ") then
-            Report.Publishing.Damage_By_Type(DB.Trackable.PET_OVERALL)
-            return nil
-        end
+        UI.TableNextColumn() if UI.Button("Melee       ") then Report.Publishing.Damage_By_Type(DB.Trackable.MELEE_OVERALL) return nil end
+        UI.TableNextColumn() if UI.Button("Weaponskills") then Report.Publishing.Damage_By_Type(DB.Trackable.WEAPONSKILL) return nil end
+        UI.TableNextColumn() if UI.Button("Magic       ") then Report.Publishing.Damage_By_Type(DB.Trackable.SPELLS_OVERALL) return nil end
+        UI.TableNextColumn() if UI.Button("Pet         ") then Report.Publishing.Damage_By_Type(DB.Trackable.PET_OVERALL) return nil end
         --
+        UI.TableNextColumn() if UI.Button("Abilities   ") then Report.Publishing.Damage_By_Type(DB.Trackable.ABILITY_DAMAGING) return nil end
+        UI.TableNextColumn() if UI.Button("Healing     ") then Report.Publishing.Damage_By_Type(DB.Trackable.ALL_HEAL) return nil end
         UI.TableNextColumn()
-        if UI.Button("Abilities   ") then
-            Report.Publishing.Damage_By_Type(DB.Trackable.ABILITY_DAMAGING)
-            return nil
-        end
         UI.TableNextColumn()
-        if UI.Button("Healing     ") then
-            Report.Publishing.Damage_By_Type(DB.Trackable.ALL_HEAL)
-            return nil
-        end
+
         UI.EndTable()
     end
 end
