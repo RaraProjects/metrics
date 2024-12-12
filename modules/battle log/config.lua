@@ -1,6 +1,6 @@
-Blog.Config = T{}
+Blog.Config = {}
 
-Blog.Config.Defaults = {                -- Default values that populate the Metrics settings global.
+Blog.Config.Defaults = T{                -- Default values that populate the Metrics settings global.
     X         = 100,                    -- Window settings. The names need to match what the Window Manager is expecting.
     Y         = 100,
     Visible   = {true},
@@ -20,6 +20,7 @@ Blog.Config.Defaults = {                -- Default values that populate the Metr
     Show_Healing          = true,
     Show_Player_Deaths    = false,
     Show_Mob_Melee        = false,
+    Show_Mob_Ranged       = false,
     Show_Mob_TP           = false,
     Show_Mob_Spells       = false,
     Show_Mob_Deaths       = true,
@@ -127,6 +128,7 @@ Blog.Config.Column_Settings = function()
         UI.TableSetupColumn("Col 3", col_flags, width)
 
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Melee",        Blog.Settings, "Show_Mob_Melee")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Ranged",       Blog.Settings, "Show_Mob_Ranged")
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("TP/Abilities", Blog.Settings, "Show_Mob_TP")
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Spells",       Blog.Settings, "Show_Mob_Spells")
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Deaths",       Blog.Settings, "Show_Mob_Deaths")

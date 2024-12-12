@@ -31,7 +31,7 @@ DB.Settings = {}
 DB.Settings.Accuracy_Warning = 0.80
 
 -- These are used for user saved settings.
-DB.Defaults = {
+DB.Defaults = T{
 	Running_Accuracy_Limit = 25
 }
 

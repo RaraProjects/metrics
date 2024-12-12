@@ -77,6 +77,7 @@ Window_Manager.Menu.Types = T{
     cmbhlst  = true,    -- Synthesis History
     mapv2    = true,    -- Map marker creation
     mapv3    = true,    -- Map markers
+    inspect  = true,    -- Checking equipment
 }
 
 -- ------------------------------------------------------------------------------------------------------

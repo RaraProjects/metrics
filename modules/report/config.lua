@@ -1,6 +1,6 @@
-Report.Config = T{}
+Report.Config = {}
 
-Report.Config.Defaults = {
+Report.Config.Defaults = T{
     X = 100,
     Y = 100,
     Visible = {true},

@@ -1,4 +1,4 @@
-Hub.Config = T{}
+Hub.Config = {}
 
 Hub.Config.Defaults = T{
     X = 100,

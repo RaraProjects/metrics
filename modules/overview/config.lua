@@ -1,4 +1,4 @@
-Overview.Config = T{}
+Overview.Config = {}
 
 Overview.Config.Defaults = T{
     X = 100,

@@ -1,4 +1,4 @@
-H.TP_Def = T{}
+H.TP_Def = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Parse the finish monster TP move packet.
@@ -7,7 +7,7 @@ H.TP_Def = T{}
 ------------------------------------------------------------------------------------------------------
 ---@param action table action packet data.
 ---@param actor_mob table the mob data of the entity performing the action.
----@param owner_mob table|nil (if pet) the mob data of the entity's owner.
+---@param owner_mob? table (if pet) the mob data of the entity's owner.
 ---@param log_defense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
 H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
@@ -17,6 +17,11 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
     if not skill_data then return nil end
     local skill_name = skill_data.en
     local action_id = skill_data.id
+
+    if skill_name and skill_name == "Ranged Attack" then
+        H.Ranged_Def.Action(action, actor_mob, owner_mob, log_defense)
+        return nil
+    end
 
     local result, target_mob
     local damage = 0

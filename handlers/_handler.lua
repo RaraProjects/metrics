@@ -3,6 +3,7 @@ H = {}
 require("handlers.melee")
 require("handlers.melee_def")
 require("handlers.ranged")
+require("handlers.ranged_def")
 require("handlers.tp_action")
 require("handlers.tp_action_def")
 require("handlers.abilities")

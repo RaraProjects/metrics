@@ -1,4 +1,4 @@
-Parse.Config = T{}
+Parse.Config = {}
 
 -- Default settings are saved to file.
 Parse.Config.Defaults = T{

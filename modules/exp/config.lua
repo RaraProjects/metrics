@@ -1,4 +1,4 @@
-XP.Config = T{}
+XP.Config = {}
 
 XP.Config.Defaults = T{
     X               = 100,
@@ -30,7 +30,7 @@ XP.Config.Defaults = T{
     Boost_EXP       = 0,
 }
 
-XP.Config.Total_Mode_List = T{
+XP.Config.Total_Mode_List = {
     [1] = "Combined",
     [2] = "Split",
 }

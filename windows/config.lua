@@ -1,4 +1,4 @@
-Window_Manager.Config = T{}
+Window_Manager.Config = {}
 
 Window_Manager.Config.Defaults = T{
     Alpha = 1.0,

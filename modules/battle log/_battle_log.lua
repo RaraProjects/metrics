@@ -45,6 +45,7 @@ Blog.Action_Type = {
     MELEE           = "Melee",
     MOB_DEATH       = "Mob Death",
     MOB_MELEE       = "Mob Melee",
+    MOB_RANGED      = "Mob Ranged",
     MOB_TP          = "Mob TP",
     MOB_SPELL       = "Mob Spell",
     PET_COMMAND     = "Pet Command",
@@ -199,6 +200,7 @@ Blog.Action_Filter = function(action_flag)
     elseif action_flag == Blog.Action_Type.MAGIC_ENFEEBLE  then return Blog.Settings.Show_Enfeebling
     elseif action_flag == Blog.Action_Type.MELEE           then return Blog.Settings.Show_Melee
     elseif action_flag == Blog.Action_Type.MOB_MELEE       then return Blog.Settings.Show_Mob_Melee
+    elseif action_flag == Blog.Action_Type.MOB_RANGED      then return Blog.Settings.Show_Mob_Ranged
     elseif action_flag == Blog.Action_Type.MOB_DEATH       then return Blog.Settings.Show_Mob_Deaths
     elseif action_flag == Blog.Action_Type.MOB_TP          then return Blog.Settings.Show_Mob_TP
     elseif action_flag == Blog.Action_Type.MOB_SPELL       then return Blog.Settings.Show_Mob_Spells

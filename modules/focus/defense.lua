@@ -57,6 +57,14 @@ Focus.Defense.Damage_Taken = function(player_name)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
+        UI.TableNextColumn() UI.Text("Ranged")
+        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_RANGED)
+        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_RANGED, true)
+        UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_RANGED)
+        if pet_dt > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_RANGED_PET) end
+        Window_Manager.Table_Row_Color(row)
+        row = row + 1
+
         UI.TableNextColumn() UI.Text("Magic")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_NUKING)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_NUKING, true)

@@ -1,4 +1,4 @@
-Focus.Config = T{}
+Focus.Config = {}
 
 Focus.Config.Defaults = T{
     X = 100,
