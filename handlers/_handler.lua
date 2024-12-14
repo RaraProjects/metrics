@@ -265,9 +265,10 @@ end
 ---@param trackable string
 ---@param damage integer
 ---@param action_name string
+---@param burst? boolean
 ------------------------------------------------------------------------------------------------------
-H.Offense.Catalog_Hit = function(audits, trackable, damage, action_name)
-    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, action_name, audits.pet_name)
+H.Offense.Catalog_Hit = function(audits, trackable, damage, action_name, burst)
+    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, action_name, audits.pet_name, burst)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -285,16 +286,25 @@ H.Offense.Catalog_No_Damage_Hit = function(audits, trackable, action_name)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Spell cast.
+-- Action used outside of the target loop.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param trackable string
----@param damage integer
----@param mp_spent integer
+---@param hit boolean
+---@param mp_spent? integer If the action is spell
 ------------------------------------------------------------------------------------------------------
-H.Offense.Spell_Cast = function(audits, trackable, damage, mp_spent)
-    H.Offense.Hit(audits, trackable, damage)
-    DB.Data.Update(DB.Update_Mode.INC, mp_spent, audits, trackable, DB.Metric.MP_SPENT)
+H.Offense.Action_Used = function(audits, trackable, action_name, hit, mp_spent)
+    if hit then
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_USE)
+    end
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
+
+    if mp_spent then
+        DB.Data.Update(DB.Update_Mode.INC, mp_spent, audits, trackable, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, mp_spent, audits, trackable, action_name, DB.Metric.MP_SPENT)
+    end
 end
 
 -- ------------------------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-Res = T{}
+Res = {}
 
 require("resources.monster_abilities_curated")
 require("resources.weapon_skills_curated")

@@ -42,6 +42,7 @@ Blog.Action_Type = {
     DISPEL          = "Dispel",
     MAGIC_OFFENSIVE = "Offensive Magic",
     MAGIC_ENFEEBLE  = "Enfeeble",
+    MAGIC_MISC      = "Misc Spells",
     MELEE           = "Melee",
     MOB_DEATH       = "Mob Death",
     MOB_MELEE       = "Mob Melee",
@@ -198,6 +199,7 @@ Blog.Action_Filter = function(action_flag)
     elseif action_flag == Blog.Action_Type.DISPEL          then return Blog.Settings.Show_Enfeebling
     elseif action_flag == Blog.Action_Type.MAGIC_OFFENSIVE then return Blog.Settings.Show_Spells
     elseif action_flag == Blog.Action_Type.MAGIC_ENFEEBLE  then return Blog.Settings.Show_Enfeebling
+    elseif action_flag == Blog.Action_Type.MAGIC_MISC      then return Blog.Settings.Show_Misc_Spells
     elseif action_flag == Blog.Action_Type.MELEE           then return Blog.Settings.Show_Melee
     elseif action_flag == Blog.Action_Type.MOB_MELEE       then return Blog.Settings.Show_Mob_Melee
     elseif action_flag == Blog.Action_Type.MOB_RANGED      then return Blog.Settings.Show_Mob_Ranged

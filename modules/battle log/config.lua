@@ -13,6 +13,7 @@ Blog.Config.Defaults = T{                -- Default values that populate the Met
     Show_Song_Buffs       = false,
     Show_Phantom_Roll     = false,
     Show_Enfeebling       = true,
+    Show_Misc_Spells      = false,
     Show_Ability          = true,
     Show_Pet_TP           = true,
     Show_Pet_Melee        = true,
@@ -102,6 +103,7 @@ Blog.Config.Column_Settings = function()
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Weaponskills", Blog.Settings, "Show_Weaponskill")
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Skillchains",  Blog.Settings, "Show_Skillchain")
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Nukes",        Blog.Settings, "Show_Spells")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Misc Spells",  Blog.Settings, "Show_Misc_Spells")
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Song Buffs",   Blog.Settings, "Show_Song_Buffs")
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Phantom Roll", Blog.Settings, "Show_Phantom_Roll")
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Abilities",    Blog.Settings, "Show_Ability")
