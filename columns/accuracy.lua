@@ -13,17 +13,17 @@ Column.Acc = T{}
 ------------------------------------------------------------------------------------------------------
 Column.Acc.By_Type = function(player_name, acc_type, justify, count_type, raw)
     local hits, attempts
-    if not count_type then count_type = DB.Metric.HIT_COUNT end
+    if not count_type then count_type = DB.Metric.HITS_ON_USE end
     if acc_type == DB.Enum.COMBINED then
-        local melee_hits = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.HIT_COUNT)
-        local melee_attempts = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.ATTEMPTS)
-        local ranged_hits = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.HIT_COUNT)
-        local ranged_attempts = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS)
+        local melee_hits = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.HITS_ON_USE)
+        local melee_attempts = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
+        local ranged_hits = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.HITS_ON_USE)
+        local ranged_attempts = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
         hits = melee_hits + ranged_hits
         attempts = melee_attempts + ranged_attempts
     else
         hits = DB.Data.Get(player_name, acc_type, count_type)
-        attempts = DB.Data.Get(player_name, acc_type, DB.Metric.ATTEMPTS)
+        attempts = DB.Data.Get(player_name, acc_type, DB.Metric.ATTEMPTS_ON_USE)
     end
 
     local color = Res.Colors.Basic.WHITE
@@ -49,9 +49,9 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Acc.Pet_By_Type = function(player_name, pet_name, acc_type, justify, count_type)
-    if not count_type then count_type = DB.Metric.HIT_COUNT end
+    if not count_type then count_type = DB.Metric.HITS_ON_USE end
     local hits = DB.Pet_Data.Get(player_name, pet_name, acc_type, count_type)
-    local attempts = DB.Pet_Data.Get(player_name, pet_name, acc_type, DB.Metric.ATTEMPTS)
+    local attempts = DB.Pet_Data.Get(player_name, pet_name, acc_type, DB.Metric.ATTEMPTS_ON_USE)
 
     local color = Res.Colors.Basic.WHITE
     local percent = Column.String.Raw_Percent(hits, attempts)

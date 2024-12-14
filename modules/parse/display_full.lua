@@ -112,7 +112,7 @@ Parse.Full.Rows = function(player_name)
     if Metrics.Parse.Weaponskill then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL, false, true) end
     if Metrics.Parse.Average_WS then   UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.WEAPONSKILL, true) end
     if Metrics.Parse.WS_TP then        UI.TableNextColumn() Column.Damage.Average_TP(player_name, true) end
-    if Metrics.Parse.WS_Accuracy then  UI.TableNextColumn() Column.General.Fraction(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.HIT_COUNT, DB.Metric.ATTEMPTS, true) end
+    if Metrics.Parse.WS_Accuracy then  UI.TableNextColumn() Column.General.Fraction(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.HITS_ON_USE, DB.Metric.ATTEMPTS_ON_USE, true) end
     if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, false, true) end
     if Metrics.Parse.Ranged then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL, false, true) end
     if Metrics.Parse.Ranged_Acc then   UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, true) end

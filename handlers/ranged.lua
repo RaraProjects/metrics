@@ -49,8 +49,9 @@ H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
     if not actor_mob or not target_mob then return 0 end
 
     Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Ranged", result)
-    local damage = result.param
+    local damage     = result.param
     local message_id = result.message
+    local no_damage  = H.No_Damage_Messages(result)
 
     -- Need special handling for pets
     local player_name = actor_mob.name
@@ -65,151 +66,84 @@ H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
         target_name = target_mob.name,
     }
 
-    local no_damage = H.Ranged.No_Damage_Messages(result)
-    H.Ranged.Totals(audits, damage, ranged_type)                    -- Totals
-    H.Ranged.Pet_Total(owner_mob, audits, damage)                   -- Pet Totals
-    H.Ranged.Message(message_id, audits, damage, ranged_type)       -- Accuracy and misc. traits.
-    H.Ranged.Min_Max(damage, audits, ranged_type, message_id)       -- Min/Max
-    damage = damage + H.Ranged.Additional_Effect(audits, result)    -- Additional Effects
-    H.Ranged.Distance(audits, actor_mob, target_mob, ranged_type)   -- Shot Distance
+    local was_critical_hit = H.Ranged.Message(audits, damage, message_id, ranged_type, owner_mob)
+
+    -- Avoid setting any damage data if the shot missed or healed a mob or something.
+    if not no_damage then
+        H.Offense.Grand_Totals(audits, damage, owner_mob)
+        H.Offense.Min_Max(audits, ranged_type, damage, was_critical_hit)
+    end
+
+    -- This has its own damage separate from the intiial ranged shot.
+    damage = damage + H.Ranged.Additional_Effect(audits, result)
+
+    -- Shot Distance
+    H.Ranged.Distance(audits, actor_mob, target_mob, ranged_type)
+
+    -- Flag for the battle log.
     if no_damage then damage = -1 end
 
     return damage
 end
 
 ------------------------------------------------------------------------------------------------------
--- Certain messages may come in with damage, but it's not actually damage.
--- Need to set the damage to zero for these cases.
-------------------------------------------------------------------------------------------------------
----@param result table
----@return boolean whether or not the damage from this should be treated as actual damage or not.
-------------------------------------------------------------------------------------------------------
-H.Ranged.No_Damage_Messages = function(result)
-    local message_id = result.message
-    local add_effect_message_id = result.add_effect_message
-    return message_id == Ashita.Enum.Message.DODGE or
-           message_id == Ashita.Enum.Message.MISS or
-           message_id == Ashita.Enum.Message.RANGEMISS or
-           message_id == Ashita.Enum.Message.SHADOWS or
-           message_id == Ashita.Enum.Message.MOBHEAL373 or
-           add_effect_message_id == Ashita.Enum.Message.ENASPIR
-end
-
-------------------------------------------------------------------------------------------------------
--- Increment Grand Totals.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param ranged_type string player ranged or melee ranged.
-------------------------------------------------------------------------------------------------------
-H.Ranged.Totals = function(audits, damage, ranged_type)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE,               DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type,                             DB.Metric.ATTEMPTS)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_SQUARE_HIT,          DB.Metric.ATTEMPTS)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_TRUE_STRIKE,         DB.Metric.ATTEMPTS)
-    DB.Total_Damage = DB.Total_Damage + damage
-    DB.Total_Damage_No_Skillchain = DB.Total_Damage_No_Skillchain + damage
-end
-
-------------------------------------------------------------------------------------------------------
--- Increment total pet damage.
-------------------------------------------------------------------------------------------------------
----@param owner_mob table|nil if the action was from a pet then this will hold the owner's mob.
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
-------------------------------------------------------------------------------------------------------
-H.Ranged.Pet_Total = function(owner_mob, audits, damage)
-    if owner_mob then
-        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
-    end
-end
-
-------------------------------------------------------------------------------------------------------
 -- Handle the various metrics based on message.
 ------------------------------------------------------------------------------------------------------
----@param message_id number numberic identifier for system chat messages.
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param damage number
----@param ranged_type string player ranged or melee ranged.
+---@param message_id number numberic identifier for system chat messages.
+---@param overall_ranged_type string player ranged or melee ranged.
+---@param owner_mob? table
+---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Ranged.Message = function(message_id, audits, damage, ranged_type)
+H.Ranged.Message = function(audits, damage, message_id, overall_ranged_type, owner_mob)
+    local was_critical_hit = false
+
     if message_id == Ashita.Enum.Message.RANGEHIT then
-        H.Ranged.Hit(audits, damage, ranged_type)
-    elseif message_id == Ashita.Enum.Message.SQUARE then
-        H.Ranged.Square(audits, damage, ranged_type)
-    elseif message_id == Ashita.Enum.Message.TRUE then
-        H.Ranged.Truestrike(audits, damage, ranged_type)
-    elseif message_id == Ashita.Enum.Message.RANGECRIT then
-        H.Ranged.Crit(audits, damage, ranged_type)
-    elseif message_id == Ashita.Enum.Message.RANGEPUP then
-        H.Ranged.PUP_Hit(audits, damage, ranged_type)
+        H.Offense.Hit(audits, overall_ranged_type, damage)
+        H.Offense.Miss(audits, DB.Trackable.RANGED_SQUARE_HIT)
+        H.Offense.Miss(audits, DB.Trackable.RANGED_TRUE_STRIKE)
+        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
+
     elseif message_id == Ashita.Enum.Message.RANGEMISS then
-        H.Ranged.Miss(audits, damage, ranged_type)
+        H.Offense.Miss(audits, overall_ranged_type)
+        H.Offense.Miss(audits, DB.Trackable.RANGED_SQUARE_HIT)
+        H.Offense.Miss(audits, DB.Trackable.RANGED_TRUE_STRIKE)
+        H.Offense.Update_Recent_Accuracy(audits, false, owner_mob)
+
+    elseif message_id == Ashita.Enum.Message.SQUARE then
+        H.Offense.Hit(audits, overall_ranged_type, damage)
+        H.Offense.Hit(audits, DB.Trackable.RANGED_SQUARE_HIT, damage)
+        H.Offense.Miss(audits, DB.Trackable.RANGED_TRUE_STRIKE)
+        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
+
+    elseif message_id == Ashita.Enum.Message.TRUE then
+        H.Offense.Hit(audits, overall_ranged_type, damage)
+        H.Offense.Hit(audits, DB.Trackable.RANGED_TRUE_STRIKE, damage)
+        H.Offense.Miss(audits, DB.Trackable.RANGED_SQUARE_HIT)
+        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
+
+    -- Critical hits will not negatively impact true strike or square hit rates.
+    elseif message_id == Ashita.Enum.Message.RANGECRIT then
+        was_critical_hit = true
+        H.Offense.Critical_Hit(audits, overall_ranged_type, damage)
+        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
+
+    -- Shadows have no impact on recent accuracy.
     elseif message_id == Ashita.Enum.Message.SHADOWS then
-        H.Ranged.Shadows(audits, damage, ranged_type)
+        H.Offense.Shadow_Absorption(audits, overall_ranged_type)
+
+    -- PUP ranged hits will not negatively impact true strike or square hit rates.
+    elseif message_id == Ashita.Enum.Message.RANGEPUP then
+        H.Offense.Hit(audits, overall_ranged_type, damage)
+        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
+
     else
         Debug.Error.Add(Debug.Error.ERROR, "H.Ranged.Message", "Player {" .. tostring(audits.player_name) .. "} had unhandled ranged message: {"
         .. tostring(message_id) .. "}.")
     end
-end
 
-------------------------------------------------------------------------------------------------------
--- Regular ranged hit.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param ranged_type string player ranged or melee ranged.
-------------------------------------------------------------------------------------------------------
-H.Ranged.Hit = function(audits, damage, ranged_type)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
-    DB.Accuracy.Update(audits.player_name, true)
-end
-
-------------------------------------------------------------------------------------------------------
--- Regular ranged square hit.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param ranged_type string player ranged or melee ranged.
-------------------------------------------------------------------------------------------------------
-H.Ranged.Square = function(audits, damage, ranged_type)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_SQUARE_HIT, DB.Metric.HIT_COUNT)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.RANGED_SQUARE_HIT, DB.Metric.TOTAL)
-    DB.Accuracy.Update(audits.player_name, true)
-end
-
-------------------------------------------------------------------------------------------------------
--- Regular ranged truestrike hit.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param ranged_type string player ranged or melee ranged.
-------------------------------------------------------------------------------------------------------
-H.Ranged.Truestrike = function(audits, damage, ranged_type)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, DB.Trackable.RANGED_TRUE_STRIKE, DB.Metric.HIT_COUNT)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.RANGED_TRUE_STRIKE, DB.Metric.TOTAL)
-    DB.Accuracy.Update(audits.player_name, true)
-end
-
-------------------------------------------------------------------------------------------------------
--- Regular ranged critical hit.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param ranged_type string player ranged or melee ranged.
-------------------------------------------------------------------------------------------------------
-H.Ranged.Crit = function(audits, damage, ranged_type)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.CRITICAL_COUNT)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.CRITICAL_DAMAGE)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
-    DB.Accuracy.Update(audits.player_name, true)
+    return was_critical_hit
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -225,106 +159,39 @@ H.Ranged.Additional_Effect = function(audits, result)
     local additional_damage = 0
 
     if result.has_add_effect then
-        local message_id = result.add_effect_message
+        local message_id   = result.add_effect_message
         local animation_id = result.add_effect_animation
-        local param = result.add_effect_param   -- This is either damage or the type of debuff applied.
+        local param        = result.add_effect_param   -- This is either damage or the type of debuff applied.
 
         -- Additional elemental damage from ammunition.
         if message_id == Ashita.Enum.Message.ENDAMAGE then
-            local effect_name = Res.Game.Get_Additional_Effect_Animation(animation_id)
             if animation_id then
+                local effect_name = Res.Game.Get_Additional_Effect_Animation(animation_id)
                 additional_damage = param
-                DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL,  DB.Metric.TOTAL)
-                DB.Data.Update(DB.Update_Mode.INC,     1, audits, DB.Trackable.RANGED_ENDAMAGE, DB.Metric.HIT_COUNT)
-                DB.Catalog.Update_Damage(audits.player_name, audits.target_name, DB.Trackable.RANGED_ENDAMAGE, param, effect_name)
-                DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.RANGED_ENDAMAGE, effect_name, DB.Metric.HIT_COUNT)
+                H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, additional_damage)
+                H.Offense.Catalog_Hit(audits, DB.Trackable.RANGED_ENDAMAGE, additional_damage, effect_name)
             end
 
         -- Debuff effect from ammunition.
         elseif message_id == Ashita.Enum.Message.ENDEBUFF then
             local buff = Res.Buffs.Get_Buff(param)
-            if buff then
-                DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.RANGED_ENDEBUFF, DB.Metric.HIT_COUNT)
-                DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.RANGED_ENDEBUFF, buff.en, DB.Metric.HIT_COUNT)
-            end
+            if buff then H.Offense.Catalog_No_Damage_Hit(audits, DB.Trackable.RANGED_ENDEBUFF, buff.en) end
 
         -- Additional damage from bloody bolts.
         elseif message_id == Ashita.Enum.Message.ENDRAIN then
             additional_damage = param
-            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.TOTAL)             -- Bloody Bolt is net additional damage.
-            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.TOTAL_DAMAGE,   DB.Metric.TOTAL)             -- Bloody Bolt is net additional damage.
-            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL) -- Bloody Bolt is net additional damage.
-            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.RANGED_ENDRAIN, DB.Metric.TOTAL)
-            DB.Data.Update(DB.Update_Mode.INC, 1,     audits, DB.Trackable.RANGED_ENDRAIN, DB.Metric.HIT_COUNT)
-            DB.Total_Damage = DB.Total_Damage + additional_damage
-            DB.Total_Damage_No_Skillchain = DB.Total_Damage_No_Skillchain + additional_damage
+            H.Offense.Grand_Totals(audits, param)                       -- Bloody Bolt is net additional damage.
+            H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, param)   -- Bloody Bolt is net additional damage.
+            H.Offense.Hit(audits, DB.Trackable.RANGED_ENDRAIN, param)
 
         -- Not sure if aspir bolts exist, but have this just in case.
         elseif message_id == Ashita.Enum.Message.ENASPIR then
-            DB.Data.Update(DB.Update_Mode.INC, param, audits, DB.Trackable.RANGED_ENASPIR, DB.Metric.TOTAL)
-            DB.Data.Update(DB.Update_Mode.INC, 1,     audits, DB.Trackable.RANGED_ENASPIR, DB.Metric.HIT_COUNT)
+            H.Offense.Hit(audits, DB.Trackable.RANGED_ENASPIR, param)
         end
 
     end
 
     return additional_damage
-end
-
-------------------------------------------------------------------------------------------------------
--- Puppet ranged hit.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param ranged_type string player ranged or melee ranged.
-------------------------------------------------------------------------------------------------------
-H.Ranged.PUP_Hit = function(audits, damage, ranged_type)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, ranged_type, DB.Metric.TOTAL)
-    DB.Accuracy.Update(audits.player_name, true)
-end
-
-------------------------------------------------------------------------------------------------------
--- Regular ranged miss.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param ranged_type string player ranged or melee ranged.
-------------------------------------------------------------------------------------------------------
-H.Ranged.Miss = function(audits, damage, ranged_type)
-    DB.Accuracy.Update(audits.player_name, false)
-    return damage
-end
-
-------------------------------------------------------------------------------------------------------
--- Regular ranged absorbed by shadows.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param ranged_type string player ranged or melee ranged.
-------------------------------------------------------------------------------------------------------
-H.Ranged.Shadows = function(audits, damage, ranged_type)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.HIT_COUNT)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, ranged_type, DB.Metric.SHADOW_ABSORPTION)
-    return damage
-end
-
-------------------------------------------------------------------------------------------------------
--- Minimum and maximum ranged values.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param ranged_type string player ranged or melee ranged.
----@param message_id integer
-------------------------------------------------------------------------------------------------------
-H.Ranged.Min_Max = function(damage, audits, ranged_type, message_id)
-    local min_metric = DB.Metric.MIN
-    local max_metric = DB.Metric.MAX
-    if message_id == Ashita.Enum.Message.RANGECRIT then
-       min_metric = DB.Metric.CRITICAL_MIN
-       max_metric = DB.Metric.CRITICAL_MAX
-    end
-    if damage > 0 and (damage < DB.Data.Get(audits.player_name, ranged_type, min_metric)) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, ranged_type, min_metric) end
-    if damage > DB.Data.Get(audits.player_name, ranged_type, max_metric) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, ranged_type, max_metric) end
 end
 
 ------------------------------------------------------------------------------------------------------

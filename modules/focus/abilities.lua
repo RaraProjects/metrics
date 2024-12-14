@@ -7,12 +7,12 @@ Focus.Abilities = T{}
 ---@param hide_publish? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Abilities.Display = function(player_name, hide_publish)
-    local ability_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_DAMAGING, DB.Metric.ATTEMPTS)
-    local healing_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_HEALING, DB.Metric.ATTEMPTS)
-    local mp_recovery   = DB.Data.Get(player_name, DB.Trackable.ABILITY_MP_RECOVERY, DB.Metric.ATTEMPTS)
-    local maneuvers     = DB.Data.Get(player_name, DB.Trackable.MANEUVER, DB.Metric.ATTEMPTS)
-    local rolls         = DB.Data.Get(player_name, DB.Trackable.PHANTOM_ROLL, DB.Metric.ATTEMPTS)
-    local misc_count    = DB.Data.Get(player_name, DB.Trackable.ABILITY_OVERALL, DB.Metric.ATTEMPTS)
+    local ability_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_DAMAGING, DB.Metric.ATTEMPTS_ON_USE)
+    local healing_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_HEALING, DB.Metric.ATTEMPTS_ON_USE)
+    local mp_recovery   = DB.Data.Get(player_name, DB.Trackable.ABILITY_MP_RECOVERY, DB.Metric.ATTEMPTS_ON_USE)
+    local maneuvers     = DB.Data.Get(player_name, DB.Trackable.MANEUVER, DB.Metric.ATTEMPTS_ON_USE)
+    local rolls         = DB.Data.Get(player_name, DB.Trackable.PHANTOM_ROLL, DB.Metric.ATTEMPTS_ON_USE)
+    local misc_count    = DB.Data.Get(player_name, DB.Trackable.ABILITY_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
 
     Focus.Abilities.Total(player_name)
     UI.Separator()

@@ -43,7 +43,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Average_By_Type = function(player_name, damage_type, justify)
     local focused_damage = DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
-    local focused_count  = DB.Data.Get(player_name, damage_type, DB.Metric.HIT_COUNT)
+    local focused_count  = DB.Data.Get(player_name, damage_type, DB.Metric.HITS_ON_USE)
     local color = Column.String.Color_Zero(focused_damage)
     if focused_damage == 0 or focused_count == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
     return UI.TextColored(color, Column.String.Format_Percent(focused_damage, focused_count, justify, true))
@@ -60,7 +60,7 @@ end
 Column.Damage.Average_Non_Critical_Melee_By_Type = function(player_name, damage_type, justify)
     local total_damage = DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
     local crit_damage = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_DAMAGE)
-    local total_hit_count = DB.Data.Get(player_name, damage_type, DB.Metric.HIT_COUNT)
+    local total_hit_count = DB.Data.Get(player_name, damage_type, DB.Metric.HITS_ON_USE)
     local crit_count = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_COUNT)
     local non_crit_damage = total_damage - crit_damage
     local non_crit_count = total_hit_count - crit_count
@@ -77,7 +77,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Average_TP = function(player_name, justify)
     local tp = DB.Data.Get(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.TP_SPENT)
-    local attempts = DB.Data.Get(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.ATTEMPTS)
+    local attempts = DB.Data.Get(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.ATTEMPTS_ON_USE)
     local color = Column.String.Color_Zero(tp)
     if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
     return UI.TextColored(color, Column.String.Format_Percent(tp, attempts, justify, true))
@@ -289,7 +289,7 @@ end
 Column.Damage.Shot_Distance = function(player_name, justify)
     local shot_distance = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.SHOT_DISTANCE)
     if shot_distance then shot_distance = shot_distance / 100 end
-    local count = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS)
+    local count = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     local color = Column.String.Color_Zero(shot_distance)
     return UI.TextColored(color, Column.String.Format_Percent(shot_distance, count, justify))
 end

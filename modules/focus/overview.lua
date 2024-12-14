@@ -49,7 +49,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.WAR = function(player_name)
     local ability_list = {[1] = "Berserk", [2] = "Warcry", [3] = "Aggressor", [4] = "Provoke", [5] = "Defender"}
-    local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS)
+    local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     Focus.Overview.Melee(player_name)
     if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
     Focus.Overview.Weaponskill(player_name)
@@ -114,7 +114,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.THF = function(player_name)
     local ability_list = {[1] = "Sneak Attack", [2] = "Trick Attack", [3] = "Bully", [4] = "Accomplice", [5] = "Collaborator", [6] = "Mug", [7] = "Steal"}
-    local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS)
+    local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     Focus.Overview.Melee(player_name)
     if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
     Focus.Overview.Weaponskill(player_name)
@@ -144,7 +144,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.DRK = function(player_name)
     local ability_list = {[1] = "Last Resort", [2] = "Souleater", [3] = "Weapon Bash"}
-    local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS)
+    local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     Focus.Overview.Melee(player_name)
     if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
     Focus.Overview.Weaponskill(player_name)
@@ -1124,7 +1124,7 @@ Focus.Overview.Defense = function(player_name)
         UI.TableSetupColumn("%DT-", col_flags, width)
         UI.TableHeadersRow()
 
-        local evade = DB.Data.Get(player_name, DB.Trackable.DEF_EVASION, DB.Metric.HIT_COUNT)
+        local evade = DB.Data.Get(player_name, DB.Trackable.DEF_EVASION, DB.Metric.HITS_ON_USE)
         if evade > 0 then
             UI.TableNextColumn() UI.Text("Evasion")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_EVASION)
@@ -1135,7 +1135,7 @@ Focus.Overview.Defense = function(player_name)
             row = row + 1
         end
 
-        local parry = DB.Data.Get(player_name, DB.Trackable.DEF_PARRY, DB.Metric.HIT_COUNT)
+        local parry = DB.Data.Get(player_name, DB.Trackable.DEF_PARRY, DB.Metric.HITS_ON_USE)
         if parry > 0 then
             UI.TableNextColumn() UI.Text("Parry")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_PARRY)
@@ -1146,7 +1146,7 @@ Focus.Overview.Defense = function(player_name)
             row = row + 1
         end
 
-        local shadows = DB.Data.Get(player_name, DB.Trackable.DEF_SHADOWS, DB.Metric.HIT_COUNT)
+        local shadows = DB.Data.Get(player_name, DB.Trackable.DEF_SHADOWS, DB.Metric.HITS_ON_USE)
         if shadows > 0 then
             UI.TableNextColumn() UI.Text("Shadows")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_SHADOWS)
@@ -1157,7 +1157,7 @@ Focus.Overview.Defense = function(player_name)
             row = row + 1
         end
 
-        local counter = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER, DB.Metric.HIT_COUNT)
+        local counter = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER, DB.Metric.HITS_ON_USE)
         if counter > 0 then
             UI.TableNextColumn() UI.Text("Counter")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.MELEE_COUNTER)
@@ -1168,7 +1168,7 @@ Focus.Overview.Defense = function(player_name)
             row = row + 1
         end
 
-        local guard = DB.Data.Get(player_name, DB.Trackable.DEF_GUARD, DB.Metric.HIT_COUNT)
+        local guard = DB.Data.Get(player_name, DB.Trackable.DEF_GUARD, DB.Metric.HITS_ON_USE)
         if guard > 0 then
             UI.TableNextColumn() UI.Text("Guard")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_GUARD)
@@ -1179,7 +1179,7 @@ Focus.Overview.Defense = function(player_name)
             row = row + 1
         end
 
-        local shield = DB.Data.Get(player_name, DB.Trackable.DEF_SHIELD_BLOCK, DB.Metric.HIT_COUNT)
+        local shield = DB.Data.Get(player_name, DB.Trackable.DEF_SHIELD_BLOCK, DB.Metric.HITS_ON_USE)
         if shield > 0 then
             UI.TableNextColumn() UI.Text("Shield Block")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_SHIELD_BLOCK)

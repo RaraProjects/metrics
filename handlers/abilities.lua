@@ -134,8 +134,8 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
             ability_type = DB.Trackable.ABILITY_MP_RECOVERY
             H.Ability.Catalog(audits, damage, ability_type, ability_name)
         elseif (ability_id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_id - Ashita.Enum.Ability_Offsets.ABILITY) then
-            DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, DB.Metric.ATTEMPTS)
-            DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, ability_name, DB.Metric.HIT_COUNT)
+            DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, DB.Metric.ATTEMPTS_ON_USE)
+            DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, ability_name, DB.Metric.HITS_ON_USE)
             if result.message == Ashita.Enum.Message.OVERLOAD then DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, DB.Metric.OVERLOAD) end
         elseif (ability_id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_id - Ashita.Enum.Ability_Offsets.ABILITY) then
             H.Ability.Phantom_Roll(audits, result, damage, ability_id, ability_name)
@@ -253,8 +253,8 @@ H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data)
 
     -- Overall ability tracking.
     local trackable = DB.Trackable.ABILITY_OVERALL
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.ABILITY_OVERALL, ability_data.Name, DB.Metric.ATTEMPTS)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.ABILITY_OVERALL, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.ABILITY_OVERALL, ability_data.Name, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.ABILITY_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
 
     -- Some abilities need to also have counts to tag them for pickup by listing functions.
     if Res.Abilities.Get_Damaging(ability_data.Id) then
@@ -270,8 +270,8 @@ H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data)
     else
         trackable = DB.Trackable.ABILITY_GENERAL
     end
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ability_data.Name, DB.Metric.ATTEMPTS)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ability_data.Name, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -338,10 +338,10 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Count = function(actor_mob, owner_mob, target_mob, ability_data, trackable, damage)
     local audits = H.Ability.Audits(owner_mob.name, target_mob.name, actor_mob.name)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ability_data.Name, DB.Metric.ATTEMPTS)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ability_data.Name, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
     if damage > 0 then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
     end
 end
 
@@ -358,7 +358,7 @@ H.Ability.Pet_Rage = function(audits, owner_mob, damage, ability_type, ability_n
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
     if damage > 0 then
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HITS_ON_USE)
     end
 end
 
@@ -375,7 +375,7 @@ H.Ability.Pet_Healing = function(audits, owner_mob, damage, ability_name)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.ALL_HEAL, DB.Metric.TOTAL)
     local ability_type = DB.Trackable.PET_HEALING
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
-    if damage > 0 then DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HIT_COUNT) end
+    if damage > 0 then DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HITS_ON_USE) end
     return ability_type
 end
 
@@ -392,7 +392,7 @@ H.Ability.Pet_Breath = function(audits, owner_mob, damage, ability_type, ability
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
     if damage > 0 then
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HITS_ON_USE)
     end
 end
 
@@ -407,8 +407,8 @@ end
 H.Ability.Catalog = function(audits, damage, ability_type, ability_name)
     if damage > 0 then
         DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HIT_COUNT)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, ability_type, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HITS_ON_USE)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, ability_type, DB.Metric.HITS_ON_USE)
     end
 end
 
@@ -422,7 +422,7 @@ end
 ---@param ability_name string
 ------------------------------------------------------------------------------------------------------
 H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_name)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, DB.Metric.ATTEMPTS_ON_USE)
     local roll_id = ability_id - Ashita.Enum.Ability_Offsets.ABILITY
 
     -- First Roll
@@ -522,6 +522,6 @@ H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_na
         end
     end
 
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.ATTEMPTS)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.HIT_COUNT)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.PHANTOM_ROLL, ability_name, DB.Metric.HITS_ON_USE)
 end

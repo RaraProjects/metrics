@@ -230,86 +230,86 @@ H.Spell.Count = function(audits, spell_id, spell_name, mp_cost, is_burst, target
     if Res.Spells.Get_Healing(spell_id) then
         if is_pet then trackable = DB.Trackable.PET_HEALING else trackable = DB.Trackable.SPELLS_HEALING end
         DB.Data.Update(DB.Update_Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
 
         DB.Catalog.Update_Metric(DB.Update_Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HITS_ON_USE)
 
         -- Healing Received (Only counts non-self healing)
         if audits.player_name ~= audits.target_name and Ashita.Party.Is_Affiliate(audits.target_name) then
             local audit_swap = H.Spell.Audit_Swap(audits)
-            DB.Data.Update(DB.Update_Mode.INC, 1, audit_swap, DB.Trackable.DEF_HEALING_RECEIVED, DB.Metric.ATTEMPTS)
-            DB.Data.Update(DB.Update_Mode.INC, 1, audit_swap, DB.Trackable.DEF_HEALING_RECEIVED, DB.Metric.HIT_COUNT)
+            DB.Data.Update(DB.Update_Mode.INC, 1, audit_swap, DB.Trackable.DEF_HEALING_RECEIVED, DB.Metric.ATTEMPTS_ON_USE)
+            DB.Data.Update(DB.Update_Mode.INC, 1, audit_swap, DB.Trackable.DEF_HEALING_RECEIVED, DB.Metric.HITS_ON_USE)
             DB.Data.Update(DB.Update_Mode.INC, (mp_cost / target_count), audit_swap, DB.Trackable.DEF_HEALING_RECEIVED, DB.Metric.MP_SPENT)
             DB.Catalog.Update_Metric(DB.Update_Mode.INC, (mp_cost / target_count), audit_swap, DB.Trackable.DEF_HEALING_RECEIVED, spell_name, DB.Metric.MP_SPENT)
-            DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audit_swap, DB.Trackable.DEF_HEALING_RECEIVED, spell_name, DB.Metric.ATTEMPTS)
-            DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audit_swap, DB.Trackable.DEF_HEALING_RECEIVED, spell_name, DB.Metric.HIT_COUNT)
+            DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audit_swap, DB.Trackable.DEF_HEALING_RECEIVED, spell_name, DB.Metric.ATTEMPTS_ON_USE)
+            DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audit_swap, DB.Trackable.DEF_HEALING_RECEIVED, spell_name, DB.Metric.HITS_ON_USE)
         end
 
     elseif Res.Spells.Get_Debuff_Removal(spell_id) then
         trackable = DB.Trackable.SPELLS_DEBUFF_REMOVAL
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
         DB.Catalog.Update_Metric(DB.Update_Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HITS_ON_USE)
 
     elseif Res.Spells.Get_Buff(spell_id) then
         trackable = DB.Trackable.SPELLS_BUFFS
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
         DB.Catalog.Update_Metric(DB.Update_Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HITS_ON_USE)
 
     elseif Res.Spells.Get_Damaging(spell_id) then
         if is_pet then trackable = DB.Trackable.PET_NUKING else trackable = DB.Trackable.SPELLS_NUKING end
         DB.Data.Update(DB.Update_Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
 
         DB.Catalog.Update_Metric(DB.Update_Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HITS_ON_USE)
 
     elseif Res.Spells.Get_Enfeeble(spell_id) then
         if is_pet then trackable = DB.Trackable.PET_ENFEEBLING else trackable = DB.Trackable.SPELLS_ENFEEBLING end
         DB.Data.Update(DB.Update_Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(DB.Update_Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_USE)
 
     elseif Res.Spells.Get_Enspell(spell_id) then
         trackable = DB.Trackable.MELEE_ENSPELL
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
         DB.Data.Update(DB.Update_Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(DB.Update_Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_USE)
 
     elseif Res.Spells.Get_Spikes(spell_id) then
         trackable = DB.Trackable.SPELLS_SPIKE_DAMAGE
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
         DB.Data.Update(DB.Update_Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(DB.Update_Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_USE)
 
     elseif Res.Spells.Get_MP_Drain(spell_id) then
         trackable = DB.Trackable.SPELLS_MP_DRAIN
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
         DB.Data.Update(DB.Update_Mode.INC, mp_cost, audits, trackable, DB.Metric.MP_SPENT)
         DB.Catalog.Update_Metric(DB.Update_Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_USE)
 
     elseif Res.Spells.Get_Buff_Song(spell_id) then
         trackable = DB.Trackable.SPELLS_BUFF_SONG
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_USE)
 
     else
         if is_pet then trackable = DB.Trackable.PET_GENERAL_MAGIC else trackable = DB.Trackable.SPELLS_OVERALL end
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
         DB.Catalog.Update_Metric(DB.Update_Mode.INC, mp_cost, audits, trackable, spell_name, DB.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_USE)
     end
 
     -- Burst Tracking
@@ -357,8 +357,8 @@ H.Spell.Overcure = function(audits, spell_name, damage, burst)
 
     -- AOE attempts are target specific attempts. If there is just one target then this will just be one.
     -- Need these because spell cast counts are handled outside of the target loop.
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.AOE_ATTEMPTS)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.AOE_ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_TARGET)
 
     -- Overcure
     local spell_max = DB.Catalog.Get(audits.player_name, trackable, spell_name, DB.Metric.MAX)
@@ -395,8 +395,8 @@ H.Spell.MP_Drain = function(audits, spell_name, damage, burst)
     local trackable = DB.Trackable.SPELLS_MP_DRAIN
     if audits.pet_name then trackable = DB.Trackable.PET_MP_DRAIN end
     if damage > 0 then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HITS_ON_USE)
     end
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, nil, burst)
 end
@@ -415,21 +415,21 @@ H.Spell.Enfeebling = function(audits, spell_name, message_id, damage)
 
     -- AOE attempts are target specific attempts. If there is just one target then this will just be one.
     -- Need these because spell cast counts are handled outside of the target loop.
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.AOE_ATTEMPTS)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.AOE_ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_TARGET)
 
     -- These will not negatively impact resist metrics.
     if message_id == Ashita.Enum.Message.NO_EFFECT or message_id == Ashita.Enum.Message.EFFECT_FAIL or message_id == Ashita.Enum.Message.COMP_RESIST then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HITS_ON_USE)
         damage = -1
     -- Resists
     elseif message_id == Ashita.Enum.Message.RESIST or message_id == Ashita.Enum.Message.RESIST_2 then
         damage = -2
     -- Effect Landed
     else
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HIT_COUNT)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HITS_ON_USE)
     end
 
     return damage

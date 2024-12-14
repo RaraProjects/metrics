@@ -102,7 +102,7 @@ Focus.Content = function()
             UI.EndTabItem()
         end
 
-        if DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS) > 0 then
+        if DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE) > 0 then
             if UI.BeginTabItem(Focus.Tabs.Names.RANGED, false, Focus.Tabs.Switch[Focus.Tabs.Names.RANGED]) then
                 Focus.Tabs.Switch[Focus.Tabs.Names.RANGED] = nil
                 Focus.Ranged.Display(player_name)

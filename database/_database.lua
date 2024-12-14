@@ -146,6 +146,7 @@ DB.Is_Total_Damage_Trackable = function(trackable)
 	   trackable == DB.Trackable.ABILITY_MP_RECOVERY or
 	   trackable == DB.Trackable.PET_HEALING or
 	   trackable == DB.Trackable.SPELLS_MP_DRAIN or
+	   trackable == DB.Trackable.WEAPONSKILL_MP_DRAIN or
 	   trackable == DB.Trackable.DEF_NUKING or
 	   trackable == DB.Trackable.DEF_NUKING_PET or
 	   trackable == DB.Trackable.DEF_SPIKES or

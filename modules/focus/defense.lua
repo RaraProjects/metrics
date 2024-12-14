@@ -159,7 +159,7 @@ Focus.Defense.Mitigation = function(player_name)
         UI.TableSetupColumn("%DT-", col_flags, width)
         UI.TableHeadersRow()
 
-        local evade = DB.Data.Get(player_name, DB.Trackable.DEF_EVASION, DB.Metric.HIT_COUNT)
+        local evade = DB.Data.Get(player_name, DB.Trackable.DEF_EVASION, DB.Metric.HITS_ON_USE)
         if evade > 0 then
             UI.TableNextColumn() UI.Text("Evasion")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_EVASION)
@@ -170,7 +170,7 @@ Focus.Defense.Mitigation = function(player_name)
             row = row + 1
         end
 
-        local parry = DB.Data.Get(player_name, DB.Trackable.DEF_PARRY, DB.Metric.HIT_COUNT)
+        local parry = DB.Data.Get(player_name, DB.Trackable.DEF_PARRY, DB.Metric.HITS_ON_USE)
         if parry > 0 then
             UI.TableNextColumn() UI.Text("Parry")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_PARRY)
@@ -181,7 +181,7 @@ Focus.Defense.Mitigation = function(player_name)
             row = row + 1
         end
 
-        local shadows = DB.Data.Get(player_name, DB.Trackable.DEF_SHADOWS, DB.Metric.HIT_COUNT)
+        local shadows = DB.Data.Get(player_name, DB.Trackable.DEF_SHADOWS, DB.Metric.HITS_ON_USE)
         if shadows > 0 then
             UI.TableNextColumn() UI.Text("Shadows")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_SHADOWS)
@@ -192,7 +192,7 @@ Focus.Defense.Mitigation = function(player_name)
             row = row + 1
         end
 
-        local third_eye = DB.Data.Get(player_name, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, DB.Metric.HIT_COUNT)
+        local third_eye = DB.Data.Get(player_name, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, DB.Metric.HITS_ON_USE)
         if third_eye > 0 then
             UI.TableNextColumn() UI.Text("Third Eye")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION)
@@ -203,7 +203,7 @@ Focus.Defense.Mitigation = function(player_name)
             row = row + 1
         end
 
-        local counter = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER, DB.Metric.HIT_COUNT)
+        local counter = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER, DB.Metric.HITS_ON_USE)
         if counter > 0 then
             UI.TableNextColumn() UI.Text("Counter")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.MELEE_COUNTER)
@@ -214,7 +214,7 @@ Focus.Defense.Mitigation = function(player_name)
             row = row + 1
         end
 
-        local guard = DB.Data.Get(player_name, DB.Trackable.DEF_GUARD, DB.Metric.HIT_COUNT)
+        local guard = DB.Data.Get(player_name, DB.Trackable.DEF_GUARD, DB.Metric.HITS_ON_USE)
         if guard > 0 then
             UI.TableNextColumn() UI.Text("Guard")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_GUARD)
@@ -225,7 +225,7 @@ Focus.Defense.Mitigation = function(player_name)
             row = row + 1
         end
 
-        local shield = DB.Data.Get(player_name, DB.Trackable.DEF_SHIELD_BLOCK, DB.Metric.HIT_COUNT)
+        local shield = DB.Data.Get(player_name, DB.Trackable.DEF_SHIELD_BLOCK, DB.Metric.HITS_ON_USE)
         if shield > 0 then
             UI.TableNextColumn() UI.Text("Shield Block")
             UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_SHIELD_BLOCK)

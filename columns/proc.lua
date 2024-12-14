@@ -13,14 +13,14 @@ Column.Proc.Crit_Rate = function(player_name, damage_type, justify)
     local crits, attempts
     if damage_type == DB.Enum.COMBINED then
         local melee_crits     = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.CRITICAL_COUNT)
-        local melee_hits  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.HIT_COUNT)
+        local melee_hits  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.HITS_ON_USE)
         local ranged_crits    = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.CRITICAL_COUNT)
-        local ranged_hits = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.HIT_COUNT)
+        local ranged_hits = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.HITS_ON_USE)
         crits = melee_crits + ranged_crits
         attempts = melee_hits + ranged_hits
     else
         crits = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_COUNT)
-        attempts = DB.Data.Get(player_name, damage_type, DB.Metric.HIT_COUNT)
+        attempts = DB.Data.Get(player_name, damage_type, DB.Metric.HITS_ON_USE)
     end
     local color = Column.String.Color_Zero(crits)
     return UI.TextColored(color, Column.String.Format_Percent(crits, attempts, justify))
@@ -85,7 +85,7 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Column.Proc.Kick_Rate = function(player_name)
-    local kick_count = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL_KICK, DB.Metric.ATTEMPTS)
+    local kick_count = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL_KICK, DB.Metric.ATTEMPTS_ON_USE)
     local melee_cycles = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.MELEE_ROUNDS)
     local color = Column.String.Color_Zero(kick_count)
     return UI.TextColored(color, Column.String.Format_Percent(kick_count, melee_cycles))
@@ -99,7 +99,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Proc.Deaths = function(player_name, justify)
-    local death_count = DB.Data.Get(player_name, DB.Trackable.DEATH, DB.Metric.ATTEMPTS)
+    local death_count = DB.Data.Get(player_name, DB.Trackable.DEATH, DB.Metric.ATTEMPTS_ON_USE)
     local color = Column.String.Color_Zero(death_count)
     return UI.TextColored(color, Column.String.Format_Number(death_count, justify))
 end
@@ -127,7 +127,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Proc.Guard = function(player_name, trackable)
     local guard = DB.Data.Get(player_name, trackable, DB.Metric.GUARD)
-    local attempts = DB.Data.Get(player_name, trackable, DB.Metric.HIT_COUNT)
+    local attempts = DB.Data.Get(player_name, trackable, DB.Metric.HITS_ON_USE)
     local color = Column.String.Color_Zero(guard)
     return UI.TextColored(color, Column.String.Format_Percent(guard, attempts))
 end
@@ -141,8 +141,8 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Proc.Distance_Correction = function(player_name, correction_type, justify)
-    local ranged_shots = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS)
-    local correction_hits = DB.Data.Get(player_name, correction_type, DB.Metric.HIT_COUNT)
+    local ranged_shots = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
+    local correction_hits = DB.Data.Get(player_name, correction_type, DB.Metric.HITS_ON_USE)
     local color = Column.String.Color_Zero(correction_hits)
     if ranged_shots == 0 or correction_hits == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
     return UI.TextColored(color, Column.String.Format_Percent(correction_hits, ranged_shots))

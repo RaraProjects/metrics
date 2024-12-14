@@ -69,7 +69,7 @@ H.Ranged_Def.Parse = function(result, actor_mob, target_mob, owner_mob)
         pet_name = pet_name,
     }
 
-    local no_damage = H.Ranged_Def.No_Damage_Messages(result)
+    local no_damage = H.No_Damage_Messages(result)
 
     if owner_mob then
         H.Ranged_Def.Pet_Total(audits, damage, no_damage)
@@ -85,7 +85,7 @@ H.Ranged_Def.Parse = function(result, actor_mob, target_mob, owner_mob)
 
         -- Unmitigated ranged attack.
         if not action_taken then
-            DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_RANGED, DB.Metric.HIT_COUNT)
+            DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_RANGED, DB.Metric.HITS_ON_USE)
         end
 
         H.Ranged_Def.Crit(audits, damage, message_id)
@@ -94,24 +94,6 @@ H.Ranged_Def.Parse = function(result, actor_mob, target_mob, owner_mob)
     if no_damage then damage = -1 end
 
     return damage
-end
-
-------------------------------------------------------------------------------------------------------
--- Certain messages may come in with damage, but it's not actually damage.
--- Need to set the damage to zero for these cases.
-------------------------------------------------------------------------------------------------------
----@param result table
----@return boolean whether or not the damage from this should be treated as actual damage or not.
-------------------------------------------------------------------------------------------------------
-H.Ranged_Def.No_Damage_Messages = function(result)
-    local message_id = result.message
-    local add_effect_message_id = result.add_effect_message
-    return message_id == Ashita.Enum.Message.DODGE or
-           message_id == Ashita.Enum.Message.MISS or
-           message_id == Ashita.Enum.Message.RANGEMISS or
-           message_id == Ashita.Enum.Message.SHADOWS or
-           message_id == Ashita.Enum.Message.MOBHEAL373 or
-           add_effect_message_id == Ashita.Enum.Message.ENASPIR
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -127,7 +109,7 @@ H.Ranged_Def.Totals = function(audits, damage, no_damage)
 
     local trackable = DB.Trackable.DEF_RANGED
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC, 1,      audits, trackable, DB.Metric.ATTEMPTS) -- Ranged attempts against entity.
+    DB.Data.Update(DB.Update_Mode.INC, 1,      audits, trackable, DB.Metric.ATTEMPTS_ON_USE) -- Ranged attempts against entity.
     -- HIT_COUNT gets set in the primary parse function.
     if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable, DB.Metric.MIN)) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN) end
     if damage > DB.Data.Get(audits.player_name, trackable, DB.Metric.MAX) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MAX) end
@@ -146,8 +128,8 @@ H.Ranged_Def.Pet_Total = function(audits, damage, no_damage)
 
     local trackable = DB.Trackable.DEF_RANGED_PET
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC, 1,      audits, trackable, DB.Metric.ATTEMPTS) -- Ranged attempts against entity.
-    if damage > 0 then DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HIT_COUNT) end
+    DB.Data.Update(DB.Update_Mode.INC, 1,      audits, trackable, DB.Metric.ATTEMPTS_ON_USE) -- Ranged attempts against entity.
+    if damage > 0 then DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE) end
     if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable, DB.Metric.MIN)) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN) end
     if damage > DB.Data.Get(audits.player_name, trackable, DB.Metric.MAX) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MAX) end
 end
@@ -161,9 +143,9 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ranged_Def.Evade = function(audits, message_id)
     local evade = false
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_EVASION, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_EVASION, DB.Metric.ATTEMPTS_ON_USE)
     if message_id == Ashita.Enum.Message.RANGEMISS then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_EVASION, DB.Metric.HIT_COUNT)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_EVASION, DB.Metric.HITS_ON_USE)
         evade = true
     end
     return evade
@@ -178,9 +160,9 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ranged_Def.Shadows = function(audits, message_id)
     local shadow = false
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_SHADOWS, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_SHADOWS, DB.Metric.ATTEMPTS_ON_USE)
     if message_id == Ashita.Enum.Message.SHADOWS then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_SHADOWS, DB.Metric.HIT_COUNT)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_SHADOWS, DB.Metric.HITS_ON_USE)
         shadow = true
     end
     return shadow
@@ -194,9 +176,9 @@ end
 ---@param message_id number the ID of the entity animation when taking a hit.
 ------------------------------------------------------------------------------------------------------
 H.Ranged_Def.Crit = function(audits, damage, message_id)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_CRITICAL, DB.Metric.ATTEMPTS)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_CRITICAL, DB.Metric.ATTEMPTS_ON_USE)
     if message_id == Ashita.Enum.Message.CRIT then
         DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_CRITICAL, DB.Metric.TOTAL)
-        DB.Data.Update(DB.Update_Mode.INC, 1,      audits, DB.Trackable.DEF_CRITICAL, DB.Metric.HIT_COUNT)
+        DB.Data.Update(DB.Update_Mode.INC, 1,      audits, DB.Trackable.DEF_CRITICAL, DB.Metric.HITS_ON_USE)
     end
 end

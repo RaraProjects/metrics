@@ -25,13 +25,13 @@ Debug.Unit.Tests.Ability.Damaging_Hit = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.ABILITY_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING] = {}
         player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
@@ -40,13 +40,13 @@ Debug.Unit.Tests.Ability.Damaging_Hit = function()
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -96,16 +96,16 @@ Debug.Unit.Tests.Ability.Damaging_Miss = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.ABILITY_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING] = {}
-        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -155,13 +155,13 @@ Debug.Unit.Tests.Ability.Damaging_Hit_TP = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.ABILITY_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING] = {}
         player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
@@ -170,13 +170,13 @@ Debug.Unit.Tests.Ability.Damaging_Hit_TP = function()
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -226,16 +226,16 @@ Debug.Unit.Tests.Ability.Damaging_Miss_TP = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.ABILITY_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING] = {}
-        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_DAMAGING][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -287,24 +287,24 @@ Debug.Unit.Tests.Ability.Healing = function()
         player[player_name][target_index][DB.Trackable.ALL_HEAL] = {}
         player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.ABILITY_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.ABILITY_HEALING] = {}
         player[player_name][target_index][DB.Trackable.ABILITY_HEALING][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.ABILITY_HEALING][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.ABILITY_HEALING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.ABILITY_HEALING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.ABILITY_HEALING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_HEALING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_HEALING] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_HEALING][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_HEALING][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_HEALING][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_HEALING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_HEALING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_HEALING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -354,24 +354,24 @@ Debug.Unit.Tests.Ability.MP = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.ABILITY_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.ABILITY_MP_RECOVERY] = {}
         player[player_name][target_index][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_MP_RECOVERY] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_MP_RECOVERY][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -421,16 +421,16 @@ Debug.Unit.Tests.Ability.No_Damage = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.ABILITY_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.ABILITY_GENERAL] = {}
-        player[player_name][target_index][DB.Trackable.ABILITY_GENERAL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.ABILITY_GENERAL][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_GENERAL] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_GENERAL][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.ABILITY_GENERAL][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -492,8 +492,8 @@ Debug.Unit.Tests.Ability.Avatar_Rage = function()
         player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
@@ -507,16 +507,16 @@ Debug.Unit.Tests.Ability.Avatar_Rage = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         pet[player_name][pet_name][target_index] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.TOTAL] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.MIN] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.MAX] = damage
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
@@ -530,8 +530,8 @@ Debug.Unit.Tests.Ability.Avatar_Rage = function()
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.TOTAL] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.MIN] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.MAX] = damage
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -592,23 +592,23 @@ Debug.Unit.Tests.Ability.Avatar_Ward = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.PET_TP] = {}
-        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         pet[player_name][pet_name][target_index] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP] = {}
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         pet_catalog[player_name][pet_name][target_index] = {}
         pet_catalog[player_name][pet_name][target_index][action_name] = {}
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP] = {}
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -674,8 +674,8 @@ Debug.Unit.Tests.Ability.Avatar_Healing = function()
         player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
@@ -683,8 +683,8 @@ Debug.Unit.Tests.Ability.Avatar_Healing = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         pet[player_name][pet_name][target_index] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL] = {}
@@ -693,8 +693,8 @@ Debug.Unit.Tests.Ability.Avatar_Healing = function()
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         pet_catalog[player_name][pet_name][target_index] = {}
         pet_catalog[player_name][pet_name][target_index][action_name] = {}
@@ -702,8 +702,8 @@ Debug.Unit.Tests.Ability.Avatar_Healing = function()
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -767,8 +767,8 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Damage = function()
         player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
@@ -782,16 +782,16 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Damage = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         pet[player_name][pet_name][target_index] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.TOTAL] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.MIN] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.MAX] = damage
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
@@ -805,8 +805,8 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Damage = function()
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.TOTAL] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.MIN] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.MAX] = damage
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HIT_COUNT] = 1
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -872,8 +872,8 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Healing = function()
         player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
@@ -881,8 +881,8 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Healing = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         pet[player_name][pet_name][target_index] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL] = {}
@@ -891,8 +891,8 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Healing = function()
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         pet_catalog[player_name][pet_name][target_index] = {}
         pet_catalog[player_name][pet_name][target_index][action_name] = {}
@@ -900,8 +900,8 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Healing = function()
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {

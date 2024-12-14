@@ -10,7 +10,7 @@ Focus.Melee.Display = function(player_name)
     local kick_damage = DB.Data.Get(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.TOTAL)
     local counter_damage = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER, DB.Metric.TOTAL)
     local endamage = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDAMAGE, DB.Metric.TOTAL)
-    local endebuff = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDEBUFF, DB.Metric.HIT_COUNT)
+    local endebuff = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDEBUFF, DB.Metric.HITS_ON_USE)
 
     Focus.Melee.Total(player_name, off_hand, kick_damage, counter_damage)
     Focus.Melee.Min_Max(player_name)

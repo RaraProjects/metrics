@@ -32,9 +32,9 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Defense.Proc_Rate_By_Type = function(player_name, damage_type, justify, raw)
-    local proc_count = DB.Data.Get(player_name, damage_type, DB.Metric.HIT_COUNT)
+    local proc_count = DB.Data.Get(player_name, damage_type, DB.Metric.HITS_ON_USE)
     local color = Column.String.Color_Zero(proc_count)
-    local attack_count = DB.Data.Get(player_name, damage_type, DB.Metric.ATTEMPTS)
+    local attack_count = DB.Data.Get(player_name, damage_type, DB.Metric.ATTEMPTS_ON_USE)
     if raw then return Column.String.Format_Percent(proc_count, attack_count) end
     return UI.TextColored(color, Column.String.Format_Percent(proc_count, attack_count, justify))
 end
@@ -48,7 +48,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Defense.Damage_Mitigation = function(player_name, mitigation_type, justify)
-    local mitigation_proc = DB.Data.Get(player_name, mitigation_type, DB.Metric.HIT_COUNT)
+    local mitigation_proc = DB.Data.Get(player_name, mitigation_type, DB.Metric.HITS_ON_USE)
     local color = Column.String.Color_Zero(mitigation_proc)
     if mitigation_proc == 0 then return UI.TextColored(color, Column.String.Format_Number(mitigation_proc)) end
 
@@ -74,7 +74,7 @@ end
 ---@return integer
 ------------------------------------------------------------------------------------------------------
 Column.Defense.Average_Damage_By_Type = function(player_name, damage_type, justify, raw)
-    local count = DB.Data.Get(player_name, damage_type, DB.Metric.HIT_COUNT)
+    local count = DB.Data.Get(player_name, damage_type, DB.Metric.HITS_ON_USE)
     local color = Column.String.Color_Zero(count)
     if count == 0 then
         if raw then return 0 end

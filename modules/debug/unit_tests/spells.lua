@@ -32,8 +32,8 @@ Debug.Unit.Tests.Spells.Nuke = function()
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
@@ -46,8 +46,8 @@ Debug.Unit.Tests.Spells.Nuke = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
     end
 
@@ -127,8 +127,8 @@ Debug.Unit.Tests.Spells.Nuke_AOE = function()
     player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage_two
     player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage_two
     player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage_two
-    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
-    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
     player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
     player[player_name][target_name_two][DB.Trackable.TOTAL_DAMAGE] = {}
     player[player_name][target_name_two][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage_two
@@ -141,8 +141,8 @@ Debug.Unit.Tests.Spells.Nuke_AOE = function()
     player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage_two
     player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage_two
     player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage_two
-    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
-    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
     player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
 
     -- Damage done to all mobs.
@@ -154,8 +154,8 @@ Debug.Unit.Tests.Spells.Nuke_AOE = function()
     player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage + damage_two
     player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage
     player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage_two
-    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
-    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
     player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
     player[player_name][all_mobs][DB.Trackable.TOTAL_DAMAGE] = {}
     player[player_name][all_mobs][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + damage_two
@@ -168,8 +168,8 @@ Debug.Unit.Tests.Spells.Nuke_AOE = function()
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage + damage_two
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage_two
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
 
     local battle_log = {
@@ -230,9 +230,9 @@ Debug.Unit.Tests.Spells.Nuke_Burst = function()
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MAGIC_BURST_DAMAGE] = damage
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MAGIC_BURST_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
@@ -246,9 +246,9 @@ Debug.Unit.Tests.Spells.Nuke_Burst = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MAGIC_BURST_DAMAGE] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MAGIC_BURST_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
     end
 
@@ -312,8 +312,8 @@ Debug.Unit.Tests.Spells.Pet_Nuke = function()
         player[player_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
@@ -328,8 +328,8 @@ Debug.Unit.Tests.Spells.Pet_Nuke = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.MP_SPENT] = mp_cost
 
         pet[player_name][pet_name][target_index] = {}
@@ -339,8 +339,8 @@ Debug.Unit.Tests.Spells.Pet_Nuke = function()
         pet[player_name][pet_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.TOTAL] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.MIN] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.MAX] = damage
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.HIT_COUNT] = 1
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.ATTEMPTS] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.HITS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.PET_NUKING][DB.Metric.MP_SPENT] = mp_cost
         pet[player_name][pet_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
@@ -355,8 +355,8 @@ Debug.Unit.Tests.Spells.Pet_Nuke = function()
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.TOTAL] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.MIN] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.MAX] = damage
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.HIT_COUNT] = 1
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.ATTEMPTS] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.HITS_ON_USE] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_NUKING][DB.Metric.MP_SPENT] = mp_cost
     end
 
@@ -419,9 +419,9 @@ Debug.Unit.Tests.Spells.Healing = function()
     player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.TOTAL] = damage
     player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MIN] = damage
     player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MAX] = damage
-    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HIT_COUNT] = 1
-    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS] = 1
-    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
     player_catalog[player_name][target_name] = {}
@@ -430,9 +430,9 @@ Debug.Unit.Tests.Spells.Healing = function()
     player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.TOTAL] = damage
     player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MIN] = damage
     player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MAX] = damage
-    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HIT_COUNT] = 1
-    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS] = 1
-    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
     -- Healing RECEIVED attributed to recipient.
@@ -441,8 +441,8 @@ Debug.Unit.Tests.Spells.Healing = function()
     player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.TOTAL] = damage
     player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MIN] = damage
     player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MAX] = damage
-    player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HIT_COUNT] = 1
-    player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS] = 1
+    player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HITS_ON_USE] = 1
+    player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS_ON_USE] = 1
     player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MP_SPENT] = mp_cost
 
     player_catalog[target_name][player_name] = {}
@@ -451,8 +451,8 @@ Debug.Unit.Tests.Spells.Healing = function()
     player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.TOTAL] = damage
     player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MIN] = damage
     player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MAX] = damage
-    player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HIT_COUNT] = 1
-    player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS] = 1
+    player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS_ON_USE] = 1
     player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MP_SPENT] = mp_cost
 
     -- No filter healing from caster.
@@ -465,9 +465,9 @@ Debug.Unit.Tests.Spells.Healing = function()
     player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.TOTAL] = damage
     player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.MIN] = damage
     player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.MAX] = damage
-    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.HIT_COUNT] = 1
-    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS] = 1
-    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
     player_catalog[player_name][all_mobs] = {}
@@ -476,9 +476,9 @@ Debug.Unit.Tests.Spells.Healing = function()
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.TOTAL] = damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MIN] = damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MAX] = damage
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HIT_COUNT] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
     -- No filter healing RECEIVED from recipient.
@@ -487,8 +487,8 @@ Debug.Unit.Tests.Spells.Healing = function()
     player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.TOTAL] = damage
     player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MIN] = damage
     player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MAX] = damage
-    player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HIT_COUNT] = 1
-    player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS] = 1
+    player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HITS_ON_USE] = 1
+    player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS_ON_USE] = 1
     player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MP_SPENT] = mp_cost
 
     player_catalog[target_name][all_mobs] = {}
@@ -497,8 +497,8 @@ Debug.Unit.Tests.Spells.Healing = function()
     player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.TOTAL] = damage
     player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MIN] = damage
     player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MAX] = damage
-    player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HIT_COUNT] = 1
-    player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS] = 1
+    player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS_ON_USE] = 1
     player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MP_SPENT] = mp_cost
 
     local battle_log = {
@@ -558,7 +558,7 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     player[player_name][player_name][DB.Trackable.SPELLS_HEALING][DB.Metric.TOTAL] = damage
     player[player_name][player_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MIN] = damage
     player[player_name][player_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MAX] = damage
-    player[player_name][player_name][DB.Trackable.SPELLS_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+    player[player_name][player_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     player_catalog[player_name][player_name] = {}
     player_catalog[player_name][player_name][action_name] = {}
@@ -566,7 +566,7 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     player_catalog[player_name][player_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.TOTAL] = damage
     player_catalog[player_name][player_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MIN] = damage
     player_catalog[player_name][player_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MAX] = damage
-    player_catalog[player_name][player_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+    player_catalog[player_name][player_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     -- Healing from the caster given to the target.
     player[player_name][target_name] = {}
@@ -578,9 +578,9 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.TOTAL] = damage_two
     player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MIN] = damage_two
     player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MAX] = damage_two
-    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HIT_COUNT] = 1
-    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS] = 1
-    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][target_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
     player_catalog[player_name][target_name] = {}
@@ -589,10 +589,10 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.TOTAL] = damage_two
     player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MIN] = damage_two
     player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MAX] = damage_two
-    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HIT_COUNT] = 1
-    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS] = 1
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
     player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MP_SPENT] = mp_cost
-    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     -- Healing received by the target from the caster.
     player[target_name][player_name] = {}
@@ -600,8 +600,8 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.TOTAL] = damage_two
     player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MIN] = damage_two
     player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MAX] = damage_two
-    player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HIT_COUNT] = 1
-    player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS] = 1
+    player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HITS_ON_USE] = 1
+    player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS_ON_USE] = 1
     player[target_name][player_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MP_SPENT] = mp_cost / 2
 
     player_catalog[target_name][player_name] = {}
@@ -610,8 +610,8 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.TOTAL] = damage_two
     player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MIN] = damage_two
     player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MAX] = damage_two
-    player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HIT_COUNT] = 1
-    player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS] = 1
+    player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS_ON_USE] = 1
     player_catalog[target_name][player_name][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MP_SPENT] = mp_cost / 2
 
     -- No filter healing from the caster.
@@ -624,9 +624,9 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.TOTAL] = damage + damage_two
     player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.MIN] = damage
     player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.MAX] = damage_two
-    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.HIT_COUNT] = 1
-    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS] = 1
-    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.AOE_ATTEMPTS] = 2
+    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 2
     player[player_name][all_mobs][DB.Trackable.SPELLS_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
     player_catalog[player_name][all_mobs] = {}
@@ -635,9 +635,9 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.TOTAL] = damage + damage_two
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MIN] = damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MAX] = damage_two
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HIT_COUNT] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.AOE_ATTEMPTS] = 2
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 2
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
     -- No filter healing received by the target.
@@ -646,8 +646,8 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.TOTAL] = damage_two
     player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MIN] = damage_two
     player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MAX] = damage_two
-    player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HIT_COUNT] = 1
-    player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS] = 1
+    player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HITS_ON_USE] = 1
+    player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS_ON_USE] = 1
     player[target_name][all_mobs][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MP_SPENT] = mp_cost / 2
 
     player_catalog[target_name][all_mobs] = {}
@@ -656,8 +656,8 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.TOTAL] = damage_two
     player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MIN] = damage_two
     player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MAX] = damage_two
-    player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HIT_COUNT] = 1
-    player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS] = 1
+    player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.ATTEMPTS_ON_USE] = 1
     player_catalog[target_name][all_mobs][action_name][DB.Trackable.DEF_HEALING_RECEIVED][DB.Metric.MP_SPENT] = mp_cost / 2
 
     local battle_log = {
@@ -722,9 +722,9 @@ Debug.Unit.Tests.Spells.Pet_Heal = function()
         player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
-        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
         player_catalog[player_name][target_index] = {}
@@ -733,9 +733,9 @@ Debug.Unit.Tests.Spells.Pet_Heal = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
         pet[player_name][pet_name][target_index] = {}
@@ -747,9 +747,9 @@ Debug.Unit.Tests.Spells.Pet_Heal = function()
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
-        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING][DB.Metric.MP_SPENT] = mp_cost
 
         pet_catalog[player_name][pet_name][target_index] = {}
@@ -758,9 +758,9 @@ Debug.Unit.Tests.Spells.Pet_Heal = function()
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.TOTAL] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MIN] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MAX] = damage
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HIT_COUNT] = 1
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS] = 1
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.AOE_ATTEMPTS] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.HITS_ON_USE] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_HEALING][DB.Metric.MP_SPENT] = mp_cost
     end
 
@@ -816,15 +816,15 @@ Debug.Unit.Tests.Spells.DoT_No_Damage = function()
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
     end
 
@@ -882,8 +882,8 @@ Debug.Unit.Tests.Spells.DoT_Damage = function()
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
@@ -896,8 +896,8 @@ Debug.Unit.Tests.Spells.DoT_Damage = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
     end
 
@@ -954,8 +954,8 @@ Debug.Unit.Tests.Spells.Aspir = function()
         player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MP_SPENT] = mp_cost
 
         player_catalog[player_name][target_index] = {}
@@ -964,8 +964,8 @@ Debug.Unit.Tests.Spells.Aspir = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MP_SPENT] = mp_cost
     end
 
@@ -1020,17 +1020,17 @@ Debug.Unit.Tests.Spells.Enfeeble_Land = function()
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
     end
 
@@ -1085,15 +1085,15 @@ Debug.Unit.Tests.Spells.Enfeeble_Resist = function()
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
     end
 
@@ -1148,17 +1148,17 @@ Debug.Unit.Tests.Spells.Enfeeble_No_Effect = function()
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HIT_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
     end
 
@@ -1213,31 +1213,31 @@ Debug.Unit.Tests.Spells.Enfeeble_AOE_Land = function()
     -- Mob specific enfeebles from the player for mob one.
     player[player_name][target_name] = {}
     player[player_name][target_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
-    player[player_name][target_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HIT_COUNT] = 1
-    player[player_name][target_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     player_catalog[player_name][target_name] = {}
     player_catalog[player_name][target_name][action_name] = {}
     player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
-    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HIT_COUNT] = 1
-    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     -- Mob specific enfeebles from the player for mob two.
     player[player_name][target_name_two] = {}
     player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL] = {}
     player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
     player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING] = {}
-    player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HIT_COUNT] = 1
-    player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS] = 1
-    player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
 
     player_catalog[player_name][target_name_two] = {}
     player_catalog[player_name][target_name_two][action_name] = {}
     player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
-    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HIT_COUNT] = 1
-    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS] = 1
-    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
 
     -- Unfiltered enfeebles from player on all mobs.
@@ -1245,17 +1245,17 @@ Debug.Unit.Tests.Spells.Enfeeble_AOE_Land = function()
     player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL] = {}
     player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
     player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING] = {}
-    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HIT_COUNT] = 2
-    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS] = 1
-    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 2
+    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 2
+    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 2
     player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
 
     player_catalog[player_name][all_mobs] = {}
     player_catalog[player_name][all_mobs][action_name] = {}
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HIT_COUNT] = 2
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.AOE_ATTEMPTS] = 2
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 2
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 2
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
 
     local battle_log = {
@@ -1305,12 +1305,12 @@ Debug.Unit.Tests.Spells.Song = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_BUFF_SONG] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_BUFF_SONG][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_BUFF_SONG][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BUFF_SONG] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BUFF_SONG][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BUFF_SONG][DB.Metric.ATTEMPTS_ON_USE] = 1
     end
 
     local battle_log = {
@@ -1364,13 +1364,13 @@ Debug.Unit.Tests.Spells.Status_Removal = function()
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.SPELLS_DEBUFF_REMOVAL] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_DEBUFF_REMOVAL][DB.Metric.ATTEMPTS] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_DEBUFF_REMOVAL][DB.Metric.ATTEMPTS_ON_USE] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DEBUFF_REMOVAL] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DEBUFF_REMOVAL][DB.Metric.HIT_COUNT] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DEBUFF_REMOVAL][DB.Metric.ATTEMPTS] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DEBUFF_REMOVAL][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DEBUFF_REMOVAL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DEBUFF_REMOVAL][DB.Metric.MP_SPENT] = mp_cost
     end
 

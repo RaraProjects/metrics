@@ -1,4 +1,6 @@
 H = {}
+H.Offense = {}
+H.Defense = {}
 
 require("handlers.melee")
 require("handlers.melee_def")
@@ -148,5 +150,205 @@ H.Action_Packet_TP_Move = function(action, actor_mob, target_pet_owner_mob, pet_
         H.TP_Def.Monster_Action(action, actor_mob, pet_owner_mob, is_defense)
     elseif mob_self_buff then
         H.TP_Def.Mob_Self_Target(action, actor_mob)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Certain messages may come in with damage, but it's not actually damage.
+-- Need to set the damage to zero for these cases.
+------------------------------------------------------------------------------------------------------
+---@param result table
+---@return boolean whether or not the damage from this should be treated as actual damage or not.
+------------------------------------------------------------------------------------------------------
+H.No_Damage_Messages = function(result)
+    local message_id = result.message
+    return message_id == Ashita.Enum.Message.DODGE or
+           message_id == Ashita.Enum.Message.MISS or
+           message_id == Ashita.Enum.Message.RANGEMISS or
+           message_id == Ashita.Enum.Message.SHADOWS or
+           message_id == Ashita.Enum.Message.MOBHEAL373
+end
+
+------------------------------------------------------------------------------------------------------
+-- Increment Grand Totals.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param owner_mob? table
+------------------------------------------------------------------------------------------------------
+H.Offense.Grand_Totals = function(audits, damage, owner_mob)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
+    DB.Total_Damage = DB.Total_Damage + damage
+    DB.Total_Damage_No_Skillchain = DB.Total_Damage_No_Skillchain + damage
+    if owner_mob then DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL) end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Tracks over time recent accuracy.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param hit boolean
+---@param owner_mob? table
+------------------------------------------------------------------------------------------------------
+H.Offense.Update_Recent_Accuracy = function(audits, hit, owner_mob)
+    if not owner_mob then DB.Accuracy.Update(audits.player_name, hit) end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Hit.
+-- Can't just used DB.Data.Update_Damage for this because I can call this multiple times per packet.
+-- The total damage will be incremented too much if that happens.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable string
+---@param damage integer
+------------------------------------------------------------------------------------------------------
+H.Offense.Hit = function(audits, trackable, damage)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.HITS_ON_USE)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Miss.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable string
+------------------------------------------------------------------------------------------------------
+H.Offense.Miss = function(audits, trackable)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Critical hit.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable string
+---@param damage number
+------------------------------------------------------------------------------------------------------
+H.Offense.Critical_Hit = function(audits, trackable, damage)
+    H.Offense.Hit(audits, trackable, damage)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.CRITICAL_COUNT)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.CRITICAL_DAMAGE)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Player attacks absorbed by shadowed. These are counted as hits in terms of accuracy.
+-- No effect on recent accuracy tracking.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable string
+------------------------------------------------------------------------------------------------------
+H.Offense.Shadow_Absorption = function(audits, trackable)
+    H.Offense.Hit(audits, trackable, 0)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.SHADOW_ABSORPTION)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Healing the mob with a physical hit.
+-- Accuracy doesn't suffer because this isn't a miss. It just heals the mob.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable string player melee or pet melee.
+---@param damage integer
+------------------------------------------------------------------------------------------------------
+H.Offense.Mob_Heal = function(audits, trackable, damage)
+    H.Offense.Hit(audits, trackable, 0)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.MOB_HEALING)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Cataloged action hit.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable string
+---@param damage integer
+---@param action_name string
+------------------------------------------------------------------------------------------------------
+H.Offense.Catalog_Hit = function(audits, trackable, damage, action_name)
+    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, action_name, audits.pet_name)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Cataloged action no damage hit.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable string
+---@param action_name string
+------------------------------------------------------------------------------------------------------
+H.Offense.Catalog_No_Damage_Hit = function(audits, trackable, action_name)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_USE)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Spell cast.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable string
+---@param damage integer
+---@param mp_spent integer
+------------------------------------------------------------------------------------------------------
+H.Offense.Spell_Cast = function(audits, trackable, damage, mp_spent)
+    H.Offense.Hit(audits, trackable, damage)
+    DB.Data.Update(DB.Update_Mode.INC, mp_spent, audits, trackable, DB.Metric.MP_SPENT)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Increments weaponskill hits.
+-- ------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param tp? integer
+---@param ws_name string
+---@param trackable string
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+H.Offense.Weaponskill_TP = function(audits, tp, ws_name, trackable)
+    if not tp or tp < 0 then tp = 0 end
+    if tp > 3000 then tp = 3000 end
+    DB.Data.Update(DB.Update_Mode.INC, tp, audits, trackable, DB.Metric.TP_SPENT)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, tp, audits, trackable, ws_name, DB.Metric.TP_SPENT)
+    return tp
+end
+
+------------------------------------------------------------------------------------------------------
+-- Minimum and maximum melee values.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable string
+---@param damage integer whether or not the animation is a NIN auto throwing attack.
+---@param was_critical_hit? boolean
+------------------------------------------------------------------------------------------------------
+H.Offense.Min_Max = function(audits, trackable, damage, was_critical_hit)
+    local metric_min = DB.Metric.MIN
+    local metric_max = DB.Metric.MAX
+
+    if was_critical_hit then
+        metric_min = DB.Metric.CRITICAL_MIN
+        metric_max = DB.Metric.CRITICAL_MAX
+    end
+
+    if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable, metric_min)) then
+        DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, metric_min)
+    end
+    if damage > DB.Data.Get(audits.player_name, trackable, metric_max) then
+        DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, metric_max)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Increment Grand Totals.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param owner_mob? table
+------------------------------------------------------------------------------------------------------
+H.Defense.Grand_Totals = function(audits, damage, owner_mob)
+    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
+    if owner_mob then
+        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
     end
 end

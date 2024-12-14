@@ -94,19 +94,22 @@ DB.Catalog.Update_Damage = function(player_name, target_name, trackable, damage,
 	-- Update the non-catalog database with the damage
 	DB.Data.Update_Damage(audits, trackable, damage, burst)
 
+	-- Total Damage
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, damage, audits, trackable, action_name, DB.Metric.TOTAL)
+
 	-- Magic Bursts
 	if trackable == DB.Trackable.SPELLS_NUKING and burst then
 		DB.Catalog.Update_Metric(DB.Update_Mode.INC, damage, audits, trackable, action_name, DB.Metric.MAGIC_BURST_DAMAGE)
 	end
-	-- COUNT gets incremented in the packet handler.
 
-	-- Total Damage
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, damage, audits, trackable, action_name, DB.Metric.TOTAL)
-
-	-- Minimum Damage
-    if damage > 0 and damage < DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MIN, audits.target_name) then
-		DB.Catalog.Update_Metric(DB.Update_Mode.SET, damage, audits, trackable, action_name, DB.Metric.MIN)
+	-- Hits and minimum damage.
+    if damage > 0 then
+		DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_TARGET)
+		if damage < DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MIN, audits.target_name) then
+			DB.Catalog.Update_Metric(DB.Update_Mode.SET, damage, audits, trackable, action_name, DB.Metric.MIN)
+		end
     end
+	DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
 
 	-- Maximum Damage
     if damage > DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MAX) then
