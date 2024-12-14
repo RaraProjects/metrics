@@ -35,7 +35,7 @@ H.Ability.Action = function(action, actor_mob, log_offense)
     end
 
     -- Log remaining action data.
-    H.Ability.Player_Catalog_Count(actor_mob, target_mob, ability_data)
+    H.Ability.Player_Catalog_Count(actor_mob, target_mob, ability_data, damage)
     H.Ability.Blog(actor_mob, ability_data, ability_id, damage)
 end
 
@@ -55,7 +55,7 @@ H.Ability.Pet_Action = function(action, actor_mob, log_offense)
     if not owner_mob then return nil end
 
     local ability_id = action.param
-    local ability_data = T{}
+    local ability_data = {}
     local avatar = false
     local trackable = DB.Trackable.PET_TP
 
@@ -67,7 +67,7 @@ H.Ability.Pet_Action = function(action, actor_mob, log_offense)
 
     local result, target
     local damage = 0
-    local count = 0
+    local count  = 0
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
@@ -99,10 +99,10 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_mob)
     Debug.Packet.Add_Action(actor_mob.name, target_name, "Ability", result)
-    local player_name = actor_mob.name
-    local ability_id = ability_data.Id
+    local player_name  = actor_mob.name
+    local ability_id   = ability_data.Id
     local ability_name = ability_data.Name
-    local damage = result.param
+    local damage       = result.param
     local ability_type = DB.Trackable.ABILITY_OVERALL
 
     local pet_name = nil
@@ -113,30 +113,37 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
 
     local audits = H.Ability.Audits(player_name, target_name, pet_name)
 
-    -- Specifics
     if owner_mob then
         if Res.Avatar.Get_Rage(ability_id) then
-            H.Ability.Pet_Rage(audits, owner_mob, damage, ability_type, ability_name)
+            H.Offense.Hit(audits, DB.Trackable.PET_OVERALL, damage)
+            H.Offense.Catalog_Hit(audits, ability_type, damage, ability_name)
+
         elseif Res.Avatar.Get_Healing(ability_id) or Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then
-            ability_type = H.Ability.Pet_Healing(audits, owner_mob, damage, ability_name)
+            H.Offense.Hit(audits, DB.Trackable.ALL_HEAL, damage)
+            H.Offense.Catalog_Hit(audits, DB.Trackable.PET_HEALING, damage, ability_name)
+
         elseif Res.Pets.Get_Damaging_Wyvern_Breath(ability_id) then
-            H.Ability.Pet_Breath(audits, owner_mob, damage, ability_type, ability_name)
+            H.Offense.Hit(audits, DB.Trackable.PET_OVERALL, damage)
+            H.Offense.Catalog_Hit(audits, ability_type, damage, ability_name)
         end
+
     else
         if Res.Abilities.Get_Damaging(ability_id) then
-            ability_type = DB.Trackable.ABILITY_DAMAGING
-            H.Ability.Catalog(audits, damage, ability_type, ability_name)
+            H.Offense.Catalog_Hit(audits, DB.Trackable.ABILITY_DAMAGING, damage, ability_name)
+
         elseif Res.Abilities.Get_Player_Healing(ability_id) or Res.Abilities.Get_Pet_Healing(ability_id) then
-            DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.ALL_HEAL, DB.Metric.TOTAL)
-            ability_type = DB.Trackable.ABILITY_HEALING
-            H.Ability.Catalog(audits, damage, ability_type, ability_name)
+            H.Offense.Hit(audits, DB.Trackable.ALL_HEAL, damage)
+            H.Offense.Catalog_Hit(audits, DB.Trackable.ABILITY_HEALING, damage, ability_name)
+
         elseif Res.Abilities.Get_MP_Recovery(ability_id) then
-            ability_type = DB.Trackable.ABILITY_MP_RECOVERY
-            H.Ability.Catalog(audits, damage, ability_type, ability_name)
+            H.Offense.Catalog_Hit(audits, DB.Trackable.ABILITY_MP_RECOVERY, damage, ability_name)
+
         elseif (ability_id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_id - Ashita.Enum.Ability_Offsets.ABILITY) then
-            DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, DB.Metric.ATTEMPTS_ON_USE)
-            DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, ability_name, DB.Metric.HITS_ON_USE)
-            if result.message == Ashita.Enum.Message.OVERLOAD then DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, DB.Metric.OVERLOAD) end
+            H.Offense.Catalog_No_Damage_Hit(audits, DB.Trackable.MANEUVER, ability_name)
+            if result.message == Ashita.Enum.Message.OVERLOAD then
+                DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, DB.Metric.OVERLOAD)
+            end
+
         elseif (ability_id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_id - Ashita.Enum.Ability_Offsets.ABILITY) then
             H.Ability.Phantom_Roll(audits, result, damage, ability_id, ability_name)
         end
@@ -247,31 +254,47 @@ end
 ---@param actor_mob table
 ---@param target_mob table
 ---@param ability_data table
+---@param damage integer
 ------------------------------------------------------------------------------------------------------
-H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data)
+H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data, damage)
     local audits = H.Ability.Audits(actor_mob.name, target_mob.name)
+    local no_damage = false
 
     -- Overall ability tracking.
     local trackable = DB.Trackable.ABILITY_OVERALL
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.ABILITY_OVERALL, ability_data.Name, DB.Metric.ATTEMPTS_ON_USE)
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.ABILITY_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.ABILITY_OVERALL, ability_data.Name, DB.Metric.ATTEMPTS_ON_USE)
 
     -- Some abilities need to also have counts to tag them for pickup by listing functions.
     if Res.Abilities.Get_Damaging(ability_data.Id) then
         trackable = DB.Trackable.ABILITY_DAMAGING
+
     elseif Res.Abilities.Get_Player_Healing(ability_data.Id) or Res.Abilities.Get_Pet_Healing(ability_data.Id) then
         trackable = DB.Trackable.ABILITY_HEALING
+
     elseif Res.Abilities.Get_MP_Recovery(ability_data.Id) then
         trackable = DB.Trackable.ABILITY_MP_RECOVERY
+
     elseif (ability_data.Id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_data.Id - Ashita.Enum.Ability_Offsets.ABILITY) then
+        no_damage = true
         trackable = DB.Trackable.MANEUVER
+
     elseif (ability_data.Id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_data.Id - Ashita.Enum.Ability_Offsets.ABILITY) then
+        no_damage = true
         trackable = DB.Trackable.PHANTOM_ROLL
+
     else
+        no_damage = true
         trackable = DB.Trackable.ABILITY_GENERAL
     end
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ability_data.Name, DB.Metric.ATTEMPTS_ON_USE)
+
+    if not no_damage and damage > 0 then
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ability_data.Name, DB.Metric.HITS_ON_USE)
+    end
+
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ability_data.Name, DB.Metric.ATTEMPTS_ON_USE)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -338,77 +361,12 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Pet_Count = function(actor_mob, owner_mob, target_mob, ability_data, trackable, damage)
     local audits = H.Ability.Audits(owner_mob.name, target_mob.name, actor_mob.name)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ability_data.Name, DB.Metric.ATTEMPTS_ON_USE)
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ability_data.Name, DB.Metric.ATTEMPTS_ON_USE)
+
     if damage > 0 then
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Handle avatar's rage bloodpact.
-------------------------------------------------------------------------------------------------------
----@param audits table
----@param owner_mob table
----@param damage number
----@param ability_type string
----@param ability_name string
-------------------------------------------------------------------------------------------------------
-H.Ability.Pet_Rage = function(audits, owner_mob, damage, ability_type, ability_name)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
-    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
-    if damage > 0 then
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HITS_ON_USE)
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Handle avatar and wyvern healing.
-------------------------------------------------------------------------------------------------------
----@param audits table
----@param owner_mob table
----@param damage number
----@param ability_name string
----@return string
-------------------------------------------------------------------------------------------------------
-H.Ability.Pet_Healing = function(audits, owner_mob, damage, ability_name)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.ALL_HEAL, DB.Metric.TOTAL)
-    local ability_type = DB.Trackable.PET_HEALING
-    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
-    if damage > 0 then DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HITS_ON_USE) end
-    return ability_type
-end
-
-------------------------------------------------------------------------------------------------------
--- Handle wyvern breath abilities.
-------------------------------------------------------------------------------------------------------
----@param audits table
----@param owner_mob table
----@param damage number
----@param ability_type string
----@param ability_name string
-------------------------------------------------------------------------------------------------------
-H.Ability.Pet_Breath = function(audits, owner_mob, damage, ability_type, ability_name)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
-    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name, owner_mob.name)
-    if damage > 0 then
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HITS_ON_USE)
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Handle player abilities that do damage.
-------------------------------------------------------------------------------------------------------
----@param audits table
----@param damage number
----@param ability_type string
----@param ability_name string
-------------------------------------------------------------------------------------------------------
-H.Ability.Catalog = function(audits, damage, ability_type, ability_name)
-    if damage > 0 then
-        DB.Catalog.Update_Damage(audits.player_name, audits.target_name, ability_type, damage, ability_name)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, ability_type, ability_name, DB.Metric.HITS_ON_USE)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, ability_type, DB.Metric.HITS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ability_data.Name, DB.Metric.HITS_ON_USE)
     end
 end
 

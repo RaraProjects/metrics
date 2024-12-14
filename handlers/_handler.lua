@@ -206,7 +206,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Offense.Hit = function(audits, trackable, damage)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.HITS_ON_USE)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.HITS_ON_TARGET)
     DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
 end
 
@@ -278,9 +278,9 @@ end
 ---@param action_name string
 ------------------------------------------------------------------------------------------------------
 H.Offense.Catalog_No_Damage_Hit = function(audits, trackable, action_name)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_USE)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_TARGET)
     DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
 end
 
