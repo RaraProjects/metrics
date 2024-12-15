@@ -53,7 +53,7 @@ Report.Publishing.Accuracy = function()
             if rank <= Parse.Config.Rank_Cutoff() then
 
                 local player_name = data[1]
-                local player_acc = Column.Acc.By_Type(player_name, DB.Enum.COMBINED, false, nil, true)
+                local player_acc = Column.Acc.By_Type(player_name, DB.Enum.COMBINED, false, true)
                 local chat_string = tostring(player_name) .. ": " .. tostring(player_acc) .. "%"
                 Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
                 found = true

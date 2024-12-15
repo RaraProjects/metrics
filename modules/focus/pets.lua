@@ -180,7 +180,7 @@ Focus.Pets.Single = function(player_name, pet_name)
             UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_MELEE_OVERALL)
             UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_MELEE_OVERALL, true, nil, true)
             UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_MELEE_OVERALL, true)
-            UI.TableNextColumn() Column.Acc.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_MELEE_DISCRETE)
+            UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, DB.Trackable.PET_MELEE_DISCRETE)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -204,7 +204,7 @@ Focus.Pets.Single = function(player_name, pet_name)
             UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP)
             UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true, nil, true)
             UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true)
-            UI.TableNextColumn() Column.Acc.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP)
+            UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, DB.Trackable.PET_TP)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
