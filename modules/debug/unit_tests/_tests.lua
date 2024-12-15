@@ -224,18 +224,20 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enspell())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Misc())
 
-    -- -- Defense
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Hit())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Miss())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Parry())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shadows())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Third_Eye())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Counter())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Guard())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shield())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Crit())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Pet_Hit())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Pet_Miss())
+    -- Defense
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Parry())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shadows())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Third_Eye())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Counter())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Guard())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shield())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Crit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Spikes())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Enspell())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Pet_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Pet_Miss())
     -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Ranged_Hit())
     -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke())
     -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_AOE())
@@ -303,10 +305,12 @@ Debug.Unit.Util.Build_Action = function(target_id, action_id, damage, primary, a
     if spike then
         action_data.has_spike_effect = true
         action_data.spike_effect_param = spike.param
+        action_data.spike_effect_animation = spike.animation
         action_data.spike_effect_message = spike.message
     else
         action_data.has_spike_effect = false
         action_data.spike_effect_param = 0
+        action_data.spike_effect_animation = 0
         action_data.spike_effect_message = 0
     end
 

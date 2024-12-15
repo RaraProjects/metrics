@@ -78,6 +78,7 @@ DB.Trackable = {
     DEF_GUARD                  = "Defense Guard",
     DEF_SHIELD_BLOCK           = "Defense Shield Block",
     DEF_UNMITIGATED            = "Defense Unmitigated",
+    DEF_UNMITIGATED_PARTIAL    = "Defense Unmitigated Partial", -- Shield block and counter
     DEF_NUKING                 = "Defense Nuking",
     DEF_NUKING_PET             = "Defense Nuking Pet",
     DEF_ENFEEBLING             = "Defense Enfeebling",

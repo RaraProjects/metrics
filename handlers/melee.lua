@@ -131,7 +131,7 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
 
     -- These have their own damage separate from the intiial melee strike.
     H.Melee.Spikes(audits, result, owner_mob)
-    damage = damage + H.Melee.Additional_Effect(audits, result, no_damage)
+    damage = damage + H.Melee.Additional_Effect(audits, result)
 
     -- Flag for the battle log.
     if no_damage then damage = -1 end
@@ -284,10 +284,9 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param result table
----@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
 ---@return integer
 ------------------------------------------------------------------------------------------------------
-H.Melee.Additional_Effect = function(audits, result, no_damage)
+H.Melee.Additional_Effect = function(audits, result)
     if not result then return 0 end
     local additional_damage = 0
 
@@ -297,7 +296,6 @@ H.Melee.Additional_Effect = function(audits, result, no_damage)
         local param        = result.add_effect_param   -- This is either damage or the type of debuff applied.
 
         if message_id == Ashita.Enum.Message.ENSPELL then
-            if no_damage then param = 0 end
             if animation_id and Res.Spells.Get_Enspell_Type(animation_id) then
                 local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
                 additional_damage = param

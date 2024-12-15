@@ -156,6 +156,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Certain messages may come in with damage, but it's not actually damage.
 -- Need to set the damage to zero for these cases.
+-- Counter isn't included here because that message is a spike message.
 ------------------------------------------------------------------------------------------------------
 ---@param result table
 ---@return boolean whether or not the damage from this should be treated as actual damage or not.
@@ -164,6 +165,8 @@ H.No_Damage_Messages = function(result)
     local message_id = result.message
     return message_id == Ashita.Enum.Message.DODGE or
            message_id == Ashita.Enum.Message.MISS or
+           message_id == Ashita.Enum.Message.PARRY or
+           message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION or
            message_id == Ashita.Enum.Message.RANGEMISS or
            message_id == Ashita.Enum.Message.SHADOWS or
            message_id == Ashita.Enum.Message.MOBHEAL373
@@ -357,8 +360,9 @@ end
 ---@param owner_mob? table
 ------------------------------------------------------------------------------------------------------
 H.Defense.Grand_Totals = function(audits, damage, owner_mob)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
     if owner_mob then
         DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
+    else
+        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
     end
 end

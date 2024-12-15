@@ -41,11 +41,12 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
     Debug.Packet.Add_Action(actor_name, target_name, "Melee Def.", result)
-    local damage = result.param
-    local reaction_id = result.reaction
-    local message_id = result.message
-    local effect_message_id = result.add_effect_message
+    local damage              = result.param
+    local reaction_id         = result.reaction
+    local message_id          = result.message
+    local effect_message_id   = result.add_effect_message
     local effect_animation_id = result.add_effect_animation
+    local melee_trackable = DB.Trackable.DEF_MELEE
     local counter_damage = 0
 
     -- Need special handling for pets
@@ -53,6 +54,7 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
     if owner_mob then
         pet_name = target_name
         target_name = owner_mob.name
+        melee_trackable = DB.Trackable.DEF_MELEE_PET
     end
 
     -- These are switched compared to offense.
@@ -63,40 +65,62 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
     }
 
     -- No damage Messages
-    local no_damage = H.Melee_Def.No_Damage_Messages(message_id)
+    local no_damage = H.No_Damage_Messages(result)
+    if no_damage then damage = 0 end
 
+    H.Defense.Grand_Totals(audits, damage, owner_mob)
+
+    -- Need to handle pets here because they aren't handled below.
     if owner_mob then
-        H.Melee_Def.Pet_Total(audits, damage, no_damage)
-    else
-        H.Melee_Def.Totals(audits, damage, no_damage)
+        if damage > 0 then
+            H.Offense.Hit(audits, melee_trackable, damage)
+            H.Offense.Min_Max(audits, melee_trackable, damage)
+        else
+            H.Offense.Miss(audits, melee_trackable)
+        end
     end
 
     -- There is an order of operations to defensive actions. Need to protect the denominator.
+    -- Not tracking damage mitigation for pets at this time.
     if not owner_mob then
-        local action_taken = false
-        if not action_taken then action_taken = H.Melee_Def.Evade(audits, message_id) end
-        if not action_taken then action_taken = H.Melee_Def.Parry(audits, message_id) end
-        if not action_taken then action_taken = H.Melee_Def.Shadows(audits, message_id) end
-        if not action_taken then action_taken = H.Melee_Def.Third_Eye(audits, message_id) end
-        if not action_taken then action_taken, counter_damage = H.Melee_Def.Counter(audits, result) end
-        if not action_taken then action_taken = H.Melee_Def.Guard(audits, damage, reaction_id) end
-        if not action_taken then action_taken = H.Melee_Def.Block(audits, damage, reaction_id) end
+        -- Full Mitigation
+        local full = false
+        if not full then full = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_EVASION, damage, message_id, Ashita.Enum.Message.MISS) end
+        if not full then full = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_PARRY, damage, message_id, Ashita.Enum.Message.PARRY) end
+        if not full then full = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_SHADOWS, damage, message_id, Ashita.Enum.Message.SHADOWS) end
+        if not full then full = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, damage, message_id, Ashita.Enum.Message.THIRD_EYE_ANTICIPATION) end
+        if not full then full, counter_damage = H.Melee_Def.Counter(audits, result) end
 
-        -- Unmitigated melee hit.
-        if not action_taken then
-            DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_MELEE, DB.Metric.HITS_ON_USE)
-            DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_UNMITIGATED, DB.Metric.HITS_ON_USE)
-            DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_UNMITIGATED, DB.Metric.TOTAL)
+        -- Partial Mitigation
+        local partial = false
+        if not full then
+            if not partial then partial = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_GUARD, damage, reaction_id, Ashita.Enum.Reaction.GUARD) end
+            if not partial then partial = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_SHIELD_BLOCK, damage, reaction_id, Ashita.Enum.Reaction.SHIELD_BLOCK) end
+        end
+
+        -- Full damage mitigation just increments attempts.
+        if full then
+            H.Offense.Miss(audits, melee_trackable)
+
+        -- Partial damage mitigation doesn't affect DEF_MELEE min max.
+        elseif partial then
+            H.Offense.Hit(audits, melee_trackable, damage)
+            H.Offense.Min_Max(audits, DB.Trackable.DEF_UNMITIGATED_PARTIAL, damage)
+            H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_PARTIAL, damage)
+
+        -- Totally unmitigated hit.
+        else
+            H.Offense.Hit(audits, melee_trackable, damage)
+            H.Offense.Min_Max(audits, melee_trackable, damage)
+            H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED, damage)
         end
 
         H.Melee_Def.Crit(audits, damage, message_id)
         H.Melee_Def.Spikes(audits, result)
-
-        -- Enspell
-        local add_effect_damage = result.add_effect_param
-        if add_effect_damage > 0 then H.Melee_Def.Additional_Effect(audits, add_effect_damage, effect_animation_id, effect_message_id, no_damage) end
+        damage = damage + H.Melee_Def.Additional_Effect(audits, result, effect_animation_id, effect_message_id)
     end
 
+    -- Set battle log flags.
     if no_damage or counter_damage > 0 then damage = -1 end
 
     return damage, counter_damage
@@ -113,25 +137,6 @@ H.Melee_Def.Blog = function(actor_mob, damage, counter_damage)
     local note = ""
     if counter_damage and counter_damage > 0 then note = "Counter: " .. tostring(counter_damage) end
     Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_MELEE, DB.Trackable.MELEE_OVERALL, damage, note)
-end
-
-------------------------------------------------------------------------------------------------------
--- Increment Grand Totals.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
-------------------------------------------------------------------------------------------------------
-H.Melee_Def.Totals = function(audits, damage, no_damage)
-    if no_damage then damage = 0 end
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
-
-    local trackable = DB.Trackable.DEF_MELEE
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC, 1,      audits, trackable, DB.Metric.ATTEMPTS_ON_USE) -- Melee attempts against entity.
-    -- HIT_COUNT gets set in the primary parse function.
-    if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable, DB.Metric.MIN)) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN) end
-    if damage > DB.Data.Get(audits.player_name, trackable, DB.Metric.MAX) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MAX) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -154,71 +159,24 @@ H.Melee_Def.Pet_Total = function(audits, damage, no_damage)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Check for evasion.
+-- Check for a full mitigation attempt.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable string
+---@param damage integer
 ---@param message_id number the ID of the entity animation when taking a hit.
+---@param message_check integer
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Melee_Def.Evade = function(audits, message_id)
-    local evade = false
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_EVASION, DB.Metric.ATTEMPTS_ON_USE)
-    if message_id == Ashita.Enum.Message.MISS then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_EVASION, DB.Metric.HITS_ON_USE)
-        evade = true
+H.Melee_Def.Mitigation = function(audits, trackable, damage, message_id, message_check)
+    local mitigation_occurred = false
+    if message_id == message_check then
+        H.Offense.Hit(audits, trackable, damage)
+        mitigation_occurred = true
+    else
+        H.Offense.Miss(audits, trackable)
     end
-    return evade
-end
-
-------------------------------------------------------------------------------------------------------
--- Check for parry.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param message_id number the ID of the entity animation when taking a hit.
----@return boolean
-------------------------------------------------------------------------------------------------------
-H.Melee_Def.Parry = function(audits, message_id)
-    local parry = false
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_PARRY, DB.Metric.ATTEMPTS_ON_USE)
-    if message_id == Ashita.Enum.Message.PARRY then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_PARRY, DB.Metric.HITS_ON_USE)
-        parry = true
-    end
-    return parry
-end
-
-------------------------------------------------------------------------------------------------------
--- Check for shadows.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param message_id number the ID of the entity animation when taking a hit.
----@return boolean
-------------------------------------------------------------------------------------------------------
-H.Melee_Def.Shadows = function(audits, message_id)
-    local shadow = false
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_SHADOWS, DB.Metric.ATTEMPTS_ON_USE)
-    if message_id == Ashita.Enum.Message.SHADOWS then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_SHADOWS, DB.Metric.HITS_ON_USE)
-        shadow = true
-    end
-    return shadow
-end
-
-------------------------------------------------------------------------------------------------------
--- Check for Third Eye.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param message_id number the ID of the entity animation when taking a hit.
----@return boolean
-------------------------------------------------------------------------------------------------------
-H.Melee_Def.Third_Eye = function(audits, message_id)
-    local anticipation = false
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, DB.Metric.ATTEMPTS_ON_USE)
-    if message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, DB.Metric.HITS_ON_USE)
-        anticipation = true
-    end
-    return anticipation
+    return mitigation_occurred
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -231,62 +189,20 @@ end
 H.Melee_Def.Counter = function(audits, result)
     local counter = false
     local counter_damage = 0
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.MELEE_COUNTER, DB.Metric.ATTEMPTS_ON_USE)
-    local spike_effect = result.has_spike_effect
-    if spike_effect then
+
+    -- Combined spike message check because blaze spikes etc. also has a spike effect.
+    if result.has_spike_effect and result.spike_effect_message == Ashita.Enum.Message.COUNTER then
         local damage = result.spike_effect_param
-        local spike_message = result.spike_effect_message
-        if spike_message == Ashita.Enum.Message.COUNTER then
-            DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
-            DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
-            DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.MELEE_OVERALL, DB.Metric.TOTAL)
-            DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.MELEE_COUNTER, DB.Metric.TOTAL)
-            DB.Data.Update(DB.Update_Mode.INC, 1     , audits, DB.Trackable.MELEE_COUNTER, DB.Metric.HITS_ON_USE)
-            counter = true
-            counter_damage = damage
-        end
+        H.Offense.Grand_Totals(audits, damage)
+        H.Offense.Hit(audits, DB.Trackable.MELEE_OVERALL, damage)
+        H.Offense.Hit(audits, DB.Trackable.MELEE_COUNTER, damage)
+        counter = true
+        counter_damage = damage
+    else
+        H.Offense.Miss(audits, DB.Trackable.MELEE_COUNTER)
     end
+
     return counter, counter_damage
-end
-
-------------------------------------------------------------------------------------------------------
--- Check for guard.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param reaction_id number the ID of the entity animation when taking a hit.
----@return boolean
-------------------------------------------------------------------------------------------------------
-H.Melee_Def.Guard = function(audits, damage, reaction_id)
-    local guard = false
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_GUARD, DB.Metric.ATTEMPTS_ON_USE)
-    if reaction_id == Ashita.Enum.Reaction.GUARD then
-        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_GUARD, DB.Metric.TOTAL)
-        DB.Data.Update(DB.Update_Mode.INC, 1,      audits, DB.Trackable.DEF_GUARD, DB.Metric.HITS_ON_USE)
-        DB.Data.Update(DB.Update_Mode.INC, 1,      audits, DB.Trackable.DEF_MELEE, DB.Metric.HITS_ON_USE)
-        guard = true
-    end
-    return guard
-end
-
-------------------------------------------------------------------------------------------------------
--- Check for block.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param reaction_id number the ID of the entity animation when taking a hit.
----@return boolean
-------------------------------------------------------------------------------------------------------
-H.Melee_Def.Block = function(audits, damage, reaction_id)
-    local block = false
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_SHIELD_BLOCK, DB.Metric.ATTEMPTS_ON_USE)
-    if reaction_id == Ashita.Enum.Reaction.SHIELD_BLOCK then
-        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_SHIELD_BLOCK, DB.Metric.TOTAL)
-        DB.Data.Update(DB.Update_Mode.INC, 1,      audits, DB.Trackable.DEF_SHIELD_BLOCK, DB.Metric.HITS_ON_USE)
-        DB.Data.Update(DB.Update_Mode.INC, 1,      audits, DB.Trackable.DEF_MELEE, DB.Metric.HITS_ON_USE)
-        block = true
-    end
-    return block
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -297,10 +213,10 @@ end
 ---@param message_id number the ID of the entity animation when taking a hit.
 ------------------------------------------------------------------------------------------------------
 H.Melee_Def.Crit = function(audits, damage, message_id)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_CRITICAL, DB.Metric.ATTEMPTS_ON_USE)
     if message_id == Ashita.Enum.Message.CRIT then
-        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_CRITICAL, DB.Metric.TOTAL)
-        DB.Data.Update(DB.Update_Mode.INC, 1,      audits, DB.Trackable.DEF_CRITICAL, DB.Metric.HITS_ON_USE)
+        H.Offense.Critical_Hit(audits, DB.Trackable.DEF_CRITICAL, damage)
+    else
+        H.Offense.Miss(audits, DB.Trackable.DEF_CRITICAL)
     end
 end
 
@@ -311,68 +227,55 @@ end
 ---@param result table action data
 ------------------------------------------------------------------------------------------------------
 H.Melee_Def.Spikes = function(audits, result)
-    local spike_effect = result.has_spike_effect
-    if spike_effect then
-        local damage = result.spike_effect_param
+    if result.has_spike_effect then
+        local damage          = result.spike_effect_param
         local spike_animation = result.spike_effect_animation
-        local spike_message = result.spike_effect_message
+        local spike_message   = result.spike_effect_message
+        local spike_trackable = DB.Trackable.SPELLS_SPIKE_DAMAGE
+
         if spike_message == Ashita.Enum.Message.SPIKE_DMG then
-            DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.TOTAL)
-            DB.Data.Update(DB.Update_Mode.INC, 1     , audits, DB.Trackable.SPELLS_SPIKE_DAMAGE, DB.Metric.HITS_ON_USE)
+            H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, damage)
+
             if spike_animation == Ashita.Enum.Effect_Animation.FIRE then
-                DB.Catalog.Update_Damage(audits.player_name, audits.target_name, DB.Trackable.SPELLS_SPIKE_DAMAGE, damage, "Blaze Spikes")
-                DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.SPELLS_SPIKE_DAMAGE, "Blaze Spikes", DB.Metric.HITS_ON_USE)
+                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Blaze Spikes")
+
             elseif spike_animation == Ashita.Enum.Effect_Animation.ICE then
-                DB.Catalog.Update_Damage(audits.player_name, audits.target_name, DB.Trackable.SPELLS_SPIKE_DAMAGE, damage, "Ice Spikes")
-                DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.SPELLS_SPIKE_DAMAGE, "Ice Spikes", DB.Metric.HITS_ON_USE)
+                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Ice Spikes")
+
             elseif spike_animation == Ashita.Enum.Effect_Animation.THUNDER then
-                DB.Catalog.Update_Damage(audits.player_name, audits.target_name, DB.Trackable.SPELLS_SPIKE_DAMAGE, damage, "Shock Spikes")
-                DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.SPELLS_SPIKE_DAMAGE, "Shock Spikes", DB.Metric.HITS_ON_USE)
+                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Shock Spikes")
+
             else
                 DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
                 DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
-                DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.SPELLS_SPIKE_DAMAGE, DB.Metric.TOTAL)
+                DB.Data.Update(DB.Update_Mode.INC, damage, audits, spike_trackable, DB.Metric.TOTAL)
             end
         end
     end
 end
 
 ------------------------------------------------------------------------------------------------------
--- Certain messages may come in with damage, but it's not actually damage.
--- Need to set the damage to zero for these cases.
-------------------------------------------------------------------------------------------------------
----@param message_id number
----@return boolean whether or not the damage from this should be treated as actual damage or not.
-------------------------------------------------------------------------------------------------------
-H.Melee_Def.No_Damage_Messages = function(message_id)
-    return message_id == Ashita.Enum.Message.DODGE or
-           message_id == Ashita.Enum.Message.MISS or
-           message_id == Ashita.Enum.Message.PARRY or
-           message_id == Ashita.Enum.Message.SHADOWS or
-           message_id == Ashita.Enum.Message.COUNTER or
-           message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION or
-           message_id == Ashita.Enum.Message.MOBHEAL373
-end
-
-------------------------------------------------------------------------------------------------------
 -- Captures additional effects from melee.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param value number how much of the thing you did.
+---@param result table how much of the thing you did.
 ---@param animation_id number determines which element the enspell is.
 ---@param message_id number numberic identifier for system chat messages.
----@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
+---@return integer
 ------------------------------------------------------------------------------------------------------
-H.Melee_Def.Additional_Effect = function(audits, value, animation_id, message_id, no_damage)
-    -- Only add additional damage to the damage totals.
-    if message_id == Ashita.Enum.Message.ENSPELL then
-        if no_damage then value = 0 end
-        DB.Data.Update(DB.Update_Mode.INC, value, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
-        if Res.Spells.Get_Enspell_Type(animation_id) then
-            local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
-            DB.Catalog.Update_Damage(audits.player_name, audits.target_name, DB.Trackable.DEF_NUKING, value, enspell_name)
-            DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_NUKING, enspell_name, DB.Metric.ATTEMPTS_ON_USE)
-            DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_NUKING, enspell_name, DB.Metric.HITS_ON_USE)
+H.Melee_Def.Additional_Effect = function(audits, result, animation_id, message_id)
+    local additional_damage = 0
+
+    if result.has_add_effect then
+        additional_damage = result.add_effect_param
+        if message_id == Ashita.Enum.Message.ENSPELL then
+            if animation_id and Res.Spells.Get_Enspell_Type(animation_id) then
+                local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
+                H.Defense.Grand_Totals(audits, additional_damage)
+                H.Offense.Catalog_Hit(audits, DB.Trackable.DEF_NUKING, additional_damage, enspell_name)
+            end
         end
     end
+
+    return additional_damage
 end
