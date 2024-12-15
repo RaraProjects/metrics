@@ -52,7 +52,7 @@ Column.Defense.Damage_Mitigation = function(player_name, mitigation_type, justif
     local color = Column.String.Color_Zero(mitigation_proc)
     if mitigation_proc == 0 then return UI.TextColored(color, Column.String.Format_Number(mitigation_proc)) end
 
-    local average_melee = Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_UNMITIGATED, false, true)
+    local average_melee = Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_UNMITIGATED_MELEE, false, true)
     color = Column.String.Color_Zero(average_melee)
     if average_melee == 0 then return UI.TextColored(color, "...") end
 
@@ -97,7 +97,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Defense.Damage_Reduction = function(player_name, mitigation_type, justify)
-    local average_melee = Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_UNMITIGATED, false, true)
+    local average_melee = Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_UNMITIGATED_MELEE, false, true)
     local color = Column.String.Color_Zero(average_melee)
     if average_melee == 0 then return UI.TextColored(color, "...") end
 

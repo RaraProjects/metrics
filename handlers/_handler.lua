@@ -366,3 +366,40 @@ H.Defense.Grand_Totals = function(audits, damage, owner_mob)
         DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
     end
 end
+
+------------------------------------------------------------------------------------------------------
+-- Check for a full mitigation attempt.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable string
+---@param damage integer
+---@param message_id number the ID of the entity animation when taking a hit.
+---@param message_check integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Defense.Mitigation = function(audits, trackable, damage, message_id, message_check)
+    local mitigation_occurred = false
+    if message_id == message_check then
+        H.Offense.Hit(audits, trackable, damage)
+        mitigation_occurred = true
+    else
+        H.Offense.Miss(audits, trackable)
+    end
+    return mitigation_occurred
+end
+
+
+------------------------------------------------------------------------------------------------------
+-- Check for critical damage taken.
+------------------------------------------------------------------------------------------------------
+---@param audits table Contains necessary entity audit data; helps save on parameter slots.
+---@param damage number
+---@param message_id number the ID of the entity animation when taking a hit.
+------------------------------------------------------------------------------------------------------
+H.Defense.Crit = function(audits, damage, message_id)
+    if message_id == Ashita.Enum.Message.CRIT then
+        H.Offense.Critical_Hit(audits, DB.Trackable.DEF_CRITICAL, damage)
+    else
+        H.Offense.Miss(audits, DB.Trackable.DEF_CRITICAL)
+    end
+end

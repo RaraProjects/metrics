@@ -42,10 +42,10 @@ Debug.Unit.Tests.Defense.Melee_Hit = function()
         player[player_name][target_index][DB.Trackable.DEF_SHIELD_BLOCK][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_CRITICAL] = {}
         player[player_name][target_index][DB.Trackable.DEF_CRITICAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED] = {}
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE] = {}
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = damage
     end
@@ -374,12 +374,12 @@ Debug.Unit.Tests.Defense.Melee_Guard = function()
         player[player_name][target_index][DB.Trackable.DEF_MELEE][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.DEF_MELEE][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_MELEE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL] = {}
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL] = {}
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_EVASION] = {}
         player[player_name][target_index][DB.Trackable.DEF_EVASION][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_PARRY] = {}
@@ -445,12 +445,12 @@ Debug.Unit.Tests.Defense.Melee_Shield = function()
         player[player_name][target_index][DB.Trackable.DEF_MELEE][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.DEF_MELEE][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_MELEE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL] = {}
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_PARTIAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL] = {}
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_EVASION] = {}
         player[player_name][target_index][DB.Trackable.DEF_EVASION][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_PARRY] = {}
@@ -540,10 +540,10 @@ Debug.Unit.Tests.Defense.Melee_Crit = function()
         player[player_name][target_index][DB.Trackable.DEF_CRITICAL][DB.Metric.CRITICAL_COUNT] = 1
         player[player_name][target_index][DB.Trackable.DEF_CRITICAL][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_CRITICAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED] = {}
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE] = {}
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = damage
     end
@@ -630,10 +630,10 @@ Debug.Unit.Tests.Defense.Melee_Spikes = function()
         player[player_name][target_index][DB.Trackable.DEF_SHIELD_BLOCK][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_CRITICAL] = {}
         player[player_name][target_index][DB.Trackable.DEF_CRITICAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED] = {}
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE] = {}
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = damage
 
@@ -723,10 +723,10 @@ Debug.Unit.Tests.Defense.Melee_Enspell = function()
         player[player_name][target_index][DB.Trackable.DEF_SHIELD_BLOCK][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_CRITICAL] = {}
         player[player_name][target_index][DB.Trackable.DEF_CRITICAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED] = {}
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE] = {}
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = damage + additional_damage
 
@@ -905,7 +905,6 @@ Debug.Unit.Tests.Defense.Ranged_Hit = function()
     H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
-    local player_catalog = {}
     local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
     player[player_name] = {}
@@ -916,14 +915,18 @@ Debug.Unit.Tests.Defense.Ranged_Hit = function()
         player[player_name][target_index][DB.Trackable.DEF_RANGED][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.DEF_RANGED][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.DEF_RANGED][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.DEF_RANGED][DB.Metric.HITS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.DEF_RANGED][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.DEF_RANGED][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_RANGED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_EVASION] = {}
-        player[player_name][target_index][DB.Trackable.DEF_EVASION][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.DEF_EVASION][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_SHADOWS] = {}
-        player[player_name][target_index][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_CRITICAL] = {}
-        player[player_name][target_index][DB.Trackable.DEF_CRITICAL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.DEF_CRITICAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_RANGED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_RANGED][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_RANGED][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_RANGED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = damage
     end
@@ -942,12 +945,64 @@ Debug.Unit.Tests.Defense.Ranged_Hit = function()
 
     local test_package = {
         player = player,
-        player_catalog = player_catalog,
         battle_log = battle_log,
         misc = misc,
     }
 
     return Debug.Unit.Check_Result("Defense - Ranged > Hit", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Defense - Ranged > Miss
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Defense.Ranged_Miss = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+    local action_id = 272
+    local action_name = "Ranged"
+    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGEMISS}
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PLAYER.id_num, action_id, damage, primary)
+    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.DEF_RANGED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_RANGED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_EVASION] = {}
+        player[player_name][target_index][DB.Trackable.DEF_EVASION][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_EVASION][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_CRITICAL] = {}
+        player[player_name][target_index][DB.Trackable.DEF_CRITICAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.ENEMY.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(0),
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Defense - Ranged > Miss", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------

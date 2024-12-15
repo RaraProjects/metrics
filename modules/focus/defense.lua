@@ -52,7 +52,7 @@ Focus.Defense.Damage_Taken = function(player_name)
         UI.TableNextColumn() UI.Text("Melee")
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_MELEE)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_MELEE, true)
-        UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_UNMITIGATED)
+        UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_UNMITIGATED_MELEE)
         if pet_dt > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_MELEE_PET) end
         Window_Manager.Table_Row_Color(row)
         row = row + 1

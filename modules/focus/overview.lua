@@ -1092,7 +1092,7 @@ Focus.Overview.Defense = function(player_name)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_MELEE)
         UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Trackable.DEF_MELEE)
         UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_MELEE, true)
-        UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_UNMITIGATED)
+        UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_UNMITIGATED_MELEE)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 

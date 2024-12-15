@@ -85,17 +85,17 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
     if not owner_mob then
         -- Full Mitigation
         local full = false
-        if not full then full = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_EVASION, damage, message_id, Ashita.Enum.Message.MISS) end
-        if not full then full = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_PARRY, damage, message_id, Ashita.Enum.Message.PARRY) end
-        if not full then full = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_SHADOWS, damage, message_id, Ashita.Enum.Message.SHADOWS) end
-        if not full then full = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, damage, message_id, Ashita.Enum.Message.THIRD_EYE_ANTICIPATION) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION, damage, message_id, Ashita.Enum.Message.MISS) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_PARRY, damage, message_id, Ashita.Enum.Message.PARRY) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS, damage, message_id, Ashita.Enum.Message.SHADOWS) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, damage, message_id, Ashita.Enum.Message.THIRD_EYE_ANTICIPATION) end
         if not full then full, counter_damage = H.Melee_Def.Counter(audits, result) end
 
         -- Partial Mitigation
         local partial = false
         if not full then
-            if not partial then partial = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_GUARD, damage, reaction_id, Ashita.Enum.Reaction.GUARD) end
-            if not partial then partial = H.Melee_Def.Mitigation(audits, DB.Trackable.DEF_SHIELD_BLOCK, damage, reaction_id, Ashita.Enum.Reaction.SHIELD_BLOCK) end
+            if not partial then partial = H.Defense.Mitigation(audits, DB.Trackable.DEF_GUARD, damage, reaction_id, Ashita.Enum.Reaction.GUARD) end
+            if not partial then partial = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHIELD_BLOCK, damage, reaction_id, Ashita.Enum.Reaction.SHIELD_BLOCK) end
         end
 
         -- Full damage mitigation just increments attempts.
@@ -105,17 +105,17 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
         -- Partial damage mitigation doesn't affect DEF_MELEE min max.
         elseif partial then
             H.Offense.Hit(audits, melee_trackable, damage)
-            H.Offense.Min_Max(audits, DB.Trackable.DEF_UNMITIGATED_PARTIAL, damage)
-            H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_PARTIAL, damage)
+            H.Offense.Min_Max(audits, DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL, damage)
+            H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_MELEE_PARTIAL, damage)
 
         -- Totally unmitigated hit.
         else
             H.Offense.Hit(audits, melee_trackable, damage)
             H.Offense.Min_Max(audits, melee_trackable, damage)
-            H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED, damage)
+            H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_MELEE, damage)
         end
 
-        H.Melee_Def.Crit(audits, damage, message_id)
+        H.Defense.Crit(audits, damage, message_id)
         H.Melee_Def.Spikes(audits, result)
         damage = damage + H.Melee_Def.Additional_Effect(audits, result, effect_animation_id, effect_message_id)
     end
@@ -137,46 +137,6 @@ H.Melee_Def.Blog = function(actor_mob, damage, counter_damage)
     local note = ""
     if counter_damage and counter_damage > 0 then note = "Counter: " .. tostring(counter_damage) end
     Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_MELEE, DB.Trackable.MELEE_OVERALL, damage, note)
-end
-
-------------------------------------------------------------------------------------------------------
--- Increment total pet damage taken.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param no_damage? boolean whether or not the damage from this should be treated as actual damage or not.
-------------------------------------------------------------------------------------------------------
-H.Melee_Def.Pet_Total = function(audits, damage, no_damage)
-    if no_damage then damage = 0 end
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
-
-    local trackable = DB.Trackable.DEF_MELEE_PET
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC, 1,      audits, trackable, DB.Metric.ATTEMPTS_ON_USE) -- Melee attempts against entity.
-    if damage > 0 then DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE) end
-    if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable, DB.Metric.MIN)) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN) end
-    if damage > DB.Data.Get(audits.player_name, trackable, DB.Metric.MAX) then DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MAX) end
-end
-
-------------------------------------------------------------------------------------------------------
--- Check for a full mitigation attempt.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param trackable string
----@param damage integer
----@param message_id number the ID of the entity animation when taking a hit.
----@param message_check integer
----@return boolean
-------------------------------------------------------------------------------------------------------
-H.Melee_Def.Mitigation = function(audits, trackable, damage, message_id, message_check)
-    local mitigation_occurred = false
-    if message_id == message_check then
-        H.Offense.Hit(audits, trackable, damage)
-        mitigation_occurred = true
-    else
-        H.Offense.Miss(audits, trackable)
-    end
-    return mitigation_occurred
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -203,21 +163,6 @@ H.Melee_Def.Counter = function(audits, result)
     end
 
     return counter, counter_damage
-end
-
-------------------------------------------------------------------------------------------------------
--- Check for critical damage taken.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param damage number
----@param message_id number the ID of the entity animation when taking a hit.
-------------------------------------------------------------------------------------------------------
-H.Melee_Def.Crit = function(audits, damage, message_id)
-    if message_id == Ashita.Enum.Message.CRIT then
-        H.Offense.Critical_Hit(audits, DB.Trackable.DEF_CRITICAL, damage)
-    else
-        H.Offense.Miss(audits, DB.Trackable.DEF_CRITICAL)
-    end
 end
 
 ------------------------------------------------------------------------------------------------------
