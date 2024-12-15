@@ -1,10 +1,10 @@
 DB = {}
 
 -- Primary Database
-DB.Parse = {}                          	-- [index][trackable][metric]
-DB.Parse_Catalog = {}					-- [index][action_name][trackable][metric]
-DB.Pet_Parse = {}						-- [index][pet][trackable][metric]
-DB.Pet_Parse_Catalog = {}				-- [index][pet][action_name][trackable][metric]
+DB.Parse = {}                          	-- [player_name][target_name][trackable][metric]
+DB.Parse_Catalog = {}					-- [player_name][target_name][action_name][trackable][metric]
+DB.Pet_Parse = {}						-- [player_name][pet][target_name][trackable][metric]
+DB.Pet_Parse_Catalog = {}				-- [player_name][pet][target_name][action_name][trackable][metric]
 DB.Total_Damage = 0
 DB.Total_Damage_No_Skillchain = 0
 

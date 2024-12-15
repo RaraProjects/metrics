@@ -165,6 +165,7 @@ H.No_Damage_Messages = function(result)
     local message_id = result.message
     return message_id == Ashita.Enum.Message.DODGE or
            message_id == Ashita.Enum.Message.MISS or
+           message_id == Ashita.Enum.Message.MISS_TP or
            message_id == Ashita.Enum.Message.PARRY or
            message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION or
            message_id == Ashita.Enum.Message.RANGEMISS or

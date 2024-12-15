@@ -16,8 +16,9 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
     local skill_data = H.TP.Pet_Skill_Data(action.param, actor_mob)
     if not skill_data then return nil end
     local skill_name = skill_data.en
-    local action_id = skill_data.id
+    local action_id  = skill_data.id
 
+    -- Mob ranged attacks come in as TP moves. Jump to Ranged Defense if that happens.
     if skill_name and skill_name == "Ranged Attack" then
         H.Ranged_Def.Action(action, actor_mob, owner_mob, log_defense)
         return nil
@@ -25,7 +26,7 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
 
     local result, target_mob
     local damage = 0
-    local count = 0
+    local count  = 0
 
     -- Mob AOEs can hit pets. Need to check for all the target owner mobs because they may not be the original target.
     for target_index, target_value in pairs(action.targets) do
@@ -72,53 +73,24 @@ end
 ------------------------------------------------------------------------------------------------------
 H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
     Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "TP Def", result)
-    local damage     = result.param
-    local message_id = result.message
+    local damage = result.param
     local audits = H.TP_Def.Audits(actor_mob, owner_mob, target_mob)
 
     -- A lot of pet abilities just land a status effect and it carries in a value as if it were damage.
-    damage = H.TP_Def.Ignore_Damage(damage, ws_id, ws_name, message_id)
+    local no_damage = H.No_Damage_Messages(result)
+    if no_damage then damage = 0 end
+
+    -- Damaging ability tallies.
+    if Res.Monster.Get_Damaging_Ability(ws_id) then
+        H.Defense.Grand_Totals(audits, damage, owner_mob)
+        H.Offense.Catalog_Hit(audits, audits.trackable, damage, ws_name)
 
     -- Some weaponskills drain MP instead of doing damage.
-    if Res.WS.Get_MP_Drain(ws_id) then
+    elseif Res.WS.Get_MP_Drain(ws_id) then
         H.Offense.Catalog_Hit(audits, DB.Trackable.WEAPONSKILL_MP_DRAIN, damage, ws_name)
+        no_damage = true
     end
 
-    -- Totals need to be updated manually here because Update_Damage isn't set up for defense metrics totals.
-    if owner_mob then
-        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
-    else
-        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
-    end
-
-    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, audits.trackable, damage, ws_name, audits.pet_name)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, audits.trackable, ws_name, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, audits.trackable, DB.Metric.ATTEMPTS_ON_USE)
-    if damage > 0 then
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, audits.trackable, ws_name, DB.Metric.HITS_ON_USE)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, audits.trackable, DB.Metric.HITS_ON_USE)
-    end
-
-    return damage
-end
-
-
--- ------------------------------------------------------------------------------------------------------
--- Some pet skills don't do direct damage and their effects come in as damage--must be ignored.
--- ------------------------------------------------------------------------------------------------------
----@param damage number
----@param ws_id number
----@param ws_name string
----@return number
--- ------------------------------------------------------------------------------------------------------
-H.TP_Def.Ignore_Damage = function(damage, ws_id, ws_name, message_id)
-    if not Res.Monster.Get_Damaging_Ability(ws_id) then
-        Debug.Error.Add(Debug.Error.WARNING, "H.TP_Def.Ignore_Damage", "TP Move {" .. tostring(ws_id) .. "} named {" .. tostring(ws_name)
-            .. "} is considered a non-damage pet ability.")
-        damage = 0
-    elseif message_id == Ashita.Enum.Message.MISS_TP or message_id == Ashita.Enum.Message.SHADOWS then
-        damage = 0
-    end
     return damage
 end
 
