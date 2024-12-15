@@ -315,20 +315,6 @@ H.TP.Pet_Skill_Hit = function(audits, trackable, skill_name)
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Handle weaponskills that drain MP instead of doing damage.
--- ------------------------------------------------------------------------------------------------------
----@param audits table
----@param damage integer
----@param ws_id number
----@param ws_name string
--- ------------------------------------------------------------------------------------------------------
-H.TP.MP_Drain = function(audits, damage, ws_id, ws_name)
-    if Res.WS.Get_MP_Drain(ws_id) then
-        H.Offense.Catalog_Hit(audits, DB.Trackable.WEAPONSKILL_MP_DRAIN, damage, ws_name)
-    end
-end
-
--- ------------------------------------------------------------------------------------------------------
 -- Set audit information for pet skills.
 -- ------------------------------------------------------------------------------------------------------
 ---@param actor_mob table

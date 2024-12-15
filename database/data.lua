@@ -79,11 +79,17 @@ end
 ---@param metric string a trackable's metric from the metric list.
 ------------------------------------------------------------------------------------------------------
 DB.Data.Update = function(mode, value, audits, trackable, metric)
+	local caller = "DB.Data.Update"
+
+	if not audits then
+		Debug.Error.Add(Debug.Error.ERROR, caller, "Nil audits passed in.")
+		return nil
+	end
+
 	local player_name = audits.player_name
 	local target_name = audits.target_name
 	local pet_name    = audits.pet_name
 
-	local caller = "DB.Data.Update"
 	if DB.Is_Value_Empty(caller, player_name, "Player") then return nil end
 	if DB.Is_Value_Empty(caller, target_name, "Target") then return nil end
 

@@ -987,7 +987,7 @@ Debug.Unit.Tests.Defense.Ranged_Miss = function()
     local battle_log = {
         player = Debug.Unit.Mob.ENEMY.name,
         pet    = Blog.Enum.NO_PET,
-        damage = tostring(0),
+        damage = "---",
         action = action_name,
         note   = " ",
     }
@@ -1033,8 +1033,10 @@ Debug.Unit.Tests.Defense.Nuke = function()
         player[player_name][target_index][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_SHADOWS] = {}
+        player[player_name][target_index][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = damage
 
@@ -1044,8 +1046,8 @@ Debug.Unit.Tests.Defense.Nuke = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     end
 
     local battle_log = {
@@ -1068,6 +1070,65 @@ Debug.Unit.Tests.Defense.Nuke = function()
     }
 
     return Debug.Unit.Check_Result("Defense - Nuke", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Defense - Nuke Shadow
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Defense.Nuke_Shadow = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+    local action_id = 145
+    local action_name = "Fire II"
+    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.SHADOWS}
+    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PLAYER.id_num, action_id, damage, primary)
+    H.Spell_Def.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+
+    local player = {}
+    local player_catalog = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    player_catalog[player_name] = {}
+
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.DEF_NUKING] = {}
+        player[player_name][target_index][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_SHADOWS] = {}
+        player[player_name][target_index][DB.Trackable.DEF_SHADOWS][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+
+        player_catalog[player_name][target_index] = {}
+        player_catalog[player_name][target_index][action_name] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.ENEMY.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = "---",
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Defense - Nuke Shadow", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -1102,8 +1163,10 @@ Debug.Unit.Tests.Defense.Nuke_AOE = function()
     player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage
     player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage
     player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage
-    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_SHADOWS] = {}
+    player[player_name][mob_name][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
     player[player_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = damage
 
@@ -1113,8 +1176,8 @@ Debug.Unit.Tests.Defense.Nuke_AOE = function()
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     -- Mob specific damage taken by player two.
     player[player_name_two][mob_name] = {}
@@ -1122,8 +1185,10 @@ Debug.Unit.Tests.Defense.Nuke_AOE = function()
     player[player_name_two][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage_two
     player[player_name_two][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage_two
     player[player_name_two][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage_two
-    player[player_name_two][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player[player_name_two][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name_two][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name_two][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name_two][mob_name][DB.Trackable.DEF_SHADOWS] = {}
+    player[player_name_two][mob_name][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name_two][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
     player[player_name_two][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = damage_two
 
@@ -1133,8 +1198,8 @@ Debug.Unit.Tests.Defense.Nuke_AOE = function()
     player_catalog[player_name_two][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage_two
     player_catalog[player_name_two][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage_two
     player_catalog[player_name_two][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage_two
-    player_catalog[player_name_two][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name_two][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name_two][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name_two][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     -- Unfiltered damage taken by player one.
     player[player_name][all_mobs] = {}
@@ -1142,8 +1207,10 @@ Debug.Unit.Tests.Defense.Nuke_AOE = function()
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage
-    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_SHADOWS] = {}
+    player[player_name][all_mobs][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
     player[player_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = damage
 
@@ -1153,8 +1220,8 @@ Debug.Unit.Tests.Defense.Nuke_AOE = function()
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     -- Unfiltered damage taken by player two.
     player[player_name_two][all_mobs] = {}
@@ -1162,8 +1229,10 @@ Debug.Unit.Tests.Defense.Nuke_AOE = function()
     player[player_name_two][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage_two
     player[player_name_two][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage_two
     player[player_name_two][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage_two
-    player[player_name_two][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player[player_name_two][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name_two][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name_two][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name_two][all_mobs][DB.Trackable.DEF_SHADOWS] = {}
+    player[player_name_two][all_mobs][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name_two][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
     player[player_name_two][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = damage_two
 
@@ -1173,8 +1242,8 @@ Debug.Unit.Tests.Defense.Nuke_AOE = function()
     player_catalog[player_name_two][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage_two
     player_catalog[player_name_two][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage_two
     player_catalog[player_name_two][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage_two
-    player_catalog[player_name_two][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name_two][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name_two][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name_two][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     local battle_log = {
         player = Debug.Unit.Mob.ENEMY.name,
@@ -1235,8 +1304,8 @@ Debug.Unit.Tests.Defense.Nuke_Pet = function()
         player[player_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = damage
 
@@ -1246,16 +1315,16 @@ Debug.Unit.Tests.Defense.Nuke_Pet = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
         pet[player_name][pet_name][target_index] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.DEF_NUKING_PET] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
-        pet[player_name][pet_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-        pet[player_name][pet_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = damage
 
@@ -1265,8 +1334,8 @@ Debug.Unit.Tests.Defense.Nuke_Pet = function()
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     end
 
     local battle_log = {
@@ -1333,14 +1402,16 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary = function()
     player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage_two
     player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage_two
     player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage_two
-    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_SHADOWS] = {}
+    player[player_name][mob_name][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET] = {}
     player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
     player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
     player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
-    player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
     player[player_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = damage
 
@@ -1350,14 +1421,14 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary = function()
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage_two
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage_two
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage_two
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET] = {}
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     player[player_name][all_mobs] = {}
     player[player_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
@@ -1366,14 +1437,16 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary = function()
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage_two
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage_two
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage_two
-    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_SHADOWS] = {}
+    player[player_name][all_mobs][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET] = {}
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
-    player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
     player[player_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = damage
 
@@ -1383,14 +1456,14 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary = function()
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage_two
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage_two
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage_two
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET] = {}
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     -- Damage done to the pet.
     pet[player_name][pet_name][mob_name] = {}
@@ -1398,8 +1471,8 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary = function()
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
-    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = damage
 
@@ -1409,16 +1482,16 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary = function()
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
-    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     pet[player_name][pet_name][all_mobs] = {}
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET] = {}
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
-    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = damage
 
@@ -1428,8 +1501,8 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary = function()
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage
-    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     local battle_log = {
         player = Debug.Unit.Mob.ENEMY.name,
@@ -1495,14 +1568,16 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary = function()
     player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage
     player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage
     player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage
-    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_SHADOWS] = {}
+    player[player_name][mob_name][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET] = {}
     player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage_two
     player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage_two
     player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage_two
-    player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
     player[player_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = damage_two
 
@@ -1512,14 +1587,14 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary = function()
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET] = {}
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage_two
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage_two
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage_two
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     player[player_name][all_mobs] = {}
     player[player_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
@@ -1528,14 +1603,16 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary = function()
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage
-    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_SHADOWS] = {}
+    player[player_name][all_mobs][DB.Trackable.DEF_SHADOWS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET] = {}
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage_two
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage_two
     player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage_two
-    player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
     player[player_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = damage_two
 
@@ -1545,14 +1622,14 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary = function()
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MIN] = damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.MAX] = damage
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET] = {}
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage_two
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage_two
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage_two
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     -- Damage done to the pet.
     pet[player_name][pet_name][mob_name] = {}
@@ -1560,8 +1637,8 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary = function()
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage_two
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage_two
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage_two
-    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = damage_two
 
@@ -1571,16 +1648,16 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary = function()
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage_two
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage_two
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage_two
-    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     pet[player_name][pet_name][all_mobs] = {}
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET] = {}
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage_two
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage_two
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage_two
-    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = damage_two
 
@@ -1590,8 +1667,8 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary = function()
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.TOTAL] = damage_two
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MIN] = damage_two
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.MAX] = damage_two
-    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_USE] = 1
-    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
+    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_NUKING_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     local battle_log = {
         player = Debug.Unit.Mob.ENEMY.name,

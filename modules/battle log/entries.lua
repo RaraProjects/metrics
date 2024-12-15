@@ -48,11 +48,11 @@ Blog.Entries.Damage = function(damage, action_type, color)
 
     -- Generate damage string.
     if not damage then
-        return {Value = Blog.Enum.NOT_APPLICABLE,            Color = Blog.Dependencies.Dim()}
+        return {Value = Blog.Enum.NOT_APPLICABLE, Color = Blog.Dependencies.Dim()}
     elseif damage < 0 then  -- Enfeeble
-        return {Value = Blog.Enum.NOT_APPLICABLE,            Color = default_color}
+        return {Value = Blog.Enum.NOT_APPLICABLE, Color = default_color}
     elseif damage == 0 then
-        return {Value = Blog.Dependencies.String_Format_Number(0),      Color = default_color}
+        return {Value = Blog.Dependencies.String_Format_Number(0),  Color = default_color}
     end
 
     return {Value = Blog.Dependencies.String_Format_Number(damage), Color = default_color}

@@ -72,7 +72,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
     Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "TP Def", result)
-    local damage = result.param
+    local damage     = result.param
     local message_id = result.message
     local audits = H.TP_Def.Audits(actor_mob, owner_mob, target_mob)
 
@@ -80,7 +80,9 @@ H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws
     damage = H.TP_Def.Ignore_Damage(damage, ws_id, ws_name, message_id)
 
     -- Some weaponskills drain MP instead of doing damage.
-    audits = H.TP.MP_Drain(audits, ws_id)
+    if Res.WS.Get_MP_Drain(ws_id) then
+        H.Offense.Catalog_Hit(audits, DB.Trackable.WEAPONSKILL_MP_DRAIN, damage, ws_name)
+    end
 
     -- Totals need to be updated manually here because Update_Damage isn't set up for defense metrics totals.
     if owner_mob then
@@ -100,36 +102,6 @@ H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws
     return damage
 end
 
--- ------------------------------------------------------------------------------------------------------
--- Set audit information for pet skills.
--- ------------------------------------------------------------------------------------------------------
----@param actor_mob table
----@param owner_mob table|nil
----@param target_mob table
----@return table
--- ------------------------------------------------------------------------------------------------------
-H.TP_Def.Audits = function(actor_mob, owner_mob, target_mob)
-    local player_name = actor_mob.name
-    local target_name = target_mob.name
-    local pet_name = nil
-    local trackable = DB.Trackable.DEF_TP_MOVE
-
-    if owner_mob then
-        pet_name = target_mob.name
-        target_name = owner_mob.name
-        trackable = DB.Trackable.DEF_TP_MOVE_PET
-    end
-
-    -- These are switched compared to offense.
-    local audits = {
-        player_name = target_name,
-        target_name = player_name,
-        pet_name = pet_name,
-        trackable = trackable
-    }
-
-    return audits
-end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Some pet skills don't do direct damage and their effects come in as damage--must be ignored.
@@ -165,4 +137,35 @@ H.TP_Def.Blog = function(actor_mob, damage, action_id, skill_name, target_count)
     -- Flag non damaging abilities to have "---" for damage.
     if action_id and not Res.Monster.Get_Damaging_Ability(action_id) then damage = -1 end
     Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_TP, skill_name, damage, note)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Set audit information for pet skills.
+-- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table
+---@param owner_mob table|nil
+---@param target_mob table
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+H.TP_Def.Audits = function(actor_mob, owner_mob, target_mob)
+    local player_name = actor_mob.name
+    local target_name = target_mob.name
+    local pet_name = nil
+    local trackable = DB.Trackable.DEF_TP_MOVE
+
+    if owner_mob then
+        pet_name = target_mob.name
+        target_name = owner_mob.name
+        trackable = DB.Trackable.DEF_TP_MOVE_PET
+    end
+
+    -- These are switched compared to offense.
+    local audits = {
+        player_name = target_name,
+        target_name = player_name,
+        pet_name = pet_name,
+        trackable = trackable
+    }
+
+    return audits
 end

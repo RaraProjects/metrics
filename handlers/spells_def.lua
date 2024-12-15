@@ -19,6 +19,7 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
     if not spell_data then return nil end
     local spell_name = Ashita.Spell.Name(spell_id, spell_data)
 
+    -- Loop through target actions.
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
@@ -34,7 +35,10 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
         end
     end
 
-    if Res.Spells.Get_Damaging(spell_id) then H.Spell_Def.Blog(actor_mob, spell_id, spell_data, spell_name, damage, target_count) end
+    -- Update the Battle Log.
+    if Res.Spells.Get_Damaging(spell_id) then
+        H.Spell_Def.Blog(actor_mob, spell_id, spell_data, spell_name, damage, target_count)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -55,38 +59,62 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     -- Need to double check each target in case a pet gets hit by AOE and wasn't the primary target.
     if not owner_mob then owner_mob = Ashita.Mob.Pet_Owner(target_mob) end
 
-    local spell_id = spell_data.Index
+    local spell_id   = spell_data.Index
     local spell_name = Ashita.Spell.Name(spell_id, spell_data)
-    local is_mapped = false
-    local damage = result.param or 0
+    local damage     = result.param or 0
+    local no_damage  = H.No_Damage_Messages(result)
+    local message_id = result.message
     local audits = H.Spell_Def.Audits(actor_mob, target_mob, owner_mob)
 
+    if no_damage then damage = 0 end
+
     if Res.Spells.Get_Damaging(spell_id) then
-        H.Spell_Def.Nuke(audits, damage, spell_name)
-        is_mapped = true
+        H.Spell_Def.Nuke(audits, damage, spell_name, owner_mob)
     else
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, DB.Metric.ATTEMPTS_ON_USE)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, DB.Metric.HITS_ON_USE)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, spell_name, DB.Metric.ATTEMPTS_ON_USE)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, spell_name, DB.Metric.HITS_ON_USE)
+        H.Offense.Catalog_No_Damage_Hit(audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, spell_name)
     end
 
-    if Res.Spells.Get_MP_Drain(spell_id) then
-        H.Spell_Def.MP_Drain(audits, damage)
-        is_mapped = true
+    -- Not tracking these for pets right now.
+    if not owner_mob then
+        H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS, damage, message_id, Ashita.Enum.Message.SHADOWS)
+        if Res.Spells.Get_MP_Drain(spell_id) then H.Offense.Hit(audits, DB.Trackable.DEF_MP_DRAIN, damage) end
+        if Res.Spells.Get_Enfeeble(spell_id) then H.Offense.Hit(audits, DB.Trackable.DEF_ENFEEBLING, damage) end
     end
 
-    if Res.Spells.Get_Enfeeble(spell_id) then
-        H.Spell_Def.Enfeebling(audits)
-        is_mapped = true
-    end
-
-    if not is_mapped then
-        Debug.Error.Add(Debug.Error.WARNING, "H.Spell_Def.Parse", "Actor {" .. tostring(actor_mob.name) .. "} cast spell {" .. tostring(spell_id)
-        .. "} named {" .. tostring(spell_name) .. "} which is unhandled.")
-    end
+    if no_damage then damage = -1 end
 
     return damage
+end
+
+------------------------------------------------------------------------------------------------------
+-- Handles spells that damage enemies.
+------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param damage number
+---@param spell_name string
+---@param owner_mob? table
+------------------------------------------------------------------------------------------------------
+H.Spell_Def.Nuke = function(audits, damage, spell_name, owner_mob)
+    local trackable = DB.Trackable.DEF_NUKING
+    if owner_mob then trackable = DB.Trackable.DEF_NUKING_PET end
+    H.Defense.Grand_Totals(audits, damage, owner_mob)
+    H.Offense.Catalog_Hit(audits, trackable, damage, spell_name)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Adds spell damage taken to the battle log.
+-- ------------------------------------------------------------------------------------------------------
+---@param actor_mob table the mob data of the entity receiving the action.
+---@param spell_id integer
+---@param spell_data table
+---@param spell_name string
+---@param damage number
+---@param target_count integer
+-- ------------------------------------------------------------------------------------------------------
+H.Spell_Def.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, target_count)
+    local blog_note = ""
+    if Res.Spells.Get_AOE(spell_id) then blog_note = "TGTs: " .. tostring(target_count) end
+    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_SPELL, spell_name, damage, blog_note, spell_data)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -115,65 +143,4 @@ H.Spell_Def.Audits = function(actor_mob, target_mob, owner_mob)
     }
 
     return audits
-end
-
-------------------------------------------------------------------------------------------------------
--- Handles spells that damage enemies.
-------------------------------------------------------------------------------------------------------
----@param audits table
----@param damage number
----@param spell_name string
-------------------------------------------------------------------------------------------------------
-H.Spell_Def.Nuke = function(audits, damage, spell_name)
-    local trackable = DB.Trackable.DEF_NUKING
-    if audits.pet_name then
-        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
-        trackable = DB.Trackable.DEF_NUKING_PET
-    else
-        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
-    end
-    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, spell_name, audits.pet_name)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HITS_ON_USE)
-end
-
-------------------------------------------------------------------------------------------------------
--- Handles spells that drain MP. The drain doesn't get used towards the damage total.
-------------------------------------------------------------------------------------------------------
----@param audits table
----@param damage number
-------------------------------------------------------------------------------------------------------
-H.Spell_Def.MP_Drain = function(audits, damage)
-    if not audits.pet_name then
-        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_MP_DRAIN, DB.Metric.TOTAL)
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Handles resist rates of enfeebling spells.
-------------------------------------------------------------------------------------------------------
----@param audits table
-------------------------------------------------------------------------------------------------------
-H.Spell_Def.Enfeebling = function(audits)
-    if not audits.pet_name then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_ENFEEBLING, DB.Metric.ATTEMPTS_ON_USE) -- Used to flag that data is availabel for show in Focus.
-    end
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Adds spell damage taken to the battle log.
--- ------------------------------------------------------------------------------------------------------
----@param actor_mob table the mob data of the entity receiving the action.
----@param spell_id integer
----@param spell_data table
----@param spell_name string
----@param damage number
----@param target_count integer
--- ------------------------------------------------------------------------------------------------------
-H.Spell_Def.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, target_count)
-    local blog_note = ""
-    if Res.Spells.Get_AOE(spell_id) then blog_note = "TGTs: " .. tostring(target_count) end
-    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_SPELL, spell_name, damage, blog_note, spell_data)
 end
