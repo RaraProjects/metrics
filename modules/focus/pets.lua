@@ -278,7 +278,7 @@ Focus.Pets.Single_Row = function(player_name, pet_name, action_name, trackable)
     UI.TableNextColumn() UI.Text(action_name)
     UI.TableNextColumn() Column.Single.Pet_Damage(player_name, pet_name, action_name, trackable, DB.Metric.TOTAL)
     UI.TableNextColumn() Column.Single.Average_Pet_TP(player_name, pet_name, trackable, action_name)
-    UI.TableNextColumn() Column.Single.Pet_Acc(player_name, pet_name, action_name, trackable)
+    UI.TableNextColumn() Column.Acc.By_Type_Pet_Catalog(player_name, pet_name, action_name, trackable)
     UI.TableNextColumn() Column.Single.Pet_Attempts(player_name, pet_name, action_name, trackable)
     UI.TableNextColumn() Column.Single.Pet_Average(player_name, pet_name, action_name, trackable)
 

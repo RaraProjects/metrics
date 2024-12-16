@@ -1,4 +1,4 @@
-Column.Single = T{}
+Column.Single = {}
 
 ------------------------------------------------------------------------------------------------------
 -- This is for cataloged actions.
@@ -179,56 +179,6 @@ Column.Single.Overcure = function(player_name, action_name)
     local overcure = DB.Catalog.Get(player_name, DB.Trackable.SPELLS_HEALING, action_name, DB.Metric.OVERCURE)
     local color = Column.String.Color_Zero(overcure)
     return UI.TextColored(color, Column.String.Format_Number(overcure))
-end
-
-------------------------------------------------------------------------------------------------------
--- This is for cataloged actions.
--- Grabs the accuracy for a given cataloged action and trackable.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param action_name string
----@param focus_type string a trackable from the model.
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Single.Acc = function(player_name, action_name, focus_type)
-    local single_hits = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.HITS_ON_USE)
-    local single_attempts = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.ATTEMPTS_ON_USE)
-    local color = Column.String.Color_Zero(single_hits)
-    return UI.TextColored(color, Column.String.Format_Percent(single_hits, single_attempts))
-end
-
-------------------------------------------------------------------------------------------------------
--- This is for cataloged actions.
--- Grabs the accuracy for a an enfeebling spell.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param action_name string
----@param focus_type string a trackable from the model.
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Single.Enfeeble_Acc = function(player_name, action_name, focus_type)
-    local single_hits = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.HITS_ON_USE)
-    local single_attempts = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
-    local color = Column.String.Color_Zero(single_hits)
-    return UI.TextColored(color, Column.String.Format_Percent(single_hits, single_attempts))
-end
-
-------------------------------------------------------------------------------------------------------
--- This is for cataloged actions.
--- This is for pet actions.
--- Grabs the accuracy for a given cataloged action and trackable.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param pet_name string
----@param action_name string
----@param trackable string a trackable from the model.
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Single.Pet_Acc = function(player_name, pet_name, action_name, trackable)
-    local single_hits = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.HITS_ON_USE)
-    local single_attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
-    local color = Column.String.Color_Zero(single_hits)
-    return UI.TextColored(color, Column.String.Format_Percent(single_hits, single_attempts))
 end
 
 ------------------------------------------------------------------------------------------------------

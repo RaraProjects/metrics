@@ -12,8 +12,10 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 	if not log_offense then return nil end
 	local result, target_mob
 	local damage = 0
-    local details = T{}
-    local mult_attack = T{}
+    local add_damage = 0
+    local overall_hit = false
+    local details = {}
+    local mult_attack = {}
 
 	for target_index, target_value in pairs(action.targets) do
 		for action_index, _ in pairs(target_value.actions) do
@@ -24,44 +26,89 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
                 if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
                 details = H.Melee.Parse(result, actor_mob.name, target_mob.name, owner_mob)
 
-                if details and details.damage then damage = damage + details.damage end
+                -- Special handling for tracking multi-attacks.
+                if details then
+                    if details.damage then damage = damage + details.damage end
+                    if details.add_damage then add_damage = add_damage + details.add_damage end     -- Additional effect kept seperate from multi-attack damage.
+                end
+
+                -- Multi-attack handling by type.
                 if details and details.type then
-                    if not mult_attack[details.type] then mult_attack[details.type] = 0 end
-                    mult_attack[details.type] = mult_attack[details.type] + 1
+                    -- First hit for a melee type should be initialization.
+                    if not mult_attack[details.type] then
+                        mult_attack[details.type] = {}
+                        mult_attack[details.type].swings = 0
+                        mult_attack[details.type].multi_damage = 0
+                        mult_attack[details.type].has_hit = false
+
+                    -- If already initialized then this should not be the first hit i.e. a multi-attack has occurred.
+                    -- Start logging multi-attack damage in this case.
+                    else
+                        mult_attack[details.type].multi_damage = mult_attack[details.type].multi_damage + details.damage
+                    end
+
+                    -- Always increment the multi-attack swing counter and total damage
+                    if details.has_hit then
+                        mult_attack[details.type].has_hit = true
+                        overall_hit = true
+                    end
+                    mult_attack[details.type].swings = mult_attack[details.type].swings + 1
                 end
             end
 		end
 	end
 
     if details and details.audits and details.audits.player_name and not owner_mob then
-        for type, number in pairs(mult_attack) do
+
+        local multi_swings = 0
+        local multi_damage = 0
+        local has_hit = false
+
+        for type, data in pairs(mult_attack) do
+            multi_swings = data.swings
+            multi_damage = data.multi_damage
+            has_hit      = data.has_hit
+
+            -- Find the correct multi-attack metric based on the number attacks for the melee type.
             local metric = nil
-            if number == 1 then metric = DB.Metric.MULTI_ATTACK_1 end
-            if number == 2 then metric = DB.Metric.MULTI_ATTACK_2 end
-            if number == 3 then metric = DB.Metric.MULTI_ATTACK_3 end
-            if number == 4 then metric = DB.Metric.MULTI_ATTACK_4 end
-            if number == 5 then metric = DB.Metric.MULTI_ATTACK_5 end
-            if number == 6 then metric = DB.Metric.MULTI_ATTACK_6 end
-            if number == 7 then metric = DB.Metric.MULTI_ATTACK_7 end
-            if number == 8 then metric = DB.Metric.MULTI_ATTACK_8 end
+            if     multi_swings == 1 then metric = DB.Metric.MULTI_ATTACK_1
+            elseif multi_swings == 2 then metric = DB.Metric.MULTI_ATTACK_2
+            elseif multi_swings == 3 then metric = DB.Metric.MULTI_ATTACK_3
+            elseif multi_swings == 4 then metric = DB.Metric.MULTI_ATTACK_4
+            elseif multi_swings == 5 then metric = DB.Metric.MULTI_ATTACK_5
+            elseif multi_swings == 6 then metric = DB.Metric.MULTI_ATTACK_6
+            elseif multi_swings == 7 then metric = DB.Metric.MULTI_ATTACK_7
+            elseif multi_swings == 8 then metric = DB.Metric.MULTI_ATTACK_8
+            end
+
             if metric then
-                if not DB.Tracking.Multi_Attack[details.audits.player_name] then DB.Tracking.Multi_Attack[details.audits.player_name] = T{} end
+                -- Multi-attack specific rate.
+                if not DB.Tracking.Multi_Attack[details.audits.player_name] then DB.Tracking.Multi_Attack[details.audits.player_name] = {} end
                 DB.Tracking.Multi_Attack[details.audits.player_name][metric] = true
-                DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, metric)
-                DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, DB.Metric.MELEE_STRIKES)
-                DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MELEE_STRIKES)
-                if number > 1 then DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_TOTAL) end
+                DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, metric)                                    -- Specific multi-attack count (even if it's one).
+                if has_hit then DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, DB.Metric.HITS_ON_USE) end -- How many times an attack round contained a specific melee type.
+                DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, DB.Metric.ATTEMPTS_ON_USE)                 -- Kind of benign. All hits should have an attempt associated though.
+
+                -- Total multi-attack rate.
+                if multi_swings > 1 then
+                    DB.Data.Update(DB.Update_Mode.INC, 1,            details.audits, type, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
+                    DB.Data.Update(DB.Update_Mode.INC, multi_damage, details.audits, type, DB.Metric.MULTI_ATTACK_TOTAL)
+                    DB.Data.Update(DB.Update_Mode.INC, 1,            details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
+                    DB.Data.Update(DB.Update_Mode.INC, multi_damage, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_TOTAL)
+                end
             end
         end
     end
 
-    -- Don't calculate attack speed for pets.
-    if not owner_mob then DB.Attack_Speed.Update(actor_mob.name) end
+    -- Don't calculatefor pets.
+    -- Keep track of how many melee cycles have occurred (1 per packet).
+    if not owner_mob then
+        DB.Attack_Speed.Update(actor_mob.name)
+        if overall_hit then DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.HITS_ON_USE) end
+        DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
+    end
 
-    -- Keeps track of how many melee cycles have occurred (1 per packet).
-    if not owner_mob then DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MELEE_ROUNDS) end
-
-    H.Melee.Blog(actor_mob, owner_mob, damage)
+    H.Melee.Blog(actor_mob, owner_mob, damage + add_damage)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -119,7 +166,7 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
         pet_name    = pet_name,
     }
 
-    local was_critical_hit = H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete, owner_mob)
+    local was_critical_hit, has_hit = H.Melee.Message(audits, damage, message_id, melee_type_broad, melee_type_discrete, owner_mob)
 
     -- Avoid setting any damage data if the strike missed or healed a mob or something.
     if not no_damage then
@@ -129,14 +176,13 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
         H.Offense.Min_Max(audits, melee_type_discrete, damage, was_critical_hit)
     end
 
+    if no_damage then damage = 0 end
+
     -- These have their own damage separate from the intiial melee strike.
     H.Melee.Spikes(audits, result, owner_mob)
-    damage = damage + H.Melee.Additional_Effect(audits, result)
+    local add_damage = H.Melee.Additional_Effect(audits, result)
 
-    -- Flag for the battle log.
-    if no_damage then damage = -1 end
-
-    return {damage = damage, type = melee_type_discrete, audits = audits}
+    return {damage = damage, add_damage = add_damage, has_hit = has_hit, type = melee_type_discrete, audits = audits}
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -198,10 +244,11 @@ end
 ---@param melee_type_broad string player melee or pet melee.
 ---@param melee_type_discrete string main-hand, off-hand, etc.
 ---@param owner_mob? table
----@return boolean
+---@return boolean, boolean
 ------------------------------------------------------------------------------------------------------
 H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_type_discrete, owner_mob)
     local was_critical_hit = false
+    local has_hit = true
 
     if message_id == Ashita.Enum.Message.HIT then
         H.Offense.Hit(audits, melee_type_broad, damage)
@@ -212,6 +259,7 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
         H.Offense.Miss(audits, melee_type_broad)
         H.Offense.Miss(audits, melee_type_discrete)
         H.Offense.Update_Recent_Accuracy(audits, false, owner_mob)
+        has_hit = false
 
     elseif message_id == Ashita.Enum.Message.CRIT then
         H.Offense.Critical_Hit(audits, melee_type_broad, damage)
@@ -241,6 +289,7 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
         H.Offense.Miss(audits, melee_type_broad)
         H.Offense.Miss(audits, melee_type_discrete)
         H.Offense.Update_Recent_Accuracy(audits, false, owner_mob)
+        has_hit = false
 
     elseif message_id == Ashita.Enum.Message.SQUARE then
         H.Offense.Hit(audits, melee_type_broad, damage)
@@ -261,9 +310,10 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
     else
         Debug.Error.Add(Debug.Error.WARNING, "H.Melee.Message", "Player {" .. tostring(audits.player_name) .. "} had unhandled melee message {"
         .. tostring(message_id) .. "}.")
+        has_hit = false
     end
 
-    return was_critical_hit
+    return was_critical_hit, has_hit
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -340,13 +390,24 @@ H.Melee.Spikes = function(audits, result, owner_mob)
 
     local spike_effect = result.has_spike_effect
     if spike_effect and not audits.pet_name then
-        local damage        = result.spike_effect_param
-        local spike_message = result.spike_effect_message
+        local damage          = result.spike_effect_param
+        local spike_animation = result.spike_effect_animation
+        local spike_message   = result.spike_effect_message
+        local spike_trackable = DB.Trackable.DEF_SPIKES
         H.Defense.Grand_Totals(audits, damage)
 
         if spike_message == Ashita.Enum.Message.SPIKE_DMG then
             H.Offense.Hit(audits, DB.Trackable.DEF_NUKING, damage)
-            H.Offense.Hit(audits, DB.Trackable.DEF_SPIKES, damage)
+
+            if spike_animation == Ashita.Enum.Effect_Animation.FIRE then
+                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Blaze Spikes")
+
+            elseif spike_animation == Ashita.Enum.Effect_Animation.ICE then
+                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Ice Spikes")
+
+            elseif spike_animation == Ashita.Enum.Effect_Animation.THUNDER then
+                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Shock Spikes")
+            end
 
         elseif spike_message == Ashita.Enum.Message.COUNTER then
             was_countered = true

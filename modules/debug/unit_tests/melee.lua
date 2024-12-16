@@ -10,8 +10,10 @@ Debug.Unit.Tests.Melee.Main_Hit = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.HIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player = {}
@@ -24,17 +26,18 @@ Debug.Unit.Tests.Melee.Main_Hit = function()
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
@@ -75,8 +78,10 @@ Debug.Unit.Tests.Melee.Main_Miss = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.MISS}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player = {}
@@ -86,12 +91,11 @@ Debug.Unit.Tests.Melee.Main_Miss = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
@@ -100,7 +104,7 @@ Debug.Unit.Tests.Melee.Main_Miss = function()
     local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
-        damage = "---",
+        damage = tostring(0),
         action = "Melee",
         note   = " ",
     }
@@ -119,280 +123,6 @@ Debug.Unit.Tests.Melee.Main_Miss = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Melee - Main-Hand > Critical Hit
-------------------------------------------------------------------------------------------------------
----@return table
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Crit = function()
-    Debug.Unit.Reset()
-    local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.CRIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
-
-    local player = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
-
-    player[player_name] = {}
-    for _, target_index in ipairs(target_lists) do
-        player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_DAMAGE] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_MIN] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_MAX] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_DAMAGE] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_MIN] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_MAX] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
-    end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = tostring(damage),
-        action = "Melee",
-        note   = " ",
-    }
-
-    local misc = {}
-    misc["Total Damage"] = damage
-    misc["Total Damage No Skillchain"] = damage
-
-    local test_package = {
-        player = player,
-        battle_log = battle_log,
-        misc = misc,
-    }
-
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Crit", test_package)
-end
-
-------------------------------------------------------------------------------------------------------
--- Melee - Main-Hand > Enspell
-------------------------------------------------------------------------------------------------------
----@return table
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Enspell = function()
-    Debug.Unit.Reset()
-    local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 100
-    local additional_damage = 200
-    local add_effect_animation = 1
-    local add_effect_name = "Enfire"
-    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.HIT}
-    local add_effect = {param = additional_damage, animation = add_effect_animation, message = Ashita.Enum.Message.ENSPELL}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
-
-    local player = {}
-    local player_catalog = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
-
-    player[player_name] = {}
-    player_catalog[player_name] = {}
-    for _, target_index in ipairs(target_lists) do
-        player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = additional_damage
-        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.TOTAL] = additional_damage
-        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.MIN] = additional_damage
-        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.MAX] = additional_damage
-        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + additional_damage
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + additional_damage
-
-        player_catalog[player_name][target_index] = {}
-        player_catalog[player_name][target_index][add_effect_name] = {}
-        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL] = {}
-        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.TOTAL] = additional_damage
-        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.MIN] = additional_damage
-        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.MAX] = additional_damage
-        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.HITS_ON_TARGET] = 1
-        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-    end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = tostring(damage + additional_damage),
-        action = "Melee",
-        note   = " ",
-    }
-
-    local misc = {}
-    misc["Total Damage"] = damage + additional_damage
-    misc["Total Damage No Skillchain"] = damage + additional_damage
-
-    local test_package = {
-        player = player,
-        player_catalog = player_catalog,
-        battle_log = battle_log,
-        misc = misc,
-    }
-
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Enspell", test_package)
-end
-
-------------------------------------------------------------------------------------------------------
--- Melee - Main-Hand > Shadows
-------------------------------------------------------------------------------------------------------
----@return table
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Shadows = function()
-    Debug.Unit.Reset()
-    local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.SHADOWS}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
-
-    local player = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
-
-    player[player_name] = {}
-    for _, target_index in ipairs(target_lists) do
-        player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.SHADOW_ABSORPTION] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.SHADOW_ABSORPTION] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-    end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = "---",
-        action = "Melee",
-        note   = " ",
-    }
-
-    local misc = {}
-    misc["Total Damage"] = 0
-    misc["Total Damage No Skillchain"] = 0
-
-    local test_package = {
-        player = player,
-        battle_log = battle_log,
-        misc = misc,
-    }
-
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Shadows", test_package)
-end
-
-------------------------------------------------------------------------------------------------------
--- Melee - Main-Hand > Mob Heal
-------------------------------------------------------------------------------------------------------
----@return table
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Mob_Heal = function()
-    Debug.Unit.Reset()
-    local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.MOBHEAL373}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
-
-    local player = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
-
-    player[player_name] = {}
-    for _, target_index in ipairs(target_lists) do
-        player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MOB_HEALING] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MOB_HEALING] = damage
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-    end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = "---",
-        action = "Melee",
-        note   = " ",
-    }
-
-    local misc = {}
-    misc["Total Damage"] = 0
-    misc["Total Damage No Skillchain"] = 0
-
-    local test_package = {
-        player = player,
-        battle_log = battle_log,
-        misc = misc,
-    }
-
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Mob Heal", test_package)
-end
-
-------------------------------------------------------------------------------------------------------
 -- Melee - Off-Hand > Hit
 ------------------------------------------------------------------------------------------------------
 ---@return table
@@ -402,8 +132,10 @@ Debug.Unit.Tests.Melee.Off_Hand_Hit = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.MELEE_OFFHAND, reaction = nil, message = Ashita.Enum.Message.HIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_OFFHAND, nil, Ashita.Enum.Message.HIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player = {}
@@ -416,17 +148,18 @@ Debug.Unit.Tests.Melee.Off_Hand_Hit = function()
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND] = {}
         player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.MULTI_ATTACK_1] = 1
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
@@ -467,8 +200,10 @@ Debug.Unit.Tests.Melee.Off_Hand_Miss = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.MELEE_OFFHAND, reaction = nil, message = Ashita.Enum.Message.MISS}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_OFFHAND, nil, Ashita.Enum.Message.MISS))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player = {}
@@ -478,12 +213,11 @@ Debug.Unit.Tests.Melee.Off_Hand_Miss = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OFF_HAND][DB.Metric.MULTI_ATTACK_1] = 1
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
@@ -492,7 +226,7 @@ Debug.Unit.Tests.Melee.Off_Hand_Miss = function()
     local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
-        damage = "---",
+        damage = tostring(0),
         action = "Melee",
         note   = " ",
     }
@@ -511,6 +245,875 @@ Debug.Unit.Tests.Melee.Off_Hand_Miss = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Melee - Kick > Hit
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Kick_Hit = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.HIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Kick > Hit", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Kick > Miss
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Kick_Miss = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 0
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.MISS))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(0),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Kick > Miss", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Kick > Critical Hit
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Kick_Crit = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.CRIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_DAMAGE] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.CRITICAL_DAMAGE] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.CRITICAL_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.CRITICAL_MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.CRITICAL_MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Kick > Crit", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Multi-Attack
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Main_Multi_Attack = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage     = 100
+    local damage_two = 200
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,     Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage + damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MULTI_ATTACK_TOTAL] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage + damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_TOTAL] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_2] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + damage_two
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + damage_two
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage + damage_two),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage + damage_two
+    misc["Total Damage No Skillchain"] = damage + damage_two
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Multi-Attack", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Multi-Attack Hit Miss Hit
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Main_Multi_Attack_Hit_Miss_Hit = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage      = 100
+    local test_damage = 500
+    local damage_two  = 200
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage + damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MULTI_ATTACK_TOTAL] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage + damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_TOTAL] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_3] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + damage_two
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + damage_two
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage + damage_two),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage + damage_two
+    misc["Total Damage No Skillchain"] = damage + damage_two
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Multi-Attack Hit Miss Hit", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Multi-Attack Hit Miss Crit
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Main_Multi_Attack_Hit_Miss_Crit = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage      = 100
+    local test_damage = 500
+    local damage_two  = 200
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.CRIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage + damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_DAMAGE] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_MIN] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_MAX] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MULTI_ATTACK_TOTAL] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage + damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_DAMAGE] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_MIN] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_MAX] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_TOTAL] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_3] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + damage_two
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + damage_two
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage + damage_two),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage + damage_two
+    misc["Total Damage No Skillchain"] = damage + damage_two
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Multi-Attack Hit Miss Crit", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Multi-Attack Miss Miss Miss
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Main_Multi_Attack_Miss_Miss_Miss = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage      = 100
+    local test_damage = 500
+    local damage_two  = 200
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_3] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(0),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Multi-Attack Miss Miss Miss", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Multi-Attack + Kick Hit
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Main_Multi_Attack_Kick = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local first  = 100
+    local second = 200
+    local kick   = 300
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, first,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, second, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, kick,   Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.HIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = first + second + kick
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = first
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = kick
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MULTI_ATTACK_TOTAL] = second
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = first + second
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = first
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = second
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_TOTAL] = second
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_2] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.TOTAL] = kick
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MIN] = kick
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MAX] = kick
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = first + second + kick
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = first + second + kick
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(first + second + kick),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = first + second + kick
+    misc["Total Damage No Skillchain"] = first + second + kick
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Multi-Attack + Kick Hit", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Multi-Attack Enspell
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Main_Multi_Attack_Enspell = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage      = 100
+    local test_damage = 500
+    local damage_two  = 200
+    local additional_damage    = 1000
+    local add_effect_animation = 1
+    local add_effect_name      = "Enfire"
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENSPELL))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local player_catalog = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    player_catalog[player_name] = {}
+
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage + damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MULTI_ATTACK_TOTAL] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage + damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 2
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_HIT_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_TOTAL] = damage_two
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_3] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 3
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = additional_damage
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.TOTAL] = additional_damage
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.MIN] = additional_damage
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.MAX] = additional_damage
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + damage_two + additional_damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + damage_two + additional_damage
+
+        player_catalog[player_name][target_index] = {}
+        player_catalog[player_name][target_index][add_effect_name] = {}
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL] = {}
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.TOTAL] = additional_damage
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.MIN] = additional_damage
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.MAX] = additional_damage
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage + damage_two + additional_damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage + damage_two + additional_damage
+    misc["Total Damage No Skillchain"] = damage + damage_two + additional_damage
+
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Multi-Attack Enspell", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Critical Hit
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Crit = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.CRIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_DAMAGE] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_DAMAGE] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.CRITICAL_MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Crit", test_package)
+end
+
+
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Shadows
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Shadows = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.SHADOWS))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.SHADOW_ABSORPTION] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.SHADOW_ABSORPTION] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(0),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Shadows", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Mob Heal
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Mob_Heal = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MOBHEAL373))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MOB_HEALING] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MOB_HEALING] = damage
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(0),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Mob Heal", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
 -- Melee - Pet > Hit
 ------------------------------------------------------------------------------------------------------
 ---@return table
@@ -521,8 +1124,10 @@ Debug.Unit.Tests.Melee.Pet_Hit = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
     local damage = 100
-    local primary = {animation = 0, reaction = nil, message = Ashita.Enum.Message.HIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.HIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -607,8 +1212,10 @@ Debug.Unit.Tests.Melee.Pet_Miss = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
     local damage = 100
-    local primary = {animation = 0, reaction = nil, message = Ashita.Enum.Message.MISS}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.MISS))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -635,7 +1242,7 @@ Debug.Unit.Tests.Melee.Pet_Miss = function()
     local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Debug.Unit.Mob.PET.name,
-        damage = "---",
+        damage = tostring(0),
         action = "Pet Melee",
         note   = " ",
     }
@@ -665,8 +1272,10 @@ Debug.Unit.Tests.Melee.Pet_Crit = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
     local damage = 100
-    local primary = {animation = 0, reaction = nil, message = Ashita.Enum.Message.CRIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.CRIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -759,8 +1368,10 @@ Debug.Unit.Tests.Melee.Pet_Shadows = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
     local damage = 100
-    local primary = {animation = 0, reaction = nil, message = Ashita.Enum.Message.SHADOWS}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SHADOWS))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -795,7 +1406,7 @@ Debug.Unit.Tests.Melee.Pet_Shadows = function()
     local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Debug.Unit.Mob.PET.name,
-        damage = "---",
+        damage = tostring(0),
         action = "Pet Melee",
         note   = " ",
     }
@@ -825,8 +1436,10 @@ Debug.Unit.Tests.Melee.Pet_Mob_Heal = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
     local damage = 100
-    local primary = {animation = 0, reaction = nil, message = Ashita.Enum.Message.MOBHEAL373}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.MOBHEAL373))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -861,7 +1474,7 @@ Debug.Unit.Tests.Melee.Pet_Mob_Heal = function()
     local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Debug.Unit.Mob.PET.name,
-        damage = "---",
+        damage = tostring(0),
         action = "Pet Melee",
         note   = " ",
     }
@@ -881,502 +1494,96 @@ Debug.Unit.Tests.Melee.Pet_Mob_Heal = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Melee - Daken > Hit
+-- Melee - Main-Hand > Enspell
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Daken_Hit = function()
+Debug.Unit.Tests.Melee.Enspell = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.DAKEN, reaction = nil, message = Ashita.Enum.Message.RANGEHIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+    local additional_damage = 200
+    local add_effect_animation = 1
+    local add_effect_name = "Enfire"
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENSPELL))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player = {}
+    local player_catalog = {}
     local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
     player[player_name] = {}
-    for _, target_index in ipairs(target_lists) do
-        player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING] = {}
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MULTI_ATTACK_1] = 1
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
-    end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = tostring(damage),
-        action = "Melee",
-        note   = " ",
-    }
-
-    local misc = {}
-    misc["Total Damage"] = damage
-    misc["Total Damage No Skillchain"] = damage
-
-    local test_package = {
-        player = player,
-        battle_log = battle_log,
-        misc = misc,
-    }
-
-    return Debug.Unit.Check_Result("Melee - Daken > Hit", test_package)
-end
-
-------------------------------------------------------------------------------------------------------
--- Melee - Daken > Square Hit
-------------------------------------------------------------------------------------------------------
----@return table
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Daken_Square = function()
-    Debug.Unit.Reset()
-    local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.DAKEN, reaction = nil, message = Ashita.Enum.Message.SQUARE}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
-
-    local player = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
-
-    player[player_name] = {}
-    for _, target_index in ipairs(target_lists) do
-        player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING] = {}
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MULTI_ATTACK_1] = 1
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
-    end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = tostring(damage),
-        action = "Melee",
-        note   = " ",
-    }
-
-    local misc = {}
-    misc["Total Damage"] = damage
-    misc["Total Damage No Skillchain"] = damage
-
-    local test_package = {
-        player = player,
-        battle_log = battle_log,
-        misc = misc,
-    }
-
-    return Debug.Unit.Check_Result("Melee - Daken > Square Hit", test_package)
-end
-
-------------------------------------------------------------------------------------------------------
--- Melee - Daken > Truestrike
-------------------------------------------------------------------------------------------------------
----@return table
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Daken_Truestrike = function()
-    Debug.Unit.Reset()
-    local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.DAKEN, reaction = nil, message = Ashita.Enum.Message.TRUE}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
-
-    local player = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
-
-    player[player_name] = {}
-    for _, target_index in ipairs(target_lists) do
-        player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING] = {}
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MULTI_ATTACK_1] = 1
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
-    end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = tostring(damage),
-        action = "Melee",
-        note   = " ",
-    }
-
-    local misc = {}
-    misc["Total Damage"] = damage
-    misc["Total Damage No Skillchain"] = damage
-
-    local test_package = {
-        player = player,
-        battle_log = battle_log,
-        misc = misc,
-    }
-
-    return Debug.Unit.Check_Result("Melee - Daken > Truestrike", test_package)
-end
-
-------------------------------------------------------------------------------------------------------
--- Melee - Daken > Miss
-------------------------------------------------------------------------------------------------------
----@return table
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Daken_Miss = function()
-    Debug.Unit.Reset()
-    local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 0
-    local primary = {animation = Ashita.Enum.Animation.DAKEN, reaction = nil, message = Ashita.Enum.Message.RANGEMISS}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
-
-    local player = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
-
-    player[player_name] = {}
-    for _, target_index in ipairs(target_lists) do
-        player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING] = {}
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MULTI_ATTACK_1] = 1
-    end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = "---",
-        action = "Melee",
-        note   = " ",
-    }
-
-    local misc = {}
-    misc["Total Damage"] = 0
-    misc["Total Damage No Skillchain"] = 0
-
-    local test_package = {
-        player = player,
-        battle_log = battle_log,
-        misc = misc,
-    }
-
-    return Debug.Unit.Check_Result("Melee - Daken > Miss", test_package)
-end
-
-------------------------------------------------------------------------------------------------------
--- Melee - Daken > Crit
-------------------------------------------------------------------------------------------------------
----@return table
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Daken_Crit = function()
-    Debug.Unit.Reset()
-    local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.DAKEN, reaction = nil, message = Ashita.Enum.Message.RANGECRIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
-
-    local player = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
-
-    player[player_name] = {}
-    for _, target_index in ipairs(target_lists) do
-        player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_MIN] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_MAX] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_DAMAGE] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING] = {}
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.CRITICAL_MIN] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.CRITICAL_MAX] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.CRITICAL_DAMAGE] = damage
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.CRITICAL_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MULTI_ATTACK_1] = 1
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
-    end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = tostring(damage),
-        action = "Melee",
-        note   = " ",
-    }
-
-    local misc = {}
-    misc["Total Damage"] = damage
-    misc["Total Damage No Skillchain"] = damage
-
-    local test_package = {
-        player = player,
-        battle_log = battle_log,
-        misc = misc,
-    }
-
-    return Debug.Unit.Check_Result("Melee - Daken > Crit", test_package)
-end
-
-------------------------------------------------------------------------------------------------------
--- Melee - Kick > Hit
-------------------------------------------------------------------------------------------------------
----@return table
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Kick_Hit = function()
-    Debug.Unit.Reset()
-    local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.MELEE_KICK, reaction = nil, message = Ashita.Enum.Message.HIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
-
-    local player = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
-
-    player[player_name] = {}
+    player_catalog[player_name] = {}
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = additional_damage
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.TOTAL] = additional_damage
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.MIN] = additional_damage
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.MAX] = additional_damage
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_ENSPELL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage + additional_damage
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage + additional_damage
+
+        player_catalog[player_name][target_index] = {}
+        player_catalog[player_name][target_index][add_effect_name] = {}
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL] = {}
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.TOTAL] = additional_damage
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.MIN] = additional_damage
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.MAX] = additional_damage
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][add_effect_name][DB.Trackable.MELEE_ENSPELL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     end
 
     local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
-        damage = tostring(damage),
+        damage = tostring(damage + additional_damage),
         action = "Melee",
         note   = " ",
     }
 
     local misc = {}
-    misc["Total Damage"] = damage
-    misc["Total Damage No Skillchain"] = damage
+    misc["Total Damage"] = damage + additional_damage
+    misc["Total Damage No Skillchain"] = damage + additional_damage
 
     local test_package = {
         player = player,
+        player_catalog = player_catalog,
         battle_log = battle_log,
         misc = misc,
     }
 
-    return Debug.Unit.Check_Result("Melee - Kick > Hit", test_package)
-end
-
-------------------------------------------------------------------------------------------------------
--- Melee - Kick > Miss
-------------------------------------------------------------------------------------------------------
----@return table
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Kick_Miss = function()
-    Debug.Unit.Reset()
-    local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 0
-    local primary = {animation = Ashita.Enum.Animation.MELEE_KICK, reaction = nil, message = Ashita.Enum.Message.MISS}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
-
-    local player = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
-
-    player[player_name] = {}
-    for _, target_index in ipairs(target_lists) do
-        player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MULTI_ATTACK_1] = 1
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-    end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = "---",
-        action = "Melee",
-        note   = " ",
-    }
-
-    local misc = {}
-    misc["Total Damage"] = 0
-    misc["Total Damage No Skillchain"] = 0
-
-    local test_package = {
-        player = player,
-        battle_log = battle_log,
-        misc = misc,
-    }
-
-    return Debug.Unit.Check_Result("Melee - Kick > Miss", test_package)
-end
-
-------------------------------------------------------------------------------------------------------
--- Melee - Kick > Critical Hit
-------------------------------------------------------------------------------------------------------
----@return table
-------------------------------------------------------------------------------------------------------
-Debug.Unit.Tests.Melee.Kick_Crit = function()
-    Debug.Unit.Reset()
-    local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 100
-    local primary = {animation = Ashita.Enum.Animation.MELEE_KICK, reaction = nil, message = Ashita.Enum.Message.CRIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
-
-    local player = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
-
-    player[player_name] = {}
-    for _, target_index in ipairs(target_lists) do
-        player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_DAMAGE] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_MIN] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.CRITICAL_MAX] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.CRITICAL_DAMAGE] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.CRITICAL_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.CRITICAL_MIN] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.CRITICAL_MAX] = damage
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MELEE_STRIKES] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_KICK_ATTACKS][DB.Metric.MULTI_ATTACK_1] = 1
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
-    end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = tostring(damage),
-        action = "Melee",
-        note   = " ",
-    }
-
-    local misc = {}
-    misc["Total Damage"] = damage
-    misc["Total Damage No Skillchain"] = damage
-
-    local test_package = {
-        player = player,
-        battle_log = battle_log,
-        misc = misc,
-    }
-
-    return Debug.Unit.Check_Result("Melee - Kick > Crit", test_package)
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Enspell", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -1392,9 +1599,10 @@ Debug.Unit.Tests.Melee.Endamage = function()
     local additional_damage = 200
     local add_effect_animation = 1
     local add_effect_name = "Fire"
-    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.HIT}
-    local add_effect = {param = additional_damage, animation = add_effect_animation, message = Ashita.Enum.Message.ENDAMAGE}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENDAMAGE))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player = {}
@@ -1409,17 +1617,18 @@ Debug.Unit.Tests.Melee.Endamage = function()
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
@@ -1482,9 +1691,10 @@ Debug.Unit.Tests.Melee.Endebuff = function()
     local damage = 100
     local additional_damage = 5
     local add_effect_name = "Blind"
-    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.HIT}
-    local add_effect = {param = additional_damage, animation = nil, message = Ashita.Enum.Message.ENDEBUFF}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDEBUFF))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player = {}
@@ -1499,17 +1709,18 @@ Debug.Unit.Tests.Melee.Endebuff = function()
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
@@ -1561,9 +1772,10 @@ Debug.Unit.Tests.Melee.Endrain = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local additional_damage = 200
-    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.HIT}
-    local add_effect = {param = additional_damage, animation = nil, message = Ashita.Enum.Message.ENDRAIN}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDRAIN))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player = {}
@@ -1576,17 +1788,18 @@ Debug.Unit.Tests.Melee.Endrain = function()
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
@@ -1632,9 +1845,10 @@ Debug.Unit.Tests.Melee.Enaspir = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local additional_damage = 200
-    local primary = {animation = Ashita.Enum.Animation.MELEE_MAIN, reaction = nil, message = Ashita.Enum.Message.HIT}
-    local add_effect = {param = additional_damage, animation = nil, message = Ashita.Enum.Message.ENASPIR}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENASPIR))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player = {}
@@ -1647,17 +1861,18 @@ Debug.Unit.Tests.Melee.Enaspir = function()
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_ROUNDS] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MELEE_STRIKES] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
@@ -1690,4 +1905,425 @@ Debug.Unit.Tests.Melee.Enaspir = function()
     }
 
     return Debug.Unit.Check_Result("Melee - Main-Hand > Enaspir", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Main-Hand > Spikes
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Spikes = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+    local spike_damage = 200
+    local spike_animation = Ashita.Enum.Effect_Animation.FIRE -- Blaze Spikes
+    local spike_message = Ashita.Enum.Message.SPIKE_DMG
+    local spike_name = "Blaze Spikes"
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, false, nil, nil, nil, true, spike_damage, spike_animation, spike_message))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local player_catalog = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    player_catalog[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
+        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_NUKING] = {}
+        player[player_name][target_index][DB.Trackable.DEF_NUKING][DB.Metric.TOTAL] = spike_damage
+        player[player_name][target_index][DB.Trackable.DEF_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_SPIKES] = {}
+        player[player_name][target_index][DB.Trackable.DEF_SPIKES][DB.Metric.TOTAL] = spike_damage
+        player[player_name][target_index][DB.Trackable.DEF_SPIKES][DB.Metric.MIN] = spike_damage
+        player[player_name][target_index][DB.Trackable.DEF_SPIKES][DB.Metric.MAX] = spike_damage
+        player[player_name][target_index][DB.Trackable.DEF_SPIKES][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_SPIKES][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
+        player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = spike_damage
+
+        player_catalog[player_name][target_index] = {}
+        player_catalog[player_name][target_index][spike_name] = {}
+        player_catalog[player_name][target_index][spike_name][DB.Trackable.DEF_SPIKES] = {}
+        player_catalog[player_name][target_index][spike_name][DB.Trackable.DEF_SPIKES][DB.Metric.TOTAL] = spike_damage
+        player_catalog[player_name][target_index][spike_name][DB.Trackable.DEF_SPIKES][DB.Metric.MIN] = spike_damage
+        player_catalog[player_name][target_index][spike_name][DB.Trackable.DEF_SPIKES][DB.Metric.MAX] = spike_damage
+        player_catalog[player_name][target_index][spike_name][DB.Trackable.DEF_SPIKES][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][spike_name][DB.Trackable.DEF_SPIKES][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Main-Hand > Spikes", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Daken > Hit
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Daken_Hit = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.RANGEHIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Daken > Hit", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Daken > Square Hit
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Daken_Square = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.SQUARE))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Daken > Square Hit", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Daken > Truestrike
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Daken_Truestrike = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.TRUE))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Daken > Truestrike", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Daken > Miss
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Daken_Miss = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 0
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.RANGEMISS))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MULTI_ATTACK_1] = 1
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(0),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Daken > Miss", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Melee - Daken > Crit
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Melee.Daken_Crit = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.RANGECRIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_DAMAGE] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.CRITICAL_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.CRITICAL_MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.CRITICAL_MAX] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.CRITICAL_DAMAGE] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.CRITICAL_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_THROWING][DB.Metric.MULTI_ATTACK_1] = 1
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage),
+        action = "Melee",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = damage
+    misc["Total Damage No Skillchain"] = damage
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Melee - Daken > Crit", test_package)
 end

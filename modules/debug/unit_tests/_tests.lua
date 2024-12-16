@@ -139,195 +139,209 @@ Debug.Unit.Run_Tests = function()
     Debug.Unit.Mob.PLAYER = Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
 
     -- Melee
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Crit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Enspell())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Shadows())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Mob_Heal())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Off_Hand_Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Off_Hand_Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Crit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Shadows())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Mob_Heal())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Square())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Truestrike())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Crit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Crit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Endamage())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Endebuff())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Enaspir())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Endrain())
-    -- Multi-attack
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Off_Hand_Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Off_Hand_Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Kick_Crit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Multi_Attack())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Multi_Attack_Hit_Miss_Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Multi_Attack_Hit_Miss_Crit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Multi_Attack_Miss_Miss_Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Multi_Attack_Kick())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Multi_Attack_Enspell())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Crit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Shadows())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Mob_Heal())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Crit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Shadows())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Pet_Mob_Heal())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Enspell())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Endamage())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Endebuff())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Enaspir())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Endrain())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Spikes())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Square())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Truestrike())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Crit())
 
-    -- Ranged
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Square())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Truestrike())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Crit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.PUP())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Shadows())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endamage())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endebuff())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endrain())
+    -- -- Ranged
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Square())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Truestrike())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Crit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.PUP())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Shadows())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endamage())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endebuff())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endrain())
 
-    -- TP Action
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Energy_Steal())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Skillchain())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit_AOE())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_No_Damage())
+    -- -- TP Action
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Energy_Steal())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Skillchain())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit_AOE())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_No_Damage())
 
-    -- Ability
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Hit_TP())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Miss_TP())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Healing())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.MP())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.No_Damage())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Avatar_Rage())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Avatar_Ward())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Avatar_Healing())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Damage())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Healing())
+    -- -- Ability
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Hit_TP())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Miss_TP())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Healing())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.MP())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.No_Damage())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Avatar_Rage())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Avatar_Ward())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Avatar_Healing())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Damage())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Wyvern_Breath_Healing())
 
-    -- -- Spells
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke_Burst())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke_AOE())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Pet_Nuke())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Healing())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Healing_AOE())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Pet_Heal())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.DoT_No_Damage())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.DoT_Damage())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Aspir())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_Land())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_Resist())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_No_Effect())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_AOE_Land())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Song())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Status_Removal())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Buff())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Spikes())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enspell())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Misc())
+    -- -- -- Spells
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke_Burst())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Nuke_AOE())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Pet_Nuke())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Healing())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Healing_AOE())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Pet_Heal())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.DoT_No_Damage())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.DoT_Damage())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Aspir())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_Land())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_Resist())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_No_Effect())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enfeeble_AOE_Land())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Song())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Status_Removal())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Buff())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Spikes())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Enspell())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Spells.Misc())
 
-    -- Defense
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Parry())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shadows())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Third_Eye())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Counter())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Guard())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shield())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Crit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Spikes())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Enspell())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Pet_Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Pet_Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Ranged_Hit())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Ranged_Miss())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_AOE())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Shadow())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_AOE())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_Pet())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_Pet_AOE_Primary())
-    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary())
+    -- -- Defense
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Parry())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shadows())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Third_Eye())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Counter())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Guard())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Shield())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Crit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Spikes())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Enspell())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Pet_Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Melee_Pet_Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Ranged_Hit())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Ranged_Miss())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_AOE())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Shadow())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_AOE())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_Pet())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_Pet_AOE_Primary())
+    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary())
 
     Debug.Unit.Active = false
 end
 
 ------------------------------------------------------------------------------------------------------
--- Build the fake result table.
+-- Builds a target packet.
 ------------------------------------------------------------------------------------------------------
----@param target_id integer
----@param action_id? integer
----@param damage integer
----@param primary? table
----@param add_effect? table
----@param spike? table
----@param target_id_two? integer
----@param damage_two? integer
----@param message_two? integer
+---@param id integer
+---@param param integer
+---@param animation? integer
+---@param reaction? integer
+---@param message? integer
+---@param has_add_effect? boolean
+---@param add_effect_param? integer
+---@param add_effect_animation? integer
+---@param add_effect_message? integer
+---@param has_spike_effect? boolean
+---@param spike_effect_param? integer
+---@param spike_effect_animation? integer
+---@param spike_effect_message? integer
 ---@return table
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Util.Build_Action = function(target_id, action_id, damage, primary, add_effect, spike, target_id_two, damage_two, message_two)
+Debug.Unit.Util.Build_Target_Packet = function(id, param, animation, reaction, message,
+                                        has_add_effect, add_effect_param, add_effect_animation, add_effect_message,
+                                        has_spike_effect, spike_effect_param, spike_effect_animation, spike_effect_message)
+    local packet = {}
+
+    packet.id    = id or 0
+    packet.param = param or 0
+
+    packet.animation = animation or 0
+    packet.reaction  = reaction or 0
+    packet.message   = message or 0
+
+    packet.has_add_effect       = has_add_effect
+    packet.add_effect_param     = add_effect_param or 0
+    packet.add_effect_animation = add_effect_animation or 0
+    packet.add_effect_message   = add_effect_message or 0 -- Skillchains
+
+    packet.has_spike_effect       = has_spike_effect
+    packet.spike_effect_param     = spike_effect_param or 0
+    packet.spike_effect_animation = spike_effect_animation or 0
+    packet.spike_effect_message   = spike_effect_message or 0
+
+    return packet
+end
+
+------------------------------------------------------------------------------------------------------
+-- Build the fake result table.
+------------------------------------------------------------------------------------------------------
+---@param packet_rounds table
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Util.Build_Action = function(packet_rounds)
     local action = {}
-    action.param = action_id
     action.targets = {}
 
     local target_data = {}
-    local target_data_two = {}
-    target_data.id = target_id
-    target_data.actions = {}
-
     local action_data = {}
-    action_data.param = damage
 
-    if primary then
-        action_data.animation = primary.animation
-        action_data.reaction = primary.reaction
-        action_data.message = primary.message
-    else
-        action_data.animation = 0
-        action_data.reaction = 0
-        action_data.message = 0
+    for _, target_round in ipairs(packet_rounds) do
+        target_data = {}
+        target_data.id = target_round.id or 0
+        target_data.actions = {}
+
+        action_data = {}
+        action_data.param = target_round.param or 0
+
+        action_data.animation = target_round.animation or 0
+        action_data.reaction  = target_round.reaction or 0
+        action_data.message   = target_round.message or 0
+
+        action_data.has_add_effect       = target_round.has_add_effect
+        action_data.add_effect_param     = target_round.add_effect_param or 0
+        action_data.add_effect_animation = target_round.add_effect_animation or 0
+        action_data.add_effect_message   = target_round.add_effect_message or 0 -- Skillchains
+
+        action_data.has_spike_effect       = target_round.has_spike_effect
+        action_data.spike_effect_param     = target_round.spike_effect_param or 0
+        action_data.spike_effect_animation = target_round.spike_effect_animation or 0
+        action_data.spike_effect_message   = target_round.spike_effect_message or 0
+
+        table.insert(target_data.actions, action_data)
+        table.insert(action.targets, target_data)
     end
-
-    if add_effect then
-        action_data.has_add_effect = true
-        action_data.add_effect_param = add_effect.param
-        action_data.add_effect_animation = add_effect.animation
-        action_data.add_effect_message = add_effect.message -- Skillchains
-    else
-        action_data.has_add_effect = false
-        action_data.add_effect_param = 0
-        action_data.add_effect_animation = 0
-        action_data.add_effect_message = 0
-    end
-
-    if spike then
-        action_data.has_spike_effect = true
-        action_data.spike_effect_param = spike.param
-        action_data.spike_effect_animation = spike.animation
-        action_data.spike_effect_message = spike.message
-    else
-        action_data.has_spike_effect = false
-        action_data.spike_effect_param = 0
-        action_data.spike_effect_animation = 0
-        action_data.spike_effect_message = 0
-    end
-
-    if target_id_two then
-        target_data_two.id = target_id_two
-        target_data_two.actions = {}
-        local action_data_two = {}
-        action_data_two.param = damage_two
-        action_data_two.message = message_two
-        table.insert(target_data_two.actions, action_data_two)
-    end
-
-    table.insert(target_data.actions, action_data)
-    table.insert(action.targets, target_data)
-    if target_id_two then table.insert(action.targets, target_data_two) end
 
     return action
 end

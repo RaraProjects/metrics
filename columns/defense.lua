@@ -1,4 +1,4 @@
-Column.Defense = T{}
+Column.Defense = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Grabs the damage of a certain trackable that the entity has taken.
@@ -20,23 +20,6 @@ Column.Defense.Damage_Taken_By_Type = function(player_name, damage_type, percent
     end
     if raw then return Column.String.Format_Number(total) end
     return UI.TextColored(color, Column.String.Format_Number(total, justify))
-end
-
-------------------------------------------------------------------------------------------------------
--- Grabs the proc rate of certain defensive actions.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param damage_type string a trackable from the model.
----@param justify? boolean whether or not to right justify the text
----@param raw? boolean true: just output the raw value; false: output a column to a table.
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Defense.Proc_Rate_By_Type = function(player_name, damage_type, justify, raw)
-    local proc_count = DB.Data.Get(player_name, damage_type, DB.Metric.HITS_ON_USE)
-    local color = Column.String.Color_Zero(proc_count)
-    local attack_count = DB.Data.Get(player_name, damage_type, DB.Metric.ATTEMPTS_ON_USE)
-    if raw then return Column.String.Format_Percent(proc_count, attack_count) end
-    return UI.TextColored(color, Column.String.Format_Percent(proc_count, attack_count, justify))
 end
 
 ------------------------------------------------------------------------------------------------------

@@ -245,7 +245,7 @@ DB.Data.Get = function(player_name, trackable, metric, temporary_mob_focus)
 	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return 0 end
 
 	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
-	if Throttle.Is_Enabled() and not Throttle.Allow_Calculation() then
+	if (Throttle.Is_Enabled() and not Throttle.Allow_Calculation()) and not temporary_mob_focus then
 		if DB.Cache[player_name] and DB.Cache[player_name][trackable] and DB.Cache[player_name][trackable][metric] then
 			return DB.Cache[player_name][trackable][metric]
 		end

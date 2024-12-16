@@ -104,7 +104,7 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
         UI.TableNextColumn() Column.Proc.Crit_Damage(player_name, trackable)
         UI.TableNextColumn() Column.Proc.Crit_Damage(player_name, trackable, true)
         UI.TableNextColumn() Column.Proc.Crit_Average(player_name, trackable)
-        UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, trackable)
+        UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, 0, true)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 

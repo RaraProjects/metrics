@@ -322,7 +322,7 @@ Focus.Overview.Melee = function(player_name)
         UI.TableNextColumn() UI.Text("Main-Hand")
         UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.MELEE_MAIN_HAND)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OVERALL)
-        UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Trackable.MELEE_OVERALL)
+        UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OVERALL, 0, true)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -331,7 +331,7 @@ Focus.Overview.Melee = function(player_name)
             UI.TableNextColumn() UI.Text("Off-Hand")
             UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.MELEE_OFF_HAND)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OFF_HAND)
-            UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Trackable.MELEE_OFF_HAND)
+            UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OFF_HAND, 0, true)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -341,7 +341,7 @@ Focus.Overview.Melee = function(player_name)
             UI.TableNextColumn() UI.Text("Kick Attacks")
             UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.MELEE_KICK_ATTACKS)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_KICK_ATTACKS)
-            UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Trackable.MELEE_KICK_ATTACKS)
+            UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_KICK_ATTACKS, 0, true)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -361,7 +361,7 @@ Focus.Overview.Melee = function(player_name)
             UI.TableNextColumn() UI.Text("Pets")
             UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL)
-            UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Trackable.PET_MELEE_OVERALL)
+            UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, 0, true)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -395,7 +395,7 @@ Focus.Overview.Ranged = function(player_name)
         UI.TableNextColumn() UI.Text("Projectile")
         UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_OVERALL)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL)
-        UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Trackable.RANGED_OVERALL)
+        UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, 0, true)
         UI.TableNextColumn() Column.Damage.Shot_Distance(player_name)
 
         UI.EndTable()
@@ -432,7 +432,7 @@ Focus.Overview.Weaponskill = function(player_name)
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
                 UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
-                UI.TableNextColumn() Column.Single.Acc(player_name, action_name, trackable)
+                UI.TableNextColumn() Column.Acc.By_Type_Catalog(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Average_TP(player_name, action_name)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
@@ -512,7 +512,7 @@ Focus.Overview.Pet_TP = function(player_name)
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
                 UI.TableNextColumn() Column.Single.Pet_Average(player_name, pet_name, action_name, trackable)
-                UI.TableNextColumn() Column.Single.Pet_Acc(player_name, pet_name, action_name, trackable)
+                UI.TableNextColumn() Column.Acc.By_Type_Pet_Catalog(player_name, pet_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Average_Pet_TP(player_name, pet_name, trackable, action_name)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
@@ -751,7 +751,7 @@ Focus.Overview.Debuff = function(player_name, hide_mp)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Enfeeble_Acc(player_name, action_name, trackable)
+                UI.TableNextColumn() Column.Acc.By_Type_Catalog(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
                 if not hide_mp then UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable) end
                 Window_Manager.Table_Row_Color(row)
@@ -1065,139 +1065,6 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.Defense = function(player_name)
     if not player_name then return nil end
-
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
-    local row = 1
-    if UI.BeginTable("Defense", 5, table_flags) then
-        UI.TableSetupColumn("Damage Taken", col_flags, name_width)
-        UI.TableSetupColumn("HP-", col_flags, width)
-        UI.TableSetupColumn("%Party", col_flags, width)
-        UI.TableSetupColumn("%Player", col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableHeadersRow()
-
-        UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL)
-        UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL)
-        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, true)
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
-
-        UI.TableNextColumn() UI.Text("Melee")
-        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_MELEE)
-        UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Trackable.DEF_MELEE)
-        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_MELEE, true)
-        UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_UNMITIGATED_MELEE)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
-
-        UI.TableNextColumn() UI.Text("Magic")
-        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_NUKING)
-        UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Trackable.DEF_NUKING)
-        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_NUKING, true)
-        UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_NUKING)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
-
-        UI.TableNextColumn() UI.Text("Mob TP")
-        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_TP_MOVE)
-        UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Trackable.DEF_TP_MOVE)
-        UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_TP_MOVE, true)
-        UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_TP_MOVE)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
-
-        UI.EndTable()
-    end
-
-    row = 1
-    if UI.BeginTable("Defense", 5, table_flags) then
-        UI.TableSetupColumn("Mitigation", col_flags, name_width)
-        UI.TableSetupColumn("~HP Saved", col_flags, width)
-        UI.TableSetupColumn("%Proc", col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("%DT-", col_flags, width)
-        UI.TableHeadersRow()
-
-        local evade = DB.Data.Get(player_name, DB.Trackable.DEF_EVASION, DB.Metric.HITS_ON_USE)
-        if evade > 0 then
-            UI.TableNextColumn() UI.Text("Evasion")
-            UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_EVASION)
-            UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Trackable.DEF_EVASION)
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        local parry = DB.Data.Get(player_name, DB.Trackable.DEF_PARRY, DB.Metric.HITS_ON_USE)
-        if parry > 0 then
-            UI.TableNextColumn() UI.Text("Parry")
-            UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_PARRY)
-            UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Trackable.DEF_PARRY)
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        local shadows = DB.Data.Get(player_name, DB.Trackable.DEF_SHADOWS, DB.Metric.HITS_ON_USE)
-        if shadows > 0 then
-            UI.TableNextColumn() UI.Text("Shadows")
-            UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_SHADOWS)
-            UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Trackable.DEF_SHADOWS)
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        local counter = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER, DB.Metric.HITS_ON_USE)
-        if counter > 0 then
-            UI.TableNextColumn() UI.Text("Counter")
-            UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.MELEE_COUNTER)
-            UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Trackable.MELEE_COUNTER)
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        local guard = DB.Data.Get(player_name, DB.Trackable.DEF_GUARD, DB.Metric.HITS_ON_USE)
-        if guard > 0 then
-            UI.TableNextColumn() UI.Text("Guard")
-            UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_GUARD)
-            UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Trackable.DEF_GUARD)
-            UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_GUARD)
-            UI.TableNextColumn() Column.Defense.Damage_Reduction(player_name, DB.Trackable.DEF_GUARD)
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        local shield = DB.Data.Get(player_name, DB.Trackable.DEF_SHIELD_BLOCK, DB.Metric.HITS_ON_USE)
-        if shield > 0 then
-            UI.TableNextColumn() UI.Text("Shield Block")
-            UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, DB.Trackable.DEF_SHIELD_BLOCK)
-            UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Trackable.DEF_SHIELD_BLOCK)
-            UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, DB.Trackable.DEF_SHIELD_BLOCK)
-            UI.TableNextColumn() Column.Defense.Damage_Reduction(player_name, DB.Trackable.DEF_SHIELD_BLOCK)
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        if (evade + parry + shadows + counter + guard + shield) == 0 then
-            UI.TableNextColumn() UI.Text("None Yet")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        end
-
-        UI.EndTable()
-    end
+    Focus.Defense.Damage_Taken(player_name)
+    Focus.Defense.Mitigation(player_name)
 end

@@ -343,7 +343,7 @@ Focus.Magic.Single_Row = function(player_name, action_name, focus_type)
     elseif focus_type == DB.Trackable.MELEE_ENSPELL       then UI.TableNextColumn() Column.Single.Hit_Count(player_name, DB.Trackable.MELEE_ENSPELL, action_name)
     elseif focus_type == DB.Trackable.RANGED_ENDAMAGE     then UI.TableNextColumn() Column.Single.Hit_Count(player_name, DB.Trackable.RANGED_ENDAMAGE, action_name)
     elseif focus_type == DB.Trackable.SPELLS_SPIKE_DAMAGE then UI.TableNextColumn() Column.Single.Hit_Count(player_name, DB.Trackable.SPELLS_SPIKE_DAMAGE, action_name)
-    else UI.TableNextColumn() Column.Single.Acc(player_name, action_name, focus_type)
+    else UI.TableNextColumn() Column.Acc.By_Type_Catalog(player_name, action_name, focus_type)
     end
 
     Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)

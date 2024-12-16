@@ -15,7 +15,7 @@ Focus.Melee.Display = function(player_name)
     Focus.Melee.Total(player_name, off_hand, kick_damage, counter_damage)
     Focus.Melee.Min_Max(player_name)
     Focus.Melee.Auxiliary(player_name, endamage)
-    Focus.Melee.Multi_Attack(player_name, kick_damage)
+    Focus.Melee.Multi_Attack(player_name)
 
     if endebuff > 0 or endamage > 0 then UI.Separator() end
     if endebuff > 0 then Focus.Catalog.Endebuff(player_name, DB.Trackable.MELEE_ENDEBUFF) end
@@ -84,7 +84,7 @@ Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_KICK_ATTACKS)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_KICK_ATTACKS, true)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_KICK_ATTACKS)
-            UI.TableNextColumn() Column.Proc.Kick_Rate(player_name)
+            UI.TableNextColumn() Column.Acc.Proc_Per_Use(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Trackable.MELEE_OVERALL)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -96,7 +96,7 @@ Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_COUNTER)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_COUNTER, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Trackable.MELEE_COUNTER)
+            UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_COUNTER)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -138,7 +138,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
         UI.TableNextColumn() Column.Proc.Crit_Damage(player_name, DB.Trackable.MELEE_OVERALL)
         UI.TableNextColumn() Column.Proc.Crit_Damage(player_name, DB.Trackable.MELEE_OVERALL, true)
         UI.TableNextColumn() Column.Proc.Crit_Average(player_name, DB.Trackable.MELEE_OVERALL)
-        UI.TableNextColumn() Column.Proc.Crit_Rate(player_name, DB.Trackable.MELEE_OVERALL)
+        UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OVERALL, true)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -148,7 +148,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.MELEE_COUNTER)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_COUNTER, true)
             UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.MELEE_COUNTER)
-            UI.TableNextColumn() Column.Defense.Proc_Rate_By_Type(player_name, DB.Trackable.MELEE_COUNTER)
+            UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_COUNTER)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -305,9 +305,8 @@ end
 -- Build melee multi-attack rate table.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
----@param kick_damage number
 ------------------------------------------------------------------------------------------------------
-Focus.Melee.Multi_Attack = function(player_name, kick_damage)
+Focus.Melee.Multi_Attack = function(player_name)
     local col_flags = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
     local name_width = Column.Widths.Name
@@ -315,101 +314,34 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
 
     local columns = 3
     local row = 1
-    if kick_damage > 0 then columns = 4 end
     if UI.BeginTable("Multi-Attack", columns, table_flags) then
         UI.TableSetupColumn("Multi-Attack", col_flags, name_width)
         UI.TableSetupColumn("Main-Hand", col_flags, width)
         UI.TableSetupColumn("Off-Hand", col_flags, width)
-        if kick_damage > 0 then UI.TableSetupColumn("Kicks", col_flags, width) end
         UI.TableHeadersRow()
 
         local multi_attack_found = false
-        if DB.Tracking.Multi_Attack[player_name][DB.Metric.MULTI_ATTACK_1] then
-            multi_attack_found = true
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(DB.Metric.MULTI_ATTACK_1)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_1)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.MULTI_ATTACK_1)
-            if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.MULTI_ATTACK_1) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
+        local multi_attack_metrics = {
+            [1] = DB.Metric.MULTI_ATTACK_1,
+            [2] = DB.Metric.MULTI_ATTACK_2,
+            [3] = DB.Metric.MULTI_ATTACK_3,
+            [4] = DB.Metric.MULTI_ATTACK_4,
+            [5] = DB.Metric.MULTI_ATTACK_5,
+            [6] = DB.Metric.MULTI_ATTACK_6,
+            [7] = DB.Metric.MULTI_ATTACK_7,
+            [8] = DB.Metric.MULTI_ATTACK_8,
+        }
 
-        if DB.Tracking.Multi_Attack[player_name][DB.Metric.MULTI_ATTACK_2] then
-            multi_attack_found = true
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(DB.Metric.MULTI_ATTACK_2)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_2)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.MULTI_ATTACK_2)
-            if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.MULTI_ATTACK_2) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        if DB.Tracking.Multi_Attack[player_name][DB.Metric.MULTI_ATTACK_3] then
-            multi_attack_found = true
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(DB.Metric.MULTI_ATTACK_3)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_3)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.MULTI_ATTACK_3)
-            if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.MULTI_ATTACK_3) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        if DB.Tracking.Multi_Attack[player_name][DB.Metric.MULTI_ATTACK_4] then
-            multi_attack_found = true
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(DB.Metric.MULTI_ATTACK_4)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_4)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.MULTI_ATTACK_4)
-            if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.MULTI_ATTACK_4) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        if DB.Tracking.Multi_Attack[player_name][DB.Metric.MULTI_ATTACK_5] then
-            multi_attack_found = true
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(DB.Metric.MULTI_ATTACK_5)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_5)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.MULTI_ATTACK_5)
-            if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.MULTI_ATTACK_5) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        if DB.Tracking.Multi_Attack[player_name][DB.Metric.MULTI_ATTACK_6] then
-            multi_attack_found = true
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(DB.Metric.MULTI_ATTACK_6)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_6)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.MULTI_ATTACK_6)
-            if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.MULTI_ATTACK_6) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        if DB.Tracking.Multi_Attack[player_name][DB.Metric.MULTI_ATTACK_7] then
-            multi_attack_found = true
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(DB.Metric.MULTI_ATTACK_7)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_7)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.MULTI_ATTACK_7)
-            if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.MULTI_ATTACK_7) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
-        if DB.Tracking.Multi_Attack[player_name][DB.Metric.MULTI_ATTACK_8] then
-            multi_attack_found = true
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(DB.Metric.MULTI_ATTACK_8)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_8)
-            UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.MULTI_ATTACK_8)
-            if kick_damage > 0 then UI.TableNextColumn() Column.Proc.Multi_Attack(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.MULTI_ATTACK_8) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+        for _, metric in ipairs(multi_attack_metrics) do
+            if DB.Tracking.Multi_Attack[player_name] and DB.Tracking.Multi_Attack[player_name][metric] then
+                multi_attack_found = true
+                UI.TableNextRow()
+                UI.TableNextColumn() UI.Text(metric)
+                UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, metric)
+                UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND, metric)
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
+            end
         end
 
         if not multi_attack_found then
@@ -417,7 +349,6 @@ Focus.Melee.Multi_Attack = function(player_name, kick_damage)
             UI.TableNextColumn() UI.Text("None")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            if kick_damage > 0 then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end

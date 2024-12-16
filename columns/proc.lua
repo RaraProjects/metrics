@@ -1,30 +1,4 @@
-Column.Proc = T{}
-
-------------------------------------------------------------------------------------------------------
--- Grabs an entity's critical hit rate for a given trackable.
--- Can also give combine melee/ranged crit rate.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param damage_type string a trackable from the model.
----@param justify? boolean whether or not to right justify the text
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Proc.Crit_Rate = function(player_name, damage_type, justify)
-    local crits, attempts
-    if damage_type == DB.Enum.COMBINED then
-        local melee_crits     = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.CRITICAL_COUNT)
-        local melee_hits  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.HITS_ON_USE)
-        local ranged_crits    = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.CRITICAL_COUNT)
-        local ranged_hits = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.HITS_ON_USE)
-        crits = melee_crits + ranged_crits
-        attempts = melee_hits + ranged_hits
-    else
-        crits = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_COUNT)
-        attempts = DB.Data.Get(player_name, damage_type, DB.Metric.HITS_ON_USE)
-    end
-    local color = Column.String.Color_Zero(crits)
-    return UI.TextColored(color, Column.String.Format_Percent(crits, attempts, justify))
-end
+Column.Proc = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Grabs an entity's critical hit damage for a given trackable.
@@ -80,18 +54,6 @@ Column.Proc.Crit_Average = function(player_name, damage_type, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Shows an entity's kick rate.
-------------------------------------------------------------------------------------------------------
----@param player_name string
-------------------------------------------------------------------------------------------------------
-Column.Proc.Kick_Rate = function(player_name)
-    local kick_count = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL_KICK, DB.Metric.ATTEMPTS_ON_USE)
-    local melee_cycles = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.MELEE_ROUNDS)
-    local color = Column.String.Color_Zero(kick_count)
-    return UI.TextColored(color, Column.String.Format_Percent(kick_count, melee_cycles))
-end
-
-------------------------------------------------------------------------------------------------------
 -- Grabs how many times an entity has died.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
@@ -102,34 +64,6 @@ Column.Proc.Deaths = function(player_name, justify)
     local death_count = DB.Data.Get(player_name, DB.Trackable.DEATH, DB.Metric.ATTEMPTS_ON_USE)
     local color = Column.String.Color_Zero(death_count)
     return UI.TextColored(color, Column.String.Format_Number(death_count, justify))
-end
-
-------------------------------------------------------------------------------------------------------
--- Grabs the multi attack rate for a specific melee type.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param melee_type string main-hand, off-hand, etc.
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Proc.Multi_Attack = function(player_name, melee_type, multi_attack_metric)
-    local multi_attack = DB.Data.Get(player_name, melee_type, multi_attack_metric)
-    local attack_rounds = DB.Data.Get(player_name, melee_type, DB.Metric.MELEE_STRIKES)
-    local color = Column.String.Color_Zero(multi_attack)
-    return UI.TextColored(color, Column.String.Format_Percent(multi_attack, attack_rounds))
-end
-
-------------------------------------------------------------------------------------------------------
--- Grabs the guard rate for a trackable.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param trackable string
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Proc.Guard = function(player_name, trackable)
-    local guard = DB.Data.Get(player_name, trackable, DB.Metric.GUARD)
-    local attempts = DB.Data.Get(player_name, trackable, DB.Metric.HITS_ON_USE)
-    local color = Column.String.Color_Zero(guard)
-    return UI.TextColored(color, Column.String.Format_Percent(guard, attempts))
 end
 
 ------------------------------------------------------------------------------------------------------

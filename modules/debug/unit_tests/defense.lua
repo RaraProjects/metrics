@@ -360,8 +360,10 @@ Debug.Unit.Tests.Defense.Melee_Guard = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local primary = {animation = nil, reaction = Ashita.Enum.Reaction.GUARD, message = Ashita.Enum.Message.HIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PLAYER.id_num, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, Ashita.Enum.Reaction.GUARD, Ashita.Enum.Message.HIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee_Def.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}

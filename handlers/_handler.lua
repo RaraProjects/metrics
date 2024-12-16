@@ -345,10 +345,10 @@ H.Offense.Min_Max = function(audits, trackable, damage, was_critical_hit)
         metric_max = DB.Metric.CRITICAL_MAX
     end
 
-    if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable, metric_min)) then
+    if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable, metric_min, audits.target_name)) then
         DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, metric_min)
     end
-    if damage > DB.Data.Get(audits.player_name, trackable, metric_max) then
+    if damage > DB.Data.Get(audits.player_name, trackable, metric_max, audits.target_name) then
         DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, metric_max)
     end
 end
