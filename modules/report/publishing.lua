@@ -95,7 +95,7 @@ Report.Publishing.Damage_By_Type = function(trackable)
             if rank <= Parse.Config.Rank_Cutoff() then
 
                 local player_name = data[1]
-                local player_damage = Column.Damage.By_Type(player_name, trackable, false, nil, true)
+                local player_damage = Column.Damage.By_Type(player_name, trackable, nil, false, nil, true)
                 local player_percent = Column.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)
                 if tonumber(player_percent) >= Metrics.Report.Damage_Threshold then
                     local chat_string = tostring(player_name) .. ": " .. tostring(player_damage) .. " (" .. tostring(player_percent) .. "%)"

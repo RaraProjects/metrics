@@ -32,7 +32,7 @@ Focus.Pets.Display = function(player_name)
         if melee > 0 then
             UI.TableNextColumn() UI.Text("Melee")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, nil, true)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_MELEE_DISCRETE)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -42,7 +42,7 @@ Focus.Pets.Display = function(player_name)
         if ranged > 0 then
             UI.TableNextColumn() UI.Text("Ranged")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_RANGED_OVERALL)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_RANGED_OVERALL, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_RANGED_OVERALL, nil, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -52,7 +52,7 @@ Focus.Pets.Display = function(player_name)
         if nuke > 0 then
             UI.TableNextColumn() UI.Text("Magic")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_NUKING)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_NUKING, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_NUKING, nil, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -72,7 +72,7 @@ Focus.Pets.Display = function(player_name)
         if ws > 0 then
             UI.TableNextColumn() UI.Text("TP Move")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, nil, true)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_TP)
             Window_Manager.Table_Row_Color(row)
             row = row + 1

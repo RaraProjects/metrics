@@ -37,11 +37,13 @@ Column.Output = {}
 ------------------------------------------------------------------------------------------------------
 ---@param value integer
 ---@param color table
----@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@param justify? boolean whether or not to right justify the text
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
+---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Output.Number = function(value, color, raw, justify)
-
+Column.Output.Number = function(value, color, justify, raw)
+    if raw then return Column.String.Format_Number(value) end
+    return UI.TextColored(color, Column.String.Format_Number(value, justify))
 end
 
 ------------------------------------------------------------------------------------------------------

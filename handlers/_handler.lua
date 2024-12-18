@@ -207,11 +207,10 @@ end
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param trackable string
 ---@param damage integer
+---@param critical_hit? boolean
 ------------------------------------------------------------------------------------------------------
-H.Offense.Hit = function(audits, trackable, damage)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+H.Offense.Hit = function(audits, trackable, damage, critical_hit)
+    DB.Data.Update_Damage_Basic(audits, trackable, damage, nil, critical_hit)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -232,7 +231,7 @@ end
 ---@param damage number
 ------------------------------------------------------------------------------------------------------
 H.Offense.Critical_Hit = function(audits, trackable, damage)
-    H.Offense.Hit(audits, trackable, damage)
+    H.Offense.Hit(audits, trackable, damage, true)
     DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.CRITICAL_COUNT)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.CRITICAL_DAMAGE)
 end
@@ -246,6 +245,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Offense.Shadow_Absorption = function(audits, trackable)
     H.Offense.Hit(audits, trackable, 0)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.SHADOW_ABSORPTION)
 end
 
@@ -259,6 +259,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Offense.Mob_Heal = function(audits, trackable, damage)
     H.Offense.Hit(audits, trackable, 0)
+    DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.HITS_ON_TARGET)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.MOB_HEALING)
 end
 

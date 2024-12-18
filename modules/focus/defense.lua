@@ -35,10 +35,10 @@ Focus.Defense.Damage_Taken = function(player_name)
     local row = 1
     if UI.BeginTable("Damage Taken", columns, table_flags) then
         UI.TableSetupColumn("Damage Taken", col_flags, name_width)
-        UI.TableSetupColumn("HP-",     col_flags, width)
-        UI.TableSetupColumn("%Party",  col_flags, width)
-        UI.TableSetupColumn("%Player", col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("HP-",          col_flags, width)
+        UI.TableSetupColumn("%Party",       col_flags, width)
+        UI.TableSetupColumn("%Player",      col_flags, width)
+        UI.TableSetupColumn("Average",      col_flags, width)
         if pet_dt > 0 then UI.TableSetupColumn("Pet HP-", col_flags, width) end
         UI.TableHeadersRow()
 
@@ -79,10 +79,10 @@ Focus.Defense.Other_Damage = function(player_name)
     local row = 1
     if UI.BeginTable("Other Damage", 5, table_flags) then
         UI.TableSetupColumn("Aux. Defense", col_flags, name_width)
-        UI.TableSetupColumn("HP-",     col_flags, width)
-        UI.TableSetupColumn("%Player", col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("%Proc",   col_flags, width)
+        UI.TableSetupColumn("HP-",          col_flags, width)
+        UI.TableSetupColumn("%Player",      col_flags, width)
+        UI.TableSetupColumn("Average",      col_flags, width)
+        UI.TableSetupColumn("%Proc",        col_flags, width)
         UI.TableHeadersRow()
 
         local aux_trackables = {
@@ -206,8 +206,8 @@ Focus.Defense.Single = function(player_name, focus_type)
 
     if UI.BeginTable(focus_type, 6, table_flags) then
         UI.TableSetupColumn(action_string, col_flags, name_width)
-        UI.TableSetupColumn("Tries", col_flags, width)
-        UI.TableSetupColumn("Total", col_flags, width)
+        UI.TableSetupColumn("Tries",   col_flags, width)
+        UI.TableSetupColumn("Total",   col_flags, width)
         UI.TableSetupColumn("Average", col_flags, width)
         UI.TableSetupColumn("Minimum", col_flags, width)
         UI.TableSetupColumn("Maximum", col_flags, width)

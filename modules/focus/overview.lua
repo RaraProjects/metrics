@@ -469,11 +469,11 @@ Focus.Overview.Skillchains = function(player_name)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Opened")
-        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_OPENED)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_OPENED)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Closed")
-        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_CLOSED)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_CLOSED)
         Window_Manager.Table_Row_Color(0)
 
         UI.EndTable()
@@ -975,7 +975,7 @@ Focus.Overview.Overload = function(player_name)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Overload")
-        UI.TableNextColumn() Column.Damage.By_Type_Metric(player_name, trackable, DB.Metric.OVERLOAD)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.OVERLOAD)
 
         UI.EndTable()
     end

@@ -106,24 +106,24 @@ Parse.Full.Rows = function(player_name)
     if Metrics.Parse.Running_Acc then  UI.TableNextColumn() Column.Acc.Recent(player_name, true) end
     if Metrics.Parse.Total_Acc then    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.COMBINED, nil, false, true) end
     if Metrics.Parse.Crit then         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Enum.COMBINED, 0, true, true) end
-    if Metrics.Parse.Melee then        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_OVERALL, false, true) end
+    if Metrics.Parse.Melee then        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_OVERALL, nil, false, true) end
     if Metrics.Parse.Melee_Acc then    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OVERALL, nil, false, true) end
     if Metrics.Parse.Melee_Crit then   UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OVERALL, 0, true, true) end
-    if Metrics.Parse.Weaponskill then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL, false, true) end
+    if Metrics.Parse.Weaponskill then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL, nil, false, true) end
     if Metrics.Parse.Average_WS then   UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.WEAPONSKILL, true) end
     if Metrics.Parse.WS_TP then        UI.TableNextColumn() Column.Damage.Average_TP(player_name, true) end
     if Metrics.Parse.WS_Accuracy then  UI.TableNextColumn() Column.General.Fraction(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.HITS_ON_USE, DB.Metric.ATTEMPTS_ON_USE, true) end
-    if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, false, true) end
-    if Metrics.Parse.Ranged then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL, false, true) end
+    if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, nil, false, true) end
+    if Metrics.Parse.Ranged then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL, nil, false, true) end
     if Metrics.Parse.Ranged_Acc then   UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, nil, false, true) end
     if Metrics.Parse.Ranged_Crit then  UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, 0, true, true) end
     if Metrics.Parse.Ranged_Dist then  UI.TableNextColumn() Column.Damage.Shot_Distance(player_name, true) end
-    if Metrics.Parse.Magic then        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, false, true) end
-    if Metrics.Parse.Ability then      UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING, false, true) end
+    if Metrics.Parse.Magic then        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, nil, false, true) end
+    if Metrics.Parse.Ability then      UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING, nil, false, true) end
     if Metrics.Parse.Pet_Acc then      UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_MELEE_DISCRETE, nil, false, true) end
-    if Metrics.Parse.Pet_Melee then    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, false, true) end
-    if Metrics.Parse.Pet_Ranged then   UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_RANGED_OVERALL, false, true) end
-    if Metrics.Parse.Pet_WS then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, false, true) end
+    if Metrics.Parse.Pet_Melee then    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, nil, false, true) end
+    if Metrics.Parse.Pet_Ranged then   UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_RANGED_OVERALL, nil, false, true) end
+    if Metrics.Parse.Pet_WS then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, nil, false, true) end
     if Metrics.Parse.Healing then      UI.TableNextColumn() Column.Healing.Total(player_name, false, true) end
     if Metrics.Parse.Damage_Taken then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, false, true) end
     if Metrics.Parse.Deaths then       UI.TableNextColumn() Column.Proc.Deaths(player_name, true) end

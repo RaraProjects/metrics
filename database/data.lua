@@ -136,33 +136,52 @@ DB.Data.Update_Damage = function(audits, trackable, damage, burst)
 		end
     end
 
-    -- Increment the trackable specific totals.
+
+	DB.Data.Update_Damage_Basic(audits, trackable, damage)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets the minimum and maximum values.
+------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param trackable string a tracked item from the trackable list.
+---@param damage number damage value to be logged.
+---@param burst? boolean whether or not a magic burst took place.
+---@param critical_hit? boolean
+------------------------------------------------------------------------------------------------------
+DB.Data.Update_Damage_Basic = function(audits, trackable, damage, burst, critical_hit)
+	-- Increment the trackable specific totals.
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
 	if burst then
 		DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.MAGIC_BURST_DAMAGE)
-		DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.MAGIC_BURST_DAMAGE)
+		DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable,                   DB.Metric.MAGIC_BURST_DAMAGE)
 	end
 
+	-- Log an attempt on the target.
+	DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+
 	-- Set trackable hits and minimums
+	local min_metric = (critical_hit and DB.Metric.CRITICAL_MIN) or DB.Metric.MIN
+	local max_metric = (critical_hit and DB.Metric.CRITICAL_MAX) or DB.Metric.MAX
+
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
 	if damage > 0 then
 		if audits.pet_name then
 			DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-			if damage < DB.Pet_Data.Get(audits.player_name, audits.pet_name, trackable, DB.Metric.MIN) then
-				DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN)
+			if damage < DB.Pet_Data.Get(audits.player_name, audits.pet_name, trackable, min_metric) then
+				DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, min_metric)
 			end
 		else
 			DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-			if damage < DB.Data.Get(audits.player_name, trackable, DB.Metric.MIN, audits.target_name) then
-				DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MIN)
+			if damage < DB.Data.Get(audits.player_name, trackable, min_metric, audits.target_name) then
+				DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, min_metric)
 			end
 		end
 	end
-	DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
 
 	-- Set trackable maximums
-    if damage > DB.Data.Get(audits.player_name, trackable, DB.Metric.MAX) then
-		DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, DB.Metric.MAX)
+	if damage > DB.Data.Get(audits.player_name, trackable, max_metric) then
+		DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, max_metric)
 	end
 end
 

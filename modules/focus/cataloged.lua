@@ -1,6 +1,6 @@
-Focus.Catalog = T{}
+Focus.Catalog = {}
 
-Focus.Catalog.Table_Flags = Window_Manager.Table.Flags.Fixed_Borders
+Focus.Catalog.Table_Flags  = Window_Manager.Table.Flags.Fixed_Borders
 Focus.Catalog.Column_Flags = Column.Flags.None
 Focus.Catalog.Column_Width = Column.Widths.Standard
 
@@ -15,9 +15,9 @@ Focus.Catalog.Weaponskill = function(player_name, focus_type)
     if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
-    local col_flags = Focus.Catalog.Column_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
+    local col_flags   = Focus.Catalog.Column_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
 
     if UI.BeginTable(focus_type, 9, table_flags) then
         UI.TableSetupColumn("Weaponskill", col_flags, name_width)
@@ -62,9 +62,9 @@ Focus.Catalog.Skillchains = function(player_name, focus_type)
     if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
-    local col_flags = Focus.Catalog.Column_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
+    local col_flags   = Focus.Catalog.Column_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
 
     if UI.BeginTable(focus_type, 7, table_flags) then
         UI.TableSetupColumn("Skillchain", col_flags, name_width)
@@ -106,9 +106,9 @@ Focus.Catalog.Abilities = function(player_name, focus_type, action_string)
     if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
-    local col_flags = Focus.Catalog.Column_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
+    local col_flags   = Focus.Catalog.Column_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
 
     if UI.BeginTable(focus_type, 7, table_flags) then
         UI.TableSetupColumn(action_string, col_flags, name_width)
@@ -149,9 +149,9 @@ Focus.Catalog.Abilities_General = function(player_name)
     if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
-    local col_flags = Focus.Catalog.Column_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
+    local col_flags   = Focus.Catalog.Column_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
 
     if UI.BeginTable(focus_type, 2, table_flags) then
         UI.TableSetupColumn("General", col_flags, name_width)
@@ -186,9 +186,9 @@ Focus.Catalog.Endamage = function(player_name, focus_type, suffix)
     if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
-    local col_flags = Focus.Catalog.Column_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
+    local col_flags   = Focus.Catalog.Column_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
 
     if not suffix then suffix = "" end
     if UI.BeginTable(focus_type, 6, table_flags) then
@@ -226,9 +226,9 @@ Focus.Catalog.Endebuff = function(player_name, focus_type, suffix)
     if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
-    local col_flags = Focus.Catalog.Column_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
+    local col_flags   = Focus.Catalog.Column_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
 
     if not suffix then suffix = "" end
     if UI.BeginTable(focus_type, 2, table_flags) then

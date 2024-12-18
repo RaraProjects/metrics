@@ -70,22 +70,24 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
             has_hit      = data.has_hit
 
             -- Find the correct multi-attack metric based on the number attacks for the melee type.
-            local metric = nil
-            if     multi_swings == 1 then metric = DB.Metric.MULTI_ATTACK_1
-            elseif multi_swings == 2 then metric = DB.Metric.MULTI_ATTACK_2
-            elseif multi_swings == 3 then metric = DB.Metric.MULTI_ATTACK_3
-            elseif multi_swings == 4 then metric = DB.Metric.MULTI_ATTACK_4
-            elseif multi_swings == 5 then metric = DB.Metric.MULTI_ATTACK_5
-            elseif multi_swings == 6 then metric = DB.Metric.MULTI_ATTACK_6
-            elseif multi_swings == 7 then metric = DB.Metric.MULTI_ATTACK_7
-            elseif multi_swings == 8 then metric = DB.Metric.MULTI_ATTACK_8
+            local multi_count_metric = nil
+            local multi_damage_metric = nil
+            if     multi_swings == 1 then multi_count_metric = DB.Metric.MULTI_ATTACK_1 multi_damage_metric = DB.Metric.MULTI_ATTACK_1_DAMAGE
+            elseif multi_swings == 2 then multi_count_metric = DB.Metric.MULTI_ATTACK_2 multi_damage_metric = DB.Metric.MULTI_ATTACK_2_DAMAGE
+            elseif multi_swings == 3 then multi_count_metric = DB.Metric.MULTI_ATTACK_3 multi_damage_metric = DB.Metric.MULTI_ATTACK_3_DAMAGE
+            elseif multi_swings == 4 then multi_count_metric = DB.Metric.MULTI_ATTACK_4 multi_damage_metric = DB.Metric.MULTI_ATTACK_4_DAMAGE
+            elseif multi_swings == 5 then multi_count_metric = DB.Metric.MULTI_ATTACK_5 multi_damage_metric = DB.Metric.MULTI_ATTACK_5_DAMAGE
+            elseif multi_swings == 6 then multi_count_metric = DB.Metric.MULTI_ATTACK_6 multi_damage_metric = DB.Metric.MULTI_ATTACK_6_DAMAGE
+            elseif multi_swings == 7 then multi_count_metric = DB.Metric.MULTI_ATTACK_7 multi_damage_metric = DB.Metric.MULTI_ATTACK_7_DAMAGE
+            elseif multi_swings == 8 then multi_count_metric = DB.Metric.MULTI_ATTACK_8 multi_damage_metric = DB.Metric.MULTI_ATTACK_8_DAMAGE
             end
 
-            if metric then
+            if multi_count_metric and multi_damage_metric then
                 -- Multi-attack specific rate.
                 if not DB.Tracking.Multi_Attack[details.audits.player_name] then DB.Tracking.Multi_Attack[details.audits.player_name] = {} end
-                DB.Tracking.Multi_Attack[details.audits.player_name][metric] = true
-                DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, metric)                                    -- Specific multi-attack count (even if it's one).
+                DB.Tracking.Multi_Attack[details.audits.player_name][multi_count_metric] = true
+                DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, multi_count_metric)                        -- Specific multi-attack count (even if it's one).
+                DB.Data.Update(DB.Update_Mode.INC, multi_damage, details.audits, type, multi_damage_metric)            -- Specific multi-attack damage.
                 if has_hit then DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, DB.Metric.HITS_ON_USE) end -- How many times an attack round contained a specific melee type.
                 DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, DB.Metric.ATTEMPTS_ON_USE)                 -- Kind of benign. All hits should have an attempt associated though.
 

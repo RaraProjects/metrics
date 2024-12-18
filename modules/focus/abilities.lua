@@ -1,4 +1,4 @@
-Focus.Abilities = T{}
+Focus.Abilities = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Loads data to the ability drop down inside the focus window.
@@ -7,17 +7,17 @@ Focus.Abilities = T{}
 ---@param hide_publish? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Abilities.Display = function(player_name, hide_publish)
-    local ability_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_DAMAGING, DB.Metric.ATTEMPTS_ON_USE)
-    local healing_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_HEALING, DB.Metric.ATTEMPTS_ON_USE)
+    local ability_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_DAMAGING,    DB.Metric.ATTEMPTS_ON_USE)
+    local healing_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_HEALING,     DB.Metric.ATTEMPTS_ON_USE)
     local mp_recovery   = DB.Data.Get(player_name, DB.Trackable.ABILITY_MP_RECOVERY, DB.Metric.ATTEMPTS_ON_USE)
-    local maneuvers     = DB.Data.Get(player_name, DB.Trackable.MANEUVER, DB.Metric.ATTEMPTS_ON_USE)
-    local rolls         = DB.Data.Get(player_name, DB.Trackable.PHANTOM_ROLL, DB.Metric.ATTEMPTS_ON_USE)
-    local misc_count    = DB.Data.Get(player_name, DB.Trackable.ABILITY_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
+    local maneuvers     = DB.Data.Get(player_name, DB.Trackable.MANEUVER,            DB.Metric.ATTEMPTS_ON_USE)
+    local rolls         = DB.Data.Get(player_name, DB.Trackable.PHANTOM_ROLL,        DB.Metric.ATTEMPTS_ON_USE)
+    local misc_count    = DB.Data.Get(player_name, DB.Trackable.ABILITY_OVERALL,     DB.Metric.ATTEMPTS_ON_USE)
 
     Focus.Abilities.Total(player_name)
     UI.Separator()
 
-    if rolls > 0         then Focus.Overview.Phantom_Roll(player_name, true) end
+    if rolls > 0 then Focus.Overview.Phantom_Roll(player_name, true) end
     if maneuvers > 0     then
         Focus.Overview.Overload(player_name)
         Focus.Overview.Maneuvers(player_name)
@@ -36,10 +36,10 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Abilities.Total = function(player_name)
-    local col_flags = Focus.Column_Flags
+    local col_flags   = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
 
     local row = 1
     if UI.BeginTable("Ability", 2, table_flags) then
@@ -47,23 +47,19 @@ Focus.Abilities.Total = function(player_name)
         UI.TableSetupColumn("Total", col_flags, width)
         UI.TableHeadersRow()
 
-        UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Damaging")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        local ability_types = {
+            [1] = {header = "Damaging", trackable = DB.Trackable.ABILITY_DAMAGING},
+            [2] = {header = "Healing",  trackable = DB.Trackable.ABILITY_HEALING},
+            [3] = {header = "Damaging", trackable = DB.Trackable.ABILITY_MP_RECOVERY},
+        }
 
-        UI.TableNextRow()
-        UI.TableNextColumn()UI.Text("Healing")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_HEALING)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
-
-        UI.TableNextRow()
-        UI.TableNextColumn()UI.Text("MP Recovery")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_MP_RECOVERY)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        for _, data in ipairs(ability_types) do
+            UI.TableNextRow()
+            UI.TableNextColumn() UI.Text(data.header)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
 
         UI.EndTable()
     end
