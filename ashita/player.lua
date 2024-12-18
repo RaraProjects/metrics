@@ -1,6 +1,6 @@
-Ashita.Player = T{}
+Ashita.Player = {}
 
-Ashita.Player.Buffs = T{
+Ashita.Player.Buffs = {
     DEDICATION = 249,
 }
 

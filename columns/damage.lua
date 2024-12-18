@@ -72,30 +72,65 @@ Column.Damage.Average_By_Type = function(player_name, trackable, justify)
     local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
     local count  = DB.Data.Get(player_name, trackable, DB.Metric.HITS_ON_TARGET)
     local color  = Column.String.Color_Zero(damage)
-    if damage == 0 or count == 0 then
-        return UI.TextColored(color, Column.String.Format_Number(0, justify))
-    end
+    if damage == 0 or count == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
     return UI.TextColored(color, Column.String.Format_Percent(damage, count, justify, true))
 end
 
 ------------------------------------------------------------------------------------------------------
--- Shows the average damage for a non-critical melee hit.
+-- Shows the average non-critical damage for a given damage type.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param damage_type string a trackable from the model.
 ---@param justify? boolean whether or not to right justify the text
 ---@return number
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Average_Non_Critical_By_Type = function(player_name, damage_type, justify)
+Column.Damage.Average_By_Type_Exclude_Critical = function(player_name, damage_type, justify)
+    -- Get the data.
     local damage      = DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
     local crit_damage = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_DAMAGE)
     local hit_count   = DB.Data.Get(player_name, damage_type, DB.Metric.HITS_ON_TARGET)
     local crit_count  = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_COUNT)
+
+    -- Seperate the critical and non-critical hit damage.
     local non_crit_damage = damage - crit_damage
     local non_crit_count  = hit_count - crit_count
+
+    -- Colors
     local color = Column.String.Color_Zero(non_crit_damage)
-    if non_crit_damage == 0 or non_crit_count == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
+
+    if non_crit_damage == 0 or non_crit_count == 0 then return UI.TextColored(color, Column.String.Format_Percent(0, 0, justify)) end
     return UI.TextColored(color, Column.String.Format_Percent(non_crit_damage, non_crit_count, justify, true))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Gets the average critical hit damage for a given damage type.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param damage_type string
+---@param justify? boolean whether or not to right justify the text.
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Damage.Average_By_Type_Critical_Only = function(player_name, damage_type, justify)
+    local crit_damage = 0
+    local crit_count  = 0
+
+    -- Get data
+    if damage_type == DB.Enum.COMBINED then
+        local melee_crits       = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  DB.Metric.CRITICAL_DAMAGE)
+        local melee_crit_count  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  DB.Metric.CRITICAL_COUNT)
+        local ranged_crits      = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.CRITICAL_DAMAGE)
+        local ranged_crit_count = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.CRITICAL_COUNT)
+        crit_damage = melee_crits + ranged_crits
+        crit_count  = melee_crit_count + ranged_crit_count
+    else
+        crit_damage = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_DAMAGE)
+        crit_count  = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_COUNT)
+    end
+
+    -- Colors
+    local color = Column.String.Color_Zero(crit_damage)
+
+    return UI.TextColored(color, Column.String.Format_Percent(crit_damage, crit_count, justify, true))
 end
 
 ------------------------------------------------------------------------------------------------------

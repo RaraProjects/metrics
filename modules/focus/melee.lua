@@ -110,7 +110,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
 
         for _, data in ipairs(full_data) do
             UI.TableNextColumn() UI.Text(data.header)
-            UI.TableNextColumn() Column.Proc.Crit_Average(player_name, data.trackable)
+            UI.TableNextColumn() Column.Damage.Average_By_Type_Critical_Only(player_name, data.trackable)
             UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, data.trackable, true)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0, true)
             Window_Manager.Table_Row_Color(row)
@@ -169,10 +169,10 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Melee.Min_Max = function(player_name)
-    local col_flags = Focus.Column_Flags
+    local col_flags   = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
 
     local off_hand = DB.Data.Get(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.TOTAL)
     local kick     = DB.Data.Get(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.TOTAL)
@@ -180,7 +180,7 @@ Focus.Melee.Min_Max = function(player_name)
 
     local row = 1
     if UI.BeginTable("Min Max Melee", 5, table_flags) then
-        UI.TableSetupColumn("MMA w/ Crit", col_flags, name_width)
+        UI.TableSetupColumn("MMA w/ Crit(!)", col_flags, name_width)
         UI.TableSetupColumn("Average",     col_flags, width)
         UI.TableSetupColumn("%Player",     col_flags, width)
         UI.TableSetupColumn("Minimum",     col_flags, width)
@@ -195,7 +195,7 @@ Focus.Melee.Min_Max = function(player_name)
 
         for _, data in ipairs(damage_types) do
             UI.TableNextColumn() UI.Text(data.header)
-            UI.TableNextColumn() Column.Damage.Average_Non_Critical_By_Type(player_name, data.trackable)
+            UI.TableNextColumn() Column.Damage.Average_By_Type_Exclude_Critical(player_name, data.trackable)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MIN)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MAX)
@@ -204,8 +204,8 @@ Focus.Melee.Min_Max = function(player_name)
         end
 
         for _, data in ipairs(damage_types) do
-            UI.TableNextColumn() UI.Text("Crit - " .. data.header)
-            UI.TableNextColumn() Column.Proc.Crit_Average(player_name, data.trackable)
+            UI.TableNextColumn() UI.Text(data.header .. "!")
+            UI.TableNextColumn() Column.Damage.Average_By_Type_Critical_Only(player_name, data.trackable)
             UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, data.trackable, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.CRITICAL_MIN)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.CRITICAL_MAX)
@@ -223,10 +223,10 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Melee.Multi_Attack = function(player_name)
-    local col_flags = Focus.Column_Flags
+    local col_flags   = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
 
     local columns = 5
     local row = 1
@@ -269,8 +269,6 @@ Focus.Melee.Multi_Attack = function(player_name)
                 row = row + 1
             end
         end
-
-
 
         UI.EndTable()
     end

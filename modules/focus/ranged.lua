@@ -1,4 +1,4 @@
-Focus.Ranged = T{}
+Focus.Ranged = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Loads data to the ranged drop down inside the focus window.
@@ -9,10 +9,11 @@ Focus.Ranged.Display = function(player_name)
     local endamage = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDAMAGE, DB.Metric.TOTAL)
     local endebuff = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDEBUFF, DB.Metric.HITS_ON_USE)
     local endrain  = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDRAIN,  DB.Metric.HITS_ON_USE)
-    local enaspir  = DB.Data.Get(player_name, DB.Trackable.RANGED_ENASPIR, DB.Metric.HITS_ON_USE)
+    local enaspir  = DB.Data.Get(player_name, DB.Trackable.RANGED_ENASPIR,  DB.Metric.HITS_ON_USE)
 
     Focus.Ranged.Total(player_name)
     Focus.Ranged.Auxiliary(player_name, endamage, endrain, enaspir)
+    Focus.Ranged.Min_Max(player_name)
 
     if endebuff > 0 or endamage > 0 then UI.Separator() end
     if endebuff > 0 then Focus.Catalog.Endebuff(player_name, DB.Trackable.RANGED_ENDEBUFF) end
@@ -25,49 +26,25 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Ranged.Total = function(player_name)
-    local col_flags = Focus.Column_Flags
+    local col_flags   = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-    local trackable = DB.Trackable.RANGED_OVERALL
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
+    local trackable   = DB.Trackable.RANGED_OVERALL
 
     local row = 1
-    if UI.BeginTable("Ranged", 6, table_flags) then
-        UI.TableSetupColumn("Ranged", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, width)
-        UI.TableSetupColumn("%Player", col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
+    if UI.BeginTable("Ranged", 4, table_flags) then
+        UI.TableSetupColumn("Ranged Overall", col_flags, name_width)
+        UI.TableSetupColumn("Damage",   col_flags, width)
+        UI.TableSetupColumn("%Player",  col_flags, width)
         UI.TableSetupColumn("Accuracy", col_flags, width)
-        UI.TableSetupColumn("%Proc", col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, true)
-        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_OVERALL)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
-
-        UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Square Hit")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_SQUARE_HIT)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_SQUARE_HIT, nil, true)
-        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_SQUARE_HIT)
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        UI.TableNextColumn() Column.Proc.Distance_Correction(player_name, DB.Trackable.RANGED_SQUARE_HIT)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
-
-        UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("True Strike")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_TRUE_STRIKE)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_TRUE_STRIKE, nil, true)
-        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name,DB.Trackable.RANGED_TRUE_STRIKE)
-        UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        UI.TableNextColumn() Column.Proc.Distance_Correction(player_name, DB.Trackable.RANGED_TRUE_STRIKE)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -84,58 +61,47 @@ end
 ---@param enaspir number
 ------------------------------------------------------------------------------------------------------
 Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
-    local col_flags = Focus.Column_Flags
+    local col_flags   = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-    local trackable = DB.Trackable.RANGED_OVERALL
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
+    local trackable   = DB.Trackable.RANGED_OVERALL
 
     local row = 1
-    if UI.BeginTable("Aux. Ranged", 5, table_flags) then
-        UI.TableSetupColumn("Auxiliary", col_flags, name_width)
-        UI.TableSetupColumn("Damage", col_flags, width)
-        UI.TableSetupColumn("%Player", col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("%Proc", col_flags, width)
+    if UI.BeginTable("Aux. Ranged", 4, table_flags) then
+        UI.TableSetupColumn("Ranged Auxiliary", col_flags, name_width)
+        UI.TableSetupColumn("Average",   col_flags, width)
+        UI.TableSetupColumn("%Player",   col_flags, width)
+        UI.TableSetupColumn("%Proc",     col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Crit. Hits")
-        UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, trackable)
+        UI.TableNextColumn() UI.Text("Crits")
+        UI.TableNextColumn() Column.Damage.Average_By_Type_Critical_Only(player_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, trackable, true)
-        UI.TableNextColumn() Column.Proc.Crit_Average(player_name, trackable)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, 0, true)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
-        if endamage > 0 then
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("En-Damage")
-            UI.TableNextColumn() UI.Text(Column.String.Format_Number(endamage))
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_ENDAMAGE, nil, true)
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_ENDAMAGE)
+        -- Data columns for damage that contributes to total damage without a proc rate.
+        local extra_damage_data = {}
+        if endamage > 0 then table.insert(extra_damage_data, {header = "En-Damage", trackable = DB.Trackable.RANGED_ENDAMAGE}) end
+        if endrain > 0  then table.insert(extra_damage_data, {header = "En-Drain",  trackable = DB.Trackable.RANGED_ENDRAIN}) end
+
+        for _, data in ipairs(extra_damage_data) do
+            UI.TableNextColumn() UI.Text(data.header)
+            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, data.trackable)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
 
-        if endrain > 0 then
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("En-Drain")
-            UI.TableNextColumn() UI.Text(Column.String.Format_Number(endrain))
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_ENDRAIN)
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-
+        -- Non-damaging data columns.
         if enaspir > 0 then
-            UI.TableNextRow()
             UI.TableNextColumn() UI.Text("En-Aspir")
-            UI.TableNextColumn() UI.Text(Column.String.Format_Number(enaspir))
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_ENASPIR)
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -145,3 +111,55 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
     end
 end
 
+------------------------------------------------------------------------------------------------------
+-- Shows min, max, average damage for melee attacks.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Ranged.Min_Max = function(player_name)
+    local col_flags   = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
+
+    local row = 1
+    if UI.BeginTable("Min Max Ranged", 5, table_flags) then
+        UI.TableSetupColumn("MMA w/ Crit(!)", col_flags, name_width)
+        UI.TableSetupColumn("Average",     col_flags, width)
+        UI.TableSetupColumn("%Player",     col_flags, width)
+        UI.TableSetupColumn("Minimum",     col_flags, width)
+        UI.TableSetupColumn("Maximum",     col_flags, width)
+        UI.TableHeadersRow()
+
+        local square_hit  = DB.Data.Get(player_name, DB.Trackable.RANGED_SQUARE_HIT,  DB.Metric.TOTAL)
+        local true_strike = DB.Data.Get(player_name, DB.Trackable.RANGED_TRUE_STRIKE, DB.Metric.TOTAL)
+
+        -- Strike specific data.
+        local damage_types = {}
+        table.insert(damage_types, {header = "Regular Hit",  trackable = DB.Trackable.RANGED_OVERALL})
+        if square_hit > 0  then table.insert(damage_types, {header = "Square Hit",  trackable = DB.Trackable.RANGED_SQUARE_HIT}) end
+        if true_strike > 0 then table.insert(damage_types, {header = "True Strike", trackable = DB.Trackable.RANGED_TRUE_STRIKE}) end
+
+        for _, data in ipairs(damage_types) do
+            UI.TableNextColumn() UI.Text(data.header)
+            UI.TableNextColumn() Column.Damage.Average_By_Type_Exclude_Critical(player_name, data.trackable)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MIN)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MAX)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
+
+        for _, data in ipairs(damage_types) do
+            UI.TableNextColumn() UI.Text(data.header .. "!")
+            UI.TableNextColumn() Column.Damage.Average_By_Type_Critical_Only(player_name, data.trackable)
+            UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, data.trackable, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.CRITICAL_MIN)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.CRITICAL_MAX)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
+
+        UI.EndTable()
+    end
+end

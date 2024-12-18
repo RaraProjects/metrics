@@ -172,17 +172,17 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Miss())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Daken_Crit())
 
-    -- -- Ranged
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Hit())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Square())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Truestrike())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Miss())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Crit())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.PUP())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Shadows())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endamage())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endebuff())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endrain())
+    -- Ranged
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Square())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Truestrike())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Crit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.PUP())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Shadows())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endamage())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endebuff())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endrain())
 
     -- -- TP Action
     -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Hit())

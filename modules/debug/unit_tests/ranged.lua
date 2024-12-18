@@ -10,8 +10,10 @@ Debug.Unit.Tests.Ranged.Hit = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGEHIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RANGEHIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -67,8 +69,10 @@ Debug.Unit.Tests.Ranged.Square = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.SQUARE}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SQUARE))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -85,6 +89,8 @@ Debug.Unit.Tests.Ranged.Square = function()
         player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT] = {}
         player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.MAX] = damage
         player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
@@ -126,8 +132,10 @@ Debug.Unit.Tests.Ranged.Truestrike = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.TRUE}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.TRUE))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -146,6 +154,8 @@ Debug.Unit.Tests.Ranged.Truestrike = function()
         player[player_name][target_index][DB.Trackable.RANGED_SQUARE_HIT][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE] = {}
         player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.MAX] = damage
         player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
@@ -185,8 +195,10 @@ Debug.Unit.Tests.Ranged.Miss = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 0
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGEMISS}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RANGEMISS))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -234,8 +246,10 @@ Debug.Unit.Tests.Ranged.Crit = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGECRIT}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RANGECRIT))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -289,8 +303,10 @@ Debug.Unit.Tests.Ranged.Shadows = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 0
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.SHADOWS}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SHADOWS))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -339,9 +355,10 @@ Debug.Unit.Tests.Ranged.Endamage = function()
     local additional_damage = 200
     local add_effect_animation = 1
     local add_effect_name = "Fire"
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGEHIT}
-    local add_effect = {param = additional_damage, animation = add_effect_animation, message = Ashita.Enum.Message.ENDAMAGE}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  nil, nil, Ashita.Enum.Message.RANGEHIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENDAMAGE))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -364,6 +381,8 @@ Debug.Unit.Tests.Ranged.Endamage = function()
         player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = additional_damage
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MIN] = additional_damage
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MAX] = additional_damage
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.RANGED_ENDAMAGE] = {}
@@ -421,9 +440,10 @@ Debug.Unit.Tests.Ranged.Endebuff = function()
     local damage = 100
     local additional_damage = 5
     local add_effect_name = "Blind"
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGEHIT}
-    local add_effect = {param = additional_damage, animation = nil, message = Ashita.Enum.Message.ENDEBUFF}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  nil, nil, Ashita.Enum.Message.RANGEHIT, true, additional_damage, nil, Ashita.Enum.Message.ENDEBUFF))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -492,9 +512,10 @@ Debug.Unit.Tests.Ranged.Endrain = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local additional_damage = 200
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGEHIT}
-    local add_effect = {param = additional_damage, animation = nil, message = Ashita.Enum.Message.ENDRAIN}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary, add_effect)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  nil, nil, Ashita.Enum.Message.RANGEHIT, true, additional_damage, nil, Ashita.Enum.Message.ENDRAIN))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -515,10 +536,14 @@ Debug.Unit.Tests.Ranged.Endrain = function()
         player[player_name][target_index][DB.Trackable.RANGED_TRUE_STRIKE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = additional_damage
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MIN] = additional_damage
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MAX] = additional_damage
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.RANGED_ENDRAIN] = {}
         player[player_name][target_index][DB.Trackable.RANGED_ENDRAIN][DB.Metric.TOTAL] = additional_damage
+        player[player_name][target_index][DB.Trackable.RANGED_ENDRAIN][DB.Metric.MIN] = additional_damage
+        player[player_name][target_index][DB.Trackable.RANGED_ENDRAIN][DB.Metric.MAX] = additional_damage
         player[player_name][target_index][DB.Trackable.RANGED_ENDRAIN][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.RANGED_ENDRAIN][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
@@ -558,8 +583,10 @@ Debug.Unit.Tests.Ranged.PUP = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.RANGEPUP}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, nil, damage, primary)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.RANGEPUP))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
