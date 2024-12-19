@@ -5,112 +5,22 @@ Focus.Catalog.Column_Flags = Column.Flags.None
 Focus.Catalog.Column_Width = Column.Widths.Standard
 
 ------------------------------------------------------------------------------------------------------
--- Sets up the table for the weaponskill list inside the focus window.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param focus_type string a trackable from the data model.
-------------------------------------------------------------------------------------------------------
-Focus.Catalog.Weaponskill = function(player_name, focus_type)
-    if not DB.Tracking.Trackable[focus_type] then return nil end
-    if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
-
-    local table_flags = Focus.Catalog.Table_Flags
-    local col_flags   = Focus.Catalog.Column_Flags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
-
-    if UI.BeginTable(focus_type, 9, table_flags) then
-        UI.TableSetupColumn("Weaponskill", col_flags, name_width)
-        UI.TableSetupColumn("Total",       col_flags, width)
-        UI.TableSetupColumn("~TP",         col_flags, width)
-        UI.TableSetupColumn("DMG/TP",      col_flags, width)
-        UI.TableSetupColumn("Attempts",    col_flags, width)
-        UI.TableSetupColumn("Accuracy",    col_flags, width)
-        UI.TableSetupColumn("Average",     col_flags, width)
-        UI.TableSetupColumn("Minimum",     col_flags, width)
-        UI.TableSetupColumn("Maximum",     col_flags, width)
-        UI.TableHeadersRow()
-
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
-        local action_name
-        local row = 1
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL)
-            UI.TableNextColumn() Column.Single.Average_TP(player_name, action_name)
-            UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, focus_type, DB.Metric.TP_SPENT)
-            UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
-            UI.TableNextColumn() Column.Acc.By_Type_Catalog(player_name, action_name, focus_type)
-            Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-        UI.EndTable()
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Sets up the table for the skillchain list inside the focus window.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param focus_type string a trackable from the data model.
-------------------------------------------------------------------------------------------------------
-Focus.Catalog.Skillchains = function(player_name, focus_type)
-    if not DB.Tracking.Trackable[focus_type] then return nil end
-    if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
-
-    local table_flags = Focus.Catalog.Table_Flags
-    local col_flags   = Focus.Catalog.Column_Flags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
-
-    if UI.BeginTable(focus_type, 7, table_flags) then
-        UI.TableSetupColumn("Skillchain", col_flags, name_width)
-        UI.TableSetupColumn("Total",      col_flags, width)
-        UI.TableSetupColumn("Opened",     col_flags, width)
-        UI.TableSetupColumn("Closed",     col_flags, width)
-        UI.TableSetupColumn("Average",    col_flags, width)
-        UI.TableSetupColumn("Minimum",    col_flags, width)
-        UI.TableSetupColumn("Maximum",    col_flags, width)
-        UI.TableHeadersRow()
-
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
-        local action_name
-        local row = 1
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.SKILLCHAIN_OPENED)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.SKILLCHAIN_CLOSED)
-            Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
-        UI.EndTable()
-    end
-end
-
-------------------------------------------------------------------------------------------------------
 -- Sets up the table for abilities inside the focus window.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
----@param focus_type string a trackable from the data model.
+---@param trackable string a trackable from the data model.
 ---@param action_string string header title for the name column.
 ------------------------------------------------------------------------------------------------------
-Focus.Catalog.Abilities = function(player_name, focus_type, action_string)
-    if not DB.Tracking.Trackable[focus_type] then return nil end
-    if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
+Focus.Catalog.Abilities = function(player_name, trackable, action_string)
+    if not DB.Tracking.Trackable[trackable] then return nil end
+    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
     local col_flags   = Focus.Catalog.Column_Flags
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
-    if UI.BeginTable(focus_type, 7, table_flags) then
+    if UI.BeginTable(trackable, 7, table_flags) then
         UI.TableSetupColumn(action_string, col_flags, name_width)
         UI.TableSetupColumn("Total",       col_flags, width)
         UI.TableSetupColumn("Uses",        col_flags, width)
@@ -120,17 +30,17 @@ Focus.Catalog.Abilities = function(player_name, focus_type, action_string)
         UI.TableSetupColumn("Maximum",     col_flags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
         local action_name
         local row = 1
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL)
-            UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
-            UI.TableNextColumn() Column.Acc.By_Type_Catalog(player_name, action_name, focus_type)
-            Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
+            UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
+            UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, 0, false, action_name)
+            Focus.Catalog.Avg_Min_Max(player_name, action_name, trackable)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -206,7 +116,7 @@ Focus.Catalog.Endamage = function(player_name, focus_type, suffix)
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, focus_type, DB.Metric.TOTAL, action_name)
             UI.TableNextColumn() Column.Single.Hit_Count(player_name, focus_type, action_name)
             Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)
         end
@@ -253,14 +163,14 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param action_name string
----@param focus_type string
+---@param trackable string
 ------------------------------------------------------------------------------------------------------
-Focus.Catalog.Min = function(player_name, action_name, focus_type)
-    local min = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.MIN)
+Focus.Catalog.Min = function(player_name, action_name, trackable)
+    local min = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MIN)
     if min == DB.Enum.MAX_DAMAGE then
-        Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.IGNORE)
+        Column.Damage.By_Type(player_name, trackable, DB.Enum.IGNORE, action_name)
     else
-        Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MIN)
+        Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name)
     end
 end
 
@@ -269,10 +179,10 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param action_name string
----@param focus_type string
+---@param trackable string
 ------------------------------------------------------------------------------------------------------
-Focus.Catalog.Avg_Min_Max = function(player_name, action_name, focus_type)
-    UI.TableNextColumn() Column.Single.Average(player_name, action_name, focus_type)
-    UI.TableNextColumn() Focus.Catalog.Min(player_name, action_name, focus_type)
-    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MAX)
+Focus.Catalog.Avg_Min_Max = function(player_name, action_name, trackable)
+    UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
+    UI.TableNextColumn() Focus.Catalog.Min(player_name, action_name, trackable)
+    UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name)
 end

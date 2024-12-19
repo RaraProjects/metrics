@@ -231,20 +231,20 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param action_name string
----@param focus_type string a trackable from the data model.
+---@param trackable string a trackable from the data model.
 ------------------------------------------------------------------------------------------------------
-Focus.Defense.Single_Row = function(player_name, action_name, focus_type)
+Focus.Defense.Single_Row = function(player_name, action_name, trackable)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(action_name)
-    UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
-    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL)
+    UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
+    UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
 
-    UI.TableNextColumn() Column.Single.Average(player_name, action_name, focus_type)
-    local min = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.MIN)
+    UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
+    local min = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MIN)
     if min == 100000 then
-        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Enum.IGNORE)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Enum.IGNORE, action_name)
     else
-        UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MIN)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name)
     end
-    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MAX)
+    UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name)
 end

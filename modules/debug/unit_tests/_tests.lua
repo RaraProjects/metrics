@@ -184,15 +184,15 @@ Debug.Unit.Run_Tests = function()
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endebuff())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ranged.Endrain())
 
-    -- -- TP Action
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Hit())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Miss())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Energy_Steal())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Skillchain())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Miss())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit_AOE())
-    -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_No_Damage())
+    -- TP Action
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Energy_Steal())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Skillchain())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit_AOE())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_No_Damage())
 
     -- -- Ability
     -- table.insert(Debug.Unit.Results, Debug.Unit.Tests.Ability.Damaging_Hit())
@@ -308,12 +308,14 @@ end
 -- Build the fake result table.
 ------------------------------------------------------------------------------------------------------
 ---@param packet_rounds table
+---@param action_id? integer
 ---@return table
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Util.Build_Action = function(packet_rounds)
+Debug.Unit.Util.Build_Action = function(packet_rounds, action_id)
     local action = {}
-    action.targets = {}
+    action.param = action_id
 
+    action.targets = {}
     local target_data = {}
     local action_data = {}
 

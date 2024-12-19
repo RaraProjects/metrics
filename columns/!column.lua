@@ -53,11 +53,12 @@ end
 ---@param numerator integer
 ---@param denominator integer
 ---@param color table
+---@param no_scaling? boolean
 ---@param justify? boolean whether or not to right justify the text
 ---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Output.Percent = function(numerator, denominator, color, justify, raw)
-    if raw then return Column.String.Format_Percent(numerator, denominator) end
-    return UI.TextColored(color, Column.String.Format_Percent(numerator, denominator, justify))
+Column.Output.Percent = function(numerator, denominator, color, no_scaling, justify, raw)
+    if raw then return Column.String.Format_Percent(numerator, denominator, justify, no_scaling) end
+    return UI.TextColored(color, Column.String.Format_Percent(numerator, denominator, justify, no_scaling))
 end

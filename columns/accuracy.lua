@@ -27,11 +27,12 @@ end
 ---@param trackable string
 ---@param threshold? integer
 ---@param critical_hit? boolean
+---@param action_name? string
 ---@param justify? boolean whether or not to right justify the text
 ---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Acc.By_Type = function(player_name, trackable, threshold, critical_hit, justify, raw)
+Column.Acc.By_Type = function(player_name, trackable, threshold, critical_hit, action_name, justify, raw)
     local hit_metric     = DB.Metric.HITS_ON_TARGET
     local attempt_metric = DB.Metric.ATTEMPTS_ON_TARGET
     local hits, attempts
@@ -43,7 +44,7 @@ Column.Acc.By_Type = function(player_name, trackable, threshold, critical_hit, j
         threshold      = 0
     end
 
-    -- Get data.
+    -- Getting melee and ranged combine accuracy.
     if trackable == DB.Enum.COMBINED then
         local melee_hits      = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  hit_metric)
         local melee_attempts  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  attempt_metric)
@@ -51,6 +52,13 @@ Column.Acc.By_Type = function(player_name, trackable, threshold, critical_hit, j
         local ranged_attempts = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, attempt_metric)
         hits = melee_hits + ranged_hits
         attempts = melee_attempts + ranged_attempts
+
+    -- Getting the accuracy of an action like a weaponskill.
+    elseif action_name then
+        hits     = DB.Catalog.Get(player_name, trackable, action_name, hit_metric)
+        attempts = DB.Catalog.Get(player_name, trackable, action_name, attempt_metric)
+
+    -- General accuracy of melee or ranged attaack.
     else
         hits     = DB.Data.Get(player_name, trackable, hit_metric)
         attempts = DB.Data.Get(player_name, trackable, attempt_metric)
@@ -60,32 +68,7 @@ Column.Acc.By_Type = function(player_name, trackable, threshold, critical_hit, j
     if not threshold then threshold = DB.Settings.Accuracy_Warning end
     local color = Column.Acc.Color_Selection(hits, attempts, threshold)
 
-    return Column.Output.Percent(hits, attempts, color, justify, raw)
-end
-
-------------------------------------------------------------------------------------------------------
--- This is for cataloged actions.
--- Grabs the accuracy for a given cataloged action and trackable.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param action_name string
----@param trackable string
----@param on_use? boolean
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Acc.By_Type_Catalog = function(player_name, action_name, trackable, on_use)
-    local hit_metric     = DB.Metric.HITS_ON_TARGET
-    local attempt_metric = DB.Metric.ATTEMPTS_ON_TARGET
-    if on_use then
-        hit_metric     = DB.Metric.HITS_ON_USE
-        attempt_metric = DB.Metric.ATTEMPTS_ON_USE
-    end
-
-    local hits     = DB.Catalog.Get(player_name, trackable, action_name, hit_metric)
-    local attempts = DB.Catalog.Get(player_name, trackable, action_name, attempt_metric)
-    local color    = Column.Acc.Color_Selection(hits, attempts, DB.Settings.Accuracy_Warning)
-
-    return Column.Output.Percent(hits, attempts, color)
+    return Column.Output.Percent(hits, attempts, color, false, justify, raw)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -105,7 +88,7 @@ Column.Acc.By_Type_Pet = function(player_name, pet_name, acc_type, justify)
     local attempts = DB.Pet_Data.Get(player_name, pet_name, acc_type, attempt_metric)
     local color    = Column.Acc.Color_Selection(hits, attempts, DB.Settings.Accuracy_Warning)
 
-    return Column.Output.Percent(hits, attempts, color, justify)
+    return Column.Output.Percent(hits, attempts, color, false, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -146,7 +129,7 @@ end
 Column.Acc.Recent = function(player_name, justify)
     local accuracy = DB.Accuracy.Get(player_name)
     local color    = Column.Acc.Color_Selection(accuracy[1], accuracy[2], DB.Settings.Accuracy_Warning)
-    return Column.Output.Percent(accuracy[1], accuracy[2], color, justify)
+    return Column.Output.Percent(accuracy[1], accuracy[2], color, false, justify)
 end
 
 ------------------------------------------------------------------------------------------------------

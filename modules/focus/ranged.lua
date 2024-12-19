@@ -43,7 +43,7 @@ Focus.Ranged.Total = function(player_name)
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, nil, true)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
@@ -90,8 +90,8 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
 
         for _, data in ipairs(extra_damage_data) do
             UI.TableNextColumn() UI.Text(data.header)
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, data.trackable)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, data.trackable)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -100,7 +100,7 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
         -- Non-damaging data columns.
         if enaspir > 0 then
             UI.TableNextColumn() UI.Text("En-Aspir")
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_ENASPIR)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.RANGED_ENASPIR)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
@@ -143,7 +143,7 @@ Focus.Ranged.Min_Max = function(player_name)
         for _, data in ipairs(damage_types) do
             UI.TableNextColumn() UI.Text(data.header)
             UI.TableNextColumn() Column.Damage.Average_By_Type_Exclude_Critical(player_name, data.trackable)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MIN)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MAX)
             Window_Manager.Table_Row_Color(row)

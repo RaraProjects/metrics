@@ -5,7 +5,7 @@ Focus.Overview = T{}
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
-Focus.Overview.Job_Selection = function(player_name)
+Focus.Overview.Display = function(player_name)
     if not player_name or not Ashita.Party.Jobs[player_name] then return Focus.Overview.Anon() end
     if not Ashita.Party.Jobs[player_name].main then return Focus.Overview.Anon() end -- Mob in player list crash prevention.
 
@@ -320,7 +320,7 @@ Focus.Overview.Melee = function(player_name)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Main-Hand")
-        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.MELEE_MAIN_HAND)
+        UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.MELEE_MAIN_HAND)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OVERALL)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OVERALL, 0, true)
         Window_Manager.Table_Row_Color(row)
@@ -329,7 +329,7 @@ Focus.Overview.Melee = function(player_name)
         if off_hand > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Off-Hand")
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.MELEE_OFF_HAND)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.MELEE_OFF_HAND)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OFF_HAND)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OFF_HAND, 0, true)
             Window_Manager.Table_Row_Color(row)
@@ -339,7 +339,7 @@ Focus.Overview.Melee = function(player_name)
         if kick_damage > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Kick Attacks")
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.MELEE_KICK_ATTACKS)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.MELEE_KICK_ATTACKS)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_KICK_ATTACKS)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_KICK_ATTACKS, 0, true)
             Window_Manager.Table_Row_Color(row)
@@ -349,7 +349,7 @@ Focus.Overview.Melee = function(player_name)
         if counter_damage > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Counter")
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.MELEE_COUNTER)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.MELEE_COUNTER)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
@@ -359,7 +359,7 @@ Focus.Overview.Melee = function(player_name)
         if pet_damage > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Pets")
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.PET_MELEE_OVERALL)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, 0, true)
             Window_Manager.Table_Row_Color(row)
@@ -393,7 +393,7 @@ Focus.Overview.Ranged = function(player_name)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Projectile")
-        UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, DB.Trackable.RANGED_OVERALL)
+        UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.RANGED_OVERALL)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, 0, true)
         UI.TableNextColumn() Column.Damage.Shot_Distance(player_name)
@@ -431,9 +431,9 @@ Focus.Overview.Weaponskill = function(player_name)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
-                UI.TableNextColumn() Column.Acc.By_Type_Catalog(player_name, action_name, trackable)
-                UI.TableNextColumn() Column.Single.Average_TP(player_name, action_name)
+                UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
+                UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, nil, false, action_name)
+                UI.TableNextColumn() Column.Single.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT, action_name)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
             end
@@ -563,9 +563,9 @@ Focus.Overview.Nuking = function(player_name, hide_mp)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.TOTAL)
-                UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
-                if not hide_mp then UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, trackable, DB.Metric.MP_SPENT) end
+                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
+                UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
+                if not hide_mp then UI.TableNextColumn() Column.Damage.Per_Unit(player_name, trackable, DB.Metric.MP_SPENT, action_name) end
                 UI.TableNextColumn() Column.Single.Bursts(player_name, action_name)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
@@ -613,8 +613,8 @@ Focus.Overview.Healing = function(player_name)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.TOTAL)
-                UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
+                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
+                UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
                 UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable)
                 UI.TableNextColumn() Column.Single.Overcure(player_name, action_name)
                 Window_Manager.Table_Row_Color(row)
@@ -662,8 +662,8 @@ Focus.Overview.Healing_Received = function(player_name)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.TOTAL)
-                UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
+                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
+                UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
                 UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
@@ -751,7 +751,7 @@ Focus.Overview.Debuff = function(player_name, hide_mp)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Acc.By_Type_Catalog(player_name, action_name, trackable)
+                UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, nil, false, action_name)
                 UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
                 if not hide_mp then UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable) end
                 Window_Manager.Table_Row_Color(row)
@@ -845,12 +845,12 @@ Focus.Overview.Phantom_Roll = function(player_name, full)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.FIRST_ROLL)
-                if full then UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.REROLL) end
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.LUCKY)
-                if full then UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.LUCKY_11) end
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.UNLUCKY)
-                UI.TableNextColumn() Column.Single.Damage(player_name, action_name, trackable, DB.Metric.BUSTS)
+                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.FIRST_ROLL, action_name)
+                if full then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.REROLL, action_name) end
+                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.LUCKY, action_name)
+                if full then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.LUCKY_11, action_name) end
+                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.UNLUCKY, action_name)
+                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.BUSTS, action_name)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
             end
@@ -897,7 +897,7 @@ Focus.Overview.Quick_Shot = function(player_name)
                 action_name = data[1]
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Single.Average(player_name, action_name, trackable)
+                UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
                 UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1

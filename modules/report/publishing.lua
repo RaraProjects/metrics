@@ -53,7 +53,7 @@ Report.Publishing.Accuracy = function()
             if rank <= Parse.Config.Rank_Cutoff() then
 
                 local player_name = data[1]
-                local player_acc = Column.Acc.By_Type(player_name, DB.Enum.COMBINED, nil, false, false, true)
+                local player_acc = Column.Acc.By_Type(player_name, DB.Enum.COMBINED, nil, false, nil, false, true)
                 local chat_string = tostring(player_name) .. ": " .. tostring(player_acc) .. "%"
                 Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
                 found = true
@@ -95,7 +95,7 @@ Report.Publishing.Damage_By_Type = function(trackable)
             if rank <= Parse.Config.Rank_Cutoff() then
 
                 local player_name = data[1]
-                local player_damage = Column.Damage.By_Type(player_name, trackable, nil, false, nil, true)
+                local player_damage = Column.Damage.By_Type(player_name, trackable, nil, nil, false, nil, true)
                 local player_percent = Column.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)
                 if tonumber(player_percent) >= Metrics.Report.Damage_Threshold then
                     local chat_string = tostring(player_name) .. ": " .. tostring(player_damage) .. " (" .. tostring(player_percent) .. "%)"
@@ -118,17 +118,17 @@ end
 -- Sends a report of cataloged damage to game chat.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
----@param focus_type string
+---@param trackable string
 ------------------------------------------------------------------------------------------------------
-Report.Publishing.Catalog = function(player_name, focus_type)
+Report.Publishing.Catalog = function(player_name, trackable)
     if not player_name then
         Ashita.Chat.Message("There was an error trying to publish: No player name provided.")
         return nil
     end
 
-    if not focus_type then focus_type = DB.Trackable.WEAPONSKILL end
-    if not DB.Lists.Check.Catalog_Exists(player_name, focus_type) then
-        Ashita.Chat.Message(tostring(player_name) .. " doesn't have " .. tostring(focus_type) .. " data to publish.")
+    if not trackable then trackable = DB.Trackable.WEAPONSKILL end
+    if not DB.Lists.Check.Catalog_Exists(player_name, trackable) then
+        Ashita.Chat.Message(tostring(player_name) .. " doesn't have " .. tostring(trackable) .. " data to publish.")
         return nil
     end
 
@@ -137,20 +137,20 @@ Report.Publishing.Catalog = function(player_name, focus_type)
         local found = false
 
         -- Headers
-        Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, tostring(focus_type) .. " for " .. tostring(player_name)) coroutine.sleep(Report.Publishing.Delay)
+        Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, tostring(trackable) .. " for " .. tostring(player_name)) coroutine.sleep(Report.Publishing.Delay)
         Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "WS: Total (Count) ~Average Min<Max") coroutine.sleep(Report.Publishing.Delay)
 
         -- Loop through weaponskill data.
         local action_name
-        local sorted_catalog_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local sorted_catalog_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
         for _, data in ipairs(sorted_catalog_damage) do
             action_name = data[1]
-            local total = Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL, false, true)
-            local count = Column.Single.Attempts(player_name, action_name, focus_type, true)
-            local average = Column.Single.Average(player_name, action_name, focus_type, true)
-            local min = Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MIN, false, true)
+            local total = Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name, false, false, true)
+            local count = Column.Single.Attempts(player_name, action_name, trackable, true)
+            local average = Column.Damage.By_Type_Average(player_name, trackable, action_name, nil, true)
+            local min = Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name, false, false, true)
             if min == tostring(DB.Enum.MAX_DAMAGE) then min = "0" end
-            local max = Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.MAX, false, true)
+            local max = Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name, false, false, true)
 
             local chat_string = tostring(action_name) .. ": " ..
                                 tostring(total) ..

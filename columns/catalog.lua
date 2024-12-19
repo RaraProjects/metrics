@@ -2,63 +2,32 @@ Column.Single = {}
 
 ------------------------------------------------------------------------------------------------------
 -- This is for cataloged actions.
--- Grabs the total amount of damage a cataloged action has done for a given trackable and metric.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param action_name string
----@param focus_type string a trackable from the model.
----@param metric string a metric from the model.
----@param percent? boolean whether or not the damage should be raw or percent.
----@param raw? boolean true: just output the raw value; false: output a column to a table.
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Single.Damage = function(player_name, action_name, focus_type, metric, percent, raw)
-    local action_total = 0
-    if metric ~= DB.Enum.IGNORE then action_total = DB.Catalog.Get(player_name, focus_type, action_name, metric) end
-    local color = Column.String.Color_Zero(action_total)
-
-    if percent then
-        local player_total = Column.Damage.Raw_Total_Player_Damage(player_name)
-        if focus_type == DB.Trackable.SPELLS_HEALING then player_total = DB.Data.Get(player_name, DB.Trackable.SPELLS_HEALING, DB.Metric.TOTAL) end
-        if raw then return Column.String.Format_Percent(action_total, player_total) end
-        return UI.TextColored(color, Column.String.Format_Percent(action_total, player_total))
-    end
-
-    if raw then return Column.String.Format_Number(action_total) end
-    return UI.TextColored(color, Column.String.Format_Number(action_total))
-end
-
-------------------------------------------------------------------------------------------------------
--- This is for cataloged actions.
--- Grabs the total amount of damage a cataloged action has done for a given trackable and metric.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param action_name string
----@param focus_type string a trackable from the model.
----@param metric_unit string
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Single.Damage_Per_Unit = function(player_name, action_name, focus_type, metric_unit)
-    local single_damage = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.TOTAL)
-    local mp = DB.Catalog.Get(player_name, focus_type, action_name, metric_unit)
-    local color = Column.String.Color_Zero(mp)
-    if single_damage == 0 or mp == 0 then color = Res.Colors.Basic.DIM end
-    return UI.TextColored(color, Column.String.Format_Percent(single_damage, mp, false, true))
-end
-
-------------------------------------------------------------------------------------------------------
--- This is for cataloged actions.
 -- Grabs the average tp used for a weaponskill.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
----@param action_name string
+---@param trackable string
+---@param unit_metric string
+---@param action_name? string
+---@param justify? boolean
 ------------------------------------------------------------------------------------------------------
-Column.Single.Average_TP = function(player_name, action_name)
-    local tp = DB.Catalog.Get(player_name, DB.Trackable.WEAPONSKILL, action_name, DB.Metric.TP_SPENT)
-    local attempts = DB.Catalog.Get(player_name, DB.Trackable.WEAPONSKILL, action_name, DB.Metric.ATTEMPTS_ON_USE)
+Column.Single.Per_Unit_Average = function(player_name, trackable, unit_metric, action_name, justify)
+    local tp        = 0
+    local attempts  = 0
+
+    -- If an action name isn't provided then get the overall weaponskill TP.
+    if action_name then
+        tp       = DB.Catalog.Get(player_name, trackable, action_name, unit_metric)
+        attempts = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
+    else
+        tp       = DB.Data.Get(player_name, trackable, unit_metric)
+        attempts = DB.Data.Get(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    end
+
+    -- Colors
     local color = Column.String.Color_Zero(tp)
+
     if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
-    return UI.TextColored(color, Column.String.Format_Percent(tp, attempts, false, true))
+    return UI.TextColored(color, Column.String.Format_Percent(tp, attempts, justify, true))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -109,16 +78,26 @@ end
 -- Grabs how many times a cataloged action was attempted for a given trackable.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
----@param action_name string
----@param focus_type string a trackable from the model.
+---@param action_name? string
+---@param trackable string a trackable from the model.
 ---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Single.Attempts = function(player_name, action_name, focus_type, raw)
-    local single_attempts = DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.ATTEMPTS_ON_USE)
-    local color = Column.String.Color_Zero(single_attempts)
-    if raw then return Column.String.Format_Number(single_attempts) end
-    return UI.TextColored(color, Column.String.Format_Number(single_attempts))
+Column.Single.Attempts = function(player_name, action_name, trackable, raw)
+    local attempts = 0
+
+    -- Get regular trackable data if an action name isn't provided.
+    if action_name then
+        attempts = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
+    else
+        attempts = DB.Data.Get(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    end
+
+    -- Colors
+    local color = Column.String.Color_Zero(attempts)
+
+    if raw then return Column.String.Format_Number(attempts) end
+    return UI.TextColored(color, Column.String.Format_Number(attempts))
 end
 
 ------------------------------------------------------------------------------------------------------

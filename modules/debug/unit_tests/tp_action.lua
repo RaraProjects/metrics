@@ -13,7 +13,10 @@ Debug.Unit.Tests.TP_Action.Hit = function()
     local action_id = 156
     local action_name = "Tachi: Fudo"
     local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -87,7 +90,10 @@ Debug.Unit.Tests.TP_Action.Miss = function()
     local action_id = 156
     local action_name = "Tachi: Fudo"
     local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -147,7 +153,10 @@ Debug.Unit.Tests.TP_Action.Energy_Steal = function()
     local action_id = 21
     local action_name = "Energy Steal"
     local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -225,8 +234,10 @@ Debug.Unit.Tests.TP_Action.Skillchain = function()
     local sc_id = 288
     local sc_name = "Light"
     local sc_damage = 200
-    local add_effect = {param = sc_damage, animation = nil, message = sc_id}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage, nil, add_effect)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, nil, true, sc_damage, nil, sc_id))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -321,7 +332,10 @@ Debug.Unit.Tests.TP_Action.Pet_Hit = function()
     local damage = 100
     local action_id = 262
     local action_name = "Sheep Charge"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
@@ -432,7 +446,10 @@ Debug.Unit.Tests.TP_Action.Pet_Miss = function()
     local damage = 0
     local action_id = 262
     local action_name = "Sheep Charge"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
@@ -514,7 +531,11 @@ Debug.Unit.Tests.TP_Action.Pet_Hit_AOE = function()
     local damage_two = 200
     local action_id = 273
     local action_name = "Claw Cyclone"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage, nil, nil, nil, Debug.Unit.Mob.Target_ID_Two, damage_two)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID_Two, damage_two))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
@@ -725,7 +746,10 @@ Debug.Unit.Tests.TP_Action.Pet_No_Damage = function()
     local damage = 0
     local action_id = 264
     local action_name = "Sheep Song"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false

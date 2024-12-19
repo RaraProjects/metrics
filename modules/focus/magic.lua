@@ -71,7 +71,7 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, nil, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, nil, nil, true)
         UI.TableNextColumn() Column.Spell.MP(player_name, DB.Trackable.SPELLS_OVERALL)
         UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         Window_Manager.Table_Row_Color(row)
@@ -81,7 +81,7 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Nuking")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_NUKING)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_NUKING, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_NUKING, nil, nil, true)
             UI.TableNextColumn() Column.Spell.MP(player_name, DB.Trackable.SPELLS_NUKING)
             UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Trackable.SPELLS_NUKING)
             Window_Manager.Table_Row_Color(row)
@@ -92,7 +92,7 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Enspell")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_ENSPELL)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_ENSPELL, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_ENSPELL, nil, nil, true)
             UI.TableNextColumn() Column.Spell.MP(player_name, DB.Trackable.MELEE_ENSPELL)
             UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Trackable.MELEE_ENSPELL)
             Window_Manager.Table_Row_Color(row)
@@ -102,7 +102,7 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
         if spike_damage > 0 then
             UI.TableNextColumn() UI.Text("Spikes")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_SPIKE_DAMAGE)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_SPIKE_DAMAGE, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_SPIKE_DAMAGE, nil, nil, true)
             UI.TableNextColumn() Column.Spell.MP(player_name, DB.Trackable.SPELLS_SPIKE_DAMAGE)
             UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, DB.Trackable.SPELLS_SPIKE_DAMAGE)
             Window_Manager.Table_Row_Color(row)
@@ -113,7 +113,7 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("En-DMG (M)")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_ENDAMAGE)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_ENDAMAGE, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_ENDAMAGE, nil, nil, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
@@ -124,7 +124,7 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("En-DMG (R)")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_ENDAMAGE)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_ENDAMAGE, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_ENDAMAGE, nil, nil, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
@@ -135,7 +135,7 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("En-Drain (R)")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_ENDRAIN)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_ENDRAIN, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_ENDRAIN, nil, nil, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
@@ -327,26 +327,26 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param action_name string
----@param focus_type string a trackable from the data model.
+---@param trackable string a trackable from the data model.
 ------------------------------------------------------------------------------------------------------
-Focus.Magic.Single_Row = function(player_name, action_name, focus_type)
+Focus.Magic.Single_Row = function(player_name, action_name, trackable)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(action_name)
-    UI.TableNextColumn() Column.Single.Damage(player_name, action_name, focus_type, DB.Metric.TOTAL)
-    UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, focus_type)
-    UI.TableNextColumn() Column.Single.Damage_Per_Unit(player_name, action_name, focus_type, DB.Metric.MP_SPENT)
-    UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, focus_type)
+    UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
+    UI.TableNextColumn() Column.Single.MP_Used(player_name, action_name, trackable)
+    UI.TableNextColumn() Column.Damage.Per_Unit(player_name, trackable, DB.Metric.MP_SPENT, action_name)
+    UI.TableNextColumn() Column.Single.Attempts(player_name, action_name, trackable)
 
     -- Accuracy changes between what the trackable is. Accuracy for spells isn't useful.
-    if     focus_type == DB.Trackable.SPELLS_NUKING       then UI.TableNextColumn() Column.Single.Bursts(player_name, action_name)
-    elseif focus_type == DB.Trackable.SPELLS_HEALING      then UI.TableNextColumn() Column.Single.Overcure(player_name, action_name)
-    elseif focus_type == DB.Trackable.MELEE_ENSPELL       then UI.TableNextColumn() Column.Single.Hit_Count(player_name, DB.Trackable.MELEE_ENSPELL, action_name)
-    elseif focus_type == DB.Trackable.RANGED_ENDAMAGE     then UI.TableNextColumn() Column.Single.Hit_Count(player_name, DB.Trackable.RANGED_ENDAMAGE, action_name)
-    elseif focus_type == DB.Trackable.SPELLS_SPIKE_DAMAGE then UI.TableNextColumn() Column.Single.Hit_Count(player_name, DB.Trackable.SPELLS_SPIKE_DAMAGE, action_name)
-    else UI.TableNextColumn() Column.Acc.By_Type_Catalog(player_name, action_name, focus_type)
+    if     trackable == DB.Trackable.SPELLS_NUKING       then UI.TableNextColumn() Column.Single.Bursts(player_name, action_name)
+    elseif trackable == DB.Trackable.SPELLS_HEALING      then UI.TableNextColumn() Column.Single.Overcure(player_name, action_name)
+    elseif trackable == DB.Trackable.MELEE_ENSPELL       then UI.TableNextColumn() Column.Single.Hit_Count(player_name, DB.Trackable.MELEE_ENSPELL, action_name)
+    elseif trackable == DB.Trackable.RANGED_ENDAMAGE     then UI.TableNextColumn() Column.Single.Hit_Count(player_name, DB.Trackable.RANGED_ENDAMAGE, action_name)
+    elseif trackable == DB.Trackable.SPELLS_SPIKE_DAMAGE then UI.TableNextColumn() Column.Single.Hit_Count(player_name, DB.Trackable.SPELLS_SPIKE_DAMAGE, action_name)
+    else UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, 0, false, action_name)
     end
 
-    Focus.Catalog.Avg_Min_Max(player_name, action_name, focus_type)
+    Focus.Catalog.Avg_Min_Max(player_name, action_name, trackable)
 end
 
 ------------------------------------------------------------------------------------------------------

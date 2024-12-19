@@ -48,14 +48,14 @@ Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
         -- All data columns.
         local full_data = {}
         table.insert(full_data, {header = "Total",     trackable = DB.Trackable.MELEE_OVERALL})
-        table.insert(full_data, {header = "Main-Hand", trackable = DB.Trackable.MELEE_MAIN_HAND})
-        if off_hand > 0    then table.insert(full_data, {header = "Off-Hand",     trackable = DB.Trackable.MELEE_OFF_HAND}) end
-        if kick_damage > 0 then table.insert(full_data, {header = "Kick Attacks", trackable = DB.Trackable.MELEE_KICK_ATTACKS}) end
+        table.insert(full_data, {header = "- Main-Hand", trackable = DB.Trackable.MELEE_MAIN_HAND})
+        if off_hand > 0    then table.insert(full_data, {header = "- Off-Hand",     trackable = DB.Trackable.MELEE_OFF_HAND}) end
+        if kick_damage > 0 then table.insert(full_data, {header = "- Kick Attacks", trackable = DB.Trackable.MELEE_KICK_ATTACKS}) end
 
         for _, data in ipairs(full_data) do
             UI.TableNextColumn() UI.Text(data.header)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -66,7 +66,7 @@ Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Counter")
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_COUNTER)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_COUNTER, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_COUNTER, nil, nil, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -124,8 +124,8 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
 
         for _, data in ipairs(enspell_data) do
             UI.TableNextColumn() UI.Text(data.header)
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, data.trackable)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, data.trackable)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -138,7 +138,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
 
         for _, data in ipairs(add_effects) do
             UI.TableNextColumn() UI.Text(data.header)
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, data.trackable)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, data.trackable)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
@@ -152,7 +152,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
 
         for _, data in ipairs(count_only) do
             UI.TableNextColumn() UI.Text(data.header)
-            UI.TableNextColumn() Column.Damage.Average_By_Type(player_name, data.trackable)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, data.trackable)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             Window_Manager.Table_Row_Color(row)
@@ -196,7 +196,7 @@ Focus.Melee.Min_Max = function(player_name)
         for _, data in ipairs(damage_types) do
             UI.TableNextColumn() UI.Text(data.header)
             UI.TableNextColumn() Column.Damage.Average_By_Type_Exclude_Critical(player_name, data.trackable)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, true)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MIN)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MAX)
             Window_Manager.Table_Row_Color(row)
@@ -241,9 +241,9 @@ Focus.Melee.Multi_Attack = function(player_name)
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_TOTAL, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_TOTAL, nil, true)
         UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND,  DB.Metric.MULTI_ATTACK_HIT_ON_USE)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_OFF_HAND,  DB.Metric.MULTI_ATTACK_TOTAL, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_OFF_HAND,  DB.Metric.MULTI_ATTACK_TOTAL, nil, true)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -262,9 +262,9 @@ Focus.Melee.Multi_Attack = function(player_name)
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(data.count)
                 UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, data.count)
-                UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_MAIN_HAND, data.damage, true)
+                UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_MAIN_HAND, data.damage, nil, true)
                 UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND,  data.count)
-                UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_OFF_HAND,  data.damage, true)
+                UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_OFF_HAND,  data.damage, nil, true)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
             end

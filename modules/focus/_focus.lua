@@ -93,56 +93,34 @@ Focus.Content = function()
     Column.String.Job(player_name)
     UI.Separator() Focus.Overall_Damage_Breakdown(player_name) UI.Separator()
 
+    -- Load tab bar and tab content.
     if UI.BeginTabBar("Focus Tabs", Window_Manager.Tabs.Flags) then
 
-        if UI.BeginTabItem(Focus.Tabs.Names.OVERVIEW, false, Focus.Tabs.Switch[Focus.Tabs.Names.OVERVIEW]) then
-            Focus.Tabs.Switch[Focus.Tabs.Names.OVERVIEW] = nil
-            Focus.Overview.Job_Selection(player_name)
-            UI.EndTabItem()
+        local tabs = {}
+        table.insert(tabs, {tab = Focus.Tabs.Names.OVERVIEW,  display_function = Focus.Overview.Display})
+        table.insert(tabs, {tab = Focus.Tabs.Names.MELEE,     display_function = Focus.Melee.Display})
+        table.insert(tabs, {tab = Focus.Tabs.Names.RANGED,    display_function = Focus.Ranged.Display})
+        table.insert(tabs, {tab = Focus.Tabs.Names.DEFENSE,   display_function = Focus.Defense.Display})
+        table.insert(tabs, {tab = Focus.Tabs.Names.WS,        display_function = Focus.WS.Display})
+        table.insert(tabs, {tab = Focus.Tabs.Names.MAGIC,     display_function = Focus.Magic.Display})
+        table.insert(tabs, {tab = Focus.Tabs.Names.ABILITIES, display_function = Focus.Abilities.Display})
+
+        -- Load tabs
+        for _, data in ipairs(tabs) do
+            if UI.BeginTabItem(data.tab, false, Focus.Tabs.Switch[data.tab]) then
+                Focus.Tabs.Switch[data.tab] = nil
+                data.display_function(player_name)
+                UI.EndTabItem()
+            end
         end
 
-        if UI.BeginTabItem(Focus.Tabs.Names.MELEE, false, Focus.Tabs.Switch[Focus.Tabs.Names.MELEE]) then
-            Focus.Tabs.Switch[Focus.Tabs.Names.MELEE] = nil
-            Focus.Melee.Display(player_name)
-            UI.EndTabItem()
-        end
-
-        if UI.BeginTabItem(Focus.Tabs.Names.RANGED, false, Focus.Tabs.Switch[Focus.Tabs.Names.RANGED]) then
-            Focus.Tabs.Switch[Focus.Tabs.Names.RANGED] = nil
-            Focus.Ranged.Display(player_name)
-            UI.EndTabItem()
-        end
-
-        if UI.BeginTabItem(Focus.Tabs.Names.WS, false, Focus.Tabs.Switch[Focus.Tabs.Names.WS]) then
-            Focus.Tabs.Switch[Focus.Tabs.Names.WS] = nil
-            Focus.WS.Display(player_name)
-            UI.EndTabItem()
-        end
-
-        if UI.BeginTabItem(Focus.Tabs.Names.MAGIC, false, Focus.Tabs.Switch[Focus.Tabs.Names.MAGIC]) then
-            Focus.Tabs.Switch[Focus.Tabs.Names.MAGIC] = nil
-            Focus.Magic.Display(player_name)
-            UI.EndTabItem()
-        end
-
-        if UI.BeginTabItem(Focus.Tabs.Names.ABILITIES, false, Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES]) then
-            Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES] = nil
-            Focus.Abilities.Display(player_name)
-            UI.EndTabItem()
-        end
-
+        -- Conditionally show pets.
         if DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL) > 0 or DB.Data.Get(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL) > 0 then
             if UI.BeginTabItem(Focus.Tabs.Names.PETS, false, Focus.Tabs.Switch[Focus.Tabs.Names.PETS]) then
                 Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = nil
                 Focus.Pets.Display(player_name)
                 UI.EndTabItem()
             end
-        end
-
-        if UI.BeginTabItem(Focus.Tabs.Names.DEFENSE, false, Focus.Tabs.Switch[Focus.Tabs.Names.DEFENSE]) then
-            Focus.Tabs.Switch[Focus.Tabs.Names.DEFENSE] = nil
-            Focus.Defense.Display(player_name)
-            UI.EndTabItem()
         end
 
         UI.EndTabBar()
@@ -156,13 +134,16 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Overall_Damage_Breakdown = function(player_name)
-    local col_flags = Column.Flags.None
+    local col_flags   = Column.Flags.None
     local table_flags = Window_Manager.Table.Flags.Fixed_Borders
-    local width = Column.Widths.Percent
+    local width       = Column.Widths.Percent
+
+    local pet = DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
+    local including_skillchain = Parse.Config.Include_SC_Damage()
 
     local columns = 8
-    local pet = DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     if pet > 0 then columns = columns + 1 end
+    if including_skillchain then columns = columns + 1 end
 
     if UI.BeginTable("Overall", columns, table_flags) then
         UI.TableSetupColumn("Type",    col_flags, width)
@@ -170,25 +151,25 @@ Focus.Overall_Damage_Breakdown = function(player_name)
         UI.TableSetupColumn("Melee",   col_flags, width)
         UI.TableSetupColumn("Ranged",  col_flags, width)
         UI.TableSetupColumn("WS",      col_flags, width)
-        UI.TableSetupColumn("SC",      col_flags, width)
+        if including_skillchain then UI.TableSetupColumn("SC", col_flags, width) end
         UI.TableSetupColumn("Magic",   col_flags, width)
         UI.TableSetupColumn("Ability", col_flags, width)
         if pet > 0 then UI.TableSetupColumn("Pet", col_flags, width) end
         UI.TableHeadersRow()
 
         local total_trackable = DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN
-        if Parse.Config.Include_SC_Damage() then total_trackable = DB.Trackable.TOTAL_DAMAGE end
+        if including_skillchain then total_trackable = DB.Trackable.TOTAL_DAMAGE end
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Percent")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, total_trackable, nil, true)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_OVERALL, nil, true)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL, nil, true)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL, nil, true)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, nil, true)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, nil, true)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING, nil, true)
-        if pet > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL, nil, true) end
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, total_trackable, nil, nil, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_OVERALL, nil, nil, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL, nil, nil, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL, nil, nil, true)
+        if including_skillchain then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, nil, nil, true) end
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, nil, nil, true)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING, nil, nil, true)
+        if pet > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL, nil, nil, true) end
         Window_Manager.Table_Row_Color(1)
 
         UI.TableNextRow()
@@ -197,7 +178,7 @@ Focus.Overall_Damage_Breakdown = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_OVERALL)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN)
+        if including_skillchain then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN) end
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING)
         if pet > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL) end

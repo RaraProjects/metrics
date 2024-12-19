@@ -11,17 +11,26 @@ Column.Damage = {}
 ---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.By_Type = function(player_name, trackable, metric, percent_player, justify, raw)
+Column.Damage.By_Type = function(player_name, trackable, metric, action_name, percent_player, justify, raw)
     if not metric then metric = DB.Metric.TOTAL end
 
-    local trackable_damage = DB.Data.Get(player_name, trackable, metric)
+    local trackable_damage = 0
+
+    if action_name then
+        trackable_damage = DB.Catalog.Get(player_name, trackable, action_name, metric)
+    else
+        trackable_damage = DB.Data.Get(player_name, trackable, metric)
+    end
     if DB.Metric_Needs_Max_Value(metric) and trackable_damage >= DB.Enum.MAX_DAMAGE then trackable_damage = 0 end
 
     local color = Column.String.Color_Zero(trackable_damage)
 
     if percent_player then
         local total_damage = Column.Damage.Raw_Total_Player_Damage(player_name)
-        return Column.Output.Percent(trackable_damage, total_damage, color, justify, raw)
+        if trackable == DB.Trackable.SPELLS_HEALING then
+            total_damage = DB.Data.Get(player_name, DB.Trackable.SPELLS_HEALING, DB.Metric.TOTAL)
+        end
+        return Column.Output.Percent(trackable_damage, total_damage, color, true, justify, raw)
     end
 
     return Column.Output.Number(trackable_damage, color, justify, raw)
@@ -54,10 +63,10 @@ Column.Damage.By_Type_Crit = function(player_name, damage_type, percent, justify
 
     if percent then
         local total_damage = Column.Damage.Raw_Total_Player_Damage(player_name)
-        return Column.Output.Percent(crit_damage, total_damage, color, justify)
+        return Column.Output.Percent(crit_damage, total_damage, color, false, justify)
     end
 
-    return Column.Output.Number(crit_damage, color, justify)
+    return Column.Output.Number(crit_damage, color, true, justify)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -65,15 +74,27 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param trackable string a trackable from the model.
+---@param action_name? string
 ---@param justify? boolean whether or not to right justify the text
----@return number
+---@param raw? boolean
+---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Average_By_Type = function(player_name, trackable, justify)
-    local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
-    local count  = DB.Data.Get(player_name, trackable, DB.Metric.HITS_ON_TARGET)
+Column.Damage.By_Type_Average = function(player_name, trackable, action_name, justify, raw)
+    local damage = 0
+    local hits   = 0
+
+    if action_name then
+        damage = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.TOTAL)
+        hits   = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.HITS_ON_TARGET)
+    else
+        damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+        hits   = DB.Data.Get(player_name, trackable, DB.Metric.HITS_ON_TARGET)
+    end
+
     local color  = Column.String.Color_Zero(damage)
-    if damage == 0 or count == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
-    return UI.TextColored(color, Column.String.Format_Percent(damage, count, justify, true))
+
+    if damage == 0 or hits == 0 then return Column.Output.Number(0, color, justify, raw) end
+    return Column.Output.Percent(damage, hits, color, true, justify, raw)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -134,17 +155,32 @@ Column.Damage.Average_By_Type_Critical_Only = function(player_name, damage_type,
 end
 
 ------------------------------------------------------------------------------------------------------
--- Shows the average TP used for weaponskills.
+-- This is for cataloged actions.
+-- Grabs the total amount of damage a cataloged action has done for a given trackable and metric.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
----@param justify? boolean whether or not to right justify the text
+---@param trackable string a trackable from the model.
+---@param unit_metric string
+---@param action_name? string
+---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Average_TP = function(player_name, justify)
-    local tp       = DB.Data.Get(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.TP_SPENT)
-    local attempts = DB.Data.Get(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.ATTEMPTS_ON_USE)
-    local color    = Column.String.Color_Zero(tp)
-    if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
-    return UI.TextColored(color, Column.String.Format_Percent(tp, attempts, justify, true))
+Column.Damage.Per_Unit = function(player_name, trackable, unit_metric, action_name)
+    local damage = 0
+    local unit   = 0
+
+    if action_name then
+        damage = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.TOTAL)
+        unit   = DB.Catalog.Get(player_name, trackable, action_name, unit_metric)
+    else
+        damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+        unit   = DB.Data.Get(player_name, trackable, unit_metric)
+    end
+
+    -- Colors
+    local color = Column.String.Color_Zero(unit)
+
+    if damage == 0 or unit == 0 then color = Res.Colors.Basic.DIM end
+    return UI.TextColored(color, Column.String.Format_Percent(damage, unit, false, true))
 end
 
 ------------------------------------------------------------------------------------------------------

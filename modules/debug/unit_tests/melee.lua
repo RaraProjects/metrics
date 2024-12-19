@@ -1515,7 +1515,7 @@ Debug.Unit.Tests.Melee.Enspell = function()
     local add_effect_name = "Enfire"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENSPELL))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENSPELL))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1610,7 +1610,7 @@ Debug.Unit.Tests.Melee.Endamage = function()
     local add_effect_name = "Fire"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENDAMAGE))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENDAMAGE))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1704,7 +1704,7 @@ Debug.Unit.Tests.Melee.Endebuff = function()
     local add_effect_name = "Blind"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDEBUFF))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDEBUFF))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1785,7 +1785,7 @@ Debug.Unit.Tests.Melee.Endrain = function()
     local additional_damage = 200
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDRAIN))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDRAIN))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1860,7 +1860,7 @@ Debug.Unit.Tests.Melee.Enaspir = function()
     local additional_damage = 200
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENASPIR))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENASPIR))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1938,7 +1938,7 @@ Debug.Unit.Tests.Melee.Spikes = function()
     local spike_name = "Blaze Spikes"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, false, nil, nil, nil, true, spike_damage, spike_animation, spike_message))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, false, nil, nil, nil, true, spike_damage, spike_animation, spike_message))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
