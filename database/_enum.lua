@@ -134,7 +134,6 @@ DB.Metric = {
     OVERCURE                = "Overcure",
     MP_SPENT                = "MP Spent",
     OVERLOAD                = "Maneuver Overload",
-    FIRST_ROLL              = "COR Roll First Rolls",
     REROLL                  = "COR Roll Rerolls",
     BUSTS                   = "COR Roll Bust Count",
     LUCKY                   = "COR Roll Lucky Count",

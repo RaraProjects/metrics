@@ -236,7 +236,7 @@ end
 Focus.Defense.Single_Row = function(player_name, action_name, trackable)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text(action_name)
-    UI.TableNextColumn() Column.Damage.Attempts(player_name, action_name, trackable)
+    UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name)
     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
 
     UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)

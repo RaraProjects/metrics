@@ -12,7 +12,10 @@ Debug.Unit.Tests.Ability.Damaging_Hit = function()
     local damage = 100
     local action_id = 46
     local action_name = "Shield Bash"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Ability.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -87,7 +90,10 @@ Debug.Unit.Tests.Ability.Damaging_Miss = function()
     local damage = 0
     local action_id = 46
     local action_name = "Shield Bash"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Ability.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -148,7 +154,10 @@ Debug.Unit.Tests.Ability.Damaging_Hit_TP = function()
     local damage = 100
     local action_id = 66
     local action_name = "Jump"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -223,7 +232,10 @@ Debug.Unit.Tests.Ability.Damaging_Miss_TP = function()
     local damage = 0
     local action_id = 66
     local action_name = "Jump"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
@@ -284,12 +296,15 @@ Debug.Unit.Tests.Ability.Healing = function()
     local damage = 100
     local action_id = 38
     local action_name = "Chakra"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Ability.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
     local player_catalog = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+    local target_lists = {[1] = player_name, [2] = DB.Enum.ALL_MOBS}
 
     player[player_name] = {}
     player_catalog[player_name] = {}
@@ -298,6 +313,8 @@ Debug.Unit.Tests.Ability.Healing = function()
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.ALL_HEAL] = {}
         player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.MAX] = damage
         player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.ABILITY_OVERALL] = {}
@@ -359,12 +376,15 @@ Debug.Unit.Tests.Ability.MP = function()
     local damage = 100
     local action_id = 154
     local action_name = "Devotion"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Ability.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
     local player_catalog = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+    local target_lists = {[1] = player_name, [2] = DB.Enum.ALL_MOBS}
 
     player[player_name] = {}
     player_catalog[player_name] = {}
@@ -430,12 +450,15 @@ Debug.Unit.Tests.Ability.No_Damage = function()
     local damage = 100
     local action_id = 47
     local action_name = "Holy Circle"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Ability.Action(action, Debug.Unit.Mob.PLAYER, true)
 
     local player = {}
     local player_catalog = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+    local target_lists = {[1] = player_name, [2] = DB.Enum.ALL_MOBS}
 
     player[player_name] = {}
     player_catalog[player_name] = {}
@@ -490,7 +513,10 @@ Debug.Unit.Tests.Ability.Avatar_Rage = function()
     local damage = 100
     local action_id = 846
     local action_name = "Flaming Crush"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.Ability.Pet_Action(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
@@ -524,6 +550,8 @@ Debug.Unit.Tests.Ability.Avatar_Rage = function()
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.PET_OVERALL] = {}
         player[player_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.MAX] = damage
         player[player_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
@@ -554,6 +582,8 @@ Debug.Unit.Tests.Ability.Avatar_Rage = function()
         pet[player_name][pet_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.TOTAL] = damage
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.MIN] = damage
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.MAX] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
@@ -606,7 +636,10 @@ Debug.Unit.Tests.Ability.Avatar_Ward = function()
     local damage = 100
     local action_id = 853
     local action_name = "Earthen Ward"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.Ability.Pet_Action(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
@@ -615,7 +648,7 @@ Debug.Unit.Tests.Ability.Avatar_Ward = function()
     local player_catalog = {}
     local pet = {}
     local pet_catalog = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+    local target_lists = {[1] = player_name, [2] = DB.Enum.ALL_MOBS}
 
     player[player_name] = {}
     player_catalog[player_name] = {}
@@ -685,7 +718,10 @@ Debug.Unit.Tests.Ability.Avatar_Healing = function()
     local damage = 100
     local action_id = 906
     local action_name = "Healing Ruby"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.Ability.Pet_Action(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
@@ -694,7 +730,7 @@ Debug.Unit.Tests.Ability.Avatar_Healing = function()
     local player_catalog = {}
     local pet = {}
     local pet_catalog = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+    local target_lists = {[1] = player_name, [2] = DB.Enum.ALL_MOBS}
 
     player[player_name] = {}
     player_catalog[player_name] = {}
@@ -707,6 +743,8 @@ Debug.Unit.Tests.Ability.Avatar_Healing = function()
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.ALL_HEAL] = {}
         player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.MAX] = damage
         player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.PET_HEALING] = {}
@@ -732,6 +770,8 @@ Debug.Unit.Tests.Ability.Avatar_Healing = function()
         pet[player_name][pet_name][target_index] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.TOTAL] = damage
+        pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.MIN] = damage
+        pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.MAX] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.HITS_ON_TARGET] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING] = {}
@@ -792,7 +832,10 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Damage = function()
     local damage = 100
     local action_id = 646
     local action_name = "Flame Breath"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.Ability.Pet_Action(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = true
@@ -826,6 +869,8 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Damage = function()
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.PET_OVERALL] = {}
         player[player_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.MAX] = damage
         player[player_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
@@ -855,6 +900,8 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Damage = function()
         pet[player_name][pet_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.TOTAL] = damage
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.MIN] = damage
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.MAX] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.PET_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
@@ -907,7 +954,10 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Healing = function()
     local damage = 100
     local action_id = 640
     local action_name = "Healing Breath"
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.Target_ID, action_id, damage)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.Ability.Pet_Action(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
@@ -916,7 +966,7 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Healing = function()
     local player_catalog = {}
     local pet = {}
     local pet_catalog = {}
-    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+    local target_lists = {[1] = player_name, [2] = DB.Enum.ALL_MOBS}
 
     player[player_name] = {}
     player_catalog[player_name] = {}
@@ -929,6 +979,8 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Healing = function()
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.ALL_HEAL] = {}
         player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.MAX] = damage
         player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.PET_HEALING] = {}
@@ -954,6 +1006,8 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Healing = function()
         pet[player_name][pet_name][target_index] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.TOTAL] = damage
+        pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.MIN] = damage
+        pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.MAX] = damage
         pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.HITS_ON_TARGET] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.ALL_HEAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.PET_HEALING] = {}

@@ -161,3 +161,23 @@ Column.Acc.Multi_Attack = function(player_name, melee_type, multi_attack_metric)
     local color         = Column.Acc.Color_Selection(multi_attack, attack_rounds, 0)
     return Column.Output.Percent(multi_attack, attack_rounds, color)
 end
+
+------------------------------------------------------------------------------------------------------
+-- Displays Phantom Roll rates.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param roll_metric string
+---@param action_name? string
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Acc.Phantom_Roll = function(player_name, roll_metric, action_name)
+    local trackable = DB.Trackable.PHANTOM_ROLL
+
+    local roll_hits = DB.Data.Get(player_name, trackable, roll_metric)
+    if action_name then roll_hits = DB.Catalog.Get(player_name, trackable, action_name, roll_metric) end
+    local roll_attempts = DB.Data.Get(player_name, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+
+    local color = Column.Acc.Color_Selection(roll_hits, roll_attempts, 0)
+
+    return Column.Output.Percent(roll_hits, roll_attempts, color)
+end

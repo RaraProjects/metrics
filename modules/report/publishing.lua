@@ -146,7 +146,7 @@ Report.Publishing.Catalog = function(player_name, trackable)
         for _, data in ipairs(sorted_catalog_damage) do
             action_name = data[1]
             local total = Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name, false, false, true)
-            local count = Column.Damage.Attempts(player_name, action_name, trackable, true)
+            local count = Column.Damage.Attempts(player_name, trackable, action_name, nil, true)
             local average = Column.Damage.By_Type_Average(player_name, trackable, action_name, nil, true)
             local min = Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name, false, false, true)
             if min == tostring(DB.Enum.MAX_DAMAGE) then min = "0" end
