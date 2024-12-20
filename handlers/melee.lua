@@ -63,6 +63,7 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
         local multi_swings = 0
         local multi_damage = 0
         local has_hit = false
+        local has_multi = false
 
         for type, data in pairs(mult_attack) do
             multi_swings = data.swings
@@ -93,13 +94,16 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 
                 -- Total multi-attack rate.
                 if multi_swings > 1 then
+                    has_multi = true
                     DB.Data.Update(DB.Update_Mode.INC, 1,            details.audits, type, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
                     DB.Data.Update(DB.Update_Mode.INC, multi_damage, details.audits, type, DB.Metric.MULTI_ATTACK_TOTAL)
-                    DB.Data.Update(DB.Update_Mode.INC, 1,            details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
                     DB.Data.Update(DB.Update_Mode.INC, multi_damage, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_TOTAL)
                 end
             end
         end
+
+        -- Only count one multi attack per attack round for the overall metric. Otherwise there is >100% for overall multi rate.
+        if has_multi then DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_HIT_ON_USE) end
     end
 
     -- Don't calculatefor pets.

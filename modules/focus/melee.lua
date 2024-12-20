@@ -6,13 +6,10 @@ Focus.Melee = {}
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Melee.Display = function(player_name)
-    local off_hand       = DB.Data.Get(player_name, DB.Trackable.MELEE_OFF_HAND,     DB.Metric.TOTAL)
-    local kick_damage    = DB.Data.Get(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.TOTAL)
-    local counter_damage = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER,      DB.Metric.TOTAL)
-    local endamage       = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDAMAGE,     DB.Metric.TOTAL)
-    local endebuff       = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDEBUFF,     DB.Metric.HITS_ON_USE)
+    local endamage = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDAMAGE,     DB.Metric.TOTAL)
+    local endebuff = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDEBUFF,     DB.Metric.HITS_ON_USE)
 
-    Focus.Melee.Total(player_name, off_hand, kick_damage, counter_damage)
+    Focus.Melee.Total(player_name)
     Focus.Melee.Auxiliary(player_name, endamage)
     Focus.Melee.Min_Max(player_name)
     Focus.Melee.Multi_Attack(player_name)
@@ -26,48 +23,72 @@ end
 -- Build total melee damage table.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
----@param off_hand number
----@param kick_damage number
----@param counter_damage number
+---@param make_brief? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.Melee.Total = function(player_name, off_hand, kick_damage, counter_damage)
+Focus.Melee.Total = function(player_name, make_brief)
     local col_flags   = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
+    local off_hand       = DB.Data.Get(player_name, DB.Trackable.MELEE_OFF_HAND,     DB.Metric.TOTAL)
+    local kick_damage    = DB.Data.Get(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.TOTAL)
+    local counter_damage = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER,      DB.Metric.TOTAL)
+
     local row = 1
-    if UI.BeginTable("Total Melee", 4, table_flags) then
+    if UI.BeginTable("Total Melee", 5, table_flags) then
         UI.TableSetupColumn("Melee Overall", col_flags, name_width)
-        UI.TableSetupColumn("Damage",   col_flags, width)
-        UI.TableSetupColumn("%Player",  col_flags, width)
-        UI.TableSetupColumn("Accuracy", col_flags, width)
-        UI.TableSetupColumn("%Multi",   col_flags, width)
+        if make_brief then
+            UI.TableSetupColumn("Average",  col_flags, width)
+            UI.TableSetupColumn("Accuracy", col_flags, width)
+            UI.TableSetupColumn("%Crit",    col_flags, width)
+            UI.TableSetupColumn("%Multi",   col_flags, width)
+        else
+            UI.TableSetupColumn("Damage",   col_flags, width)
+            UI.TableSetupColumn("%Player",  col_flags, width)
+            UI.TableSetupColumn("Accuracy", col_flags, width)
+            UI.TableSetupColumn("%Multi",   col_flags, width)
+        end
         UI.TableHeadersRow()
 
-        -- All data columns.
         local full_data = {}
-        table.insert(full_data, {header = "Total",     trackable = DB.Trackable.MELEE_OVERALL})
+        table.insert(full_data, {header = "Total",       trackable = DB.Trackable.MELEE_OVERALL})
         table.insert(full_data, {header = "- Main-Hand", trackable = DB.Trackable.MELEE_MAIN_HAND})
         if off_hand > 0    then table.insert(full_data, {header = "- Off-Hand",     trackable = DB.Trackable.MELEE_OFF_HAND}) end
         if kick_damage > 0 then table.insert(full_data, {header = "- Kick Attacks", trackable = DB.Trackable.MELEE_KICK_ATTACKS}) end
 
         for _, data in ipairs(full_data) do
             UI.TableNextColumn() UI.Text(data.header)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
-            UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable)
+            if make_brief then
+                UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, data.trackable)
+                UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable)
+                UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0, true)
+                UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
+            else
+                UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable)
+                UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
+                UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable)
+                UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
+            end
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
 
         -- Counter doesn't have the accuracy column.
         if counter_damage > 0 then
-            UI.TableNextRow()
+            local trackable = DB.Trackable.MELEE_COUNTER
             UI.TableNextColumn() UI.Text("Counter")
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_COUNTER)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_COUNTER, nil, nil, true)
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            if make_brief then
+                UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
+                UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+                UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, 0, true)
+                UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            else
+                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
+                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, nil, true)
+                UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+                UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            end
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
