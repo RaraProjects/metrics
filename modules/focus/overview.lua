@@ -52,7 +52,7 @@ Focus.Overview.WAR = function(player_name)
     local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     Focus.Overview.Melee(player_name)
     if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.From_List(player_name, ability_list)
 end
 
@@ -64,7 +64,7 @@ end
 Focus.Overview.MNK = function(player_name)
     local ability_list = {[1] = "Focus", [2] = "Dodge", [3] = "Boost", [4] = "Chi Blast", [5] = "Chakra", [6] = "Counterstance"}
     Focus.Overview.Melee(player_name)
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.From_List(player_name, ability_list)
 end
 
@@ -117,7 +117,7 @@ Focus.Overview.THF = function(player_name)
     local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     Focus.Overview.Melee(player_name)
     if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.From_List(player_name, ability_list)
 end
 
@@ -147,7 +147,7 @@ Focus.Overview.DRK = function(player_name)
     local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     Focus.Overview.Melee(player_name)
     if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Overview.Nuking(player_name)
     Focus.Magic.Debuff(player_name)
     Focus.Abilities.From_List(player_name, ability_list)
@@ -161,7 +161,7 @@ end
 Focus.Overview.BST = function(player_name)
     local ability_list = {[1] = "Reward", [2] = "Call Beast"}
     Focus.Overview.Melee(player_name)
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Overview.Pet_TP(player_name)
     Focus.Abilities.From_List(player_name, ability_list)
 end
@@ -174,7 +174,7 @@ end
 Focus.Overview.BRD = function(player_name)
     local buff_list = {[1] = "Enlight"}
     Focus.Overview.Melee(player_name)
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Overview.Healing(player_name)
     Focus.Magic.Debuff(player_name)
     Focus.Magic.Basic_Spell(player_name, DB.Trackable.SPELLS_BUFF_SONG, "Buff Songs", true)
@@ -189,7 +189,7 @@ Focus.Overview.RNG = function(player_name)
     local ability_list = {[1] = "Barrage", [2] = "Sharpshot", [3] = "Velocity Shot", [4] = "Unlimited Shot"}
     Focus.Overview.Melee(player_name)
     Focus.Overview.Ranged(player_name)
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.From_List(player_name, ability_list)
 end
 
@@ -201,8 +201,8 @@ end
 Focus.Overview.SAM = function(player_name)
     local ability_list = {[1] = "Hasso", [2] = "Meditate", [3] = "Seigan", [4] = "Third Eye"}
     Focus.Overview.Melee(player_name)
-    Focus.Overview.Weaponskill(player_name)
-    Focus.Overview.Skillchains(player_name)
+    Focus.WS.Weaponskill(player_name, true)
+    Focus.WS.Skillchains(player_name, true)
     Focus.Abilities.From_List(player_name, ability_list)
 end
 
@@ -215,7 +215,7 @@ Focus.Overview.NIN = function(player_name)
     local ability_list = {[1] = "Yonin"}
     local buff_list = {[1] = "Utsusemi: Ichi", [2] = "Utsusemi: Ni"}
     Focus.Overview.Melee(player_name)
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Overview.Defense(player_name)
     Focus.Overview.Healing_Received(player_name)
     Focus.Overview.Nuking(player_name, true)
@@ -232,7 +232,7 @@ end
 Focus.Overview.DRG = function(player_name)
     local ability_list = {[1] = "Jump", [2] = "High Jump", [3] = "Super Jump", [4] = "Spirit Link", [5] = "Call Wyvern"}
     Focus.Overview.Melee(player_name)
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Overview.Pet_TP(player_name)
     Focus.Abilities.From_List(player_name, ability_list)
 end
@@ -257,7 +257,7 @@ end
 Focus.Overview.BLU = function(player_name)
     local ability_list = {[1] = "Burst Affinity", [2] = "Chain Affinity"}
     Focus.Overview.Melee(player_name)
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Overview.Nuking(player_name, true)
     Focus.Overview.Healing(player_name)
     Focus.Magic.Debuff(player_name)
@@ -272,7 +272,7 @@ end
 Focus.Overview.COR = function(player_name)
     Focus.Overview.Melee(player_name)
     Focus.Overview.Ranged(player_name)
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.Phantom_Roll(player_name)
     Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_DAMAGING, "Quick Draw+", true)
 end
@@ -285,7 +285,7 @@ end
 Focus.Overview.PUP = function(player_name)
     local ability_list = {[1] = "Deus Ex Automata", [2] = "Repair", [3] = "Maintenance"}
     Focus.Overview.Melee(player_name)
-    Focus.Overview.Weaponskill(player_name)
+    Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.Mauevers(player_name)
     Focus.Abilities.From_List(player_name, ability_list)
 end
@@ -396,84 +396,6 @@ Focus.Overview.Ranged = function(player_name)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, 0, true)
         UI.TableNextColumn() Column.Damage.Shot_Distance(player_name)
-
-        UI.EndTable()
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Shows weaponskill overview stats.
-------------------------------------------------------------------------------------------------------
----@param player_name string
-------------------------------------------------------------------------------------------------------
-Focus.Overview.Weaponskill = function(player_name)
-    if not player_name then return nil end
-
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
-    if UI.BeginTable("Weaponskills", 4, table_flags) then
-        UI.TableSetupColumn("Weaponskill", col_flags, name_width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("Accuracy", col_flags, width)
-        UI.TableSetupColumn("~TP", col_flags, width)
-        UI.TableHeadersRow()
-
-        local trackable = DB.Trackable.WEAPONSKILL
-        local row = 1
-        if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
-            local action_name
-            for _, data in ipairs(sorted_damage) do
-                action_name = data[1]
-                UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
-                UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, nil, false, action_name)
-                UI.TableNextColumn() Column.Single.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT, action_name)
-                Window_Manager.Table_Row_Color(row)
-                row = row + 1
-            end
-        else
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("None")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        end
-
-        UI.EndTable()
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Shows skillchain overview stats.
-------------------------------------------------------------------------------------------------------
----@param player_name string
-------------------------------------------------------------------------------------------------------
-Focus.Overview.Skillchains = function(player_name)
-    if not player_name then return nil end
-
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
-    if UI.BeginTable("Skillchains", 2, table_flags) then
-        UI.TableSetupColumn("Skillchains", col_flags, name_width)
-        UI.TableSetupColumn("Count", col_flags, width)
-        UI.TableHeadersRow()
-
-        UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Opened")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_OPENED)
-
-        UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Closed")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_CLOSED)
-        Window_Manager.Table_Row_Color(0)
 
         UI.EndTable()
     end
