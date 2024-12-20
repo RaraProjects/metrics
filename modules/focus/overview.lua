@@ -76,8 +76,8 @@ end
 Focus.Overview.WHM = function(player_name)
     local ability_list = {[1] = "Divine Seal", [2] = "Devotion"}
     local buff_list = {[1] = "Regen III", [2] = "Regen II", [3] = "Regen"}
-    Focus.Overview.Healing(player_name)
-    Focus.Overview.Buffs(player_name, buff_list)
+    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
+    Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
     Focus.Abilities.From_List(player_name, ability_list)
 end
 
@@ -88,7 +88,8 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.BLM = function(player_name)
     local ability_list = {[1] = "Elemental Seal"}
-    Focus.Overview.Nuking(player_name)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst", true)
     Focus.Abilities.From_List(player_name, ability_list)
 end
 
@@ -100,10 +101,11 @@ end
 Focus.Overview.RDM = function(player_name)
     local ability_list = {[1] = "Convert"}
     local buff_list = {[1] = "Refresh", [2] = "Haste"}
-    Focus.Overview.Healing(player_name)
-    Focus.Overview.Nuking(player_name)
+    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst", true)
     Focus.Magic.Debuff(player_name)
-    Focus.Overview.Buffs(player_name, buff_list)
+    Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
     Focus.Abilities.From_List(player_name, ability_list)
 end
 
@@ -130,10 +132,10 @@ Focus.Overview.PLD = function(player_name)
     local ability_list = {[1] = "Sentinel", [2] = "Rampart", [3] = "Cover", [4] = "Chivalry", [5] = "Shield Bash"}
     local buff_list = {[1] = "Enlight"}
     Focus.Overview.Defense(player_name)
-    Focus.Overview.Healing(player_name)
+    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
     Focus.Overview.Healing_Received(player_name)
     Focus.Magic.Debuff(player_name)
-    Focus.Overview.Buffs(player_name, buff_list)
+    Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
     Focus.Abilities.From_List(player_name, ability_list)
 end
 
@@ -148,7 +150,8 @@ Focus.Overview.DRK = function(player_name)
     Focus.Overview.Melee(player_name)
     if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
     Focus.WS.Weaponskill(player_name, true)
-    Focus.Overview.Nuking(player_name)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst", true)
     Focus.Magic.Debuff(player_name)
     Focus.Abilities.From_List(player_name, ability_list)
 end
@@ -175,7 +178,7 @@ Focus.Overview.BRD = function(player_name)
     local buff_list = {[1] = "Enlight"}
     Focus.Overview.Melee(player_name)
     Focus.WS.Weaponskill(player_name, true)
-    Focus.Overview.Healing(player_name)
+    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
     Focus.Magic.Debuff(player_name)
     Focus.Magic.Basic_Spell(player_name, DB.Trackable.SPELLS_BUFF_SONG, "Buff Songs", true)
 end
@@ -218,9 +221,10 @@ Focus.Overview.NIN = function(player_name)
     Focus.WS.Weaponskill(player_name, true)
     Focus.Overview.Defense(player_name)
     Focus.Overview.Healing_Received(player_name)
-    Focus.Overview.Nuking(player_name, true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true, true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst", true, true)
     Focus.Magic.Debuff(player_name, true)
-    Focus.Overview.Buffs(player_name, buff_list, true)
+    Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells", true)
     Focus.Abilities.From_List(player_name, ability_list)
 end
 
@@ -245,7 +249,7 @@ end
 Focus.Overview.SMN = function(player_name)
     Focus.Overview.Melee(player_name)
     Focus.Overview.Pet_TP(player_name)
-    Focus.Overview.Healing(player_name)
+    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
     Focus.Magic.Debuff(player_name)
 end
 
@@ -258,8 +262,8 @@ Focus.Overview.BLU = function(player_name)
     local ability_list = {[1] = "Burst Affinity", [2] = "Chain Affinity"}
     Focus.Overview.Melee(player_name)
     Focus.WS.Weaponskill(player_name, true)
-    Focus.Overview.Nuking(player_name, true)
-    Focus.Overview.Healing(player_name)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true)
+    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
     Focus.Magic.Debuff(player_name)
     Focus.Abilities.From_List(player_name, ability_list)
 end
@@ -451,110 +455,6 @@ Focus.Overview.Pet_TP = function(player_name)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Shows nuking overview stats.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param hide_mp? boolean hide MP for things like NIN nukes.
-------------------------------------------------------------------------------------------------------
-Focus.Overview.Nuking = function(player_name, hide_mp)
-    if not player_name then return nil end
-
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
-    local columns = 5
-    if hide_mp then columns = columns - 1 end
-
-    if UI.BeginTable("Nuking", columns, table_flags) then
-        UI.TableSetupColumn("Nuking", col_flags, name_width)
-        UI.TableSetupColumn("Total", col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        if not hide_mp then UI.TableSetupColumn("DMG/MP", col_flags, width) end
-        UI.TableSetupColumn("Bursts", col_flags, width)
-        UI.TableHeadersRow()
-
-        local trackable = DB.Trackable.SPELLS_NUKING
-        local row = 1
-        if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
-            local action_name
-            for _, data in ipairs(sorted_damage) do
-                action_name = data[1]
-                UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
-                UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
-                if not hide_mp then UI.TableNextColumn() Column.Damage.Per_Unit(player_name, trackable, DB.Metric.MP_SPENT, action_name) end
-                UI.TableNextColumn() Column.Single.Bursts(player_name, action_name)
-                Window_Manager.Table_Row_Color(row)
-                row = row + 1
-            end
-        else
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("None")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            if not hide_mp then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        end
-
-        UI.EndTable()
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Shows healing overview stats.
-------------------------------------------------------------------------------------------------------
----@param player_name string
-------------------------------------------------------------------------------------------------------
-Focus.Overview.Healing = function(player_name)
-    if not player_name then return nil end
-
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
-    if UI.BeginTable("Healing", 5, table_flags) then
-        UI.TableSetupColumn("Healing Cast", col_flags, name_width)
-        UI.TableSetupColumn("HP+", col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("MP-", col_flags, width)
-        UI.TableSetupColumn("Overcure", col_flags, width)
-        UI.TableHeadersRow()
-
-        local trackable = DB.Trackable.SPELLS_HEALING
-        local row = 1
-        if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
-            local action_name
-            for _, data in ipairs(sorted_damage) do
-                action_name = data[1]
-                UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
-                UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
-                UI.TableNextColumn() Column.Spell.MP_Used_Catalog(player_name, trackable, action_name)
-                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.OVERCURE, action_name)
-                Window_Manager.Table_Row_Color(row)
-                row = row + 1
-            end
-        else
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("None")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        end
-
-        UI.EndTable()
-    end
-end
-
-------------------------------------------------------------------------------------------------------
 -- Shows healing received overview stats.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
@@ -595,44 +495,6 @@ Focus.Overview.Healing_Received = function(player_name)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        end
-
-        UI.EndTable()
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Shows buff overview stats.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param buff_list table
----@param hide_mp? boolean hide MP for things like NIN buffs.
-------------------------------------------------------------------------------------------------------
-Focus.Overview.Buffs = function(player_name, buff_list, hide_mp)
-    if not player_name or not buff_list then return nil end
-
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
-    local columns = 3
-    if hide_mp then columns = columns - 1 end
-
-    if UI.BeginTable("Buffs", columns, table_flags) then
-        UI.TableSetupColumn("Buffs", col_flags, name_width)
-        UI.TableSetupColumn("Casts", col_flags, width)
-        if not hide_mp then UI.TableSetupColumn("-MP", col_flags, width) end
-        UI.TableHeadersRow()
-
-        local row = 1
-        for _, buff_name in ipairs(buff_list) do
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(buff_name)
-            UI.TableNextColumn() Column.Damage.Attempts(player_name, DB.Trackable.SPELLS_BUFFS, buff_name)
-            if not hide_mp then UI.TableNextColumn() Column.Spell.MP_Used_Catalog(player_name, DB.Trackable.SPELLS_BUFFS, buff_name) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
         end
 
         UI.EndTable()
