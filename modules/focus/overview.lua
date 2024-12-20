@@ -51,7 +51,7 @@ Focus.Overview.WAR = function(player_name)
     local ability_list = {[1] = "Berserk", [2] = "Warcry", [3] = "Aggressor", [4] = "Provoke", [5] = "Defender"}
     local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     Focus.Melee.Total(player_name, true)
-    if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
+    if ranged_damage > 0 then Focus.Ranged.Total(player_name, true) end
     Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.From_List(player_name, ability_list)
 end
@@ -118,7 +118,7 @@ Focus.Overview.THF = function(player_name)
     local ability_list = {[1] = "Sneak Attack", [2] = "Trick Attack", [3] = "Bully", [4] = "Accomplice", [5] = "Collaborator", [6] = "Mug", [7] = "Steal"}
     local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     Focus.Melee.Total(player_name, true)
-    if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
+    if ranged_damage > 0 then Focus.Ranged.Total(player_name, true) end
     Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.From_List(player_name, ability_list)
 end
@@ -148,7 +148,7 @@ Focus.Overview.DRK = function(player_name)
     local ability_list = {[1] = "Last Resort", [2] = "Souleater", [3] = "Weapon Bash"}
     local ranged_damage = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     Focus.Melee.Total(player_name, true)
-    if ranged_damage > 0 then Focus.Overview.Ranged(player_name) end
+    if ranged_damage > 0 then Focus.Ranged.Total(player_name, true) end
     Focus.WS.Weaponskill(player_name, true)
     Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true)
     Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst", true)
@@ -191,7 +191,7 @@ end
 Focus.Overview.RNG = function(player_name)
     local ability_list = {[1] = "Barrage", [2] = "Sharpshot", [3] = "Velocity Shot", [4] = "Unlimited Shot"}
     Focus.Melee.Total(player_name, true)
-    Focus.Overview.Ranged(player_name)
+    Focus.Ranged.Total(player_name, true)
     Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.From_List(player_name, ability_list)
 end
@@ -275,7 +275,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.COR = function(player_name)
     Focus.Melee.Total(player_name, true)
-    Focus.Overview.Ranged(player_name)
+    Focus.Ranged.Total(player_name, true)
     Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.Phantom_Roll(player_name)
     Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_DAMAGING, "Quick Draw+", true)
@@ -292,38 +292,6 @@ Focus.Overview.PUP = function(player_name)
     Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.Mauevers(player_name)
     Focus.Abilities.From_List(player_name, ability_list)
-end
-
-------------------------------------------------------------------------------------------------------
--- Shows weaponskill overview stats.
-------------------------------------------------------------------------------------------------------
----@param player_name string
-------------------------------------------------------------------------------------------------------
-Focus.Overview.Ranged = function(player_name)
-    if not player_name then return nil end
-
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
-    if UI.BeginTable("Ranged", 5, table_flags) then
-        UI.TableSetupColumn("Ranged", col_flags, name_width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("Accuracy", col_flags, width)
-        UI.TableSetupColumn("%Crit", col_flags, width)
-        UI.TableSetupColumn("Distance", col_flags, width)
-        UI.TableHeadersRow()
-
-        UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Projectile")
-        UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.RANGED_OVERALL)
-        UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL)
-        UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, 0, true)
-        UI.TableNextColumn() Column.Damage.Shot_Distance(player_name)
-
-        UI.EndTable()
-    end
 end
 
 ------------------------------------------------------------------------------------------------------

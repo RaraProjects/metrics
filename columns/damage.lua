@@ -424,7 +424,7 @@ end
 Column.Damage.Shot_Distance = function(player_name, justify)
     local shot_distance = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.SHOT_DISTANCE)
     if shot_distance then shot_distance = shot_distance / 100 end
-    local count = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
+    local count = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_TARGET)
     local color = Column.String.Color_Zero(shot_distance)
     return UI.TextColored(color, Column.String.Format_Percent(shot_distance, count, justify))
 end

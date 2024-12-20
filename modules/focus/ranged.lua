@@ -24,27 +24,47 @@ end
 -- Build total ranged damage table.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
+---@param make_brief? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.Ranged.Total = function(player_name)
+Focus.Ranged.Total = function(player_name, make_brief)
     local col_flags   = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
     local trackable   = DB.Trackable.RANGED_OVERALL
 
+    local columns = 5
+
     local row = 1
-    if UI.BeginTable("Ranged", 4, table_flags) then
-        UI.TableSetupColumn("Ranged Overall", col_flags, name_width)
-        UI.TableSetupColumn("Damage",   col_flags, width)
-        UI.TableSetupColumn("%Player",  col_flags, width)
-        UI.TableSetupColumn("Accuracy", col_flags, width)
+    if UI.BeginTable("Ranged", columns, table_flags) then
+        if make_brief then
+            UI.TableSetupColumn("Ranged Overall", col_flags, name_width)
+            UI.TableSetupColumn("Average",   col_flags, width)
+            UI.TableSetupColumn("Accuracy", col_flags, width)
+            UI.TableSetupColumn("%Crit",    col_flags, width)
+            UI.TableSetupColumn("Distance", col_flags, width)
+        else
+            UI.TableSetupColumn("Ranged Overall", col_flags, name_width)
+            UI.TableSetupColumn("Damage",   col_flags, width)
+            UI.TableSetupColumn("%Player",  col_flags, width)
+            UI.TableSetupColumn("Accuracy", col_flags, width)
+            UI.TableSetupColumn("Distance", col_flags, width)
+        end
         UI.TableHeadersRow()
 
-        UI.TableNextRow()
-        UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, nil, true)
-        UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
+        if make_brief then
+            UI.TableNextColumn() UI.Text("Total")
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
+            UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
+            UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, 0, true)
+            UI.TableNextColumn() Column.Damage.Shot_Distance(player_name)
+        else
+            UI.TableNextColumn() UI.Text("Total")
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, nil, true)
+            UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
+            UI.TableNextColumn() Column.Damage.Shot_Distance(player_name)
+        end
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -70,9 +90,9 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
     local row = 1
     if UI.BeginTable("Aux. Ranged", 4, table_flags) then
         UI.TableSetupColumn("Ranged Auxiliary", col_flags, name_width)
-        UI.TableSetupColumn("Average",   col_flags, width)
-        UI.TableSetupColumn("%Player",   col_flags, width)
-        UI.TableSetupColumn("%Proc",     col_flags, width)
+        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("%Player", col_flags, width)
+        UI.TableSetupColumn("%Proc",   col_flags, width)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
@@ -125,10 +145,10 @@ Focus.Ranged.Min_Max = function(player_name)
     local row = 1
     if UI.BeginTable("Min Max Ranged", 5, table_flags) then
         UI.TableSetupColumn("MMA w/ Crit(!)", col_flags, name_width)
-        UI.TableSetupColumn("Average",     col_flags, width)
-        UI.TableSetupColumn("%Player",     col_flags, width)
-        UI.TableSetupColumn("Minimum",     col_flags, width)
-        UI.TableSetupColumn("Maximum",     col_flags, width)
+        UI.TableSetupColumn("Average", col_flags, width)
+        UI.TableSetupColumn("%Player", col_flags, width)
+        UI.TableSetupColumn("Minimum", col_flags, width)
+        UI.TableSetupColumn("Maximum", col_flags, width)
         UI.TableHeadersRow()
 
         local square_hit  = DB.Data.Get(player_name, DB.Trackable.RANGED_SQUARE_HIT,  DB.Metric.TOTAL)
