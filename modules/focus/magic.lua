@@ -29,6 +29,7 @@ Focus.Magic.Display = function(player_name, hide_publish)
 
     if nuke_total > 0     then Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke") end
     if burst_total > 0    then Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst") end
+    if dot > 0            then Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_DOT,    "DoTs") end
     if enspell_count > 0  then Focus.Magic.Damaging_Spell(player_name, DB.Trackable.MELEE_ENSPELL, "Enspell") end
     if spike_damage > 0   then Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_SPIKE_DAMAGE, "Spikes") end
     if melee_endamage > 0 then Focus.Catalog.Endamage(player_name, DB.Trackable.MELEE_ENDAMAGE, " (M)") end
