@@ -264,8 +264,8 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
         has_hit = false
 
     elseif message_id == Ashita.Enum.Message.CRIT then
-        H.Offense.Critical_Hit(audits, melee_type_broad, damage)
-        H.Offense.Critical_Hit(audits, melee_type_discrete, damage)
+        H.Offense.Hit(audits, melee_type_broad, damage, true)
+        H.Offense.Hit(audits, melee_type_discrete, damage, true)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
         was_critical_hit = true
 
@@ -304,8 +304,8 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
         H.Offense.Update_Recent_Accuracy(audits, true)
 
     elseif message_id == Ashita.Enum.Message.RANGECRIT then
-        H.Offense.Critical_Hit(audits, melee_type_broad, damage)
-        H.Offense.Critical_Hit(audits, melee_type_discrete, damage)
+        H.Offense.Hit(audits, melee_type_broad, damage, true)
+        H.Offense.Hit(audits, melee_type_discrete, damage, true)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
         was_critical_hit = true
 

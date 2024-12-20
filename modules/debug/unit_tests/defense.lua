@@ -580,12 +580,16 @@ Debug.Unit.Tests.Defense.Melee_Spikes = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 100
-    local animation = Ashita.Enum.Effect_Animation.FIRE -- Blaze Spikes
+    local damage    = 100
+    local message   = Ashita.Enum.Message.HIT
+    local spike_damage    = 200
+    local spike_animation = Ashita.Enum.Effect_Animation.FIRE -- Blaze Spikes
+    local spike_message   = Ashita.Enum.Message.SPIKE_DMG
     local action_name = "Blaze Spikes"
-    local primary = {animation = nil, reaction = nil, message = Ashita.Enum.Message.HIT}
-    local spike = {param = damage, animation = animation, message = Ashita.Enum.Message.SPIKE_DMG}
-    local action = Debug.Unit.Util.Build_Action(Debug.Unit.Mob.PLAYER.id_num, nil, damage, primary, nil, spike)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, nil, message, false, nil, nil, nil, true, spike_damage, spike_animation, spike_message))
+    local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee_Def.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
@@ -597,19 +601,21 @@ Debug.Unit.Tests.Defense.Melee_Spikes = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = spike_damage
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MIN] = spike_damage
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MAX] = spike_damage
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_SPIKE_DAMAGE] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.TOTAL] = spike_damage
+        player[player_name][target_index][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.MIN] = spike_damage
+        player[player_name][target_index][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.MAX] = spike_damage
         player[player_name][target_index][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = spike_damage
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = spike_damage
         player[player_name][target_index][DB.Trackable.DEF_MELEE] = {}
         player[player_name][target_index][DB.Trackable.DEF_MELEE][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.DEF_MELEE][DB.Metric.MIN] = damage
@@ -634,6 +640,8 @@ Debug.Unit.Tests.Defense.Melee_Spikes = function()
         player[player_name][target_index][DB.Trackable.DEF_CRITICAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE] = {}
         player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.MIN] = damage
+        player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.MAX] = damage
         player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_UNMITIGATED_MELEE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL] = {}
@@ -642,9 +650,9 @@ Debug.Unit.Tests.Defense.Melee_Spikes = function()
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_SPIKE_DAMAGE] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.TOTAL] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.MIN] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.MAX] = damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.TOTAL] = spike_damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.MIN] = spike_damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.MAX] = spike_damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.HITS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_SPIKE_DAMAGE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     end
@@ -658,8 +666,8 @@ Debug.Unit.Tests.Defense.Melee_Spikes = function()
     }
 
     local misc = {}
-    misc["Total Damage"] = damage
-    misc["Total Damage No Skillchain"] = damage
+    misc["Total Damage"] = spike_damage
+    misc["Total Damage No Skillchain"] = spike_damage
 
     local test_package = {
         player = player,

@@ -140,7 +140,9 @@ H.Spell.Count = function(audits, spell_id, spell_name, hit, mp_cost, is_burst, t
     elseif Res.Spells.Get_Buff_Song(spell_id)      then trackable = DB.Trackable.SPELLS_BUFF_SONG
     end
 
-    -- Set the usage tracking.
+    if trackable == DB.Trackable.SPELLS_NUKING and is_burst then trackable = DB.Trackable.SPELLS_BURSTS end
+
+    -- Set the usage tracking and MP spent.
     H.Offense.Action_Used(audits, trackable, spell_name, hit, mp_cost)
 
     -- Overall mana tracking. Be careful to not double dip on MP Spent for general spells.
@@ -148,13 +150,6 @@ H.Spell.Count = function(audits, spell_id, spell_name, hit, mp_cost, is_burst, t
         DB.Data.Update(DB.Update_Mode.INC, mp_cost, audits, DB.Trackable.PET_GENERAL_MAGIC, DB.Metric.MP_SPENT)
     elseif trackable ~= DB.Trackable.SPELLS_OVERALL then
         DB.Data.Update(DB.Update_Mode.INC, mp_cost, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.MP_SPENT)
-    end
-
-    -- Burst Tracking
-    if is_burst then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.MAGIC_BURST_COUNT)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.MAGIC_BURST_COUNT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.MAGIC_BURST_COUNT)
     end
 end
 
@@ -233,13 +228,23 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Spell.Nuke = function(audits, spell_name, damage, burst)
     local trackable = DB.Trackable.SPELLS_NUKING
+
+    -- Not tracking bursts for pets.
     if audits.pet_name then
         trackable = DB.Trackable.PET_NUKING
         H.Offense.Hit(audits, DB.Trackable.PET_OVERALL, damage)
+
+    -- This just catches the the overall magic damage for the player.
     else
-        H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, damage)
+        H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, damage, burst)
     end
-    H.Offense.Catalog_Hit(audits, trackable, damage, spell_name, burst)
+
+    -- Burst and non-burst damage are tracked seperately.
+    if burst then
+        H.Offense.Catalog_Hit(audits, DB.Trackable.SPELLS_BURSTS, damage, spell_name, burst)
+    else
+        H.Offense.Catalog_Hit(audits, trackable, damage, spell_name)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -291,32 +296,37 @@ end
 ---@param burst boolean
 ------------------------------------------------------------------------------------------------------
 H.Spell.Enfeebling_And_DoTs = function(audits, trackable, damage, spell_name, message_id, burst)
+    local overall = DB.Trackable.SPELLS_OVERALL
+
     -- Damaging DoTs like Dia, Bio, Helix
     if message_id == Ashita.Enum.Message.DAMAGE_SPELL_HIT then
-        H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, damage)
+        H.Offense.Hit(audits, overall, damage)
         H.Offense.Catalog_Hit(audits, trackable, damage, spell_name, burst)
 
         -- Need to supplement just in case the damage was zero but it wasn't resisted.
         if damage == 0 then
+            DB.Data.Update(DB.Update_Mode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
             DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
             DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spell_name, DB.Metric.HITS_ON_TARGET)
         end
 
     -- No Effects: These will not negatively impact resist metrics.
     elseif message_id == Ashita.Enum.Message.NO_EFFECT or message_id == Ashita.Enum.Message.EFFECT_FAIL or message_id == Ashita.Enum.Message.COMP_RESIST then
-        H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, 0)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
+        H.Offense.Hit(audits, overall, 0)
         H.Offense.Catalog_No_Damage_Hit(audits, trackable, spell_name)
         damage = -1
 
     -- Resists
     elseif message_id == Ashita.Enum.Message.RESIST or message_id == Ashita.Enum.Message.RESIST_2 then
-        H.Offense.Miss(audits, DB.Trackable.SPELLS_OVERALL)
+        H.Offense.Miss(audits, overall)
         H.Offense.Catalog_Hit(audits, trackable, 0, spell_name)
         damage = -2
 
     -- Effect Landed
     else
-        H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, 0)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
+        H.Offense.Hit(audits, overall, 0)
         H.Offense.Catalog_No_Damage_Hit(audits, trackable, spell_name)
     end
 

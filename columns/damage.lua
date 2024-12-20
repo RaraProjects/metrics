@@ -30,7 +30,7 @@ Column.Damage.By_Type = function(player_name, trackable, metric, action_name, pe
         if trackable == DB.Trackable.SPELLS_HEALING then
             total_damage = DB.Data.Get(player_name, DB.Trackable.SPELLS_HEALING, DB.Metric.TOTAL)
         end
-        return Column.Output.Percent(trackable_damage, total_damage, color, true, justify, raw)
+        return Column.Output.Percent(trackable_damage, total_damage, color, false, justify, raw)
     end
 
     return Column.Output.Number(trackable_damage, color, justify, raw)
@@ -152,6 +152,60 @@ Column.Damage.Average_By_Type_Critical_Only = function(player_name, damage_type,
     local color = Column.String.Color_Zero(crit_damage)
 
     return UI.TextColored(color, Column.String.Format_Percent(crit_damage, crit_count, justify, true))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- Grabs the usage rate of specfic enspells.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param trackable string a trackable from the model.
+---@param action_name? string
+---@param on_target? boolean
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Damage.Hits = function(player_name, trackable, action_name, on_target)
+    local hits = 0
+
+    local hit_metric = DB.Metric.HITS_ON_USE
+    if on_target then hit_metric = DB.Metric.HITS_ON_TARGET end
+
+    if action_name then
+        hits = DB.Catalog.Get(player_name, trackable, action_name, hit_metric)
+    else
+        hits = DB.Data.Get(player_name, trackable, hit_metric)
+    end
+
+    local color = Column.String.Color_Zero(hits)
+
+    return UI.TextColored(color, Column.String.Format_Number(hits))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- Grabs how many times a cataloged action was attempted for a given trackable.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param action_name? string
+---@param trackable string a trackable from the model.
+---@param raw? boolean true: just output the raw value; false: output a column to a table.
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Damage.Attempts = function(player_name, action_name, trackable, raw)
+    local attempts = 0
+
+    -- Get regular trackable data if an action name isn't provided.
+    if action_name then
+        attempts = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
+    else
+        attempts = DB.Data.Get(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    end
+
+    -- Colors
+    local color = Column.String.Color_Zero(attempts)
+
+    if raw then return Column.String.Format_Number(attempts) end
+    return UI.TextColored(color, Column.String.Format_Number(attempts))
 end
 
 ------------------------------------------------------------------------------------------------------

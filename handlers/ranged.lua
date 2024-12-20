@@ -126,7 +126,7 @@ H.Ranged.Message = function(audits, damage, message_id, overall_ranged_type, own
     -- Critical hits will not negatively impact true strike or square hit rates.
     elseif message_id == Ashita.Enum.Message.RANGECRIT then
         was_critical_hit = true
-        H.Offense.Critical_Hit(audits, overall_ranged_type, damage)
+        H.Offense.Hit(audits, overall_ranged_type, damage, true)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
 
     -- Shadows have no impact on recent accuracy.

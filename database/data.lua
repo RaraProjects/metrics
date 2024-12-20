@@ -123,9 +123,9 @@ end
 ---@param audits table
 ---@param trackable string a tracked item from the trackable list.
 ---@param damage number damage value to be logged.
----@param burst? boolean whether or not a magic burst took place.
+---@param critical_hit? boolean whether or not a critical hit or magic burst took place.
 ------------------------------------------------------------------------------------------------------
-DB.Data.Update_Damage = function(audits, trackable, damage, burst)
+DB.Data.Update_Damage = function(audits, trackable, damage, critical_hit)
 	-- Increment grand totals if necessary. There is an all damage track and a no-skillchain track.
     if DB.Is_Total_Damage_Trackable(trackable) then
     	DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
@@ -136,8 +136,7 @@ DB.Data.Update_Damage = function(audits, trackable, damage, burst)
 		end
     end
 
-
-	DB.Data.Update_Damage_Basic(audits, trackable, damage)
+	DB.Data.Update_Damage_Basic(audits, trackable, damage, critical_hit)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -146,15 +145,15 @@ end
 ---@param audits table
 ---@param trackable string a tracked item from the trackable list.
 ---@param damage number damage value to be logged.
----@param burst? boolean whether or not a magic burst took place.
 ---@param critical_hit? boolean
 ------------------------------------------------------------------------------------------------------
-DB.Data.Update_Damage_Basic = function(audits, trackable, damage, burst, critical_hit)
+DB.Data.Update_Damage_Basic = function(audits, trackable, damage, critical_hit)
 	-- Increment the trackable specific totals.
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
-	if burst then
-		DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.MAGIC_BURST_DAMAGE)
-		DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable,                   DB.Metric.MAGIC_BURST_DAMAGE)
+
+	if critical_hit then
+		DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.CRITICAL_COUNT)
+    	DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.CRITICAL_DAMAGE)
 	end
 
 	-- Log an attempt on the target.
@@ -165,6 +164,7 @@ DB.Data.Update_Damage_Basic = function(audits, trackable, damage, burst, critica
 	local max_metric = (critical_hit and DB.Metric.CRITICAL_MAX) or DB.Metric.MAX
 
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
+	-- We log a hit on the target here too since we have a damage check.
 	if damage > 0 then
 		if audits.pet_name then
 			DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
@@ -180,7 +180,7 @@ DB.Data.Update_Damage_Basic = function(audits, trackable, damage, burst, critica
 	end
 
 	-- Set trackable maximums
-	if damage > DB.Data.Get(audits.player_name, trackable, max_metric) then
+	if damage > DB.Data.Get(audits.player_name, trackable, max_metric, audits.target_name) then
 		DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, max_metric)
 	end
 end

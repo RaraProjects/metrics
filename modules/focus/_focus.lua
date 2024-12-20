@@ -100,9 +100,9 @@ Focus.Content = function()
         table.insert(tabs, {tab = Focus.Tabs.Names.OVERVIEW,  display_function = Focus.Overview.Display})
         table.insert(tabs, {tab = Focus.Tabs.Names.MELEE,     display_function = Focus.Melee.Display})
         table.insert(tabs, {tab = Focus.Tabs.Names.RANGED,    display_function = Focus.Ranged.Display})
+        table.insert(tabs, {tab = Focus.Tabs.Names.MAGIC,     display_function = Focus.Magic.Display})
         table.insert(tabs, {tab = Focus.Tabs.Names.DEFENSE,   display_function = Focus.Defense.Display})
         table.insert(tabs, {tab = Focus.Tabs.Names.WS,        display_function = Focus.WS.Display})
-        table.insert(tabs, {tab = Focus.Tabs.Names.MAGIC,     display_function = Focus.Magic.Display})
         table.insert(tabs, {tab = Focus.Tabs.Names.ABILITIES, display_function = Focus.Abilities.Display})
 
         -- Load tabs
@@ -141,7 +141,7 @@ Focus.Overall_Damage_Breakdown = function(player_name)
     local pet = DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     local including_skillchain = Parse.Config.Include_SC_Damage()
 
-    local columns = 8
+    local columns = 7
     if pet > 0 then columns = columns + 1 end
     if including_skillchain then columns = columns + 1 end
 

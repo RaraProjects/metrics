@@ -210,7 +210,7 @@ end
 ---@param critical_hit? boolean
 ------------------------------------------------------------------------------------------------------
 H.Offense.Hit = function(audits, trackable, damage, critical_hit)
-    DB.Data.Update_Damage_Basic(audits, trackable, damage, nil, critical_hit)
+    DB.Data.Update_Damage_Basic(audits, trackable, damage, critical_hit)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -221,19 +221,6 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Offense.Miss = function(audits, trackable)
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
-end
-
-------------------------------------------------------------------------------------------------------
--- Critical hit.
-------------------------------------------------------------------------------------------------------
----@param audits table Contains necessary entity audit data; helps save on parameter slots.
----@param trackable string
----@param damage number
-------------------------------------------------------------------------------------------------------
-H.Offense.Critical_Hit = function(audits, trackable, damage)
-    H.Offense.Hit(audits, trackable, damage, true)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.CRITICAL_COUNT)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.CRITICAL_DAMAGE)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -270,10 +257,10 @@ end
 ---@param trackable string
 ---@param damage integer
 ---@param action_name string
----@param burst? boolean
+---@param critical_hit? boolean
 ------------------------------------------------------------------------------------------------------
-H.Offense.Catalog_Hit = function(audits, trackable, damage, action_name, burst)
-    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, action_name, audits.pet_name, burst)
+H.Offense.Catalog_Hit = function(audits, trackable, damage, action_name, critical_hit)
+    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, action_name, audits.pet_name, critical_hit)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -400,7 +387,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Defense.Crit = function(audits, damage, message_id)
     if message_id == Ashita.Enum.Message.CRIT then
-        H.Offense.Critical_Hit(audits, DB.Trackable.DEF_CRITICAL, damage)
+        H.Offense.Hit(audits, DB.Trackable.DEF_CRITICAL, damage, true)
     else
         H.Offense.Miss(audits, DB.Trackable.DEF_CRITICAL)
     end

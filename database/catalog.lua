@@ -74,9 +74,9 @@ end
 ---@param damage number damage value to be logged.
 ---@param action_name string the name of the action to be cataloged.
 ---@param pet_name? string
----@param burst? boolean whether or not a magic burst took place.
+---@param critical_hit? boolean whether or not a critical hit or magic burst took place.
 ------------------------------------------------------------------------------------------------------
-DB.Catalog.Update_Damage = function(player_name, target_name, trackable, damage, action_name, pet_name, burst)
+DB.Catalog.Update_Damage = function(player_name, target_name, trackable, damage, action_name, pet_name, critical_hit)
 	-- Early quit out to prevent crashing.
 	local caller = "DB.Catalog.Update_Damage"
 	if DB.Is_Value_Empty(caller, player_name, "Player") then return false end
@@ -92,32 +92,37 @@ DB.Catalog.Update_Damage = function(player_name, target_name, trackable, damage,
 	}
 
 	-- Update the non-catalog database with the damage
-	DB.Data.Update_Damage(audits, trackable, damage, burst)
+	DB.Data.Update_Damage(audits, trackable, damage, critical_hit)
+	-- Everything after this is for the catalog.
 
 	-- Total Damage
     DB.Catalog.Update_Metric(DB.Update_Mode.INC, damage, audits, trackable, action_name, DB.Metric.TOTAL)
 
-	-- Magic Bursts
-	if trackable == DB.Trackable.SPELLS_NUKING and burst then
-		DB.Catalog.Update_Metric(DB.Update_Mode.INC, damage, audits, trackable, action_name, DB.Metric.MAGIC_BURST_DAMAGE)
-	end
-
-	-- Hits and minimum damage.
-    if damage > 0 then
-		DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_TARGET)
-		if damage < DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MIN, audits.target_name) then
-			DB.Catalog.Update_Metric(DB.Update_Mode.SET, damage, audits, trackable, action_name, DB.Metric.MIN)
-		end
-    end
+	-- Attempts on the target.
 	DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
 
-	-- Maximum Damage
-    if damage > DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MAX) then
+	-- Set trackable hits and minimums
+	local min_metric = (critical_hit and DB.Metric.CRITICAL_MIN) or DB.Metric.MIN
+	local max_metric = (critical_hit and DB.Metric.CRITICAL_MAX) or DB.Metric.MAX
+
+    if damage > 0 then
+		-- Log hits here since we have a damage check.
+		DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_TARGET)
+
+		-- Minimum damage.
+		if damage < DB.Catalog.Get(player_name, trackable, action_name, min_metric, audits.target_name) then
+			DB.Catalog.Update_Metric(DB.Update_Mode.SET, damage, audits, trackable, action_name, min_metric)
+		end
+    end
+
+    if damage > DB.Catalog.Get(player_name, trackable, action_name, max_metric) then
     	-- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
 		if trackable == DB.Trackable.SPELLS_HEALING and DB.Healing_Max[action_name] then
 			if damage > DB.Healing_Max[action_name] then damage = DB.Healing_Max[action_name] end
 		end
-		DB.Catalog.Update_Metric(DB.Update_Mode.SET, damage, audits, trackable, action_name, DB.Metric.MAX)
+
+		-- Maximum damage.
+		DB.Catalog.Update_Metric(DB.Update_Mode.SET, damage, audits, trackable, action_name, max_metric)
     end
 end
 
