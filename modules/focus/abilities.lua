@@ -76,7 +76,7 @@ Focus.Abilities.Damaging = function(player_name, trackable, header, make_brief)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
-            UI.TableNextColumn() UI.Text(action_name)
+            UI.TableNextColumn() UI.Text("- " .. action_name)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name, true) end
             if not make_brief then UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, nil, nil, action_name) end
@@ -159,7 +159,7 @@ Focus.Abilities.Mauevers = function(player_name)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
-            UI.TableNextColumn() UI.Text(action_name)
+            UI.TableNextColumn() UI.Text("- " .. action_name)
             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.OVERLOAD, action_name)
             Window_Manager.Table_Row_Color(row)
@@ -215,7 +215,7 @@ Focus.Abilities.Phantom_Roll = function(player_name, full)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
-            UI.TableNextColumn() UI.Text(action_name)
+            UI.TableNextColumn() UI.Text("- " .. action_name)
             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name, true)
             if full then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.REROLL, action_name) end
             UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY, action_name)

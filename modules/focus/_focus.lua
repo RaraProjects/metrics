@@ -115,7 +115,9 @@ Focus.Content = function()
         end
 
         -- Conditionally show pets.
-        if DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL) > 0 or DB.Data.Get(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL) > 0 then
+        if DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL) > 0 or
+           DB.Data.Get(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL) > 0 or
+           DB.Data.Get(player_name, DB.Trackable.PET_HEALING, DB.Metric.TOTAL) > 0 then
             if UI.BeginTabItem(Focus.Tabs.Names.PETS, false, Focus.Tabs.Switch[Focus.Tabs.Names.PETS]) then
                 Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = nil
                 Focus.Pets.Display(player_name)

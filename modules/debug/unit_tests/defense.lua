@@ -2209,7 +2209,9 @@ Debug.Unit.Tests.Defense.TP_MP = function()
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.DEF_TP_MOVE] = {}
         player[player_name][target_index][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_EVASION_TP_ACTION] = {}
         player[player_name][target_index][DB.Trackable.DEF_EVASION_TP_ACTION][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.DEF_SHADOWS_TP_ACTION] = {}
@@ -2219,7 +2221,9 @@ Debug.Unit.Tests.Defense.TP_MP = function()
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_TP_MOVE] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     end
 
     local battle_log = {
@@ -2242,6 +2246,75 @@ Debug.Unit.Tests.Defense.TP_MP = function()
     }
 
     return Debug.Unit.Check_Result("Defense - TP (MP)", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Defense - TP (No damage skill hit)
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Defense.TP_No_Damage_Skill_Hit = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 0
+    local message = Ashita.Enum.Message.HIT
+    local action_id = 302
+    local action_name = "Wild Oats"
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, nil, message))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
+    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+
+    local player = {}
+    local player_catalog = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    player_catalog[player_name] = {}
+
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.DEF_TP_MOVE] = {}
+        player[player_name][target_index][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_EVASION_TP_ACTION] = {}
+        player[player_name][target_index][DB.Trackable.DEF_EVASION_TP_ACTION][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.DEF_SHADOWS_TP_ACTION] = {}
+        player[player_name][target_index][DB.Trackable.DEF_SHADOWS_TP_ACTION][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+
+        player_catalog[player_name][target_index] = {}
+        player_catalog[player_name][target_index][action_name] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_TP_MOVE] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.ENEMY.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = "---",
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Defense - TP (No damage skill hit)", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------

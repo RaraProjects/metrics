@@ -110,8 +110,8 @@ Parse.Full.Rows = function(player_name)
     if Metrics.Parse.Melee_Acc then    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OVERALL, nil, false, nil, true) end
     if Metrics.Parse.Melee_Crit then   UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.MELEE_OVERALL, 0, true, nil, true) end
     if Metrics.Parse.Weaponskill then  UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL, nil, nil, false, true) end
-    if Metrics.Parse.Average_WS then   UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.WEAPONSKILL, nil, true) end
-    if Metrics.Parse.WS_TP then        UI.TableNextColumn() Column.Single.Per_Unit_Average(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.TP_SPENT, nil, true) end
+    if Metrics.Parse.Average_WS then   UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.WEAPONSKILL, nil, nil, true) end
+    if Metrics.Parse.WS_TP then        UI.TableNextColumn() Column.Damage.Per_Unit_Average(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.TP_SPENT, nil, true) end
     if Metrics.Parse.WS_Accuracy then  UI.TableNextColumn() Column.General.Fraction(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.HITS_ON_USE, DB.Metric.ATTEMPTS_ON_USE, true) end
     if Parse.Config.Include_SC_Damage() then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, nil, nil, false, true) end
     if Metrics.Parse.Ranged then       UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL, nil, nil, false, true) end

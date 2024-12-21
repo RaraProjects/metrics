@@ -1,4 +1,4 @@
-Column.Util = T{}
+Column.Util = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Switches to a player in the player filter based on partial matching.

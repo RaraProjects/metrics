@@ -13,7 +13,6 @@ Column.Damage = {}
 ------------------------------------------------------------------------------------------------------
 Column.Damage.By_Type = function(player_name, trackable, metric, action_name, percent_player, justify, raw)
     if not metric then metric = DB.Metric.TOTAL end
-
     local trackable_damage = 0
 
     if action_name then
@@ -34,6 +33,40 @@ Column.Damage.By_Type = function(player_name, trackable, metric, action_name, pe
     end
 
     return Column.Output.Number(trackable_damage, color, justify, raw)
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- This is for pet actions.
+-- Grabs the total amount of damage a cataloged action has done for a given trackable and metric.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param pet_name string
+---@param trackable string a trackable from the model.
+---@param metric? string a metric from the model.
+---@param action_name? string
+---@param percent_pet? boolean whether or not the damage should be raw or percent.
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Damage.By_Type_Pet = function(player_name, pet_name, trackable, metric, action_name, percent_pet)
+    if not metric then metric = DB.Metric.TOTAL end
+    local trackable_damage = 0
+
+    if action_name then
+        trackable_damage = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, metric)
+    else
+        trackable_damage = DB.Pet_Data.Get(player_name, pet_name, trackable, metric)
+    end
+    if DB.Metric_Needs_Max_Value(metric) and trackable_damage >= DB.Enum.MAX_DAMAGE then trackable_damage = 0 end
+
+    local color = Column.String.Color_Zero(trackable_damage)
+
+    if percent_pet then
+        local total_damage = DB.Pet_Data.Get(player_name, pet_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+        return UI.TextColored(color, Column.String.Format_Percent(trackable_damage, total_damage))
+    end
+
+    return UI.TextColored(color, Column.String.Format_Number(trackable_damage))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -74,20 +107,22 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param trackable string a trackable from the model.
+---@param damage_metric? string
 ---@param action_name? string
 ---@param justify? boolean whether or not to right justify the text
 ---@param raw? boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.By_Type_Average = function(player_name, trackable, action_name, justify, raw)
+Column.Damage.By_Type_Average = function(player_name, trackable, damage_metric, action_name, justify, raw)
     local damage = 0
     local hits   = 0
+    if not damage_metric then damage_metric = DB.Metric.TOTAL end
 
     if action_name then
-        damage = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.TOTAL)
+        damage = DB.Catalog.Get(player_name, trackable, action_name, damage_metric)
         hits   = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.HITS_ON_TARGET)
     else
-        damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+        damage = DB.Data.Get(player_name, trackable, damage_metric)
         hits   = DB.Data.Get(player_name, trackable, DB.Metric.HITS_ON_TARGET)
     end
 
@@ -101,16 +136,16 @@ end
 -- Shows the average non-critical damage for a given damage type.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
----@param damage_type string a trackable from the model.
+---@param trackable string a trackable from the model.
 ---@param justify? boolean whether or not to right justify the text
 ---@return number
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Average_By_Type_Exclude_Critical = function(player_name, damage_type, justify)
+Column.Damage.Average_By_Type_Exclude_Critical = function(player_name, trackable, justify)
     -- Get the data.
-    local damage      = DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
-    local crit_damage = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_DAMAGE)
-    local hit_count   = DB.Data.Get(player_name, damage_type, DB.Metric.HITS_ON_TARGET)
-    local crit_count  = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_COUNT)
+    local damage      = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+    local crit_damage = DB.Data.Get(player_name, trackable, DB.Metric.CRITICAL_DAMAGE)
+    local hit_count   = DB.Data.Get(player_name, trackable, DB.Metric.HITS_ON_TARGET)
+    local crit_count  = DB.Data.Get(player_name, trackable, DB.Metric.CRITICAL_COUNT)
 
     -- Seperate the critical and non-critical hit damage.
     local non_crit_damage = damage - crit_damage
@@ -156,6 +191,35 @@ end
 
 ------------------------------------------------------------------------------------------------------
 -- This is for cataloged actions.
+-- This is for pet actions.
+-- Grabs the average damage for a given cataloged action and trackable.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param pet_name string
+---@param trackable string a trackable from the model.
+---@param action_name? string
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Damage.Pet_Average = function(player_name, pet_name, trackable, action_name)
+    local hits   = 0
+    local damage = 0
+
+    if action_name then
+        hits   = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.HITS_ON_TARGET)
+        damage = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.TOTAL)
+    else
+        hits   = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.HITS_ON_TARGET)
+        damage = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.TOTAL)
+    end
+
+    local color = Column.String.Color_Zero(hits)
+
+    if hits == 0 or damage == 0 then return UI.TextColored(color, Column.String.Format_Number(0)) end
+    return UI.TextColored(color, Column.String.Format_Percent(damage, hits, false, true))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
 -- Grabs the usage rate of specfic enspells.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
@@ -196,12 +260,44 @@ Column.Damage.Attempts = function(player_name, trackable, action_name, on_target
     local attempt_metric = DB.Metric.ATTEMPTS_ON_USE
     if on_target then attempt_metric = DB.Metric.ATTEMPTS_ON_TARGET end
 
-    local attempts = DB.Data.Get(player_name, trackable, attempt_metric)
-    if action_name then attempts = DB.Catalog.Get(player_name, trackable, action_name, attempt_metric) end
+    local attempts = 0
+    if action_name then
+        attempts = DB.Catalog.Get(player_name, trackable, action_name, attempt_metric)
+    else
+        attempts = DB.Data.Get(player_name, trackable, attempt_metric)
+    end
 
     local color = Column.String.Color_Zero(attempts)
 
     if raw then return Column.String.Format_Number(attempts) end
+    return UI.TextColored(color, Column.String.Format_Number(attempts))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- This is for pet actions.
+-- Grabs how many times a cataloged action was attempted for a given trackable.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param pet_name string
+---@param trackable string a trackable from the model.
+---@param action_name? string
+---@param on_target? boolean
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Damage.Pet_Attempts = function(player_name, pet_name, trackable, action_name, on_target)
+    local attempt_metric = DB.Metric.ATTEMPTS_ON_USE
+    if on_target then attempt_metric = DB.Metric.ATTEMPTS_ON_TARGET end
+
+    local attempts = 0
+    if action_name then
+        attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, attempt_metric)
+    else
+        attempts = DB.Pet_Data.Get(player_name, pet_name, trackable, attempt_metric)
+    end
+
+    local color = Column.String.Color_Zero(attempts)
+
     return UI.TextColored(color, Column.String.Format_Number(attempts))
 end
 
@@ -232,6 +328,63 @@ Column.Damage.Per_Unit = function(player_name, trackable, unit_metric, action_na
 
     if damage == 0 or unit == 0 then color = Res.Colors.Basic.DIM end
     return UI.TextColored(color, Column.String.Format_Percent(damage, unit, false, true))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- Grabs the average tp used for a weaponskill.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param trackable string
+---@param unit_metric string
+---@param action_name? string
+---@param justify? boolean
+------------------------------------------------------------------------------------------------------
+Column.Damage.Per_Unit_Average = function(player_name, trackable, unit_metric, action_name, justify)
+    local tp        = 0
+    local attempts  = 0
+
+    -- If an action name isn't provided then get the overall weaponskill TP.
+    if action_name then
+        tp       = DB.Catalog.Get(player_name, trackable, action_name, unit_metric)
+        attempts = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
+    else
+        tp       = DB.Data.Get(player_name, trackable, unit_metric)
+        attempts = DB.Data.Get(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    end
+
+    -- Colors
+    local color = Column.String.Color_Zero(tp)
+
+    if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
+    return UI.TextColored(color, Column.String.Format_Percent(tp, attempts, justify, true))
+end
+
+------------------------------------------------------------------------------------------------------
+-- This is for cataloged actions.
+-- Grabs the average tp used for a pet weaponskill.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param pet_name string
+---@param trackable string
+---@param action_name? string
+------------------------------------------------------------------------------------------------------
+Column.Damage.Average_Pet_TP = function(player_name, pet_name, trackable, action_name)
+    local tp = 0
+    local attempts = 0
+
+    if action_name then
+        tp       = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.TP_SPENT)
+        attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
+    else
+        tp       = DB.Data.Get(player_name, trackable, DB.Metric.TP_SPENT)
+        attempts = DB.Data.Get(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    end
+
+    local color = Column.String.Color_Zero(tp)
+    if tp == 0 or attempts == 0 then color = Res.Colors.Basic.DIM end
+
+    return UI.TextColored(color, Column.String.Format_Percent(tp, attempts, false, true))
 end
 
 ------------------------------------------------------------------------------------------------------

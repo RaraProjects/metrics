@@ -9,10 +9,12 @@ Focus.Melee.Display = function(player_name)
     local endamage = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDAMAGE,     DB.Metric.TOTAL)
     local endebuff = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDEBUFF,     DB.Metric.HITS_ON_USE)
 
+    local has_multi = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_HIT_ON_USE) > 0
+
     Focus.Melee.Total(player_name)
     Focus.Melee.Auxiliary(player_name, endamage)
     Focus.Melee.Min_Max(player_name)
-    Focus.Melee.Multi_Attack(player_name)
+    if has_multi then Focus.Melee.Multi_Attack(player_name) end
 
     if endebuff > 0 or endamage > 0 then UI.Separator() end
     if endebuff > 0 then Focus.Catalog.Endebuff(player_name, DB.Trackable.MELEE_ENDEBUFF) end
@@ -34,20 +36,26 @@ Focus.Melee.Total = function(player_name, make_brief)
     local off_hand       = DB.Data.Get(player_name, DB.Trackable.MELEE_OFF_HAND,     DB.Metric.TOTAL)
     local kick_damage    = DB.Data.Get(player_name, DB.Trackable.MELEE_KICK_ATTACKS, DB.Metric.TOTAL)
     local counter_damage = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER,      DB.Metric.TOTAL)
+    local has_multi      = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_HIT_ON_USE) > 0
+
+    local columns = 5
+    if make_brief then columns = 4 end
+    if has_multi then columns = columns + 1 end
 
     local row = 1
-    if UI.BeginTable("Total Melee", 5, table_flags) then
+    if UI.BeginTable("Total Melee", columns, table_flags) then
         UI.TableSetupColumn("Melee Overall", col_flags, name_width)
         if make_brief then
             UI.TableSetupColumn("Average",  col_flags, width)
             UI.TableSetupColumn("Accuracy", col_flags, width)
             UI.TableSetupColumn("%Crit",    col_flags, width)
-            UI.TableSetupColumn("%Multi",   col_flags, width)
+            if has_multi then UI.TableSetupColumn("%Multi", col_flags, width) end
         else
             UI.TableSetupColumn("Damage",   col_flags, width)
             UI.TableSetupColumn("%Player",  col_flags, width)
             UI.TableSetupColumn("Accuracy", col_flags, width)
-            UI.TableSetupColumn("%Multi",   col_flags, width)
+            UI.TableSetupColumn("%Crit",    col_flags, width)
+            if has_multi then UI.TableSetupColumn("%Multi", col_flags, width) end
         end
         UI.TableHeadersRow()
 
@@ -63,12 +71,13 @@ Focus.Melee.Total = function(player_name, make_brief)
                 UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, data.trackable)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0, true)
-                UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
+                if has_multi then UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE) end
             else
                 UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable)
                 UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable)
-                UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
+                UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0, true)
+                if has_multi then UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE) end
             end
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -82,12 +91,13 @@ Focus.Melee.Total = function(player_name, make_brief)
                 UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, 0, true)
-                UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+                if has_multi then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
             else
                 UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
                 UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, nil, true)
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+                UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, 0, true)
+                if has_multi then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
             end
             Window_Manager.Table_Row_Color(row)
             row = row + 1
@@ -166,16 +176,21 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             row = row + 1
         end
 
-        -- Data for non-damage count only.
-        local count_only = {}
-        if mob_heal > 0 then table.insert(count_only, {header = "Mob Heal", trackable = DB.Trackable.MOB_HEALING}) end
-        if shadows > 0  then table.insert(count_only, {header = "Shadows",  trackable = DB.Trackable.SHADOW_ABSORPTION}) end
+        local trackable = DB.Trackable.MELEE_OVERALL
+        if DB.Data.Get(player_name, trackable, DB.Metric.MOB_HEALING) > 0 then
+            UI.TableNextColumn() UI.Text("Mob Heal")
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, DB.Metric.MOB_HEALING)
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
 
-        for _, data in ipairs(count_only) do
-            UI.TableNextColumn() UI.Text(data.header)
-            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, data.trackable)
+        if DB.Data.Get(player_name, trackable, DB.Metric.SHADOW_ABSORPTION) > 0 then
+            UI.TableNextColumn() UI.Text("Shadows")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() Column.General.Fraction(player_name, trackable, DB.Metric.SHADOW_ABSORPTION, DB.Metric.HITS_ON_TARGET)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -225,7 +240,7 @@ Focus.Melee.Min_Max = function(player_name)
         end
 
         for _, data in ipairs(damage_types) do
-            UI.TableNextColumn() UI.Text(data.header .. "!")
+            UI.TableNextColumn() UI.Text("! " .. data.header)
             UI.TableNextColumn() Column.Damage.Average_By_Type_Critical_Only(player_name, data.trackable)
             UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, data.trackable, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.CRITICAL_MIN)
@@ -259,7 +274,6 @@ Focus.Melee.Multi_Attack = function(player_name)
         UI.TableSetupColumn("Off-Hand\n%Player",  col_flags, width)
         UI.TableHeadersRow()
 
-        UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
         UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_TOTAL, nil, true)
@@ -280,8 +294,7 @@ Focus.Melee.Multi_Attack = function(player_name)
 
         for _, data in ipairs(multi_attack_metrics) do
             if DB.Tracking.Multi_Attack[player_name] and DB.Tracking.Multi_Attack[player_name][data.count] then
-                UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(data.count)
+                UI.TableNextColumn() UI.Text("- " .. data.count)
                 UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, data.count)
                 UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_MAIN_HAND, data.damage, nil, true)
                 UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND,  data.count)

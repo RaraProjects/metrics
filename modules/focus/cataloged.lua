@@ -46,8 +46,8 @@ Focus.Catalog.Endamage = function(player_name, trackable, suffix)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
-            UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
+            UI.TableNextColumn() UI.Text("- " .. action_name)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, action_name, true)
             UI.TableNextColumn() Column.Damage.Hits(player_name, trackable, action_name, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)

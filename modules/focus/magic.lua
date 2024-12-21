@@ -24,7 +24,6 @@ Focus.Magic.Display = function(player_name, hide_publish)
     local misc_count     = DB.Data.Get(player_name, DB.Trackable.SPELLS_OVERALL,        DB.Metric.ATTEMPTS_ON_USE)
 
     Focus.Magic.Total(player_name, nuke_total, melee_endamage, range_endamage, enspell_count, endrain, spike_damage, dot, burst_total)
-    UI.Separator()
 
     if nuke_total > 0     then Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke") end
     if burst_total > 0    then Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst") end
@@ -172,8 +171,8 @@ Focus.Magic.Damaging_Spell = function(player_name, trackable, header, make_brief
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
-            UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
+            UI.TableNextColumn() UI.Text("- " .. action_name)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, action_name, true) end
             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name)
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, action_name) end
@@ -251,8 +250,8 @@ Focus.Magic.No_Damage_Spell = function(player_name, trackable, header, make_brie
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
-            UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
+            UI.TableNextColumn() UI.Text("- " .. action_name)
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
             if show_overcure  then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.OVERCURE, action_name) end
             if not make_brief then UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name) end
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, action_name)
@@ -308,7 +307,7 @@ Focus.Magic.Debuff = function(player_name, hide_mp)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
-            UI.TableNextColumn() UI.Text(action_name)
+            UI.TableNextColumn() UI.Text("- " .. action_name)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, nil, false, action_name)
             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name)
             if not hide_mp then UI.TableNextColumn() Column.Spell.MP_Used_Catalog(player_name, trackable, action_name) end
@@ -358,7 +357,7 @@ Focus.Magic.Basic_Spell = function(player_name, trackable, header, no_mp)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
-            UI.TableNextColumn() UI.Text(action_name)
+            UI.TableNextColumn() UI.Text("- " .. action_name)
             if not no_mp then UI.TableNextColumn() Column.Spell.MP_Used_Catalog(player_name, trackable, action_name) end
             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name)
             Window_Manager.Table_Row_Color(row)
