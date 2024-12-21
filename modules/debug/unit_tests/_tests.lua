@@ -187,6 +187,7 @@ Debug.Unit.Run_Tests = function()
     -- TP Action
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Hit())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Miss())
+    table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Shadow())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Energy_Steal())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Skillchain())
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.TP_Action.Pet_Hit())

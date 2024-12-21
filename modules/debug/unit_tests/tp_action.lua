@@ -141,6 +141,74 @@ Debug.Unit.Tests.TP_Action.Miss = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- TP > Shadow
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.TP_Action.Shadow = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+    local message = Ashita.Enum.Message.SHADOWS
+    local action_id = 156
+    local action_name = "Tachi: Fudo"
+    local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
+    H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
+
+    local player = {}
+    local player_catalog = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    player_catalog[player_name] = {}
+
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.WEAPONSKILL] = {}
+        player[player_name][target_index][DB.Trackable.WEAPONSKILL][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.WEAPONSKILL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.WEAPONSKILL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.WEAPONSKILL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.WEAPONSKILL][DB.Metric.TP_SPENT] = tp
+
+        player_catalog[player_name][target_index] = {}
+        player_catalog[player_name][target_index][action_name] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.TP_SPENT] = tp
+    end
+
+    local battle_log = {
+        player = player_name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(0),
+        action = action_name,
+        note   = "TP: 0 ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("TP - Weaponskill > Shadow", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
 -- Melee - TP > Energy Steal
 ------------------------------------------------------------------------------------------------------
 ---@return table

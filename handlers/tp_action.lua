@@ -54,6 +54,7 @@ H.TP.Action = function(action, actor_mob, log_offense)
     local tp = H.TP.Weaponskill_Wrap_Up(actor_mob, target_mob, total_damage, ws_name, sc_name, was_no_damage_hit)
 
     -- Update the battle log.
+    if was_no_damage_hit then total_damage = 0 end
     Blog.Add(actor_mob.name, nil, Blog.Action_Type.WEAPONSKILL, ws_name, total_damage, tp, ws_data)
     if sc_damage > 0 then Blog.Add(actor_mob.name, nil, Blog.Action_Type.SKILLCHAIN, sc_name, sc_damage) end
 end
@@ -176,7 +177,8 @@ end
 ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
     Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Weaponskill", result)
-    local damage = result.param
+    local damage     = result.param
+    local message_id = result.message
     local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
 
     -- Some weaponskills drain MP instead of doing damage.
@@ -195,7 +197,12 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
         DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     end
 
-    H.Offense.Catalog_Hit(audits, audits.trackable, damage, ws_name)
+    if message_id == Ashita.Enum.Message.SHADOWS then
+        H.Offense.Catalog_No_Damage_Hit(audits, audits.trackable, ws_name)
+        was_no_damage_hit = true
+    else
+        H.Offense.Catalog_Hit(audits, audits.trackable, damage, ws_name)
+    end
 
     return damage, was_no_damage_hit
 end
