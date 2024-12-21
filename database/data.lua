@@ -168,7 +168,7 @@ DB.Data.Update_Damage_Basic = function(audits, trackable, damage, critical_hit)
 	if damage > 0 then
 		if audits.pet_name then
 			DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-			if damage < DB.Pet_Data.Get(audits.player_name, audits.pet_name, trackable, min_metric) then
+			if damage < DB.Pet_Data.Get(audits.player_name, audits.pet_name, trackable, min_metric, audits.target_name) then
 				DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, min_metric)
 			end
 		else

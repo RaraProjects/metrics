@@ -1,4 +1,4 @@
-Focus.Overview = T{}
+Focus.Overview = {}
 
 ------------------------------------------------------------------------------------------------------
 
@@ -131,9 +131,10 @@ end
 Focus.Overview.PLD = function(player_name)
     local ability_list = {[1] = "Sentinel", [2] = "Rampart", [3] = "Cover", [4] = "Chivalry", [5] = "Shield Bash"}
     local buff_list = {[1] = "Enlight"}
-    Focus.Overview.Defense(player_name)
+    Focus.Defense.Damage_Taken(player_name, true)
+    Focus.Defense.Mitigation(player_name)
     Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
-    Focus.Overview.Healing_Received(player_name)
+    Focus.Defense.Healing_Received(player_name)
     Focus.Magic.Debuff(player_name)
     Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
     Focus.Abilities.From_List(player_name, ability_list)
@@ -219,8 +220,9 @@ Focus.Overview.NIN = function(player_name)
     local buff_list = {[1] = "Utsusemi: Ichi", [2] = "Utsusemi: Ni"}
     Focus.Melee.Total(player_name, true)
     Focus.WS.Weaponskill(player_name, true)
-    Focus.Overview.Defense(player_name)
-    Focus.Overview.Healing_Received(player_name)
+    Focus.Defense.Damage_Taken(player_name, true)
+    Focus.Defense.Mitigation(player_name)
+    Focus.Defense.Healing_Received(player_name)
     Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true, true)
     Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst", true, true)
     Focus.Magic.Debuff(player_name, true)
@@ -341,62 +343,4 @@ Focus.Overview.Pet_TP = function(player_name)
         end
         UI.EndTable()
     end
-end
-
-------------------------------------------------------------------------------------------------------
--- Shows healing received overview stats.
-------------------------------------------------------------------------------------------------------
----@param player_name string
-------------------------------------------------------------------------------------------------------
-Focus.Overview.Healing_Received = function(player_name)
-    if not player_name then return nil end
-
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
-    if UI.BeginTable("Healing", 4, table_flags) then
-        UI.TableSetupColumn("Healing Received", col_flags, name_width)
-        UI.TableSetupColumn("HP+", col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("MP-", col_flags, width)
-        UI.TableHeadersRow()
-
-        local trackable = DB.Trackable.DEF_HEALING_RECEIVED
-        local row = 1
-        if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
-            local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
-            local action_name
-            for _, data in ipairs(sorted_damage) do
-                action_name = data[1]
-                UI.TableNextRow()
-                UI.TableNextColumn() UI.Text(action_name)
-                UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
-                UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, action_name)
-                UI.TableNextColumn() Column.Spell.MP_Used_Catalog(player_name, trackable, action_name)
-                Window_Manager.Table_Row_Color(row)
-                row = row + 1
-            end
-        else
-            UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("None")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-        end
-
-        UI.EndTable()
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Shows defensive overview stats.
-------------------------------------------------------------------------------------------------------
----@param player_name string
-------------------------------------------------------------------------------------------------------
-Focus.Overview.Defense = function(player_name)
-    if not player_name then return nil end
-    Focus.Defense.Damage_Taken(player_name)
-    Focus.Defense.Mitigation(player_name)
 end

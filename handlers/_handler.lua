@@ -350,9 +350,9 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Defense.Grand_Totals = function(audits, damage, owner_mob)
     if owner_mob then
-        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
+        H.Offense.Hit(audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, damage)
     else
-        DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
+        H.Offense.Hit(audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, damage)
     end
 end
 
@@ -364,12 +364,14 @@ end
 ---@param damage integer
 ---@param message_id number the ID of the entity animation when taking a hit.
 ---@param message_check integer
+---@param no_damage_hit? boolean If this is set hits will increment with 0 damage.
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Defense.Mitigation = function(audits, trackable, damage, message_id, message_check)
+H.Defense.Mitigation = function(audits, trackable, damage, message_id, message_check, no_damage_hit)
     local mitigation_occurred = false
     if message_id == message_check then
         H.Offense.Hit(audits, trackable, damage)
+        if no_damage_hit then DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET) end
         mitigation_occurred = true
     else
         H.Offense.Miss(audits, trackable)

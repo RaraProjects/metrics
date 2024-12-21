@@ -27,6 +27,7 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
     local result, target_mob
     local damage = 0
     local count  = 0
+    local trackable = DB.Trackable.DEF_TP_MOVE_PET
 
     -- Mob AOEs can hit pets. Need to check for all the target owner mobs because they may not be the original target.
     for target_index, target_value in pairs(action.targets) do
@@ -36,12 +37,23 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
             if target_mob and (Ashita.Party.Is_Affiliate(target_mob.name) or Ashita.Mob.Pet_Owner(target_mob) or Metrics.Parse.Lurk_Mode) then
                 if Ashita.Mob.Is_Monster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
                 owner_mob = Ashita.Mob.Pet_Owner(target_mob)    -- Need to recheck for AOEs.
+                if not owner_mob then trackable = DB.Trackable.DEF_TP_MOVE end
                 count = count + 1
                 damage = damage + H.TP_Def.Weaponskill_Parse(result, actor_mob, target_mob, skill_name, action_id, owner_mob)
             end
         end
     end
 
+    -- Counts
+    local audits = H.TP_Def.Audits(actor_mob, owner_mob, target_mob)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, skill_name, DB.Metric.ATTEMPTS_ON_USE)
+    if damage > 0 then
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, skill_name, DB.Metric.HITS_ON_USE)
+    end
+
+    -- Battle Log
     H.TP_Def.Blog(actor_mob, damage, action_id, skill_name, count)
 
     return true
@@ -73,7 +85,8 @@ end
 ------------------------------------------------------------------------------------------------------
 H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
     Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "TP Def", result)
-    local damage = result.param
+    local damage     = result.param
+    local message_id = result.message
     local audits = H.TP_Def.Audits(actor_mob, owner_mob, target_mob)
 
     -- A lot of pet abilities just land a status effect and it carries in a value as if it were damage.
@@ -81,14 +94,24 @@ H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws
     if no_damage then damage = 0 end
 
     -- Damaging ability tallies.
+    local damaging_ability = false
     if Res.Monster.Get_Damaging_Ability(ws_id) then
         H.Defense.Grand_Totals(audits, damage, owner_mob)
         H.Offense.Catalog_Hit(audits, audits.trackable, damage, ws_name)
+        damaging_ability = true
 
     -- Some weaponskills drain MP instead of doing damage.
     elseif Res.WS.Get_MP_Drain(ws_id) then
         H.Offense.Catalog_Hit(audits, DB.Trackable.WEAPONSKILL_MP_DRAIN, damage, ws_name)
-        no_damage = true
+    end
+
+    -- Not tracking these for pets right now.
+    if not owner_mob then
+        -- Full Mitigation; track unmitigated damage if it isn't absorbed by a shadow.
+        local full = false
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION_TP_ACTION, damage, message_id, Ashita.Enum.Message.MISS_TP, true) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_TP_ACTION, damage, message_id, Ashita.Enum.Message.SHADOWS, true) end
+        if not full and damaging_ability then H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_TP_ACTION, damage) end
     end
 
     return damage

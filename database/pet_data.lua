@@ -130,9 +130,10 @@ end
 ---@param pet_name string
 ---@param trackable string a tracked item from the trackable list.
 ---@param metric string a trackable's metric from the metric list.
+---@param temporary_mob_focus? string used to force look for a specific mob (mainly for setting minimums for AOEs).
 ---@return number
 ------------------------------------------------------------------------------------------------------
-DB.Pet_Data.Get = function(player_name, pet_name, trackable, metric)
+DB.Pet_Data.Get = function(player_name, pet_name, trackable, metric, temporary_mob_focus)
 	local caller = "DB.Pet_Data.Get"
 	if DB.Is_Value_Empty(caller, player_name, "Player")    then return 0 end
 	if DB.Is_Value_Empty(caller, pet_name,    "Pet")       then return 0 end
@@ -140,7 +141,7 @@ DB.Pet_Data.Get = function(player_name, pet_name, trackable, metric)
 	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return 0 end
 
 	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
-	if Throttle.Is_Enabled() and not Throttle.Allow_Calculation() then
+	if (Throttle.Is_Enabled() and not Throttle.Allow_Calculation()) and not temporary_mob_focus then
 		if DB.Pet_Cache[player_name] and DB.Pet_Cache[player_name][pet_name] and DB.Pet_Cache[player_name][pet_name][trackable]
 		and DB.Pet_Cache[player_name][pet_name][trackable][metric] then
 			return DB.Pet_Cache[player_name][pet_name][trackable][metric]
@@ -153,6 +154,7 @@ DB.Pet_Data.Get = function(player_name, pet_name, trackable, metric)
 	if DB.Metric_Needs_Max_Value(metric) then value = DB.Enum.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	local target_index = mob_focus
+	if temporary_mob_focus then target_index = temporary_mob_focus end
 
 	-- Get the data.
 	if DB.Pet_Data.Is_Index_Node_Initialized(caller, false, player_name, pet_name, target_index) then

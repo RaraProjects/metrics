@@ -76,7 +76,11 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
 
     -- Not tracking these for pets right now.
     if not owner_mob then
-        H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS, damage, message_id, Ashita.Enum.Message.SHADOWS)
+        -- Full Mitigation; track unmitigated damage if it isn't absorbed by a shadow.
+        local full = false
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MAGIC, damage, message_id, Ashita.Enum.Message.SHADOWS, true) end
+        if not full then H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_MAGIC, damage) end
+
         if Res.Spells.Get_MP_Drain(spell_id) then H.Offense.Hit(audits, DB.Trackable.DEF_MP_DRAIN, damage) end
         if Res.Spells.Get_Enfeeble(spell_id) then H.Offense.Hit(audits, DB.Trackable.DEF_ENFEEBLING, damage) end
     end

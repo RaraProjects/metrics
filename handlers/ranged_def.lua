@@ -81,8 +81,8 @@ H.Ranged_Def.Parse = function(result, actor_mob, target_mob, owner_mob)
     if not owner_mob then
         -- Full Mitigation
         local full = false
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION, damage, message_id, Ashita.Enum.Message.RANGEMISS) end
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS, damage, message_id, Ashita.Enum.Message.SHADOWS) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION_RANGED, damage, message_id, Ashita.Enum.Message.RANGEMISS, true) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_RANGED, damage, message_id, Ashita.Enum.Message.SHADOWS, true) end
 
         -- Full damage mitigation just increments attempts.
         if full then

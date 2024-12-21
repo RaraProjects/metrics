@@ -562,7 +562,7 @@ Overview.Parse.Defense = function()
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_MELEE, true)
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_NUKING, true)
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_TP_MOVE, true)
-                    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.DEF_EVASION, 0)
+                    UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.DEF_EVASION_MELEE, 0)
                     Window_Manager.Table_Row_Color(row)
                     row = row + 1
                 end

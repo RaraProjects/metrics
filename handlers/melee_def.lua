@@ -85,10 +85,10 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
     if not owner_mob then
         -- Full Mitigation
         local full = false
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION, damage, message_id, Ashita.Enum.Message.MISS) end
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_PARRY, damage, message_id, Ashita.Enum.Message.PARRY) end
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS, damage, message_id, Ashita.Enum.Message.SHADOWS) end
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, damage, message_id, Ashita.Enum.Message.THIRD_EYE_ANTICIPATION) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION_MELEE, damage, message_id, Ashita.Enum.Message.MISS, true) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_PARRY, damage, message_id, Ashita.Enum.Message.PARRY, true) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MELEE, damage, message_id, Ashita.Enum.Message.SHADOWS, true) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, damage, message_id, Ashita.Enum.Message.THIRD_EYE_ANTICIPATION, true) end
         if not full then full, counter_damage = H.Melee_Def.Counter(audits, result) end
 
         -- Partial Mitigation
@@ -218,6 +218,10 @@ H.Melee_Def.Additional_Effect = function(audits, result, animation_id, message_i
                 local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
                 H.Defense.Grand_Totals(audits, additional_damage)
                 H.Offense.Catalog_Hit(audits, DB.Trackable.DEF_NUKING, additional_damage, enspell_name)
+
+                -- Need to undo the counts because Grand Totals is also called in the main parse function.
+                DB.Data.Update(DB.Update_Mode.INC, -1, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.HITS_ON_TARGET)
+                DB.Data.Update(DB.Update_Mode.INC, -1, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.ATTEMPTS_ON_TARGET)
             end
         end
     end
