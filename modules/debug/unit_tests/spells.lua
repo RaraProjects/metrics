@@ -202,34 +202,18 @@ Debug.Unit.Tests.Spells.Nuke_Shadow = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MAX] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
-        player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = damage
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
@@ -238,14 +222,14 @@ Debug.Unit.Tests.Spells.Nuke_Shadow = function()
     local battle_log = {
         player = player_name,
         pet    = Blog.Enum.NO_PET,
-        damage = tostring(damage),
+        damage = tostring(0),
         action = action_name,
         note   = " ",
     }
 
     local misc = {}
-    misc["Total Damage"] = damage
-    misc["Total Damage No Skillchain"] = damage
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
 
     local test_package = {
         player = player,

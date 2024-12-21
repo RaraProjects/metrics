@@ -67,6 +67,7 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
     local audits     = H.Spell.Audits(actor_mob, target_mob, owner_mob)
 
     if Res.Spells.Get_Damaging(spell_id) then
+        if message_id == Ashita.Enum.Message.SHADOWS then damage = 0 end
         H.Spell.Nuke(audits, spell_name, damage, burst)
     end
 
