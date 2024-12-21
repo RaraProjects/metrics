@@ -154,7 +154,7 @@ Report.Publishing.Catalog = function(player_name, trackable)
 
             local chat_string = tostring(action_name) .. ": " ..
                                 tostring(total) ..
-                                " (" .. tostring(count) .. ") " ..
+                                " (" .. tostring(count) .. ")" ..
                                 " ~" .. tostring(average) ..
                                 " "  .. tostring(min) ..
                                 "<"  .. tostring(max)
