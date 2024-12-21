@@ -200,6 +200,8 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
         local action_type = Blog.Action_Type.MAGIC_ENFEEBLE
         if damage == -1     then blog_note = Blog.Enum.NO_EFFECT
         elseif damage == -2 then blog_note = Blog.Enum.RESIST
+        elseif damage == 999999 then    -- For things like Poison
+            damage = -1
         elseif Res.Spells.Get_Dispel(spell_id) then
             local buff = Res.Buffs.Get_Buff(damage)
             if buff then blog_note = buff.en end
@@ -329,6 +331,7 @@ H.Spell.Enfeebling_And_DoTs = function(audits, trackable, damage, spell_name, me
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
         H.Offense.Hit(audits, overall, 0)
         H.Offense.Catalog_No_Damage_Hit(audits, trackable, spell_name)
+        damage = 999999
     end
 
     return damage

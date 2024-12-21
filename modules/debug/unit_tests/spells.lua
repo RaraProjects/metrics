@@ -1147,6 +1147,77 @@ Debug.Unit.Tests.Spells.DoT_Damage = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Spells - DoT > Poison
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Spells.Poison = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 3    -- Poison Debuff
+    local action_id = 220
+    local action_name = "Poison"
+    local mp_cost = 5
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.ENF_LAND))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
+    H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local player_catalog = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    player_catalog[player_name] = {}
+
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
+        player[player_name][target_index][DB.Trackable.SPELLS_DOT] = {}
+        player[player_name][target_index][DB.Trackable.SPELLS_DOT][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_DOT][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_DOT][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_DOT][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_DOT][DB.Metric.MP_SPENT] = mp_cost
+
+        player_catalog[player_name][target_index] = {}
+        player_catalog[player_name][target_index][action_name] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DOT] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DOT][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DOT][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DOT][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DOT][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_DOT][DB.Metric.MP_SPENT] = mp_cost
+    end
+
+    local battle_log = {
+        player = player_name,
+        pet    = Blog.Enum.NO_PET,
+        damage = "---",
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Spells - DoT > Poison", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
 -- Spells - Aspir
 ------------------------------------------------------------------------------------------------------
 ---@return table
