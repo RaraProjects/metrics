@@ -40,8 +40,8 @@ Report.Section.Chat_Reports = function()
 
         -- The early returns are necessary for crash prevention.
         UI.TableNextRow()
-        UI.TableNextColumn() if UI.Button("Total Damage") then Report.Publishing.Total_Damage() return nil end
-        UI.TableNextColumn() if UI.Button("Accuracy    ") then Report.Publishing.Accuracy() return nil end
+        UI.TableNextColumn() if UI.Button("Overall     ") then Report.Publishing.Overall() return nil end
+        UI.TableNextColumn()
         UI.TableNextColumn()
         UI.TableNextColumn()
         --

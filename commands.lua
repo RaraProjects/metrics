@@ -65,9 +65,7 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "report" or arg == "rep" then
             local report_type = command_args[3]
             if report_type == "total" then
-                Report.Publishing.Total_Damage()
-            elseif report_type == "acc" then
-                Report.Publishing.Accuracy()
+                Report.Publishing.Overall()
             elseif report_type == "melee" then
                 Report.Publishing.Damage_By_Type(DB.Trackable.MELEE_OVERALL)
             elseif report_type == "ws" then

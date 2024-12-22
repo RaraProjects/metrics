@@ -325,28 +325,23 @@ Config.Section.Text_Commands = function()
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("rep total")
             UI.TableNextColumn() UI.Text("")
-            UI.TableNextColumn() UI.Text("Publishes total damage report in chat.")
+            UI.TableNextColumn() UI.Text("Publishes total damage and accuracy report in chat.")
             Window_Manager.Table_Row_Color(1)
-
-            UI.TableNextColumn() UI.Text("rep acc")
-            UI.TableNextColumn() UI.Text("")
-            UI.TableNextColumn() UI.Text("Publishes accuracy report in chat.")
-            Window_Manager.Table_Row_Color(0)
 
             UI.TableNextColumn() UI.Text("rep melee")
             UI.TableNextColumn() UI.Text("")
             UI.TableNextColumn() UI.Text("Publishes melee report in chat.")
-            Window_Manager.Table_Row_Color(1)
+            Window_Manager.Table_Row_Color(0)
 
             UI.TableNextColumn() UI.Text("rep ws")
             UI.TableNextColumn() UI.Text("")
             UI.TableNextColumn() UI.Text("Publishes weaponskill report in chat.")
-            Window_Manager.Table_Row_Color(0)
+            Window_Manager.Table_Row_Color(1)
 
             UI.TableNextColumn() UI.Text("rep healing")
             UI.TableNextColumn() UI.Text("")
             UI.TableNextColumn() UI.Text("Publishes healing report in chat.")
-            Window_Manager.Table_Row_Color(1)
+            Window_Manager.Table_Row_Color(0)
 
             UI.EndTable()
         end
