@@ -55,6 +55,7 @@ Window_Manager.Config.Display = function()
                 Config.Window.Show()
             else
                 Metrics.Window.Active_Window = Config.Name
+                Hub.Window.Show()
                 Config.Window.Hide()
             end
         end

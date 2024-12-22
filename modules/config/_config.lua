@@ -12,7 +12,7 @@ Config.Window = Window:New({
 
 Config.Defaults = T{
     X = 100,
-    Y = 100,
+    Y = 150,
     Visible = {false},
 }
 
