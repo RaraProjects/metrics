@@ -71,11 +71,15 @@ Focus.Content = function()
     if player_name == DB.Widgets.Dropdown.Enum.NONE then unselected = true end
 
     -- Toolbar buttons
-    Focus.Config.Settings_Button()                              -- Settings
-    UI.SameLine() UI.Text(" ") UI.SameLine()
+    -- Focus.Config.Settings_Button()                           -- Settings (No settings to display so removed)
+    -- UI.SameLine() UI.Text(" ") UI.SameLine()
     Focus.Config.Percent_Details()                              -- % Details
     UI.SameLine() UI.Text(" ") UI.SameLine()
-    if not unselected then Overview.Screenshot_Button() end     -- Screenshot
+    Focus.Config.Misc_Actions()                                 -- Misc Actions
+    if not unselected then
+        UI.SameLine() UI.Text(" ") UI.SameLine()
+        Overview.Screenshot_Button()                            -- Screenshot
+    end
 
     -- Filters
     DB.Widgets.Player_Filter() UI.SameLine() UI.Text("  ") UI.SameLine()
