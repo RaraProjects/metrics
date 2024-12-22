@@ -1,4 +1,4 @@
-Overview.Parse = T{}
+Overview.Parse = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Overview Content
@@ -376,15 +376,14 @@ Overview.Parse.Pets = function()
 
     local trackable = DB.Trackable.PET_OVERALL
 
-    if UI.BeginTable("Pets", 8, table_flags) then
+    if UI.BeginTable("Pets", 7, table_flags) then
         UI.TableSetupColumn("Pet",      col_flags, name_width)
         UI.TableSetupColumn("Damage",   col_flags, width)
         UI.TableSetupColumn("%Party",   col_flags, width)
         UI.TableSetupColumn("Accuracy", col_flags, width)
         UI.TableSetupColumn("%Player",  col_flags, width)
         UI.TableSetupColumn("%Melee",   col_flags, width)
-        UI.TableSetupColumn("%WS",      col_flags, width)
-        UI.TableSetupColumn("%Ability", col_flags, width)
+        UI.TableSetupColumn("%TP Move", col_flags, width)
         UI.TableHeadersRow()
 
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
@@ -403,7 +402,6 @@ Overview.Parse.Pets = function()
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, nil, nil, true)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, nil, nil, true)
-                    UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, nil, nil, true)
                     Window_Manager.Table_Row_Color(1)
                     row = row + 1
 
@@ -420,7 +418,6 @@ Overview.Parse.Pets = function()
                         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable, true)
                         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_MELEE_OVERALL, true)
                         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true)
-                        UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true)
                         Window_Manager.Table_Row_Color(0)
                     end
                 end
@@ -429,7 +426,6 @@ Overview.Parse.Pets = function()
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
