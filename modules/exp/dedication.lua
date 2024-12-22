@@ -1,4 +1,4 @@
-XP.Dedication = T{}
+XP.Dedication = {}
 
 XP.Dedication.Is_Active = true
 XP.Dedication.Need_Defaulting = false
@@ -40,6 +40,20 @@ XP.Dedication.Progress = function()
     local max_xp = Metrics.XP.Boost_Item_Max
     if not max_xp or max_xp == 0 then max_xp = 1 end
     return bonus_xp / max_xp
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns how much boost XP remains before wearing off.
+-- ------------------------------------------------------------------------------------------------------
+---@return number
+-- ------------------------------------------------------------------------------------------------------
+XP.Dedication.XP_Remaining = function()
+    if not XP.Dedication.Is_Active then return 0 end
+    local bonus_xp = Metrics.XP.Boost_EXP
+    local max_xp = Metrics.XP.Boost_Item_Max
+    local remaining_boost = max_xp - bonus_xp
+    if remaining_boost < 0 then remaining_boost = 0 end
+    return remaining_boost
 end
 
 -- ------------------------------------------------------------------------------------------------------

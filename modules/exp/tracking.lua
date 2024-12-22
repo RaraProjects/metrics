@@ -1,8 +1,8 @@
-XP.Local = T{}
-XP.Local.EXP_Buckets = T{}
-XP.Local.EXP_Base_Buckets = T{}
-XP.Local.LP_Buckets = T{}
-XP.Local.LP_Base_Buckets = T{}
+XP.Local = {}
+XP.Local.EXP_Buckets = {}
+XP.Local.EXP_Base_Buckets = {}
+XP.Local.LP_Buckets = {}
+XP.Local.LP_Base_Buckets = {}
 XP.Local.Bucket_Length = 30 -- seconds
 XP.Local.Bucket_Max    = 16  -- Total average window of 8 minutes (30 seconds * 16 buckets)
 XP.Local.EXP_Rate = 0
@@ -13,10 +13,10 @@ XP.Local.Show_Windows = false
 -- Initializes the local XP tracking table.
 -- ------------------------------------------------------------------------------------------------------
 XP.Local.Initialize = function()
-    XP.Local.EXP_Buckets = T{}
-    XP.Local.EXP_Base_Buckets = T{}
-    XP.Local.LP_Buckets = T{}
-    XP.Local.LP_Base_Buckets = T{}
+    XP.Local.EXP_Buckets = {}
+    XP.Local.EXP_Base_Buckets = {}
+    XP.Local.LP_Buckets = {}
+    XP.Local.LP_Base_Buckets = {}
     for i = 1, XP.Local.Bucket_Max do
         table.insert(XP.Local.EXP_Buckets, 0)
         table.insert(XP.Local.EXP_Base_Buckets, 0)
@@ -149,7 +149,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Gets the xp/hr rate.
 -- ------------------------------------------------------------------------------------------------------
----@param type string
+---@param type integer
 -- ------------------------------------------------------------------------------------------------------
 XP.Local.Get_Rate = function(type)
     if     type == XP.Type.EXPERIENCE then return XP.Local.EXP_Rate

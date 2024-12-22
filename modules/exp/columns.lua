@@ -1,4 +1,4 @@
-XP.Columns = T{}
+XP.Columns = {}
 
 XP.Columns.Display_Count = 2
 
@@ -157,7 +157,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Calculates the estimated time to level given XP rate.
 -- ------------------------------------------------------------------------------------------------------
----@param type? string
+---@param type? integer
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Time_To_Level = function(type)
@@ -184,7 +184,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Calculates the estimated time to level given XP rate.
 -- ------------------------------------------------------------------------------------------------------
----@param type? string
+---@param type? integer
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Time_To_Level_Local = function(type)
@@ -198,6 +198,33 @@ XP.Columns.Time_To_Level_Local = function(type)
     local time_remaining = estimated_time - now
     if time_remaining < 0 then return Timers.Format(0) end
     return Timers.Format(time_remaining)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Calculates the estimated time to finish dedication given XP rate.
+-- ------------------------------------------------------------------------------------------------------
+---@param type? integer
+---@return string
+-- ------------------------------------------------------------------------------------------------------
+XP.Columns.Time_To_Finish_Dedication = function(type)
+    local color = Res.Colors.Basic.WHITE
+    if XP.Last_XP_Time == 0 then return UI.TextColored(color, "--:--:--") end
+    local duration = os.time() - XP.Last_XP_Time
+
+    if not type then type = XP.Type.EXPERIENCE end
+    local dedication_remaining = XP.Dedication.XP_Remaining()
+    if type == XP.Type.LIMIT then dedication_remaining = Ashita.Player.Exp_TNM() end
+
+    local average_xp = XP.Columns.Average_XP()
+    if average_xp <= 0 then return UI.TextColored(color, "--:--:--") end
+
+    color = Res.Colors.Basic.WHITE
+    local kill_speed = XP.Columns.Average_Kill_Time()
+    local kills_needed = dedication_remaining / average_xp
+    local total_time = kill_speed * kills_needed
+    local final_time = total_time - duration
+    if final_time < 0 then final_time = 0 end
+    return UI.TextColored(color, Timers.Format(final_time))
 end
 
 -- ------------------------------------------------------------------------------------------------------

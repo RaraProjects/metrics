@@ -1,4 +1,4 @@
-XP = T{}
+XP = {}
 -- ASB Code: /src/map/utils/charutils.cpp->AddExperiencePoints
 -- ASB Code: /src/map/utils/charutils.cpp->DistributeExperiencePoints
 -- https://github.com/Shinzaku/Points
@@ -14,27 +14,27 @@ XP.Window = Window:New({
 
 XP.Table_Flags = bit.bor(ImGuiTableFlags_Borders)
 
-XP.Type = T{
+XP.Type = {
     ERROR      = 0,
     EXPERIENCE = 1,
     LIMIT      = 2,
 }
 
-XP.Messages = T{}
-XP.Messages.EXP = T{
+XP.Messages = {}
+XP.Messages.EXP = {
     [8]   = true,   -- No chain
     [253] = true,   -- Chain
 }
-XP.Messages.LP = T{
+XP.Messages.LP = {
     [371] = true,   -- No chain
     [372] = true,   -- Chain
 }
-XP.Messages.Chain = T{
+XP.Messages.Chain = {
     [253] = true,   -- Experience points
     [372] = true,   -- Limit points
 }
 
-XP.Metric = T{
+XP.Metric = {
     Experience_Total   = 0,
     Experience_Base    = 0,
     Experience_Boosted = 0,
@@ -44,12 +44,12 @@ XP.Metric = T{
     Max_Chain          = 0,
 }
 
-XP.Global = T{}
+XP.Global = {}
 
-XP.Kill_Times = T{}
+XP.Kill_Times = {}
 XP.Kill_Time_Threshold = 10 * 60    -- Seconds
-XP.XP_Per_Kill = T{}
-XP.XP_Per_Kill_Base = T{}
+XP.XP_Per_Kill = {}
+XP.XP_Per_Kill_Base = {}
 XP.XP_Per_Kill_Limit = 6
 XP.Last_XP_Time = 0
 XP.Full_Bar_Height = 18
@@ -81,7 +81,7 @@ XP.Initialize = function()
             XP.Dedication.Need_Clear = true
         end
         XP.Dedication.Check()
-        XP.Metric = T{
+        XP.Metric = {
             Experience_Total   = 0,
             Experience_Base    = 0,
             Experience_Boosted = 0,
@@ -90,9 +90,9 @@ XP.Initialize = function()
             Limit_Boosted      = 0,
             Max_Chain          = 0,
         }
-        XP.Kill_Times = T{}
-        XP.XP_Per_Kill = T{}
-        XP.XP_Per_Kill_Base = T{}
+        XP.Kill_Times = {}
+        XP.XP_Per_Kill = {}
+        XP.XP_Per_Kill_Base = {}
         XP.Last_XP_Time = 0
         XP.Is_Initialized = true
     end
@@ -164,7 +164,7 @@ XP.XP_Table = function(xp_type)
     end
 
     UI.PushStyleColor(ImGuiCol_TableRowBg, Window_Manager.Theme.Table_Row_Bg)
-    if UI.BeginTable("XP Metrics", XP.Columns.Display_Count, table_flags) then
+    if UI.BeginTable("XP Metrics", XP.Columns.Display_Count + 1, table_flags) then
         if Metrics.XP.XP_Job then UI.TableSetupColumn("Job", flags) end
         UI.TableSetupColumn("Chain", flags)
         UI.TableSetupColumn("*" .. type_string .. "/hr", flags)
@@ -179,6 +179,7 @@ XP.XP_Table = function(xp_type)
         if Metrics.XP.XP_Boost_Item then UI.TableSetupColumn("Bonus", flags) end
         if Metrics.XP.XP_Boost_Rate then UI.TableSetupColumn("Bonus %", flags) end
         if Metrics.XP.XP_Boost_Max  then UI.TableSetupColumn("Bonus Max", flags) end
+        UI.TableSetupColumn("TTD")
         UI.TableHeadersRow()
 
         UI.TableNextRow()
@@ -203,6 +204,7 @@ XP.XP_Table = function(xp_type)
         if Metrics.XP.XP_Boost_Item then UI.TableNextColumn() UI.Text(tostring(Metrics.XP.Boost_Item_Name)) end
         if Metrics.XP.XP_Boost_Rate then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Bonus()) end
         if Metrics.XP.XP_Boost_Max  then UI.TableNextColumn() UI.Text(XP.Columns.Dedication_Progress()) end
+        UI.TableNextColumn() XP.Columns.Time_To_Finish_Dedication(xp_type)
 
         UI.EndTable()
     end
@@ -256,7 +258,7 @@ end
 -- Checks whether the XP is either XP or limit points.
 -- ------------------------------------------------------------------------------------------------------
 ---@param message_id integer
----@return string
+---@return integer
 -- ------------------------------------------------------------------------------------------------------
 XP.Get_XP_Type = function(message_id)
     if not message_id then return XP.Type.ERROR end
@@ -295,7 +297,7 @@ end
 -- Tally's total experience / limit points.
 -- ------------------------------------------------------------------------------------------------------
 ---@param amount integer
----@param type string
+---@param type integer
 ---@return integer, integer
 -- ------------------------------------------------------------------------------------------------------
 XP.Add_Total_XP = function(amount, type)

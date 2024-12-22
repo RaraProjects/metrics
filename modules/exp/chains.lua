@@ -1,8 +1,8 @@
-XP.Chains = T{}
+XP.Chains = {}
 
 -- Adapted from Points and ASB.
 -- https://github.com/Shinzaku/Points
-XP.Chains.Max_Times = T{
+XP.Chains.Max_Times = {
     {level=10, maxtime={80,  80,  60,  40,  30,  15}},
     {level=20, maxtime={130, 130, 110, 80,  60,  25}},
     {level=30, maxtime={160, 150, 120, 90,  60,  30}},
