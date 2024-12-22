@@ -113,7 +113,7 @@ ashita.events.register('load', 'load_cb', function()
 
     -- Initialize Modules
     DB.Initialize()
-    Parse.Initialize()
+    Parse.Initialize(Metrics.Parse)
     Blog.Initialize(Metrics.Blog)
     Ashita.Party.Need_Refresh = true
     Window_Manager.Initialize(Metrics)

@@ -281,7 +281,7 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
         H.Offense.No_Damage_Hit(audits, melee_type_discrete, metric)
 
     -- Paralyze has no impact on any accuracy.
-    elseif message_id == Ashita.Enum.Message.IS_PARALYZED then
+    elseif message_id == Ashita.Enum.Message.IS_PARALYZED or message_id == Ashita.Enum.Message.IS_PARALYZED_2 then
         metric = DB.Metric.PARALYZED
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, melee_type_broad, metric)
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, melee_type_discrete, metric)

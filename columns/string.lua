@@ -7,7 +7,7 @@ Column.String = T{}
 ------------------------------------------------------------------------------------------------------
 Column.String.Format_Name = function(player_name)
     if not player_name then player_name = "Player" end
-    if Metrics.Parse.Hide_Name then return Column.String.Job(player_name, Metrics.Parse.Hide_Subjob) end
+    if Parse.Config.Is_Masking_Names() then return Column.String.Job(player_name, Parse.Config.Is_Hiding_Subjob()) end
 
     local job = Res.Jobs.List[0]
     if Ashita.Party.Jobs[player_name] then
@@ -16,7 +16,7 @@ Column.String.Format_Name = function(player_name)
     end
 
     local color = Res.Colors.Basic.WHITE
-    if Metrics.Parse.Name_Colors then color = Res.Colors.Get_Job(job.id) end
+    if Parse.Config.Is_Colored_Name() then color = Res.Colors.Get_Job(job.id) end
 
     UI.TextColored(color, player_name)
 end

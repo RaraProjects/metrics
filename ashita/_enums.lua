@@ -97,6 +97,7 @@ Ashita.Enum.Message = {
     CRIT                   = 67,
     PARRY                  = 70,
     NO_EFFECT              = 75,
+    IS_PARALYZED_2         = 84,
     RESIST                 = 85,
     DEATH                  = 97,
     IS_INTIMIDATED         = 106,

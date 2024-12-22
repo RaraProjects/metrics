@@ -1,4 +1,4 @@
-Parse.Mini = T{}
+Parse.Mini = {}
 
 Parse.Mini.Column_Flags = Column.Flags.None
 Parse.Mini.Table_Flags = bit.bor(ImGuiTableFlags_Borders)
@@ -9,10 +9,10 @@ Parse.Mini.Table_Flags = bit.bor(ImGuiTableFlags_Borders)
 Parse.Mini.Populate = function()
     local columns = 3
     if Parse.Config.Is_Pet_Column_Enabled() then columns = columns + 2 end
-    if Metrics.Parse.Attack_Speed then columns = columns + 1 end
-    if Metrics.Parse.DPS then columns = columns + 1 end
-    if Metrics.Parse.Running_Acc then columns = columns + 1 end
-    if Metrics.Parse.Lurk_Mode then UI.Text("Lurking...") end
+    if Parse.Settings.Show_Melee_Delay      then columns = columns + 1 end
+    if Parse.Settings.Show_DPS              then columns = columns + 1 end
+    if Parse.Settings.Show_Accuracy_Recent  then columns = columns + 1 end
+    if Parse.Settings.Lurk_Mode then UI.Text("Lurking...") end
     if UI.BeginTable("Team Mini", columns, Parse.Mini.Table_Flags) then
         Parse.Mini.Headers()
 
@@ -41,12 +41,12 @@ end
 Parse.Mini.Headers = function()
     local flags = Parse.Mini.Column_Flags
 
-    UI.TableSetupColumn("Name", flags)
+    UI.TableSetupColumn("Name",  flags)
     UI.TableSetupColumn("Total", flags)
-    UI.TableSetupColumn("%T", flags)
-    if Metrics.Parse.Attack_Speed then UI.TableSetupColumn("Speed", flags) end
-    if Metrics.Parse.DPS then          UI.TableSetupColumn(DB.DPS.Column_Header(), flags) end
-    if Metrics.Parse.Running_Acc then  UI.TableSetupColumn("%A-" .. Metrics.Model.Running_Accuracy_Limit, flags) end
+    UI.TableSetupColumn("%T",    flags)
+    if Parse.Settings.Show_Melee_Delay      then UI.TableSetupColumn("s/Melee", flags) end
+    if Parse.Settings.Show_DPS              then UI.TableSetupColumn(DB.DPS.Column_Header(), flags) end
+    if Parse.Settings.Show_Accuracy_Recent  then UI.TableSetupColumn("%A." .. Metrics.Model.Running_Accuracy_Limit, flags) end
     if Parse.Config.Is_Pet_Column_Enabled() then
         UI.TableSetupColumn("Pet D.", flags)
         UI.TableSetupColumn("Pet A.", flags)
@@ -64,9 +64,9 @@ Parse.Mini.Rows = function(player_name)
     UI.TableNextColumn() Column.String.Format_Name(player_name)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
     UI.TableNextColumn() Column.Damage.Total(player_name, true, true)
-    if Metrics.Parse.Attack_Speed then UI.TableNextColumn() Column.Attack_Speed.Get(player_name, true) end
-    if Metrics.Parse.DPS then          UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
-    if Metrics.Parse.Running_Acc then  UI.TableNextColumn() Column.Acc.Recent(player_name, true) end
+    if Parse.Settings.Show_Melee_Delay      then UI.TableNextColumn() Column.Attack_Speed.Get(player_name, true) end
+    if Parse.Settings.Show_DPS              then UI.TableNextColumn() Column.Damage.DPS(player_name, true) end
+    if Parse.Settings.Show_Accuracy_Recent  then UI.TableNextColumn() Column.Acc.Recent(player_name, true) end
     if Parse.Config.Is_Pet_Column_Enabled() then
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_MELEE_DISCRETE)
@@ -84,12 +84,11 @@ Parse.Mini.Total_Row = function()
 
     UI.TableNextColumn() UI.Text("Total")
     UI.TableNextColumn() Column.Damage.Parse_Total(true)
-    if Metrics.Parse.Attack_Speed then UI.TableNextColumn() UI.Text(" ") end
-    if Metrics.Parse.DPS then          UI.TableNextColumn() Column.Damage.Parse_DPS(true) end
-    if Metrics.Parse.Running_Acc then  UI.TableNextColumn() UI.Text(" ") end
     UI.TableNextColumn() UI.Text(" ")
+    if Parse.Settings.Show_Melee_Delay      then UI.TableNextColumn() UI.Text(" ") end
+    if Parse.Settings.Show_DPS              then UI.TableNextColumn() Column.Damage.Parse_DPS(true) end
+    if Parse.Settings.Show_Accuracy_Recent  then UI.TableNextColumn() UI.Text(" ") end
     if Parse.Config.Is_Pet_Column_Enabled() then
-        UI.TableNextColumn() UI.Text(" ")
         UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.PET_OVERALL, true)
         UI.TableNextColumn() UI.Text(" ")
     end

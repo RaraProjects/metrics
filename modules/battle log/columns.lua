@@ -8,7 +8,7 @@ Blog.Columns = T{}
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Name = function(player_name, pet_name)
-    if Blog.Settings.Mask_Names then player_name = Blog.Columns.Job(player_name) end
+    if Blog.Dependencies.Mask_Names() then player_name = Blog.Columns.Job(player_name) end
     if pet_name ~= Blog.Enum.NO_PET then
         local combined_string = player_name .. " (" .. pet_name .. ")"
         if string.len(combined_string) > Blog.Enum.TRUNCATE_TOTAL then

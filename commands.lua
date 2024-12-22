@@ -43,15 +43,15 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "percent" then
             Focus.Config.Percent_Toggle()
         elseif arg == "dps" then
-            Metrics.Parse.DPS = not Metrics.Parse.DPS
+            Parse.Config.Toggle_DPS()
             Parse.Util.Calculate_Column_Flags()
         elseif arg == "speed" then
-            Metrics.Parse.Attack_Speed = not Metrics.Parse.Attack_Speed
+            Parse.Config.Toggle_Melee_Delay()
             Parse.Util.Calculate_Column_Flags()
         elseif arg == "throttle" then
             Throttle.Toggle()
         elseif arg == "lurk" then
-            Metrics.Parse.Lurk_Mode = not Metrics.Parse.Lurk_Mode
+            Parse.Config.Toggle_Lurk_Mode()
         elseif arg == "mouse" then
             Window_Manager.Toggle_Mouse()
 
