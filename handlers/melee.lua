@@ -255,6 +255,7 @@ end
 H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_type_discrete, owner_mob)
     local was_critical_hit = false
     local has_hit = true
+    local metric  = nil
 
     if message_id == Ashita.Enum.Message.HIT then
         H.Offense.Hit(audits, melee_type_broad, damage)
@@ -275,8 +276,21 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
 
     -- Shadows have no impact on recent accuracy.
     elseif message_id == Ashita.Enum.Message.SHADOWS then
-        H.Offense.Shadow_Absorption(audits, melee_type_broad)
-        H.Offense.Shadow_Absorption(audits, melee_type_discrete)
+        metric = DB.Metric.SHADOW_ABSORPTION
+        H.Offense.No_Damage_Hit(audits, melee_type_broad, metric)
+        H.Offense.No_Damage_Hit(audits, melee_type_discrete, metric)
+
+    -- Paralyze has no impact on recent accuracy.
+    elseif message_id == Ashita.Enum.Message.IS_PARALYZED then
+        metric = DB.Metric.PARALYZED
+        H.Offense.No_Damage_Hit(audits, melee_type_broad, metric)
+        H.Offense.No_Damage_Hit(audits, melee_type_discrete, metric)
+
+    -- Intimidation has no impact on recent accuracy.
+    elseif message_id == Ashita.Enum.Message.IS_INTIMIDATED then
+        metric = DB.Metric.INTIMIDATED
+        H.Offense.No_Damage_Hit(audits, melee_type_broad, metric)
+        H.Offense.No_Damage_Hit(audits, melee_type_discrete, metric)
 
     elseif message_id == Ashita.Enum.Message.DODGE then
         H.Melee.Dodge(audits, melee_type_broad, melee_type_discrete)

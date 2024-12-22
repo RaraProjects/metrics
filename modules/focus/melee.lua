@@ -119,12 +119,13 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
-    local mob_heal = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.MOB_HEALING)
-    local shadows  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.SHADOW_ABSORPTION)
-    local enspell  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL, DB.Metric.TOTAL)
-    local endrain  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDRAIN, DB.Metric.TOTAL)
-    local enaspir  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENASPIR, DB.Metric.TOTAL)
-    local counter  = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER, DB.Metric.TOTAL)
+    local shadows      = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.SHADOW_ABSORPTION)
+    local paralyzed    = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.PARALYZED)
+    local intimidated  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.INTIMIDATED)
+    local enspell      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL, DB.Metric.TOTAL)
+    local endrain      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDRAIN, DB.Metric.TOTAL)
+    local enaspir      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENASPIR, DB.Metric.TOTAL)
+    local counter      = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER, DB.Metric.TOTAL)
 
     local row = 1
     if UI.BeginTable("Aux. Melee", 4, table_flags) then
@@ -148,7 +149,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             row = row + 1
         end
 
-        -- Data columns for enspells.
+        -- Damaging additional effects.
         local enspell_data = {}
         if endamage > 0 then table.insert(enspell_data, {header = "En-Damage", trackable = DB.Trackable.MELEE_ENDAMAGE}) end
         if enspell > 0  then table.insert(enspell_data, {header = "En-Spell",  trackable = DB.Trackable.MELEE_ENSPELL}) end
@@ -162,7 +163,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             row = row + 1
         end
 
-        -- Data for non-damage additional effect.
+        -- Non-damage additional effects.
         local add_effects = {}
         if endrain > 0 then table.insert(add_effects, {header = "En-Drain", trackable = DB.Trackable.MELEE_ENDRAIN}) end
         if enaspir > 0 then table.insert(add_effects, {header = "En-Aspir", trackable = DB.Trackable.MELEE_ENASPIR}) end
@@ -176,6 +177,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             row = row + 1
         end
 
+        -- Effects that carry a damage value but do not contribute to player damage.
         local trackable = DB.Trackable.MELEE_OVERALL
         if DB.Data.Get(player_name, trackable, DB.Metric.MOB_HEALING) > 0 then
             UI.TableNextColumn() UI.Text("Mob Heal")
@@ -186,11 +188,29 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             row = row + 1
         end
 
-        if DB.Data.Get(player_name, trackable, DB.Metric.SHADOW_ABSORPTION) > 0 then
-            UI.TableNextColumn() UI.Text("Shadows")
+        -- Effects that just need a counter (per swing).
+        local on_swing = {}
+        if shadows > 0     then table.insert(on_swing, {header = "Shadows",     trackable = DB.Trackable.MELEE_OVERALL, metric = DB.Metric.SHADOW_ABSORPTION}) end
+
+        for _, data in ipairs(on_swing) do
+            UI.TableNextColumn() UI.Text(tostring(data.header))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() Column.General.Fraction(player_name, trackable, DB.Metric.SHADOW_ABSORPTION, DB.Metric.HITS_ON_TARGET)
+            UI.TableNextColumn() Column.General.Fraction(player_name, data.trackable, data.metric, DB.Metric.HITS_ON_TARGET)
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
+
+        -- Effects that just need a counter (pet use).
+        local on_use = {}
+        if paralyzed > 0   then table.insert(on_use, {header = "Paralyzed",   trackable = DB.Trackable.MELEE_OVERALL, metric = DB.Metric.PARALYZED}) end
+        if intimidated > 0 then table.insert(on_use, {header = "Intimidated", trackable = DB.Trackable.MELEE_OVERALL, metric = DB.Metric.INTIMIDATED}) end
+
+        for _, data in ipairs(on_use) do
+            UI.TableNextColumn() UI.Text(tostring(data.header))
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() Column.General.Fraction(player_name, data.trackable, data.metric, DB.Metric.ATTEMPTS_ON_USE)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end

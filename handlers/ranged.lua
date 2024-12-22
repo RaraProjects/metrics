@@ -131,7 +131,7 @@ H.Ranged.Message = function(audits, damage, message_id, overall_ranged_type, own
 
     -- Shadows have no impact on recent accuracy.
     elseif message_id == Ashita.Enum.Message.SHADOWS then
-        H.Offense.Shadow_Absorption(audits, overall_ranged_type)
+        H.Offense.No_Damage_Hit(audits, overall_ranged_type, DB.Metric.SHADOW_ABSORPTION)
 
     -- PUP ranged hits will not negatively impact true strike or square hit rates.
     elseif message_id == Ashita.Enum.Message.RANGEPUP then

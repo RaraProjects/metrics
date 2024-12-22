@@ -170,6 +170,8 @@ H.No_Damage_Messages = function(result)
            message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION or
            message_id == Ashita.Enum.Message.RANGEMISS or
            message_id == Ashita.Enum.Message.SHADOWS or
+           message_id == Ashita.Enum.Message.IS_PARALYZED or
+           message_id == Ashita.Enum.Message.IS_INTIMIDATED or
            message_id == Ashita.Enum.Message.MOBHEAL373
 end
 
@@ -229,11 +231,12 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.
 ---@param trackable string
+---@param metric string
 ------------------------------------------------------------------------------------------------------
-H.Offense.Shadow_Absorption = function(audits, trackable)
+H.Offense.No_Damage_Hit = function(audits, trackable, metric)
     H.Offense.Hit(audits, trackable, 0)
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.SHADOW_ABSORPTION)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, metric)
 end
 
 ------------------------------------------------------------------------------------------------------

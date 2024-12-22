@@ -1,4 +1,4 @@
-Overview.Focus = T{}
+Overview.Focus = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Content for the Focus screenshot window.
