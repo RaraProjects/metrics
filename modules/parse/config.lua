@@ -8,7 +8,7 @@ Parse.Config.Defaults = T{
     Display_Mode = Parse.Enum.Display_Mode.FULL,
 
     -- General Settings
-    Show_Clock        = true,
+    Show_Clock        = false,
     Include_SC_Damage = false,
     Condensed_Numbers = false,
     Lurk_Mode         = false,

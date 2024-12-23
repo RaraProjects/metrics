@@ -17,15 +17,15 @@ XP.Config.Defaults = T{
 
     -- Columns Flags
     Show_Job                 = true,
-    Show_Base_Rate           = false,
+    Show_Base_Rate           = true,
     Show_Time_To_Level       = true,
-    Show_TNL                 = false,
-    Show_Kill_Rate           = true,
+    Show_Boost_Time_To_Level = true,
+    Show_TNL                 = true,
+    Show_Kill_Rate           = false,
     Show_Average_XP          = false,
-    Show_Total_XP_Gained     = true,
+    Show_Total_XP_Gained     = false,
     Show_Max_Chain           = false,
     Show_Zone_Time           = true,
-    Show_Boost_Time_To_Level = true,
     Show_Boost_Item          = false,
     Show_Boost_Rate          = false,   -- These are based on the item used.
     Show_Boost_Max           = false,   -- These are based on the item used.
