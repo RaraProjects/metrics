@@ -59,33 +59,33 @@ Parse.Full.Headers = function()
     if Parse.Settings.Show_Melee_Delay           then UI.TableSetupColumn("s/Melee",   flags) end
     if Parse.Settings.Show_DPS                   then UI.TableSetupColumn(DB.DPS.Column_Header(), flags) end
     if Parse.Settings.Show_Accuracy_Recent       then UI.TableSetupColumn("%A." .. Metrics.Model.Running_Accuracy_Limit, flags) end
-    if Parse.Settings.Show_Accuracy_Combined     then UI.TableSetupColumn("%A.Total",  flags) end
-    if Parse.Settings.Show_Crit_Combined         then UI.TableSetupColumn("%Crit",     flags) end
-    if Parse.Settings.Show_Total_Melee           then UI.TableSetupColumn("Melee",     flags) end
-    if Parse.Settings.Show_Accuracy_Melee        then UI.TableSetupColumn("M.Acc",     flags) end
-    if Parse.Settings.Show_Crit_Melee            then UI.TableSetupColumn("%M.Crit",   flags) end
-    if Parse.Settings.Show_Total_Weaponskill     then UI.TableSetupColumn("WS",        flags) end
-    if Parse.Settings.Show_Weaponskill_Average   then UI.TableSetupColumn("WS Avg",    flags) end
-    if Parse.Settings.Show_Weaponskill_TP        then UI.TableSetupColumn("WS ~TP",    flags) end
-    if Parse.Settings.Show_Accuracy_Weaponskill  then UI.TableSetupColumn("WS Acc",    flags) end
-    if Parse.Settings.Show_Total_Skillchain      then UI.TableSetupColumn("SC",        flags) end
-    if Parse.Settings.Show_Total_Ranged          then UI.TableSetupColumn("Ranged",    flags) end
-    if Parse.Settings.Show_Accuracy_Ranged       then UI.TableSetupColumn("R.Acc",     flags) end
-    if Parse.Settings.Show_Crit_Ranged           then UI.TableSetupColumn("%R.Crit",   flags) end
-    if Parse.Settings.Show_Ranged_Distance       then UI.TableSetupColumn("R.Dist",    flags) end
-    if Parse.Settings.Show_Total_Nuking_Combined then UI.TableSetupColumn("Nukes All", flags) end
-    if Parse.Settings.Show_Total_Nuking_No_Burst then UI.TableSetupColumn("Nukes -MB", flags) end
-    if Parse.Settings.Show_Total_Nuking_Burst    then UI.TableSetupColumn("Bursts",    flags) end
-    if Parse.Settings.Show_Total_Ability         then UI.TableSetupColumn("JA",        flags) end
-    if Parse.Settings.Show_Pet_Total             then UI.TableSetupColumn("P.Total",   flags) end
-    if Parse.Settings.Show_Pet_Accuracy          then UI.TableSetupColumn("P.Acc",     flags) end
-    if Parse.Settings.Show_Pet_Melee             then UI.TableSetupColumn("P.Melee",   flags) end
-    if Parse.Settings.Show_Pet_Ranged            then UI.TableSetupColumn("P.RA",      flags) end
-    if Parse.Settings.Show_Pet_TP_Move           then UI.TableSetupColumn("P.TP",      flags) end
-    if Parse.Settings.Show_Pet_Healing           then UI.TableSetupColumn("P.Healing", flags) end
-    if Parse.Settings.Show_Total_Healing         then UI.TableSetupColumn("Healing",   flags) end
-    if Parse.Settings.Show_Damage_Taken          then UI.TableSetupColumn("DT",        flags) end
-    if Parse.Settings.Show_Player_Deaths         then UI.TableSetupColumn("Deaths",    flags) end
+    if Parse.Settings.Show_Accuracy_Combined     then UI.TableSetupColumn("%A.Total", flags) end
+    if Parse.Settings.Show_Crit_Combined         then UI.TableSetupColumn("%Crit",    flags) end
+    if Parse.Settings.Show_Total_Melee           then UI.TableSetupColumn("Melee",    flags) end
+    if Parse.Settings.Show_Accuracy_Melee        then UI.TableSetupColumn("M.Acc",    flags) end
+    if Parse.Settings.Show_Crit_Melee            then UI.TableSetupColumn("%M.Crit",  flags) end
+    if Parse.Settings.Show_Total_Weaponskill     then UI.TableSetupColumn("WS",       flags) end
+    if Parse.Settings.Show_Weaponskill_Average   then UI.TableSetupColumn("WS Avg",   flags) end
+    if Parse.Settings.Show_Weaponskill_TP        then UI.TableSetupColumn("WS ~TP",   flags) end
+    if Parse.Settings.Show_Accuracy_Weaponskill  then UI.TableSetupColumn("WS Acc",   flags) end
+    if Parse.Settings.Show_Total_Skillchain      then UI.TableSetupColumn("SC",       flags) end
+    if Parse.Settings.Show_Total_Ranged          then UI.TableSetupColumn("Ranged",   flags) end
+    if Parse.Settings.Show_Accuracy_Ranged       then UI.TableSetupColumn("R.Acc",    flags) end
+    if Parse.Settings.Show_Crit_Ranged           then UI.TableSetupColumn("%R.Crit",  flags) end
+    if Parse.Settings.Show_Ranged_Distance       then UI.TableSetupColumn("R.Dist",   flags) end
+    if Parse.Settings.Show_Total_Nuking_Combined then UI.TableSetupColumn("Nuke +MB", flags) end
+    if Parse.Settings.Show_Total_Nuking_No_Burst then UI.TableSetupColumn("Nuke -MB", flags) end
+    if Parse.Settings.Show_Total_Nuking_Burst    then UI.TableSetupColumn("Bursts",   flags) end
+    if Parse.Settings.Show_Total_Ability         then UI.TableSetupColumn("JA",       flags) end
+    if Parse.Settings.Show_Pet_Total             then UI.TableSetupColumn("P.Total",  flags) end
+    if Parse.Settings.Show_Pet_Accuracy          then UI.TableSetupColumn("P.Acc",    flags) end
+    if Parse.Settings.Show_Pet_Melee             then UI.TableSetupColumn("P.Melee",  flags) end
+    if Parse.Settings.Show_Pet_Ranged            then UI.TableSetupColumn("P.RA",     flags) end
+    if Parse.Settings.Show_Pet_TP_Move           then UI.TableSetupColumn("P.TP",     flags) end
+    if Parse.Settings.Show_Pet_Healing           then UI.TableSetupColumn("P.Heals",  flags) end
+    if Parse.Settings.Show_Total_Healing         then UI.TableSetupColumn("Healing",  flags) end
+    if Parse.Settings.Show_Damage_Taken          then UI.TableSetupColumn("DT",       flags) end
+    if Parse.Settings.Show_Player_Deaths         then UI.TableSetupColumn("Deaths",   flags) end
 
     UI.TableHeadersRow()
 end
