@@ -1,20 +1,19 @@
-local timers = T{}
+local timers = {}
 
-timers.Timers = T{}
+timers.Timers = {}
 
-timers.Enum = T{}
-timers.Enum.Names = T{
+timers.Enum = {}
+timers.Enum.Names = {
     METRICS   = "Total Runtime",
     PARSE     = "Active Time",
     AUTOPAUSE = "Auto-Pause",
     AUTOSAVE  = "Auto-Save",
     DPS       = "DPS",
-    EXP       = "EXP",
     CHAIN     = "Chain",
     ZONE      = "Zone",
 }
 
-timers.Tresholds = T{
+timers.Tresholds = {
     AUTOPAUSE = 5,
 }
 
@@ -139,11 +138,6 @@ timers.Cycle = function(name)
         if duration > DB.DPS.Snapshot_Time then
             DB.DPS.Create_Snapshot()
             timers.Reset(Timers.Enum.Names.DPS)
-        end
-    elseif name == Timers.Enum.Names.EXP then
-        if duration > XP.Local.Bucket_Length then
-            XP.Local.Cycle_Window()
-            timers.Reset(Timers.Enum.Names.EXP)
         end
     end
 end

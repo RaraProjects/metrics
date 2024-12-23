@@ -1,159 +1,128 @@
-XP.Local = {}
-XP.Local.EXP_Buckets = {}
-XP.Local.EXP_Base_Buckets = {}
-XP.Local.LP_Buckets = {}
-XP.Local.LP_Base_Buckets = {}
-XP.Local.Bucket_Length = 30 -- seconds
-XP.Local.Bucket_Max    = 16  -- Total average window of 8 minutes (30 seconds * 16 buckets)
-XP.Local.EXP_Rate = 0
-XP.Local.LP_Rate = 0
-XP.Local.Show_Windows = false
+XP.Tracking = {}
+
+XP.Tracking.Metric = {
+    Experience_Total   = 0,
+    Experience_Base    = 0,
+    Experience_Boosted = 0,
+    Limit_Total        = 0,
+    Limit_Base         = 0,
+    Limit_Boosted      = 0,
+    Max_Chain          = 0,
+}
+
+XP.Tracking.Kill_Times = {}
+XP.Tracking.Kill_Time_Threshold = 10 * 60    -- Seconds
+XP.Tracking.Per_Kill_Base_And_Boost = {}
+XP.Tracking.Per_Kill_Base_XP_Only = {}
+XP.Tracking.Per_Kill_Max_Windows = 6
+XP.Tracking.Last_XP_Gain_Time = 0
+
+XP.Tracking.Show_Debug    = false -- Shows debug information when enabled.
 
 -- ------------------------------------------------------------------------------------------------------
--- Initializes the local XP tracking table.
+-- Initializes XP Tracking.
 -- ------------------------------------------------------------------------------------------------------
-XP.Local.Initialize = function()
-    XP.Local.EXP_Buckets = {}
-    XP.Local.EXP_Base_Buckets = {}
-    XP.Local.LP_Buckets = {}
-    XP.Local.LP_Base_Buckets = {}
-    for i = 1, XP.Local.Bucket_Max do
-        table.insert(XP.Local.EXP_Buckets, 0)
-        table.insert(XP.Local.EXP_Base_Buckets, 0)
-        table.insert(XP.Local.LP_Buckets, 0)
-        table.insert(XP.Local.LP_Base_Buckets, 0)
-    end
+XP.Tracking.Initialize = function()
+    XP.Tracking.Metric = {
+        Experience_Total   = 0,
+        Experience_Base    = 0,
+        Experience_Boosted = 0,
+        Limit_Total        = 0,
+        Limit_Base         = 0,
+        Limit_Boosted      = 0,
+        Max_Chain          = 0,
+    }
+
+    XP.Tracking.Kill_Times = {}
+    XP.Tracking.Per_Kill_Base_And_Boost = {}
+    XP.Tracking.Per_Kill_Base_XP_Only   = {}
+    XP.Tracking.Last_XP_Gain_Time       = 0
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Add XP to current window. More recent XP goes earlier on in the table.
+-- Tally's total experience / limit points.
 -- ------------------------------------------------------------------------------------------------------
----@param base_xp integer
----@param bonus_xp integer
----@param type string
--- ------------------------------------------------------------------------------------------------------
-XP.Local.Add_XP = function(base_xp, bonus_xp, type)
-    if not base_xp then base_xp = 0 end
-    if not bonus_xp then bonus_xp = 0 end
-    if type == XP.Type.EXPERIENCE then
-        XP.Local.EXP_Buckets[1] = XP.Local.EXP_Buckets[1] + base_xp + bonus_xp
-        XP.Local.EXP_Base_Buckets[1] = XP.Local.EXP_Base_Buckets[1] + base_xp
-    elseif type == XP.Type.LIMIT then
-        XP.Local.LP_Buckets[1] = XP.Local.LP_Buckets[1] + base_xp + bonus_xp
-        XP.Local.LP_Base_Buckets[1] = XP.Local.LP_Base_Buckets[1] + base_xp
-    end
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Gets rid of old data in the current XP tracking windows.
--- ------------------------------------------------------------------------------------------------------
-XP.Local.Cycle_Window = function()
-    table.remove(XP.Local.EXP_Buckets)        -- Get rid of the last element (oldest XP).
-    table.insert(XP.Local.EXP_Buckets, 1, 0)  -- Add a new blank element at index [1].
-    table.remove(XP.Local.EXP_Base_Buckets)
-    table.insert(XP.Local.EXP_Base_Buckets, 1, 0)
-    table.remove(XP.Local.LP_Buckets)
-    table.insert(XP.Local.LP_Buckets, 1, 0)
-    table.remove(XP.Local.LP_Base_Buckets)
-    table.insert(XP.Local.LP_Base_Buckets, 1, 0)
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Gets the local XP tracking value.
--- ------------------------------------------------------------------------------------------------------
----@param type string
----@param base? boolean
----@return string
--- ------------------------------------------------------------------------------------------------------
-XP.Local.Get_XP_Rate = function(type, base)
-    local total_xp = XP.Local.XP_In_Window(type, base)
-    local average_xp = (total_xp / XP.Local.Window_Length()) * 3600
-    XP.Local.Set_Rate(average_xp, type)
-    local return_string = string.format("%d", average_xp)
-    if not base and XP.Dedication.Is_Active then return_string = return_string .. "*" end
-    return return_string
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Shows how much XP is in each bucket.
--- ------------------------------------------------------------------------------------------------------
----@param type string
----@return string
--- ------------------------------------------------------------------------------------------------------
-XP.Local.Bucket_View = function(type)
-    local string = ""
-    local total_xp = 0
-    if type == XP.Type.EXPERIENCE then
-        for _, window_xp in ipairs(XP.Local.EXP_Buckets) do
-            string = string .. "|" .. tostring(window_xp)
-            total_xp = total_xp + window_xp
-        end
-    elseif type == XP.Type.LIMIT then
-        for _, window_xp in ipairs(XP.Local.LP_Buckets) do
-            string = string .. "|" .. tostring(window_xp)
-            total_xp = total_xp + window_xp
-        end
-    end
-    return string
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Gets the total amount of XP from within the window.
--- ------------------------------------------------------------------------------------------------------
----@param type string
----@param base? boolean
----@return integer
--- ------------------------------------------------------------------------------------------------------
-XP.Local.XP_In_Window = function(type, base)
-    local total_xp = 0
-    if type == XP.Type.EXPERIENCE then
-        if base then
-            for _, window_xp in ipairs(XP.Local.EXP_Base_Buckets) do total_xp = total_xp + window_xp end
-        else
-            for _, window_xp in ipairs(XP.Local.EXP_Buckets) do total_xp = total_xp + window_xp end
-        end
-    elseif type == XP.Type.LIMIT then
-        if base then
-            for _, window_xp in ipairs(XP.Local.LP_Base_Buckets) do total_xp = total_xp + window_xp end
-        else
-            for _, window_xp in ipairs(XP.Local.LP_Buckets) do total_xp = total_xp + window_xp end
-        end
-    end
-    return total_xp
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Returns window length in seconds.
--- ------------------------------------------------------------------------------------------------------
----@return integer
--- ------------------------------------------------------------------------------------------------------
-XP.Local.Window_Length = function()
-    local length = XP.Local.Bucket_Length * XP.Local.Bucket_Max
-    if length == 0 then length = 1 end
-    return length
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Sets the xp/hr rate.
--- ------------------------------------------------------------------------------------------------------
----@param rate number
----@param type string
--- ------------------------------------------------------------------------------------------------------
-XP.Local.Set_Rate = function(rate, type)
-    if not rate then rate = 0 end
-    if     type == XP.Type.EXPERIENCE then XP.Local.EXP_Rate = rate
-    elseif type == XP.Type.LIMIT      then XP.Local.LP_Rate = rate
-    end
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Gets the xp/hr rate.
--- ------------------------------------------------------------------------------------------------------
+---@param amount integer
 ---@param type integer
+---@return integer, integer
 -- ------------------------------------------------------------------------------------------------------
-XP.Local.Get_Rate = function(type)
-    if     type == XP.Type.EXPERIENCE then return XP.Local.EXP_Rate
-    elseif type == XP.Type.LIMIT      then return XP.Local.LP_Rate
-    else   return 0
+XP.Tracking.Add_Total_XP = function(amount, type)
+    if not type or type == XP.Type.ERROR then return 0, 0 end
+    if not amount then amount = 0 end
+
+    -- Handle dedication bonus xp.
+    XP.Dedication.Check()
+    local base_xp  = amount
+    local bonus_xp = 0
+    if XP.Dedication.Is_Active and XP.Settings.Boost_Item_Rate > 0 then
+        base_xp  = amount / (1 + (XP.Settings.Boost_Item_Rate / 100))
+        bonus_xp = amount - base_xp
     end
+
+    -- Increment the XP totals. These are client session specific.
+    if type == XP.Type.EXPERIENCE then
+        XP.Tracking.Metric.Experience_Base    = XP.Tracking.Metric.Experience_Base + base_xp
+        XP.Tracking.Metric.Experience_Boosted = XP.Tracking.Metric.Experience_Boosted + bonus_xp
+        XP.Tracking.Metric.Experience_Total   = XP.Tracking.Metric.Experience_Base + XP.Tracking.Metric.Experience_Boosted
+    elseif type == XP.Type.LIMIT then
+        XP.Tracking.Metric.Limit_Base    = XP.Tracking.Metric.Limit_Base + base_xp
+        XP.Tracking.Metric.Limit_Boosted = XP.Tracking.Metric.Limit_Boosted + bonus_xp
+        XP.Tracking.Metric.Limit_Total   = XP.Tracking.Metric.Limit_Base + XP.Tracking.Metric.Limit_Boosted
+    end
+
+    -- This is XP type agnositic and persists across client sessions.
+    XP.Settings.Boost_XP_Acquired = XP.Settings.Boost_XP_Acquired + bonus_xp
+
+    -- Average XP and Kill Times
+    local elements = #XP.Tracking.Per_Kill_Base_And_Boost
+    if elements > XP.Tracking.Per_Kill_Max_Windows then
+        table.remove(XP.Tracking.Per_Kill_Base_And_Boost)
+        table.remove(XP.Tracking.Per_Kill_Base_XP_Only)
+    end
+    table.insert(XP.Tracking.Per_Kill_Base_And_Boost, 1, base_xp + bonus_xp)
+    table.insert(XP.Tracking.Per_Kill_Base_XP_Only, 1, base_xp)
+
+    return base_xp, bonus_xp
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Handles mob kill time tracking.
+-- This gets called when an XP message comes in (from a kill).
+-- ------------------------------------------------------------------------------------------------------
+XP.Tracking.Set_Kill_Time = function()
+    local duration = os.time() - XP.Tracking.Last_XP_Gain_Time
+    if duration < XP.Tracking.Kill_Time_Threshold then       -- Throw out afk/break times.
+        local elements = #XP.Tracking.Kill_Times
+        if elements >= XP.Tracking.Per_Kill_Max_Windows then table.remove(XP.Tracking.Kill_Times) end
+        table.insert(XP.Tracking.Kill_Times, 1, duration)
+    end
+
+    -- Update last kill time to now.
+    XP.Tracking.Last_XP_Gain_Time = os.time()
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Shows XP tracking (debug) information.
+-- Debug mode needs to be enabled in order to turn this on.
+-- ------------------------------------------------------------------------------------------------------
+XP.Tracking.Debug_Content = function()
+    if not XP.Tracking.Show_Debug then return nil end
+
+    local flags       = Column.Flags.None
+    local table_flags = XP.Table_Flags
+    table_flags       = bit.bor(table_flags, ImGuiTableFlags_RowBg)
+
+    local kill_entries = #XP.Tracking.Kill_Times
+    UI.PushStyleColor(ImGuiCol_TableRowBg, Window_Manager.Theme.Table_Row_Bg)
+    if UI.BeginTable("Kill Speed", 1 + kill_entries, table_flags) then
+        UI.TableSetupColumn("Current", flags)
+        for i, _ in ipairs(XP.Tracking.Kill_Times) do UI.TableSetupColumn(tostring(i), flags) end
+        UI.TableHeadersRow()
+
+        UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Tracking.Last_XP_Gain_Time))
+        for _, v in ipairs(XP.Tracking.Kill_Times) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+
+        UI.EndTable()
+    end
+    UI.PopStyleColor(1)
 end

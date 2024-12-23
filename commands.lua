@@ -57,9 +57,7 @@ ashita.events.register('command', 'command_cb', function (e)
 
         -- XP
         elseif arg == "xp" and sub_command then
-            if sub_command == "mini" then
-                Metrics.XP.XP_Mini = not Metrics.XP.XP_Mini
-            end
+            if sub_command == "mini" then XP.Config.Toggle_Mini_Mode() end
 
         -- General reports.
         elseif arg == "report" or arg == "rep" then

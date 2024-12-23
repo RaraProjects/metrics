@@ -76,6 +76,7 @@ Hub.Single_Window = function()
         end
         if UI.BeginTabItem(Config.Name, false, Window_Manager.Is_Module_Active(Config.Name)) then
             Window_Manager.Clear_Module_Switch(Config.Name)
+            Config.Settings_Mode = Config.Enum.File.CONFIG
             Config.Content()
             UI.EndTabItem()
         end
