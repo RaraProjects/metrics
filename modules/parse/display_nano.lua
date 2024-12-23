@@ -34,12 +34,12 @@ end
 -- Returns whether nano mode is enabled.
 ------------------------------------------------------------------------------------------------------
 Parse.Nano.Is_Enabled = function()
-    return Metrics.Parse.Display_Mode == Parse.Enum.Display_Mode.NANO
+    return Parse.Settings.Display_Mode == Parse.Enum.Display_Mode.NANO
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles nano mode.
 ------------------------------------------------------------------------------------------------------
 Parse.Nano.Toggle = function()
-    Metrics.Parse.Display_Mode = Parse.Enum.Display_Mode.NANO
+    Parse.Settings.Display_Mode = Parse.Enum.Display_Mode.NANO
 end

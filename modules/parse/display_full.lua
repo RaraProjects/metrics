@@ -17,7 +17,7 @@ Parse.Full.Populate = function()
     UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Reset_Button()
     if Parse.Confirmation then UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Reset_Confirmation_Button() end
     if Parse.Settings.Lurk_Mode then UI.SameLine() UI.Text(" Lurking...") end
-    if Metrics.Parse.Show_Filter then DB.Widgets.Mob_Filter() end
+    if Parse.Settings.Show_Filter then DB.Widgets.Mob_Filter() end
     Parse.Widgets.Clock()
 
     local player = Ashita.Player.My_Mob()
@@ -37,7 +37,7 @@ Parse.Full.Populate = function()
             end
             Window_Manager.Table_Row_Color(rank)
         end
-        if Metrics.Parse.Grand_Totals and #sorted_damage > 0 then Parse.Full.Total_Row() end
+        if Parse.Settings.Grand_Totals and #sorted_damage > 0 then Parse.Full.Total_Row() end
 
         UI.EndTable()
     end
@@ -99,7 +99,7 @@ Parse.Full.Rows = function(player_name)
     UI.TableNextRow()
 
     if Parse.Settings.Show_Focus_Jump then UI.TableNextColumn() Column.Util.Focus(player_name) end
-    if Parse.Settings.Show_Jobs then       UI.TableNextColumn() Column.String.Job(player_name, Metrics.Parse.Hide_Subjob) end
+    if Parse.Settings.Show_Jobs then       UI.TableNextColumn() Column.String.Job(player_name, Parse.Settings.Hide_Subjob) end
 
     UI.TableNextColumn() Column.String.Format_Name(player_name)
     UI.TableNextColumn() Column.Damage.Total(player_name, false, true)
@@ -190,5 +190,5 @@ end
 -- Toggles full mode.
 ------------------------------------------------------------------------------------------------------
 Parse.Full.Enable = function()
-    Metrics.Parse.Display_Mode = Parse.Enum.Display_Mode.FULL
+    Parse.Settings.Display_Mode = Parse.Enum.Display_Mode.FULL
 end

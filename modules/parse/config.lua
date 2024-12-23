@@ -123,7 +123,7 @@ table.insert(Parse.Config.Columns.Pets, {header = "Pet Healing",           setti
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Reset = function()
     for setting, value in pairs(Parse.Config.Defaults) do
-        Metrics.Parse[setting] = value
+        Parse.Settings[setting] = value
     end
     Parse.Util.Calculate_Column_Flags()
 end
@@ -302,7 +302,7 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Include_SC_Damage = function()
-    return Metrics.Parse.Include_SC_Damage
+    return Parse.Settings.Include_SC_Damage
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -311,7 +311,7 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Rank_Cutoff = function()
-    return Metrics.Parse.Rank_Cutoff
+    return Parse.Settings.Rank_Cutoff
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -320,7 +320,7 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Condensed_Numbers = function()
-    return Metrics.Parse.Condensed_Numbers
+    return Parse.Settings.Condensed_Numbers
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -334,5 +334,5 @@ end
 -- Toggles the clock.
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Toggle_Clock = function()
-    Metrics.Parse.Show_Clock = not Metrics.Parse.Show_Clock
+    Parse.Settings.Show_Clock = not Parse.Settings.Show_Clock
 end

@@ -29,7 +29,7 @@ Parse.Mini.Populate = function()
                 Parse.Mini.Rows(player.name)
             end
         end
-        if Metrics.Parse.Grand_Totals and #sorted_damage > 0 then Parse.Mini.Total_Row() end
+        if Parse.Settings.Grand_Totals and #sorted_damage > 0 then Parse.Mini.Total_Row() end
 
         UI.EndTable()
     end
@@ -98,12 +98,12 @@ end
 -- Returns whether mini mode is enabled.
 ------------------------------------------------------------------------------------------------------
 Parse.Mini.Is_Enabled = function()
-    return Metrics.Parse.Display_Mode == Parse.Enum.Display_Mode.MINI
+    return Parse.Settings.Display_Mode == Parse.Enum.Display_Mode.MINI
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles mini mode.
 ------------------------------------------------------------------------------------------------------
 Parse.Mini.Toggle = function()
-    Metrics.Parse.Display_Mode = Parse.Enum.Display_Mode.MINI
+    Parse.Settings.Display_Mode = Parse.Enum.Display_Mode.MINI
 end

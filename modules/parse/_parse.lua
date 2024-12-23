@@ -39,7 +39,7 @@ require("modules.parse.widgets")
 ------------------------------------------------------------------------------------------------------
 Parse.Initialize = function(settings_pointer)
     -- Check for necessary settings and dependencies.
-    if settings_pointer and Ashita and Res and Window_Manager and UI and Column then
+    if settings_pointer and Ashita and Res and Window_Manager and UI and DB and Column then
         Parse.Settings = settings_pointer
         Parse.Is_Initialized = true
     end

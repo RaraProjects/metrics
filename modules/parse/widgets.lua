@@ -4,7 +4,7 @@ Parse.Widgets = {}
 -- Shows the parse duration clock.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Clock = function()
-    if Metrics.Parse.Show_Clock then
+    if Parse.Settings.Show_Clock then
         local pause_string = ""
         if Timers.Is_Paused(Timers.Enum.Names.PARSE) then pause_string = " (||)" end
         UI.Text("Total: " .. tostring(Timers.Check(Timers.Enum.Names.METRICS)))
@@ -28,7 +28,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Filter_Button = function()
     if UI.SmallButton("Filters") then
-        Metrics.Parse.Show_Filter = not Metrics.Parse.Show_Filter
+        Parse.Settings.Show_Filter = not Parse.Settings.Show_Filter
     end
 end
 
@@ -46,7 +46,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Timer_Button = function()
     if UI.SmallButton("Timer") then
-        Metrics.Parse.Show_Clock = not Metrics.Parse.Show_Clock
+        Parse.Settings.Show_Clock = not Parse.Settings.Show_Clock
     end
 end
 
@@ -105,9 +105,9 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Player_Limit = function()
     UI.SetNextItemWidth(Parse.Config.Slider_Width)
-    local cutoff = {[1] = Metrics.Parse.Rank_Cutoff}
+    local cutoff = {[1] = Parse.Settings.Rank_Cutoff}
     if UI.DragInt("Player Limit", cutoff, 0.1, 0, 18, "%d", ImGuiSliderFlags_None) then
-        Metrics.Parse.Rank_Cutoff = cutoff[1]
+        Parse.Settings.Rank_Cutoff = cutoff[1]
     end
     UI.SameLine() Window_Manager.Widgets.HelpMarker("How many players are listed on the Team table.")
 end
