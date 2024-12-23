@@ -6,14 +6,17 @@ Focus.Ranged = {}
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Ranged.Display = function(player_name)
-    local endamage = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDAMAGE, DB.Metric.TOTAL)
-    local endebuff = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDEBUFF, DB.Metric.HITS_ON_USE)
-    local endrain  = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDRAIN,  DB.Metric.HITS_ON_USE)
-    local enaspir  = DB.Data.Get(player_name, DB.Trackable.RANGED_ENASPIR,  DB.Metric.HITS_ON_USE)
+    local endamage    = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDAMAGE, DB.Metric.TOTAL)
+    local endebuff    = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDEBUFF, DB.Metric.HITS_ON_USE)
+    local endrain     = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDRAIN,  DB.Metric.HITS_ON_USE)
+    local enaspir     = DB.Data.Get(player_name, DB.Trackable.RANGED_ENASPIR,  DB.Metric.HITS_ON_USE)
+    local paralyzed   = DB.Data.Get(player_name, DB.Trackable.ALL_PARALYZE,    DB.Metric.HITS_ON_USE)
+    local intimidated = DB.Data.Get(player_name, DB.Trackable.ALL_INTIMIDATE,  DB.Metric.HITS_ON_USE)
 
     Focus.Ranged.Total(player_name)
     Focus.Ranged.Auxiliary(player_name, endamage, endrain, enaspir)
     Focus.Ranged.Min_Max(player_name)
+    if paralyzed > 0 or intimidated > 0 then Focus.Melee.Action_Blocked(player_name, paralyzed, intimidated) end
 
     if endebuff > 0 or endamage > 0 then UI.Separator() end
     if endebuff > 0 then Focus.Catalog.Endebuff(player_name, DB.Trackable.RANGED_ENDEBUFF) end

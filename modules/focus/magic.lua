@@ -22,8 +22,11 @@ Focus.Magic.Display = function(player_name, hide_publish)
     local buff_songs     = DB.Data.Get(player_name, DB.Trackable.SPELLS_BUFF_SONG,      DB.Metric.ATTEMPTS_ON_USE)
     local dot            = DB.Data.Get(player_name, DB.Trackable.SPELLS_DOT,            DB.Metric.ATTEMPTS_ON_USE)
     local misc_count     = DB.Data.Get(player_name, DB.Trackable.SPELLS_OVERALL,        DB.Metric.ATTEMPTS_ON_USE)
+    local paralyzed      = DB.Data.Get(player_name, DB.Trackable.ALL_PARALYZE,          DB.Metric.HITS_ON_USE)
+    local intimidated    = DB.Data.Get(player_name, DB.Trackable.ALL_INTIMIDATE,        DB.Metric.HITS_ON_USE)
 
     Focus.Magic.Total(player_name, nuke_total, melee_endamage, range_endamage, enspell_count, endrain, spike_damage, dot, burst_total)
+    if paralyzed > 0 or intimidated > 0 then Focus.Melee.Action_Blocked(player_name, paralyzed, intimidated) end
 
     if nuke_total > 0     then Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke") end
     if burst_total > 0    then Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst") end

@@ -6,14 +6,16 @@ Focus.Melee = {}
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Melee.Display = function(player_name)
-    local endamage = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDAMAGE,     DB.Metric.TOTAL)
-    local endebuff = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDEBUFF,     DB.Metric.HITS_ON_USE)
-
-    local has_multi = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_HIT_ON_USE) > 0
+    local endamage    = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDAMAGE, DB.Metric.TOTAL)
+    local endebuff    = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDEBUFF, DB.Metric.HITS_ON_USE)
+    local paralyzed   = DB.Data.Get(player_name, DB.Trackable.ALL_PARALYZE,   DB.Metric.HITS_ON_USE)
+    local intimidated = DB.Data.Get(player_name, DB.Trackable.ALL_INTIMIDATE, DB.Metric.HITS_ON_USE)
+    local has_multi   = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  DB.Metric.MULTI_ATTACK_HIT_ON_USE) > 0
 
     Focus.Melee.Total(player_name)
     Focus.Melee.Auxiliary(player_name, endamage)
     Focus.Melee.Min_Max(player_name)
+    if paralyzed > 0 or intimidated > 0 then Focus.Melee.Action_Blocked(player_name, paralyzed, intimidated) end
     if has_multi then Focus.Melee.Multi_Attack(player_name) end
 
     if endebuff > 0 or endamage > 0 then UI.Separator() end
@@ -119,13 +121,11 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
-    local shadows      = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.SHADOW_ABSORPTION)
-    local paralyzed    = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.PARALYZED)
-    local intimidated  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL, DB.Metric.INTIMIDATED)
-    local enspell      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL, DB.Metric.TOTAL)
-    local endrain      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDRAIN, DB.Metric.TOTAL)
-    local enaspir      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENASPIR, DB.Metric.TOTAL)
-    local counter      = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER, DB.Metric.TOTAL)
+    local shadows      = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  DB.Metric.SHADOW_ABSORPTION)
+    local enspell      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL,  DB.Metric.TOTAL)
+    local endrain      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDRAIN,  DB.Metric.TOTAL)
+    local enaspir      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENASPIR,  DB.Metric.TOTAL)
+    local counter      = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER,  DB.Metric.TOTAL)
 
     local row = 1
     if UI.BeginTable("Aux. Melee", 4, table_flags) then
@@ -201,16 +201,36 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             row = row + 1
         end
 
-        -- Effects that just need a counter (pet use).
-        local on_use = {}
-        if paralyzed > 0   then table.insert(on_use, {header = "Paralyzed",   trackable = DB.Trackable.MELEE_OVERALL, metric = DB.Metric.PARALYZED}) end
-        if intimidated > 0 then table.insert(on_use, {header = "Intimidated", trackable = DB.Trackable.MELEE_OVERALL, metric = DB.Metric.INTIMIDATED}) end
+        UI.EndTable()
+    end
+end
 
-        for _, data in ipairs(on_use) do
+------------------------------------------------------------------------------------------------------
+-- Shows paralyzed, intimidated, etc.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+---@param paralyzed integer
+---@param intimidated integer
+------------------------------------------------------------------------------------------------------
+Focus.Melee.Action_Blocked = function(player_name, paralyzed, intimidated)
+    local col_flags   = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
+
+    local row = 1
+    if UI.BeginTable("Blocked", 2, table_flags) then
+        UI.TableSetupColumn("Type",  col_flags, name_width)
+        UI.TableSetupColumn("Count", col_flags, width)
+        UI.TableHeadersRow()
+
+        local blocked = {}
+        if paralyzed > 0   then table.insert(blocked, {header = "Paralyzed",   trackable = DB.Trackable.ALL_PARALYZE,   metric = DB.Metric.HITS_ON_USE}) end
+        if intimidated > 0 then table.insert(blocked, {header = "Intimidated", trackable = DB.Trackable.ALL_INTIMIDATE, metric = DB.Metric.HITS_ON_USE}) end
+
+        for _, data in ipairs(blocked) do
             UI.TableNextColumn() UI.Text(tostring(data.header))
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() Column.General.Fraction(player_name, data.trackable, data.metric, DB.Metric.ATTEMPTS_ON_USE)
+            UI.TableNextColumn() UI.Text(Column.String.Format_Number(DB.Data.Get(player_name, data.trackable, data.metric)))
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end

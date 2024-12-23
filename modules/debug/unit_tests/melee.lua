@@ -1059,7 +1059,7 @@ Debug.Unit.Tests.Melee.Shadows = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Melee - Main-Hand > Paralyzed
+-- Melee - Paralyzed
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
@@ -1070,9 +1070,9 @@ Debug.Unit.Tests.Melee.Paralyzed = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.IS_PARALYZED))
-    local action = Debug.Unit.Util.Build_Action(payload)
-    H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.IS_PARALYZED))
+    local action = Debug.Unit.Util.Build_Action(payload, 0)
+    H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player = {}
     local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
@@ -1080,26 +1080,9 @@ Debug.Unit.Tests.Melee.Paralyzed = function()
     player[player_name] = {}
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.PARALYZED] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.PARALYZED] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
-        player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.ALL_PARALYZE] = {}
+        player[player_name][target_index][DB.Trackable.ALL_PARALYZE][DB.Metric.HITS_ON_USE] = 1
     end
-
-    local battle_log = {
-        player = Debug.Unit.Mob.PLAYER.name,
-        pet    = Blog.Enum.NO_PET,
-        damage = tostring(0),
-        action = "Melee",
-        note   = " ",
-    }
 
     local misc = {}
     misc["Total Damage"] = 0
@@ -1107,11 +1090,10 @@ Debug.Unit.Tests.Melee.Paralyzed = function()
 
     local test_package = {
         player = player,
-        battle_log = battle_log,
         misc = misc,
     }
 
-    return Debug.Unit.Check_Result("Melee - Main-Hand > Paralyzed", test_package)
+    return Debug.Unit.Check_Result("Melee - > Paralyzed", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -1127,7 +1109,7 @@ Debug.Unit.Tests.Melee.Intimidated = function()
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.IS_INTIMIDATED))
-    local action = Debug.Unit.Util.Build_Action(payload)
+    local action = Debug.Unit.Util.Build_Action(payload, 0)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
     local player = {}
@@ -1139,11 +1121,9 @@ Debug.Unit.Tests.Melee.Intimidated = function()
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL] = {}
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.ATTEMPTS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_OVERALL][DB.Metric.INTIMIDATED] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND] = {}
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.ATTEMPTS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.INTIMIDATED] = 1
         player[player_name][target_index][DB.Trackable.MELEE_MAIN_HAND][DB.Metric.MULTI_ATTACK_1] = 1
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED] = {}
         player[player_name][target_index][DB.Trackable.DEF_COUNTERED][DB.Metric.ATTEMPTS_ON_TARGET] = 1

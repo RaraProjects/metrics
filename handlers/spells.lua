@@ -16,6 +16,8 @@ H.Spell.Action = function(action, actor_mob, owner_mob, log_offense)
     local target_count = 0
     local spell_id = action.param
     local spell_data = Ashita.Spell.Get_By_ID(spell_id)
+
+    H.Spell.Is_Action_Blocked(action, actor_mob)
     if not spell_data then return nil end
 
     local spell_name = Ashita.Spell.Name(spell_id, spell_data)
@@ -30,7 +32,7 @@ H.Spell.Action = function(action, actor_mob, owner_mob, log_offense)
             if target_mob then
                 if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
                 is_burst = result.message == Ashita.Enum.Message.BURST
-                new_damage = H.Spell.Parse(spell_data, result, actor_mob, target_mob, owner_mob, is_burst)
+                new_damage = H.Spell.Target_Parse(spell_data, result, actor_mob, target_mob, owner_mob, is_burst)
                 if not new_damage then new_damage = 0 end
                 if new_damage > -2 then hit = true end
                 target_count = target_count + 1
@@ -56,7 +58,7 @@ end
 ---@param burst boolean true if this cast was a magic burst.
 ---@return number
 ------------------------------------------------------------------------------------------------------
-H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, burst)
+H.Spell.Target_Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, burst)
     Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Spell", result)
     if not spell_data then return 0 end
 
@@ -101,6 +103,27 @@ H.Spell.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob, b
     end
 
     return damage
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check if an action is paralyzed, intimidated, etc.
+-- Paralyze and intimidate come through this packet even for melee.
+------------------------------------------------------------------------------------------------------
+---@param action table
+---@param actor_mob table
+------------------------------------------------------------------------------------------------------
+H.Spell.Is_Action_Blocked = function(action, actor_mob)
+    if action.targets and action.targets[1] and action.targets[1].actions and action.targets[1].actions[1] and action.targets[1].actions[1].message then
+        local message_id = action.targets[1].actions[1].message
+        local temp_audits = H.Spell.Audits(actor_mob, Ashita.Mob.Get_Mob_By_ID(action.targets[1].id))
+
+        if message_id == Ashita.Enum.Message.IS_PARALYZED or message_id == Ashita.Enum.Message.IS_PARALYZED_2 then
+            DB.Data.Update(DB.Update_Mode.INC, 1, temp_audits, DB.Trackable.ALL_PARALYZE, DB.Metric.HITS_ON_USE)
+
+        elseif message_id == Ashita.Enum.Message.IS_INTIMIDATED then
+            DB.Data.Update(DB.Update_Mode.INC, 1, temp_audits, DB.Trackable.ALL_INTIMIDATE, DB.Metric.HITS_ON_USE)
+        end
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

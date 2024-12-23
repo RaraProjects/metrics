@@ -68,7 +68,7 @@ Parse.Full.Headers = function()
     if Parse.Settings.Show_Weaponskill_Average   then UI.TableSetupColumn("WS Avg",    flags) end
     if Parse.Settings.Show_Weaponskill_TP        then UI.TableSetupColumn("WS ~TP",    flags) end
     if Parse.Settings.Show_Accuracy_Weaponskill  then UI.TableSetupColumn("WS Acc",    flags) end
-    if Parse.Config.Include_SC_Damage()          then UI.TableSetupColumn("SC",        flags) end
+    if Parse.Settings.Show_Total_Skillchain      then UI.TableSetupColumn("SC",        flags) end
     if Parse.Settings.Show_Total_Ranged          then UI.TableSetupColumn("Ranged",    flags) end
     if Parse.Settings.Show_Accuracy_Ranged       then UI.TableSetupColumn("R.Acc",     flags) end
     if Parse.Settings.Show_Crit_Ranged           then UI.TableSetupColumn("%R.Crit",   flags) end
@@ -117,7 +117,7 @@ Parse.Full.Rows = function(player_name)
     if Parse.Settings.Show_Weaponskill_Average   then UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.WEAPONSKILL, nil, nil, true) end
     if Parse.Settings.Show_Weaponskill_TP        then UI.TableNextColumn() Column.Damage.Per_Unit_Average(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.TP_SPENT, nil, true) end
     if Parse.Settings.Show_Accuracy_Weaponskill  then UI.TableNextColumn() Column.General.Fraction(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.HITS_ON_USE, DB.Metric.ATTEMPTS_ON_USE, true) end
-    if Parse.Config.Include_SC_Damage()          then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, nil, nil, false, true) end
+    if Parse.Settings.Show_Total_Skillchain      then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, nil, nil, false, true) end
     if Parse.Settings.Show_Total_Ranged          then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL, nil, nil, false, true) end
     if Parse.Settings.Show_Accuracy_Ranged       then UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, nil, false, nil, true) end
     if Parse.Settings.Show_Crit_Ranged           then UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, 0, true, nil, true) end
@@ -166,7 +166,7 @@ Parse.Full.Total_Row = function()
     if Parse.Settings.Show_Weaponskill_Average   then UI.TableNextColumn() UI.Text(" ") end
     if Parse.Settings.Show_Weaponskill_TP        then UI.TableNextColumn() UI.Text(" ") end
     if Parse.Settings.Show_Accuracy_Weaponskill  then UI.TableNextColumn() UI.Text(" ") end
-    if Parse.Config.Include_SC_Damage()          then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.SKILLCHAIN, true) end
+    if Parse.Settings.Show_Total_Skillchain      then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.SKILLCHAIN, true) end
     if Parse.Settings.Show_Total_Ranged          then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.RANGED_OVERALL, true) end
     if Parse.Settings.Show_Accuracy_Ranged       then UI.TableNextColumn() UI.Text(" ") end
     if Parse.Settings.Show_Crit_Ranged           then UI.TableNextColumn() UI.Text(" ") end
