@@ -134,7 +134,7 @@ H.Ranged.Message = function(audits, damage, message_id, overall_ranged_type, own
         H.Offense.No_Damage_Hit(audits, overall_ranged_type, DB.Metric.SHADOW_ABSORPTION)
 
     -- PUP ranged hits will not negatively impact true strike or square hit rates.
-    elseif message_id == Ashita.Enum.Message.RANGEPUP then
+    elseif message_id == Ashita.Enum.Message.WEAPONSKILL_DAMAGE then
         H.Offense.Hit(audits, overall_ranged_type, damage)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
 

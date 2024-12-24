@@ -66,6 +66,10 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     local message_id = result.message
     local audits = H.Spell_Def.Audits(actor_mob, target_mob, owner_mob)
 
+    local tag = "H.Spell_Def.Parse"
+    Debug.Error.Add(Debug.Error.WARNING, tag,
+    "BENIGN: Spell {" .. tostring(spell_name) .. "} (" .. tostring(spell_id) .. ") has message {" .. tostring(message_id) .. "}.")
+
     if no_damage then damage = 0 end
 
     if Res.Spells.Get_Damaging(spell_id) then

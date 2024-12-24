@@ -153,7 +153,8 @@ DB.Is_Total_Damage_Trackable = function(trackable)
 	   trackable == DB.Trackable.DEF_TP_MOVE or
 	   trackable == DB.Trackable.DEF_TP_MOVE_PET or
 	   trackable == DB.Trackable.DEF_MELEE or
-	   trackable == DB.Trackable.DEF_MELEE_PET then
+	   trackable == DB.Trackable.DEF_MELEE_PET or
+	   trackable == DB.Trackable.DEF_MP_DRAIN then
 		return false
 	end
 	return true

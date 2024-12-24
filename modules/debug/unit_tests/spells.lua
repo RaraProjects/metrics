@@ -10,12 +10,13 @@ Debug.Unit.Tests.Spells.Nuke = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
+    local message = Ashita.Enum.Message.SPELL_DAMAGE_HIT
     local action_id = 145
     local action_name = "Fire II"
     local mp_cost = 68
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -99,7 +100,7 @@ Debug.Unit.Tests.Spells.Nuke_Burst = function()
     local mp_cost = 68
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.BURST))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_MAGIC_BURST))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -202,12 +203,10 @@ Debug.Unit.Tests.Spells.Nuke_Shadow = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
 
         player_catalog[player_name][target_index] = {}
@@ -215,7 +214,6 @@ Debug.Unit.Tests.Spells.Nuke_Shadow = function()
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
     end
 
@@ -254,13 +252,14 @@ Debug.Unit.Tests.Spells.Nuke_AOE = function()
     local all_mobs = DB.Enum.ALL_MOBS
     local damage = 100
     local damage_two = 200
+    local message = Ashita.Enum.Message.SPELL_DAMAGE_HIT
     local action_id = 174
     local action_name = "Firaga"
     local mp_cost = 71
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID_Two, damage_two))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID_Two, damage_two, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -401,12 +400,13 @@ Debug.Unit.Tests.Spells.Pet_Nuke = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
     local damage = 100
+    local message = Ashita.Enum.Message.SPELL_DAMAGE_HIT
     local action_id = 145
     local action_name = "Fire II"
     local mp_cost = 68
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
@@ -530,12 +530,13 @@ Debug.Unit.Tests.Spells.Healing = function()
     local target_name = Debug.Unit.Mob.PLAYER_TWO.name
     local all_mobs = DB.Enum.ALL_MOBS
     local damage = 100
+    local message = Ashita.Enum.Message.SPELL_HP_RECOVERY
     local action_id = 3
     local action_name = "Cure III"
     local mp_cost = 46
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER_TWO.id, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER_TWO.id, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -693,13 +694,14 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     local all_mobs = DB.Enum.ALL_MOBS
     local damage = 100
     local damage_two = 200
+    local message = Ashita.Enum.Message.SPELL_HP_RECOVERY
     local action_id = 8
     local action_name = "Curaga II"
     local mp_cost = 120
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER_TWO.id, damage_two))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage, nil, nil, message))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER_TWO.id, damage_two, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -881,12 +883,13 @@ Debug.Unit.Tests.Spells.Pet_Heal = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
     local damage = 100
+    local message = Ashita.Enum.Message.SPELL_HP_RECOVERY
     local action_id = 3
     local action_name = "Cure III"
     local mp_cost = 46
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
@@ -1006,7 +1009,7 @@ Debug.Unit.Tests.Spells.DoT_No_Damage = function()
     local mp_cost = 15
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.DAMAGE_SPELL_HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_DAMAGE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1077,7 +1080,7 @@ Debug.Unit.Tests.Spells.DoT_Damage = function()
     local mp_cost = 15
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.DAMAGE_SPELL_HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_DAMAGE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1161,7 +1164,7 @@ Debug.Unit.Tests.Spells.Poison = function()
     local mp_cost = 5
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.ENF_LAND))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_ENFEEBLE_LAND))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1227,12 +1230,13 @@ Debug.Unit.Tests.Spells.Aspir = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
+    local message = Ashita.Enum.Message.SPELL_MP_DRAIN
     local action_id = 247
     local action_name = "Aspir"
     local mp_cost = 10
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1307,7 +1311,7 @@ Debug.Unit.Tests.Spells.Aspir_Burst = function()
     local mp_cost = 10
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.BURST))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_MAGIC_BURST))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1382,7 +1386,7 @@ Debug.Unit.Tests.Spells.Enfeeble_Land = function()
     local mp_cost = 25
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.ENF_LAND))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_ENFEEBLE_LAND))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1453,7 +1457,7 @@ Debug.Unit.Tests.Spells.Enfeeble_Resist = function()
     local mp_cost = 25
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RESIST))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_RESIST))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1519,7 +1523,7 @@ Debug.Unit.Tests.Spells.Enfeeble_No_Effect = function()
     local mp_cost = 25
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.NO_EFFECT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_NO_EFFECT))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1593,8 +1597,8 @@ Debug.Unit.Tests.Spells.Enfeeble_AOE_Land = function()
     local mp_cost = 58
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.ENF_LAND))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID_Two, damage_two, nil, nil, Ashita.Enum.Message.ENF_LAND))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_ENFEEBLE_LAND))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID_Two, damage_two, nil, nil, Ashita.Enum.Message.SPELL_ENFEEBLE_LAND))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 

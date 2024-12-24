@@ -585,7 +585,7 @@ Debug.Unit.Tests.Ranged.PUP = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.RANGEPUP))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.WEAPONSKILL_DAMAGE))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 

@@ -7,7 +7,7 @@ Focus.Magic = {}
 ---@param hide_publish? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Magic.Display = function(player_name, hide_publish)
-    local nuke_total     = DB.Data.Get(player_name, DB.Trackable.SPELLS_NUKING,         DB.Metric.TOTAL)
+    local nuke_total     = DB.Data.Get(player_name, DB.Trackable.SPELLS_NUKING,         DB.Metric.ATTEMPTS_ON_USE)
     local burst_total    = DB.Data.Get(player_name, DB.Trackable.SPELLS_OVERALL,        DB.Metric.CRITICAL_DAMAGE)
     local melee_endamage = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDAMAGE,        DB.Metric.TOTAL)
     local range_endamage = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDAMAGE,       DB.Metric.TOTAL)

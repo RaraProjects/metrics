@@ -11,6 +11,7 @@ require("handlers.tp_action_def")
 require("handlers.abilities")
 require("handlers.spells")
 require("handlers.spells_def")
+require("handlers.unblinkable")
 require("handlers.deaths")
 require("handlers.items")
 
@@ -92,7 +93,7 @@ H.Pick_Action_Category = function(action, actor_mob, target_pet_owner_mob, pet_o
     elseif (category == 11) then H.Action_Packet_TP_Move(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense, mob_self_buff)
     elseif (category == 12) then -- Do nothing (Begin Ranged Attack)
     elseif (category == 13) then H.Ability.Pet_Action(action, actor_mob, is_offense)
-    elseif (category == 14) then -- Do nothing (Unblinkable Job Ability); Waltz
+    elseif (category == 14) then H.Unblinkable.Action(action, actor_mob, is_offense)
     end
 end
 
@@ -154,6 +155,32 @@ H.Action_Packet_TP_Move = function(action, actor_mob, target_pet_owner_mob, pet_
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it would have been a hit, but was just mitigated.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_No_Damage_Hit = function(message_id)
+    return message_id == Ashita.Enum.Message.DODGE or
+           message_id == Ashita.Enum.Message.PARRY or
+           message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION or
+           message_id == Ashita.Enum.Message.SHADOWS or
+           message_id == Ashita.Enum.Message.MOBHEAL373
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is a completely missed action.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_No_Damage_Miss = function(message_id)
+    return message_id == Ashita.Enum.Message.MISS or
+           message_id == Ashita.Enum.Message.WEAPONSKILL_MISS or
+           message_id == Ashita.Enum.Message.RANGEMISS
+end
+
+------------------------------------------------------------------------------------------------------
 -- Certain messages may come in with damage, but it's not actually damage.
 -- Need to set the damage to zero for these cases.
 -- Counter isn't included here because that message is a spike message.
@@ -165,14 +192,109 @@ H.No_Damage_Messages = function(result)
     local message_id = result.message
     return message_id == Ashita.Enum.Message.DODGE or
            message_id == Ashita.Enum.Message.MISS or
-           message_id == Ashita.Enum.Message.MISS_TP or
+           message_id == Ashita.Enum.Message.WEAPONSKILL_MISS or
            message_id == Ashita.Enum.Message.PARRY or
            message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION or
            message_id == Ashita.Enum.Message.RANGEMISS or
            message_id == Ashita.Enum.Message.SHADOWS or
-           message_id == Ashita.Enum.Message.IS_PARALYZED or
-           message_id == Ashita.Enum.Message.IS_INTIMIDATED or
            message_id == Ashita.Enum.Message.MOBHEAL373
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to damage or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_Damaging = function(message_id)
+    return message_id == Ashita.Enum.Message.ABILITY_DAMAGE_1 or
+           message_id == Ashita.Enum.Message.ABILITY_DAMAGE_2 or
+           message_id == Ashita.Enum.Message.WEAPONSKILL_DAMAGE or
+           message_id == Ashita.Enum.Message.WEAPONSKILL_HP_DRAIN or
+           message_id == Ashita.Enum.Message.SPELL_DAMAGE_HIT or
+           message_id == Ashita.Enum.Message.SPELL_HP_DRAIN or
+           message_id == Ashita.Enum.Message.TAKES_DAMAGE
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to healing or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_Healing = function(message_id)
+    return
+           message_id == Ashita.Enum.Message.ABILITY_RECOVER_HP or
+           message_id == Ashita.Enum.Message.ABILITY_RECOVER_HP_2 or
+           message_id == Ashita.Enum.Message.ABILITY_RECOVER_HP_3 or
+           message_id == Ashita.Enum.Message.ABILITY_RECOVER_HP_4 or
+           message_id == Ashita.Enum.Message.SPELL_HP_RECOVERY or
+           message_id == Ashita.Enum.Message.HP_RECOVERED
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to debuff or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_Debuff = function(message_id)
+    return message_id == Ashita.Enum.Message.WEAPONSKILL_DEBUFF or
+           message_id == Ashita.Enum.Message.SPELL_ENFEEBLE_LAND or
+           message_id == Ashita.Enum.Message.SPELL_ENFEEBLE_LAND_2 or
+           message_id == Ashita.Enum.Message.TARGET_STATUS
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to dispel or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_Dispel = function(message_id)
+    return message_id == Ashita.Enum.Message.ABILITY_DISPEL
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to HP Draining or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_HP_Drain = function(message_id)
+    return message_id == Ashita.Enum.Message.WEAPONSKILL_HP_DRAIN or
+           message_id == Ashita.Enum.Message.SPELL_HP_DRAIN
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to MP Draining or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_MP_Drain = function(message_id)
+    return message_id == Ashita.Enum.Message.WEAPONSKILL_MP_DRAIN or
+           message_id == Ashita.Enum.Message.SPELL_MP_DRAIN
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to TP Draining or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_TP_Drain = function(message_id)
+    return message_id == Ashita.Enum.Message.WEAPONSKILL_TP_DRAIN
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to TP Reduction or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_TP_Reduction = function(message_id)
+    return message_id == Ashita.Enum.Message.ABILITY_TP_REDUCTION
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -226,7 +348,7 @@ H.Offense.Miss = function(audits, trackable)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Player attacks absorbed by shadowed. These are counted as hits in terms of accuracy.
+-- Player attacks absorbed by shadows. These are counted as hits in terms of accuracy.
 -- No effect on recent accuracy tracking.
 ------------------------------------------------------------------------------------------------------
 ---@param audits table Contains necessary entity audit data; helps save on parameter slots.

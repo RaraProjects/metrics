@@ -181,6 +181,10 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
     local message_id = result.message
     local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
 
+    local tag = "H.TP.Weaponskill_Parse"
+    Debug.Error.Add(Debug.Error.WARNING, tag,
+    "BENIGN: Ability {" .. tostring(ws_name) .. "} (" .. tostring(ws_id) .. ") has message {" .. tostring(message_id) .. "}.")
+
     -- Some weaponskills drain MP instead of doing damage.
     -- There is special handling within DB code to prevent total damage increment on this trackable.
     local was_no_damage_hit = false

@@ -1,4 +1,4 @@
-Ashita.Spell = T{}
+Ashita.Spell = {}
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get spell data.
@@ -43,4 +43,21 @@ Ashita.Spell.MP = function(id, data)
     end
     if not spell then return 0 end
     return spell.ManaCost
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Get the skill a spell.
+-- If we already have the spell data then we don't need to get it again.
+-- ------------------------------------------------------------------------------------------------------
+---@param id number spell ID.
+---@param data? table spell table if we already have it.
+---@return number
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Spell.Skill = function(id, data)
+    local spell = data
+    if not spell then
+        spell = Ashita.Spell.Get_By_ID(id)
+    end
+    if not spell then return 0 end
+    return spell.Skill
 end

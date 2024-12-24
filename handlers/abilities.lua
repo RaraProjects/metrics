@@ -103,6 +103,7 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
     local ability_id   = ability_data.Id
     local ability_name = ability_data.Name
     local damage       = result.param
+    local message_id   = result.message
     local ability_type = DB.Trackable.ABILITY_OVERALL
 
     local pet_name = nil
@@ -112,6 +113,10 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
     end
 
     local audits = H.Ability.Audits(player_name, target_name, pet_name)
+
+    local tag = "H.Ability.Parse"
+    Debug.Error.Add(Debug.Error.WARNING, tag,
+    "BENIGN: Ability {" .. tostring(ability_name) .. "} (" .. tostring(ability_id) .. ") has message {" .. tostring(message_id) .. "}.")
 
     if owner_mob then
         if Res.Avatar.Get_Rage(ability_id) then
