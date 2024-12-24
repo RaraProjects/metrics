@@ -292,13 +292,13 @@ end
 Debug.Unit.Tests.Ability.Healing = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
+    local message = Ashita.Enum.Message.ABILITY_RECOVER_HP
     local action_id = 38
     local action_name = "Chakra"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Ability.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -372,7 +372,6 @@ end
 Debug.Unit.Tests.Ability.MP = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
-    local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
     local action_id = 154
     local action_name = "Devotion"

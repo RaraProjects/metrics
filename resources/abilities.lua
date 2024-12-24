@@ -22,6 +22,8 @@ Res.Abilities.Damaging = {
     [772] = {id = 772, old_id = 260, en = "Spirit Jump"},
     [805] = {id = 805, old_id = 293, en = "Soul Jump"},
     [841] = {id = 841              , en = "Intervene"},
+    [856] = {id = 856              , en = "Swipe"},
+    [880] = {id = 880              , en = "Lunge"},
 }
 
 -- Based off of job_abilities.lua from Windower.
@@ -38,8 +40,8 @@ Res.Abilities.Maneuvers = {
 
 -- Based off of job_abilities.lua from Windower.
 Res.Abilities.Phantom_Roll = {
-    [98] = {id=98,en="Fighter's Roll",ja="ファイターズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=310,targets=1,tp_cost=0,type="CorsairRoll"},
-    [99] = {id=99,en="Monk's Roll",ja="モンクスロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=311,targets=1,tp_cost=0,type="CorsairRoll"},
+    [98]  = {id=98,en="Fighter's Roll",ja="ファイターズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=310,targets=1,tp_cost=0,type="CorsairRoll"},
+    [99]  = {id=99,en="Monk's Roll",ja="モンクスロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=311,targets=1,tp_cost=0,type="CorsairRoll"},
     [100] = {id=100,en="Healer's Roll",ja="ヒーラーズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=312,targets=1,tp_cost=0,type="CorsairRoll"},
     [101] = {id=101,en="Wizard's Roll",ja="ウィザーズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=313,targets=1,tp_cost=0,type="CorsairRoll"},
     [102] = {id=102,en="Warlock's Roll",ja="ワーロックスロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=314,targets=1,tp_cost=0,type="CorsairRoll"},
@@ -107,13 +109,14 @@ Res.Abilities.Phantom_Roll_Lucky = {
 
 -- Based off of job_abilities.lua from Windower.
 Res.Abilities.Healing = {
-    [541] = {id = 541, oldid = 29, en = "Spirit Surge"},
-    [550] = {id = 550, oldid = 38, en = "Chakra"},
+    [541] = {id = 541, oldid = 29,  en = "Spirit Surge"},
+    [550] = {id = 550, oldid = 38,  en = "Chakra"},
     [702] = {id = 702, oldid = 190, en = "Curing Waltz"},
     [703] = {id = 703, oldid = 191, en = "Curing Waltz II"},
     [704] = {id = 704, oldid = 192, en = "Curing Waltz III"},
     [705] = {id = 705, oldid = 193, en = "Curing Waltz IV"},
     [707] = {id = 707, oldid = 195, en = "Divine Waltz"},
+    [895] = {id = 895,              en = "Vivacious Pulse"},
 }
 
 -- Based off of job_abilities.lua from Windower.

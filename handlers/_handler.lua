@@ -81,19 +81,20 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Pick_Action_Category = function(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense, mob_self_buff)
     local category = action.category
-    if     (category ==  1) then H.Action_Packet_Melee(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense)
-    elseif (category ==  2) then H.Ranged.Action(action, actor_mob, is_offense)
-    elseif (category ==  3) then H.TP.Action(action, actor_mob, is_offense)
-    elseif (category ==  4) then H.Action_Packet_Spell(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense)
-    elseif (category ==  5) then H.Item.Action(action, actor_mob)
-    elseif (category ==  6) then H.Ability.Action(action, actor_mob, is_offense)
-    elseif (category ==  7) then H.TP.Begin_Monster_Action(action, actor_mob, is_offense)
-    elseif (category ==  8) then -- Do nothing (Begin Spellcasting)
-    elseif (category ==  9) then -- Do nothing (Begin or Interrupt Item Usage)
-    elseif (category == 11) then H.Action_Packet_TP_Move(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense, mob_self_buff)
-    elseif (category == 12) then -- Do nothing (Begin Ranged Attack)
-    elseif (category == 13) then H.Ability.Pet_Action(action, actor_mob, is_offense)
-    elseif (category == 14) then H.Unblinkable.Action(action, actor_mob, is_offense)
+    if     category ==  1 then H.Action_Packet_Melee(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense)
+    elseif category ==  2 then H.Ranged.Action(action, actor_mob, is_offense)
+    elseif category ==  3 then H.TP.Action(action, actor_mob, is_offense)
+    elseif category ==  4 then H.Action_Packet_Spell(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense)
+    elseif category ==  5 then H.Item.Action(action, actor_mob)
+    elseif category ==  6 then H.Ability.Action(action, actor_mob, is_offense)
+    elseif category ==  7 then H.TP.Begin_Monster_Action(action, actor_mob, is_offense)
+    elseif category ==  8 then -- Do nothing (Begin Spellcasting)
+    elseif category ==  9 then -- Do nothing (Begin or Interrupt Item Usage)
+    elseif category == 11 then H.Action_Packet_TP_Move(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense, mob_self_buff)
+    elseif category == 12 then -- Do nothing (Begin Ranged Attack)
+    elseif category == 13 then H.Ability.Pet_Action(action, actor_mob, is_offense)
+    elseif category == 14 then H.Ability.Action(action, actor_mob, is_offense)
+    elseif category == 15 then H.Ability.Action(action, actor_mob, is_offense)
     end
 end
 
@@ -328,6 +329,31 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Message_TP_Reduction = function(message_id)
     return message_id == Ashita.Enum.Message.ABILITY_TP_REDUCTION
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to Maneuver or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_Maneuver = function(message_id)
+    return message_id == Ashita.Enum.Message.MANEUVER_NO_OVERLOAD or
+           message_id == Ashita.Enum.Message.MANEUVER_OVERLOAD
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to Phantom Roll or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_Phantom_Roll = function(message_id)
+    return message_id == Ashita.Enum.Message.PHANTOM_ROLL_FIRST or
+           message_id == Ashita.Enum.Message.PHANTOM_ROLL_REROLL or
+           message_id == Ashita.Enum.Message.PHANTOM_ROLL_EFFECT or
+           message_id == Ashita.Enum.Message.PHANTOM_ROLL_NO_EFFECT or
+           message_id == Ashita.Enum.Message.PHANTOM_ROLL_BUST
 end
 
 ------------------------------------------------------------------------------------------------------
