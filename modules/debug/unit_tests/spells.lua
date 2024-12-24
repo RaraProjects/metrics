@@ -1825,12 +1825,13 @@ Debug.Unit.Tests.Spells.Buff = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.PLAYER_TWO.name
     local damage = 40   -- Protect
+    local message = Ashita.Enum.Message.SPELL_BUFF
     local action_id = 43
     local action_name = "Protect"
     local mp_cost = 9
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER_TWO.id, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER_TWO.id, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 

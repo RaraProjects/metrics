@@ -10,12 +10,13 @@ Debug.Unit.Tests.TP_Action.Hit = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
+    local message = Ashita.Enum.Message.WEAPONSKILL_DAMAGE
     local action_id = 156
     local action_name = "Tachi: Fudo"
     local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -87,12 +88,13 @@ Debug.Unit.Tests.TP_Action.Miss = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 0
+    local message = Ashita.Enum.Message.WEAPONSKILL_MISS
     local action_id = 156
     local action_name = "Tachi: Fudo"
     local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -218,12 +220,13 @@ Debug.Unit.Tests.TP_Action.Energy_Steal = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
+    local message = Ashita.Enum.Message.WEAPONSKILL_MP_DRAIN
     local action_id = 21
     local action_name = "Energy Steal"
     local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -266,7 +269,7 @@ Debug.Unit.Tests.TP_Action.Energy_Steal = function()
     local battle_log = {
         player = player_name,
         pet    = Blog.Enum.NO_PET,
-        damage = "0",
+        damage = tostring(damage),
         action = action_name,
         note   = "TP: 0 ",
     }
@@ -296,6 +299,7 @@ Debug.Unit.Tests.TP_Action.Skillchain = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
+    local message = Ashita.Enum.Message.WEAPONSKILL_DAMAGE
     local action_id = 156
     local action_name = "Tachi: Fudo"
     local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
@@ -304,7 +308,7 @@ Debug.Unit.Tests.TP_Action.Skillchain = function()
     local sc_damage = 200
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, nil, true, sc_damage, nil, sc_id))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message, true, sc_damage, nil, sc_id))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -398,11 +402,12 @@ Debug.Unit.Tests.TP_Action.Pet_Hit = function()
     local pet_name = Debug.Unit.Mob.PET.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
+    local message = Ashita.Enum.Message.WEAPONSKILL_DAMAGE
     local action_id = 262
     local action_name = "Sheep Charge"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
@@ -511,12 +516,13 @@ Debug.Unit.Tests.TP_Action.Pet_Miss = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local pet_name = Debug.Unit.Mob.PET.name
     local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 0
+    local damage = 100
+    local message = Ashita.Enum.Message.WEAPONSKILL_MISS
     local action_id = 262
     local action_name = "Sheep Charge"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
@@ -562,7 +568,7 @@ Debug.Unit.Tests.TP_Action.Pet_Miss = function()
     local battle_log = {
         player = player_name,
         pet    = pet_name,
-        damage = tostring(damage),
+        damage = "---",
         action = action_name,
         note   = " ",
     }
@@ -597,12 +603,13 @@ Debug.Unit.Tests.TP_Action.Pet_Hit_AOE = function()
     local all_mobs = DB.Enum.ALL_MOBS
     local damage = 100
     local damage_two = 200
+    local message = Ashita.Enum.Message.WEAPONSKILL_DAMAGE
     local action_id = 273
     local action_name = "Claw Cyclone"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID_Two, damage_two))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID_Two, damage_two, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
@@ -812,11 +819,12 @@ Debug.Unit.Tests.TP_Action.Pet_No_Damage = function()
     local pet_name = Debug.Unit.Mob.PET.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 0
+    local message = Ashita.Enum.Message.WEAPONSKILL_DAMAGE
     local action_id = 264
     local action_name = "Sheep Song"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
     H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
@@ -862,7 +870,7 @@ Debug.Unit.Tests.TP_Action.Pet_No_Damage = function()
     local battle_log = {
         player = player_name,
         pet    = pet_name,
-        damage = "---",
+        damage = tostring(damage),
         action = action_name,
         note   = " ",
     }

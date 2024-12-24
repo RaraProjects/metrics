@@ -1,6 +1,5 @@
 Res = {}
 
-require("resources.monster_abilities_curated")
 require("resources.weapon_skills_curated")
 require("resources.spells_curated")
 require("resources.avatars")
@@ -13,6 +12,7 @@ require("resources.jobs")
 require("resources.items")
 
 Res.WS.Full_List = require("resources.weapon_skills")
+Res.Monster = {}
 Res.Monster.Full_List = require("resources.monster_abilities")
 Themes = require("resources.themes")
 
@@ -24,16 +24,6 @@ Themes = require("resources.themes")
 -- ------------------------------------------------------------------------------------------------------
 Res.Monster.Get_Full_List = function(ability_id)
     return Res.Monster.Full_List[ability_id]
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Checks whether a monster ability is one that does damage.
--- ------------------------------------------------------------------------------------------------------
----@param ability_id integer
----@return table
--- ------------------------------------------------------------------------------------------------------
-Res.Monster.Get_Damaging_Ability = function(ability_id)
-    return Res.Monster.Damaging_Abilities[ability_id]
 end
 
 -- ------------------------------------------------------------------------------------------------------

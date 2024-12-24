@@ -11,37 +11,37 @@ H.Spell = {}
 H.Spell.Action = function(action, actor_mob, owner_mob, log_offense)
     if not log_offense then return nil end
 
-    local result, target_mob, new_damage
-    local damage = 0
-    local target_count = 0
-    local spell_id = action.param
+    local spell_id   = action.param
     local spell_data = Ashita.Spell.Get_By_ID(spell_id)
 
     -- Paralyze, Intimidate, etc.
     H.Spell.Is_Action_Blocked(action, actor_mob)
     if not spell_data then return nil end
 
-    local spell_name = Ashita.Spell.Name(spell_id, spell_data)
-    local mp_cost = Ashita.Spell.MP(spell_id, spell_data)
-    local new_burst = false
-    local is_burst = false
-    local hit = false
+    local spell_name   = Ashita.Spell.Name(spell_id, spell_data)
+    local mp_cost      = Ashita.Spell.MP(spell_id, spell_data)
+    local target_mob   = {}
+    local total_damage = 0
+    local target_count = 0
+    local is_burst     = false
+    local hit          = false  -- Mainly for enfeebles in this context.
 
-    for target_index, target_value in pairs(action.targets) do
-        for action_index, _ in pairs(target_value.actions) do
-            result = action.targets[target_index].actions[action_index]
-            target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+    for _, target_data in pairs(action.targets) do
+        target_mob = Ashita.Mob.Get_Mob_By_ID(target_data.id)
+        if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
+        if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+
+        for _, action_data in pairs(target_data.actions) do
             if target_mob then
-                if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
-                new_damage, new_burst = H.Spell.Target_Parse(spell_data, result, actor_mob, target_mob, owner_mob)
+                local target_damage, target_burst = H.Spell.Target_Parse(spell_data, action_data, actor_mob, target_mob, owner_mob)
 
-                -- Damage
-                if not new_damage then new_damage = 0 end
-                if new_damage > -2 then hit = true end
-                damage = damage + new_damage
+                -- Handle damage. Hits are primarily for enfeebles.
+                target_damage = target_damage or 0
+                total_damage  = total_damage + target_damage
+                hit = hit or (target_damage > -2)
 
-                -- Burst
-                if new_burst then is_burst = true end
+                -- Burst: The Use level is a burst if any of the target checks are bursts.
+                is_burst = is_burst or target_burst
 
                 -- AOE Target Counts
                 target_count = target_count + 1
@@ -49,9 +49,11 @@ H.Spell.Action = function(action, actor_mob, owner_mob, log_offense)
         end
     end
 
+    -- Shadow absorption makes it so I can't rely on message ID's in the Count function for MP tracking
+    -- because then I don't know what trackable to log the MP to. So, hardcoding of spells is still necessary.
     local audits = H.Spell.Audits(actor_mob, target_mob, owner_mob)
     H.Spell.Count(audits, spell_id, spell_name, hit, mp_cost, is_burst, target_count)
-    H.Spell.Blog(audits, spell_id, spell_data, spell_name, damage, is_burst, target_count)
+    H.Spell.Blog(audits, spell_id, spell_data, spell_name, total_damage, is_burst, target_count)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -367,14 +369,14 @@ H.Spell.Enfeebling_And_DoTs = function(audits, trackable, damage, spell_name, me
         end
 
     -- No Effects: These will not negatively impact resist metrics.
-    elseif message_id == Ashita.Enum.Message.SPELL_NO_EFFECT or message_id == Ashita.Enum.Message.EFFECT_FAIL or message_id == Ashita.Enum.Message.COMP_RESIST then
+    elseif H.Message_No_Effect(message_id) then
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
         H.Offense.Hit(audits, overall, 0)
         H.Offense.Catalog_No_Damage_Hit(audits, trackable, spell_name)
         damage = -1
 
     -- Resists
-    elseif message_id == Ashita.Enum.Message.SPELL_RESIST or message_id == Ashita.Enum.Message.SPELL_RESIST_2 then
+    elseif H.Message_Resist(message_id) then
         H.Offense.Miss(audits, overall)
         H.Offense.Catalog_Hit(audits, trackable, 0, spell_name)
         damage = -2

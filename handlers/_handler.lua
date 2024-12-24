@@ -217,6 +217,29 @@ H.Message_Damaging = function(message_id)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to debuffs having no effect or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_No_Effect = function(message_id)
+    return message_id == Ashita.Enum.Message.SPELL_NO_EFFECT or
+           message_id == Ashita.Enum.Message.SPELL_EFFECT_FAIL or
+           message_id == Ashita.Enum.Message.SPELL_COMPLETE_RESIST
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to debuffs getting resisted or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_Resist = function(message_id)
+    return message_id == Ashita.Enum.Message.SPELL_RESIST or
+           message_id == Ashita.Enum.Message.SPELL_RESIST_2
+end
+
+------------------------------------------------------------------------------------------------------
 -- Checks the action message to see if it is related to healing or not.
 ------------------------------------------------------------------------------------------------------
 ---@param message_id integer
@@ -230,6 +253,16 @@ H.Message_Healing = function(message_id)
            message_id == Ashita.Enum.Message.ABILITY_RECOVER_HP_4 or
            message_id == Ashita.Enum.Message.SPELL_HP_RECOVERY or
            message_id == Ashita.Enum.Message.HP_RECOVERED
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to buff or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_Buff = function(message_id)
+    return message_id == Ashita.Enum.Message.SPELL_BUFF
 end
 
 ------------------------------------------------------------------------------------------------------

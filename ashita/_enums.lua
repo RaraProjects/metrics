@@ -107,7 +107,7 @@ Ashita.Enum.Message = {
     ABILITY_RECOVER_HP     = 102,   -- Chakra, Reward
     IS_INTIMIDATED         = 106,
     ABILITY_DAMAGE_1       = 110,   -- Shield Bash, Weapon Bash, Fire Shot, Chi Blast, Eagle Eye Shot
-    EFFECT_FAIL            = 114,
+    SPELL_EFFECT_FAIL      = 114,
     ABILITY_DISPEL         = 159,   -- Geist Wall
     ENDEBUFF               = 160,
     ENDRAIN                = 161,
@@ -151,7 +151,7 @@ Ashita.Enum.Message = {
     ABSORB_ACC             = 533,
     SQUARE                 = 576,
     TRUE                   = 577,
-    COMP_RESIST            = 655,
+    SPELL_COMPLETE_RESIST  = 655,
     MANEUVER_NO_OVERLOAD   = 798,
     OVERLOAD               = 799,
 }
