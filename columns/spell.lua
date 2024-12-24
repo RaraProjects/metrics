@@ -8,7 +8,7 @@ Column.Spell = {}
 ---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Spell.MP_Used = function(player_name, trackable, justify)
+Column.Spell.MP_Used = function(player_name, trackable, action_name, burst, justify)
     if not trackable then trackable = DB.Trackable.SPELLS_OVERALL end
 
     local mp = 0
@@ -20,28 +20,26 @@ Column.Spell.MP_Used = function(player_name, trackable, justify)
         local enspell  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL,     DB.Metric.MP_SPENT)
         local mp_drain = DB.Data.Get(player_name, DB.Trackable.SPELLS_MP_DRAIN,   DB.Metric.MP_SPENT)
         mp = total - healing - nuke - enfeeble - enspell - mp_drain
+
+    elseif action_name then
+        mp = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MP_SPENT)
+
     else
         mp = DB.Data.Get(player_name, trackable, DB.Metric.MP_SPENT)
     end
 
-    local color = Column.String.Color_Zero(mp)
+    local final_mp = mp
+    if burst then
+        local nuke_targets   = DB.Data.Get(player_name, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+        local burst_attempts = DB.Data.Get(player_name, trackable, DB.Metric.CRITICAL_COUNT)
+        local mp_per_target  = mp / nuke_targets
+        local burst_mp       = mp_per_target * burst_attempts
+        final_mp             = burst_mp
+    end
 
-    return Column.Output.Number(mp, color, justify)
-end
+    local color = Column.String.Color_Zero(final_mp)
 
-------------------------------------------------------------------------------------------------------
--- This is for cataloged actions.
--- Returns how much total MP was used for a specific spell.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param trackable string a trackable from the model.
----@param action_name string
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Spell.MP_Used_Catalog = function(player_name, trackable, action_name)
-    local mp = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MP_SPENT)
-    local color = Column.String.Color_Zero(mp)
-    return UI.TextColored(color, Column.String.Format_Number(mp))
+    return Column.Output.Number(final_mp, color, justify)
 end
 
 ------------------------------------------------------------------------------------------------------

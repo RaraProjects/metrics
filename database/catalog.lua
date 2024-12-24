@@ -97,9 +97,11 @@ DB.Catalog.Update_Damage = function(player_name, target_name, trackable, damage,
 
 	-- Total Damage
     DB.Catalog.Update_Metric(DB.Update_Mode.INC, damage, audits, trackable, action_name, DB.Metric.TOTAL)
+	if critical_hit then DB.Catalog.Update_Metric(DB.Update_Mode.INC, damage, audits, trackable, action_name, DB.Metric.CRITICAL_DAMAGE) end
 
 	-- Attempts on the target.
 	DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
+	if critical_hit then DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.CRITICAL_COUNT) end
 
 	-- Set trackable hits and minimums
 	local min_metric = (critical_hit and DB.Metric.CRITICAL_MIN) or DB.Metric.MIN

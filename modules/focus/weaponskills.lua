@@ -69,15 +69,15 @@ Focus.WS.Weaponskill = function(player_name, make_brief)
         -- All Weaponskills
         local row = 1
         UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, nil, true) end
-        UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
-        if not make_brief then UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.Per_Unit(player_name, trackable, DB.Metric.TP_SPENT) end
-        UI.TableNextColumn() Column.Damage.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT)
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX) end
+        UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name,  trackable)
+        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, nil, nil, true) end
+        UI.TableNextColumn()                        Column.Acc.By_Type(player_name,             trackable)
+        if not make_brief then UI.TableNextColumn() Column.Damage.Attempts(player_name,         trackable) end
+        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable) end
+        if not make_brief then UI.TableNextColumn() Column.Damage.Per_Unit(player_name,         trackable, DB.Metric.TP_SPENT) end
+        UI.TableNextColumn()                        Column.Damage.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT)
+        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MIN) end
+        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MAX) end
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -88,15 +88,15 @@ Focus.WS.Weaponskill = function(player_name, make_brief)
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, action_name, true) end
-            UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, nil, false, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.Per_Unit(player_name, trackable, DB.Metric.TP_SPENT, action_name) end
-            UI.TableNextColumn() Column.Damage.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name) end
+            UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name,  trackable, nil, action_name)
+            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, nil, action_name, true) end
+            UI.TableNextColumn()                        Column.Acc.By_Type(player_name,             trackable, nil, false, action_name)
+            if not make_brief then UI.TableNextColumn() Column.Damage.Attempts(player_name,         trackable, nil, action_name) end
+            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, nil, action_name) end
+            if not make_brief then UI.TableNextColumn() Column.Damage.Per_Unit(player_name,         trackable, DB.Metric.TP_SPENT, action_name) end
+            UI.TableNextColumn()                        Column.Damage.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT, action_name)
+            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MIN, action_name) end
+            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MAX, action_name) end
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end

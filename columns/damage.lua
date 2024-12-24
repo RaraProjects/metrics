@@ -118,12 +118,15 @@ Column.Damage.By_Type_Average = function(player_name, trackable, damage_metric, 
     local hits   = 0
     if not damage_metric then damage_metric = DB.Metric.TOTAL end
 
+    local count_metric = DB.Metric.HITS_ON_TARGET
+    if damage_metric == DB.Metric.CRITICAL_DAMAGE then count_metric = DB.Metric.CRITICAL_COUNT end
+
     if action_name then
         damage = DB.Catalog.Get(player_name, trackable, action_name, damage_metric)
-        hits   = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.HITS_ON_TARGET)
+        hits   = DB.Catalog.Get(player_name, trackable, action_name, count_metric)
     else
         damage = DB.Data.Get(player_name, trackable, damage_metric)
-        hits   = DB.Data.Get(player_name, trackable, DB.Metric.HITS_ON_TARGET)
+        hits   = DB.Data.Get(player_name, trackable, count_metric)
     end
 
     local color  = Column.String.Color_Zero(damage)
@@ -162,16 +165,16 @@ end
 -- Gets the average critical hit damage for a given damage type.
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
----@param damage_type string
+---@param trackable string
 ---@param justify? boolean whether or not to right justify the text.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Average_By_Type_Critical_Only = function(player_name, damage_type, justify)
+Column.Damage.Average_By_Type_Critical_Only = function(player_name, trackable, justify)
     local crit_damage = 0
     local crit_count  = 0
 
     -- Get data
-    if damage_type == DB.Enum.COMBINED then
+    if trackable == DB.Enum.COMBINED then
         local melee_crits       = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  DB.Metric.CRITICAL_DAMAGE)
         local melee_crit_count  = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  DB.Metric.CRITICAL_COUNT)
         local ranged_crits      = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.CRITICAL_DAMAGE)
@@ -179,8 +182,8 @@ Column.Damage.Average_By_Type_Critical_Only = function(player_name, damage_type,
         crit_damage = melee_crits + ranged_crits
         crit_count  = melee_crit_count + ranged_crit_count
     else
-        crit_damage = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_DAMAGE)
-        crit_count  = DB.Data.Get(player_name, damage_type, DB.Metric.CRITICAL_COUNT)
+        crit_damage = DB.Data.Get(player_name, trackable, DB.Metric.CRITICAL_DAMAGE)
+        crit_count  = DB.Data.Get(player_name, trackable, DB.Metric.CRITICAL_COUNT)
     end
 
     -- Colors
@@ -251,13 +254,14 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param trackable string a trackable from the model.
+---@param attempt_metric? string
 ---@param action_name? string
 ---@param on_target? boolean
 ---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Attempts = function(player_name, trackable, action_name, on_target, raw)
-    local attempt_metric = DB.Metric.ATTEMPTS_ON_USE
+Column.Damage.Attempts = function(player_name, trackable, attempt_metric, action_name, on_target, raw)
+    if not attempt_metric then attempt_metric = DB.Metric.ATTEMPTS_ON_USE end
     if on_target then attempt_metric = DB.Metric.ATTEMPTS_ON_TARGET end
 
     local attempts = 0
@@ -309,25 +313,40 @@ end
 ---@param trackable string a trackable from the model.
 ---@param unit_metric string
 ---@param action_name? string
+---@param burst? boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Per_Unit = function(player_name, trackable, unit_metric, action_name)
+Column.Damage.Per_Unit = function(player_name, trackable, unit_metric, action_name, burst)
     local damage = 0
     local unit   = 0
 
+    local metric_total = DB.Metric.TOTAL
+    if burst then metric_total = DB.Metric.CRITICAL_DAMAGE end
+
     if action_name then
-        damage = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.TOTAL)
+        damage = DB.Catalog.Get(player_name, trackable, action_name, metric_total)
         unit   = DB.Catalog.Get(player_name, trackable, action_name, unit_metric)
     else
-        damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+        damage = DB.Data.Get(player_name, trackable, metric_total)
         unit   = DB.Data.Get(player_name, trackable, unit_metric)
     end
 
+    local final_unit = unit
+
+    -- Convert MP to Burst MP if needed.
+    if burst then
+        local target_count    = DB.Data.Get(player_name, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+        local burst_attempts  = DB.Data.Get(player_name, trackable, DB.Metric.CRITICAL_COUNT)
+        local unit_per_target = unit / target_count
+        local burst_mp        = unit_per_target * burst_attempts
+        final_unit            = burst_mp
+    end
+
     -- Colors
-    local color = Column.String.Color_Zero(unit)
+    local color = Column.String.Color_Zero(final_unit)
 
     if damage == 0 or unit == 0 then color = Res.Colors.Basic.DIM end
-    return UI.TextColored(color, Column.String.Format_Percent(damage, unit, false, true))
+    return UI.TextColored(color, Column.String.Format_Percent(damage, final_unit, false, true))
 end
 
 ------------------------------------------------------------------------------------------------------

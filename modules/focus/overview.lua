@@ -88,8 +88,8 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.BLM = function(player_name)
     local ability_list = {[1] = "Elemental Seal"}
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
     Focus.Abilities.From_List(player_name, ability_list)
 end
 
@@ -102,8 +102,8 @@ Focus.Overview.RDM = function(player_name)
     local ability_list = {[1] = "Convert"}
     local buff_list = {[1] = "Refresh", [2] = "Haste"}
     Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
     Focus.Magic.Debuff(player_name)
     Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
     Focus.Abilities.From_List(player_name, ability_list)
@@ -151,8 +151,8 @@ Focus.Overview.DRK = function(player_name)
     Focus.Melee.Total(player_name, true)
     if ranged_damage > 0 then Focus.Ranged.Total(player_name, true) end
     Focus.WS.Weaponskill(player_name, true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
     Focus.Magic.Debuff(player_name)
     Focus.Abilities.From_List(player_name, ability_list)
 end
@@ -223,8 +223,8 @@ Focus.Overview.NIN = function(player_name)
     Focus.Defense.Damage_Taken(player_name, true)
     Focus.Defense.Mitigation(player_name)
     Focus.Defense.Healing_Received(player_name)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true, true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_BURSTS, "Nuke Burst", true, true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true, true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, true, true)
     Focus.Magic.Debuff(player_name, true)
     Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells", true)
     Focus.Abilities.From_List(player_name, ability_list)
@@ -318,7 +318,7 @@ Focus.Overview.Pet_TP = function(player_name)
 
         local has_data = false
         local row = 1
-        if not DB.Tracking.Initialized_Pets[player_name] then DB.Tracking.Initialized_Pets[player_name] = T{} end
+        if not DB.Tracking.Initialized_Pets[player_name] then DB.Tracking.Initialized_Pets[player_name] = {} end
         for pet_name, _ in pairs(DB.Tracking.Initialized_Pets[player_name]) do
             DB.Lists.Sort.Pet_Catalog_Damage(player_name, pet_name)
             for _, data in ipairs(DB.Sorted.Pet_Catalog_Damage) do

@@ -251,7 +251,7 @@ Focus.Defense.Healing_Received = function(player_name)
             UI.TableNextColumn() UI.Text("- " .. action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
-            UI.TableNextColumn() Column.Spell.MP_Used_Catalog(player_name, trackable, action_name)
+            UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable, action_name)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -296,10 +296,10 @@ Focus.Defense.TP_Move = function(player_name, trackable)
         local row = 1
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
-        UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, on_target)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX)
+        UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, nil, on_target)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.TOTAL)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MIN)
+        UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MAX)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -309,10 +309,10 @@ Focus.Defense.TP_Move = function(player_name, trackable)
             action_name = data[1]
             UI.TableNextColumn() UI.Text("- " .. action_name)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
-            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name, on_target)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name)
+            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name, on_target)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.TOTAL, action_name)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MIN, action_name)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MAX, action_name)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end

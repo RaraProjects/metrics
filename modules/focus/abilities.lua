@@ -62,13 +62,13 @@ Focus.Abilities.Damaging = function(player_name, trackable, header, make_brief)
 
         local row = 1
         UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, nil, true) end
-        if not make_brief then UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable) end
-        UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable)
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX) end
+        UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name, trackable)
+        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.TOTAL, nil, true) end
+        if not make_brief then UI.TableNextColumn() Column.Acc.By_Type(player_name,            trackable) end
+        UI.TableNextColumn()                        Column.Damage.Attempts(player_name,        trackable)
+        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.TOTAL) end
+        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MIN) end
+        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MAX) end
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -77,13 +77,13 @@ Focus.Abilities.Damaging = function(player_name, trackable, header, make_brief)
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name, true) end
-            if not make_brief then UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, nil, nil, action_name) end
-            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name) end
+            UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name, trackable)
+            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.TOTAL, action_name, true) end
+            if not make_brief then UI.TableNextColumn() Column.Acc.By_Type(player_name,            trackable, nil, nil, action_name) end
+            UI.TableNextColumn()                        Column.Damage.Attempts(player_name,        trackable, nil, action_name)
+            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.TOTAL, action_name) end
+            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MIN, action_name) end
+            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MAX, action_name) end
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -118,7 +118,7 @@ Focus.Abilities.Abilities_General = function(player_name)
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name)
+            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -160,8 +160,8 @@ Focus.Abilities.Mauevers = function(player_name)
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.OVERLOAD, action_name)
+            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
+            UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.OVERLOAD, action_name)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -202,12 +202,12 @@ Focus.Abilities.Phantom_Roll = function(player_name, full)
 
         local row = 1
         UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, true)
-        if full then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.REROLL) end
-        UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY)
+        UI.TableNextColumn()              Column.Damage.Attempts(player_name,  trackable, nil, nil, true)
+        if full then UI.TableNextColumn() Column.Damage.By_Type(player_name,   trackable, DB.Metric.REROLL) end
+        UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY)
         if full then UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY_11) end
-        UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.UNLUCKY)
-        UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.BUSTS)
+        UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.UNLUCKY)
+        UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.BUSTS)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
@@ -216,12 +216,12 @@ Focus.Abilities.Phantom_Roll = function(player_name, full)
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, action_name, true)
-            if full then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.REROLL, action_name) end
-            UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY, action_name)
+            UI.TableNextColumn()              Column.Damage.Attempts(player_name,  trackable, nil, action_name, true)
+            if full then UI.TableNextColumn() Column.Damage.By_Type(player_name,   trackable, DB.Metric.REROLL, action_name) end
+            UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY, action_name)
             if full then UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY_11, action_name) end
-            UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.UNLUCKY, action_name)
-            UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.BUSTS, action_name)
+            UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.UNLUCKY, action_name)
+            UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.BUSTS, action_name)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
@@ -253,7 +253,7 @@ Focus.Abilities.From_List = function(player_name, ability_list)
         for _, ability_name in ipairs(ability_list) do
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(ability_name)
-            UI.TableNextColumn() Column.Damage.Attempts(player_name, DB.Trackable.ABILITY_OVERALL, ability_name)
+            UI.TableNextColumn() Column.Damage.Attempts(player_name, DB.Trackable.ABILITY_OVERALL, nil, ability_name)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end

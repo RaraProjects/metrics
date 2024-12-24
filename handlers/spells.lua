@@ -175,8 +175,6 @@ H.Spell.Count = function(audits, spell_id, spell_name, hit, mp_cost, is_burst, t
     elseif Res.Spells.Get_Buff_Song(spell_id)      then trackable = DB.Trackable.SPELLS_BUFF_SONG
     end
 
-    if trackable == DB.Trackable.SPELLS_NUKING and is_burst then trackable = DB.Trackable.SPELLS_BURSTS end
-
     -- Set the usage tracking and MP spent.
     H.Offense.Action_Used(audits, trackable, spell_name, hit, mp_cost)
 
@@ -265,31 +263,20 @@ end
 ---@param burst boolean
 ------------------------------------------------------------------------------------------------------
 H.Spell.Nuke = function(audits, spell_name, damage, message_id, burst)
-    local trackable = DB.Trackable.SPELLS_NUKING
+    local is_pet = audits.pet_name
 
-    -- Shadow absorption.
-    if H.Message_No_Damage_Hit(message_id) then
-        H.Offense.No_Damage_Hit(audits, trackable, DB.Metric.SHADOW_ABSORPTION)
-        H.Offense.Catalog_No_Damage_Hit(audits, trackable, spell_name)
+    local overall  = is_pet and DB.Trackable.PET_OVERALL or DB.Trackable.SPELLS_OVERALL
+    local discrete = is_pet and DB.Trackable.PET_NUKING or DB.Trackable.SPELLS_NUKING
+
+    -- Shadow absorption (not tracking for pets)
+    if not audits.pet_name and H.Message_No_Damage_Hit(message_id) then
+        H.Offense.No_Damage_Hit(audits, discrete, DB.Metric.SHADOW_ABSORPTION)
+        H.Offense.Catalog_No_Damage_Hit(audits, discrete, spell_name)
 
     -- If not absorbed by shadows then go through the damage process.
     else
-        -- Not tracking bursts for pets.
-        if audits.pet_name then
-            trackable = DB.Trackable.PET_NUKING
-            H.Offense.Hit(audits, DB.Trackable.PET_OVERALL, damage)
-
-        -- This just catches the the overall magic damage for the player.
-        else
-            H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, damage, burst)
-        end
-
-        -- Burst and non-burst damage are tracked seperately.
-        if burst then
-            H.Offense.Catalog_Hit(audits, DB.Trackable.SPELLS_BURSTS, damage, spell_name, burst)
-        else
-            H.Offense.Catalog_Hit(audits, trackable, damage, spell_name)
-        end
+        H.Offense.Hit(audits, overall, damage, burst)
+        H.Offense.Catalog_Hit(audits, discrete, damage, spell_name, burst)
     end
 end
 

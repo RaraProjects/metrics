@@ -210,10 +210,10 @@ end
 ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
     Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Weaponskill", result)
-    local damage     = result.param
-    local message_id = result.message
-    local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
-    local hit = false
+    local damage       = result.param
+    local message_id   = result.message
+    local audits       = H.TP.Audits(actor_mob, owner_mob, target_mob)
+    local hit          = false
     local is_no_damage = false
 
     -- Check damage mitigation first. If mitigated, the damage is set to zero for the counts, blog, etc.
@@ -227,6 +227,7 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
 
     -- The player drains the mob's TP.
     elseif H.Message_TP_Drain(message_id) then
+        is_no_damage = true
 
     -- The player dispels the mob. (this situation may not exist)
     elseif H.Message_Dispel(message_id) then

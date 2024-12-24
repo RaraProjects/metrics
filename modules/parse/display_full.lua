@@ -73,9 +73,7 @@ Parse.Full.Headers = function()
     if Parse.Settings.Show_Accuracy_Ranged       then UI.TableSetupColumn("R.Acc",    flags) end
     if Parse.Settings.Show_Crit_Ranged           then UI.TableSetupColumn("%R.Crit",  flags) end
     if Parse.Settings.Show_Ranged_Distance       then UI.TableSetupColumn("R.Dist",   flags) end
-    if Parse.Settings.Show_Total_Nuking_Combined then UI.TableSetupColumn("Nuke +MB", flags) end
-    if Parse.Settings.Show_Total_Nuking_No_Burst then UI.TableSetupColumn("Nuke -MB", flags) end
-    if Parse.Settings.Show_Total_Nuking_Burst    then UI.TableSetupColumn("Bursts",   flags) end
+    if Parse.Settings.Show_Total_Nuking          then UI.TableSetupColumn("Nuking",   flags) end
     if Parse.Settings.Show_Total_Ability         then UI.TableSetupColumn("JA",       flags) end
     if Parse.Settings.Show_Pet_Total             then UI.TableSetupColumn("P.Total",  flags) end
     if Parse.Settings.Show_Pet_Accuracy          then UI.TableSetupColumn("P.Acc",    flags) end
@@ -122,9 +120,7 @@ Parse.Full.Rows = function(player_name)
     if Parse.Settings.Show_Accuracy_Ranged       then UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, nil, false, nil, true) end
     if Parse.Settings.Show_Crit_Ranged           then UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.RANGED_OVERALL, 0, true, nil, true) end
     if Parse.Settings.Show_Ranged_Distance       then UI.TableNextColumn() Column.Damage.Shot_Distance(player_name, true) end
-    if Parse.Settings.Show_Total_Nuking_Combined then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, nil, nil, false, true) end
-    if Parse.Settings.Show_Total_Nuking_No_Burst then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_NUKING, nil, nil, false, true) end
-    if Parse.Settings.Show_Total_Nuking_Burst    then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_BURSTS, nil, nil, false, true)end
+    if Parse.Settings.Show_Total_Nuking          then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_NUKING, nil, nil, false, true) end
     if Parse.Settings.Show_Total_Ability         then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING, nil, nil, false, true) end
     if Parse.Settings.Show_Pet_Total             then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL, nil, nil, false, true)end
     if Parse.Settings.Show_Pet_Accuracy          then UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.PET_MELEE_DISCRETE, nil, false, nil, true) end
@@ -171,9 +167,7 @@ Parse.Full.Total_Row = function()
     if Parse.Settings.Show_Accuracy_Ranged       then UI.TableNextColumn() UI.Text(" ") end
     if Parse.Settings.Show_Crit_Ranged           then UI.TableNextColumn() UI.Text(" ") end
     if Parse.Settings.Show_Ranged_Distance       then UI.TableNextColumn() UI.Text(" ") end
-    if Parse.Settings.Show_Total_Nuking_Combined then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.SPELLS_OVERALL, true) end
-    if Parse.Settings.Show_Total_Nuking_No_Burst then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.SPELLS_NUKING, true)end
-    if Parse.Settings.Show_Total_Nuking_Burst    then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.SPELLS_BURSTS, true)end
+    if Parse.Settings.Show_Total_Nuking          then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.SPELLS_NUKING, true)end
     if Parse.Settings.Show_Total_Ability         then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.ABILITY_DAMAGING, true) end
     if Parse.Settings.Show_Pet_Total             then UI.TableNextColumn() Column.Damage.Trackable_Total(DB.Trackable.PET_OVERALL, true)end
     if Parse.Settings.Show_Pet_Accuracy          then UI.TableNextColumn() UI.Text(" ") end

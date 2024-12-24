@@ -47,7 +47,6 @@ DB.Trackable = {
     SPELLS_HP_DRAIN               = "Spells HP Drain",
     SPELLS_MP_DRAIN               = "Spells MP Drain",
     SPELLS_SPIKE_DAMAGE           = "Spells Spike Damage",
-    SPELLS_BURSTS                 = "Spells Burst",
     PET_OVERALL                   = "Pet Overall",
     PET_MELEE_OVERALL             = "Pet Melee",
     PET_MELEE_DISCRETE            = "Pet Melee Discrete",          -- This fills the role of main-hand/off-hand.

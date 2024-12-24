@@ -122,17 +122,17 @@ Debug.Unit.Tests.Spells.Nuke_Burst = function()
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
-        player[player_name][target_index][DB.Trackable.SPELLS_BURSTS] = {}
-        player[player_name][target_index][DB.Trackable.SPELLS_BURSTS][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_BURSTS][DB.Metric.CRITICAL_MIN] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_BURSTS][DB.Metric.CRITICAL_MAX] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_BURSTS][DB.Metric.CRITICAL_DAMAGE] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_BURSTS][DB.Metric.CRITICAL_COUNT] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_BURSTS][DB.Metric.HITS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_BURSTS][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_BURSTS][DB.Metric.ATTEMPTS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_BURSTS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.SPELLS_BURSTS][DB.Metric.MP_SPENT] = mp_cost
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING] = {}
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MIN] = damage
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MAX] = damage
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_DAMAGE] = damage
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_COUNT] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE] = {}
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
@@ -140,15 +140,17 @@ Debug.Unit.Tests.Spells.Nuke_Burst = function()
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BURSTS] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BURSTS][DB.Metric.TOTAL] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BURSTS][DB.Metric.CRITICAL_MIN] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BURSTS][DB.Metric.CRITICAL_MAX] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BURSTS][DB.Metric.HITS_ON_USE] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BURSTS][DB.Metric.HITS_ON_TARGET] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BURSTS][DB.Metric.ATTEMPTS_ON_USE] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BURSTS][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_BURSTS][DB.Metric.MP_SPENT] = mp_cost
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MIN] = damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MAX] = damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_DAMAGE] = damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_COUNT] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
     end
 
     local battle_log = {
@@ -387,6 +389,174 @@ Debug.Unit.Tests.Spells.Nuke_AOE = function()
     }
 
     return Debug.Unit.Check_Result("Spells > Nuke AOE", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Spells > Nuke AOE with Burst
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Spells.Nuke_AOE_Burst = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local target_name_two = Debug.Unit.Mob.ENEMY_TWO.name
+    local all_mobs = DB.Enum.ALL_MOBS
+    local burst_damage = 1000
+    local regular_damage = 100
+    local message = Ashita.Enum.Message.SPELL_DAMAGE_HIT
+    local action_id = 174
+    local action_name = "Firaga"
+    local mp_cost = 71
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, burst_damage, nil, nil, Ashita.Enum.Message.SPELL_MAGIC_BURST))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID_Two, regular_damage, nil, nil, message))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
+    H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local player_catalog = {}
+
+    player[player_name] = {}
+    player_catalog[player_name] = {}
+
+    -- Damage done to target one. MP Spent and Hits on Target get attributed to the second mob.
+    player[player_name][target_name] = {}
+    player[player_name][target_name][DB.Trackable.SPELLS_OVERALL] = {}
+    player[player_name][target_name][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = burst_damage
+    player[player_name][target_name][DB.Trackable.SPELLS_OVERALL][DB.Metric.CRITICAL_MIN] = burst_damage
+    player[player_name][target_name][DB.Trackable.SPELLS_OVERALL][DB.Metric.CRITICAL_MAX] = burst_damage
+    player[player_name][target_name][DB.Trackable.SPELLS_OVERALL][DB.Metric.CRITICAL_DAMAGE] = burst_damage
+    player[player_name][target_name][DB.Trackable.SPELLS_OVERALL][DB.Metric.CRITICAL_COUNT] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_NUKING] = {}
+    player[player_name][target_name][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = burst_damage
+    player[player_name][target_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MIN] = burst_damage
+    player[player_name][target_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MAX] = burst_damage
+    player[player_name][target_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_DAMAGE] = burst_damage
+    player[player_name][target_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_COUNT] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][target_name][DB.Trackable.TOTAL_DAMAGE] = {}
+    player[player_name][target_name][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = burst_damage
+    player[player_name][target_name][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+    player[player_name][target_name][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = burst_damage
+
+    player_catalog[player_name][target_name] = {}
+    player_catalog[player_name][target_name][action_name] = {}
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_NUKING] = {}
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = burst_damage
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MIN] = burst_damage
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MAX] = burst_damage
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_DAMAGE] = burst_damage
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_COUNT] = 1
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+
+    -- Damage done to target two.
+    player[player_name][target_name_two] = {}
+    player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL] = {}
+    player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = regular_damage
+    player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL][DB.Metric.MIN] = regular_damage
+    player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL][DB.Metric.MAX] = regular_damage
+    player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
+    player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING] = {}
+    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = regular_damage
+    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = regular_damage
+    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = regular_damage
+    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
+    player[player_name][target_name_two][DB.Trackable.TOTAL_DAMAGE] = {}
+    player[player_name][target_name_two][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = regular_damage
+    player[player_name][target_name_two][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+    player[player_name][target_name_two][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = regular_damage
+
+    player_catalog[player_name][target_name_two] = {}
+    player_catalog[player_name][target_name_two][action_name] = {}
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING] = {}
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = regular_damage
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = regular_damage
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = regular_damage
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
+
+    -- Damage done to all mobs.
+    player[player_name][all_mobs] = {}
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL] = {}
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.TOTAL] = burst_damage + regular_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.MIN] = regular_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.MAX] = regular_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.CRITICAL_MIN] = burst_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.CRITICAL_MAX] = burst_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.CRITICAL_DAMAGE] = burst_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.CRITICAL_COUNT] =  1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 2
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 2
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING] = {}
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = burst_damage + regular_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = regular_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = regular_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MIN] = burst_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MAX] = burst_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_DAMAGE] = burst_damage
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_COUNT] =  1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_TARGET] = 2
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 2
+    player[player_name][all_mobs][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
+    player[player_name][all_mobs][DB.Trackable.TOTAL_DAMAGE] = {}
+    player[player_name][all_mobs][DB.Trackable.TOTAL_DAMAGE][DB.Metric.TOTAL] = burst_damage + regular_damage
+    player[player_name][all_mobs][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN] = {}
+    player[player_name][all_mobs][DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN][DB.Metric.TOTAL] = burst_damage + regular_damage
+
+    player_catalog[player_name][all_mobs] = {}
+    player_catalog[player_name][all_mobs][action_name] = {}
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING] = {}
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.TOTAL] = burst_damage + regular_damage
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MIN] = regular_damage
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MAX] = regular_damage
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MIN] = burst_damage
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_MAX] = burst_damage
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_DAMAGE] = burst_damage
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.CRITICAL_COUNT] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.HITS_ON_TARGET] = 2
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.ATTEMPTS_ON_TARGET] = 2
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_NUKING][DB.Metric.MP_SPENT] = mp_cost
+
+    local battle_log = {
+        player = player_name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(burst_damage + regular_damage),
+        action = action_name,
+        note   = "BURST! TGTs: 2",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = burst_damage + regular_damage
+    misc["Total Damage No Skillchain"] = burst_damage + regular_damage
+
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Spells > Nuke AOE (with Burst)", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -1687,6 +1857,113 @@ Debug.Unit.Tests.Spells.Enfeeble_AOE_Land = function()
     }
 
     return Debug.Unit.Check_Result("Spells - Enfeeble > AOE Land", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Spells - Enfeeble > AOE One Resist
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Spells.Enfeeble_AOE_One_Resist = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local target_name_two = Debug.Unit.Mob.ENEMY_TWO.name
+    local all_mobs = DB.Enum.ALL_MOBS
+    local damage = 100
+    local damage_two = 200
+    local action_id = 274
+    local action_name = "Sleepga II"
+    local mp_cost = 58
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_ENFEEBLE_LAND))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID_Two, damage_two, nil, nil, Ashita.Enum.Message.SPELL_RESIST))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
+    H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local player_catalog = {}
+
+    player[player_name] = {}
+    player_catalog[player_name] = {}
+
+    -- Mob specific enfeebles from the player for mob one.
+    player[player_name][target_name] = {}
+    player[player_name][target_name][DB.Trackable.SPELLS_OVERALL] = {}
+    player[player_name][target_name][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
+    player[player_name][target_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][target_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+
+    player_catalog[player_name][target_name] = {}
+    player_catalog[player_name][target_name][action_name] = {}
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][target_name][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+
+    -- Mob specific enfeebles from the player for mob two.
+    player[player_name][target_name_two] = {}
+    player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL] = {}
+    player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
+    player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING] = {}
+    player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player[player_name][target_name_two][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
+
+    player_catalog[player_name][target_name_two] = {}
+    player_catalog[player_name][target_name_two][action_name] = {}
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+    player_catalog[player_name][target_name_two][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
+
+    -- Unfiltered enfeebles from player on all mobs.
+    player[player_name][all_mobs] = {}
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL] = {}
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 2
+    player[player_name][all_mobs][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
+    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING] = {}
+    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 2
+    player[player_name][all_mobs][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
+
+    player_catalog[player_name][all_mobs] = {}
+    player_catalog[player_name][all_mobs][action_name] = {}
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 2
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
+
+    local battle_log = {
+        player = player_name,
+        pet    = Blog.Enum.NO_PET,
+        damage = "---",
+        action = action_name,
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Spells - Enfeeble > AOE One Resist", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------

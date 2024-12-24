@@ -36,9 +36,7 @@ Parse.Config.Defaults = T{
     Show_Ranged_Distance       = false,
     Show_Total_Melee           = true,
     Show_Total_Ranged          = true,
-    Show_Total_Nuking_Combined = true,
-    Show_Total_Nuking_No_Burst = false,
-    Show_Total_Nuking_Burst    = false,
+    Show_Total_Nuking          = true,
     Show_Total_Healing         = false,
     Show_Total_Weaponskill     = true,
     Show_Total_Skillchain      = false,
@@ -105,9 +103,7 @@ table.insert(Parse.Config.Columns.Weaponskills, {header = "WS Accuracy",   setti
 table.insert(Parse.Config.Columns.Weaponskills, {header = "SC Damage",     setting = "Show_Total_Skillchain"})
 
 Parse.Config.Columns.Magic = {}
-table.insert(Parse.Config.Columns.Magic, {header = "Nuking Total",         setting = "Show_Total_Nuking_Combined"})
-table.insert(Parse.Config.Columns.Magic, {header = "Nukes (No MB)",        setting = "Show_Total_Nuking_No_Burst"})
-table.insert(Parse.Config.Columns.Magic, {header = "Bursts",               setting = "Show_Total_Nuking_Burst"})
+table.insert(Parse.Config.Columns.Magic, {header = "Nuking",               setting = "Show_Total_Nuking"})
 table.insert(Parse.Config.Columns.Magic, {header = "Healing",              setting = "Show_Total_Healing"})
 
 Parse.Config.Columns.Pets = {}
