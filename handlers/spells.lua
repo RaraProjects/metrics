@@ -75,7 +75,7 @@ H.Spell.Target_Parse = function(spell_data, result, actor_mob, target_mob, owner
     local spell_name = Ashita.Spell.Name(spell_id, spell_data)
     local damage     = result.param or 0
     local message_id = result.message
-    local is_burst   = message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST
+    local is_burst   = message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_PRIMARY
     local audits     = H.Spell.Audits(actor_mob, target_mob, owner_mob)
 
     -- Shadow absorption.
@@ -173,6 +173,7 @@ H.Spell.Count = function(audits, spell_id, spell_name, hit, mp_cost, is_burst, t
     elseif Res.Spells.Get_Spikes(spell_id)         then trackable = DB.Trackable.SPELLS_SPIKE_DAMAGE
     elseif Res.Spells.Get_MP_Drain(spell_id)       then trackable = DB.Trackable.SPELLS_MP_DRAIN
     elseif Res.Spells.Get_Buff_Song(spell_id)      then trackable = DB.Trackable.SPELLS_BUFF_SONG
+    elseif Ashita.Spell.Skill(spell_id) == 44      then trackable = DB.Trackable.SPELLS_GEOMANCY
     end
 
     -- Set the usage tracking and MP spent.

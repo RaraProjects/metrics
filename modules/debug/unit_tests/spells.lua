@@ -100,7 +100,7 @@ Debug.Unit.Tests.Spells.Nuke_Burst = function()
     local mp_cost = 68
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_MAGIC_BURST))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_MAGIC_BURST_PRIMARY))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -410,7 +410,7 @@ Debug.Unit.Tests.Spells.Nuke_AOE_Burst = function()
     local mp_cost = 71
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, burst_damage, nil, nil, Ashita.Enum.Message.SPELL_MAGIC_BURST))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, burst_damage, nil, nil, Ashita.Enum.Message.SPELL_MAGIC_BURST_PRIMARY))
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID_Two, regular_damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
@@ -1467,7 +1467,7 @@ Debug.Unit.Tests.Spells.Aspir = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Spells - Aspir
+-- Spells - Aspir (Burst)
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
@@ -1481,7 +1481,7 @@ Debug.Unit.Tests.Spells.Aspir_Burst = function()
     local mp_cost = 10
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_MAGIC_BURST))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_MAGIC_BURST_PRIMARY))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1538,7 +1538,7 @@ Debug.Unit.Tests.Spells.Aspir_Burst = function()
         misc = misc,
     }
 
-    return Debug.Unit.Check_Result("Spells - Aspir", test_package)
+    return Debug.Unit.Check_Result("Spells - Aspir (Burst)", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------

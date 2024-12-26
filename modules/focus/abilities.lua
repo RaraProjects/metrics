@@ -77,7 +77,7 @@ Focus.Abilities.Damaging = function(player_name, trackable, header, make_brief)
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name, trackable)
+            UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.TOTAL, action_name, true) end
             if not make_brief then UI.TableNextColumn() Column.Acc.By_Type(player_name,            trackable, nil, nil, action_name) end
             UI.TableNextColumn()                        Column.Damage.Attempts(player_name,        trackable, nil, action_name)

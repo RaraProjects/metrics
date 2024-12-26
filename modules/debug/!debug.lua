@@ -121,6 +121,10 @@ Debug.Content = function()
         UI.TextColored(Res.Colors.Get_Job(16), "Blue Mage")
         UI.TextColored(Res.Colors.Get_Job(17), "Corsair")
         UI.TextColored(Res.Colors.Get_Job(18), "Puppetmaster")
+        UI.TextColored(Res.Colors.Get_Job(19), "Dancer")
+        UI.TextColored(Res.Colors.Get_Job(20), "Scholar")
+        UI.TextColored(Res.Colors.Get_Job(21), "Geomancer")
+        UI.TextColored(Res.Colors.Get_Job(22), "Runefencer")
     elseif Debug.Active_Mode == Debug.Modes.UNIT_TESTS     then
         Debug.Unit.Populate()
     else

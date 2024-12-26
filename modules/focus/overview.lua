@@ -32,6 +32,10 @@ Focus.Overview.Display = function(player_name)
     elseif job_id == 16 then Focus.Overview.BLU(player_name)
     elseif job_id == 17 then Focus.Overview.COR(player_name)
     elseif job_id == 18 then Focus.Overview.PUP(player_name)
+    elseif job_id == 19 then Focus.Overview.DNC(player_name)
+    elseif job_id == 20 then Focus.Overview.SCH(player_name)
+    elseif job_id == 21 then Focus.Overview.GEO(player_name)
+    elseif job_id == 22 then Focus.Overview.RUN(player_name)
     end
 end
 
@@ -294,6 +298,60 @@ Focus.Overview.PUP = function(player_name)
     Focus.WS.Weaponskill(player_name, true)
     Focus.Abilities.Mauevers(player_name)
     Focus.Abilities.From_List(player_name, ability_list)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Overview screen for DNC.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.DNC = function(player_name)
+    Focus.Melee.Total(player_name, true)
+    Focus.WS.Weaponskill(player_name, true)
+    Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_HEALING, "Healing", true)
+    Focus.Abilities.Abilities_General(player_name)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Overview screen for SCH.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.SCH = function(player_name)
+    local buff_list = {[1] = "Regen V"}
+    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
+    Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
+    Focus.Abilities.Abilities_General(player_name)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Overview screen for GEO.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.GEO = function(player_name)
+    local ability_list = {[1] = "Blaze of Glory", [2] = "Dematerialize", [3] = "Ecliptic Attrition", [4] = "Entrust", [5] = "Life Cycle"}
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
+    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
+    Focus.Magic.Basic_Spell(player_name, DB.Trackable.SPELLS_GEOMANCY, "Geomancy", true)
+    Focus.Abilities.From_List(player_name, ability_list)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Overview screen for RUN.
+------------------------------------------------------------------------------------------------------
+---@param player_name string
+------------------------------------------------------------------------------------------------------
+Focus.Overview.RUN = function(player_name)
+    local buff_list = {[1] = "Foil", [2] = "Regen IV", [3] = "Refresh", [4] = "Phalanx", [5] = "Crusade",}
+    Focus.Defense.Damage_Taken(player_name, true)
+    Focus.Defense.Mitigation(player_name)
+    Focus.Defense.Healing_Received(player_name)
+    Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
+    Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_HEALING, "Healing", true)
+    Focus.Abilities.Abilities_General(player_name)
 end
 
 ------------------------------------------------------------------------------------------------------

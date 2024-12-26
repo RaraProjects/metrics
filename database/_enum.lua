@@ -44,6 +44,7 @@ DB.Trackable = {
     SPELLS_ENFEEBLING             = "Spells Enfeebling",
     SPELLS_BUFFS                  = "Spells Buffs",
     SPELLS_BUFF_SONG              = "Spells Buff Songs",
+    SPELLS_GEOMANCY               = "Spells Geomancy",
     SPELLS_HP_DRAIN               = "Spells HP Drain",
     SPELLS_MP_DRAIN               = "Spells MP Drain",
     SPELLS_SPIKE_DAMAGE           = "Spells Spike Damage",
