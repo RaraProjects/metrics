@@ -129,6 +129,123 @@ Ashita.Packets.EXP = function(data)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Handles parsing the capacity and limit points packet 0x063.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.Capacity_And_Limit_Update = function(data)
+	local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+	local parsed_data = T{}
+	parsed_data.order = reader:read(16)
+
+	-- Limit Points
+	if parsed_data.order == 2 then
+		parsed_data.unknown = reader:read(16)
+		parsed_data.limit_points_into_level = reader:read(16)
+		parsed_data.current_merit_points = reader:read(7)
+		parsed_data.assimilation = reader:read(6)
+		parsed_data.limit_breakder = reader:read(1)
+		parsed_data.exp_capped = reader:read(1)
+		parsed_data.limit_point_mode = reader:read(1)
+		parsed_data.max_merit_points_aquirable = reader:read(8)
+
+	-- Capacity Points
+	elseif parsed_data.order == 5 then
+		local job_id = Ashita.Player.Main_Job_ID()
+		if not job_id then job_id = 1 end
+
+		-- Skip the initial junk packets.
+		reader:read(16 * 6)
+
+		-- Jump to the specific job data.
+		reader:read((job_id - 1) * (16 * 3))
+
+		parsed_data.capacity_points_into_level = reader:read(16) or 0
+		parsed_data.current_job_points = reader:read(16) or 0
+		parsed_data.spent_job_points = reader:read(16) or 0
+	end
+
+	return parsed_data
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Handles parsing the stat update packet 0x061.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.Stat_Update = function(data)
+    local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+	local parsed_data = T{}
+
+	parsed_data.max_hp = reader:read(32)
+	parsed_data.max_mp = reader:read(32)
+	parsed_data.main_job = reader:read(8)
+	parsed_data.main_job_level = reader:read(8)
+	parsed_data.sub_job = reader:read(8)
+	parsed_data.sub_job_level = reader:read(8)
+	parsed_data.current_exp = reader:read(16)
+	parsed_data.required_exp = reader:read(16)
+	parsed_data.base_str = reader:read(16)
+	parsed_data.base_dex = reader:read(16)
+	parsed_data.base_vit = reader:read(16)
+	parsed_data.base_agi = reader:read(16)
+	parsed_data.base_int = reader:read(16)
+	parsed_data.base_mnd = reader:read(16)
+	parsed_data.base_chr = reader:read(16)
+	parsed_data.added_str = reader:read(16)
+	parsed_data.added_dex = reader:read(16)
+	parsed_data.added_vit = reader:read(16)
+	parsed_data.added_agi = reader:read(16)
+	parsed_data.added_int = reader:read(16)
+	parsed_data.added_mnd = reader:read(16)
+	parsed_data.added_chr = reader:read(16)
+	parsed_data.attack = reader:read(16)
+	parsed_data.defense = reader:read(16)
+	parsed_data.fire_resist = reader:read(16)
+	parsed_data.wind_resist = reader:read(16)
+	parsed_data.lighting_resist = reader:read(16)
+	parsed_data.light_resist = reader:read(16)
+	parsed_data.ice_resist = reader:read(16)
+	parsed_data.earth_resist = reader:read(16)
+	parsed_data.water_resist = reader:read(16)
+	parsed_data.dark_resist = reader:read(16)
+	parsed_data.title = reader:read(16)
+	parsed_data.nation_rank = reader:read(16)
+	parsed_data.rank_points = reader:read(16)
+	parsed_data.home_point = reader:read(16)
+	parsed_data.unknown1 = reader:read(16)
+	parsed_data.unknown2 = reader:read(16)
+	parsed_data.nation = reader:read(8)
+	parsed_data.unknown3 = reader:read(8)
+	parsed_data.su_level = reader:read(8)
+	parsed_data.unknown4 = reader:read(8)
+	parsed_data.max_ilevel = reader:read(8)
+	parsed_data.ilevel_over_99 = reader:read(8)
+	parsed_data.main_hand_ilevel = reader:read(8)
+	parsed_data.unknown5 = reader:read(8)
+	parsed_data.unity_id = reader:read(5)
+	parsed_data.unity_rank = reader:read(5)
+	parsed_data.unity_points = reader:read(17)
+	parsed_data.unknown6 = reader:read(5)
+	parsed_data.junk1 = reader:read(32)
+	parsed_data.junk2 = reader:read(32)
+	parsed_data.unknown7 = reader:read(8)
+	parsed_data.master_level = reader:read(8)
+	parsed_data.master_breaker = reader:read(1)
+	parsed_data.junk3 = reader:read(15)
+	parsed_data.exemplar_points_into_level = reader:read(32)
+	parsed_data.exemplar_level_max = reader:read(32)
+
+	return parsed_data
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Handles parsing the character update packet 0x0DF.
 -- ------------------------------------------------------------------------------------------------------
 ---@param data table parsed packet data

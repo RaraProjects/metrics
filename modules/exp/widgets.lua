@@ -53,9 +53,9 @@ XP.Widgets.Level_Progress_Bar = function()
 
         -- Calculate progress.
         local current_xp = Ashita.Player.Current_XP()
-        local level_xp   = Ashita.Player.Level_XP()
+        local level_xp   = Ashita.Player.Level_Max_XP()
         if XP.Display_Mode == XP.Type.LIMIT then
-            current_xp = Ashita.Player.Limit_XP()
+            current_xp = Ashita.Player.Current_Limit()
             level_xp   = 10000
         end
         if not current_xp or not level_xp or level_xp == 0 then return 0 end

@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author  = "Metra"
 addon.name    = "Metrics"
-addon.version = "12.24.24.00"
+addon.version = "12.25.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -125,7 +125,8 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         return nil
     end
 
-    if packet.id == 0x00B then Ashita.Player.Zoning(true)                               -- Start Zone
+    -- Start Zone
+    if packet.id == 0x00B then Ashita.Player.Zoning(true)
 
     -- End Zone
     elseif packet.id == 0x00A then
@@ -134,9 +135,15 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         Window_Manager.Set_Bar_Delay()
         XP.Chains.End()
 
-    elseif packet.id == 0x0C8 then Ashita.Party.Need_Refresh = true                     -- 200 0xC8 Alliance Update
-    elseif packet.id == 0x0DD then Ashita.Party.Need_Refresh = true                     -- 221 0xDD Party Member Update
-    elseif packet.id == 0x02D then XP.Handle_Packet(packet.data)                                -- Experience Points
+    -- CP/EP Update: The current and max of these need to be tracked manually.
+    -- Based off of Points.
+    -- https://github.com/Shinzaku/Points
+    elseif packet.id == 0x061 then XP.Tracking.Update_EP_Into_Level(packet.data)
+    elseif packet.id == 0x063 then XP.Tracking.Update_CP_Into_Level(packet.data)
+
+    elseif packet.id == 0x0C8 then Ashita.Party.Need_Refresh = true                     -- Alliance Update
+    elseif packet.id == 0x0DD then Ashita.Party.Need_Refresh = true                     -- Party Member Update
+    elseif packet.id == 0x02D then XP.Handle_Packet(packet.data)                        -- Experience Points
     elseif packet.id == 0x037 then if XP.Is_Initialized then XP.Dedication.Check() end  -- Player Update
     elseif packet.id == 0x028 then H.Start_Action_Packet(packet)                        -- Action Packet
 

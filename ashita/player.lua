@@ -22,6 +22,17 @@ Ashita.Player.Get = function(attribute)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Returns the player's current job ID.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Main_Job_ID = function()
+    local player = Ashita.Player.Get()
+    if not player then return 0 end
+    return player:GetMainJob()
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Returns string in the form "WHM75/BLM37"
 -- ------------------------------------------------------------------------------------------------------
 ---@return table
@@ -101,22 +112,11 @@ Ashita.Player.Is_Limit_Mode_Enabled = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Returns the player's TNL.
--- ------------------------------------------------------------------------------------------------------
----@return integer
--- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Exp_TNL = function()
-    local player = Ashita.Player.Get()
-    if not player then return 99999 end
-    return player:GetExpNeeded() - player:GetExpCurrent()
-end
-
--- ------------------------------------------------------------------------------------------------------
 -- Returns the player's current level's total XP to next level.
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Level_XP = function()
+Ashita.Player.Level_Max_XP = function()
     local player = Ashita.Player.Get()
     if not player then return 99999 end
     return player:GetExpNeeded()
@@ -134,6 +134,28 @@ Ashita.Player.Current_XP = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Returns the player's TNL.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Exp_TNL = function()
+    local player = Ashita.Player.Get()
+    if not player then return 99999 end
+    return player:GetExpNeeded() - player:GetExpCurrent()
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns the player's current limit points through the level.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Current_Limit = function()
+    local player = Ashita.Player.Get()
+    if not player then return 99999 end
+    return player:GetLimitPoints()
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Returns the player's TNLP.
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
@@ -147,12 +169,46 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Returns the player's current limit points through the level.
 -- ------------------------------------------------------------------------------------------------------
+---@param job_id integer
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Limit_XP = function()
+Ashita.Player.Current_Capacity = function(job_id)
+    local player = Ashita.Player.Get()
+    if not player or not job_id then return 99999 end
+    return player:GetCapacityPoints(job_id)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns the player's current exemplar points through the level.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Current_Exemplar = function()
     local player = Ashita.Player.Get()
     if not player then return 99999 end
-    return player:GetLimitPoints()
+    return player:GetMasteryExp()
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns the player's current max EP needed to go to the next level..
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.Exemplar_Level_Max = function()
+    local player = Ashita.Player.Get()
+    if not player then return 99999 end
+    return player:GetMasteryExpNeeded()
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Returns the player's exemplar points needed to get the next master level.
+-- ------------------------------------------------------------------------------------------------------
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Player.TNML = function()
+    local player = Ashita.Player.Get()
+    if not player then return 99999 end
+    return player:GetMasteryExp() - player:GetMasteryExpNeeded()
 end
 
 -- ------------------------------------------------------------------------------------------------------

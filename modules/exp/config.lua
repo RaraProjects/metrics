@@ -21,6 +21,12 @@ XP.Config.Defaults = T{
     Show_Time_To_Level       = true,
     Show_Boost_Time_To_Level = true,
     Show_TNL                 = true,
+    Show_Capacity_Base_Rate  = false,
+    Show_Time_To_Job_Point   = false,
+    Show_TNJP                = false,
+    Show_Exemplar_Base_Rate  = false,
+    Show_Time_To_Mastery     = false,
+    Show_TNML                = false,
     Show_Kill_Rate           = false,
     Show_Average_XP          = false,
     Show_Total_XP_Gained     = false,
@@ -146,6 +152,14 @@ XP.Config.Populate = function()
         " group is doing.")
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("TNL",           XP.Settings, "Show_TNL")
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Time in Zone",  XP.Settings, "Show_Zone_Time")
+
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Base CP Rate",  XP.Settings, "Show_Capacity_Base_Rate")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Time to JP",    XP.Settings, "Show_Time_To_Job_Point")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("TNJP",          XP.Settings, "Show_TNJP")
+
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Base EP Rate",  XP.Settings, "Show_Exemplar_Base_Rate")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Time to ML",    XP.Settings, "Show_Time_To_Mastery")
+        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("TNML",          XP.Settings, "Show_TNML")
 
         UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Kill Speed",    XP.Settings, "Show_Kill_Rate")
         UI.SameLine() Window_Manager.Widgets.HelpMarker("Seconds per kill for mobs that grant XP.")

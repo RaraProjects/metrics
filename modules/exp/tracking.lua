@@ -1,5 +1,7 @@
 XP.Tracking = {}
 
+XP.Tracking.Main_Job = 0
+
 XP.Tracking.Metric = {
     Experience_Total   = 0,
     Experience_Base    = 0,
@@ -7,17 +9,30 @@ XP.Tracking.Metric = {
     Limit_Total        = 0,
     Limit_Base         = 0,
     Limit_Boosted      = 0,
+    Capacity_Current   = 0,
+    Capacity_Base      = 0,
+    Exemplar_Current   = 0,
+    Exemplar_Max       = 0,
+    Exemplar_Base      = 0,
     Max_Chain          = 0,
 }
 
-XP.Tracking.Kill_Times = {}
-XP.Tracking.Kill_Time_Threshold = 10 * 60    -- Seconds
-XP.Tracking.Per_Kill_Base_And_Boost = {}
-XP.Tracking.Per_Kill_Base_XP_Only = {}
 XP.Tracking.Per_Kill_Max_Windows = 6
-XP.Tracking.Last_XP_Gain_Time = 0
+XP.Tracking.Kill_Time_Threshold = 10 * 60    -- Seconds
 
-XP.Tracking.Show_Debug    = false -- Shows debug information when enabled.
+XP.Tracking.Last_XP_Gain_Time = 0
+XP.Tracking.Last_CP_Gain_Time = 0
+XP.Tracking.Last_EP_Gain_Time = 0
+XP.Tracking.Kill_Times_XP = {}
+XP.Tracking.Kill_Times_CP = {}
+XP.Tracking.Kill_Times_EP = {}
+
+XP.Tracking.Per_Kill_Base_XP_Only = {}
+XP.Tracking.Per_Kill_Base_And_Boost = {}
+XP.Tracking.Per_Kill_Capacity_Base = {}
+XP.Tracking.Per_Kill_Exemplar_Base = {}
+
+XP.Tracking.Show_Debug = false -- Shows debug information when enabled.
 
 -- ------------------------------------------------------------------------------------------------------
 -- Initializes XP Tracking.
@@ -30,13 +45,50 @@ XP.Tracking.Initialize = function()
         Limit_Total        = 0,
         Limit_Base         = 0,
         Limit_Boosted      = 0,
+        Capacity_Current   = 0,
+        Capacity_Base      = 0,
+        Exemplar_Current   = 0,
+        Exemplar_Max       = 0,
+        Exemplar_Base      = 0,
         Max_Chain          = 0,
     }
 
-    XP.Tracking.Kill_Times = {}
+    XP.Tracking.Last_XP_Gain_Time = 0
+    XP.Tracking.Last_CP_Gain_Time = 0
+    XP.Tracking.Last_EP_Gain_Time = 0
+    XP.Tracking.Kill_Times_XP = {}
+    XP.Tracking.Kill_Times_CP = {}
+    XP.Tracking.Kill_Times_EP = {}
+
     XP.Tracking.Per_Kill_Base_And_Boost = {}
     XP.Tracking.Per_Kill_Base_XP_Only   = {}
-    XP.Tracking.Last_XP_Gain_Time       = 0
+    XP.Tracking.Per_Kill_Capacity_Base  = {}
+    XP.Tracking.Per_Kill_Exemplar_Base  = {}
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- CP needs to be tracked manually.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table
+-- ------------------------------------------------------------------------------------------------------
+XP.Tracking.Update_CP_Into_Level = function(data)
+    local parsed_packet = Ashita.Packets.Capacity_And_Limit_Update(data)
+    if parsed_packet.capacity_points_into_level then
+        XP.Tracking.Metric.Capacity_Current = parsed_packet.capacity_points_into_level
+    end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- EP needs to be tracked manually.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table
+-- ------------------------------------------------------------------------------------------------------
+XP.Tracking.Update_EP_Into_Level = function(data)
+    local parsed_packet = Ashita.Packets.Stat_Update(data)
+    if parsed_packet.exemplar_points_into_level and parsed_packet.exemplar_level_max then
+        XP.Tracking.Metric.Exemplar_Current = parsed_packet.exemplar_points_into_level
+        XP.Tracking.Metric.Exemplar_Max     = parsed_packet.exemplar_level_max
+    end
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -73,7 +125,7 @@ XP.Tracking.Add_Total_XP = function(amount, type)
     -- This is XP type agnositic and persists across client sessions.
     XP.Settings.Boost_XP_Acquired = XP.Settings.Boost_XP_Acquired + bonus_xp
 
-    -- Average XP and Kill Times
+    -- Average XP
     local elements = #XP.Tracking.Per_Kill_Base_And_Boost
     if elements > XP.Tracking.Per_Kill_Max_Windows then
         table.remove(XP.Tracking.Per_Kill_Base_And_Boost)
@@ -86,19 +138,66 @@ XP.Tracking.Add_Total_XP = function(amount, type)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Tally's total capacity points.
+-- ------------------------------------------------------------------------------------------------------
+---@param amount integer
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+XP.Tracking.Add_Total_CP = function(amount)
+    if not amount then amount = 0 end
+
+    XP.Tracking.Metric.Capacity_Base = XP.Tracking.Metric.Capacity_Base + amount
+
+    -- Need to keep track of current CP in level because the Ashita data only refreshes when viewing the JP screen.
+    XP.Tracking.Metric.Capacity_Current = XP.Tracking.Metric.Capacity_Current + amount
+    if XP.Tracking.Metric.Capacity_Current > 30000 then XP.Tracking.Metric.Capacity_Current = XP.Tracking.Metric.Capacity_Current - 30000 end
+
+    local elements = #XP.Tracking.Per_Kill_Capacity_Base
+    if elements > XP.Tracking.Per_Kill_Max_Windows then table.remove(XP.Tracking.Per_Kill_Capacity_Base) end
+    table.insert(XP.Tracking.Per_Kill_Capacity_Base, 1, amount)
+
+    return amount
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Tally's total exemplar points.
+-- ------------------------------------------------------------------------------------------------------
+---@param amount integer
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+XP.Tracking.Add_Total_EP = function(amount)
+    if not amount then amount = 0 end
+
+    XP.Tracking.Metric.Exemplar_Base = XP.Tracking.Metric.Exemplar_Base + amount
+
+    -- Need to keep track of current CP in level because the Ashita data only refreshes when viewing the JP screen.
+    XP.Tracking.Metric.Exemplar_Current = XP.Tracking.Metric.Exemplar_Current + amount
+    if XP.Tracking.Metric.Exemplar_Current > 30000 then XP.Tracking.Metric.Exemplar_Current = XP.Tracking.Metric.Exemplar_Current - XP.Tracking.Metric.Exemplar_Max end
+
+    local elements = #XP.Tracking.Per_Kill_Exemplar_Base
+    if elements > XP.Tracking.Per_Kill_Max_Windows then table.remove(XP.Tracking.Per_Kill_Exemplar_Base) end
+    table.insert(XP.Tracking.Per_Kill_Exemplar_Base, 1, amount)
+
+    return amount
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Handles mob kill time tracking.
 -- This gets called when an XP message comes in (from a kill).
 -- ------------------------------------------------------------------------------------------------------
-XP.Tracking.Set_Kill_Time = function()
-    local duration = os.time() - XP.Tracking.Last_XP_Gain_Time
+---@param last_xp_time integer
+---@param time_table table pointer
+---@return integer
+-- ------------------------------------------------------------------------------------------------------
+XP.Tracking.Set_Kill_Time = function(last_xp_time, time_table)
+    local duration = os.time() - last_xp_time
     if duration < XP.Tracking.Kill_Time_Threshold then       -- Throw out afk/break times.
-        local elements = #XP.Tracking.Kill_Times
-        if elements >= XP.Tracking.Per_Kill_Max_Windows then table.remove(XP.Tracking.Kill_Times) end
-        table.insert(XP.Tracking.Kill_Times, 1, duration)
+        local elements = #time_table
+        if elements >= XP.Tracking.Per_Kill_Max_Windows then table.remove(time_table) end
+        table.insert(time_table, 1, duration)
     end
 
-    -- Update last kill time to now.
-    XP.Tracking.Last_XP_Gain_Time = os.time()
+    return  os.time()
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -112,17 +211,85 @@ XP.Tracking.Debug_Content = function()
     local table_flags = XP.Table_Flags
     table_flags       = bit.bor(table_flags, ImGuiTableFlags_RowBg)
 
-    local kill_entries = #XP.Tracking.Kill_Times
+
     UI.PushStyleColor(ImGuiCol_TableRowBg, Window_Manager.Theme.Table_Row_Bg)
-    if UI.BeginTable("Kill Speed", 1 + kill_entries, table_flags) then
-        UI.TableSetupColumn("Current", flags)
-        for i, _ in ipairs(XP.Tracking.Kill_Times) do UI.TableSetupColumn(tostring(i), flags) end
+    if UI.BeginTable("Current XP", 5, table_flags) then
+        UI.TableSetupColumn("Metric", flags)
+        UI.TableSetupColumn("EXP",    flags)
+        UI.TableSetupColumn("Limit",  flags)
+        UI.TableSetupColumn("CP",     flags)
+        UI.TableSetupColumn("EP",     flags)
         UI.TableHeadersRow()
 
-        UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Tracking.Last_XP_Gain_Time))
-        for _, v in ipairs(XP.Tracking.Kill_Times) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+        UI.TableNextColumn() UI.Text("Total XP Gained")
+        UI.TableNextColumn() UI.Text(tostring(XP.Tracking.Metric.Experience_Base))
+        UI.TableNextColumn() UI.Text(tostring(XP.Tracking.Metric.Limit_Base))
+        UI.TableNextColumn() UI.Text(tostring(XP.Tracking.Metric.Capacity_Base))
+        UI.TableNextColumn() UI.Text(tostring(XP.Tracking.Metric.Exemplar_Base))
+
+        UI.TableNextColumn() UI.Text("Current")
+        UI.TableNextColumn() UI.Text(tostring(Ashita.Player.Current_XP()))
+        UI.TableNextColumn() UI.Text(tostring(Ashita.Player.Current_Limit()))
+        UI.TableNextColumn() UI.Text(tostring(XP.Tracking.Metric.Capacity_Current))
+        UI.TableNextColumn() UI.Text(tostring(XP.Tracking.Metric.Exemplar_Current))
+
+        UI.TableNextColumn() UI.Text("TNL")
+        UI.TableNextColumn() UI.Text(XP.Columns.TNL(XP.Type.EXPERIENCE))
+        UI.TableNextColumn() UI.Text(XP.Columns.TNL(XP.Type.LIMIT))
+        UI.TableNextColumn() UI.Text(XP.Columns.TNL(XP.Type.CAPACITY))
+        UI.TableNextColumn() UI.Text(XP.Columns.TNL(XP.Type.EXEMPLAR))
+
+        UI.TableNextColumn() UI.Text("Average XP/Kill")
+        UI.TableNextColumn() UI.Text(string.format("%.2f", (XP.Columns.Average_XP(XP.Type.EXPERIENCE))))
+        UI.TableNextColumn() UI.Text(string.format("%.2f", (XP.Columns.Average_XP(XP.Type.LIMIT))))
+        UI.TableNextColumn() UI.Text(string.format("%.2f", (XP.Columns.Average_XP(XP.Type.CAPACITY))))
+        UI.TableNextColumn() UI.Text(string.format("%.2f", (XP.Columns.Average_XP(XP.Type.EXEMPLAR))))
+
+        UI.TableNextColumn() UI.Text("XP/hr")
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.Average_Rate(XP.Type.EXPERIENCE)))
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.Average_Rate(XP.Type.LIMIT)))
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.Average_Rate(XP.Type.CAPACITY)))
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.Average_Rate(XP.Type.EXEMPLAR)))
 
         UI.EndTable()
     end
+
+    local xp_kill_entries = #XP.Tracking.Kill_Times_XP
+    UI.PushStyleColor(ImGuiCol_TableRowBg, Window_Manager.Theme.Table_Row_Bg)
+    if UI.BeginTable("Kill Speed XP", 1 + xp_kill_entries, table_flags) then
+        UI.TableSetupColumn("Current XP Window", flags)
+        for i, _ in ipairs(XP.Tracking.Kill_Times_XP) do UI.TableSetupColumn(tostring(i), flags) end
+        UI.TableHeadersRow()
+
+        UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Tracking.Last_XP_Gain_Time))
+        for _, v in ipairs(XP.Tracking.Kill_Times_XP) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+
+        UI.EndTable()
+    end
+
+    local cp_kill_entries = #XP.Tracking.Kill_Times_CP
+    if UI.BeginTable("Kill Speed CP", 1 + cp_kill_entries, table_flags) then
+        UI.TableSetupColumn("Current CP Window", flags)
+        for i, _ in ipairs(XP.Tracking.Kill_Times_CP) do UI.TableSetupColumn(tostring(i), flags) end
+        UI.TableHeadersRow()
+
+        UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Tracking.Last_CP_Gain_Time))
+        for _, v in ipairs(XP.Tracking.Kill_Times_CP) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+
+        UI.EndTable()
+    end
+
+    local ep_kill_entries = #XP.Tracking.Kill_Times_EP
+    if UI.BeginTable("Kill Speed CP", 1 + ep_kill_entries, table_flags) then
+        UI.TableSetupColumn("Current CP Window", flags)
+        for i, _ in ipairs(XP.Tracking.Kill_Times_EP) do UI.TableSetupColumn(tostring(i), flags) end
+        UI.TableHeadersRow()
+
+        UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Tracking.Last_EP_Gain_Time))
+        for _, v in ipairs(XP.Tracking.Kill_Times_EP) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+
+        UI.EndTable()
+    end
+
     UI.PopStyleColor(1)
 end

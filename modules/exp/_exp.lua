@@ -18,9 +18,21 @@ XP.Type = {
     ERROR      = 0,
     EXPERIENCE = 1,
     LIMIT      = 2,
+    CAPACITY   = 3,
+    EXEMPLAR   = 4,
 }
 
 XP.Messages = {}
+XP.Messages.ALL = {
+    [8]   = true,   -- EXP No chain
+    [253] = true,   -- EXP Chain
+    [371] = true,   -- LP No chain
+    [372] = true,   -- LP Chain
+    [718] = true,   -- CP No chain
+    [735] = true,   -- CP Chain
+    [809] = true,   -- EP No chain
+    [810] = true,   -- EP Chain
+}
 XP.Messages.EXP = {
     [8]   = true,   -- No chain
     [253] = true,   -- Chain
@@ -29,9 +41,19 @@ XP.Messages.LP = {
     [371] = true,   -- No chain
     [372] = true,   -- Chain
 }
+XP.Messages.CP = {
+    [718] = true,   -- No chain
+    [735] = true,   -- Chain
+}
+XP.Messages.EP = {
+    [809] = true,   -- No chain
+    [810] = true,   -- Chain
+}
 XP.Messages.Chain = {
     [253] = true,   -- Experience points
     [372] = true,   -- Limit points
+    [735] = true,   -- Capacity points
+    [810] = true,   -- Exemplar points
 }
 
 XP.Settings = T{}
@@ -124,6 +146,7 @@ XP.Display_Table = function()
 
     UI.PushStyleColor(ImGuiCol_TableRowBg, Window_Manager.Theme.Table_Row_Bg)
     if UI.BeginTable("XP Metrics", XP.Columns.Display_Count, table_flags) then
+        -- Headers
         if XP.Settings.Show_Job                 then UI.TableSetupColumn("Job", flags) end
         UI.TableSetupColumn("Chain", flags)
         UI.TableSetupColumn("*" .. type_string .. "/hr", flags)
@@ -131,6 +154,12 @@ XP.Display_Table = function()
         if XP.Settings.Show_Time_To_Level       then UI.TableSetupColumn("~TT" .. level_string, flags) end
         if XP.Settings.Show_Boost_Time_To_Level then UI.TableSetupColumn("TTB",                 flags) end
         if XP.Settings.Show_TNL                 then UI.TableSetupColumn("TN" .. level_string,  flags) end
+        if XP.Settings.Show_Capacity_Base_Rate  then UI.TableSetupColumn("CP/hr",               flags) end
+        if XP.Settings.Show_Time_To_Job_Point   then UI.TableSetupColumn("~TTJP",               flags) end
+        if XP.Settings.Show_TNJP                then UI.TableSetupColumn("TNJP",                flags) end
+        if XP.Settings.Show_Exemplar_Base_Rate  then UI.TableSetupColumn("EP/hr",               flags) end
+        if XP.Settings.Show_Time_To_Mastery     then UI.TableSetupColumn("~TTML",               flags) end
+        if XP.Settings.Show_TNML                then UI.TableSetupColumn("TNML",                flags) end
         if XP.Settings.Show_Kill_Rate           then UI.TableSetupColumn("Time/Kill",           flags) end
         if XP.Settings.Show_Average_XP          then UI.TableSetupColumn("XP/Kill",             flags) end
         if XP.Settings.Show_Total_XP_Gained     then UI.TableSetupColumn("Total",               flags) end
@@ -141,22 +170,29 @@ XP.Display_Table = function()
         if XP.Settings.Show_Boost_Max           then UI.TableSetupColumn("Bonus Max",           flags) end
         UI.TableHeadersRow()
 
+        -- Content
         if XP.Settings.Show_Job                 then UI.TableNextColumn() XP.Columns.Job() end
-        UI.TableNextColumn() XP.Columns.Chain()
-        UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate())
-        if XP.Settings.Show_Base_Rate           then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(true)) end
+                                                     UI.TableNextColumn() XP.Columns.Chain()
+                                                     UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(xp_type))
+        if XP.Settings.Show_Base_Rate           then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(xp_type, true)) end
         if XP.Settings.Show_Time_To_Level       then UI.TableNextColumn() XP.Columns.Time_To_Level(xp_type) end
         if XP.Settings.Show_Boost_Time_To_Level then UI.TableNextColumn() XP.Columns.Time_To_Finish_Dedication(xp_type) end
         if XP.Settings.Show_TNL                 then UI.TableNextColumn() UI.Text(XP.Columns.TNL(xp_type)) end
+        if XP.Settings.Show_Capacity_Base_Rate  then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(XP.Type.CAPACITY)) end
+        if XP.Settings.Show_Time_To_Job_Point   then UI.TableNextColumn() XP.Columns.Time_To_Level(XP.Type.CAPACITY) end
+        if XP.Settings.Show_TNJP                then UI.TableNextColumn() UI.Text(XP.Columns.TNL(XP.Type.CAPACITY)) end
+        if XP.Settings.Show_Exemplar_Base_Rate  then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(XP.Type.EXEMPLAR)) end
+        if XP.Settings.Show_Time_To_Mastery     then UI.TableNextColumn() XP.Columns.Time_To_Level(XP.Type.EXEMPLAR) end
+        if XP.Settings.Show_TNML                then UI.TableNextColumn() UI.Text(XP.Columns.TNL(XP.Type.EXEMPLAR)) end
         if XP.Settings.Show_Kill_Rate           then
-            local kill_time = XP.Columns.Average_Kill_Time()
+            local kill_time = XP.Columns.Average_Kill_Time(XP.Tracking.Last_XP_Gain_Time, XP.Tracking.Kill_Times_XP)
             if kill_time < 0 then
                 UI.TableNextColumn() UI.Text("--:--")
             else
                 UI.TableNextColumn() UI.Text(Timers.Format(kill_time, true))
             end
         end
-        if XP.Settings.Show_Average_XP          then UI.TableNextColumn() UI.Text(string.format("%d", XP.Columns.Average_XP())) end
+        if XP.Settings.Show_Average_XP          then UI.TableNextColumn() UI.Text(string.format("%d", XP.Columns.Average_XP(xp_type))) end
         if XP.Settings.Show_Total_XP_Gained     then UI.TableNextColumn() UI.Text(XP.Columns.Total_XP(xp_type)) end
         if XP.Settings.Show_Max_Chain           then UI.TableNextColumn() UI.Text(XP.Columns.Max_Chain()) end
         if XP.Settings.Show_Zone_Time           then UI.TableNextColumn() UI.Text(XP.Columns.Zone_Time()) end
@@ -171,6 +207,7 @@ end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Primary XP driving function.
+-- RoE quests that give EXP also come through here. They result in zero kill times.
 -- ------------------------------------------------------------------------------------------------------
 ---@param raw_packet any
 -- ------------------------------------------------------------------------------------------------------
@@ -181,14 +218,29 @@ XP.Handle_Packet = function(raw_packet)
     local parsed_packet = Ashita.Packets.EXP(raw_packet)
     if not parsed_packet then return nil end
 
-    local xp_amount = parsed_packet.xp_amount
-    if xp_amount > 1000 then return nil end         -- Ignore XP scrolls and ENM awards.
+    -- Records of Eminance also come through this packet. Exclude non-XP related content.
+    local message_id = parsed_packet.message_id
+    if not XP.Messages.ALL[message_id] then return nil end
 
     local xp_type = XP.Get_Message_XP_Type(parsed_packet.message_id)
     if xp_type == XP.Type.ERROR then return nil end
 
-    XP.Tracking.Add_Total_XP(xp_amount, xp_type)             -- Add XP to sum total.
-    XP.Tracking.Set_Kill_Time()                     -- Keep track of kill time for rate metrics.
+    local xp_amount = parsed_packet.xp_amount
+
+    -- Kill time rate metrics. Add XP to sum total.
+    if xp_type == XP.Type.EXPERIENCE or xp_type == XP.Type.LIMIT then
+        XP.Tracking.Add_Total_XP(xp_amount, xp_type)
+        XP.Tracking.Last_XP_Gain_Time = XP.Tracking.Set_Kill_Time(XP.Tracking.Last_XP_Gain_Time, XP.Tracking.Kill_Times_XP)
+
+    -- Kill time rate metrics. Add capacity to sum total.
+    elseif xp_type == XP.Type.CAPACITY then
+        XP.Tracking.Add_Total_CP(xp_amount)
+        XP.Tracking.Last_CP_Gain_Time = XP.Tracking.Set_Kill_Time(XP.Tracking.Last_CP_Gain_Time, XP.Tracking.Kill_Times_CP)
+
+    elseif xp_type == XP.Type.EXEMPLAR then
+        XP.Tracking.Add_Total_EP(xp_amount)
+        XP.Tracking.Last_EP_Gain_Time = XP.Tracking.Set_Kill_Time(XP.Tracking.Last_EP_Gain_Time, XP.Tracking.Kill_Times_EP)
+    end
 
     -- Handle chains for EM and above. I've observed 100 XP for EM mobs.
     if xp_amount >= 100 then XP.Chains.Start(parsed_packet.chain_count) end
@@ -203,8 +255,11 @@ end
 XP.Get_Message_XP_Type = function(message_id)
     if not message_id then return XP.Type.ERROR end
 
-    if XP.Messages.EXP[message_id] then return XP.Type.EXPERIENCE end
-    if XP.Messages.LP[message_id]  then return XP.Type.LIMIT end
+    if     XP.Messages.EXP[message_id] then return XP.Type.EXPERIENCE
+    elseif XP.Messages.LP[message_id]  then return XP.Type.LIMIT
+    elseif XP.Messages.CP[message_id]  then return XP.Type.CAPACITY
+    elseif XP.Messages.EP[message_id]  then return XP.Type.EXEMPLAR
+    end
 
     return XP.Type.ERROR
 end
