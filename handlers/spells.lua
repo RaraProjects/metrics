@@ -75,7 +75,7 @@ H.Spell.Target_Parse = function(spell_data, result, actor_mob, target_mob, owner
     local spell_name = Ashita.Spell.Name(spell_id, spell_data)
     local damage     = result.param or 0
     local message_id = result.message
-    local is_burst   = message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_PRIMARY
+    local is_burst   = H.Message_Magic_Burst(message_id)
     local audits     = H.Spell.Audits(actor_mob, target_mob, owner_mob)
 
     -- Shadow absorption.
@@ -92,16 +92,16 @@ H.Spell.Target_Parse = function(spell_data, result, actor_mob, target_mob, owner
 
     -- Status removal spells can have No Effect just like enfeebles, so can't rely on the message.
     elseif Res.Spells.Get_Debuff_Removal(spell_id) then
-        if message_id == Ashita.Enum.Message.SPELL_NO_EFFECT then damage = -1 end
+        if H.Message_No_Effect(message_id) then damage = -1 end
 
     -- MP Drain doesn't do damage.
     elseif H.Message_MP_Drain(message_id) then
         local trackable = DB.Trackable.SPELLS_MP_DRAIN
         if owner_mob then trackable = DB.Trackable.PET_MP_DRAIN end
-        H.Offense.Catalog_Hit(audits, trackable, damage, spell_name)
+        H.Offense.Catalog_Hit(audits, trackable, damage, spell_name, is_burst)
 
     -- Check for magic bursts. Enfeebles shouldn't be caught in this because they are an earlier check.
-    elseif H.Message_Damaging(message_id) or is_burst then
+    elseif H.Message_Damaging(message_id) then
         H.Spell.Nuke(audits, spell_name, damage, message_id, is_burst)
 
     -- Spells that involve HP recovery.
@@ -231,17 +231,20 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
 
     elseif Res.Spells.Get_Enfeeble(spell_id) or Res.Spells.Get_DoT(spell_id) then
         local action_type = Blog.Action_Type.MAGIC_ENFEEBLE
-        if damage == -1     then blog_note = Blog.Enum.NO_EFFECT
-        elseif damage == -2 then blog_note = Blog.Enum.RESIST
-        elseif damage == 999999 then    -- For things like Poison
-            damage = -1
+        if     damage == -1     then blog_note = Blog.Enum.NO_EFFECT
+        elseif damage == -2     then blog_note = Blog.Enum.RESIST
+        elseif damage == 999999 then damage = -1  -- For things like Poison
+
         elseif Res.Spells.Get_Dispel(spell_id) then
             local buff = Res.Buffs.Get_Buff(damage)
             if buff then blog_note = buff.en end
             action_type = Blog.Action_Type.DISPEL
+            damage = -1
+
         elseif Res.Spells.Get_Enfeeble(spell_id) then
             damage = -1
         end
+
         Blog.Add(audits.player_name, audits.pet_name, action_type, spell_name, damage, blog_note, spell_data)
 
     elseif Res.Spells.Get_Buff_Song(spell_id) then
@@ -374,7 +377,9 @@ H.Spell.Enfeebling_And_DoTs = function(audits, trackable, damage, spell_name, me
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
         H.Offense.Hit(audits, overall, 0)
         H.Offense.Catalog_No_Damage_Hit(audits, trackable, spell_name)
-        damage = 999999
+
+        -- Preserve the damage for dispels since it is the buff ID.
+        if not H.Message_Dispel(message_id) then damage = 999999 end
     end
 
     return damage

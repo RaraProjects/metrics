@@ -213,8 +213,29 @@ H.Message_Damaging = function(message_id)
            message_id == Ashita.Enum.Message.WEAPONSKILL_DAMAGE or
            message_id == Ashita.Enum.Message.WEAPONSKILL_HP_DRAIN or
            message_id == Ashita.Enum.Message.SPELL_DAMAGE_HIT or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_PRIMARY or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_ADDITIONAL or
            message_id == Ashita.Enum.Message.SPELL_HP_DRAIN or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_HP_DRAIN or
            message_id == Ashita.Enum.Message.TAKES_DAMAGE
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks the action message to see if it is related to a magic burst or not.
+------------------------------------------------------------------------------------------------------
+---@param message_id integer
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.Message_Magic_Burst = function(message_id)
+    return message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_PRIMARY or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_ADDITIONAL or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_ENFEEBLE_PRIMARY or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_ENFEEBLE_PRIMARY_2 or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_ENFEEBLE_ADDITIONAL or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_ENFEEBLE_ADDITIONAL_2 or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_HP_DRAIN or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_MP_DRAIN or
+           message_id == Ashita.Enum.Message.ABILITY_MAGIC_BURST
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -276,6 +297,10 @@ H.Message_Debuff = function(message_id)
     return message_id == Ashita.Enum.Message.WEAPONSKILL_DEBUFF or
            message_id == Ashita.Enum.Message.SPELL_ENFEEBLE_LAND or
            message_id == Ashita.Enum.Message.SPELL_ENFEEBLE_LAND_2 or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_ENFEEBLE_PRIMARY or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_ENFEEBLE_PRIMARY_2 or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_ENFEEBLE_ADDITIONAL or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_ENFEEBLE_ADDITIONAL_2 or
            message_id == Ashita.Enum.Message.TARGET_STATUS
 end
 
@@ -286,7 +311,12 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 H.Message_Dispel = function(message_id)
-    return message_id == Ashita.Enum.Message.ABILITY_DISPEL
+    return message_id == Ashita.Enum.Message.ABILITY_REMOVE_STATUS_EFFECT_PRIMARY or
+           message_id == Ashita.Enum.Message.ABILITY_REMOVE_STATUS_EFFECT_PRIMARY_2 or
+           message_id == Ashita.Enum.Message.SPELL_REMOVE_STATUS_EFFECT_PRIMARY or
+           message_id == Ashita.Enum.Message.SPELL_REMOVE_STATUS_EFFECT_PRIMARY_2 or
+           message_id == Ashita.Enum.Message.SPELL_REMOVE_STATUS_EFFECT_ADDITIONAL or
+           message_id == Ashita.Enum.Message.SPELL_REMOVE_STATUS_EFFECT_ADDITIONAL_2
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -297,7 +327,8 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Message_HP_Drain = function(message_id)
     return message_id == Ashita.Enum.Message.WEAPONSKILL_HP_DRAIN or
-           message_id == Ashita.Enum.Message.SPELL_HP_DRAIN
+           message_id == Ashita.Enum.Message.SPELL_HP_DRAIN or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_HP_DRAIN
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -308,7 +339,8 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Message_MP_Drain = function(message_id)
     return message_id == Ashita.Enum.Message.WEAPONSKILL_MP_DRAIN or
-           message_id == Ashita.Enum.Message.SPELL_MP_DRAIN
+           message_id == Ashita.Enum.Message.SPELL_MP_DRAIN or
+           message_id == Ashita.Enum.Message.SPELL_MAGIC_BURST_MP_DRAIN
 end
 
 ------------------------------------------------------------------------------------------------------

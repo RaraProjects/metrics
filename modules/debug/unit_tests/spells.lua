@@ -1481,7 +1481,7 @@ Debug.Unit.Tests.Spells.Aspir_Burst = function()
     local mp_cost = 10
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_MAGIC_BURST_PRIMARY))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SPELL_MAGIC_BURST_MP_DRAIN))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1498,8 +1498,10 @@ Debug.Unit.Tests.Spells.Aspir_Burst = function()
         player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
         player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN] = {}
         player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.TOTAL] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MIN] = damage
-        player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.CRITICAL_MIN] = damage
+        player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.CRITICAL_MAX] = damage
+        player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.CRITICAL_DAMAGE] = damage
+        player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.CRITICAL_COUNT] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.ATTEMPTS_ON_USE] = 1
@@ -1510,8 +1512,10 @@ Debug.Unit.Tests.Spells.Aspir_Burst = function()
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.TOTAL] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MIN] = damage
-        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.MAX] = damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.CRITICAL_MIN] = damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.CRITICAL_MAX] = damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.CRITICAL_DAMAGE] = damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.CRITICAL_COUNT] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.HITS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.HITS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_MP_DRAIN][DB.Metric.ATTEMPTS_ON_USE] = 1
@@ -1524,7 +1528,7 @@ Debug.Unit.Tests.Spells.Aspir_Burst = function()
         pet    = Blog.Enum.NO_PET,
         damage = tostring(damage),
         action = action_name,
-        note   = " ",
+        note   = "BURST!",
     }
 
     local misc = {}
@@ -1964,6 +1968,78 @@ Debug.Unit.Tests.Spells.Enfeeble_AOE_One_Resist = function()
     }
 
     return Debug.Unit.Check_Result("Spells - Enfeeble > AOE One Resist", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Spells - Dispel
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Spells.Dispel = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local debuff_id = 93
+    local debuff_name = "Defense Boost"
+    local action_id = 260
+    local action_name = "Dispel"
+    local mp_cost = 25
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, debuff_id, nil, nil, Ashita.Enum.Message.SPELL_REMOVE_STATUS_EFFECT_PRIMARY))
+    local action = Debug.Unit.Util.Build_Action(payload, action_id)
+    H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local player_catalog = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    player_catalog[player_name] = {}
+
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mp_cost
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING] = {}
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
+
+        player_catalog[player_name][target_index] = {}
+        player_catalog[player_name][target_index][action_name] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.SPELLS_ENFEEBLING][DB.Metric.MP_SPENT] = mp_cost
+    end
+
+    local battle_log = {
+        player = player_name,
+        pet    = Blog.Enum.NO_PET,
+        damage = "---",
+        action = action_name,
+        note   = debuff_name,
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Spells - Dispel", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------
