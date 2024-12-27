@@ -135,12 +135,24 @@ end
 ---@param player_name string
 ---@param melee_type string
 ---@param multi_attack_metric string
+---@param total_multi? boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Acc.Multi_Attack = function(player_name, melee_type, multi_attack_metric)
+Column.Acc.Multi_Attack = function(player_name, melee_type, multi_attack_metric, total_multi)
     local multi_attack  = DB.Data.Get(player_name, melee_type, multi_attack_metric)
     local attack_rounds = DB.Data.Get(player_name, melee_type, DB.Metric.ATTEMPTS_ON_USE)
-    local color         = Column.Acc.Color_Selection(multi_attack, attack_rounds, 0)
+
+    -- The denominator for the total multi attack needs to be the sum amount of attack rounds for main- and off-hand attacks.
+    if total_multi then
+        local main_hand_multi = DB.Data.Get(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
+        local off_hand_multi  = DB.Data.Get(player_name, DB.Trackable.MELEE_OFF_HAND, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
+        local main_hand_count = DB.Data.Get(player_name, DB.Trackable.MELEE_MAIN_HAND, DB.Metric.ATTEMPTS_ON_USE)
+        local off_hand_count  = DB.Data.Get(player_name, DB.Trackable.MELEE_OFF_HAND,  DB.Metric.ATTEMPTS_ON_USE)
+        multi_attack  = main_hand_multi + off_hand_multi
+        attack_rounds = main_hand_count + off_hand_count
+    end
+
+    local color = Column.Acc.Color_Selection(multi_attack, attack_rounds, 0)
     return Column.Output.Percent(multi_attack, attack_rounds, color)
 end
 

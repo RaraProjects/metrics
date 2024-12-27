@@ -62,7 +62,7 @@ Focus.Melee.Total = function(player_name, make_brief)
         UI.TableHeadersRow()
 
         local full_data = {}
-        table.insert(full_data, {header = "Total",       trackable = DB.Trackable.MELEE_OVERALL})
+        table.insert(full_data, {header = "Total",       trackable = DB.Trackable.MELEE_OVERALL, total = true})
         table.insert(full_data, {header = "- Main-Hand", trackable = DB.Trackable.MELEE_MAIN_HAND})
         if off_hand > 0    then table.insert(full_data, {header = "- Off-Hand",     trackable = DB.Trackable.MELEE_OFF_HAND}) end
         if kick_damage > 0 then table.insert(full_data, {header = "- Kick Attacks", trackable = DB.Trackable.MELEE_KICK_ATTACKS}) end
@@ -73,13 +73,13 @@ Focus.Melee.Total = function(player_name, make_brief)
                 UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, data.trackable)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0, true)
-                if has_multi then UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE) end
+                if has_multi then UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE, data.total) end
             else
                 UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable)
                 UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0, true)
-                if has_multi then UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE) end
+                if has_multi then UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE, data.total) end
             end
             Window_Manager.Table_Row_Color(row)
             row = row + 1
