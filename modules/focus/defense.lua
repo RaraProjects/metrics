@@ -58,7 +58,7 @@ Focus.Defense.Damage_Taken = function(player_name, make_brief)
         UI.TableHeadersRow()
 
         local defense_trackables = {
-            [1] = {header = "Total",  trackable = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, trackable_pet = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, damage = 1},
+            [1] = {header = "Total",    trackable = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, trackable_pet = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, damage = 1},
             [2] = {header = "- Melee",  trackable = DB.Trackable.DEF_MELEE,              trackable_pet = DB.Trackable.DEF_MELEE_PET,   damage = melee},
             [3] = {header = "- Ranged", trackable = DB.Trackable.DEF_RANGED,             trackable_pet = DB.Trackable.DEF_RANGED_PET,  damage = ranged},
             [4] = {header = "- Magic",  trackable = DB.Trackable.DEF_NUKING,             trackable_pet = DB.Trackable.DEF_NUKING_PET,  damage = magic},
@@ -142,13 +142,20 @@ Focus.Defense.Mitigation = function(player_name)
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
+    local shield_block = DB.Data.Get(player_name, DB.Trackable.DEF_SHIELD_BLOCK, DB.Metric.HITS_ON_TARGET)
+    local guard        = DB.Data.Get(player_name, DB.Trackable.DEF_GUARD,        DB.Metric.HITS_ON_TARGET)
+    local show_dt = shield_block > 0 or guard > 0
+
+    local columns = 3
+    if show_dt then columns = columns + 2 end
+
     local row = 1
-    if UI.BeginTable("Defense", 5, table_flags) then
+    if UI.BeginTable("Defense", columns, table_flags) then
         UI.TableSetupColumn("Mitigation", col_flags, name_width)
         UI.TableSetupColumn("%Proc",      col_flags, width)
         UI.TableSetupColumn("~HP Saved",  col_flags, width)
-        UI.TableSetupColumn("~Damage",    col_flags, width)
-        UI.TableSetupColumn("%DT-",       col_flags, width)
+        if show_dt then UI.TableSetupColumn("~Damage",    col_flags, width) end
+        if show_dt then UI.TableSetupColumn("%DT-",       col_flags, width) end
         UI.TableHeadersRow()
 
         -- Full Mitigation
@@ -170,8 +177,8 @@ Focus.Defense.Mitigation = function(player_name)
                 UI.TableNextColumn() UI.Text(data.header)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0)
                 UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, data.trackable)
-                UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+                if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
+                if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
                 mitigation_found = true
@@ -189,8 +196,8 @@ Focus.Defense.Mitigation = function(player_name)
                 UI.TableNextColumn() UI.Text(data.header)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0)
                 UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, data.trackable, data.ranged)
-                UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, data.trackable)
-                UI.TableNextColumn() Column.Defense.Damage_Reduction(player_name, data.trackable)
+                if show_dt then UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, data.trackable) end
+                if show_dt then UI.TableNextColumn() Column.Defense.Damage_Reduction(player_name, data.trackable) end
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
                 mitigation_found = true
@@ -203,8 +210,8 @@ Focus.Defense.Mitigation = function(player_name)
             UI.TableNextColumn() UI.Text("None Yet")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
+            if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
         end
 
         UI.EndTable()
