@@ -56,14 +56,18 @@ H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
     -- Need special handling for pets
     local player_name = actor_mob.name
     local ranged_type = DB.Trackable.RANGED_OVERALL
+    local pet_name
+
     if owner_mob then
         ranged_type = DB.Trackable.PET_RANGED_OVERALL
+        pet_name    = player_name
         player_name = owner_mob.name
     end
 
     local audits = {
         player_name = player_name,
         target_name = target_mob.name,
+        pet_name    = pet_name,
     }
 
     local was_critical_hit = H.Ranged.Message(audits, damage, message_id, ranged_type, owner_mob)

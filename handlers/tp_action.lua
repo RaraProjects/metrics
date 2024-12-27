@@ -162,9 +162,7 @@ H.TP.Monster_Action = function(action, actor_mob, log_offense)
 
             -- Puppet ranged attack. Send this action to the ranged action parser.
             if action_id == 1949 then
-                H.Ranged.Parse(action_data, actor_mob, target_mob, owner_mob)
-                skill_name = "Pet Ranged"
-                tp_damage = action_data.param
+                return H.Ranged.Parse(action_data, actor_mob, target_mob, owner_mob)
 
             -- BST pet abilities can't skillchain in HorizonXI.
             -- Need to calculate WS damage here to account for AOE weaponskills.
