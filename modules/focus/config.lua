@@ -39,13 +39,9 @@ end
 -- Toggles the settings showing for the battle log.
 ------------------------------------------------------------------------------------------------------
 Focus.Config.Settings_Button = function()
-    UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
-    UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
-    UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     if UI.SmallButton("Settings") then
         -- Config.Button_Toggle(Config.Enum.File.FOCUS)
     end
-    UI.PopStyleColor(3)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -53,15 +49,9 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Config.Percent_Details = function()
     local active = Focus.Config.Show_Percent_Details
-    if active then
-        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
-        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
-        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
-    end
     if UI.SmallButton("% Details") then
         Focus.Config.Percent_Toggle()
     end
-    if active then UI.PopStyleColor(3) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -75,14 +65,7 @@ end
 -- Toggles miscellaneous actions.
 ------------------------------------------------------------------------------------------------------
 Focus.Config.Misc_Actions = function()
-    local active = Metrics.Focus.Show_Misc_Actions
-    if active then
-        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
-        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
-        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
-    end
     if UI.SmallButton("Misc. Actions") then
         Metrics.Focus.Show_Misc_Actions = not Metrics.Focus.Show_Misc_Actions
     end
-    if active then UI.PopStyleColor(3) end
 end
