@@ -27,10 +27,11 @@ XP.Tracking.Kill_Times_XP = {}
 XP.Tracking.Kill_Times_CP = {}
 XP.Tracking.Kill_Times_EP = {}
 
-XP.Tracking.Per_Kill_Base_XP_Only = {}
+XP.Tracking.Per_Kill_Base_XP_Only   = {}
+XP.Tracking.Per_Kill_Boost_Only     = {}
 XP.Tracking.Per_Kill_Base_And_Boost = {}
-XP.Tracking.Per_Kill_Capacity_Base = {}
-XP.Tracking.Per_Kill_Exemplar_Base = {}
+XP.Tracking.Per_Kill_Capacity_Base  = {}
+XP.Tracking.Per_Kill_Exemplar_Base  = {}
 
 XP.Tracking.Show_Debug = false -- Shows debug information when enabled.
 
@@ -61,6 +62,7 @@ XP.Tracking.Initialize = function()
     XP.Tracking.Kill_Times_EP = {}
 
     XP.Tracking.Per_Kill_Base_And_Boost = {}
+    XP.Tracking.Per_Kill_Boost_Only     = {}
     XP.Tracking.Per_Kill_Base_XP_Only   = {}
     XP.Tracking.Per_Kill_Capacity_Base  = {}
     XP.Tracking.Per_Kill_Exemplar_Base  = {}
@@ -129,9 +131,11 @@ XP.Tracking.Add_Total_XP = function(amount, type)
     local elements = #XP.Tracking.Per_Kill_Base_And_Boost
     if elements > XP.Tracking.Per_Kill_Max_Windows then
         table.remove(XP.Tracking.Per_Kill_Base_And_Boost)
+        table.remove(XP.Tracking.Per_Kill_Boost_Only)
         table.remove(XP.Tracking.Per_Kill_Base_XP_Only)
     end
     table.insert(XP.Tracking.Per_Kill_Base_And_Boost, 1, base_xp + bonus_xp)
+    table.insert(XP.Tracking.Per_Kill_Boost_Only, 1, bonus_xp)
     table.insert(XP.Tracking.Per_Kill_Base_XP_Only, 1, base_xp)
 
     return base_xp, bonus_xp
@@ -213,6 +217,7 @@ XP.Tracking.Debug_Content = function()
 
 
     UI.PushStyleColor(ImGuiCol_TableRowBg, Window_Manager.Theme.Table_Row_Bg)
+    UI.PushStyleColor(ImGuiCol_TableRowBgAlt, Window_Manager.Theme.Table_Row_Bg)
     if UI.BeginTable("Current XP", 5, table_flags) then
         UI.TableSetupColumn("Metric", flags)
         UI.TableSetupColumn("EXP",    flags)
@@ -255,41 +260,57 @@ XP.Tracking.Debug_Content = function()
     end
 
     local xp_kill_entries = #XP.Tracking.Kill_Times_XP
-    UI.PushStyleColor(ImGuiCol_TableRowBg, Window_Manager.Theme.Table_Row_Bg)
-    if UI.BeginTable("Kill Speed XP", 1 + xp_kill_entries, table_flags) then
-        UI.TableSetupColumn("Current XP Window", flags)
-        for i, _ in ipairs(XP.Tracking.Kill_Times_XP) do UI.TableSetupColumn(tostring(i), flags) end
-        UI.TableHeadersRow()
+    if xp_kill_entries > 0 then
+        if UI.BeginTable("Kill Speed XP", 2 + xp_kill_entries, table_flags) then
+            UI.TableSetupColumn("Type", flags)
+            UI.TableSetupColumn("Current XP Window", flags)
+            for i, _ in ipairs(XP.Tracking.Kill_Times_XP) do UI.TableSetupColumn(tostring(i), flags) end
+            UI.TableHeadersRow()
 
-        UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Tracking.Last_XP_Gain_Time))
-        for _, v in ipairs(XP.Tracking.Kill_Times_XP) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+            UI.TableNextColumn() UI.Text("Kill Times")
+            UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Tracking.Last_XP_Gain_Time))
+            for _, v in ipairs(XP.Tracking.Kill_Times_XP) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
 
-        UI.EndTable()
+            UI.TableNextColumn() UI.Text("Base Only")
+            for _, v in ipairs(XP.Tracking.Per_Kill_Base_XP_Only) do UI.TableNextColumn() UI.Text(string.format("%.1f", v)) end
+
+            UI.TableNextColumn() UI.Text("Boost Only")
+            for _, v in ipairs(XP.Tracking.Per_Kill_Boost_Only) do UI.TableNextColumn() UI.Text(string.format("%.1f", v)) end
+
+            UI.TableNextColumn() UI.Text("Base + Boost")
+            for _, v in ipairs(XP.Tracking.Per_Kill_Base_And_Boost) do UI.TableNextColumn() UI.Text(tostring(v)) end
+
+            UI.EndTable()
+        end
     end
 
     local cp_kill_entries = #XP.Tracking.Kill_Times_CP
-    if UI.BeginTable("Kill Speed CP", 1 + cp_kill_entries, table_flags) then
-        UI.TableSetupColumn("Current CP Window", flags)
-        for i, _ in ipairs(XP.Tracking.Kill_Times_CP) do UI.TableSetupColumn(tostring(i), flags) end
-        UI.TableHeadersRow()
+    if cp_kill_entries > 0 then
+        if UI.BeginTable("Kill Speed CP", 1 + cp_kill_entries, table_flags) then
+            UI.TableSetupColumn("Current CP Window", flags)
+            for i, _ in ipairs(XP.Tracking.Kill_Times_CP) do UI.TableSetupColumn(tostring(i), flags) end
+            UI.TableHeadersRow()
 
-        UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Tracking.Last_CP_Gain_Time))
-        for _, v in ipairs(XP.Tracking.Kill_Times_CP) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+            UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Tracking.Last_CP_Gain_Time))
+            for _, v in ipairs(XP.Tracking.Kill_Times_CP) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
 
-        UI.EndTable()
+            UI.EndTable()
+        end
     end
 
     local ep_kill_entries = #XP.Tracking.Kill_Times_EP
-    if UI.BeginTable("Kill Speed CP", 1 + ep_kill_entries, table_flags) then
-        UI.TableSetupColumn("Current CP Window", flags)
-        for i, _ in ipairs(XP.Tracking.Kill_Times_EP) do UI.TableSetupColumn(tostring(i), flags) end
-        UI.TableHeadersRow()
+    if ep_kill_entries > 0 then
+        if UI.BeginTable("Kill Speed CP", 1 + ep_kill_entries, table_flags) then
+            UI.TableSetupColumn("Current CP Window", flags)
+            for i, _ in ipairs(XP.Tracking.Kill_Times_EP) do UI.TableSetupColumn(tostring(i), flags) end
+            UI.TableHeadersRow()
 
-        UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Tracking.Last_EP_Gain_Time))
-        for _, v in ipairs(XP.Tracking.Kill_Times_EP) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+            UI.TableNextColumn() UI.Text(Timers.Format(os.time() - XP.Tracking.Last_EP_Gain_Time))
+            for _, v in ipairs(XP.Tracking.Kill_Times_EP) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
 
-        UI.EndTable()
+            UI.EndTable()
+        end
     end
 
-    UI.PopStyleColor(1)
+    UI.PopStyleColor(2)
 end

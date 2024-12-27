@@ -146,16 +146,21 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@param xp_type integer
 ---@param base_only? boolean
+---@param boost_only? boolean
 ---@return number
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Average_XP = function(xp_type, base_only)
+XP.Columns.Average_XP = function(xp_type, base_only, boost_only)
     local last_xp_gain_time = 0
     local xp_list = {}
 
     if xp_type == XP.Type.EXPERIENCE or xp_type == XP.Type.LIMIT then
         last_xp_gain_time = XP.Tracking.Last_XP_Gain_Time
         xp_list = XP.Tracking.Per_Kill_Base_And_Boost
-        if base_only then xp_list = XP.Tracking.Per_Kill_Base_XP_Only end
+        if base_only then
+            xp_list = XP.Tracking.Per_Kill_Base_XP_Only
+        elseif boost_only then
+            xp_list = XP.Tracking.Per_Kill_Boost_Only
+        end
 
     elseif xp_type == XP.Type.CAPACITY then
         last_xp_gain_time = XP.Tracking.Last_CP_Gain_Time
@@ -196,7 +201,6 @@ XP.Columns.Average_Rate = function(xp_type, base_only)
         last_xp_gain_time = XP.Tracking.Last_XP_Gain_Time
         kill_times = XP.Tracking.Kill_Times_XP
         show_dedication = true
-        if base_only then kill_times = XP.Tracking.Per_Kill_Base_XP_Only end
 
     elseif xp_type == XP.Type.CAPACITY then
         last_xp_gain_time = XP.Tracking.Last_CP_Gain_Time
@@ -298,7 +302,7 @@ XP.Columns.Time_To_Finish_Dedication = function(xp_type)
     local dedication_remaining = XP.Dedication.XP_Remaining()
     if xp_type == XP.Type.LIMIT then dedication_remaining = Ashita.Player.Exp_TNM() end
 
-    local average_xp = XP.Columns.Average_XP(xp_type)
+    local average_xp = XP.Columns.Average_XP(xp_type, nil, true)
     if average_xp <= 0 then return UI.TextColored(color, "--:--:--") end
 
     color = Res.Colors.Basic.WHITE
