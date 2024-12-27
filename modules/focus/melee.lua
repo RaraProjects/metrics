@@ -220,7 +220,7 @@ Focus.Melee.Action_Blocked = function(player_name, paralyzed, intimidated)
 
     local row = 1
     if UI.BeginTable("Blocked", 2, table_flags) then
-        UI.TableSetupColumn("Type",  col_flags, name_width)
+        UI.TableSetupColumn("Action Blocked", col_flags, name_width)
         UI.TableSetupColumn("Count", col_flags, width)
         UI.TableHeadersRow()
 

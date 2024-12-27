@@ -5,7 +5,7 @@ Focus.Config.Defaults = T{
     Y = 100,
     Visible = {false},
     Show_Mitigation_Details = false,
-    Show_Misc_Actions = false,
+    Show_Misc_Actions = true,
 }
 
 Focus.Config.Show_Percent_Details = false

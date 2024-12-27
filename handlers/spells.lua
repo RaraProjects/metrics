@@ -108,6 +108,10 @@ H.Spell.Target_Parse = function(spell_data, result, actor_mob, target_mob, owner
     elseif H.Message_Healing(message_id) then
         H.Spell.Healing(audits, spell_name, damage)
 
+    -- General buffs.
+    elseif H.Message_Buff(message_id) then
+        -- Nothing special.
+
     else
         Debug.Error.Add(Debug.Error.WARNING, "H.Spell.Target_Parse",
         "BENIGN: Spell {" .. tostring(spell_name) .. "} (" .. tostring(spell_id) .. ") has unaccounted for message {" .. tostring(message_id) .. "}.")

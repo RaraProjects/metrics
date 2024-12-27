@@ -14,7 +14,7 @@ Focus.Abilities.Display = function(player_name, hide_publish)
     local mp_recovery   = DB.Data.Get(player_name, DB.Trackable.ABILITY_MP_RECOVERY, DB.Metric.ATTEMPTS_ON_USE)
     local misc_count    = DB.Data.Get(player_name, DB.Trackable.ABILITY_GENERAL,     DB.Metric.ATTEMPTS_ON_USE)
 
-    local has_data = rolls > 0 or maneuvers > 0 or ability_total > 0 or healing_total > 0 or mp_recovery > 0 or (misc_count > 0 and Metrics.Focus.Show_Misc_Actions)
+    local has_data = rolls > 0 or maneuvers > 0 or ability_total > 0 or healing_total > 0 or mp_recovery > 0 or misc_count > 0
 
     if has_data then
         if ability_total > 0 then Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_DAMAGING, "Damaging") end
@@ -22,7 +22,13 @@ Focus.Abilities.Display = function(player_name, hide_publish)
         if maneuvers > 0     then Focus.Abilities.Mauevers(player_name) end
         if healing_total > 0 then Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_HEALING, "Healing") end
         if mp_recovery > 0   then Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_MP_RECOVERY, "MP Recovery") end
-        if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Abilities.Abilities_General(player_name) end
+        if misc_count > 0 then
+            if Metrics.Focus.Show_Misc_Actions then
+                Focus.Abilities.Abilities_General(player_name)
+            else
+                UI.Text("Enable Misc. Actions to see additional data.")
+            end
+        end
         if not hide_publish then Focus.Abilities.Publish(player_name, ability_total, healing_total) end
     else
         UI.Text("No ability data available for this player.")

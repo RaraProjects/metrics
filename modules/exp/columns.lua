@@ -290,7 +290,8 @@ end
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Time_To_Finish_Dedication = function(xp_type)
     local color = Res.Colors.Basic.WHITE
-    if XP.Tracking.Last_XP_Gain_Time == 0 then return UI.TextColored(color, "--:--:--") end
+
+    if not XP.Dedication.Is_Active or XP.Tracking.Last_XP_Gain_Time == 0 then return UI.TextColored(color, "--:--:--") end
     local duration = os.time() - XP.Tracking.Last_XP_Gain_Time
 
     if not xp_type then xp_type = XP.Type.EXPERIENCE end

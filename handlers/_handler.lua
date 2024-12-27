@@ -284,7 +284,8 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 H.Message_Buff = function(message_id)
-    return message_id == Ashita.Enum.Message.SPELL_BUFF
+    return message_id == Ashita.Enum.Message.SPELL_BUFF_PRIMARY or
+           message_id == Ashita.Enum.Message.SPELL_BUFF_ADDITIONAL
 end
 
 ------------------------------------------------------------------------------------------------------
