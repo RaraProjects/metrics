@@ -121,7 +121,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.Spell_Def.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, target_count)
     local blog_note = ""
-    if Res.Spells.Get_AOE(spell_id) then blog_note = "TGTs: " .. tostring(target_count) end
+    if target_count > 1 then blog_note = "TGTs: " .. tostring(target_count) end
     Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_SPELL, spell_name, damage, blog_note, spell_data)
 end
 

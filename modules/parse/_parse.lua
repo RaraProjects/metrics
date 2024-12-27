@@ -1,4 +1,4 @@
-Parse = T{}
+Parse = {}
 
 Parse.Name   = "Parse"
 Parse.Title  = "Metrics - Parse"

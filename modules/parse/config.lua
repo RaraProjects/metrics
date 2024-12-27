@@ -8,6 +8,7 @@ Parse.Config.Defaults = T{
     Display_Mode = Parse.Enum.Display_Mode.FULL,
 
     -- General Settings
+    Is_Horizon        = true,
     Show_Clock        = false,
     Include_SC_Damage = false,
     Condensed_Numbers = false,
@@ -58,6 +59,7 @@ Parse.Config.Column_Width = Column.Widths.Settings
 Parse.Config.Slider_Width = 100
 
 Parse.Config.General_Settings = {}
+table.insert(Parse.Config.General_Settings, {header = "Horizon Mode",      setting = "Is_Horizon",        help = Parse.Help.Horizon_Mode})
 table.insert(Parse.Config.General_Settings, {header = "Run Time",          setting = "Show_Clock",        help = Parse.Help.Help_Text_Clock})
 table.insert(Parse.Config.General_Settings, {header = "Include SC Damage", setting = "Include_SC_Damage", help = Parse.Help.Help_Text_SC_Damage})
 table.insert(Parse.Config.General_Settings, {header = "Short Numbers",     setting = "Condensed_Numbers", help = Parse.Help.Help_Text_Condensed_Numbers})

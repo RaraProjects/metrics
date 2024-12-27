@@ -1,6 +1,15 @@
 Parse.Help = {}
 
 ------------------------------------------------------------------------------------------------------
+-- Shows the Horizon Mode help text.
+------------------------------------------------------------------------------------------------------
+Parse.Help.Horizon_Mode = function()
+    UI.SameLine() Window_Manager.Widgets.HelpMarker(
+    "Are you playing on the Horizon server? Turn this off for retail. Horizon has some custom behavior and " ..
+    "is capped at 75.")
+end
+
+------------------------------------------------------------------------------------------------------
 -- Shows the Clock help text.
 ------------------------------------------------------------------------------------------------------
 Parse.Help.Help_Text_Clock = function()

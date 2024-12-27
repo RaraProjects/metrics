@@ -209,13 +209,13 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
             space = " "
         end
         -- Show how many targets were hit on the ga-spell.
-        if Res.Spells.Get_AOE(spell_id) then
+        if target_count > 1 then
             blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
         end
         Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.MAGIC_OFFENSIVE, spell_name, damage, blog_note, spell_data)
 
     elseif Res.Spells.Get_Healing(spell_id) then
-        if Res.Spells.Get_AOE(spell_id) then
+        if target_count > 1 then
             blog_note = blog_note .. space .. "TGTs: " .. tostring(target_count)
         end
         Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.ALL_HEALING, spell_name, damage, blog_note, spell_data)

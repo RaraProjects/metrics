@@ -178,17 +178,22 @@ Focus.Magic.Damaging_Spell = function(player_name, trackable, header, make_brief
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
-            UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name, trackable, metric_total, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_total, action_name, true) end
-            UI.TableNextColumn()                        Column.Damage.Attempts(player_name,        trackable, metric_count, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_total, action_name) end
-            if not hide_mp    then UI.TableNextColumn() Column.Spell.MP_Used(player_name,          trackable, action_name, burst) end
-            if not hide_mp    then UI.TableNextColumn() Column.Damage.Per_Unit(player_name,        trackable, DB.Metric.MP_SPENT, action_name, burst) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_min, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_max, action_name) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+
+            local attempts = DB.Catalog.Get(player_name, trackable, action_name, metric_count)
+            if attempts > 0 then
+                UI.TableNextColumn() UI.Text("- " .. action_name)
+                UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name, trackable, metric_total, action_name)
+                if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_total, action_name, true) end
+                UI.TableNextColumn()                        Column.Damage.Attempts(player_name,        trackable, metric_count, action_name)
+                if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_total, action_name) end
+                if not hide_mp    then UI.TableNextColumn() Column.Spell.MP_Used(player_name,          trackable, action_name, burst) end
+                if not hide_mp    then UI.TableNextColumn() Column.Damage.Per_Unit(player_name,        trackable, DB.Metric.MP_SPENT, action_name, burst) end
+                if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_min, action_name) end
+                if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_max, action_name) end
+                Window_Manager.Table_Row_Color(row)
+                row = row + 1
+            end
+
         end
 
         UI.EndTable()

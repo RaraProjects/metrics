@@ -52,6 +52,7 @@ require("modules.focus.pets")
 require("modules.focus.defense")
 require("modules.focus.cataloged")
 require("modules.focus.overview")
+require("modules.focus.dependencies")
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the focus settings.
