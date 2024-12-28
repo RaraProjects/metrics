@@ -169,10 +169,10 @@ H.Spell.Count = function(audits, spell_id, spell_name, hit, mp_cost, is_burst, t
         end
 
     elseif Res.Spells.Get_Debuff_Removal(spell_id) then trackable = DB.Trackable.SPELLS_DEBUFF_REMOVAL
-    elseif Res.Spells.Get_Buff(spell_id)           then trackable = DB.Trackable.SPELLS_BUFFS
-    elseif Res.Spells.Get_Damaging(spell_id)       then if is_pet then trackable = DB.Trackable.PET_NUKING else trackable = DB.Trackable.SPELLS_NUKING end
-    elseif Res.Spells.Get_Enfeeble(spell_id)       then if is_pet then trackable = DB.Trackable.PET_ENFEEBLING else trackable = DB.Trackable.SPELLS_ENFEEBLING end
-    elseif Res.Spells.Get_DoT(spell_id)            then if is_pet then trackable = DB.Trackable.PET_DOT else trackable = DB.Trackable.SPELLS_DOT end
+    elseif Res.Spells.Get_Buff(spell_id)           then if is_pet then trackable = DB.Trackable.PET_SPELL_BUFFS else trackable = DB.Trackable.SPELLS_BUFFS end
+    elseif Res.Spells.Get_Damaging(spell_id)       then if is_pet then trackable = DB.Trackable.PET_NUKING      else trackable = DB.Trackable.SPELLS_NUKING end
+    elseif Res.Spells.Get_Enfeeble(spell_id)       then if is_pet then trackable = DB.Trackable.PET_ENFEEBLING  else trackable = DB.Trackable.SPELLS_ENFEEBLING end
+    elseif Res.Spells.Get_DoT(spell_id)            then if is_pet then trackable = DB.Trackable.PET_DOT         else trackable = DB.Trackable.SPELLS_DOT end
     elseif Res.Spells.Get_Enspell(spell_id)        then trackable = DB.Trackable.MELEE_ENSPELL
     elseif Res.Spells.Get_Spikes(spell_id)         then trackable = DB.Trackable.SPELLS_SPIKE_DAMAGE
     elseif Res.Spells.Get_MP_Drain(spell_id)       then trackable = DB.Trackable.SPELLS_MP_DRAIN
