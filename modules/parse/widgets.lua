@@ -10,7 +10,7 @@ Parse.Widgets.Clock = function()
         UI.Text("Total: " .. tostring(Timers.Check(Timers.Enum.Names.METRICS)))
         UI.SameLine() UI.Text(" ") UI.SameLine()
         UI.SameLine() UI.Text("Active: " .. tostring(Timers.Check(Timers.Enum.Names.PARSE)))
-        UI.SameLine() UI.Text(pause_string) Parse.Widgets.Timer_Duration_Help_Text()
+        UI.SameLine() UI.Text(pause_string) Parse.Help.Timer_Duration_Help_Text()
     end
 end
 
@@ -110,15 +110,4 @@ Parse.Widgets.Player_Limit = function()
         Parse.Settings.Rank_Cutoff = cutoff[1]
     end
     UI.SameLine() Window_Manager.Widgets.HelpMarker("How many players are listed on the Team table.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Shows the help text for the player filter.
-------------------------------------------------------------------------------------------------------
-Parse.Widgets.Timer_Duration_Help_Text = function()
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("The active timer will auto-pause after " .. tostring(Timers.Tresholds.AUTOPAUSE)
-                                        .. " seconds of no actions. The timer will auto restart after someone affiliated with you "
-                                        .. "(in your party or alliance) takes an action. Data collection does NOT stop while "
-                                        .. "paused! The duration and auto-pause is to help you see how long your group has actually "
-                                        .. "been active. \n")
 end

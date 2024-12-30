@@ -29,16 +29,18 @@ end
 -- Populate the data in the monitor window.
 ------------------------------------------------------------------------------------------------------
 Hub.Content = function()
-    local nano_mode = Parse.Nano.Is_Enabled()
-    local mini_mode = Parse.Mini.Is_Enabled()
+    -- If Multi Window mode is enabled then just show the buttons here. The rest of the content is handled
+    -- in the primary screen refresh event.
     if Window_Manager.Settings.Multi_Window then
-        Hub.Multi_Window()
-    elseif nano_mode then
-        Parse.Nano.Populate()
-    elseif mini_mode then
-        Parse.Mini.Populate()
+        Hub.Buttons()
+
+    -- Only show the Mini or Nano mode if they are enabled while in Single Window mode.
     else
-        Hub.Single_Window()
+        if Parse.Config.Is_Nano_Mode() or Parse.Config.Is_Mini_Mode() then
+            Parse.Content()
+        else
+            Hub.Single_Window()
+        end
     end
 end
 
@@ -57,20 +59,13 @@ Hub.Buttons = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Allows Metrics to be broken into individual windows.
-------------------------------------------------------------------------------------------------------
-Hub.Multi_Window = function()
-    Hub.Buttons()
-end
-
-------------------------------------------------------------------------------------------------------
 -- Shows Metrics in a single window with tabs.
 ------------------------------------------------------------------------------------------------------
 Hub.Single_Window = function()
     if UI.BeginTabBar("Tabs", Window_Manager.Tabs.Flags) then
         if UI.BeginTabItem(Parse.Name, false, Window_Manager.Is_Module_Active(Parse.Name)) then
             Window_Manager.Clear_Module_Switch(Parse.Name)
-            Parse.Full.Populate()
+            Parse.Content()
             UI.EndTabItem()
         end
         if UI.BeginTabItem(Focus.Name, false, Window_Manager.Is_Module_Active(Focus.Name)) then

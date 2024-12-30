@@ -64,3 +64,15 @@ Parse.Help.Help_Text_Focus_Jump = function()
     "Provides a button that allows you to quickly jump to the Focus window to look into " ..
     "the specified player's stats more.")
 end
+
+------------------------------------------------------------------------------------------------------
+-- Shows the help text for the player filter.
+------------------------------------------------------------------------------------------------------
+Parse.Help.Timer_Duration_Help_Text = function()
+    UI.SameLine() Window_Manager.Widgets.HelpMarker(
+    "The active timer will auto-pause after " .. tostring(Timers.Tresholds.AUTOPAUSE) ..
+    " seconds of no actions. The timer will auto restart after someone affiliated with you " ..
+    "(in your party or alliance) takes an action. Data collection does NOT stop while " ..
+    "paused! The duration and auto-pause is to help you see how long your group has actually " ..
+    "been active. \n")
+end

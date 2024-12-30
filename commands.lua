@@ -28,14 +28,14 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "debug" then
             Debug.Toggle()
         elseif arg == "nano" or arg == "n" then
-            Parse.Nano.Toggle()
+            Parse.Config.Enable_Nano_Mode()
         elseif arg == "mini" or arg == "m" then
-            Parse.Mini.Toggle()
+            Parse.Config.Enable_Mini_Mode()
         elseif arg == "reset" or arg == "r" then
             DB.Initialize(true)
             Blog.Initialize()
         elseif arg == "full" or arg == "f" then
-            Parse.Full.Enable()
+            Parse.Config.Enabled_Full_Mode()
         elseif (arg == "pet" or arg == "p") then
             Parse.Config.Toggle_Pet()
         elseif arg == "clock" or arg == "c" then
@@ -44,10 +44,8 @@ ashita.events.register('command', 'command_cb', function (e)
             Focus.Config.Percent_Toggle()
         elseif arg == "dps" then
             Parse.Config.Toggle_DPS()
-            Parse.Util.Calculate_Column_Flags()
         elseif arg == "speed" then
             Parse.Config.Toggle_Melee_Delay()
-            Parse.Util.Calculate_Column_Flags()
         elseif arg == "throttle" then
             Throttle.Toggle()
         elseif arg == "lurk" then

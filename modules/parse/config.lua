@@ -5,7 +5,7 @@ Parse.Config.Defaults = T{
     X = 100,
     Y = 100,
     Visible = {false},
-    Display_Mode = Parse.Enum.Display_Mode.FULL,
+    Display_Mode = Parse.Display_Modes.FULL,
 
     -- General Settings
     Is_Horizon        = true,
@@ -123,7 +123,7 @@ Parse.Config.Reset = function()
     for setting, value in pairs(Parse.Config.Defaults) do
         Parse.Settings[setting] = value
     end
-    Parse.Util.Calculate_Column_Flags()
+    Parse.Refresh_Column_Count()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -146,7 +146,7 @@ Parse.Config.Display = function()
     Parse.Config.Show_Column_Group(Parse.Config.Columns.Magic, "Magic")
     UI.Separator()
     Parse.Config.Show_Column_Group(Parse.Config.Columns.Pets, "Pets")
-    Parse.Util.Calculate_Column_Flags()
+    Parse.Refresh_Column_Count()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -224,7 +224,7 @@ end
 Parse.Config.Set_Pet_Columns = function(bool)
     Parse.Settings.Show_Pet_Total = bool
     Parse.Settings.Show_Pet_Accuracy = bool
-    Parse.Util.Calculate_Column_Flags()
+    Parse.Refresh_Column_Count()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -285,6 +285,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Toggle_DPS = function()
     Parse.Settings.Show_DPS = not Parse.Settings.Show_DPS
+    Parse.Refresh_Column_Count()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -292,6 +293,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Toggle_Melee_Delay = function()
     Parse.Settings.Show_Melee_Delay = not Parse.Settings.Show_Melee_Delay
+    Parse.Refresh_Column_Count()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -333,4 +335,55 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Toggle_Clock = function()
     Parse.Settings.Show_Clock = not Parse.Settings.Show_Clock
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks if the display mode is currently set to full.
+------------------------------------------------------------------------------------------------------
+---@return boolean
+------------------------------------------------------------------------------------------------------
+Parse.Config.Is_Full_Mode = function()
+    return Parse.Settings.Display_Mode == Parse.Display_Modes.FULL
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles full mode.
+------------------------------------------------------------------------------------------------------
+Parse.Config.Enabled_Full_Mode = function()
+    Parse.Settings.Display_Mode = Parse.Display_Modes.FULL
+    Parse.Refresh_Column_Count()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns whether mini mode is enabled.
+------------------------------------------------------------------------------------------------------
+---@return boolean
+------------------------------------------------------------------------------------------------------
+Parse.Config.Is_Mini_Mode = function()
+    return Parse.Settings.Display_Mode == Parse.Display_Modes.MINI
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles mini mode.
+------------------------------------------------------------------------------------------------------
+Parse.Config.Enable_Mini_Mode = function()
+    Parse.Settings.Display_Mode = Parse.Display_Modes.MINI
+    Parse.Refresh_Column_Count()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns whether nano mode is enabled.
+------------------------------------------------------------------------------------------------------
+---@return boolean
+------------------------------------------------------------------------------------------------------
+Parse.Config.Is_Nano_Mode = function()
+    return Parse.Settings.Display_Mode == Parse.Display_Modes.NANO
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles nano mode.
+------------------------------------------------------------------------------------------------------
+Parse.Config.Enable_Nano_Mode = function()
+    Parse.Settings.Display_Mode = Parse.Display_Modes.NANO
+    Parse.Refresh_Column_Count()
 end
