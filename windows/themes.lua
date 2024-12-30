@@ -1,4 +1,4 @@
-Window_Manager.Theme = T{}
+Window_Manager.Theme = {}
 
 Window_Manager.Theme.Is_Set = false
 Window_Manager.Theme.Table_Row_Bg = {0.00, 0.00, 0.00, 0.00}
@@ -10,18 +10,18 @@ Window_Manager.Theme.Table_Row_Bg = {0.00, 0.00, 0.00, 0.00}
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Theme.Choose = function()
     UI.Text("Theme (will affect other ImGui based addons)")
-    if UI.RadioButton("Default ", {Metrics.Window.Style}, 0) then
-        Metrics.Window.Style = 0
+    if UI.RadioButton("Default ", {Window_Manager.Settings.Style}, 0) then
+        Window_Manager.Settings.Style = 0
         Window_Manager.Theme.Is_Set = false
     end
     UI.SameLine()
-    if UI.RadioButton("Dark ", {Metrics.Window.Style}, 1) then
-        Metrics.Window.Style = 1
+    if UI.RadioButton("Dark ", {Window_Manager.Settings.Style}, 1) then
+        Window_Manager.Settings.Style = 1
         Window_Manager.Theme.Is_Set = false
     end
     UI.SameLine()
-    if UI.RadioButton("Classic ", {Metrics.Window.Style}, 3) then
-        Metrics.Window.Style = 3
+    if UI.RadioButton("Classic ", {Window_Manager.Settings.Style}, 3) then
+        Window_Manager.Settings.Style = 3
         Window_Manager.Theme.Is_Set = false
     end
     Window_Manager.Theme.Set()
@@ -34,15 +34,15 @@ end
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Theme.Set = function()
     if not Window_Manager.Theme.Is_Set then
-        if Metrics.Window.Style == 0 then
+        if Window_Manager.Settings.Style == 0 then
             Window_Manager.Theme.Apply_Custom(Themes.Default)
             Window_Manager.Theme.Table_Row_Bg = {0.18, 0.20, 0.23, 1.00}
-        elseif Metrics.Window.Style == 1 then
+        elseif Window_Manager.Settings.Style == 1 then
             UI.StyleColorsDark()
             Window_Manager.Theme.Table_Row_Bg = {0.06, 0.06, 0.06, 1.00}
-        elseif Metrics.Window.Style == 2 then
+        elseif Window_Manager.Settings.Style == 2 then
             UI.StyleColorsLight()
-        elseif Metrics.Window.Style == 3 then
+        elseif Window_Manager.Settings.Style == 3 then
             UI.StyleColorsClassic()
             Window_Manager.Theme.Table_Row_Bg = {0.00, 0.00, 0.00, 1.00}
         else

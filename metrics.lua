@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author  = "Metra"
 addon.name    = "Metrics"
-addon.version = "12.25.24.00"
+addon.version = "12.29.24.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -83,7 +83,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
     if Debug.Is_Enabled() and Debug.Show_Demo then UI.ShowDemoWindow() end
 
     Throttle.Throttle()                     -- Throttling for performance.
-    XP.Initialize(Metrics.XP)               -- Need to initialize here because some things aren't ready when addon loads.
+    XP.Initialize()                         -- Need to initialize here because some things aren't ready when addon loads.
     Ashita.Party.Check_Refresh_Time()
     Ashita.Party.Refresh()
     Window_Manager.Check_Mouse()
@@ -96,7 +96,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
         Overview.Window.Populate(Overview.Content)
         Config.Window.Populate(Config.Content)
         Debug.Window.Populate(Debug.Content)
-        if Metrics.Window.Multi_Window then
+        if Window_Manager.Settings.Multi_Window then
             Parse.Window.Populate(Parse.Content)
             Focus.Window.Populate(Focus.Content)
             Blog.Window.Populate(Blog.Content)

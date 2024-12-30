@@ -1,20 +1,22 @@
-Blog = T{}
+Blog = {}
+
+require("modules.battle log.enum")
+require("modules.battle log.dependencies")
+require("modules.battle log.config")
+require("modules.battle log.columns")
+require("modules.battle log.entries")
+require("modules.battle log.widgets")
 
 Blog.Name   = "Battle Log"
 Blog.Title  = "Metrics - Battle Log"
 Blog.Module = "Blog"
-Blog.Window = Window:New({
-    Name   = Blog.Name,
-    Title  = Blog.Title,
-    Module = Blog.Module,
-})
+Blog.File   = "blog"
 
 Blog.Log = {}       -- Primary Data Node
 Blog.Display = {}
 Blog.Util = {}
 
 Blog.Is_Initialized = false
-Blog.Settings = T{}                     -- Keep the "T" on this.
 Blog.Page = 1
 Blog.Filtered_Count = 0
 
@@ -23,13 +25,6 @@ Blog.Tables = {
     Width_Settings    = 175,
     Column_Flags_None = ImGuiTableColumnFlags_None,
 }
-
-require("modules.battle log.enum")
-require("modules.battle log.dependencies")
-require("modules.battle log.config")
-require("modules.battle log.columns")
-require("modules.battle log.entries")
-require("modules.battle log.widgets")
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the battle log.
@@ -40,15 +35,24 @@ require("modules.battle log.widgets")
 -- * UI:             This should come with Window_Manager, but its the base ImGui tool.
 -- * Column:         Provides some unique string formatting.
 ------------------------------------------------------------------------------------------------------
----@param settings_pointer? table you only need to set this once on initial addon load.
+---@param settings? table settings that come from the Ashita settings_update event.
 ------------------------------------------------------------------------------------------------------
-Blog.Initialize = function(settings_pointer)
+Blog.Initialize = function(settings)
+    if not (Ashita and Res and Window_Manager and UI and Column) then return nil end
+
+    -- Get saved settings from file.
+    Blog.Settings = settings or Settings_File.load(Blog.Config.Defaults, Blog.File)
+
+    -- Create the Blog Window.
+    Blog.Window = Window:New({
+        Name     = Blog.Name,
+        Title    = Blog.Title,
+        Module   = Blog.Module,
+        Settings = Blog.Settings,
+    })
+
     Blog.Log = {}
-    -- Check for necessary settings and dependencies.
-    if settings_pointer and Ashita and Res and Window_Manager and UI and Column then
-        Blog.Settings = settings_pointer
-        Blog.Is_Initialized = true
-    end
+    Blog.Is_Initialized = true
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -218,7 +222,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Display.Headers = function()
     local no_flags = Blog.Tables.Column_Flags_None
-    local width = Blog.Tables.Width_Name
+    local width    = Blog.Tables.Width_Name
     if Blog.Settings.Show_Timestamp then UI.TableSetupColumn("Time", no_flags) end
     UI.TableSetupColumn("Name",   no_flags, width)
     UI.TableSetupColumn("Damage", no_flags)

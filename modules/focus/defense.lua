@@ -14,7 +14,7 @@ Focus.Defense.Display = function(player_name)
 
     Focus.Defense.TP_Move(player_name, DB.Trackable.DEF_TP_MOVE)
     Focus.Defense.TP_Move(player_name, DB.Trackable.DEF_NUKING)
-    if Metrics.Focus.Show_Misc_Actions then Focus.Defense.TP_Move(player_name, DB.Trackable.DEF_NO_DAMAGE_SPELLS) end
+    if Focus.Settings.Show_Misc_Actions then Focus.Defense.TP_Move(player_name, DB.Trackable.DEF_NO_DAMAGE_SPELLS) end
 end
 
 ------------------------------------------------------------------------------------------------------

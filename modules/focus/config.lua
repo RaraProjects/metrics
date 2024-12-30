@@ -24,8 +24,8 @@ Focus.Config.Display = function()
 
         -- Row 1
         UI.TableNextColumn()
-        if UI.Checkbox("Misc Actions", {Metrics.Focus.Show_Misc_Actions}) then
-            Metrics.Focus.Show_Misc_Actions = not Metrics.Focus.Show_Misc_Actions
+        if UI.Checkbox("Misc Actions", {Focus.Settings.Show_Misc_Actions}) then
+            Focus.Settings.Show_Misc_Actions = not Focus.Settings.Show_Misc_Actions
         end
         UI.SameLine() Window_Manager.Widgets.HelpMarker("Shows uncategorized actions in the catalog lists. "
                                               .."Sometimes these lists can get quite long and take up a lot of space. "
@@ -66,6 +66,6 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Config.Misc_Actions = function()
     if UI.SmallButton("Misc. Actions") then
-        Metrics.Focus.Show_Misc_Actions = not Metrics.Focus.Show_Misc_Actions
+        Focus.Settings.Show_Misc_Actions = not Focus.Settings.Show_Misc_Actions
     end
 end

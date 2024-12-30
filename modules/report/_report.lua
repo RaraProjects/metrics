@@ -1,19 +1,33 @@
 Report = {}
 
-Report.Name   = "Report"
-Report.Title  = "Metrics - Reporting"
-Report.Module = "Report"
-Report.Window = Window:New({
-    Name   = Report.Name,
-    Title  = Report.Title,
-    Module = Report.Module,
-})
-
-Report.Section = {}
-
 require("modules.report.config")
 require("modules.report.publishing")
 require("modules.report.widgets")
+
+Report.Name   = "Report"
+Report.Title  = "Metrics - Reporting"
+Report.Module = "Report"
+Report.File   = "report"
+
+Report.Section = {}
+
+------------------------------------------------------------------------------------------------------
+-- Initializes the Hub screen.
+------------------------------------------------------------------------------------------------------
+---@param settings? table settings that come from the Ashita settings_update event.
+------------------------------------------------------------------------------------------------------
+Report.Initialize = function(settings)
+    -- Get saved settings from file.
+    Report.Settings = settings or Settings_File.load(Report.Config.Defaults, Report.File)
+
+    -- Create the Overview Window.
+    Report.Window = Window:New({
+        Name     = Report.Name,
+        Title    = Report.Title,
+        Module   = Report.Module,
+        Settings = Report.Settings,
+    })
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Creates some buttons to publish various party metrics to chat.

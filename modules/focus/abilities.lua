@@ -23,7 +23,7 @@ Focus.Abilities.Display = function(player_name, hide_publish)
         if healing_total > 0 then Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_HEALING, "Healing") end
         if mp_recovery > 0   then Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_MP_RECOVERY, "MP Recovery") end
         if misc_count > 0 then
-            if Metrics.Focus.Show_Misc_Actions then
+            if Focus.Settings.Show_Misc_Actions then
                 Focus.Abilities.Abilities_General(player_name)
             else
                 UI.Text("Enable Misc. Actions to see additional data.")

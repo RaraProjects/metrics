@@ -1,29 +1,5 @@
 Parse = {}
 
-Parse.Name   = "Parse"
-Parse.Title  = "Metrics - Parse"
-Parse.Module = "Parse"
-Parse.Window = Window:New({
-    Name   = Parse.Name,
-    Title  = Parse.Title,
-    Module = Parse.Module,
-})
-
--- Used to house general functions that I don't want immediately exposed.
-Parse.Util = {}
-
--- Keeps track of how many columns should be shown on the screen in full mode.
-Parse.Columns = {
-    Base = 3,       -- Name, Total, %T
-    Current = 5,
-    Max = 32,
-}
-
-Parse.Is_Initialized = false
-Parse.Settings = T{}            -- Keep the "T" on this.
-Parse.Confirmation = false
-
--- Load dependencies
 require("modules.parse.enum")
 require("modules.parse.help_text")
 require("modules.parse.config")
@@ -32,18 +8,43 @@ require("modules.parse.display_mini")
 require("modules.parse.display_nano")
 require("modules.parse.widgets")
 
+Parse.Name   = "Parse"
+Parse.Title  = "Metrics - Parse"
+Parse.Module = "Parse"
+Parse.File   = "parse"
+
+-- Used to house general functions that I don't want immediately exposed.
+Parse.Util = {}
+
+-- Keeps track of how many columns should be shown on the screen in full mode.
+Parse.Columns = {
+    Base    = 3,    -- Name, Total, %T
+    Current = 5,
+    Max     = 32,
+}
+
+Parse.Is_Initialized = false
+Parse.Confirmation   = false
+
 ------------------------------------------------------------------------------------------------------
 -- Initializes the Parse screen.
 ------------------------------------------------------------------------------------------------------
----@param settings_pointer? table you only need to set this once on initial addon load.
+---@param settings? table settings that come from the Ashita settings_update event.
 ------------------------------------------------------------------------------------------------------
-Parse.Initialize = function(settings_pointer)
-    -- Check for necessary settings and dependencies.
-    if settings_pointer and Ashita and Res and Window_Manager and UI and DB and Column then
-        Parse.Settings = settings_pointer
-        Parse.Is_Initialized = true
-    end
+Parse.Initialize = function(settings)
+    -- Get saved settings from file.
+    Parse.Settings = settings or Settings_File.load(Parse.Config.Defaults, Parse.File)
+
+    -- Create the Parse Window.
+    Parse.Window = Window:New({
+        Name     = Parse.Name,
+        Title    = Parse.Title,
+        Module   = Parse.Module,
+        Settings = Parse.Settings,
+    })
+
     Parse.Util.Calculate_Column_Flags()
+    Parse.Is_Initialized = true
 end
 
 ------------------------------------------------------------------------------------------------------

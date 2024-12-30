@@ -1,26 +1,41 @@
-Overview = T{}
+Overview = {}
+
+require("modules.overview.config")
+require("modules.overview.parse")
+require("modules.overview.focus")
 
 Overview.Name   = "Overview"
 Overview.Title  = "Metrics - Overview"
 Overview.Module = "Overview"
-Overview.Window = Window:New({
-    Name    = Overview.Name,
-    Title   = Overview.Title,
-    Module  = Overview.Module,
-    Visible = {false},
-    Show_Title = true,
-})
+Overview.File   = "overview"
 
-Overview.Modes = T{
+
+
+Overview.Modes = {
     PARSE = "Parse",
     FOCUS = "Focus",
     BLOG  = "Battle Log",
 }
 Overview.Mode = Overview.Modes.PARSE
 
-require("modules.overview.config")
-require("modules.overview.parse")
-require("modules.overview.focus")
+------------------------------------------------------------------------------------------------------
+-- Initializes the Hub screen.
+------------------------------------------------------------------------------------------------------
+---@param settings? table settings that come from the Ashita settings_update event.
+------------------------------------------------------------------------------------------------------
+Overview.Initialize = function(settings)
+    -- Get saved settings from file.
+    Overview.Settings = settings or Settings_File.load(Overview.Config.Defaults, Overview.File)
+
+    -- Create the Overview Window.
+    Overview.Window = Window:New({
+        Name     = Overview.Name,
+        Title    = Overview.Title,
+        Module   = Overview.Module,
+        Settings = Overview.Settings,
+        Show_Title = true,
+    })
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Opens a new window to show all tabs as a vertical column.

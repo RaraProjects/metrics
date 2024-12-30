@@ -4,8 +4,6 @@ Window_Manager.Config.Defaults = T{
     Alpha = 1.0,
     Window_Scaling = 1.0,
     Style = 0,
-    X_Pos = 100,
-    Y_Pos = 100,
     Show_Title = false,
     Show_Mouse = false,
     Multi_Window = false,
@@ -23,9 +21,9 @@ Window_Manager.Config.Defaults = T{
 -- Resets visual settings in the window.
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Config.Reset = function()
-    Metrics.Window.Alpha = Window_Manager.Defaults.Alpha
-    Metrics.Window.Window_Scaling = Window_Manager.Defaults.Window_Scaling
-    Metrics.Window.Show_Title = Window_Manager.Defaults.Show_Title
+    Window_Manager.Settings.Alpha          = Window_Manager.Defaults.Alpha
+    Window_Manager.Settings.Window_Scaling = Window_Manager.Defaults.Window_Scaling
+    Window_Manager.Settings.Show_Title     = Window_Manager.Defaults.Show_Title
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -34,13 +32,13 @@ end
 Window_Manager.Config.Display = function()
     if UI.BeginTable("GUI Setings", 2) then
         UI.TableNextColumn()
-        if UI.Checkbox("Show Title Bar", {Metrics.Window.Show_Title}) then
-            Metrics.Window.Show_Title = not Metrics.Window.Show_Title
+        if UI.Checkbox("Show Title Bar", {Window_Manager.Settings.Show_Title}) then
+            Window_Manager.Settings.Show_Title = not Window_Manager.Settings.Show_Title
         end
         UI.SameLine() Window_Manager.Widgets.HelpMarker("Enables a window header that allows you to collapse the window.")
 
         UI.TableNextColumn()
-        if UI.Checkbox("Show Mouse", {Metrics.Window.Show_Mouse}) then
+        if UI.Checkbox("Show Mouse", {Window_Manager.Settings.Show_Mouse}) then
             Window_Manager.Toggle_Mouse()
         end
         UI.SameLine() Window_Manager.Widgets.HelpMarker("There are a lot of click targets in Metrics. If you can't see your mouse when hovering over " ..
@@ -48,13 +46,13 @@ Window_Manager.Config.Display = function()
                                    "Windows mouse on top of your regular in game cursor.")
 
                                    UI.TableNextColumn()
-        if UI.Checkbox("Multi Window", {Metrics.Window.Multi_Window}) then
-            Metrics.Window.Multi_Window = not Metrics.Window.Multi_Window
-            if Metrics.Window.Multi_Window then
-                Metrics.Window.Active_Window = nil
+        if UI.Checkbox("Multi Window", {Window_Manager.Settings.Multi_Window}) then
+            Window_Manager.Settings.Multi_Window = not Window_Manager.Settings.Multi_Window
+            if Window_Manager.Settings.Multi_Window then
+                Window_Manager.Settings.Active_Window = nil
                 Config.Window.Show()
             else
-                Metrics.Window.Active_Window = Config.Name
+                Window_Manager.Settings.Active_Window = Config.Name
                 Hub.Window.Show()
                 Config.Window.Hide()
             end
@@ -67,4 +65,22 @@ Window_Manager.Config.Display = function()
     UI.Separator() Window_Manager.Theme.Choose()
     UI.Separator() Window_Manager.Widgets.Alpha()
     Window_Manager.Widgets.Window_Scale()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns the window alpha.
+------------------------------------------------------------------------------------------------------
+---@return number
+------------------------------------------------------------------------------------------------------
+Window_Manager.Config.Get_Alpha = function()
+    return Window_Manager.Settings.Alpha or 1
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns the window scaling.
+------------------------------------------------------------------------------------------------------
+---@return number
+------------------------------------------------------------------------------------------------------
+Window_Manager.Config.Get_Scaling = function()
+    return Window_Manager.Settings.Window_Scaling or 1
 end

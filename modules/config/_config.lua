@@ -1,23 +1,10 @@
 Config = {}
 
-Config.Name   = "Settings"
-Config.Title  = "Metrics - Help"
-Config.Module = "Config"
-Config.Window = Window:New({
-    Name   = Config.Name,
-    Title  = Config.Title,
-    Module = Config.Module,
-    Show_Title = true,
-})
-
 Config.Defaults = T{
     X = 100,
     Y = 150,
     Visible = {false},
 }
-
-Config.Section = {}
-Config.Widget = {}
 
 Config.Enum = {}
 Config.Enum.File = {
@@ -33,10 +20,37 @@ Config.Enum.File = {
     HUB      = "hub",
 }
 
+Config.Name   = "Settings"
+Config.Title  = "Metrics - Help"
+Config.Module = "Config"
+Config.File   = "config"
+
+Config.Section = {}
+Config.Widget  = {}
+
 Config.Settings_Mode = Config.Enum.File.CONFIG
-Config.Full_Width = 120
+Config.Full_Width  = 120
 Config.Short_Width = 75
-Config.Desc_Width = 300
+Config.Desc_Width  = 300
+
+------------------------------------------------------------------------------------------------------
+-- Initializes the Settings screen.
+------------------------------------------------------------------------------------------------------
+---@param settings? table settings that come from the Ashita settings_update event.
+------------------------------------------------------------------------------------------------------
+Config.Initialize = function(settings)
+    -- Get saved settings from file.
+    Config.Settings = Settings_File.load(Config.Defaults, Config.File)
+
+    -- Create the Settings Window.
+    Config.Window = Window:New({
+        Name       = Config.Name,
+        Title      = Config.Title,
+        Module     = Config.Module,
+        Settings   = Config.Settings,
+        Show_Title = true,
+    })
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Loads the settings data to the screen.

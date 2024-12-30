@@ -1,21 +1,20 @@
 Window = {}
 
-function Window:New(settings)
+function Window:New(init_settings)
 
     local self = {}
-    settings = settings or {}
+    init_settings = init_settings or {}
 
-    local name       = settings.Name       or "Default"
-    local title      = settings.Title      or "Default Title"
-    local module     = settings.Module     or "Default"
-    local x          = settings.X          or 100
-    local y          = settings.Y          or 100
-    local show_title = settings.Show_Title or false
+    local name       = init_settings.Name       or "Default"
+    local title      = init_settings.Title      or "Default Title"
+    local module     = init_settings.Module     or "Default"
+    local settings   = init_settings.Settings   or {}
+    local show_title = init_settings.Show_Title or false
     local show_bg    = true
 
     local need_position_reset = true
     local scaling_set = false
-    local visible = {false}
+    local visible = {settings.Visible[1]}
 
     local flags_default = bit.bor(
         ImGuiWindowFlags_AlwaysAutoResize,  -- This prevents manual resizing, but without it things look messed up.
@@ -32,14 +31,14 @@ function Window:New(settings)
         visible[1] = Window_Manager.Get_Visibility(module)
         if Ashita.Player.Is_Zoning() or not visible[1] then return nil end
 
-        UI.PushStyleVar(ImGuiStyleVar_Alpha, Window_Manager.Settings.Window.Alpha)
+        UI.PushStyleVar(ImGuiStyleVar_Alpha, Window_Manager.Config.Get_Alpha())
         UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})
         UI.PushStyleVar(ImGuiStyleVar_WindowPadding, {7, 3})
         UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
         UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
 
         local flags = flags_default
-        if not Window_Manager.Settings.Window.Show_Title and not show_title then flags = bit.bor(flags, ImGuiWindowFlags_NoTitleBar) end
+        if not Window_Manager.Settings.Show_Title and not show_title then flags = bit.bor(flags, ImGuiWindowFlags_NoTitleBar) end
         if not show_bg then flags = bit.bor(flags, ImGuiWindowFlags_NoBackground) end
         self.Check_Position()
 
@@ -59,7 +58,7 @@ function Window:New(settings)
     ------------------------------------------------------------------------------------------------------
     self.Check_Position = function()
         if need_position_reset then
-            UI.SetNextWindowPos(Window_Manager.Get_Position(module), ImGuiCond_Always)
+            UI.SetNextWindowPos({settings.X, settings.Y}, ImGuiCond_Always)
             need_position_reset = false
         end
     end
@@ -68,9 +67,8 @@ function Window:New(settings)
     -- Updates the window position for the settings file.
     ------------------------------------------------------------------------------------------------------
     self.Update_Settings = function()
-        x, y = UI.GetWindowPos()
-        Window_Manager.Save_Position(module, x, y)
-        Window_Manager.Save_Visibility(module, visible[1])
+        settings.X, settings.Y = UI.GetWindowPos()
+        settings.Visible[1] = visible[1]
     end
 
     ------------------------------------------------------------------------------------------------------
@@ -85,7 +83,7 @@ function Window:New(settings)
     ------------------------------------------------------------------------------------------------------
     self.Toggle_Visibility = function()
         visible[1] = not visible[1]
-        Window_Manager.Save_Visibility(module, visible[1])
+        settings.Visible[1] = visible[1]
     end
 
     ------------------------------------------------------------------------------------------------------
@@ -93,7 +91,7 @@ function Window:New(settings)
     ------------------------------------------------------------------------------------------------------
     self.Show = function()
         visible[1] = true
-        Window_Manager.Save_Visibility(module, true)
+        settings.Visible[1] = visible[1]
     end
 
     ------------------------------------------------------------------------------------------------------
@@ -101,7 +99,7 @@ function Window:New(settings)
     ------------------------------------------------------------------------------------------------------
     self.Hide = function()
         visible[1] = false
-        Window_Manager.Save_Visibility(module, false)
+        settings.Visible[1] = visible[1]
     end
 
     ------------------------------------------------------------------------------------------------------
@@ -125,7 +123,7 @@ function Window:New(settings)
     ------------------------------------------------------------------------------------------------------
     self.Set_Scaling = function()
         if not scaling_set then
-            UI.SetWindowFontScale(Window_Manager.Get_Scaling())
+            UI.SetWindowFontScale(Window_Manager.Config.Get_Scaling())
             scaling_set = true
         end
     end
@@ -146,6 +144,8 @@ function Window:New(settings)
         show_bg = background
     end
 
+    -- Adds this window to the Window Manager list of windows.
     Window_Manager.Add_Window(module, module, self)
+
     return self
 end

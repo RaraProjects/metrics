@@ -1,14 +1,21 @@
 Focus = {}
 
+require("modules.focus.config")
+require("modules.focus.melee")
+require("modules.focus.ranged")
+require("modules.focus.weaponskills")
+require("modules.focus.magic")
+require("modules.focus.abilities")
+require("modules.focus.pets")
+require("modules.focus.defense")
+require("modules.focus.cataloged")
+require("modules.focus.overview")
+require("modules.focus.dependencies")
+
 Focus.Name   = "Focus"
 Focus.Title  = "Metrics - Focus"
 Focus.Module = "Focus"
-Focus.Window = Window:New({
-    Name   = Focus.Name,
-    Title  = Focus.Title,
-    Module = Focus.Module,
-    Show_Title = true,
-})
+Focus.File   = "focus"
 
 Focus.Tabs = {}
 Focus.Tabs.Names = {
@@ -41,18 +48,24 @@ Focus.Screenshot_Flags = bit.bor(
     ImGuiWindowFlags_NoNav)
 Focus.Screenshot_Mode = {false}
 
--- Load dependencies
-require("modules.focus.config")
-require("modules.focus.melee")
-require("modules.focus.ranged")
-require("modules.focus.weaponskills")
-require("modules.focus.magic")
-require("modules.focus.abilities")
-require("modules.focus.pets")
-require("modules.focus.defense")
-require("modules.focus.cataloged")
-require("modules.focus.overview")
-require("modules.focus.dependencies")
+------------------------------------------------------------------------------------------------------
+-- Initializes the Focus screen.
+------------------------------------------------------------------------------------------------------
+---@param settings? table settings that come from the Ashita settings_update event.
+------------------------------------------------------------------------------------------------------
+Focus.Initialize = function(settings)
+    -- Get saved settings from file.
+    Focus.Settings = settings or Settings_File.load(Focus.Config.Defaults, Focus.File)
+
+    -- Create the Focus Window.
+    Focus.Window = Window:New({
+        Name     = Focus.Name,
+        Title    = Focus.Title,
+        Module   = Focus.Module,
+        Settings = Focus.Settings,
+        Show_Title = true,
+    })
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the focus settings.

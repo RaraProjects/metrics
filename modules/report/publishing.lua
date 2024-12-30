@@ -29,7 +29,7 @@ Report.Publishing.Overall = function()
                 local player_acc = Column.Acc.By_Type(player_name, DB.Enum.COMBINED, nil, false, nil, false, true)
 
                 -- Only output if damage is above certain threshold to prevent a lot of waiting for long lists.
-                if tonumber(player_percent) >= Metrics.Report.Damage_Threshold then
+                if tonumber(player_percent) >= Report.Settings.Damage_Threshold then
                     local chat_string = tostring(player_name) .. ": " ..
                                         tostring(player_total) ..
                                         " (" .. tostring(player_percent) .. "%) " ..
@@ -74,7 +74,7 @@ Report.Publishing.Damage_By_Type = function(trackable)
                 local player_name = data[1]
                 local player_damage = Column.Damage.By_Type(player_name, trackable, nil, nil, false, nil, true)
                 local player_percent = Column.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)
-                if tonumber(player_percent) >= Metrics.Report.Damage_Threshold then
+                if tonumber(player_percent) >= Report.Settings.Damage_Threshold then
                     local chat_string = tostring(player_name) .. ": " .. tostring(player_damage) .. " (" .. tostring(player_percent) .. "%)"
                     Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
                     found = true

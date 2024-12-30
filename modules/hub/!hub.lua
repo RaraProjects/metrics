@@ -1,10 +1,29 @@
-Hub = T{}
-
-Hub.Title  = "Metrics"
-Hub.Module = "Hub"
-Hub.Window = Window:New({Title = Hub.Title, Module = Hub.Module})
+Hub = {}
 
 require("modules.hub.config")
+
+Hub.Name   = "Hub"
+Hub.Title  = "Metrics"
+Hub.Module = "Hub"
+Hub.File   = "hub"
+
+------------------------------------------------------------------------------------------------------
+-- Initializes the Hub screen.
+------------------------------------------------------------------------------------------------------
+---@param settings? table settings that come from the Ashita settings_update event.
+------------------------------------------------------------------------------------------------------
+Hub.Initialize = function(settings)
+    -- Get saved settings from file.
+    Hub.Settings = settings or Settings_File.load(Hub.Config.Defaults, Hub.File)
+
+    -- Create the Hub Window.
+    Hub.Window = Window:New({
+        Name     = Hub.Name,
+        Title    = Hub.Title,
+        Module   = Hub.Module,
+        Settings = Hub.Settings,
+    })
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Populate the data in the monitor window.
@@ -12,7 +31,7 @@ require("modules.hub.config")
 Hub.Content = function()
     local nano_mode = Parse.Nano.Is_Enabled()
     local mini_mode = Parse.Mini.Is_Enabled()
-    if Metrics.Window.Multi_Window then
+    if Window_Manager.Settings.Multi_Window then
         Hub.Multi_Window()
     elseif nano_mode then
         Parse.Nano.Populate()
@@ -95,8 +114,8 @@ Hub.Parse_Button = function()
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Parse.Name) then
-        if Metrics.Window.Multi_Window then Parse.Window.Toggle_Visibility() end
-        Metrics.Window.Active_Window = Parse.Name
+        if Window_Manager.Settings.Multi_Window then Parse.Window.Toggle_Visibility() end
+        Window_Manager.Settings.Active_Window = Parse.Name
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -112,8 +131,8 @@ Hub.Focus_Button = function()
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Focus.Name) then
-        if Metrics.Window.Multi_Window then Focus.Window.Toggle_Visibility() end
-        Metrics.Window.Active_Window = Focus.Name
+        if Window_Manager.Settings.Multi_Window then Focus.Window.Toggle_Visibility() end
+        Window_Manager.Settings.Active_Window = Focus.Name
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -129,8 +148,8 @@ Hub.Battle_Log_Button = function()
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Blog.Name) then
-        if Metrics.Window.Multi_Window then Blog.Window.Toggle_Visibility() end
-        Metrics.Window.Active_Window = Blog.Name
+        if Window_Manager.Settings.Multi_Window then Blog.Window.Toggle_Visibility() end
+        Window_Manager.Settings.Active_Window = Blog.Name
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -146,8 +165,8 @@ Hub.XP_Button = function()
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(XP.Name) then
-        if Metrics.Window.Multi_Window then XP.Window.Toggle_Visibility() end
-        Metrics.Window.Active_Window = XP.Name
+        if Window_Manager.Settings.Multi_Window then XP.Window.Toggle_Visibility() end
+        Window_Manager.Settings.Active_Window = XP.Name
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -163,8 +182,8 @@ Hub.Report_Button = function()
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Report.Name) then
-        if Metrics.Window.Multi_Window then Report.Window.Toggle_Visibility() end
-        Metrics.Window.Active_Window = Report.Name
+        if Window_Manager.Settings.Multi_Window then Report.Window.Toggle_Visibility() end
+        Window_Manager.Settings.Active_Window = Report.Name
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -182,9 +201,9 @@ Hub.Settings_Button = function()
     if UI.Button(Config.Name) then
         -- Don't toggle off if config window is open and not showing settings.
         if not (Config.Window.Is_Visible() and Config.Settings_Mode ~= Config.Enum.File.CONFIG) then
-            if Metrics.Window.Multi_Window then Config.Window.Toggle_Visibility() end
+            if Window_Manager.Settings.Multi_Window then Config.Window.Toggle_Visibility() end
         end
-        Metrics.Window.Active_Window = Config.Name
+        Window_Manager.Settings.Active_Window = Config.Name
         Config.Settings_Mode = Config.Enum.File.CONFIG
     end
     if not active then UI.PopStyleColor(3) end
@@ -202,8 +221,8 @@ Hub.Debug_Button = function()
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Debug.Name) then
-        if Metrics.Window.Multi_Window then Debug.Window.Toggle_Visibility() end
-        Metrics.Window.Active_Window = Debug.Name
+        if Window_Manager.Settings.Multi_Window then Debug.Window.Toggle_Visibility() end
+        Window_Manager.Settings.Active_Window = Debug.Name
     end
     if not active then UI.PopStyleColor(3) end
 end

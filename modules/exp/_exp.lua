@@ -3,14 +3,17 @@ XP = {}
 -- ASB Code: /src/map/utils/charutils.cpp->DistributeExperiencePoints
 -- https://github.com/Shinzaku/Points
 
+require("modules.exp.columns")
+require("modules.exp.config")
+require("modules.exp.tracking")
+require("modules.exp.chains")
+require("modules.exp.dedication")
+require("modules.exp.widgets")
+
 XP.Name   = "XP"
 XP.Title  = "Metrics - EXP"
 XP.Module = "XP"
-XP.Window = Window:New({
-    Name   = XP.Name,
-    Title  = XP.Title,
-    Module = XP.Module,
-})
+XP.File   = "exp"
 
 XP.Table_Flags = bit.bor(ImGuiTableFlags_Borders)
 
@@ -56,7 +59,6 @@ XP.Messages.Chain = {
     [810] = true,   -- Exemplar points
 }
 
-XP.Settings = T{}
 XP.Full_Bar_Height = 18
 XP.Tiny_Bar_Height = 8
 XP.Is_Initialized  = false
@@ -64,22 +66,25 @@ XP.Display_Mode    = XP.Type.EXPERIENCE
 XP.Show_Additional_Info    = false
 XP.Show_Reset_Confirmation = false
 
-require("modules.exp.columns")
-require("modules.exp.config")
-require("modules.exp.tracking")
-require("modules.exp.chains")
-require("modules.exp.dedication")
-require("modules.exp.widgets")
-
 -- ------------------------------------------------------------------------------------------------------
 -- Initializes the XP module.
 -- ------------------------------------------------------------------------------------------------------
----@param settings_pointer? table you only need to set this once on initial addon load.
-------------------------------------------------------------------------------------------------------
-XP.Initialize = function(settings_pointer)
+XP.Initialize = function(settings)
     if not XP.Is_Initialized then
-        if settings_pointer and Ashita and Res and Window_Manager and UI and DB and Column then
-            XP.Settings = settings_pointer
+        if Ashita and Res and Window_Manager and UI and DB and Column then
+
+            -- Get saved settings from file.
+            XP.Settings = settings or Settings_File.load(XP.Config.Defaults, XP.File)
+
+            -- Create the XP Window.
+            XP.Window = Window:New({
+                Name     = XP.Name,
+                Title    = XP.Title,
+                Module   = XP.Module,
+                Settings = XP.Settings,
+            })
+
+            XP.Window.Set_Background(XP.Settings.Show_Background)
 
             -- Dedication
             XP.Dedication.Check()

@@ -5,11 +5,12 @@ Debug.Show_Demo = false
 Debug.Name   = "Debug"
 Debug.Title  = "Metrics - Debug"
 Debug.Module = "Debug"
+
 Debug.Window = Window:New({
-    Name    = Debug.Name,
-    Title   = Debug.Title,
-    Module  = Debug.Module,
-    Visible = {false},
+    Name     = Debug.Name,
+    Title    = Debug.Title,
+    Module   = Debug.Module,
+    Settings = {Visible = {false}, X = 100, Y = 100},
     Show_Title = true,
 })
 

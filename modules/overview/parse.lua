@@ -8,15 +8,15 @@ Overview.Parse.Content = function()
     UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.Percent_Details()
     Overview.Parse.Settings()
     UI.Separator()
-    if Metrics.Overview.Timer then Overview.Parse.Clock() end
-    if Metrics.Overview.Melee then Overview.Parse.Melee() end
-    if Metrics.Overview.Ranged then Overview.Parse.Ranged() end
-    if Metrics.Overview.WS then Overview.Parse.Weaponskills() end
-    if Metrics.Overview.Nuke then Overview.Parse.Nukes() end
-    if Metrics.Overview.Pets then Overview.Parse.Pets() end
-    if Metrics.Overview.Healing then Overview.Parse.Healing() end
-    if Metrics.Overview.Defense then Overview.Parse.Defense() end
-    if Metrics.Overview.Mobs_Defeated then Overview.Parse.Monsters_Defeated() end
+    if Overview.Settings.Show_Timer         then Overview.Parse.Clock() end
+    if Overview.Settings.Show_Melee         then Overview.Parse.Melee() end
+    if Overview.Settings.Show_Ranged        then Overview.Parse.Ranged() end
+    if Overview.Settings.Weaponskills       then Overview.Parse.Weaponskills() end
+    if Overview.Settings.Show_Nuking        then Overview.Parse.Nukes() end
+    if Overview.Settings.Show_Pets          then Overview.Parse.Pets() end
+    if Overview.Settings.Show_Healing       then Overview.Parse.Healing() end
+    if Overview.Settings.Show_Defense       then Overview.Parse.Defense() end
+    if Overview.Settings.Show_Mobs_Defeated then Overview.Parse.Monsters_Defeated() end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -33,15 +33,15 @@ Overview.Parse.Settings = function()
         UI.TableSetupColumn("Col 4", col_flags, width)
         UI.TableSetupColumn("Col 5", col_flags, width)
 
-        UI.TableNextColumn() if UI.Checkbox("Timer", {Metrics.Overview.Timer}) then Metrics.Overview.Timer = not Metrics.Overview.Timer end
-        UI.TableNextColumn() if UI.Checkbox("Melee", {Metrics.Overview.Melee}) then Metrics.Overview.Melee = not Metrics.Overview.Melee end
-        UI.TableNextColumn() if UI.Checkbox("Ranged", {Metrics.Overview.Ranged}) then Metrics.Overview.Ranged = not Metrics.Overview.Ranged end
-        UI.TableNextColumn() if UI.Checkbox("Weaponskills", {Metrics.Overview.WS}) then Metrics.Overview.WS = not Metrics.Overview.WS end
-        UI.TableNextColumn() if UI.Checkbox("Nuking", {Metrics.Overview.Nuke}) then Metrics.Overview.Nuke = not Metrics.Overview.Nuke end
-        UI.TableNextColumn() if UI.Checkbox("Pets", {Metrics.Overview.Pets}) then Metrics.Overview.Pets = not Metrics.Overview.Pets end
-        UI.TableNextColumn() if UI.Checkbox("Healing", {Metrics.Overview.Healing}) then Metrics.Overview.Healing = not Metrics.Overview.Healing end
-        UI.TableNextColumn() if UI.Checkbox("Defense", {Metrics.Overview.Defense}) then Metrics.Overview.Defense = not Metrics.Overview.Defense end
-        UI.TableNextColumn() if UI.Checkbox("Mobs Defeated", {Metrics.Overview.Mobs_Defeated}) then Metrics.Overview.Mobs_Defeated = not Metrics.Overview.Mobs_Defeated end
+        UI.TableNextColumn() if UI.Checkbox("Timer",         {Overview.Settings.Show_Timer})         then Overview.Settings.Show_Timer         = not Overview.Settings.Show_Timer end
+        UI.TableNextColumn() if UI.Checkbox("Melee",         {Overview.Settings.Show_Melee})         then Overview.Settings.Show_Melee         = not Overview.Settings.Show_Melee end
+        UI.TableNextColumn() if UI.Checkbox("Ranged",        {Overview.Settings.Show_Ranged})        then Overview.Settings.Show_Ranged        = not Overview.Settings.Show_Ranged end
+        UI.TableNextColumn() if UI.Checkbox("Weaponskills",  {Overview.Settings.Show_Weaponskills})  then Overview.Settings.Show_Weaponskills  = not Overview.Settings.Show_Weaponskills end
+        UI.TableNextColumn() if UI.Checkbox("Nuking",        {Overview.Settings.Show_Nuking})        then Overview.Settings.Show_Nuking        = not Overview.Settings.Show_Nuking end
+        UI.TableNextColumn() if UI.Checkbox("Pets",          {Overview.Settings.Show_Pets})          then Overview.Settings.Show_Pets          = not Overview.Settings.Show_Pets end
+        UI.TableNextColumn() if UI.Checkbox("Healing",       {Overview.Settings.Show_Healing})       then Overview.Settings.Show_Healing       = not Overview.Settings.Show_Healing end
+        UI.TableNextColumn() if UI.Checkbox("Defense",       {Overview.Settings.Show_Defense})       then Overview.Settings.Show_Defense       = not Overview.Settings.Show_Defense end
+        UI.TableNextColumn() if UI.Checkbox("Mobs Defeated", {Overview.Settings.Show_Mobs_Defeated}) then Overview.Settings.Show_Mobs_Defeated = not Overview.Settings.Show_Mobs_Defeated end
 
         UI.EndTable()
     end

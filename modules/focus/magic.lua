@@ -41,7 +41,7 @@ Focus.Magic.Display = function(player_name, hide_publish)
     if buff > 0           then Focus.Magic.Basic_Spell(player_name, DB.Trackable.SPELLS_BUFFS,           "Buff Spell") end
     if enfeeble_count > 0 then Focus.Magic.Debuff(player_name) end
     if buff_songs > 0     then Focus.Magic.Basic_Spell(player_name, DB.Trackable.SPELLS_BUFF_SONG,       "Buff Songs", true) end
-    if misc_count > 0 and Metrics.Focus.Show_Misc_Actions then Focus.Magic.Basic_Spell(player_name, DB.Trackable.SPELLS_OVERALL, "Misc. Spell") end
+    if misc_count > 0 and Focus.Settings.Show_Misc_Actions then Focus.Magic.Basic_Spell(player_name, DB.Trackable.SPELLS_OVERALL, "Misc. Spell") end
 
     if not hide_publish then Focus.Magic.Publish(player_name, nuke_total, healing_total) end
 end
