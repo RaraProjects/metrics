@@ -1,5 +1,12 @@
 Parse = {}
 
+-- Config has a dependency on this.
+Parse.Display_Modes = {
+    FULL = 1,
+    MINI = 2,
+    NANO = 3,
+}
+
 require("modules.parse.help_text")
 require("modules.parse.config")
 require("modules.parse.columns")
@@ -9,12 +16,6 @@ Parse.Name   = "Parse"
 Parse.Title  = "Metrics - Parse"
 Parse.Module = "Parse"
 Parse.File   = "parse"
-
-Parse.Display_Modes = {
-    FULL = 1,
-    MINI = 2,
-    NANO = 3,
-}
 
 Parse.Columns = {
     [Parse.Display_Modes.FULL] = 0,
@@ -62,7 +63,7 @@ Parse.Content = function()
 
     -- The full toolbar is only available in full mode.
     Parse.Toolbar()
-    if Parse.Config.Is_Mini_Mode() then UI.Text(" Lurking...") end
+    if Parse.Config.Is_Mini_Mode() and Parse.Settings.Lurk_Mode then UI.Text(" Lurking...") end
 
     local columns = Parse.Columns[Parse.Settings.Display_Mode]
 
