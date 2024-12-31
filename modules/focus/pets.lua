@@ -148,7 +148,7 @@ Focus.Pets.Pet_Sub_Tab = function(player_name, pet_name)
 
     trackable = DB.Trackable.PET_SPELL_BUFFS
     local buffs = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.HITS_ON_USE) > 0
-    if buffs then Focus.Pets.Pet_Specific_Non_Damaging_Spells(player_name, pet_name, trackable, "Buffs") end
+    if buffs then Focus.Pets.Pet_Specific_Non_Damaging_Spells(player_name, pet_name, trackable, "Buffs", true) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -284,8 +284,9 @@ end
 ---@param pet_name string
 ---@param trackable string
 ---@param header string
+---@param is_buff? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.Pets.Pet_Specific_Non_Damaging_Spells = function(player_name, pet_name, trackable, header)
+Focus.Pets.Pet_Specific_Non_Damaging_Spells = function(player_name, pet_name, trackable, header, is_buff)
     local table_flags = Window_Manager.Table.Flags.Fixed_Borders
     local col_flags   = Column.Flags.None
     local name_width  = Column.Widths.Name
@@ -293,17 +294,20 @@ Focus.Pets.Pet_Specific_Non_Damaging_Spells = function(player_name, pet_name, tr
 
     if not trackable then trackable = DB.Trackable.PET_ENFEEBLING end
 
-    if UI.BeginTable(pet_name.." single", 4, table_flags) then
+    local columns = 4
+    if is_buff then columns = 2 end
+
+    if UI.BeginTable(pet_name.." single", columns, table_flags) then
         UI.TableSetupColumn(tostring(header), col_flags, name_width)
-        UI.TableSetupColumn("Average",     col_flags, width)
-        UI.TableSetupColumn("Accuracy",    col_flags, width)
+        if not is_buff then UI.TableSetupColumn("Average",  col_flags, width) end
+        if not is_buff then UI.TableSetupColumn("Accuracy", col_flags, width) end
         UI.TableSetupColumn("Attempts",    col_flags, width)
         UI.TableHeadersRow()
 
         local row = 1
         UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, trackable)
-        UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, trackable)
+        if not is_buff then UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, trackable) end
+        if not is_buff then UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, trackable) end
         UI.TableNextColumn() Column.Damage.Pet_Attempts(player_name, pet_name, trackable)
         Window_Manager.Table_Row_Color(row)
         row = row + 1
@@ -314,8 +318,8 @@ Focus.Pets.Pet_Specific_Non_Damaging_Spells = function(player_name, pet_name, tr
             local action_trackable = data[3]
             if trackable == action_trackable then
                 UI.TableNextColumn() UI.Text("- " .. action_name)
-                UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, action_trackable, action_name)
-                UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, action_trackable, action_name)
+                if not is_buff then UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, action_trackable, action_name) end
+                if not is_buff then UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, action_trackable, action_name) end
                 UI.TableNextColumn() Column.Damage.Pet_Attempts(player_name, pet_name, action_trackable, action_name)
                 Window_Manager.Table_Row_Color(row)
                 row = row + 1
