@@ -26,8 +26,9 @@ Column.Damage.By_Type = function(player_name, trackable, metric, action_name, pe
 
     if percent_player then
         local total_damage = Column.Damage.Raw_Total_Player_Damage(player_name)
-        if trackable == DB.Trackable.SPELLS_HEALING then
-            total_damage = DB.Data.Get(player_name, DB.Trackable.SPELLS_HEALING, DB.Metric.TOTAL)
+        if trackable == DB.Trackable.SPELLS_HEALING or trackable == DB.Trackable.ABILITY_HEALING or
+           trackable == DB.Trackable.PET_HEALING or trackable == DB.Trackable.ALL_HEAL then
+            total_damage = DB.Data.Get(player_name, DB.Trackable.ALL_HEAL, DB.Metric.TOTAL)
         end
         return Column.Output.Percent(trackable_damage, total_damage, color, false, justify, raw)
     end
