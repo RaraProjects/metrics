@@ -27,6 +27,7 @@ H.TP.Action = function(action, actor_mob, log_offense)
     local sc_damage   = 0
     local is_use_hit  = false
     local is_use_no_damage = true
+    local is_use_mp_drain  = false
 
     for _, target_data in pairs(action.targets) do
         target_mob = Ashita.Mob.Get_Mob_By_ID(target_data.id)
@@ -42,7 +43,7 @@ H.TP.Action = function(action, actor_mob, log_offense)
                 sc_damage, sc_name = H.TP.Skillchain_Parse(action_data, actor_mob, target_mob, ws_name)
 
                 -- Need to calculate WS damage here to account for AOE weaponskills
-                local target_damage, is_target_hit, is_target_no_damage = H.TP.Weaponskill_Parse(action_data, actor_mob, target_mob, ws_name, ws_id)
+                local target_damage, is_target_hit, is_target_no_damage, is_target_mp_drain = H.TP.Weaponskill_Parse(action_data, actor_mob, target_mob, ws_name, ws_id)
                 tp_damage = tp_damage + target_damage
 
                 -- No Damage: The Use level is only no damage if all of the target checks are no damage.
@@ -50,13 +51,14 @@ H.TP.Action = function(action, actor_mob, log_offense)
 
                 -- Hit: The Use level is a hit if any of the target checks are hits.
                 is_use_hit = is_use_hit or is_target_hit
+                is_use_mp_drain = is_use_mp_drain or is_target_mp_drain
             end
         end
     end
 
     -- Finalize weaponskill and skillchain data.
     -- Have to do it outside of the loop to avoid counting attempts and hits multiple times.
-    local tp = H.TP.Weaponskill_Wrap_Up(actor_mob, target_mob, tp_damage, ws_name, sc_name, is_use_hit)
+    local tp = H.TP.Weaponskill_Wrap_Up(actor_mob, target_mob, tp_damage, ws_name, sc_name, is_use_hit, is_use_mp_drain)
 
     -- Update the battle log.
     if is_use_no_damage then tp_damage = 0 end
@@ -205,6 +207,7 @@ end
 ---@return integer
 ---@return boolean
 ---@return boolean
+---@return boolean
 ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
     Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Weaponskill", result)
@@ -213,15 +216,15 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
     local audits       = H.TP.Audits(actor_mob, owner_mob, target_mob)
     local hit          = false
     local is_no_damage = false
+    local is_mp_drain  = false
 
     -- Check damage mitigation first. If mitigated, the damage is set to zero for the counts, blog, etc.
     damage, hit, is_no_damage = H.TP.Damage_Mitigation(audits, damage, message_id, ws_name, owner_mob)
 
     -- The player drains the mob's MP.
     if H.Message_MP_Drain(message_id) then
-        H.Offense.Hit(audits, audits.trackable, 0)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, audits.trackable, ws_name, DB.Metric.ATTEMPTS_ON_TARGET)
         H.Offense.Catalog_Hit(audits, DB.Trackable.WEAPONSKILL_MP_DRAIN, damage, ws_name)
+        is_mp_drain = true
 
     -- The player drains the mob's TP.
     elseif H.Message_TP_Drain(message_id) then
@@ -252,7 +255,7 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
         "BENIGN: Weaponskill {" .. tostring(ws_name) .. "} (" .. tostring(ws_id) .. ") has unaccounted message {" .. tostring(message_id) .. "}.")
     end
 
-    return damage, hit, is_no_damage
+    return damage, hit, is_no_damage, is_mp_drain
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -323,25 +326,31 @@ end
 ---@param target_mob table
 ---@param damage integer
 ---@param ws_name string
+---@param sc_name string
+---@param was_hit boolean
+---@param was_mp_drain boolean
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-H.TP.Weaponskill_Wrap_Up = function(actor_mob, target_mob, damage, ws_name, sc_name, was_hit)
+H.TP.Weaponskill_Wrap_Up = function(actor_mob, target_mob, damage, ws_name, sc_name, was_hit, was_mp_drain)
     local audits = {
         player_name = actor_mob.name,
         target_name = target_mob.name,
     }
 
+    local trackable = DB.Trackable.WEAPONSKILL
+    if was_mp_drain then trackable = DB.Trackable.WEAPONSKILL_MP_DRAIN end
+
     -- Update TP usage.
     local tp = Ashita.Party.Refresh(audits.player_name, Ashita.Enum.Player_Attributes.TP)
-    tp = H.Offense.Weaponskill_TP(audits, tp, ws_name, DB.Trackable.WEAPONSKILL)
+    tp = H.Offense.Weaponskill_TP(audits, tp, ws_name, trackable)
 
     -- Update non-target loop hits and attempts.
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, ws_name, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ws_name, DB.Metric.ATTEMPTS_ON_USE)
 
     if damage > 0 or was_hit then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, DB.Metric.HITS_ON_USE)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.WEAPONSKILL, ws_name, DB.Metric.HITS_ON_USE)
+        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, ws_name, DB.Metric.HITS_ON_USE)
     end
 
     if sc_name ~= DB.Enum.DEBUG then H.TP.Skillchain_Hit(audits, sc_name) end

@@ -239,31 +239,27 @@ Debug.Unit.Tests.TP_Action.Energy_Steal = function()
 
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
-        player[player_name][target_index][DB.Trackable.WEAPONSKILL] = {}
-        player[player_name][target_index][DB.Trackable.WEAPONSKILL][DB.Metric.HITS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.WEAPONSKILL][DB.Metric.ATTEMPTS_ON_USE] = 1
-        player[player_name][target_index][DB.Trackable.WEAPONSKILL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.WEAPONSKILL][DB.Metric.TP_SPENT] = tp
         player[player_name][target_index][DB.Trackable.WEAPONSKILL_MP_DRAIN] = {}
         player[player_name][target_index][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.TOTAL] = damage
         player[player_name][target_index][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.MIN] = damage
         player[player_name][target_index][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.MAX] = damage
+        player[player_name][target_index][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.ATTEMPTS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.TP_SPENT] = tp
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL] = {}
-        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.HITS_ON_USE] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.ATTEMPTS_ON_USE] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
-        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL][DB.Metric.TP_SPENT] = tp
         player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL_MP_DRAIN] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.TOTAL] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.MIN] = damage
         player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.MAX] = damage
+        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.HITS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.ATTEMPTS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.WEAPONSKILL_MP_DRAIN][DB.Metric.TP_SPENT] = tp
     end
 
     local battle_log = {

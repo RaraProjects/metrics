@@ -8,19 +8,22 @@ Focus.WS = {}
 ------------------------------------------------------------------------------------------------------
 Focus.WS.Display = function(player_name, hide_publish)
     local trackable_ws = DB.Trackable.WEAPONSKILL
+    local trackable_mp = DB.Trackable.WEAPONSKILL_MP_DRAIN
     local trackable_sc = DB.Trackable.SKILLCHAIN
 
-    local weaponskills_found = DB.Tracking.Trackable[trackable_ws] and DB.Tracking.Trackable[trackable_ws][player_name]
-    local skillchains_found  = DB.Tracking.Trackable[trackable_sc] and DB.Tracking.Trackable[trackable_sc][player_name]
+    local weaponskills_found   = DB.Tracking.Trackable[trackable_ws] and DB.Tracking.Trackable[trackable_ws][player_name]
+    local mp_weaponskill_found = DB.Tracking.Trackable[trackable_mp] and DB.Tracking.Trackable[trackable_mp][player_name]
+    local skillchains_found    = DB.Tracking.Trackable[trackable_sc] and DB.Tracking.Trackable[trackable_sc][player_name]
 
     -- No data found message.
-    if not weaponskills_found and not skillchains_found then
+    if not weaponskills_found and not skillchains_found and not mp_weaponskill_found then
         UI.Text("No weaponskill or skillchain data available for this player.")
     end
 
     -- Display the weaponskill and skillchain data.
-    if weaponskills_found then Focus.WS.Weaponskill(player_name) end
-    if skillchains_found  then Focus.WS.Skillchains(player_name) end
+    if weaponskills_found   then Focus.WS.Weaponskill(player_name) end
+    if mp_weaponskill_found then Focus.WS.Weaponskill(player_name, nil, true) end
+    if skillchains_found    then Focus.WS.Skillchains(player_name) end
 
     -- Publish buttons
     if not hide_publish then
@@ -39,9 +42,12 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ---@param make_brief? boolean
+---@param is_mp_drain? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.WS.Weaponskill = function(player_name, make_brief)
+Focus.WS.Weaponskill = function(player_name, make_brief, is_mp_drain)
     local trackable = DB.Trackable.WEAPONSKILL
+    if is_mp_drain then trackable = DB.Trackable.WEAPONSKILL_MP_DRAIN end
+
     if not DB.Tracking.Trackable[trackable] then return nil end
     if not DB.Tracking.Trackable[trackable][player_name] then return nil end
 
@@ -53,15 +59,18 @@ Focus.WS.Weaponskill = function(player_name, make_brief)
     local columns = 10
     if make_brief then columns = 4 end
 
+    local header = "Weaponskill"
+    if is_mp_drain then header = header .. " (MP)" end
+
     if UI.BeginTable(trackable, columns, table_flags) then
-        UI.TableSetupColumn("Weaponskill", col_flags, name_width)
-        UI.TableSetupColumn("Average",     col_flags, width)
+        UI.TableSetupColumn(header,     col_flags, name_width)
+        UI.TableSetupColumn("Average",  col_flags, width)
         if not make_brief then UI.TableSetupColumn("%Player",  col_flags, width) end
-        UI.TableSetupColumn("Accuracy",    col_flags, width)
+        UI.TableSetupColumn("Accuracy", col_flags, width)
         if not make_brief then UI.TableSetupColumn("Attempts", col_flags, width) end
         if not make_brief then UI.TableSetupColumn("Damage",   col_flags, width) end
         if not make_brief then UI.TableSetupColumn("DMG/TP",   col_flags, width) end
-        UI.TableSetupColumn("~TP",         col_flags, width)
+        UI.TableSetupColumn("~TP",      col_flags, width)
         if not make_brief then UI.TableSetupColumn("Minimum",  col_flags, width) end
         if not make_brief then UI.TableSetupColumn("Maximum",  col_flags, width) end
         UI.TableHeadersRow()
