@@ -274,7 +274,8 @@ H.Message_Healing = function(message_id)
            message_id == Ashita.Enum.Message.ABILITY_RECOVER_HP_2 or
            message_id == Ashita.Enum.Message.ABILITY_RECOVER_HP_3 or
            message_id == Ashita.Enum.Message.ABILITY_RECOVER_HP_4 or
-           message_id == Ashita.Enum.Message.SPELL_HP_RECOVERY or
+           message_id == Ashita.Enum.Message.SPELL_HP_RECOVERY_PRIMARY or
+           message_id == Ashita.Enum.Message.SPELL_HP_RECOVERY_ADDITIONAL or
            message_id == Ashita.Enum.Message.HP_RECOVERED
 end
 

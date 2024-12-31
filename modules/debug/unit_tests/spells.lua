@@ -700,7 +700,7 @@ Debug.Unit.Tests.Spells.Healing = function()
     local target_name = Debug.Unit.Mob.PLAYER_TWO.name
     local all_mobs = DB.Enum.ALL_MOBS
     local damage = 100
-    local message = Ashita.Enum.Message.SPELL_HP_RECOVERY
+    local message = Ashita.Enum.Message.SPELL_HP_RECOVERY_PRIMARY
     local action_id = 3
     local action_name = "Cure III"
     local mp_cost = 46
@@ -864,14 +864,15 @@ Debug.Unit.Tests.Spells.Healing_AOE = function()
     local all_mobs = DB.Enum.ALL_MOBS
     local damage = 100
     local damage_two = 200
-    local message = Ashita.Enum.Message.SPELL_HP_RECOVERY
+    local message = Ashita.Enum.Message.SPELL_HP_RECOVERY_PRIMARY
+    local message_two = Ashita.Enum.Message.SPELL_HP_RECOVERY_ADDITIONAL
     local action_id = 8
     local action_name = "Curaga II"
     local mp_cost = 120
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage, nil, nil, message))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER_TWO.id, damage_two, nil, nil, message))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER_TWO.id, damage_two, nil, nil, message_two))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1053,7 +1054,7 @@ Debug.Unit.Tests.Spells.Pet_Heal = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
     local damage = 100
-    local message = Ashita.Enum.Message.SPELL_HP_RECOVERY
+    local message = Ashita.Enum.Message.SPELL_HP_RECOVERY_PRIMARY
     local action_id = 3
     local action_name = "Cure III"
     local mp_cost = 46
