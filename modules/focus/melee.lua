@@ -121,11 +121,11 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
-    local shadows      = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  DB.Metric.SHADOW_ABSORPTION)
-    local enspell      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL,  DB.Metric.TOTAL)
-    local endrain      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDRAIN,  DB.Metric.TOTAL)
-    local enaspir      = DB.Data.Get(player_name, DB.Trackable.MELEE_ENASPIR,  DB.Metric.TOTAL)
-    local counter      = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER,  DB.Metric.TOTAL)
+    local shadows = DB.Data.Get(player_name, DB.Trackable.MELEE_OVERALL,  DB.Metric.SHADOW_ABSORPTION)
+    local enspell = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL,  DB.Metric.TOTAL)
+    local endrain = DB.Data.Get(player_name, DB.Trackable.MELEE_ENDRAIN,  DB.Metric.TOTAL)
+    local enaspir = DB.Data.Get(player_name, DB.Trackable.MELEE_ENASPIR,  DB.Metric.TOTAL)
+    local counter = DB.Data.Get(player_name, DB.Trackable.MELEE_COUNTER,  DB.Metric.TOTAL)
 
     local row = 1
     if UI.BeginTable("Aux. Melee", 4, table_flags) then
@@ -190,7 +190,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
 
         -- Effects that just need a counter (per swing).
         local on_swing = {}
-        if shadows > 0     then table.insert(on_swing, {header = "Shadows",     trackable = DB.Trackable.MELEE_OVERALL, metric = DB.Metric.SHADOW_ABSORPTION}) end
+        if shadows > 0 then table.insert(on_swing, {header = "Shadows", trackable = DB.Trackable.MELEE_OVERALL, metric = DB.Metric.SHADOW_ABSORPTION}) end
 
         for _, data in ipairs(on_swing) do
             UI.TableNextColumn() UI.Text(tostring(data.header))

@@ -84,8 +84,7 @@ H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
     -- Shot Distance
     H.Ranged.Distance(audits, actor_mob, target_mob, ranged_type)
 
-    -- Flag for the battle log.
-    if no_damage then damage = -1 end
+    if no_damage then damage = 0 end
 
     return damage
 end
@@ -136,6 +135,10 @@ H.Ranged.Message = function(audits, damage, message_id, overall_ranged_type, own
     -- Shadows have no impact on recent accuracy.
     elseif message_id == Ashita.Enum.Message.SHADOWS then
         H.Offense.No_Damage_Hit(audits, overall_ranged_type, DB.Metric.SHADOW_ABSORPTION)
+
+    elseif message_id == Ashita.Enum.Message.MOBHEAL3 or message_id == Ashita.Enum.Message.MOBHEAL373 then
+        H.Offense.Mob_Heal(audits, overall_ranged_type, damage)
+        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
 
     -- PUP ranged hits will not negatively impact true strike or square hit rates.
     elseif message_id == Ashita.Enum.Message.WEAPONSKILL_DAMAGE then

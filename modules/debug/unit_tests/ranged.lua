@@ -324,7 +324,7 @@ Debug.Unit.Tests.Ranged.Shadows = function()
     local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
-        damage = "---",
+        damage = tostring(0),
         action = "Ranged",
         note   = " ",
     }
@@ -340,6 +340,55 @@ Debug.Unit.Tests.Ranged.Shadows = function()
     }
 
     return Debug.Unit.Check_Result("Ranged > Shadows", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Ranged - Mob Heal
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Ranged.Mob_Heal = function()
+    Debug.Unit.Reset()
+    local player_name = Debug.Unit.Mob.PLAYER.name
+    local target_name = Debug.Unit.Mob.ENEMY.name
+    local damage = 100
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.MOBHEAL373))
+    local action = Debug.Unit.Util.Build_Action(payload)
+    H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
+
+    local player = {}
+    local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
+
+    player[player_name] = {}
+    for _, target_index in ipairs(target_lists) do
+        player[player_name][target_index] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL] = {}
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.HITS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[player_name][target_index][DB.Trackable.RANGED_OVERALL][DB.Metric.MOB_HEALING] = damage
+    end
+
+    local battle_log = {
+        player = Debug.Unit.Mob.PLAYER.name,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(0),
+        action = "Ranged",
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Ranged - Mob Heal", test_package)
 end
 
 ------------------------------------------------------------------------------------------------------

@@ -90,6 +90,8 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
     local width       = Column.Widths.Standard
     local trackable   = DB.Trackable.RANGED_OVERALL
 
+    local shadows = DB.Data.Get(player_name, trackable, DB.Metric.SHADOW_ABSORPTION)
+
     local row = 1
     if UI.BeginTable("Aux. Ranged", 4, table_flags) then
         UI.TableSetupColumn("Ranged Auxiliary", col_flags, name_width)
@@ -126,6 +128,29 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.RANGED_ENASPIR)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
+
+        -- Effects that carry a damage value but do not contribute to player damage.
+        if DB.Data.Get(player_name, trackable, DB.Metric.MOB_HEALING) > 0 then
+            UI.TableNextColumn() UI.Text("Mob Heal")
+            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, DB.Metric.MOB_HEALING)
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(row)
+            row = row + 1
+        end
+
+        -- Effects that just need a counter (per shot).
+        local on_shot = {}
+        if shadows > 0 then table.insert(on_shot, {header = "Shadows", trackable = trackable, metric = DB.Metric.SHADOW_ABSORPTION}) end
+
+        for _, data in ipairs(on_shot) do
+            UI.TableNextColumn() UI.Text(tostring(data.header))
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() Column.General.Fraction(player_name, data.trackable, data.metric, DB.Metric.HITS_ON_TARGET)
             Window_Manager.Table_Row_Color(row)
             row = row + 1
         end
