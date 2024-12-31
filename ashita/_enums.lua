@@ -116,6 +116,7 @@ Ashita.Enum.Message = {
     WEAPONSKILL_DAMAGE                      = 185,   -- PUP Ranged Attack, Avatar Rage, Mob/Pet TP
     WEAPONSKILL_HP_DRAIN                    = 187,   -- Vampiric Lash
     WEAPONSKILL_MISS                        = 188,   -- Mob TP
+    WEAPONSKILL_NO_EFFECT                   = 189,   -- Demonic Howl used when player has Haste buff.
     WEAPONSKILL_MP_DRAIN                    = 225,   -- Energy Steal
     WEAPONSKILL_TP_DRAIN                    = 226,   -- TP Drainkiss
     SPELL_HP_DRAIN                          = 227,   -- Drain, Blood Drain (BLU)

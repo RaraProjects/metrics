@@ -166,6 +166,7 @@ H.Message_No_Damage_Hit = function(message_id)
            message_id == Ashita.Enum.Message.PARRY or
            message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION or
            message_id == Ashita.Enum.Message.SHADOWS or
+           message_id == Ashita.Enum.Message.WEAPONSKILL_NO_EFFECT or
            message_id == Ashita.Enum.Message.MOBHEAL373
 end
 
