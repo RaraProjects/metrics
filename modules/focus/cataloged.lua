@@ -89,7 +89,7 @@ Focus.Catalog.Endebuff = function(player_name, focus_type, suffix)
             action_name = data[1]
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Damage.Hits(player_name, focus_type, action_name)
+            UI.TableNextColumn() Column.Damage.Hits(player_name, focus_type, action_name, true)
         end
         UI.EndTable()
     end

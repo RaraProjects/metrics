@@ -7,9 +7,9 @@ Focus.Ranged = {}
 ------------------------------------------------------------------------------------------------------
 Focus.Ranged.Display = function(player_name)
     local endamage    = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDAMAGE, DB.Metric.TOTAL)
-    local endebuff    = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDEBUFF, DB.Metric.HITS_ON_USE)
-    local endrain     = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDRAIN,  DB.Metric.HITS_ON_USE)
-    local enaspir     = DB.Data.Get(player_name, DB.Trackable.RANGED_ENASPIR,  DB.Metric.HITS_ON_USE)
+    local endebuff    = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDEBUFF, DB.Metric.HITS_ON_TARGET)
+    local endrain     = DB.Data.Get(player_name, DB.Trackable.RANGED_ENDRAIN,  DB.Metric.HITS_ON_TARGET)
+    local enaspir     = DB.Data.Get(player_name, DB.Trackable.RANGED_ENASPIR,  DB.Metric.HITS_ON_TARGET)
     local paralyzed   = DB.Data.Get(player_name, DB.Trackable.ALL_PARALYZE,    DB.Metric.HITS_ON_USE)
     local intimidated = DB.Data.Get(player_name, DB.Trackable.ALL_INTIMIDATE,  DB.Metric.HITS_ON_USE)
 
