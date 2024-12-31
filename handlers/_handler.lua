@@ -162,12 +162,13 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 H.Message_No_Damage_Hit = function(message_id)
-    return message_id == Ashita.Enum.Message.DODGE or
-           message_id == Ashita.Enum.Message.PARRY or
+    return message_id == Ashita.Enum.Message.PERFECT_DODGE or
+           message_id == Ashita.Enum.Message.MELEE_PARRY or
            message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION or
-           message_id == Ashita.Enum.Message.SHADOWS or
+           message_id == Ashita.Enum.Message.SHADOW_ABSORPTION or
            message_id == Ashita.Enum.Message.WEAPONSKILL_NO_EFFECT or
-           message_id == Ashita.Enum.Message.MOBHEAL373
+           message_id == Ashita.Enum.Message.MOB_HEAL_MELEE or
+           message_id == Ashita.Enum.Message.MOB_HEAL_RANGED
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -177,9 +178,9 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 H.Message_No_Damage_Miss = function(message_id)
-    return message_id == Ashita.Enum.Message.MISS or
+    return message_id == Ashita.Enum.Message.MELEE_MISS or
            message_id == Ashita.Enum.Message.WEAPONSKILL_MISS or
-           message_id == Ashita.Enum.Message.RANGEMISS
+           message_id == Ashita.Enum.Message.RANGE_MISS
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -192,14 +193,15 @@ end
 ------------------------------------------------------------------------------------------------------
 H.No_Damage_Messages = function(result)
     local message_id = result.message
-    return message_id == Ashita.Enum.Message.DODGE or
-           message_id == Ashita.Enum.Message.MISS or
+    return message_id == Ashita.Enum.Message.PERFECT_DODGE or
+           message_id == Ashita.Enum.Message.MELEE_MISS or
            message_id == Ashita.Enum.Message.WEAPONSKILL_MISS or
-           message_id == Ashita.Enum.Message.PARRY or
+           message_id == Ashita.Enum.Message.MELEE_PARRY or
            message_id == Ashita.Enum.Message.THIRD_EYE_ANTICIPATION or
-           message_id == Ashita.Enum.Message.RANGEMISS or
-           message_id == Ashita.Enum.Message.SHADOWS or
-           message_id == Ashita.Enum.Message.MOBHEAL373
+           message_id == Ashita.Enum.Message.RANGE_MISS or
+           message_id == Ashita.Enum.Message.SHADOW_ABSORPTION or
+           message_id == Ashita.Enum.Message.MOB_HEAL_MELEE or
+           message_id == Ashita.Enum.Message.MOB_HEAL_RANGED
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -607,7 +609,7 @@ end
 ---@param message_id number the ID of the entity animation when taking a hit.
 ------------------------------------------------------------------------------------------------------
 H.Defense.Crit = function(audits, damage, message_id)
-    if message_id == Ashita.Enum.Message.CRIT then
+    if message_id == Ashita.Enum.Message.CRITICAL_HIT then
         H.Offense.Hit(audits, DB.Trackable.DEF_CRITICAL, damage, true)
     else
         H.Offense.Miss(audits, DB.Trackable.DEF_CRITICAL)

@@ -122,23 +122,13 @@ Focus.Content = function()
         table.insert(tabs, {tab = Focus.Tabs.Names.DEFENSE,   display_function = Focus.Defense.Display})
         table.insert(tabs, {tab = Focus.Tabs.Names.WS,        display_function = Focus.WS.Display})
         table.insert(tabs, {tab = Focus.Tabs.Names.ABILITIES, display_function = Focus.Abilities.Display})
+        table.insert(tabs, {tab = Focus.Tabs.Names.PETS,      display_function = Focus.Pets.Display})
 
         -- Load tabs
         for _, data in ipairs(tabs) do
             if UI.BeginTabItem(data.tab, false, Focus.Tabs.Switch[data.tab]) then
                 Focus.Tabs.Switch[data.tab] = nil
                 data.display_function(player_name)
-                UI.EndTabItem()
-            end
-        end
-
-        -- Conditionally show pets.
-        if DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL) > 0 or
-           DB.Data.Get(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL) > 0 or
-           DB.Data.Get(player_name, DB.Trackable.PET_HEALING, DB.Metric.TOTAL) > 0 then
-            if UI.BeginTabItem(Focus.Tabs.Names.PETS, false, Focus.Tabs.Switch[Focus.Tabs.Names.PETS]) then
-                Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = nil
-                Focus.Pets.Display(player_name)
                 UI.EndTabItem()
             end
         end

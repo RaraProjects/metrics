@@ -12,7 +12,7 @@ Debug.Unit.Tests.Ranged.Hit = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RANGEHIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RANGE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -71,7 +71,7 @@ Debug.Unit.Tests.Ranged.Square = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SQUARE))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RANGE_SQUARE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -134,7 +134,7 @@ Debug.Unit.Tests.Ranged.Truestrike = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.TRUE))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RANGE_TRUESTRIKE))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -197,7 +197,7 @@ Debug.Unit.Tests.Ranged.Miss = function()
     local damage = 0
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RANGEMISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RANGE_MISS))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -218,7 +218,7 @@ Debug.Unit.Tests.Ranged.Miss = function()
     local battle_log = {
         player = Debug.Unit.Mob.PLAYER.name,
         pet    = Blog.Enum.NO_PET,
-        damage = "---",
+        damage = tostring(0),
         action = "Ranged",
         note   = " ",
     }
@@ -248,7 +248,7 @@ Debug.Unit.Tests.Ranged.Crit = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RANGECRIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.RANGE_CRITICAL_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -305,7 +305,7 @@ Debug.Unit.Tests.Ranged.Shadows = function()
     local damage = 0
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SHADOWS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SHADOW_ABSORPTION))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -354,7 +354,7 @@ Debug.Unit.Tests.Ranged.Mob_Heal = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.MOBHEAL373))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.MOB_HEAL_MELEE))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -406,7 +406,7 @@ Debug.Unit.Tests.Ranged.Endamage = function()
     local add_effect_name = "Fire"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  nil, nil, Ashita.Enum.Message.RANGEHIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENDAMAGE))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  nil, nil, Ashita.Enum.Message.RANGE_HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENDAMAGE))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -491,7 +491,7 @@ Debug.Unit.Tests.Ranged.Endebuff = function()
     local add_effect_name = "Blind"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  nil, nil, Ashita.Enum.Message.RANGEHIT, true, additional_damage, nil, Ashita.Enum.Message.ENDEBUFF))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  nil, nil, Ashita.Enum.Message.RANGE_HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDEBUFF))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -563,7 +563,7 @@ Debug.Unit.Tests.Ranged.Endrain = function()
     local additional_damage = 200
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  nil, nil, Ashita.Enum.Message.RANGEHIT, true, additional_damage, nil, Ashita.Enum.Message.ENDRAIN))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,  nil, nil, Ashita.Enum.Message.RANGE_HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDRAIN))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Ranged.Action(action, Debug.Unit.Mob.PLAYER, true)
 

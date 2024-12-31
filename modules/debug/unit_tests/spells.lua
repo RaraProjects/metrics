@@ -185,7 +185,7 @@ Debug.Unit.Tests.Spells.Nuke_Shadow = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local message = Ashita.Enum.Message.SHADOWS
+    local message = Ashita.Enum.Message.SHADOW_ABSORPTION
     local action_id = 145
     local action_name = "Fire II"
     local mp_cost = 68
@@ -1769,7 +1769,7 @@ Debug.Unit.Tests.Spells.Enfeeble_Shadow = function()
     local mp_cost = 25
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SHADOWS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SHADOW_ABSORPTION))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 

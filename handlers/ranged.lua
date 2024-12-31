@@ -102,41 +102,45 @@ end
 H.Ranged.Message = function(audits, damage, message_id, overall_ranged_type, owner_mob)
     local was_critical_hit = false
 
-    if message_id == Ashita.Enum.Message.RANGEHIT then
+    if message_id == Ashita.Enum.Message.RANGE_HIT then
         H.Offense.Hit(audits, overall_ranged_type, damage)
         H.Offense.Miss(audits, DB.Trackable.RANGED_SQUARE_HIT)
         H.Offense.Miss(audits, DB.Trackable.RANGED_TRUE_STRIKE)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
 
-    elseif message_id == Ashita.Enum.Message.RANGEMISS then
+    -- PUP Ranged Attack
+    elseif message_id == Ashita.Enum.Message.WEAPONSKILL_DAMAGE then
+        H.Offense.Hit(audits, overall_ranged_type, damage)
+
+    elseif message_id == Ashita.Enum.Message.RANGE_MISS then
         H.Offense.Miss(audits, overall_ranged_type)
         H.Offense.Miss(audits, DB.Trackable.RANGED_SQUARE_HIT)
         H.Offense.Miss(audits, DB.Trackable.RANGED_TRUE_STRIKE)
         H.Offense.Update_Recent_Accuracy(audits, false, owner_mob)
 
-    elseif message_id == Ashita.Enum.Message.SQUARE then
+    elseif message_id == Ashita.Enum.Message.RANGE_SQUARE_HIT then
         H.Offense.Hit(audits, overall_ranged_type, damage)
         H.Offense.Hit(audits, DB.Trackable.RANGED_SQUARE_HIT, damage)
         H.Offense.Miss(audits, DB.Trackable.RANGED_TRUE_STRIKE)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
 
-    elseif message_id == Ashita.Enum.Message.TRUE then
+    elseif message_id == Ashita.Enum.Message.RANGE_TRUESTRIKE then
         H.Offense.Hit(audits, overall_ranged_type, damage)
         H.Offense.Hit(audits, DB.Trackable.RANGED_TRUE_STRIKE, damage)
         H.Offense.Miss(audits, DB.Trackable.RANGED_SQUARE_HIT)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
 
     -- Critical hits will not negatively impact true strike or square hit rates.
-    elseif message_id == Ashita.Enum.Message.RANGECRIT then
+    elseif message_id == Ashita.Enum.Message.RANGE_CRITICAL_HIT then
         was_critical_hit = true
         H.Offense.Hit(audits, overall_ranged_type, damage, true)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
 
     -- Shadows have no impact on recent accuracy.
-    elseif message_id == Ashita.Enum.Message.SHADOWS then
+    elseif message_id == Ashita.Enum.Message.SHADOW_ABSORPTION then
         H.Offense.No_Damage_Hit(audits, overall_ranged_type, DB.Metric.SHADOW_ABSORPTION)
 
-    elseif message_id == Ashita.Enum.Message.MOBHEAL3 or message_id == Ashita.Enum.Message.MOBHEAL373 then
+    elseif message_id == Ashita.Enum.Message.MOB_HEAL_MELEE then
         H.Offense.Mob_Heal(audits, overall_ranged_type, damage)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
 

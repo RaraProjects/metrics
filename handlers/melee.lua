@@ -257,59 +257,59 @@ H.Melee.Message = function(audits, damage, message_id, melee_type_broad, melee_t
     local has_hit = true
     local metric  = nil
 
-    if message_id == Ashita.Enum.Message.HIT then
+    if message_id == Ashita.Enum.Message.MELEE_HIT then
         H.Offense.Hit(audits, melee_type_broad, damage)
         H.Offense.Hit(audits, melee_type_discrete, damage)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
 
-    elseif message_id == Ashita.Enum.Message.MISS then
+    elseif message_id == Ashita.Enum.Message.MELEE_MISS then
         H.Offense.Miss(audits, melee_type_broad)
         H.Offense.Miss(audits, melee_type_discrete)
         H.Offense.Update_Recent_Accuracy(audits, false, owner_mob)
         has_hit = false
 
-    elseif message_id == Ashita.Enum.Message.CRIT then
+    elseif message_id == Ashita.Enum.Message.CRITICAL_HIT then
         H.Offense.Hit(audits, melee_type_broad, damage, true)
         H.Offense.Hit(audits, melee_type_discrete, damage, true)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
         was_critical_hit = true
 
     -- Shadows have no impact on recent accuracy.
-    elseif message_id == Ashita.Enum.Message.SHADOWS then
+    elseif message_id == Ashita.Enum.Message.SHADOW_ABSORPTION then
         metric = DB.Metric.SHADOW_ABSORPTION
         H.Offense.No_Damage_Hit(audits, melee_type_broad, metric)
         H.Offense.No_Damage_Hit(audits, melee_type_discrete, metric)
 
-    elseif message_id == Ashita.Enum.Message.DODGE then
+    elseif message_id == Ashita.Enum.Message.PERFECT_DODGE then
         H.Melee.Dodge(audits, melee_type_broad, melee_type_discrete)
 
-    elseif message_id == Ashita.Enum.Message.MOBHEAL3 or message_id == Ashita.Enum.Message.MOBHEAL373 then
+    elseif message_id == Ashita.Enum.Message.MOB_HEAL_MELEE then
         H.Offense.Mob_Heal(audits, melee_type_broad, damage)
         H.Offense.Mob_Heal(audits, melee_type_discrete, damage)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
 
-    elseif message_id == Ashita.Enum.Message.RANGEHIT then
+    elseif message_id == Ashita.Enum.Message.RANGE_HIT then
         H.Offense.Hit(audits, melee_type_broad, damage)
         H.Offense.Hit(audits, melee_type_discrete, damage)
         H.Offense.Update_Recent_Accuracy(audits, true)
 
-    elseif message_id == Ashita.Enum.Message.RANGEMISS then
+    elseif message_id == Ashita.Enum.Message.RANGE_MISS then
         H.Offense.Miss(audits, melee_type_broad)
         H.Offense.Miss(audits, melee_type_discrete)
         H.Offense.Update_Recent_Accuracy(audits, false, owner_mob)
         has_hit = false
 
-    elseif message_id == Ashita.Enum.Message.SQUARE then
+    elseif message_id == Ashita.Enum.Message.RANGE_SQUARE_HIT then
         H.Offense.Hit(audits, melee_type_broad, damage)
         H.Offense.Hit(audits, melee_type_discrete, damage)
         H.Offense.Update_Recent_Accuracy(audits, true)
 
-    elseif message_id == Ashita.Enum.Message.TRUE then
+    elseif message_id == Ashita.Enum.Message.RANGE_TRUESTRIKE then
         H.Offense.Hit(audits, melee_type_broad, damage)
         H.Offense.Hit(audits, melee_type_discrete, damage)
         H.Offense.Update_Recent_Accuracy(audits, true)
 
-    elseif message_id == Ashita.Enum.Message.RANGECRIT then
+    elseif message_id == Ashita.Enum.Message.RANGE_CRITICAL_HIT then
         H.Offense.Hit(audits, melee_type_broad, damage, true)
         H.Offense.Hit(audits, melee_type_discrete, damage, true)
         H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
@@ -353,7 +353,7 @@ H.Melee.Additional_Effect = function(audits, result)
         local animation_id = result.add_effect_animation
         local param        = result.add_effect_param   -- This is either damage or the type of debuff applied.
 
-        if message_id == Ashita.Enum.Message.ENSPELL then
+        if message_id == Ashita.Enum.Message.ADDITIONAL_DAMAGE then
             if animation_id and Res.Spells.Get_Enspell_Type(animation_id) then
                 local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
                 additional_damage = param
@@ -404,7 +404,7 @@ H.Melee.Spikes = function(audits, result, owner_mob)
         local spike_trackable = DB.Trackable.DEF_SPIKES
         H.Defense.Grand_Totals(audits, damage)
 
-        if spike_message == Ashita.Enum.Message.SPIKE_DMG then
+        if spike_message == Ashita.Enum.Message.SPIKE_DAMAGE then
             H.Offense.Hit(audits, DB.Trackable.DEF_NUKING, damage)
 
             if spike_animation == Ashita.Enum.Effect_Animation.FIRE then
@@ -417,7 +417,7 @@ H.Melee.Spikes = function(audits, result, owner_mob)
                 H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Shock Spikes")
             end
 
-        elseif spike_message == Ashita.Enum.Message.COUNTER then
+        elseif spike_message == Ashita.Enum.Message.MELEE_COUNTER then
             was_countered = true
             H.Offense.Hit(audits, DB.Trackable.DEF_MELEE, damage)
             H.Offense.Hit(audits, DB.Trackable.DEF_COUNTERED, damage)

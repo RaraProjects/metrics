@@ -12,7 +12,7 @@ Debug.Unit.Tests.Melee.Main_Hit = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -80,7 +80,7 @@ Debug.Unit.Tests.Melee.Main_Miss = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_MISS))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -134,7 +134,7 @@ Debug.Unit.Tests.Melee.Off_Hand_Hit = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_OFFHAND, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_OFFHAND, nil, Ashita.Enum.Message.MELEE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -202,7 +202,7 @@ Debug.Unit.Tests.Melee.Off_Hand_Miss = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_OFFHAND, nil, Ashita.Enum.Message.MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_OFFHAND, nil, Ashita.Enum.Message.MELEE_MISS))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -256,7 +256,7 @@ Debug.Unit.Tests.Melee.Kick_Hit = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.MELEE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -324,7 +324,7 @@ Debug.Unit.Tests.Melee.Kick_Miss = function()
     local damage = 0
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.MELEE_MISS))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -378,7 +378,7 @@ Debug.Unit.Tests.Melee.Kick_Crit = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.CRIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.CRITICAL_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -451,8 +451,8 @@ Debug.Unit.Tests.Melee.Main_Multi_Attack = function()
     local damage_two = 200
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,     Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,     Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -527,9 +527,9 @@ Debug.Unit.Tests.Melee.Main_Multi_Attack_Hit_Miss_Hit = function()
     local damage_two  = 200
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -604,9 +604,9 @@ Debug.Unit.Tests.Melee.Main_Multi_Attack_Hit_Miss_Crit = function()
     local damage_two  = 200
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.CRIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.CRITICAL_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -689,9 +689,9 @@ Debug.Unit.Tests.Melee.Main_Multi_Attack_Miss_Miss_Miss = function()
     local damage_two  = 200
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_MISS))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -749,9 +749,9 @@ Debug.Unit.Tests.Melee.Main_Multi_Attack_Kick = function()
     local kick   = 300
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, first,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, second, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, kick,   Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, first,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, second, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, kick,   Ashita.Enum.Animation.MELEE_KICK, nil, Ashita.Enum.Message.MELEE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -838,9 +838,9 @@ Debug.Unit.Tests.Melee.Main_Multi_Attack_Enspell = function()
     local add_effect_name      = "Enfire"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MISS))
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENSPELL))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage,      Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, test_damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage_two,  Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ADDITIONAL_DAMAGE))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -938,7 +938,7 @@ Debug.Unit.Tests.Melee.Crit = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.CRIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.CRITICAL_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1010,7 +1010,7 @@ Debug.Unit.Tests.Melee.Shadows = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.SHADOWS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.SHADOW_ABSORPTION))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1146,7 +1146,7 @@ Debug.Unit.Tests.Melee.Mob_Heal = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MOBHEAL373))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MOB_HEAL_MELEE))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1207,7 +1207,7 @@ Debug.Unit.Tests.Melee.Pet_Hit = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.HIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.MELEE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
@@ -1295,7 +1295,7 @@ Debug.Unit.Tests.Melee.Pet_Miss = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.MISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.MELEE_MISS))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
@@ -1355,7 +1355,7 @@ Debug.Unit.Tests.Melee.Pet_Crit = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.CRIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.CRITICAL_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
@@ -1451,7 +1451,7 @@ Debug.Unit.Tests.Melee.Pet_Shadows = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SHADOWS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.SHADOW_ABSORPTION))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
@@ -1519,7 +1519,7 @@ Debug.Unit.Tests.Melee.Pet_Mob_Heal = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.MOBHEAL373))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Enum.Message.MOB_HEAL_MELEE))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PET, Debug.Unit.Mob.PLAYER, true)
 
@@ -1589,7 +1589,7 @@ Debug.Unit.Tests.Melee.Enspell = function()
     local add_effect_name = "Enfire"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENSPELL))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ADDITIONAL_DAMAGE))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1684,7 +1684,7 @@ Debug.Unit.Tests.Melee.Endamage = function()
     local add_effect_name = "Fire"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENDAMAGE))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT, true, additional_damage, add_effect_animation, Ashita.Enum.Message.ENDAMAGE))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1778,7 +1778,7 @@ Debug.Unit.Tests.Melee.Endebuff = function()
     local add_effect_name = "Blind"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDEBUFF))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDEBUFF))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1859,7 +1859,7 @@ Debug.Unit.Tests.Melee.Endrain = function()
     local additional_damage = 200
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDRAIN))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT, true, additional_damage, nil, Ashita.Enum.Message.ENDRAIN))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -1934,7 +1934,7 @@ Debug.Unit.Tests.Melee.Enaspir = function()
     local additional_damage = 200
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, true, additional_damage, nil, Ashita.Enum.Message.ENASPIR))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT, true, additional_damage, nil, Ashita.Enum.Message.ENASPIR))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -2008,11 +2008,11 @@ Debug.Unit.Tests.Melee.Spikes = function()
     local damage = 100
     local spike_damage = 200
     local spike_animation = Ashita.Enum.Effect_Animation.FIRE -- Blaze Spikes
-    local spike_message = Ashita.Enum.Message.SPIKE_DMG
+    local spike_message = Ashita.Enum.Message.SPIKE_DAMAGE
     local spike_name = "Blaze Spikes"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.HIT, false, nil, nil, nil, true, spike_damage, spike_animation, spike_message))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.MELEE_MAIN, nil, Ashita.Enum.Message.MELEE_HIT, false, nil, nil, nil, true, spike_damage, spike_animation, spike_message))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -2110,7 +2110,7 @@ Debug.Unit.Tests.Melee.Daken_Hit = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.RANGEHIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.RANGE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -2177,7 +2177,7 @@ Debug.Unit.Tests.Melee.Daken_Square = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.SQUARE))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.RANGE_SQUARE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -2244,7 +2244,7 @@ Debug.Unit.Tests.Melee.Daken_Truestrike = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.TRUE))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.RANGE_TRUESTRIKE))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -2311,7 +2311,7 @@ Debug.Unit.Tests.Melee.Daken_Miss = function()
     local damage = 0
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.RANGEMISS))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.RANGE_MISS))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 
@@ -2364,7 +2364,7 @@ Debug.Unit.Tests.Melee.Daken_Crit = function()
     local damage = 100
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.RANGECRIT))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, Ashita.Enum.Animation.DAKEN, nil, Ashita.Enum.Message.RANGE_CRITICAL_HIT))
     local action = Debug.Unit.Util.Build_Action(payload)
     H.Melee.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
 

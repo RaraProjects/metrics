@@ -166,13 +166,12 @@ DB.Data.Update_Damage_Basic = function(audits, trackable, damage, critical_hit)
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
 	-- We log a hit on the target here too since we have a damage check.
 	if damage > 0 then
+		DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
 		if audits.pet_name then
-			DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
 			if damage < DB.Pet_Data.Get(audits.player_name, audits.pet_name, trackable, min_metric, audits.target_name) then
 				DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, min_metric)
 			end
 		else
-			DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
 			if damage < DB.Data.Get(audits.player_name, trackable, min_metric, audits.target_name) then
 				DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, min_metric)
 			end
