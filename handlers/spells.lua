@@ -80,10 +80,10 @@ H.Spell.Target_Parse = function(spell_data, result, actor_mob, target_mob, owner
 
     -- Shadow absorption.
     if H.Message_No_Damage_Hit(message_id) then
-        return 0, false end
+        return 0, false
 
     -- Enfeebles shouldn't come with damage.
-    if Res.Spells.Get_Enfeeble(spell_id) then
+    elseif Res.Spells.Get_Enfeeble(spell_id) then
         damage = H.Spell.Enfeebling_And_DoTs(audits, DB.Trackable.SPELLS_ENFEEBLING, damage, spell_name, message_id, owner_mob)
 
     -- Some DoTs come with initial damage. Damage gets handled inside the enfeeble function.
