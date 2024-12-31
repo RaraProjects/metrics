@@ -16,7 +16,7 @@ Focus.Magic.Display = function(player_name, hide_publish)
     local healing_total  = DB.Data.Get(player_name, DB.Trackable.SPELLS_HEALING,        DB.Metric.TOTAL)
     local debuff_removal = DB.Data.Get(player_name, DB.Trackable.SPELLS_DEBUFF_REMOVAL, DB.Metric.ATTEMPTS_ON_USE)
     local buff           = DB.Data.Get(player_name, DB.Trackable.SPELLS_BUFFS,          DB.Metric.ATTEMPTS_ON_USE)
-    local enspell_count  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL,         DB.Metric.ATTEMPTS_ON_USE)
+    local enspell_count  = DB.Data.Get(player_name, DB.Trackable.MELEE_ENSPELL,         DB.Metric.ATTEMPTS_ON_TARGET)
     local enfeeble_count = DB.Data.Get(player_name, DB.Trackable.SPELLS_ENFEEBLING,     DB.Metric.ATTEMPTS_ON_USE)
     local spike_damage   = DB.Data.Get(player_name, DB.Trackable.SPELLS_SPIKE_DAMAGE,   DB.Metric.TOTAL)
     local buff_songs     = DB.Data.Get(player_name, DB.Trackable.SPELLS_BUFF_SONG,      DB.Metric.ATTEMPTS_ON_USE)
@@ -179,7 +179,10 @@ Focus.Magic.Damaging_Spell = function(player_name, trackable, header, make_brief
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
 
+            -- Enspell doesn't have ATTEMPTS_ON_USE
             local attempts = DB.Catalog.Get(player_name, trackable, action_name, metric_count)
+            if trackable == DB.Trackable.MELEE_ENSPELL then attempts = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET) end
+
             if attempts > 0 then
                 UI.TableNextColumn() UI.Text("- " .. action_name)
                 UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name, trackable, metric_total, action_name)
