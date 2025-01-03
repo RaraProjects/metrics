@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author  = "Metra"
 addon.name    = "Metrics"
-addon.version = "12.31.24.00"
+addon.version = "01.02.25.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -61,6 +61,7 @@ require("windows.!window")
 require("columns.!column")
 require("modules.config._config")
 require("modules.exp._exp")
+require("modules.items._items")
 require("modules.parse._parse")
 require("modules.focus._focus")
 require("modules.battle log._battle_log")
@@ -171,8 +172,13 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             end
         end
 
-    -- Item obtained by someone.
+    -- Items dropped by monster.
+    elseif packet.id == 0x0D2 then
+        Items.Dropped(packet.data)
+
+    -- Item actions like lotting and obtaining items.
     elseif packet.id == 0x0D3 then
-        -- Not implemented.
+        Items.Obtained(packet.data)
+
     end
 end)

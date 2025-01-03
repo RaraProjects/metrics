@@ -17,6 +17,7 @@ Overview.Parse.Content = function()
     if Overview.Settings.Show_Healing       then Overview.Parse.Healing() end
     if Overview.Settings.Show_Defense       then Overview.Parse.Defense() end
     if Overview.Settings.Show_Mobs_Defeated then Overview.Parse.Monsters_Defeated() end
+    Overview.Parse.Items_Obtained()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -584,24 +585,83 @@ end
 -- Builds the monsters defeated section.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Monsters_Defeated = function()
-    local col_flags = Focus.Column_Flags
+    local col_flags   = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
 
-    if UI.BeginTable("Mobs Defeated", 2, table_flags) then
-        UI.TableSetupColumn("Mob Name", col_flags, name_width)
-        UI.TableSetupColumn("Defeated", col_flags, width)
+    if UI.BeginTable("Mobs Defeated", 3, table_flags) then
+        UI.TableSetupColumn("Mobs & Drops", col_flags, name_width)
+        UI.TableSetupColumn("Defeated",     col_flags, width)
+        UI.TableSetupColumn("%Drop",        col_flags, width)
         UI.TableHeadersRow()
 
         local mobs_defeated = 0
-        for mob_name, count in pairs(DB.Tracking.Defeated_Mobs) do
+
+        -- Mob
+        for mob_name, mob_deaths in pairs(DB.Tracking.Defeated_Mobs) do
             UI.TableNextColumn() UI.Text(tostring(mob_name))
-            UI.TableNextColumn() UI.Text(tostring(count))
+            UI.TableNextColumn() UI.Text(tostring(mob_deaths))
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(1)
+
+            -- Items
+            if DB.Tracking.Drop_Rates[mob_name] then
+                for item_name, drop_count in pairs(DB.Tracking.Drop_Rates[mob_name]) do
+                    UI.TableNextColumn() UI.Text("- " .. tostring(item_name))
+                    UI.TableNextColumn() UI.Text(tostring(drop_count))
+                    UI.TableNextColumn() UI.Text(Column.String.Format_Percent(drop_count, mob_deaths))
+                    Window_Manager.Table_Row_Color(0)
+                end
+            end
+
             mobs_defeated = mobs_defeated + 1
         end
+
         if mobs_defeated == 0 then
-            UI.TableNextColumn() UI.Text("None")
+            UI.TableNextColumn() UI.Text("None Yet")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Builds the items obtained section.
+------------------------------------------------------------------------------------------------------
+Overview.Parse.Items_Obtained = function()
+    local col_flags   = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
+
+    if UI.BeginTable("Items Obtained", 2, table_flags) then
+        UI.TableSetupColumn("Players & Drops",  col_flags, name_width)
+        UI.TableSetupColumn("Drops",            col_flags, width)
+        UI.TableHeadersRow()
+
+        local items_obtained = 0
+
+        -- Player
+        for player_name, item_data in pairs(DB.Tracking.Received_Items) do
+            UI.TableNextColumn() UI.Text(tostring(player_name))
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(1)
+
+            -- Items
+            for item_name, count in pairs(item_data) do
+                UI.TableNextColumn() UI.Text("- " .. tostring(item_name))
+                UI.TableNextColumn() UI.Text(tostring(count))
+                Window_Manager.Table_Row_Color(0)
+            end
+
+            items_obtained = items_obtained + 1
+        end
+
+        if items_obtained == 0 then
+            UI.TableNextColumn() UI.Text("None Yet")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
         end
 

@@ -20,6 +20,9 @@ DB.Tracking.Running_Attack_Speed = {}  	-- [player_name]
 DB.Tracking.Running_Damage = {}			-- [player_name]
 DB.Tracking.Multi_Attack = {}			-- [player_name][multi-rank]
 DB.Tracking.Defeated_Mobs = {}			-- [mob_name]
+DB.Tracking.Total_Items = {}			-- [item_name]
+DB.Tracking.Received_Items = {}		    -- [recipient_name][item_name]
+DB.Tracking.Drop_Rates = {}				-- [mob_name][item_name]
 
 -- Used to hold column data for performance improvements.
 DB.Cache = {}							-- [player_name][trackable][metric]
@@ -78,6 +81,9 @@ DB.Initialize = function(manual_reset)
 	DB.Tracking.Running_Damage = {}
 	DB.Tracking.Multi_Attack = {}
     DB.Tracking.Defeated_Mobs = {}
+	DB.Tracking.Total_Items = {}
+	DB.Tracking.Received_Items = {}
+	DB.Tracking.Drop_Rates = {}
 
 	DB.Sorted.Players = {[1] = DB.Widgets.Dropdown.Enum.NONE}
 	DB.Sorted.Mobs = {[1] = DB.Enum.ALL_MOBS}

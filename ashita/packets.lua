@@ -67,7 +67,7 @@ Ashita.Packets.Build_Action = function (data)
 				new_action.spike_effect_effect    = action.react_info
 				new_action.spike_effect_param     = action.react_value
 				new_action.spike_effect_message   = action.react_message
-			else 
+			else
 				new_action.has_spike_effect       = false
 				new_action.spike_effect_animation = 0
 				new_action.spike_effect_effect    = 0
@@ -276,14 +276,64 @@ Ashita.Packets.Character_Update = function(data)
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- NOT IMPLEMENTED
--- Handles parsing messages out of incoming packet 0x029.
+-- Handles parsing messages out of incoming packet 0x0D2.
 -- ------------------------------------------------------------------------------------------------------
 ---@param data table parsed packet data
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Packets.Item_Message = function(data)
-    return {}
+Ashita.Packets.Item_Drop = function(data)
+	local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+	local parsed_data = T{}
+	parsed_data.Unknown1      = reader:read(32)
+	parsed_data.Dropper       = reader:read(32)
+	parsed_data.Count         = reader:read(32)
+	parsed_data.Item          = reader:read(16)
+	parsed_data.Dropper_Index = reader:read(16)
+	parsed_data.Index         = reader:read(8)
+	parsed_data.Old           = reader:read(8)
+	parsed_data.Unknown2      = reader:read(8)
+	parsed_data.Unknown3      = reader:read(8)
+	parsed_data.Timestamp     = reader:read(32)
+
+	return parsed_data
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Handles parsing messages out of incoming packet 0x0D3.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.Item_Action = function(data)
+	local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+	local parsed_data = T{}
+	parsed_data.Highest_Lotter       = reader:read(32)
+	parsed_data.Current_Lotter       = reader:read(32)
+	parsed_data.Highest_Lotter_Index = reader:read(16)
+	parsed_data.Highest_Lot          = reader:read(16)
+	parsed_data.Current_Lotter_Index = reader:read(15)
+	parsed_data.Unknown              = reader:read(1)
+	parsed_data.Current_Lot          = reader:read(16)
+	parsed_data.Index                = reader:read(8)
+	parsed_data.Drop                 = reader:read(8)
+
+	local highest_lotter = ""
+	for x = 1, 16 do
+		highest_lotter = highest_lotter .. string.char(reader:read(8))
+	end
+	parsed_data.Highest_Lotter_Name  = highest_lotter
+
+	local current_lotter = ""
+	for x = 1, 16 do
+		current_lotter = current_lotter .. string.char(reader:read(8))
+	end
+	parsed_data.Current_Lotter_Name  = current_lotter
+
+	return parsed_data
 end
 
 -- ------------------------------------------------------------------------------------------------------
