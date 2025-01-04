@@ -65,7 +65,6 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
-    local row = 1
     if UI.BeginTable("Magic", 5, table_flags) then
         UI.TableSetupColumn("Magic Overall", col_flags, name_width)
         UI.TableSetupColumn("Damage",  col_flags, width)
@@ -82,8 +81,7 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
         UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, nil, nil, true)
         UI.TableNextColumn() Column.Spell.MP_Used(player_name,   trackable)
         UI.TableNextColumn() Column.Damage.Per_Unit(player_name, trackable, DB.Metric.MP_SPENT)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         -- Show damage types that contribute to total damage.
         local damage_types = {}
@@ -102,8 +100,7 @@ Focus.Magic.Total = function(player_name, nuke_total, melee_endamage, range_enda
                 UI.TableNextColumn() Column.Damage.By_Type(player_name,  data.trackable, nil, nil, true)
                 UI.TableNextColumn() Column.Spell.MP_Used(player_name,   data.trackable)
                 UI.TableNextColumn() Column.Damage.Per_Unit(player_name, data.trackable, DB.Metric.MP_SPENT)
-                Window_Manager.Table_Row_Color(row)
-                row = row + 1
+                Window_Manager.Table_Row_Color(0)
             end
         end
 
@@ -161,7 +158,6 @@ Focus.Magic.Damaging_Spell = function(player_name, trackable, header, make_brief
         if not make_brief then UI.TableSetupColumn("Maximum", col_flags, width) end
         UI.TableHeadersRow()
 
-        local row = 1
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name, trackable, metric_total)
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_total, nil, true) end
@@ -171,8 +167,7 @@ Focus.Magic.Damaging_Spell = function(player_name, trackable, header, make_brief
         if not hide_mp    then UI.TableNextColumn() Column.Damage.Per_Unit(player_name,        trackable, DB.Metric.MP_SPENT, nil, burst) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_min) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_max) end
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
         local action_name
@@ -193,8 +188,7 @@ Focus.Magic.Damaging_Spell = function(player_name, trackable, header, make_brief
                 if not hide_mp    then UI.TableNextColumn() Column.Damage.Per_Unit(player_name,        trackable, DB.Metric.MP_SPENT, action_name, burst) end
                 if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_min, action_name) end
                 if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_max, action_name) end
-                Window_Manager.Table_Row_Color(row)
-                row = row + 1
+                Window_Manager.Table_Row_Color(0)
             end
 
         end
@@ -248,7 +242,6 @@ Focus.Magic.No_Damage_Spell = function(player_name, trackable, header, make_brie
         if not make_brief then UI.TableSetupColumn("Maximum",   col_flags, width) end
         UI.TableHeadersRow()
 
-        local row = 1
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name, trackable)
         if show_overcure  then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.OVERCURE) end
@@ -258,8 +251,7 @@ Focus.Magic.No_Damage_Spell = function(player_name, trackable, header, make_brie
         if not make_brief then UI.TableNextColumn() Column.Damage.Per_Unit(player_name,        trackable, DB.Metric.MP_SPENT) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MIN) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MAX) end
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
         local action_name
@@ -274,8 +266,7 @@ Focus.Magic.No_Damage_Spell = function(player_name, trackable, header, make_brie
             if not make_brief then UI.TableNextColumn() Column.Damage.Per_Unit(player_name,        trackable, DB.Metric.MP_SPENT, action_name) end
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MIN, action_name) end
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MAX, action_name) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+            Window_Manager.Table_Row_Color(0)
         end
 
         UI.EndTable()
@@ -310,13 +301,11 @@ Focus.Magic.Debuff = function(player_name, hide_mp)
         if not hide_mp then UI.TableSetupColumn("MP-", col_flags, width) end
         UI.TableHeadersRow()
 
-        local row = 1
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
         UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable)
         if not hide_mp then UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable) end
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
         local action_name
@@ -326,8 +315,7 @@ Focus.Magic.Debuff = function(player_name, hide_mp)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, nil, false, action_name)
             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
             if not hide_mp then UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable, action_name) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+            Window_Manager.Table_Row_Color(0)
         end
 
         UI.EndTable()
@@ -361,12 +349,10 @@ Focus.Magic.Basic_Spell = function(player_name, trackable, header, no_mp)
         UI.TableSetupColumn("Casts", col_flags, width)
         UI.TableHeadersRow()
 
-        local row = 1
         UI.TableNextColumn() UI.Text("Total")
         if not no_mp then UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable) end
         UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
         local action_name
@@ -375,8 +361,7 @@ Focus.Magic.Basic_Spell = function(player_name, trackable, header, no_mp)
             UI.TableNextColumn() UI.Text("- " .. action_name)
             if not no_mp then UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable, action_name) end
             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+            Window_Manager.Table_Row_Color(0)
         end
         UI.EndTable()
     end

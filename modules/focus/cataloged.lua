@@ -31,7 +31,6 @@ Focus.Catalog.Endamage = function(player_name, trackable, suffix)
         UI.TableSetupColumn("Maximum", col_flags, width)
         UI.TableHeadersRow()
 
-        local row = 1
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, nil, true)
@@ -39,8 +38,7 @@ Focus.Catalog.Endamage = function(player_name, trackable, suffix)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
         local action_name
@@ -53,8 +51,7 @@ Focus.Catalog.Endamage = function(player_name, trackable, suffix)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name)
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+            Window_Manager.Table_Row_Color(0)
         end
 
         UI.EndTable()

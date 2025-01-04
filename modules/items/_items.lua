@@ -188,8 +188,8 @@ Loot.All_Items = function()
                 UI.TableNextColumn() UI.Text(tostring(item_name))
                 UI.TableNextColumn() UI.Text(tostring(DB.Tracking.Total_Items[item_name]))
                 Window_Manager.Table_Row_Color(1)
-                items_obtained = items_obtained + 1
             end
+            items_obtained = items_obtained + 1
         end
 
         if items_obtained == 0 then
@@ -229,9 +229,10 @@ Loot.Player_Items = function()
                     UI.TableNextColumn() UI.Text("- " .. tostring(item_name))
                     UI.TableNextColumn() UI.Text(tostring(DB.Tracking.Received_Items[player_name][item_name]))
                     Window_Manager.Table_Row_Color(0)
-                    items_obtained = items_obtained + 1
                 end
             end
+
+            items_obtained = items_obtained + 1
         end
 
         if items_obtained == 0 then
@@ -278,11 +279,11 @@ Loot.Mob_Items = function()
                             UI.TableNextColumn() UI.Text(tostring(drop_count))
                             UI.TableNextColumn() UI.Text(Column.String.Format_Percent(drop_count, mob_deaths))
                             Window_Manager.Table_Row_Color(0)
-                            mobs_defeated = mobs_defeated + 1
                         end
                     end
                 end
             end
+            mobs_defeated = mobs_defeated + 1
         end
 
         if mobs_defeated == 0 then

@@ -44,7 +44,6 @@ Focus.Melee.Total = function(player_name, make_brief)
     if make_brief then columns = 4 end
     if has_multi then columns = columns + 1 end
 
-    local row = 1
     if UI.BeginTable("Total Melee", columns, table_flags) then
         UI.TableSetupColumn("Melee Overall", col_flags, name_width)
         if make_brief then
@@ -81,8 +80,11 @@ Focus.Melee.Total = function(player_name, make_brief)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0, true)
                 if has_multi then UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE, data.total) end
             end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+            if data.header == "Total" then
+                Window_Manager.Table_Row_Color(1)
+            else
+                Window_Manager.Table_Row_Color(0)
+            end
         end
 
         -- Counter doesn't have the accuracy column.
@@ -101,8 +103,7 @@ Focus.Melee.Total = function(player_name, make_brief)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, 0, true)
                 if has_multi then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
             end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+            Window_Manager.Table_Row_Color(0)
         end
 
         UI.EndTable()
@@ -256,7 +257,7 @@ Focus.Melee.Min_Max = function(player_name)
 
     local row = 1
     if UI.BeginTable("Min Max Melee", 5, table_flags) then
-        UI.TableSetupColumn("MMA w/ Crit(!)", col_flags, name_width)
+        UI.TableSetupColumn("MMA w/ Crit", col_flags, name_width)
         UI.TableSetupColumn("Average",     col_flags, width)
         UI.TableSetupColumn("%Player",     col_flags, width)
         UI.TableSetupColumn("Minimum",     col_flags, width)
@@ -276,11 +277,8 @@ Focus.Melee.Min_Max = function(player_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MIN)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MAX)
             Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
 
-        for _, data in ipairs(damage_types) do
-            UI.TableNextColumn() UI.Text("! " .. data.header)
+            UI.TableNextColumn() UI.Text("- Critical")
             UI.TableNextColumn() Column.Damage.Average_By_Type_Critical_Only(player_name, data.trackable)
             UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, data.trackable, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.CRITICAL_MIN)
@@ -305,7 +303,6 @@ Focus.Melee.Multi_Attack = function(player_name)
     local width       = Column.Widths.Standard
 
     local columns = 5
-    local row = 1
     if UI.BeginTable("Multi-Attack", columns, table_flags) then
         UI.TableSetupColumn("Multi-Attack", col_flags, name_width)
         UI.TableSetupColumn("Main-Hand\n%Proc",   col_flags, width)
@@ -319,8 +316,7 @@ Focus.Melee.Multi_Attack = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_TOTAL, nil, true)
         UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND,  DB.Metric.MULTI_ATTACK_HIT_ON_USE)
         UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_OFF_HAND,  DB.Metric.MULTI_ATTACK_TOTAL, nil, true)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         local multi_attack_metrics = {
             [1] = {count = DB.Metric.MULTI_ATTACK_2, damage = DB.Metric.MULTI_ATTACK_2_DAMAGE},
@@ -339,8 +335,7 @@ Focus.Melee.Multi_Attack = function(player_name)
                 UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_MAIN_HAND, data.damage, nil, true)
                 UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND,  data.count)
                 UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_OFF_HAND,  data.damage, nil, true)
-                Window_Manager.Table_Row_Color(row)
-                row = row + 1
+                Window_Manager.Table_Row_Color(0)
             end
         end
 

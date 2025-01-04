@@ -76,7 +76,6 @@ Focus.WS.Weaponskill = function(player_name, make_brief, is_mp_drain)
         UI.TableHeadersRow()
 
         -- All Weaponskills
-        local row = 1
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name,  trackable)
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, nil, nil, true) end
@@ -87,8 +86,7 @@ Focus.WS.Weaponskill = function(player_name, make_brief, is_mp_drain)
         UI.TableNextColumn()                        Column.Damage.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT)
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MIN) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MAX) end
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         -- Specific Weaponskills
         local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
@@ -106,8 +104,7 @@ Focus.WS.Weaponskill = function(player_name, make_brief, is_mp_drain)
             UI.TableNextColumn()                        Column.Damage.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT, action_name)
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MIN, action_name) end
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MAX, action_name) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+            Window_Manager.Table_Row_Color(0)
         end
 
         UI.EndTable()
@@ -147,7 +144,6 @@ Focus.WS.Skillchains = function(player_name, make_brief)
         UI.TableHeadersRow()
 
         -- All Skillchains
-        local row = 1
         UI.TableNextColumn() UI.Text("Total")
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable) end
         if including_skillchain then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, nil, true) end
@@ -156,8 +152,7 @@ Focus.WS.Skillchains = function(player_name, make_brief)
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX) end
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         -- Specific Skillchains
         local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
@@ -173,8 +168,7 @@ Focus.WS.Skillchains = function(player_name, make_brief)
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name) end
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name) end
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name) end
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+            Window_Manager.Table_Row_Color(0)
         end
 
         UI.EndTable()

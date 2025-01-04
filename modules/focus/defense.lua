@@ -39,7 +39,6 @@ Focus.Defense.Damage_Taken = function(player_name, make_brief)
     if make_brief then columns = columns - 1 end
     if pet > 0 then columns = columns + 1 end
 
-    local row = 1
     if UI.BeginTable("Damage Taken", columns, table_flags) then
         if make_brief then
             UI.TableSetupColumn("Damage Taken", col_flags, name_width)
@@ -80,8 +79,11 @@ Focus.Defense.Damage_Taken = function(player_name, make_brief)
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable)
                     if pet > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable_pet) end
                 end
-                Window_Manager.Table_Row_Color(row)
-                row = row + 1
+                if data.header == "Total" then
+                    Window_Manager.Table_Row_Color(1)
+                else
+                    Window_Manager.Table_Row_Color(0)
+                end
             end
         end
 
@@ -243,13 +245,11 @@ Focus.Defense.Healing_Received = function(player_name)
         UI.TableSetupColumn("MP-",     col_flags, width)
         UI.TableHeadersRow()
 
-        local row = 1
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL)
         UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
         UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
         local action_name
@@ -259,8 +259,7 @@ Focus.Defense.Healing_Received = function(player_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
             UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable, action_name)
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+            Window_Manager.Table_Row_Color(0)
         end
 
         UI.EndTable()
@@ -286,8 +285,11 @@ Focus.Defense.TP_Move = function(player_name, trackable)
 
     local action_string = "TP Move"
     local on_target = true
-    if trackable == DB.Trackable.DEF_NUKING or trackable == DB.Trackable.DEF_NO_DAMAGE_SPELLS then
-        action_string = "Spell"
+    if trackable == DB.Trackable.DEF_NUKING then
+        action_string = "Spell - Damaging"
+        on_target = true
+    elseif trackable == DB.Trackable.DEF_NO_DAMAGE_SPELLS then
+        action_string = "Spell - Misc"
         on_target = true
     end
 
@@ -300,15 +302,13 @@ Focus.Defense.TP_Move = function(player_name, trackable)
         UI.TableSetupColumn("Maximum", col_flags, width)
         UI.TableHeadersRow()
 
-        local row = 1
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
         UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, nil, on_target)
         UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.TOTAL)
         UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MIN)
         UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MAX)
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
         local action_name
@@ -320,8 +320,7 @@ Focus.Defense.TP_Move = function(player_name, trackable)
             UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.TOTAL, action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MIN, action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MAX, action_name)
-            Window_Manager.Table_Row_Color(row)
-            row = row + 1
+            Window_Manager.Table_Row_Color(0)
         end
 
         UI.EndTable()

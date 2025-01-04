@@ -38,7 +38,6 @@ Focus.Ranged.Total = function(player_name, make_brief)
 
     local columns = 5
 
-    local row = 1
     if UI.BeginTable("Ranged", columns, table_flags) then
         if make_brief then
             UI.TableSetupColumn("Ranged Overall", col_flags, name_width)
@@ -68,8 +67,7 @@ Focus.Ranged.Total = function(player_name, make_brief)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
             UI.TableNextColumn() Column.Damage.Shot_Distance(player_name)
         end
-        Window_Manager.Table_Row_Color(row)
-        row = row + 1
+        Window_Manager.Table_Row_Color(1)
 
         UI.EndTable()
     end
@@ -172,7 +170,7 @@ Focus.Ranged.Min_Max = function(player_name)
 
     local row = 1
     if UI.BeginTable("Min Max Ranged", 5, table_flags) then
-        UI.TableSetupColumn("MMA w/ Crit(!)", col_flags, name_width)
+        UI.TableSetupColumn("MMA w/ Crit", col_flags, name_width)
         UI.TableSetupColumn("Average", col_flags, width)
         UI.TableSetupColumn("%Player", col_flags, width)
         UI.TableSetupColumn("Minimum", col_flags, width)
@@ -195,11 +193,8 @@ Focus.Ranged.Min_Max = function(player_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MIN)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MAX)
             Window_Manager.Table_Row_Color(row)
-            row = row + 1
-        end
 
-        for _, data in ipairs(damage_types) do
-            UI.TableNextColumn() UI.Text(data.header .. "!")
+            UI.TableNextColumn() UI.Text("- Critical")
             UI.TableNextColumn() Column.Damage.Average_By_Type_Critical_Only(player_name, data.trackable)
             UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, data.trackable, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.CRITICAL_MIN)
