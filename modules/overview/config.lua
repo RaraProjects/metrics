@@ -12,5 +12,4 @@ Overview.Config.Defaults = T{
     Show_Pets          = false,
     Show_Healing       = false,
     Show_Defense       = false,
-    Show_Mobs_Defeated = false,
 }

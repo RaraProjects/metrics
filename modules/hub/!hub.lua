@@ -52,6 +52,7 @@ Hub.Buttons = function()
     UI.SameLine() Hub.Focus_Button()
     UI.SameLine() Hub.Battle_Log_Button()
     UI.SameLine() Hub.XP_Button()
+    UI.SameLine() Hub.Loot_Button()
     UI.SameLine() Hub.Report_Button()
     UI.SameLine() Hub.Settings_Button()
     UI.SameLine() Hub.Debug_Button()
@@ -81,6 +82,11 @@ Hub.Single_Window = function()
         if UI.BeginTabItem(XP.Name, false, Window_Manager.Is_Module_Active(XP.Name)) then
             Window_Manager.Clear_Module_Switch(XP.Name)
             XP.Content()
+            UI.EndTabItem()
+        end
+        if UI.BeginTabItem(Loot.Name, false, Window_Manager.Is_Module_Active(Loot.Name)) then
+            Window_Manager.Clear_Module_Switch(Loot.Name)
+            Loot.Content()
             UI.EndTabItem()
         end
         if UI.BeginTabItem(Report.Name, false, Window_Manager.Is_Module_Active(Report.Name)) then
@@ -162,6 +168,23 @@ Hub.XP_Button = function()
     if UI.Button(XP.Name) then
         if Window_Manager.Settings.Multi_Window then XP.Window.Toggle_Visibility() end
         Window_Manager.Settings.Active_Window = XP.Name
+    end
+    if not active then UI.PopStyleColor(3) end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Toggles the Loot window visibility.
+------------------------------------------------------------------------------------------------------
+Hub.Loot_Button = function()
+    local active = Loot.Window.Is_Visible()
+    if not active then
+        UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
+        UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
+    end
+    if UI.Button(Loot.Name) then
+        if Window_Manager.Settings.Multi_Window then Loot.Window.Toggle_Visibility() end
+        Window_Manager.Settings.Active_Window = Loot.Name
     end
     if not active then UI.PopStyleColor(3) end
 end

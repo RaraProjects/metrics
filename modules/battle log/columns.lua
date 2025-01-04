@@ -1,4 +1,4 @@
-Blog.Columns = T{}
+Blog.Columns = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Creates a name string for display in the battle log.

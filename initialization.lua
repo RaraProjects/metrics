@@ -62,6 +62,16 @@ Settings_File.register(XP.File, "settings_update", function(settings)
 end)
 
 ------------------------------------------------------------------------------------------------------
+-- Check for character switches. Reloads character specific Loot settings.
+------------------------------------------------------------------------------------------------------
+Settings_File.register(Loot.File, "settings_update", function(settings)
+    if settings ~= nil then
+        Loot.Initialize(settings)
+        Settings_File.save(Loot.File)
+    end
+end)
+
+------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Report settings.
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Report.File, "settings_update", function(settings)
@@ -108,6 +118,7 @@ ashita.events.register('load', 'load_cb', function()
         XP,
         Hub,
         Blog,
+        Loot,
         Parse,
         Focus,
         Config,
@@ -139,6 +150,7 @@ ashita.events.register('unload', 'unload_cb', function()
     Settings_File.save(Focus.File)
     Settings_File.save(Blog.File)
     Settings_File.save(XP.File)
+    Settings_File.save(Loot.File)
     Settings_File.save(Config.Enum.File.WINDOW)
     Settings_File.save(Report.File)
     Settings_File.save(Overview.File)

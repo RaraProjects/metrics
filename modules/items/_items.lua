@@ -1,18 +1,69 @@
-Items = {}
+Loot = {}
 
-Items.Pool = {}
+require("modules.items.config")
+
+Loot.Name   = "Loot"
+Loot.Title  = "Metrics - Loot"
+Loot.Module = "Loot"
+Loot.File   = "loot"
+
+Loot.Pool = {}
+Loot.Item_Buffer = {}
+
+Loot.Sorted_Items_All = {}
+Loot.Sorted_Items_Player = {}
+Loot.Sorted_Items_Mob = {}
+
+------------------------------------------------------------------------------------------------------
+-- Initializes the Focus screen.
+------------------------------------------------------------------------------------------------------
+---@param settings? table settings that come from the Ashita settings_update event.
+------------------------------------------------------------------------------------------------------
+Loot.Initialize = function(settings)
+    -- Get saved settings from file.
+    Loot.Settings = settings or Settings_File.load(Loot.Config.Defaults, Loot.File)
+
+    -- Create the Focus Window.
+    Loot.Window = Window:New({
+        Name     = Loot.Name,
+        Title    = Loot.Title,
+        Module   = Loot.Module,
+        Settings = Loot.Settings,
+        Show_Title = true,
+    })
+end
+
+------------------------------------------------------------------------------------------------------
+-- Loads the loot data to the screen.
+------------------------------------------------------------------------------------------------------
+Loot.Content = function()
+
+    Loot.Config.Loot_Mode_Dropdown()
+    Loot.Config.Item_Filter_Input()
+
+    if Loot.Settings.Loot_Mode == 1 then
+        Loot.All_Items()
+
+    elseif Loot.Settings.Loot_Mode == 2 then
+        Loot.Player_Items()
+
+    elseif Loot.Settings.Loot_Mode == 3 then
+        Loot.Mob_Items()
+
+    end
+end
 
 -- ------------------------------------------------------------------------------------------------------
 -- File who obtained the item.
 -- ------------------------------------------------------------------------------------------------------
 ---@param data table
 -- ------------------------------------------------------------------------------------------------------
-Items.Dropped = function(data)
+Loot.Dropped = function(data)
     local drop_data = Ashita.Packets.Item_Drop(data)
     if not drop_data then return nil end
 
     local item_name = Ashita.Item.Get_Item_Name(drop_data.Item)
-    Items.Pool[drop_data.Index] = item_name
+    Loot.Pool[drop_data.Index] = item_name
 
     local mob = Ashita.Mob.Get_Mob_By_Index(drop_data.Dropper_Index)
     if not mob or not mob.name then return nil end
@@ -26,6 +77,13 @@ Items.Dropped = function(data)
     if not DB.Tracking.Drop_Rates[mob_name] then DB.Tracking.Drop_Rates[mob_name] = {} end
     if not DB.Tracking.Drop_Rates[mob_name][item_name] then DB.Tracking.Drop_Rates[mob_name][item_name] = 0 end
     DB.Tracking.Drop_Rates[mob_name][item_name] = DB.Tracking.Drop_Rates[mob_name][item_name] + 1
+
+    -- Sort the items alphabetically.
+    Loot.Sorted_Items_All = {}
+    for item in pairs(DB.Tracking.Total_Items) do table.insert(Loot.Sorted_Items_All, item) end
+    table.sort(Loot.Sorted_Items_All, function(a, b) return a < b end)
+
+    Loot.Sorted_Items_Mob = Loot.Sort_Nested_Table(DB.Tracking.Drop_Rates)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -33,7 +91,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@param data table
 -- ------------------------------------------------------------------------------------------------------
-Items.Obtained = function(data)
+Loot.Obtained = function(data)
     local drop_data = Ashita.Packets.Item_Action(data)
     if not drop_data then return nil end
 
@@ -59,12 +117,180 @@ Items.Obtained = function(data)
 
     end
 
-    local item_name = Items.Pool[drop_data.Index] or "Unknown"
-    Items.Pool[drop_data.Index] = nil
+    local item_name = Loot.Pool[drop_data.Index] or "Unknown"
+    Loot.Pool[drop_data.Index] = nil
+
+    Loot.Add_Received_Item(recipient_name, item_name, 1)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Add a player received item (or gil).
+-- ------------------------------------------------------------------------------------------------------
+---@param recipient_name string
+---@param item_name string
+---@param item_count? integer
+-- ------------------------------------------------------------------------------------------------------
+Loot.Add_Received_Item = function(recipient_name, item_name, item_count)
+    item_count = item_count or 1
 
     if not DB.Tracking.Received_Items[recipient_name] then DB.Tracking.Received_Items[recipient_name] = {} end
     if not DB.Tracking.Received_Items[recipient_name][item_name] then DB.Tracking.Received_Items[recipient_name][item_name] = 0 end
+    DB.Tracking.Received_Items[recipient_name][item_name] = DB.Tracking.Received_Items[recipient_name][item_name] + item_count
 
-    DB.Tracking.Received_Items[recipient_name][item_name] = DB.Tracking.Received_Items[recipient_name][item_name] + 1
-    print(tostring(recipient_name) .. " obtained " .. tostring(item_name))
+    -- Sort the items alphabetically.
+    Loot.Sorted_Items_Player = Loot.Sort_Nested_Table(DB.Tracking.Received_Items)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Sort nested tables.
+-- ------------------------------------------------------------------------------------------------------
+---@param unsorted_table table
+-- ------------------------------------------------------------------------------------------------------
+Loot.Sort_Nested_Table = function(unsorted_table)
+    local sorted_table = {}
+    local sorted_entities = {}
+
+    -- Sort the entities first.
+    for entity_name in pairs(unsorted_table) do table.insert(sorted_entities, entity_name) end
+    table.sort(sorted_entities)
+
+    -- Sort the items within each entity.
+    for _, entity_name in ipairs(sorted_entities) do
+        sorted_table[entity_name] = {}
+        local item_sort = {}
+        for item_name in pairs(unsorted_table[entity_name]) do table.insert(item_sort, item_name) end
+        table.sort(item_sort)
+        for _, item_name in ipairs(item_sort) do table.insert(sorted_table[entity_name], item_name) end
+    end
+
+    return sorted_table
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Shows all loot.
+-- ------------------------------------------------------------------------------------------------------
+Loot.All_Items = function()
+    local col_flags   = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
+
+    if UI.BeginTable("All Loot", 2, table_flags) then
+        UI.TableSetupColumn("Item",  col_flags, name_width)
+        UI.TableSetupColumn("Drops", col_flags, width)
+        UI.TableHeadersRow()
+
+        local items_obtained = 0
+
+        -- Player
+        for _, item_name in pairs(Loot.Sorted_Items_All) do
+            if Loot.Config.Show_Item(item_name) then
+                UI.TableNextColumn() UI.Text(tostring(item_name))
+                UI.TableNextColumn() UI.Text(tostring(DB.Tracking.Total_Items[item_name]))
+                Window_Manager.Table_Row_Color(1)
+                items_obtained = items_obtained + 1
+            end
+        end
+
+        if items_obtained == 0 then
+            UI.TableNextColumn() UI.Text("None Yet")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Shows player loot.
+-- ------------------------------------------------------------------------------------------------------
+Loot.Player_Items = function()
+    local col_flags   = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
+
+    if UI.BeginTable("Player Loot", 2, table_flags) then
+        UI.TableSetupColumn("Player Loot", col_flags, name_width)
+        UI.TableSetupColumn("Drops",       col_flags, width)
+        UI.TableHeadersRow()
+
+        local items_obtained = 0
+
+        -- Player
+        for player_name, item_data in pairs(Loot.Sorted_Items_Player) do
+            UI.TableNextColumn() UI.Text(tostring(player_name))
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            Window_Manager.Table_Row_Color(1)
+
+            -- Items
+            for _, item_name  in pairs(item_data) do
+                if Loot.Config.Show_Item(item_name) and DB.Tracking.Received_Items[player_name] and DB.Tracking.Received_Items[player_name][item_name] then
+                    UI.TableNextColumn() UI.Text("- " .. tostring(item_name))
+                    UI.TableNextColumn() UI.Text(tostring(DB.Tracking.Received_Items[player_name][item_name]))
+                    Window_Manager.Table_Row_Color(0)
+                    items_obtained = items_obtained + 1
+                end
+            end
+        end
+
+        if items_obtained == 0 then
+            UI.TableNextColumn() UI.Text("None Yet")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Shows mob loot.
+-- ------------------------------------------------------------------------------------------------------
+Loot.Mob_Items = function()
+    local col_flags   = Focus.Column_Flags
+    local table_flags = Focus.Table_Flags
+    local name_width  = Column.Widths.Name
+    local width       = Column.Widths.Standard
+
+    if UI.BeginTable("Mob Loot", 3, table_flags) then
+        UI.TableSetupColumn("Mob Loot", col_flags, name_width)
+        UI.TableSetupColumn("Count",    col_flags, width)
+        UI.TableSetupColumn("%Drop",    col_flags, width)
+        UI.TableHeadersRow()
+
+        local mobs_defeated = 0
+
+        -- Mob
+        for _, mob_name in pairs(DB.Lists.Get.Mob()) do
+            if DB.Tracking.Defeated_Mobs[mob_name] then
+                local mob_deaths = DB.Tracking.Defeated_Mobs[mob_name]
+                UI.TableNextColumn() UI.Text(tostring(mob_name))
+                UI.TableNextColumn() UI.Text(tostring(mob_deaths))
+                UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+                Window_Manager.Table_Row_Color(1)
+
+                -- Items
+                if Loot.Sorted_Items_Mob[mob_name] and DB.Tracking.Drop_Rates[mob_name] then
+                    for _, item_name in pairs(Loot.Sorted_Items_Mob[mob_name]) do
+                        if Loot.Config.Show_Item(item_name) and DB.Tracking.Drop_Rates[mob_name][item_name] then
+                            local drop_count = DB.Tracking.Drop_Rates[mob_name][item_name]
+                            UI.TableNextColumn() UI.Text("- " .. tostring(item_name))
+                            UI.TableNextColumn() UI.Text(tostring(drop_count))
+                            UI.TableNextColumn() UI.Text(Column.String.Format_Percent(drop_count, mob_deaths))
+                            Window_Manager.Table_Row_Color(0)
+                            mobs_defeated = mobs_defeated + 1
+                        end
+                    end
+                end
+            end
+        end
+
+        if mobs_defeated == 0 then
+            UI.TableNextColumn() UI.Text("None Yet")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+            UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
+        end
+
+        UI.EndTable()
+    end
 end

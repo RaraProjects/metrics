@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author  = "Metra"
 addon.name    = "Metrics"
-addon.version = "01.02.25.00"
+addon.version = "01.04.25.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -102,6 +102,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
             Focus.Window.Populate(Focus.Content)
             Blog.Window.Populate(Blog.Content)
             XP.Window.Populate(XP.Content)
+            Loot.Window.Populate(Loot.Content)
             Report.Window.Populate(Report.Content)
         end
         Throttle.Block()
@@ -170,15 +171,22 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
                 local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.actor_index)
                 H.Death.Action(actor_mob, target_mob)
             end
+
+        -- Gil obtained from kill.
+        elseif data.message == Ashita.Enum.Message.GIL_ACTOR or data.message == Ashita.Enum.Message.GIL_TARGET or data.message == Ashita.Enum.Message.GIL_MUG then
+            local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
+            if Ashita.Party.Is_Affiliate(actor_mob.name) or Ashita.Mob.Pet_Owner(actor_mob) then
+                Loot.Add_Received_Item(actor_mob.name, "Gil", data.param1)
+            end
         end
 
     -- Items dropped by monster.
     elseif packet.id == 0x0D2 then
-        Items.Dropped(packet.data)
+        Loot.Dropped(packet.data)
 
     -- Item actions like lotting and obtaining items.
     elseif packet.id == 0x0D3 then
-        Items.Obtained(packet.data)
+        Loot.Obtained(packet.data)
 
     end
 end)

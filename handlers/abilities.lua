@@ -116,7 +116,7 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
 
     local tag = "H.Ability.Parse"
     Debug.Error.Add(Debug.Error.WARNING, tag,
-    "BENIGN: Ability {" .. tostring(ability_name) .. "} (" .. tostring(ability_id) .. ") has message {" .. tostring(message_id) .. "}.")
+    "BENIGN: Ability {" .. tostring(ability_name) .. "} (" .. tostring(ability_id) .. ") has message {" .. tostring(message_id) .. "} and damage {" .. tostring(damage) .. "}.")
 
     if owner_mob then
         if Res.Avatar.Get_Rage(ability_id) then
@@ -152,6 +152,16 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
 
         elseif (ability_id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_id - Ashita.Enum.Ability_Offsets.ABILITY) then
             H.Ability.Phantom_Roll(audits, result, damage, ability_id, ability_name)
+
+        -- Steal
+        elseif ability_id == 553 and damage > 0 then
+            local item_name = Ashita.Item.Get_Item_Name(damage)
+            Loot.Add_Received_Item(actor_mob.name, item_name, 1)
+
+        -- Mug
+        elseif ability_id == 557 and damage > 0 then
+            Loot.Add_Received_Item(actor_mob.name, "Gil", damage)
+
         end
     end
 

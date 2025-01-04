@@ -1,9 +1,9 @@
-Blog.Widgets = T{}
+Blog.Widgets = {}
 
 Blog.Widgets.Player_Focus = DB.Widgets.Dropdown.Enum.NONE
 Blog.Widgets.Player_Index = 1
 
-Blog.Widgets.Action_Buffer = T{}
+Blog.Widgets.Action_Buffer = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles the settings showing for the battle log.
