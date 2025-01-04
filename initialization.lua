@@ -160,5 +160,6 @@ ashita.events.register('unload', 'unload_cb', function()
     if Report.Settings.Auto_Save then
         File.Save_Data()
         File.Save_Battlelog()
+        File.Save_Loot()
     end
 end)

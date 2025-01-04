@@ -1,4 +1,4 @@
-File = T{}
+File = {}
 
 File.Addend_Path = "config\\Metrics"
 File.Delimiter = ","
@@ -156,6 +156,46 @@ File.Save_Battlelog = function()
                         .. tostring(note.Value) .. "\n")
             end
         end
+        file:close()
+    end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Write to file for the item tracking data.
+-- ------------------------------------------------------------------------------------------------------
+File.Save_Loot = function()
+    local path = File.Path()
+    File.File_Exists(path)
+
+    local player = Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
+    if not player then return nil end
+    local filename = tostring(os.date("%m-%d-%Y %H-%M-%S Loot ", os.time()) .. tostring(player.name) .. ".csv")
+
+    ---@diagnostic disable-next-line: undefined-field
+    local file = io.open(('%s/%s'):fmt(path, filename), "w")
+    if file ~= nil then
+        file:write(tostring("Entity Type") .. File.Delimiter .. tostring("Entity Name") .. File.Delimiter .. tostring("Item Name") .. File.Delimiter
+                .. tostring("Item Count") .. File.Delimiter .. tostring("Defeated Count (Mobs)") .. "\n")
+
+        local entity_type = "Player"
+        for player_name, item_data in pairs(DB.Tracking.Received_Items) do
+            for item_name, item_count in pairs(item_data) do
+                file:write(
+                tostring(entity_type) .. File.Delimiter .. tostring(player_name) .. File.Delimiter .. tostring(item_name) .. File.Delimiter ..
+                tostring(item_count) .. File.Delimiter .. tostring(0) .. "\n")
+            end
+        end
+
+        entity_type = "Mob"
+        for mob_name, item_data in pairs(DB.Tracking.Drop_Rates) do
+            for item_name, drop_count in pairs(item_data) do
+                local defeated_count = DB.Tracking.Defeated_Mobs[mob_name] or 1
+                file:write(
+                tostring(entity_type) .. File.Delimiter .. tostring(mob_name) .. File.Delimiter .. tostring(item_name) .. File.Delimiter ..
+                tostring(drop_count) .. File.Delimiter .. tostring(defeated_count) .. "\n")
+            end
+        end
+
         file:close()
     end
 end

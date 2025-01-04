@@ -92,7 +92,7 @@ Report.Section.File = function()
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
-        UI.TableSetupColumn("Col 3", col_flags, width)
+        UI.TableSetupColumn("Col 4", col_flags, width)
 
         UI.TableNextRow()
         UI.TableNextColumn()
@@ -103,6 +103,11 @@ Report.Section.File = function()
         UI.TableNextColumn()
         if UI.Button("Battle Log  ") then
             File.Save_Battlelog()
+            return nil
+        end
+        UI.TableNextColumn()
+        if UI.Button("Loot        ") then
+            File.Save_Loot()
             return nil
         end
         UI.EndTable()
