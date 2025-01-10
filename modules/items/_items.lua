@@ -131,6 +131,7 @@ end
 ---@param item_count? integer
 -- ------------------------------------------------------------------------------------------------------
 Loot.Add_Received_Item = function(recipient_name, item_name, item_count)
+    recipient_name = recipient_name or "Unknown"
     item_count = item_count or 1
 
     if not DB.Tracking.Received_Items[recipient_name] then DB.Tracking.Received_Items[recipient_name] = {} end
