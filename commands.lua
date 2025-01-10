@@ -22,6 +22,7 @@ ashita.events.register('command', 'command_cb', function (e)
 
         -- General Settings
         elseif arg == "show" or arg == "s" then
+            if not Window_Manager.Is_Masked() then Hub.Window.Show() end
             Window_Manager.Toggle_Mask()
         elseif arg == "hub" then
             Hub.Window.Toggle_Visibility()
