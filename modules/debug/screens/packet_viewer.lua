@@ -5,17 +5,19 @@ Debug.Packet.Item_Log = {}
 Debug.Packet.Limit = 1000
 Debug.Packet.Size = 32
 
-Debug.Packet.Actions = T{
-    MELEE = true,
-    MELEE_DEF = true,
-    RANGED = true,
+Debug.Packet.Actions = {
+    MELEE      = true,
+    MELEE_DEF  = true,
+    RANGED     = true,
     RANGED_DEF = true,
-    SPELL = true,
-    SPELL_DEF = true,
-    TP = true,
-    TP_DEF = true,
-    ABILITY = true,
+    SPELL      = true,
+    SPELL_DEF  = true,
+    TP         = true,
+    TP_DEF     = true,
+    ABILITY    = true,
 }
+
+Debug.Packet.Action_Buffer = {}
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the packet viewer.
@@ -24,6 +26,26 @@ Debug.Packet.Reset = function()
     Debug.Packet.Action_Log = {}
     Debug.Packet.Message_Log = {}
     Debug.Packet.Item_Log = {}
+end
+
+------------------------------------------------------------------------------------------------------
+-- Creates an input text box for the action filter.
+------------------------------------------------------------------------------------------------------
+Debug.Packet.Action_Filter_Input = function()
+    UI.SetNextItemWidth(150) UI.InputText("Action", Debug.Packet.Action_Buffer, 100, ImGuiInputTextFlags_AutoSelectAll)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Check to see if the entry contains an action that passes the filter.
+------------------------------------------------------------------------------------------------------
+---@param entry table
+---@return boolean
+------------------------------------------------------------------------------------------------------
+Debug.Packet.Action_Name_Filter = function(entry)
+    if not entry or not entry.Action then return false end
+    local action_string = Debug.Packet.Action_Buffer[1]
+    if not action_string then return true end
+    return string.find(string.lower(entry.Action), string.lower(action_string)) ~= nil
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -50,11 +72,12 @@ end
 -- Populates the Packet Viewer tab.
 ------------------------------------------------------------------------------------------------------
 Debug.Packet.Populate_Action = function()
+    Debug.Packet.Action_Filter_Input()
     local table_size = {0, Debug.Packet.Size * 8}
     if UI.BeginTable("Action Packet Log", 21, Window_Manager.Table.Flags.Scrollable, table_size) then
         Debug.Packet.Action_Headers()
         for _, data in ipairs(Debug.Packet.Action_Log) do
-            Debug.Packet.Action_Rows(data)
+            if Debug.Packet.Action_Name_Filter(data) then Debug.Packet.Action_Rows(data) end
         end
         UI.EndTable()
     end

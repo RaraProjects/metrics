@@ -1,4 +1,4 @@
-Ashita.Party = T{}
+Ashita.Party = {}
 
 Ashita.Party.List = {}              -- Maintains who is currently in the party.
 Ashita.Party.Jobs = {}              -- [player_name] Keeps track of player jobs.
