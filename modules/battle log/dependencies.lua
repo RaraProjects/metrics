@@ -14,7 +14,7 @@ end
 ---@return nil|table
 ------------------------------------------------------------------------------------------------------
 Blog.Dependencies.Check_Party = function(player_name)
-    return Ashita.Party.Get_Member(player_name)
+    return Ashita.Party.GetMember(player_name)
 end
 
 ------------------------------------------------------------------------------------------------------

@@ -85,7 +85,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
 
     Throttle.Throttle()                     -- Throttling for performance.
     XP.Initialize()                         -- Need to initialize here because some things aren't ready when addon loads.
-    Ashita.Party.Check_Refresh_Time()
+    Ashita.Party.CheckRefreshTime()
     Ashita.Party.Refresh()
     Window_Manager.Check_Mouse()
 
@@ -143,8 +143,8 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0x061 then XP.Tracking.Update_EP_Into_Level(packet.data)
     elseif packet.id == 0x063 then XP.Tracking.Update_CP_Into_Level(packet.data)
 
-    elseif packet.id == 0x0C8 then Ashita.Party.Need_Refresh = true                     -- Alliance Update
-    elseif packet.id == 0x0DD then Ashita.Party.Need_Refresh = true                     -- Party Member Update
+    elseif packet.id == 0x0C8 then Ashita.Party.NeedRefresh = true                     -- Alliance Update
+    elseif packet.id == 0x0DD then Ashita.Party.NeedRefresh = true                     -- Party Member Update
     elseif packet.id == 0x02D then XP.Handle_Packet(packet.data)                        -- Experience Points
     elseif packet.id == 0x037 then if XP.Is_Initialized then XP.Dedication.Check() end  -- Player Update
     elseif packet.id == 0x028 then H.Start_Action_Packet(packet)                        -- Action Packet

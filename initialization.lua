@@ -129,7 +129,7 @@ ashita.events.register('load', 'load_cb', function()
     }
     for _, module in ipairs(modules) do module.Initialize() end
 
-    Ashita.Party.Need_Refresh = true
+    Ashita.Party.NeedRefresh = true
 
     -- Start the clock.
     Timers.Start(Timers.Enum.Names.METRICS)
