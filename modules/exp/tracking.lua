@@ -233,8 +233,8 @@ XP.Tracking.Debug_Content = function()
         UI.TableNextColumn() UI.Text(tostring(XP.Tracking.Metric.Exemplar_Base))
 
         UI.TableNextColumn() UI.Text("Current")
-        UI.TableNextColumn() UI.Text(tostring(Ashita.Player.Current_XP()))
-        UI.TableNextColumn() UI.Text(tostring(Ashita.Player.Current_Limit()))
+        UI.TableNextColumn() UI.Text(tostring(Ashita.Player.CurrentXP()))
+        UI.TableNextColumn() UI.Text(tostring(Ashita.Player.CurrentLimit()))
         UI.TableNextColumn() UI.Text(tostring(XP.Tracking.Metric.Capacity_Current))
         UI.TableNextColumn() UI.Text(tostring(XP.Tracking.Metric.Exemplar_Current))
 

@@ -9,7 +9,7 @@ XP.Dedication.Zone_Delay      = 10
 -- Checks if dedication is active.
 -- ------------------------------------------------------------------------------------------------------
 XP.Dedication.Check = function()
-    XP.Dedication.Is_Active = Ashita.Player.Has_Buff(Ashita.Player.Buffs.DEDICATION)
+    XP.Dedication.Is_Active = Ashita.Player.HasBuff(Ashita.Player.Buffs.DEDICATION)
 
     -- There is a zone delay to prevent checking boost status while buffs are temporarily gone after zoning.
     if not XP.Dedication.Is_Active and not Ashita.States.Zoning and XP.Dedication.Need_Clear and

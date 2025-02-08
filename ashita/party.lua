@@ -228,7 +228,7 @@ Ashita.Party.UpdateJob = function(playerName, mainJob, mainLevel, subJob, subLev
     -- Avoid random members having their job color grayed out when leaving party or zoning.
     -- Only give NON jobs if they don't have one saved already.
     if not Ashita.Party.Jobs[playerName] or mainJob > 0 then
-        Ashita.Party.Jobs[playerName] = {main = mainJob, main_level = mainLevel, sub = subJob, sub_level = subLevel}
+        Ashita.Party.Jobs[playerName] = { main = mainJob, main_level = mainLevel, sub = subJob, sub_level = subLevel }
     end
 end
 

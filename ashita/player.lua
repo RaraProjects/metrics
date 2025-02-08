@@ -1,6 +1,7 @@
-Ashita.Player = {}
+Ashita.Player = { }
 
-Ashita.Player.Buffs = {
+Ashita.Player.Buffs =
+{
     DEDICATION = 249,
 }
 
@@ -12,12 +13,18 @@ Ashita.Player.Buffs = {
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.Get = function(attribute)
     local player = AshitaCore:GetMemoryManager():GetPlayer()
-    if not player then return nil end
-    if attribute == Ashita.PlayerAttributes.IS_ZONING then
-        return player:GetIsZoning()
-    elseif attribute == Ashita.PlayerAttributes.PET_TP then
-        return player:GetPetTP()
+    if not player then
+        return nil
     end
+
+    if attribute then
+        if attribute == Ashita.PlayerAttributes.IS_ZONING then
+            return player:GetIsZoning()
+        elseif attribute == Ashita.PlayerAttributes.PET_TP then
+            return player:GetPetTP()
+        end
+    end
+
     return player
 end
 
@@ -26,9 +33,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Main_Job_ID = function()
+Ashita.Player.MainJobID = function()
     local player = Ashita.Player.Get()
-    if not player then return 0 end
+    if not player then
+        return 0
+    end
+
     return player:GetMainJob()
 end
 
@@ -37,25 +47,39 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Job_Data = function()
-    local default_color = Res.Colors.Basic.WHITE
+Ashita.Player.JobData = function()
+    local defaultColor  = Res.Colors.Basic.WHITE
+    local ANON_JOB   = "NON"
+    local ANON_LEVEL = 0
+
     local player = AshitaCore:GetMemoryManager():GetPlayer()
     if not player then
-        return {main = "NON", main_level = 0, main_color = default_color, sub = "NON", sub_level = 0, sub_color = default_color}
+        return
+        {
+            main = ANON_JOB, main_level = ANON_LEVEL, main_color = defaultColor,
+            sub  = ANON_JOB, sub_level  = ANON_LEVEL, sub_color  = defaultColor,
+        }
     end
-    local main_color = default_color
-    local sub_color = default_color
-    local main = Res.Jobs.Get_Job(player:GetMainJob())
-    if not main then main = Res.Jobs.List[0] end
-    main_color = Res.Colors.Get_Job(main.id)
-    local main_short = main.ens
-    local main_lvl = player:GetMainJobLevel()
-    local sub = Res.Jobs.Get_Job(player:GetSubJob())
-    if not sub then sub = Res.Jobs.List[0] end
-    sub_color = Res.Colors.Get_Job(sub.id)
-    local sub_short = sub.ens
-    local sub_lvl = player:GetSubJobLevel()
-    return {main = main_short, main_level = main_lvl, main_color = main_color, sub = sub_short, sub_level = sub_lvl, sub_color = sub_color}
+
+    -- Helper function to get job data.
+    local function getJobData(jobId)
+        local job = Res.Jobs.Get_Job(jobId)
+        if not job then
+            job = Res.Jobs.List[0]
+        end
+        local jobColor = Res.Colors.Get_Job(job.id)
+        local jobShort = job.ens
+        return jobShort, player:GetJobLevel(jobId), jobColor
+    end
+
+    local mainShort, mainLevel, mainColor = getJobData(player:GetMainJob())
+    local subShort,  subLevel,  subColor  = getJobData(player:GetSubJob())
+
+    return
+    {
+        main = mainShort, main_level = mainLevel, main_color = mainColor,
+        sub = subShort,   sub_level  = subLevel,  sub_color  = subColor
+    }
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -71,32 +95,38 @@ end
 -- I grabbed this from HXUI.
 -- https://github.com/tirem/HXUI
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Is_Logged_In = function()
-    local logged_in = false
+Ashita.Player.IsLoggedIn = function()
     local playerIndex = AshitaCore:GetMemoryManager():GetParty():GetMemberTargetIndex(0)
-    if playerIndex ~= 0 then
-        local entity = AshitaCore:GetMemoryManager():GetEntity()
-        local flags = entity:GetRenderFlags0(playerIndex)
-        if bit.band(flags, 0x200) == 0x200 and bit.band(flags, 0x4000) == 0 then
-            logged_in = true
-        end
+
+    if playerIndex == 0 then
+        return false
     end
-    return logged_in
+
+    local entity = AshitaCore:GetMemoryManager():GetEntity()
+    local flags  = entity:GetRenderFlags0(playerIndex)
+    return bit.band(flags, 0x200) == 0x200 and bit.band(flags, 0x4000) == 0
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Checks if the player has a specific buff or not.
 -- ------------------------------------------------------------------------------------------------------
----@param buff_id integer
+---@param buffId integer
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Has_Buff = function(buff_id)
+Ashita.Player.HasBuff = function(buffId)
     local player = AshitaCore:GetMemoryManager():GetPlayer()
-    if not player then return false end
-    local buffs = player:GetBuffs()
-    for _, buff in pairs(buffs) do
-        if buff == buff_id then return true end
+    if not player then
+        return false
     end
+
+    local buffs = player:GetBuffs()
+
+    for _, buff in pairs(buffs) do
+        if buff == buffId then
+            return true
+        end
+    end
+
     return false
 end
 
@@ -105,9 +135,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Is_Limit_Mode_Enabled = function()
+Ashita.Player.IsLimitModeEnabled = function()
     local player = Ashita.Player.Get()
-    if not player then return false end
+    if not player then
+        return false
+    end
+
     return player:GetIsLimitModeEnabled()
 end
 
@@ -116,9 +149,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Level_Max_XP = function()
+Ashita.Player.LevelMaxXP = function()
     local player = Ashita.Player.Get()
-    if not player then return 99999 end
+    if not player then
+        return 99999
+    end
+
     return player:GetExpNeeded()
 end
 
@@ -127,9 +163,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Current_XP = function()
+Ashita.Player.CurrentXP = function()
     local player = Ashita.Player.Get()
-    if not player then return 99999 end
+    if not player then
+        return 99999
+    end
+
     return player:GetExpCurrent()
 end
 
@@ -138,9 +177,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Exp_TNL = function()
+Ashita.Player.ExpTNL = function()
     local player = Ashita.Player.Get()
-    if not player then return 99999 end
+    if not player then
+        return 99999
+    end
+
     return player:GetExpNeeded() - player:GetExpCurrent()
 end
 
@@ -149,9 +191,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Current_Limit = function()
+Ashita.Player.CurrentLimit = function()
     local player = Ashita.Player.Get()
-    if not player then return 99999 end
+    if not player then
+        return 99999
+    end
+
     return player:GetLimitPoints()
 end
 
@@ -160,9 +205,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Exp_TNM = function()
+Ashita.Player.ExpTNM = function()
     local player = Ashita.Player.Get()
-    if not player then return 99999 end
+    if not player then
+        return 99999
+    end
+
     return 10000 - player:GetLimitPoints()
 end
 
@@ -172,9 +220,12 @@ end
 ---@param job_id integer
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Current_Capacity = function(job_id)
+Ashita.Player.CurrentCapacityPoints = function(job_id)
     local player = Ashita.Player.Get()
-    if not player or not job_id then return 99999 end
+    if not player or not job_id then
+        return 99999
+    end
+
     return player:GetCapacityPoints(job_id)
 end
 
@@ -183,9 +234,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Current_Exemplar = function()
+Ashita.Player.CurrentExemplarPoints = function()
     local player = Ashita.Player.Get()
-    if not player then return 99999 end
+    if not player then
+        return 99999
+    end
+
     return player:GetMasteryExp()
 end
 
@@ -194,9 +248,12 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Exemplar_Level_Max = function()
+Ashita.Player.ExemplarLevelMax = function()
     local player = Ashita.Player.Get()
-    if not player then return 99999 end
+    if not player then
+        return 99999
+    end
+
     return player:GetMasteryExpNeeded()
 end
 
@@ -207,7 +264,10 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.TNML = function()
     local player = Ashita.Player.Get()
-    if not player then return 99999 end
+    if not player then
+        return 99999
+    end
+
     return player:GetMasteryExp() - player:GetMasteryExpNeeded()
 end
 
@@ -220,9 +280,9 @@ end
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.TargetIndex = function()
-    local memory_manager = AshitaCore:GetMemoryManager()
-    local target_manager = memory_manager:GetTarget()
-    return target_manager:GetTargetIndex(target_manager:GetIsSubTargetActive())
+    local memoryManager = AshitaCore:GetMemoryManager()
+    local targetManager = memoryManager:GetTarget()
+    return targetManager:GetTargetIndex(targetManager:GetIsSubTargetActive())
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -239,7 +299,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Is_Zoning = function()
+Ashita.Player.IsZoning = function()
     return Ashita.States.Zoning
 end
 
@@ -248,6 +308,6 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.My_Mob = function()
+Ashita.Player.MyMob = function()
     return Ashita.Mob.GetMobByTarget(Ashita.TargetString.ME)
 end

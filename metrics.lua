@@ -80,7 +80,7 @@ require("initialization")
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('d3d_present', 'present_cb', function()
     if not _Globals.Initialized then return nil end
-    if not Ashita.Player.Is_Logged_In() then return nil end
+    if not Ashita.Player.IsLoggedIn() then return nil end
     if Debug.Is_Enabled() and Debug.Show_Demo then UI.ShowDemoWindow() end
 
     Throttle.Throttle()                     -- Throttling for performance.

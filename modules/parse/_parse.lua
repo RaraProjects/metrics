@@ -58,7 +58,7 @@ end
 Parse.Content = function()
     if not Parse.Is_Initialized then return nil end
 
-    local player = Ashita.Player.My_Mob()
+    local player = Ashita.Player.MyMob()
     if not player then return nil end
 
     -- The full toolbar is only available in full mode.

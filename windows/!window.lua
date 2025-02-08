@@ -29,7 +29,7 @@ function Window:New(init_settings)
     ------------------------------------------------------------------------------------------------------
     self.Populate = function(content)
         visible[1] = Window_Manager.Get_Visibility(module)
-        if Ashita.Player.Is_Zoning() or not visible[1] then return nil end
+        if Ashita.Player.IsZoning() or not visible[1] then return nil end
 
         UI.PushStyleVar(ImGuiStyleVar_Alpha, Window_Manager.Config.Get_Alpha())
         UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})

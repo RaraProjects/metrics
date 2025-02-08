@@ -273,7 +273,7 @@ end
 -- Sets XP display mode.
 -- ------------------------------------------------------------------------------------------------------
 XP.Refresh_Display_Mode = function()
-    if Ashita.Player.Exp_TNL() == 1 then
+    if Ashita.Player.ExpTNL() == 1 then
         XP.Display_Mode = XP.Type.LIMIT
     else
         XP.Display_Mode = XP.Type.EXPERIENCE

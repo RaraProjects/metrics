@@ -159,7 +159,7 @@ Ashita.Packets.CapacityAndLimitUpdate = function(data)
 
 	-- Capacity Points
 	elseif parsedData.order == 5 then
-		local jobId = Ashita.Player.Main_Job_ID()
+		local jobId = Ashita.Player.MainJobID()
 		if not jobId then
 			jobId = 1
 		end

@@ -34,7 +34,7 @@ end
 -- Creates a column that shows the player's level, job, and subjob with color.
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Job = function()
-    local job_data    = Ashita.Player.Job_Data()
+    local job_data    = Ashita.Player.JobData()
     local main_string = job_data.main .. string.format("%02d", job_data.main_level)
     local sub_string  = job_data.sub .. string.format("%02d", job_data.sub_level)
     if job_data.sub == "NON" then sub_string = "" end
@@ -115,11 +115,11 @@ XP.Columns.TNL = function(xp_type, raw)
     local needed  = 0
 
     if xp_type == XP.Type.EXPERIENCE then
-        current = Ashita.Player.Current_XP()
-        needed  = Ashita.Player.Level_Max_XP()
+        current = Ashita.Player.CurrentXP()
+        needed  = Ashita.Player.LevelMaxXP()
 
     elseif xp_type == XP.Type.LIMIT then
-        current = Ashita.Player.Current_Limit()
+        current = Ashita.Player.CurrentLimit()
         needed = 10000
 
     elseif xp_type == XP.Type.CAPACITY then
@@ -300,7 +300,7 @@ XP.Columns.Time_To_Finish_Dedication = function(xp_type)
 
     if not xp_type then xp_type = XP.Type.EXPERIENCE end
     local dedication_remaining = XP.Dedication.XP_Remaining()
-    if xp_type == XP.Type.LIMIT then dedication_remaining = Ashita.Player.Exp_TNM() end
+    if xp_type == XP.Type.LIMIT then dedication_remaining = Ashita.Player.ExpTNM() end
 
     local average_xp = XP.Columns.Average_XP(xp_type, nil, true)
     if average_xp <= 0 then return UI.TextColored(color, "--:--:--") end
