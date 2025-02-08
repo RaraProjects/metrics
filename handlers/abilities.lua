@@ -18,7 +18,7 @@ H.Ability.Action = function(action, actor_mob, log_offense)
 
 	-- Need to provide an offset to get to the abilities. Otherwise I get WS information.
 	local ability_id = action.param + Ashita.AbilityOffset.ABILITY
-    local ability_data = Ashita.Ability.Get_By_ID(ability_id)
+    local ability_data = Ashita.Ability.GetByID(ability_id)
     ability_data = H.Ability.Player_Missing_Ability_Check(ability_data, ability_id, actor_mob)
 
     local result, target_mob
@@ -334,7 +334,7 @@ H.Ability.Pet_Ability_Mapping = function(ability_id, trackable)
         if Res.Avatar.Get_Healing(ability_id) then trackable = DB.Trackable.PET_HEALING end
         avatar = true
     else
-        ability_data = Ashita.Ability.Get_By_ID(ability_id + Ashita.AbilityOffset.PET)
+        ability_data = Ashita.Ability.GetByID(ability_id + Ashita.AbilityOffset.PET)
         if Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then trackable = DB.Trackable.PET_HEALING end
     end
     return ability_data, avatar, trackable

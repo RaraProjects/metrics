@@ -18,9 +18,9 @@ Ashita.PlayerAttributes =
 ---@enum Ashita.TargetString
 Ashita.TargetString =
 {
-    ME       = "me",
-    TARGET   = "t",
-    PET      = "pet",
+    ME     = "me",
+    TARGET = "t",
+    PET    = "pet",
 }
 
 ---@enum Ashita.AbilityOffset
