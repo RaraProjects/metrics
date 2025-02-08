@@ -1,13 +1,17 @@
-Ashita.Spell = {}
+Ashita.Spell = { }
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get spell data.
 -- https://wiki.ashitaxi.com/doku.php?id=addons:adk:iresourcemanager
 -- ------------------------------------------------------------------------------------------------------
----@param id number spell ID.
+---@param id integer spell ID.
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Spell.Get_By_ID = function(id)
+Ashita.Spell.GetByID = function(id)
+    if not id or math.type(id) ~= "integer" then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.GetByID", "Parameter \"id\" was " .. tostring(id))
+    end
+
     return AshitaCore:GetResourceManager():GetSpellById(id)
 end
 
@@ -20,11 +24,16 @@ end
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Spell.Name = function(id, data)
-    local spell = data
-    if not spell then
-        spell = Ashita.Spell.Get_By_ID(id)
+    if not id or math.type(id) ~= "integer" then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.Name", "Parameter \"id\" was " .. tostring(id))
     end
-    if not spell then return "Error" end
+
+    local spell = data or Ashita.Spell.GetByID(id)
+
+    if not spell or not spell.Name or not spell.Name[1] then
+        return "Error"
+    end
+
     return spell.Name[1]
 end
 
@@ -37,11 +46,16 @@ end
 ---@return number
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Spell.MP = function(id, data)
-    local spell = data
-    if not spell then
-        spell = Ashita.Spell.Get_By_ID(id)
+    if not id or math.type(id) ~= "integer" then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.MP", "Parameter \"id\" was " .. tostring(id))
     end
-    if not spell then return 0 end
+
+    local spell = data or Ashita.Spell.GetByID(id)
+
+    if not spell or not spell.ManaCost then
+        return 0
+    end
+
     return spell.ManaCost
 end
 
@@ -54,10 +68,15 @@ end
 ---@return number
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Spell.Skill = function(id, data)
-    local spell = data
-    if not spell then
-        spell = Ashita.Spell.Get_By_ID(id)
+    if not id or math.type(id) ~= "integer" then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.Skill", "Parameter \"id\" was " .. tostring(id))
     end
-    if not spell then return 0 end
+
+    local spell = data or Ashita.Spell.GetByID(id)
+
+    if not spell or not spell.Skill then
+        return 0
+    end
+
     return spell.Skill
 end

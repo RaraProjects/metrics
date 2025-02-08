@@ -12,7 +12,7 @@ H.Spell.Action = function(action, actor_mob, owner_mob, log_offense)
     if not log_offense then return nil end
 
     local spell_id   = action.param
-    local spell_data = Ashita.Spell.Get_By_ID(spell_id)
+    local spell_data = Ashita.Spell.GetByID(spell_id)
 
     -- Paralyze, Intimidate, etc.
     H.Spell.Is_Action_Blocked(action, actor_mob)

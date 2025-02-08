@@ -15,7 +15,7 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
     local damage = 0
     local target_count = 0
     local spell_id = action.param
-    local spell_data = Ashita.Spell.Get_By_ID(spell_id)
+    local spell_data = Ashita.Spell.GetByID(spell_id)
     if not spell_data then return nil end
     local spell_name = Ashita.Spell.Name(spell_id, spell_data)
 
