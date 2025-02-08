@@ -93,7 +93,7 @@ Debug.Content = function()
         UI.EndTable()
     end
 
-    if     Debug.Active_Mode == Debug.Modes.MOB_VIEWER     then Debug.Mob.Populate(Ashita.Mob.Get_Mob_By_Target(Ashita.TargetString.TARGET))
+    if     Debug.Active_Mode == Debug.Modes.MOB_VIEWER     then Debug.Mob.Populate(Ashita.Mob.GetMobByTarget(Ashita.TargetString.TARGET))
     elseif Debug.Active_Mode == Debug.Modes.ACTION_PACKET  then Debug.Packet.Populate_Action()
     elseif Debug.Active_Mode == Debug.Modes.MESSAGE_PACKET then Debug.Packet.Populate_Message()
     elseif Debug.Active_Mode == Debug.Modes.ERROR_LOG      then

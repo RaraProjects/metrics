@@ -65,7 +65,7 @@ Loot.Dropped = function(data)
     local item_name = Ashita.Item.GetItemName(drop_data.Item)
     Loot.Pool[drop_data.Index] = item_name
 
-    local mob = Ashita.Mob.Get_Mob_By_Index(drop_data.Dropper_Index)
+    local mob = Ashita.Mob.GetMobByIndex(drop_data.Dropper_Index)
     if not mob or not mob.name then return nil end
     local mob_name = mob.name
 
@@ -107,7 +107,7 @@ Loot.Obtained = function(data)
     -- Player obtains item.
     elseif is_drop == 1 then
         local recipient_index = drop_data.Highest_Lotter_Index
-        local recipient_mob = Ashita.Mob.Get_Mob_By_Index(recipient_index)
+        local recipient_mob = Ashita.Mob.GetMobByIndex(recipient_index)
         if not recipient_mob then return nil end
         recipient_name = recipient_mob.name
 

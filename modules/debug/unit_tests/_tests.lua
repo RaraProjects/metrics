@@ -136,7 +136,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Run_Tests = function()
     Debug.Unit.Active = true
-    Debug.Unit.Mob.PLAYER = Ashita.Mob.Get_Mob_By_Target(Ashita.TargetString.ME)
+    Debug.Unit.Mob.PLAYER = Ashita.Mob.GetMobByTarget(Ashita.TargetString.ME)
 
     -- Melee
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Hit())

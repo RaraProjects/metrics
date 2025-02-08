@@ -219,7 +219,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Player.Target_Index = function()
+Ashita.Player.TargetIndex = function()
     local memory_manager = AshitaCore:GetMemoryManager()
     local target_manager = memory_manager:GetTarget()
     return target_manager:GetTargetIndex(target_manager:GetIsSubTargetActive())
@@ -249,5 +249,5 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.My_Mob = function()
-    return Ashita.Mob.Get_Mob_By_Target(Ashita.TargetString.ME)
+    return Ashita.Mob.GetMobByTarget(Ashita.TargetString.ME)
 end

@@ -26,9 +26,9 @@ H.Ability.Action = function(action, actor_mob, log_offense)
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
-            target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            target_mob = Ashita.Mob.GetMobByID(action.targets[target_index].id)
             if target_mob then
-                if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+                if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
                 damage = damage + H.Ability.Parse(ability_data, result, actor_mob, target_mob.name)
             end
         end
@@ -51,7 +51,7 @@ H.Ability.Pet_Action = function(action, actor_mob, log_offense)
     if not log_offense then return nil end
 
     -- Check to see if the pet belongs to anyone in the party.
-    local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)
+    local owner_mob = Ashita.Mob.PetOwner(actor_mob)
     if not owner_mob then return nil end
 
     local ability_id = action.param
@@ -71,7 +71,7 @@ H.Ability.Pet_Action = function(action, actor_mob, log_offense)
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
-            target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+            target = Ashita.Mob.GetMobByID(action.targets[target_index].id)
             if target then
                 if target.spawn_flags == Ashita.EntityType.MOB then DB.Lists.Check.Mob_Exists(target.name) end
                 damage = damage + H.Ability.Parse(ability_data, result, owner_mob, target.name, actor_mob)

@@ -27,9 +27,9 @@ H.Spell.Action = function(action, actor_mob, owner_mob, log_offense)
     local hit          = false  -- Mainly for enfeebles in this context.
 
     for _, target_data in pairs(action.targets) do
-        target_mob = Ashita.Mob.Get_Mob_By_ID(target_data.id)
+        target_mob = Ashita.Mob.GetMobByID(target_data.id)
         if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
-        if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+        if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
 
         for _, action_data in pairs(target_data.actions) do
             if target_mob then
@@ -130,7 +130,7 @@ end
 H.Spell.Is_Action_Blocked = function(action, actor_mob)
     if action.targets and action.targets[1] and action.targets[1].actions and action.targets[1].actions[1] and action.targets[1].actions[1].message then
         local message_id = action.targets[1].actions[1].message
-        local temp_audits = H.Spell.Audits(actor_mob, Ashita.Mob.Get_Mob_By_ID(action.targets[1].id))
+        local temp_audits = H.Spell.Audits(actor_mob, Ashita.Mob.GetMobByID(action.targets[1].id))
 
         if message_id == Ashita.Message.IS_PARALYZED or message_id == Ashita.Message.IS_PARALYZED_2 then
             DB.Data.Update(DB.Update_Mode.INC, 1, temp_audits, DB.Trackable.ALL_PARALYZE, DB.Metric.HITS_ON_USE)
@@ -163,7 +163,7 @@ H.Spell.Count = function(audits, spell_id, spell_name, hit, mp_cost, is_burst, t
         if is_pet then trackable = DB.Trackable.PET_HEALING else trackable = DB.Trackable.SPELLS_HEALING end
 
         -- Healing Received (Only counts non-self healing).
-        if audits.player_name ~= audits.target_name and Ashita.Party.Is_Affiliate(audits.target_name) then
+        if audits.player_name ~= audits.target_name and Ashita.Party.IsAffiliate(audits.target_name) then
             local audit_swap = H.Spell.Audit_Swap(audits)
             H.Offense.Action_Used(audit_swap, DB.Trackable.DEF_HEALING_RECEIVED, spell_name, hit, mp_cost / target_count)
         end
@@ -312,7 +312,7 @@ H.Spell.Healing = function(audits, spell_name, damage)
 
     -- Healing Received
     -- Curing NPCs or non-party members makes them show up in the party list.
-    if Ashita.Party.Is_Affiliate(audits.target_name) then
+    if Ashita.Party.IsAffiliate(audits.target_name) then
         H.Spell.Healing_Received(audits, spell_name, damage)
     end
 end

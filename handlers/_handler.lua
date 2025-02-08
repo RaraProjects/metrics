@@ -22,7 +22,7 @@ H.Start_Action_Packet = function(packet)
     local action = Ashita.Packets.Build_Action(packet.data)
     if not action then Debug.Error.Add(Debug.Error.ERROR, "Packet In", "action was nil from Packets.Build_Action") return nil end
 
-    local actor_mob = Ashita.Mob.Get_Mob_By_ID(action.actor_id)
+    local actor_mob = Ashita.Mob.GetMobByID(action.actor_id)
     if not actor_mob then Debug.Error.Add(Debug.Error.ERROR, "Packet In", "actor_mob was nil from Mob.Get_Mob_By_ID") return nil end
 
     local target_mob = Ashita.Packets.Get_Action_Target(action)
@@ -30,33 +30,33 @@ H.Start_Action_Packet = function(packet)
 
     -- Need to refresh party for pet checks.
     Ashita.Party.Refresh()
-    local pet_owner_mob = Ashita.Mob.Pet_Owner(actor_mob)           -- Is the actor the pet of someone in the party/alliance?
-    local target_pet_owner_mob = Ashita.Mob.Pet_Owner(target_mob)   -- Is the target the pet of someone in the party/alliance?
+    local pet_owner_mob = Ashita.Mob.PetOwner(actor_mob)           -- Is the actor the pet of someone in the party/alliance?
+    local target_pet_owner_mob = Ashita.Mob.PetOwner(target_mob)   -- Is the target the pet of someone in the party/alliance?
 
     local is_offense    = false
     local is_defense    = false
     local mob_self_buff = false
 
     -- OFFENSE: The actor is an affiliate or the pet of an affiliate.
-    if pet_owner_mob or Ashita.Party.Is_Affiliate(actor_mob.name) then
+    if pet_owner_mob or Ashita.Party.IsAffiliate(actor_mob.name) then
         is_offense = true
         Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
         Timers.Unpause(Timers.Enum.Names.PARSE)
 
     -- DEFENSE: The actor is not another player and the target is an affiliate or the pet of an affiliate.
-    elseif not Ashita.Mob.Is_Player(actor_mob) and (target_pet_owner_mob or Ashita.Party.Is_Affiliate(target_mob.name)) then
+    elseif not Ashita.Mob.IsPlayer(actor_mob) and (target_pet_owner_mob or Ashita.Party.IsAffiliate(target_mob.name)) then
         is_defense = true
         Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
         Timers.Unpause(Timers.Enum.Names.PARSE)
 
     -- The actor is a mob claimed by the party and is doing something that is targetting itself.
-    elseif Ashita.Mob.Claimed_By_Affiliate(actor_mob) and actor_mob.name == target_mob.name then
+    elseif Ashita.Mob.ClaimedByAffiliate(actor_mob) and actor_mob.name == target_mob.name then
         mob_self_buff = true
 
     -- Lurk mode detects all actions.
     elseif Parse.Config.Is_Lurking() then
         -- If the actor is player so log offense.
-        if Ashita.Mob.Is_Player(actor_mob) then
+        if Ashita.Mob.IsPlayer(actor_mob) then
             is_offense = true
         -- This must be a mob. If it's targetting itself then it's a buff. If not, log a defensive action.
         else

@@ -20,10 +20,10 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 	for target_index, target_value in pairs(action.targets) do
 		for action_index, _ in pairs(target_value.actions) do
 			result = action.targets[target_index].actions[action_index]
-			target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+			target_mob = Ashita.Mob.GetMobByID(action.targets[target_index].id)
 			if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
             if target_mob then
-                if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+                if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
                 details = H.Melee.Parse(result, actor_mob.name, target_mob.name, owner_mob)
 
                 -- Special handling for tracking multi-attacks.

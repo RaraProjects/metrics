@@ -23,10 +23,10 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
     for target_index, target_value in pairs(action.targets) do
         for action_index, _ in pairs(target_value.actions) do
             result = action.targets[target_index].actions[action_index]
-            target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if target_mob and (Ashita.Party.Is_Affiliate(target_mob.name) or Ashita.Mob.Pet_Owner(target_mob) or Parse.Config.Is_Lurking()) then
-                if Ashita.Mob.Is_Monster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
-                owner_mob = Ashita.Mob.Pet_Owner(target_mob)    -- Need to recheck for AOEs.
+            target_mob = Ashita.Mob.GetMobByID(action.targets[target_index].id)
+            if target_mob and (Ashita.Party.IsAffiliate(target_mob.name) or Ashita.Mob.PetOwner(target_mob) or Parse.Config.Is_Lurking()) then
+                if Ashita.Mob.IsMonster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
+                owner_mob = Ashita.Mob.PetOwner(target_mob)    -- Need to recheck for AOEs.
                 new_damage = H.Spell_Def.Parse(spell_data, result, actor_mob, target_mob, owner_mob)
                 if not new_damage then new_damage = 0 end
                 target_count = target_count + 1
@@ -57,7 +57,7 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     if not spell_data then return 0 end
 
     -- Need to double check each target in case a pet gets hit by AOE and wasn't the primary target.
-    if not owner_mob then owner_mob = Ashita.Mob.Pet_Owner(target_mob) end
+    if not owner_mob then owner_mob = Ashita.Mob.PetOwner(target_mob) end
 
     local spell_id   = spell_data.Index
     local spell_name = Ashita.Spell.Name(spell_id, spell_data)

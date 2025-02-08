@@ -11,7 +11,7 @@ File.Save_Data = function()
     local path = File.Path()
     File.File_Exists(path)
 
-    local player = Ashita.Mob.Get_Mob_By_Target(Ashita.TargetString.ME)
+    local player = Ashita.Mob.GetMobByTarget(Ashita.TargetString.ME)
     if not player then return nil end
     local filename = tostring(os.date("%m-%d-%Y %H-%M-%S Database ", os.time()) .. " " .. tostring(player.name) .. ".csv")
 
@@ -130,7 +130,7 @@ File.Save_Battlelog = function()
     local path = File.Path()
     File.File_Exists(path)
 
-    local player = Ashita.Mob.Get_Mob_By_Target(Ashita.TargetString.ME)
+    local player = Ashita.Mob.GetMobByTarget(Ashita.TargetString.ME)
     if not player then return nil end
     local filename = tostring(os.date("%m-%d-%Y %H-%M-%S Battle Log ", os.time()) .. tostring(player.name) .. ".csv")
 
@@ -167,7 +167,7 @@ File.Save_Loot = function()
     local path = File.Path()
     File.File_Exists(path)
 
-    local player = Ashita.Mob.Get_Mob_By_Target(Ashita.TargetString.ME)
+    local player = Ashita.Mob.GetMobByTarget(Ashita.TargetString.ME)
     if not player then return nil end
     local filename = tostring(os.date("%m-%d-%Y %H-%M-%S Loot ", os.time()) .. tostring(player.name) .. ".csv")
 

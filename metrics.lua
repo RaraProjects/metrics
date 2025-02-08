@@ -157,25 +157,25 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
 
         -- Killing a mob.
         if data.message == Ashita.Message.MOB_KILL then
-            local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.actor_index)
-            if Ashita.Party.Is_Affiliate(actor_mob.name) or Ashita.Mob.Pet_Owner(actor_mob) then
-                local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
+            local actor_mob = Ashita.Mob.GetMobByIndex(data.actor_index)
+            if Ashita.Party.IsAffiliate(actor_mob.name) or Ashita.Mob.PetOwner(actor_mob) then
+                local target_mob = Ashita.Mob.GetMobByIndex(data.target_index)
                 DB.Defeated_Mob(target_mob.name)
                 Blog.Add(target_mob.name, nil, Blog.Action_Type.MOB_DEATH, Blog.Enum.MOB_DEATH, nil, "------------")
             end
 
         -- Being defeated by a mob.
         elseif data.message == Ashita.Message.DEATH_FALL or data.message == Ashita.Message.DEATH then
-            local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
-            if Ashita.Party.Is_Affiliate(target_mob.name) then
-                local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.actor_index)
+            local target_mob = Ashita.Mob.GetMobByIndex(data.target_index)
+            if Ashita.Party.IsAffiliate(target_mob.name) then
+                local actor_mob = Ashita.Mob.GetMobByIndex(data.actor_index)
                 H.Death.Action(actor_mob, target_mob)
             end
 
         -- Gil obtained from kill.
         elseif data.message == Ashita.Message.GIL_ACTOR or data.message == Ashita.Message.GIL_TARGET or data.message == Ashita.Message.GIL_MUG then
-            local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
-            if Ashita.Party.Is_Affiliate(actor_mob.name) or Ashita.Mob.Pet_Owner(actor_mob) then
+            local actor_mob = Ashita.Mob.GetMobByIndex(data.target_index)
+            if Ashita.Party.IsAffiliate(actor_mob.name) or Ashita.Mob.PetOwner(actor_mob) then
                 Loot.Add_Received_Item(actor_mob.name, "Gil", data.param1)
             end
         end

@@ -45,7 +45,7 @@ Ashita.Party.Get = function()
             party[slot].tp    = data:GetMemberTP(slot)
             party[slot].zone  = data:GetMemberZone(slot)
             party[slot].flags = data:GetMemberFlagMask(slot)
-            party[slot].mob   = Ashita.Mob.Get_Mob_By_Index(party[slot].index)
+            party[slot].mob   = Ashita.Mob.GetMobByIndex(party[slot].index)
 
             if party[slot].flags == 4 then
                 parties[party_number].leader = party[slot].index
@@ -107,7 +107,7 @@ Ashita.Party.Refresh = function(player_name, node)
         if data:GetMemberIsActive(slot) == 1 then
             local name = data:GetMemberName(slot)
             local id = data:GetMemberServerId(slot)
-            local member_mob = Ashita.Mob.Get_Mob_By_ID(id)
+            local member_mob = Ashita.Mob.GetMobByID(id)
             if member_mob and name ~= "" then
                 Ashita.Party.List[name] = party_number
                 DB.Data.Initialize_Player_Tracking_Tables(name)
@@ -148,7 +148,7 @@ end
 ---@param player_name string
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Party.Is_Affiliate = function(player_name)
+Ashita.Party.IsAffiliate = function(player_name)
     -- Short circuit for unit tests. Other players won't be in the normal party table.
     if Debug.Enabled and Debug.Unit.Active and player_name == "Player Two" then return true end
 

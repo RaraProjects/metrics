@@ -30,9 +30,9 @@ H.TP.Action = function(action, actor_mob, log_offense)
     local is_use_mp_drain  = false
 
     for _, target_data in pairs(action.targets) do
-        target_mob = Ashita.Mob.Get_Mob_By_ID(target_data.id)
+        target_mob = Ashita.Mob.GetMobByID(target_data.id)
         if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
-        if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+        if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
 
         for _, action_data in pairs(target_data.actions) do
             -- Abilities marked as weaponskills
@@ -78,8 +78,8 @@ end
 ---@param log_offense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
 H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
-    if not log_offense or Ashita.Mob.Is_Player(actor_mob) then return false end
-    local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
+    if not log_offense or Ashita.Mob.IsPlayer(actor_mob) then return false end
+    local owner_mob = Ashita.Mob.PetOwner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
 
     local target_mob = {}
     local is_tracked = false
@@ -87,9 +87,9 @@ H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
     local trackable  = DB.Trackable.PET_TP
 
     for _, target_data in pairs(action.targets) do
-        target_mob = Ashita.Mob.Get_Mob_By_ID(target_data.id)
+        target_mob = Ashita.Mob.GetMobByID(target_data.id)
         if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
-        if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+        if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
 
         for _, action_data in pairs(target_data.actions) do
             local action_id = action_data.param
@@ -143,7 +143,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.TP.Monster_Action = function(action, actor_mob, log_offense)
     if not log_offense then return false end
-    local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
+    local owner_mob = Ashita.Mob.PetOwner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
 
     local skill_data = H.TP.Pet_Skill_Data(action.param, actor_mob)
     if not skill_data then return nil end
@@ -156,9 +156,9 @@ H.TP.Monster_Action = function(action, actor_mob, log_offense)
     local is_use_no_damage = true
 
     for _, target_data in pairs(action.targets) do
-        target_mob = Ashita.Mob.Get_Mob_By_ID(target_data.id)
+        target_mob = Ashita.Mob.GetMobByID(target_data.id)
         if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
-        if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+        if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
 
         for _, action_data in pairs(target_data.actions) do
 

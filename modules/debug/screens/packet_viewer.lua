@@ -150,8 +150,8 @@ Debug.Packet.Add_Message = function(data)
     if #Debug.Packet.Message_Log >= Debug.Packet.Limit then table.remove(Debug.Packet.Message_Log, Debug.Packet.Limit) end
     local entry = {
         Time    = os.date("%X"),
-        Actor   = Ashita.Mob.Get_Mob_By_Index(data.actor_index).name,
-        Target  = Ashita.Mob.Get_Mob_By_Index(data.target_index).name,
+        Actor   = Ashita.Mob.GetMobByIndex(data.actor_index).name,
+        Target  = Ashita.Mob.GetMobByIndex(data.target_index).name,
         Message = data.message,
         Data    = data,
     }
