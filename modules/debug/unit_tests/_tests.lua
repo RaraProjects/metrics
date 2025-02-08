@@ -18,7 +18,7 @@ Debug.Unit.Mob.PET = {
     id = 2222222,
     index = 2222222,
     target_index = 2222222,
-    spawn_flags = Ashita.Enum.Spawn_Flags.PET,
+    spawn_flags = Ashita.EntityType.PET,
     in_party = true,
     in_alliance = false,
 }
@@ -28,7 +28,7 @@ Debug.Unit.Mob.ENEMY = {
     id = 3333333,
     index = 3333333,
     target_index = 3333333,
-    spawn_flags = Ashita.Enum.Spawn_Flags.MOB,
+    spawn_flags = Ashita.EntityType.MOB,
     in_party = false,
     in_alliance = false,
 }
@@ -38,7 +38,7 @@ Debug.Unit.Mob.ENEMY_TWO = {
     id = 4444444,
     index = 4444444,
     target_index = 4444444,
-    spawn_flags = Ashita.Enum.Spawn_Flags.MOB,
+    spawn_flags = Ashita.EntityType.MOB,
     in_party = false,
     in_alliance = false,
 }
@@ -49,7 +49,7 @@ Debug.Unit.Mob.PLAYER_TWO = {
     index = 5555555,
     target_index = 5555555,
     pet_index = 6666666,
-    spawn_flags = Ashita.Enum.Spawn_Flags.OTHERPLAYER,
+    spawn_flags = Ashita.EntityType.OTHERPLAYER,
     in_party = true,
     in_alliance = true,
 }
@@ -59,7 +59,7 @@ Debug.Unit.Mob.PET_TWO = {
     id = 6666666,
     index = 6666666,
     target_index = 6666666,
-    spawn_flags = Ashita.Enum.Spawn_Flags.PET,
+    spawn_flags = Ashita.EntityType.PET,
     in_party = false,
     in_alliance = false,
 }
@@ -136,7 +136,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Run_Tests = function()
     Debug.Unit.Active = true
-    Debug.Unit.Mob.PLAYER = Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
+    Debug.Unit.Mob.PLAYER = Ashita.Mob.Get_Mob_By_Target(Ashita.TargetString.ME)
 
     -- Melee
     table.insert(Debug.Unit.Results, Debug.Unit.Tests.Melee.Main_Hit())

@@ -156,7 +156,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         if Debug.Is_Enabled() then Debug.Packet.Add_Message(data) end
 
         -- Killing a mob.
-        if data.message == Ashita.Enum.Message.MOB_KILL then
+        if data.message == Ashita.Message.MOB_KILL then
             local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.actor_index)
             if Ashita.Party.Is_Affiliate(actor_mob.name) or Ashita.Mob.Pet_Owner(actor_mob) then
                 local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
@@ -165,7 +165,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             end
 
         -- Being defeated by a mob.
-        elseif data.message == Ashita.Enum.Message.DEATH_FALL or data.message == Ashita.Enum.Message.DEATH then
+        elseif data.message == Ashita.Message.DEATH_FALL or data.message == Ashita.Message.DEATH then
             local target_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
             if Ashita.Party.Is_Affiliate(target_mob.name) then
                 local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.actor_index)
@@ -173,7 +173,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             end
 
         -- Gil obtained from kill.
-        elseif data.message == Ashita.Enum.Message.GIL_ACTOR or data.message == Ashita.Enum.Message.GIL_TARGET or data.message == Ashita.Enum.Message.GIL_MUG then
+        elseif data.message == Ashita.Message.GIL_ACTOR or data.message == Ashita.Message.GIL_TARGET or data.message == Ashita.Message.GIL_MUG then
             local actor_mob = Ashita.Mob.Get_Mob_By_Index(data.target_index)
             if Ashita.Party.Is_Affiliate(actor_mob.name) or Ashita.Mob.Pet_Owner(actor_mob) then
                 Loot.Add_Received_Item(actor_mob.name, "Gil", data.param1)

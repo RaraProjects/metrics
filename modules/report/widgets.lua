@@ -45,7 +45,7 @@ Report.Widgets.Chat_Mode = function()
             UI.EndCombo()
         end
     else
-        if UI.BeginCombo(Ashita.Chat.Selection.Title, Ashita.Enum.Chat.PARTY, flags) then
+        if UI.BeginCombo(Ashita.Chat.Selection.Title, Ashita.ChatMode.PARTY, flags) then
             UI.EndCombo()
         end
     end

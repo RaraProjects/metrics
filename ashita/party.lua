@@ -213,7 +213,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Party.Get_Vital = function(data, slot, stat)
     if not stat then return 1 end
-    if stat == Ashita.Enum.Player_Attributes.TP then
+    if stat == Ashita.PlayerAttributes.TP then
         return data:GetMemberTP(slot)
     end
     return 1

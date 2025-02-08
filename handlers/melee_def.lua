@@ -85,17 +85,17 @@ H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
     if not owner_mob then
         -- Full Mitigation
         local full = false
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION_MELEE, damage, message_id, Ashita.Enum.Message.MELEE_MISS, true) end
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_PARRY, damage, message_id, Ashita.Enum.Message.MELEE_PARRY, true) end
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MELEE, damage, message_id, Ashita.Enum.Message.SHADOW_ABSORPTION, true) end
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, damage, message_id, Ashita.Enum.Message.THIRD_EYE_ANTICIPATION, true) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION_MELEE, damage, message_id, Ashita.Message.MELEE_MISS, true) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_PARRY, damage, message_id, Ashita.Message.MELEE_PARRY, true) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MELEE, damage, message_id, Ashita.Message.SHADOW_ABSORPTION, true) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, damage, message_id, Ashita.Message.THIRD_EYE_ANTICIPATION, true) end
         if not full then full, counter_damage = H.Melee_Def.Counter(audits, result) end
 
         -- Partial Mitigation
         local partial = false
         if not full then
-            if not partial then partial = H.Defense.Mitigation(audits, DB.Trackable.DEF_GUARD, damage, reaction_id, Ashita.Enum.Reaction.GUARD) end
-            if not partial then partial = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHIELD_BLOCK, damage, reaction_id, Ashita.Enum.Reaction.SHIELD_BLOCK) end
+            if not partial then partial = H.Defense.Mitigation(audits, DB.Trackable.DEF_GUARD, damage, reaction_id, Ashita.AttackReaction.GUARD) end
+            if not partial then partial = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHIELD_BLOCK, damage, reaction_id, Ashita.AttackReaction.SHIELD_BLOCK) end
         end
 
         -- Full damage mitigation just increments attempts.
@@ -151,7 +151,7 @@ H.Melee_Def.Counter = function(audits, result)
     local counter_damage = 0
 
     -- Combined spike message check because blaze spikes etc. also has a spike effect.
-    if result.has_spike_effect and result.spike_effect_message == Ashita.Enum.Message.MELEE_COUNTER then
+    if result.has_spike_effect and result.spike_effect_message == Ashita.Message.MELEE_COUNTER then
         local damage = result.spike_effect_param
         H.Offense.Grand_Totals(audits, damage)
         H.Offense.Hit(audits, DB.Trackable.MELEE_OVERALL, damage)
@@ -178,16 +178,16 @@ H.Melee_Def.Spikes = function(audits, result)
         local spike_message   = result.spike_effect_message
         local spike_trackable = DB.Trackable.SPELLS_SPIKE_DAMAGE
 
-        if spike_message == Ashita.Enum.Message.SPIKE_DAMAGE then
+        if spike_message == Ashita.Message.SPIKE_DAMAGE then
             H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, damage)
 
-            if spike_animation == Ashita.Enum.Effect_Animation.FIRE then
+            if spike_animation == Ashita.EffectAnimation.FIRE then
                 H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Blaze Spikes")
 
-            elseif spike_animation == Ashita.Enum.Effect_Animation.ICE then
+            elseif spike_animation == Ashita.EffectAnimation.ICE then
                 H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Ice Spikes")
 
-            elseif spike_animation == Ashita.Enum.Effect_Animation.THUNDER then
+            elseif spike_animation == Ashita.EffectAnimation.THUNDER then
                 H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Shock Spikes")
 
             else
@@ -213,7 +213,7 @@ H.Melee_Def.Additional_Effect = function(audits, result, animation_id, message_i
 
     if result.has_add_effect then
         additional_damage = result.add_effect_param
-        if message_id == Ashita.Enum.Message.ADDITIONAL_DAMAGE then
+        if message_id == Ashita.Message.ADDITIONAL_DAMAGE then
             if animation_id and Res.Spells.Get_Enspell_Type(animation_id) then
                 local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
                 H.Defense.Grand_Totals(audits, additional_damage)

@@ -132,10 +132,10 @@ H.Spell.Is_Action_Blocked = function(action, actor_mob)
         local message_id = action.targets[1].actions[1].message
         local temp_audits = H.Spell.Audits(actor_mob, Ashita.Mob.Get_Mob_By_ID(action.targets[1].id))
 
-        if message_id == Ashita.Enum.Message.IS_PARALYZED or message_id == Ashita.Enum.Message.IS_PARALYZED_2 then
+        if message_id == Ashita.Message.IS_PARALYZED or message_id == Ashita.Message.IS_PARALYZED_2 then
             DB.Data.Update(DB.Update_Mode.INC, 1, temp_audits, DB.Trackable.ALL_PARALYZE, DB.Metric.HITS_ON_USE)
 
-        elseif message_id == Ashita.Enum.Message.IS_INTIMIDATED then
+        elseif message_id == Ashita.Message.IS_INTIMIDATED then
             DB.Data.Update(DB.Update_Mode.INC, 1, temp_audits, DB.Trackable.ALL_INTIMIDATE, DB.Metric.HITS_ON_USE)
         end
     end

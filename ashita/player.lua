@@ -13,9 +13,9 @@ Ashita.Player.Buffs = {
 Ashita.Player.Get = function(attribute)
     local player = AshitaCore:GetMemoryManager():GetPlayer()
     if not player then return nil end
-    if attribute == Ashita.Enum.Player_Attributes.ISZONING then
+    if attribute == Ashita.PlayerAttributes.IS_ZONING then
         return player:GetIsZoning()
-    elseif attribute == Ashita.Enum.Player_Attributes.PET_TP then
+    elseif attribute == Ashita.PlayerAttributes.PET_TP then
         return player:GetPetTP()
     end
     return player
@@ -249,5 +249,5 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.My_Mob = function()
-    return Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
+    return Ashita.Mob.Get_Mob_By_Target(Ashita.TargetString.ME)
 end

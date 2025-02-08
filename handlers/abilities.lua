@@ -17,7 +17,7 @@ H.Ability.Action = function(action, actor_mob, log_offense)
     if not log_offense then return nil end
 
 	-- Need to provide an offset to get to the abilities. Otherwise I get WS information.
-	local ability_id = action.param + Ashita.Enum.Ability_Offsets.ABILITY
+	local ability_id = action.param + Ashita.AbilityOffset.ABILITY
     local ability_data = Ashita.Ability.Get_By_ID(ability_id)
     ability_data = H.Ability.Player_Missing_Ability_Check(ability_data, ability_id, actor_mob)
 
@@ -73,7 +73,7 @@ H.Ability.Pet_Action = function(action, actor_mob, log_offense)
             result = action.targets[target_index].actions[action_index]
             target = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
             if target then
-                if target.spawn_flags == Ashita.Enum.Spawn_Flags.MOB then DB.Lists.Check.Mob_Exists(target.name) end
+                if target.spawn_flags == Ashita.EntityType.MOB then DB.Lists.Check.Mob_Exists(target.name) end
                 damage = damage + H.Ability.Parse(ability_data, result, owner_mob, target.name, actor_mob)
                 count = count + 1
             end
@@ -143,14 +143,14 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
         elseif Res.Abilities.Get_MP_Recovery(ability_id) then
             H.Offense.Catalog_Hit(audits, DB.Trackable.ABILITY_MP_RECOVERY, damage, ability_name)
 
-        elseif (ability_id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_id - Ashita.Enum.Ability_Offsets.ABILITY) then
+        elseif (ability_id - Ashita.AbilityOffset.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_id - Ashita.AbilityOffset.ABILITY) then
             H.Offense.Catalog_No_Damage_Hit(audits, DB.Trackable.MANEUVER, ability_name)
-            if result.message == Ashita.Enum.Message.MANEUVER_OVERLOAD then
+            if result.message == Ashita.Message.MANEUVER_OVERLOAD then
                 DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, DB.Metric.OVERLOAD)
                 DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, ability_name, DB.Metric.OVERLOAD)
             end
 
-        elseif (ability_id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_id - Ashita.Enum.Ability_Offsets.ABILITY) then
+        elseif (ability_id - Ashita.AbilityOffset.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_id - Ashita.AbilityOffset.ABILITY) then
             H.Ability.Phantom_Roll(audits, result, damage, ability_id, ability_name)
 
         -- Steal
@@ -193,17 +193,17 @@ H.Ability.Blog = function(actor_mob, ability_data, ability_id, damage)
 
     if Res.Abilities.Get_Damaging(ability_id) or Res.Abilities.Get_MP_Recovery(ability_id) then
         local note = nil
-        if ability_id == Res.Abilities.CHIVALRY then note = Ashita.Party.Refresh(actor_mob.name, Ashita.Enum.Player_Attributes.TP) end
+        if ability_id == Res.Abilities.CHIVALRY then note = Ashita.Party.Refresh(actor_mob.name, Ashita.PlayerAttributes.TP) end
         Blog.Add(actor_mob.name, nil, Blog.Action_Type.ABILITY, ability_data.Name, damage, note)
 
     elseif Res.Abilities.Get_Player_Healing(ability_id) or Res.Abilities.Get_Pet_Healing(ability_id) then
         Blog.Add(actor_mob.name, nil, Blog.Action_Type.MAGIC_HEALING, ability_data.Name, damage)
 
-    elseif (ability_id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Pet_Command(ability_id - Ashita.Enum.Ability_Offsets.ABILITY) then
+    elseif (ability_id - Ashita.AbilityOffset.ABILITY) > 0 and Res.Abilities.Get_Pet_Command(ability_id - Ashita.AbilityOffset.ABILITY) then
         Blog.Add(actor_mob.name, nil, Blog.Action_Type.PET_COMMAND, ability_data.Name, damage)
 
-    elseif (ability_id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_id - Ashita.Enum.Ability_Offsets.ABILITY) then
-        local lucky_details = Res.Abilities.Get_Roll_Lucky(ability_id - Ashita.Enum.Ability_Offsets.ABILITY)
+    elseif (ability_id - Ashita.AbilityOffset.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_id - Ashita.AbilityOffset.ABILITY) then
+        local lucky_details = Res.Abilities.Get_Roll_Lucky(ability_id - Ashita.AbilityOffset.ABILITY)
         if not lucky_details then return nil end
         local suffix = ""
         if damage == lucky_details.lucky or damage == 11 then
@@ -291,11 +291,11 @@ H.Ability.Player_Catalog_Count = function(actor_mob, target_mob, ability_data, d
     elseif Res.Abilities.Get_MP_Recovery(ability_data.Id) then
         trackable = DB.Trackable.ABILITY_MP_RECOVERY
 
-    elseif (ability_data.Id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_data.Id - Ashita.Enum.Ability_Offsets.ABILITY) then
+    elseif (ability_data.Id - Ashita.AbilityOffset.ABILITY) > 0 and Res.Abilities.Get_Maneuver(ability_data.Id - Ashita.AbilityOffset.ABILITY) then
         no_damage = true
         trackable = DB.Trackable.MANEUVER
 
-    elseif (ability_data.Id - Ashita.Enum.Ability_Offsets.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_data.Id - Ashita.Enum.Ability_Offsets.ABILITY) then
+    elseif (ability_data.Id - Ashita.AbilityOffset.ABILITY) > 0 and Res.Abilities.Get_Roll(ability_data.Id - Ashita.AbilityOffset.ABILITY) then
         no_damage = true
         trackable = DB.Trackable.PHANTOM_ROLL
 
@@ -334,7 +334,7 @@ H.Ability.Pet_Ability_Mapping = function(ability_id, trackable)
         if Res.Avatar.Get_Healing(ability_id) then trackable = DB.Trackable.PET_HEALING end
         avatar = true
     else
-        ability_data = Ashita.Ability.Get_By_ID(ability_id + Ashita.Enum.Ability_Offsets.PET)
+        ability_data = Ashita.Ability.Get_By_ID(ability_id + Ashita.AbilityOffset.PET)
         if Res.Pets.Get_Healing_Wyvern_Breath(ability_id) then trackable = DB.Trackable.PET_HEALING end
     end
     return ability_data, avatar, trackable
@@ -398,7 +398,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_name)
     local trackable = DB.Trackable.PHANTOM_ROLL
-    local roll_id = ability_id - Ashita.Enum.Ability_Offsets.ABILITY
+    local roll_id = ability_id - Ashita.AbilityOffset.ABILITY
 
     -- First Roll; Attempt on TARGET is updated here to signify a roll series because attempt on use gets updated everytime the ability is used.
     if H.Ability.Active_Phantom_Roll ~= roll_id then
@@ -416,10 +416,10 @@ H.Ability.Phantom_Roll = function(audits, result, damage, ability_id, ability_na
     end
 
     -- Lucky, Unlucky, and Busts.
-    local lucky_details = Res.Abilities.Get_Roll_Lucky(ability_id - Ashita.Enum.Ability_Offsets.ABILITY)
+    local lucky_details = Res.Abilities.Get_Roll_Lucky(ability_id - Ashita.AbilityOffset.ABILITY)
     if lucky_details then
         -- Bust; Undo lucky and unluckies
-        if result.message == Ashita.Enum.Message.COR_BUST then
+        if result.message == Ashita.Message.COR_BUST then
             H.Ability.Phantom_Roll_Adjust_Roll(audits, trackable, 1, ability_name, DB.Metric.BUSTS)
             if H.Ability.Active_Phantom_Roll_Was_Lucky    then H.Ability.Phantom_Roll_Adjust_Roll(audits, trackable, -1, ability_name, DB.Metric.LUCKY) end
             if H.Ability.Active_Phantom_Roll_Was_Lucky_11 then H.Ability.Phantom_Roll_Adjust_Roll(audits, trackable, -1, ability_name, DB.Metric.LUCKY_11) end

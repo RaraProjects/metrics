@@ -100,7 +100,7 @@ end
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.Is_Me = function(player_name)
-    local player = Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
+    local player = Ashita.Mob.Get_Mob_By_Target(Ashita.TargetString.ME)
     if not player then return false end
     return player_name == player.name
 end
@@ -113,10 +113,10 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.Is_Player = function(mob_data)
     if not mob_data or not mob_data.spawn_flags then return false end
-    return mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.MAINPLAYER
-    or mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.OTHERPLAYER
-    or mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.IN_PARTY
-    or mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.IN_ALLIANCE
+    return mob_data.spawn_flags == Ashita.EntityType.MAINPLAYER
+    or mob_data.spawn_flags == Ashita.EntityType.OTHERPLAYER
+    or mob_data.spawn_flags == Ashita.EntityType.IN_PARTY
+    or mob_data.spawn_flags == Ashita.EntityType.IN_ALLIANCE
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -127,7 +127,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.Is_Monster = function(mob_data)
     if not mob_data or not mob_data.spawn_flags then return false end
-    return mob_data.spawn_flags == Ashita.Enum.Spawn_Flags.MOB
+    return mob_data.spawn_flags == Ashita.EntityType.MOB
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -144,14 +144,14 @@ Ashita.Mob.Get_Mob_By_Target = function(target)
     local player_id = player.ServerId
     local player_entity = Ashita.Mob.Get_Mob_By_ID(player_id)
 
-    if target == Ashita.Enum.Targets.ME then
+    if target == Ashita.TargetString.ME then
         return player_entity
-    elseif target == Ashita.Enum.Targets.TARGET then
+    elseif target == Ashita.TargetString.TARGET then
         local target_index = Ashita.Player.Target_Index()
         if target_index then
             return Ashita.Mob.Get_Mob_By_Index(target_index)
         end
-    elseif target == Ashita.Enum.Targets.PET then
+    elseif target == Ashita.TargetString.PET then
         -- local pet_index = player_entity.pet_index
         -- local pet_id = pet_entity.ServerId
         -- return a.Data.Mob_By_ID(pet_id)
@@ -174,8 +174,8 @@ Ashita.Mob.Pet_Owner = function(pet_data)
     for _, member in pairs(party) do
         if type(member) == 'table' and member.mob then
             -- May not always have a pet when running unit tests so need to short circuit here.
-            if Debug.Enabled and Debug.Unit.Active and Debug.Unit.Has_Pet and pet_data.spawn_flags == Ashita.Enum.Spawn_Flags.PET then
-                return Ashita.Mob.Get_Mob_By_Target(Ashita.Enum.Targets.ME)
+            if Debug.Enabled and Debug.Unit.Active and Debug.Unit.Has_Pet and pet_data.spawn_flags == Ashita.EntityType.PET then
+                return Ashita.Mob.Get_Mob_By_Target(Ashita.TargetString.ME)
             elseif member.mob.pet_index == pet_data.index then
                 owner = member.mob
             end

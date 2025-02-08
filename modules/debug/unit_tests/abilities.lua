@@ -293,7 +293,7 @@ Debug.Unit.Tests.Ability.Healing = function()
     Debug.Unit.Reset()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local damage = 100
-    local message = Ashita.Enum.Message.ABILITY_RECOVER_HP
+    local message = Ashita.Message.ABILITY_RECOVER_HP
     local action_id = 38
     local action_name = "Chakra"
 

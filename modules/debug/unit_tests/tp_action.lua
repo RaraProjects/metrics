@@ -10,10 +10,10 @@ Debug.Unit.Tests.TP_Action.Hit = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local message = Ashita.Enum.Message.WEAPONSKILL_DAMAGE
+    local message = Ashita.Message.WEAPONSKILL_DAMAGE
     local action_id = 156
     local action_name = "Tachi: Fudo"
-    local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
+    local tp = Ashita.Party.Refresh(player_name, Ashita.PlayerAttributes.TP)
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
@@ -88,10 +88,10 @@ Debug.Unit.Tests.TP_Action.Miss = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 0
-    local message = Ashita.Enum.Message.WEAPONSKILL_MISS
+    local message = Ashita.Message.WEAPONSKILL_MISS
     local action_id = 156
     local action_name = "Tachi: Fudo"
-    local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
+    local tp = Ashita.Party.Refresh(player_name, Ashita.PlayerAttributes.TP)
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
@@ -152,10 +152,10 @@ Debug.Unit.Tests.TP_Action.Shadow = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local message = Ashita.Enum.Message.SHADOW_ABSORPTION
+    local message = Ashita.Message.SHADOW_ABSORPTION
     local action_id = 156
     local action_name = "Tachi: Fudo"
-    local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
+    local tp = Ashita.Party.Refresh(player_name, Ashita.PlayerAttributes.TP)
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
@@ -220,10 +220,10 @@ Debug.Unit.Tests.TP_Action.Energy_Steal = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local message = Ashita.Enum.Message.WEAPONSKILL_MP_DRAIN
+    local message = Ashita.Message.WEAPONSKILL_MP_DRAIN
     local action_id = 21
     local action_name = "Energy Steal"
-    local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
+    local tp = Ashita.Party.Refresh(player_name, Ashita.PlayerAttributes.TP)
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
@@ -295,10 +295,10 @@ Debug.Unit.Tests.TP_Action.Skillchain = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local message = Ashita.Enum.Message.WEAPONSKILL_DAMAGE
+    local message = Ashita.Message.WEAPONSKILL_DAMAGE
     local action_id = 156
     local action_name = "Tachi: Fudo"
-    local tp = Ashita.Party.Refresh(player_name, Ashita.Enum.Player_Attributes.TP)
+    local tp = Ashita.Party.Refresh(player_name, Ashita.PlayerAttributes.TP)
     local sc_id = 288
     local sc_name = "Light"
     local sc_damage = 200
@@ -398,7 +398,7 @@ Debug.Unit.Tests.TP_Action.Pet_Hit = function()
     local pet_name = Debug.Unit.Mob.PET.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local message = Ashita.Enum.Message.WEAPONSKILL_DAMAGE
+    local message = Ashita.Message.WEAPONSKILL_DAMAGE
     local action_id = 262
     local action_name = "Sheep Charge"
 
@@ -513,7 +513,7 @@ Debug.Unit.Tests.TP_Action.Pet_Miss = function()
     local pet_name = Debug.Unit.Mob.PET.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 100
-    local message = Ashita.Enum.Message.WEAPONSKILL_MISS
+    local message = Ashita.Message.WEAPONSKILL_MISS
     local action_id = 262
     local action_name = "Sheep Charge"
 
@@ -599,7 +599,7 @@ Debug.Unit.Tests.TP_Action.Pet_Hit_AOE = function()
     local all_mobs = DB.Enum.ALL_MOBS
     local damage = 100
     local damage_two = 200
-    local message = Ashita.Enum.Message.WEAPONSKILL_DAMAGE
+    local message = Ashita.Message.WEAPONSKILL_DAMAGE
     local action_id = 273
     local action_name = "Claw Cyclone"
 
@@ -815,7 +815,7 @@ Debug.Unit.Tests.TP_Action.Pet_No_Damage = function()
     local pet_name = Debug.Unit.Mob.PET.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 0
-    local message = Ashita.Enum.Message.WEAPONSKILL_DAMAGE
+    local message = Ashita.Message.WEAPONSKILL_DAMAGE
     local action_id = 264
     local action_name = "Sheep Song"
 

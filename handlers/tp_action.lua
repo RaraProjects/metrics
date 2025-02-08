@@ -127,7 +127,7 @@ H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
     -- Quit out if we aren't tracking whatever this ability is.
     if not is_tracked then return nil end
 
-    local pet_tp = Ashita.Player.Get(Ashita.Enum.Player_Attributes.PET_TP) or 0
+    local pet_tp = Ashita.Player.Get(Ashita.PlayerAttributes.PET_TP) or 0
     local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
     H.Offense.Weaponskill_TP(audits, pet_tp, skill_name, trackable)
 end
@@ -341,7 +341,7 @@ H.TP.Weaponskill_Wrap_Up = function(actor_mob, target_mob, damage, ws_name, sc_n
     if was_mp_drain then trackable = DB.Trackable.WEAPONSKILL_MP_DRAIN end
 
     -- Update TP usage.
-    local tp = Ashita.Party.Refresh(audits.player_name, Ashita.Enum.Player_Attributes.TP)
+    local tp = Ashita.Party.Refresh(audits.player_name, Ashita.PlayerAttributes.TP)
     tp = H.Offense.Weaponskill_TP(audits, tp, ws_name, trackable)
 
     -- Update non-target loop hits and attempts.

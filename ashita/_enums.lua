@@ -1,30 +1,38 @@
-Ashita.Enum = {}
-
-Ashita.Enum.Chat = {
+---@enum Ashita.ChatMode
+Ashita.ChatMode =
+{
     PARTY      = 1,
     LINKSHELL  = 2,
     LINKSHELL2 = 3,
     SAY        = 4,
 }
 
-Ashita.Enum.Player_Attributes = {
-    TP       = "TP",
-    PET_TP   = "Pet TP",
-    ISZONING = "IsZoning",
+---@enum Ashita.PlayerAttributes
+Ashita.PlayerAttributes =
+{
+    TP        = "TP",
+    PET_TP    = "Pet TP",
+    IS_ZONING = "Is Zoning",
 }
 
-Ashita.Enum.Targets = {
+---@enum Ashita.TargetString
+Ashita.TargetString =
+{
     ME       = "me",
     TARGET   = "t",
     PET      = "pet",
 }
 
-Ashita.Enum.Ability_Offsets = {
+---@enum Ashita.AbilityOffset
+Ashita.AbilityOffset =
+{
     ABILITY = 512,
-    PET  = 512,
+    PET     = 512,
 }
 
-Ashita.Enum.Spawn_Flags = {
+---@enum Ashita.EntityType
+Ashita.EntityType =
+{
     MAINPLAYER  = 525,
     OTHERPLAYER = 1,
     NPC         = 2,
@@ -35,52 +43,50 @@ Ashita.Enum.Spawn_Flags = {
     PET         = 258,
 }
 
-Ashita.Enum.Ability = {
-    NORMAL        = 1,  -- Type: Normal Ability
-    PETLOGISTICS  = 2,  -- Type: Fight, Heel, Stay, etc.
-    BLOODPACTRAGE = 6,  -- Type:
-    BLOODPACTWARD = 10, -- Type:
-    PETABILITY    = 18, -- Type: Offensive BST/SMN ability.
-}
-
--- Animation IDs from incoming packet 0x028 (Action Packet).
-Ashita.Enum.Animation = {
+---@enum Ashita.AttackAnimation
+Ashita.AttackAnimation =
+{
     MELEE_MAIN    = 0,
     MELEE_OFFHAND = 1,
     MELEE_KICK    = 2,
-    MELEE_KICK2   = 3,
+    MELEE_KICK_2  = 3,
     DAKEN         = 4,
 }
 
-Ashita.Enum.Reaction = {
+---@enum Ashita.AttackReaction
+Ashita.AttackReaction =
+{
     GUARD        = 2,
     SHIELD_BLOCK = 4,
 }
 
-Ashita.Enum.Effect_Animation = {
-    FIRE     = 1,
-    ICE      = 2,
-    WIND     = 3,
-    EARTH    = 4,
-    THUNDER  = 5,
-    WATER    = 6,
-    LIGHT    = 7,
-    DARK     = 8,
-    SLEEP    = 9,
-    POISON   = 10,
-    PARALYZE = 11,
-    BLIND    = 12,
-    SILENCE  = 13,
-    STUN     = 16,
-    CURSE    = 17,
-    DEF_DOWN = 18,
-    DRAIN    = 21,
-    ASPIR    = 22,
-    HASTE    = 23,
+---@enum Ashita.EffectAnimation
+Ashita.EffectAnimation =
+{
+    FIRE         = 1,
+    ICE          = 2,
+    WIND         = 3,
+    EARTH        = 4,
+    THUNDER      = 5,
+    WATER        = 6,
+    LIGHT        = 7,
+    DARK         = 8,
+    SLEEP        = 9,
+    POISON       = 10,
+    PARALYZE     = 11,
+    BLIND        = 12,
+    SILENCE      = 13,
+    STUN         = 16,
+    CURSE        = 17,
+    DEFENSE_DOWN = 18,
+    DRAIN        = 21,
+    ASPIR        = 22,
+    HASTE        = 23,
 }
 
--- Message IDs from incoming packet 0x029 (Action Message).
-Ashita.Enum.Message = {
+---@enum Ashita.Message
+Ashita.Message =
+{
     MELEE_HIT                               = 1,
     SPELL_DAMAGE_HIT                        = 2,     -- Dia, Fire,
     MOB_KILL                                = 6,

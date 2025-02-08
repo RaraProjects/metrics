@@ -82,7 +82,7 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     if not owner_mob then
         -- Full Mitigation; track unmitigated damage if it isn't absorbed by a shadow.
         local full = false
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MAGIC, damage, message_id, Ashita.Enum.Message.SHADOW_ABSORPTION, true) end
+        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MAGIC, damage, message_id, Ashita.Message.SHADOW_ABSORPTION, true) end
         if not full then H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_MAGIC, damage) end
 
         if Res.Spells.Get_MP_Drain(spell_id) then H.Offense.Hit(audits, DB.Trackable.DEF_MP_DRAIN, damage) end
