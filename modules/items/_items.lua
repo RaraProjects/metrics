@@ -62,7 +62,7 @@ Loot.Dropped = function(data)
     local drop_data = Ashita.Packets.Item_Drop(data)
     if not drop_data then return nil end
 
-    local item_name = Ashita.Item.Get_Item_Name(drop_data.Item)
+    local item_name = Ashita.Item.GetItemName(drop_data.Item)
     Loot.Pool[drop_data.Index] = item_name
 
     local mob = Ashita.Mob.Get_Mob_By_Index(drop_data.Dropper_Index)

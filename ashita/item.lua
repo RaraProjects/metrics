@@ -1,29 +1,36 @@
-Ashita.Item = {}
+Ashita.Item = { }
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get an item's name.
 -- ------------------------------------------------------------------------------------------------------
----@param item_id string
+---@param itemId integer
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Item.Get_Item_Name = function(item_id)
-    local item = AshitaCore:GetResourceManager():GetItemById(item_id)
-    if not item then return "Unknown" end
+Ashita.Item.GetItemName = function(itemId)
+    local item = AshitaCore:GetResourceManager():GetItemById(itemId)
+    if not item then
+        return "Unknown"
+    end
 
-    local item_name = item.Name[1]
-    if not item_name then return DB.Enum.DEBUG end
-    return item_name
+    local itemName = item.Name[1]
+    if not itemName then
+        return DB.Enum.DEBUG
+    end
+
+    return itemName
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Checks a piece of gear's level.
 -- ------------------------------------------------------------------------------------------------------
----@param item_name string
+---@param itemName string
 ---@return number
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Item.Get_Item_Level = function(item_name)
-    local item = AshitaCore:GetResourceManager():GetItemByName(item_name, 0)
-    local item_level = item.Level
-    if not item_level then return 0 end
-    return item_level
+Ashita.Item.GetItemLevel = function(itemName)
+    local item = AshitaCore:GetResourceManager():GetItemByName(itemName, 0)
+    if not item or not item.Level then
+        return 0
+    end
+
+    return item.Level
 end

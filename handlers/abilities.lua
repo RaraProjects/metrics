@@ -155,7 +155,7 @@ H.Ability.Parse = function(ability_data, result, actor_mob, target_name, owner_m
 
         -- Steal
         elseif ability_id == 553 and damage > 0 then
-            local item_name = Ashita.Item.Get_Item_Name(damage)
+            local item_name = Ashita.Item.GetItemName(damage)
             Loot.Add_Received_Item(actor_mob.name, item_name, 1)
 
         -- Mug
