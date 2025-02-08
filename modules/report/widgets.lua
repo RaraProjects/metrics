@@ -27,13 +27,14 @@ end
 -- Creates a dropdown menu to chat mode options for publishing.
 ------------------------------------------------------------------------------------------------------
 Report.Widgets.Chat_Mode = function()
-    local list = Ashita.Chat.Modes
+    local list  = Ashita.Chat.Modes
     local flags = DB.Widgets.Dropdown.Flags
+    local title = "Chat Mode"
     if list[1] then
-        UI.SetNextItemWidth(Ashita.Chat.Selection.Width)
-        if UI.BeginCombo(Ashita.Chat.Selection.Title, list[Report.Publishing.Chat_Index].Name, flags) then
+        UI.SetNextItemWidth(150)
+        if UI.BeginCombo(title, list[Report.Publishing.Chat_Index].Name, flags) then
             for n = 1, #list, 1 do
-                local is_selected = Ashita.Chat.Selection.Index == n
+                local is_selected = Report.Publishing.Chat_Index == n
                 if UI.Selectable(list[n].Name, is_selected) then
                     Report.Publishing.Chat_Index = n
                     Report.Publishing.Chat_Mode = list[n]
@@ -45,7 +46,7 @@ Report.Widgets.Chat_Mode = function()
             UI.EndCombo()
         end
     else
-        if UI.BeginCombo(Ashita.Chat.Selection.Title, Ashita.ChatMode.PARTY, flags) then
+        if UI.BeginCombo(title, Ashita.ChatMode.PARTY, flags) then
             UI.EndCombo()
         end
     end

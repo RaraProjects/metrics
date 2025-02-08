@@ -17,7 +17,7 @@ Report.Publishing.Overall = function()
         local found = false
 
         -- Chat header.
-        Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Total Damage and Accuracy") coroutine.sleep(Report.Publishing.Delay)
+        Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, "Total Damage and Accuracy") coroutine.sleep(Report.Publishing.Delay)
 
         local sorted_damage = DB.Lists.Sort.Total_Damage()
         for rank, data in ipairs(sorted_damage) do
@@ -34,13 +34,13 @@ Report.Publishing.Overall = function()
                                         tostring(player_total) ..
                                         " (" .. tostring(player_percent) .. "%) " ..
                                         "Acc: " .. tostring(player_acc) .. "%"
-                    Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
+                    Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
                     found = true
                 end
             end
         end
         if not found then
-            Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(Report.Publishing.Delay)
+            Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(Report.Publishing.Delay)
         end
         Report.Publishing.Lock = false
     end
@@ -53,7 +53,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Report.Publishing.Damage_By_Type = function(trackable)
     if not trackable then
-        Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Error") coroutine.sleep(Report.Publishing.Delay)
+        Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, "Error") coroutine.sleep(Report.Publishing.Delay)
         return nil
     end
 
@@ -64,7 +64,7 @@ Report.Publishing.Damage_By_Type = function(trackable)
         if trackable == DB.Trackable.SPELLS_HEALING then suffix = "" end
 
         -- Header
-        Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Total " .. tostring(trackable) .. tostring(suffix)) coroutine.sleep(Report.Publishing.Delay)
+        Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, "Total " .. tostring(trackable) .. tostring(suffix)) coroutine.sleep(Report.Publishing.Delay)
 
         -- Loop through the data.
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
@@ -76,7 +76,7 @@ Report.Publishing.Damage_By_Type = function(trackable)
                 local player_percent = Column.Damage.Percent_Total_By_Type(player_name, trackable, nil, true)
                 if tonumber(player_percent) >= Report.Settings.Damage_Threshold then
                     local chat_string = tostring(player_name) .. ": " .. tostring(player_damage) .. " (" .. tostring(player_percent) .. "%)"
-                    Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
+                    Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
                     found = true
                 end
 
@@ -84,7 +84,7 @@ Report.Publishing.Damage_By_Type = function(trackable)
         end
 
         if not found then
-            Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(Report.Publishing.Delay)
+            Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(Report.Publishing.Delay)
         end
 
         Report.Publishing.Lock = false
@@ -99,13 +99,13 @@ end
 ------------------------------------------------------------------------------------------------------
 Report.Publishing.Catalog = function(player_name, trackable)
     if not player_name then
-        Ashita.Chat.Message("There was an error trying to publish: No player name provided.")
+        Ashita.Chat.Echo("There was an error trying to publish: No player name provided.")
         return nil
     end
 
     if not trackable then trackable = DB.Trackable.WEAPONSKILL end
     if not DB.Lists.Check.Catalog_Exists(player_name, trackable) then
-        Ashita.Chat.Message(tostring(player_name) .. " doesn't have " .. tostring(trackable) .. " data to publish.")
+        Ashita.Chat.Echo(tostring(player_name) .. " doesn't have " .. tostring(trackable) .. " data to publish.")
         return nil
     end
 
@@ -114,8 +114,8 @@ Report.Publishing.Catalog = function(player_name, trackable)
         local found = false
 
         -- Headers
-        Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, tostring(trackable) .. " for " .. tostring(player_name)) coroutine.sleep(Report.Publishing.Delay)
-        Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "WS: Total (Count) ~Average Min<Max") coroutine.sleep(Report.Publishing.Delay)
+        Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, tostring(trackable) .. " for " .. tostring(player_name)) coroutine.sleep(Report.Publishing.Delay)
+        Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, "WS: Total (Count) ~Average Min<Max") coroutine.sleep(Report.Publishing.Delay)
 
         -- Loop through weaponskill data.
         local action_name
@@ -135,13 +135,13 @@ Report.Publishing.Catalog = function(player_name, trackable)
                                 " ~" .. tostring(average) ..
                                 " "  .. tostring(min) ..
                                 "<"  .. tostring(max)
-            Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
+            Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, chat_string) coroutine.sleep(Report.Publishing.Delay)
 
             found = true
         end
 
         if not found then
-            Ashita.Chat.Add_To_Chat(Report.Publishing.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(Report.Publishing.Delay)
+            Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, "Nothing to report.") coroutine.sleep(Report.Publishing.Delay)
         end
 
         Report.Publishing.Lock = false
