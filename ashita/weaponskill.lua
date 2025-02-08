@@ -1,4 +1,4 @@
-Ashita.WS = T{}
+Ashita.WS = { }
 
 -- ------------------------------------------------------------------------------------------------------
 -- Gets properties for a WS.
@@ -9,8 +9,6 @@ Ashita.WS = T{}
 ---@param id number weaponskill ID.
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Ashita.WS.Get_By_ID = function(id)
-    local ws = Res.WS.Get_Full_List(id)
-    if not ws then ws = Res.WS.Get_Missing(id) end
-    return ws
+Ashita.WS.GetByID = function(id)
+    return Res.WS.Get_Full_List(id) or Res.WS.Get_Missing(id) or { }
 end

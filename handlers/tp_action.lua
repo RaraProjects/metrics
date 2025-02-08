@@ -448,7 +448,7 @@ end
 ---@return table|nil
 -- ------------------------------------------------------------------------------------------------------
 H.TP.WS_Data = function(action, actor_mob)
-    local ws_data = Ashita.WS.Get_By_ID(action.param)
+    local ws_data = Ashita.WS.GetByID(action.param)
 	if not ws_data then
         Debug.Error.Add(Debug.Error.ERROR, "H.TP.WS_Data", "Actor {" .. tostring(actor_mob.name) .. "} used WS ID {" .. tostring(action.param)
         .. "} and it wasn't found.")
