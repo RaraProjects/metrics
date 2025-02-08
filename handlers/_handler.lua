@@ -19,13 +19,13 @@ require("handlers.items")
 -- Sorts out the entities involved with the action packet.
 ------------------------------------------------------------------------------------------------------
 H.Start_Action_Packet = function(packet)
-    local action = Ashita.Packets.Build_Action(packet.data)
+    local action = Ashita.Packets.BuildAction(packet.data)
     if not action then Debug.Error.Add(Debug.Error.ERROR, "Packet In", "action was nil from Packets.Build_Action") return nil end
 
     local actor_mob = Ashita.Mob.GetMobByID(action.actor_id)
     if not actor_mob then Debug.Error.Add(Debug.Error.ERROR, "Packet In", "actor_mob was nil from Mob.Get_Mob_By_ID") return nil end
 
-    local target_mob = Ashita.Packets.Get_Action_Target(action)
+    local target_mob = Ashita.Packets.GetActionTarget(action)
     if not target_mob then Debug.Error.Add(Debug.Error.ERROR, "Packet In", "target_mob was nil from Mob.Get_Mob_By_ID") return nil end
 
     -- Need to refresh party for pet checks.

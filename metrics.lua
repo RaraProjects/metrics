@@ -47,8 +47,8 @@ FFI = require("ffi")
 FFI.cdef[[
     int32_t memcmp(const void* buff1, const void* buff2, size_t count);
 ]]
-Last_Chunk_Buffer = T{}
-Current_Chunk_Buffer = T{}
+LastChunkBuffer = T{}
+CurrentChunkBuffer = T{}
 
 require("resources._resource")
 require("database._database")
@@ -121,7 +121,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     -- Duplicate packet checking from Thorny by way of the parse addon.
     -- https://github.com/WinterSolstice8/parse/
 	local is_duplicate = false
-	if not packet.injected then is_duplicate = Ashita.Packets.Is_Duplicate(packet) end
+	if not packet.injected then is_duplicate = Ashita.Packets.IsDuplicate(packet) end
     if is_duplicate then
         Debug.Error.Add(Debug.Error.WARNING, "Packet In", "Duplicate packet for packet {" .. tostring(packet.id) .. "} found.")
         return nil
@@ -151,7 +151,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
 
     -- Action Messages
     elseif packet.id == 0x029 then
-        local data = Ashita.Packets.Build_Message(packet.data)
+        local data = Ashita.Packets.BuildMessage(packet.data)
         if not data then return nil end
         if Debug.Is_Enabled() then Debug.Packet.Add_Message(data) end
 

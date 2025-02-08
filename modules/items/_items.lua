@@ -59,7 +59,7 @@ end
 ---@param data table
 -- ------------------------------------------------------------------------------------------------------
 Loot.Dropped = function(data)
-    local drop_data = Ashita.Packets.Item_Drop(data)
+    local drop_data = Ashita.Packets.ItemDrop(data)
     if not drop_data then return nil end
 
     local item_name = Ashita.Item.GetItemName(drop_data.Item)
@@ -92,7 +92,7 @@ end
 ---@param data table
 -- ------------------------------------------------------------------------------------------------------
 Loot.Obtained = function(data)
-    local drop_data = Ashita.Packets.Item_Action(data)
+    local drop_data = Ashita.Packets.ItemAction(data)
     if not drop_data then return nil end
 
     -- Only care about items being obtained or floored.

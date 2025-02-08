@@ -74,7 +74,7 @@ end
 ---@param data table
 -- ------------------------------------------------------------------------------------------------------
 XP.Tracking.Update_CP_Into_Level = function(data)
-    local parsed_packet = Ashita.Packets.Capacity_And_Limit_Update(data)
+    local parsed_packet = Ashita.Packets.CapacityAndLimitUpdate(data)
     if parsed_packet.capacity_points_into_level then
         XP.Tracking.Metric.Capacity_Current = parsed_packet.capacity_points_into_level
     end
@@ -86,7 +86,7 @@ end
 ---@param data table
 -- ------------------------------------------------------------------------------------------------------
 XP.Tracking.Update_EP_Into_Level = function(data)
-    local parsed_packet = Ashita.Packets.Stat_Update(data)
+    local parsed_packet = Ashita.Packets.StatUpdate(data)
     if parsed_packet.exemplar_points_into_level and parsed_packet.exemplar_level_max then
         XP.Tracking.Metric.Exemplar_Current = parsed_packet.exemplar_points_into_level
         XP.Tracking.Metric.Exemplar_Max     = parsed_packet.exemplar_level_max
