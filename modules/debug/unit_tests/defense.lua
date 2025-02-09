@@ -1134,7 +1134,7 @@ Debug.Unit.Tests.Defense.Nuke = function()
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
-    H.Spell_Def.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.SpellDef.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
     local player_catalog = {}
@@ -1215,7 +1215,7 @@ Debug.Unit.Tests.Defense.Nuke_Shadow = function()
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
-    H.Spell_Def.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.SpellDef.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
     local player_catalog = {}
@@ -1282,7 +1282,7 @@ Debug.Unit.Tests.Defense.Nuke_AOE = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage))
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER_TWO.id, damage_two))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
-    H.Spell_Def.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.SpellDef.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
     local player_catalog = {}
@@ -1460,7 +1460,7 @@ Debug.Unit.Tests.Defense.Nuke_Pet = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PET.id, damage))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.Spell_Def.Action(action, Debug.Unit.Mob.ENEMY, Debug.Unit.Mob.PLAYER, true)
+    H.SpellDef.Action(action, Debug.Unit.Mob.ENEMY, Debug.Unit.Mob.PLAYER, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}
@@ -1569,7 +1569,7 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Primary = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, player_damage))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.Spell_Def.Action(action, Debug.Unit.Mob.ENEMY, Debug.Unit.Mob.PLAYER, true)
+    H.SpellDef.Action(action, Debug.Unit.Mob.ENEMY, Debug.Unit.Mob.PLAYER, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}
@@ -1775,7 +1775,7 @@ Debug.Unit.Tests.Defense.Nuke_Pet_AOE_Secondary = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PET.id, pet_damage))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.Spell_Def.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.SpellDef.Action(action, Debug.Unit.Mob.ENEMY, nil, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}

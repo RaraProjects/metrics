@@ -13,19 +13,18 @@ H.MeleeDef.Action = function(action, actorMob, ownerMob, logDefense)
         return nil
     end
 
+    -- Keep the mob list up-to-date.
+    if Ashita.Mob.IsMonster(actorMob) then
+        DB.Lists.Check.MobExists(actorMob.name)
+    end
+
 	local totalDamage   = 0
     local counterDamage = 0
     local targetMob
 
     for _, target in pairs(action.targets) do
         targetMob = Ashita.Mob.GetMobByID(target.id)
-        if targetMob then
-            -- Keep the mob list up-to-date.
-            if Ashita.Mob.IsMonster(actorMob) then
-                DB.Lists.Check.MobExists(actorMob.name)
-            end
-
-            -- Loop through actions on the target.
+        if targetMob and (Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.Is_Lurking()) then
             for _, actionData in pairs(target.actions) do
 			    local newDamage, newCounterDamage = H.MeleeDef.Parse(actionData, actorMob.name, targetMob.name, ownerMob)
                 totalDamage = totalDamage + newDamage

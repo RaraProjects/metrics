@@ -1,43 +1,50 @@
-H.Spell_Def = {}
+H.SpellDef = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Parse the finish spell casting packet.
 ------------------------------------------------------------------------------------------------------
----@param action table action packet data.
----@param actor_mob table the mob data of the entity performing the action.
----@param owner_mob table|nil (if pet) the mob data of the entity's owner.
----@param log_defense boolean if this action should actually be logged.
+---@param action     table     action packet data.
+---@param actorMob   table     the mob data of the entity performing the action.
+---@param ownerMob   table|nil (if pet) the mob data of the entity's owner.
+---@param logDefense boolean   if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
-    if not log_defense then return nil end
+H.SpellDef.Action = function(action, actorMob, ownerMob, logDefense)
+    if not logDefense then
+        return nil
+    end
 
-    local result, target_mob, new_damage
-    local damage = 0
-    local target_count = 0
-    local spell_id = action.param
-    local spell_data = Ashita.Spell.GetByID(spell_id)
-    if not spell_data then return nil end
-    local spell_name = Ashita.Spell.Name(spell_id, spell_data)
+    local spellId   = action.param
+    local spellData = Ashita.Spell.GetByID(spellId)
+    if not spellData then
+        return nil
+    end
+
+    -- Keep the mob list up-to-date.
+    if Ashita.Mob.IsMonster(actorMob) then
+        DB.Lists.Check.MobExists(actorMob.name)
+    end
+
+    local spellName   = Ashita.Spell.Name(spellId, spellData)
+    local totalDamage = 0
+    local targetCount = 0
 
     -- Loop through target actions.
-    for target_index, target_value in pairs(action.targets) do
-        for action_index, _ in pairs(target_value.actions) do
-            result = action.targets[target_index].actions[action_index]
-            target_mob = Ashita.Mob.GetMobByID(action.targets[target_index].id)
-            if target_mob and (Ashita.Party.IsAffiliate(target_mob.name) or Ashita.Mob.PetOwner(target_mob) or Parse.Config.Is_Lurking()) then
-                if Ashita.Mob.IsMonster(actor_mob) then DB.Lists.Check.MobExists(actor_mob.name) end
-                owner_mob = Ashita.Mob.PetOwner(target_mob)    -- Need to recheck for AOEs.
-                new_damage = H.Spell_Def.Parse(spell_data, result, actor_mob, target_mob, owner_mob)
-                if not new_damage then new_damage = 0 end
-                target_count = target_count + 1
-                damage = damage + new_damage
+    for _, target in pairs(action.targets) do
+        local targetMob = Ashita.Mob.GetMobByID(target.id)
+        if targetMob and (Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.Is_Lurking()) then
+            ownerMob = Ashita.Mob.PetOwner(targetMob)   -- Need to recheck for AOEs.
+
+            for _, actionData in pairs(target.actions) do
+                local newDamage = H.SpellDef.Parse(spellData, actionData, actorMob, targetMob, ownerMob) or 0
+                targetCount = targetCount + 1
+                totalDamage = totalDamage + newDamage
             end
         end
     end
 
     -- Update the Battle Log.
-    if Res.Spells.Get_Damaging(spell_id) then
-        H.Spell_Def.Blog(actor_mob, spell_id, spell_data, spell_name, damage, target_count)
+    if Res.Spells.Damaging[spellId] then
+        H.SpellDef.Blog(actorMob, spellData, spellName, totalDamage, targetCount)
     end
 end
 
@@ -45,51 +52,65 @@ end
 -- Set data for a spell action (including healing).
 -- Not all spells do damage and not all spells heal this will sort those out.
 ------------------------------------------------------------------------------------------------------
----@param spell_data table the main packet; need it to get spell ID
----@param result table contains all the information for the action
----@param actor_mob table
----@param target_mob table
----@param owner_mob? table
+---@param spellData  table the main packet; need it to get spell ID
+---@param actionData table contains all the information for the action
+---@param actorMob   table
+---@param targetMob  table
+---@param ownerMob?  table
 ---@return number
 ------------------------------------------------------------------------------------------------------
-H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob)
-    Debug.Packet.AddAction(actor_mob.name, target_mob.name, "Spell Def", result)
-    if not spell_data then return 0 end
+H.SpellDef.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob)
+    Debug.Packet.AddAction(actorMob.name, targetMob.name, "Spell Def", actionData)
 
     -- Need to double check each target in case a pet gets hit by AOE and wasn't the primary target.
-    if not owner_mob then owner_mob = Ashita.Mob.PetOwner(target_mob) end
+    if not ownerMob then
+        ownerMob = Ashita.Mob.PetOwner(targetMob)
+    end
 
-    local spell_id   = spell_data.Index
-    local spell_name = Ashita.Spell.Name(spell_id, spell_data)
-    local damage     = result.param or 0
-    local no_damage  = H.NoDamageMessages(result)
-    local message_id = result.message
-    local audits = H.Spell_Def.Audits(actor_mob, target_mob, owner_mob)
+    local spellId   = spellData.Index
+    local spellName = Ashita.Spell.Name(spellId, spellData)
+    local noDamage  = H.NoDamageMessages(actionData)
+    local damage    = actionData.param or 0
+    local messageId = actionData.message or 0
+    local audits    = H.SpellDef.Audits(actorMob, targetMob, ownerMob)
 
     local tag = "H.Spell_Def.Parse"
-    Debug.Error.Add(Debug.Error.WARNING, tag,
-    "BENIGN: Spell {" .. tostring(spell_name) .. "} (" .. tostring(spell_id) .. ") has message {" .. tostring(message_id) .. "}.")
+    local warning = string.format("BENIGN: Spell {%s} (%d) has message {%d}.", spellName, spellId, messageId)
+    Debug.Error.Add(Debug.Error.WARNING, tag, warning)
 
-    if no_damage then damage = 0 end
+    if noDamage then
+        damage = 0
+    end
 
-    if Res.Spells.Get_Damaging(spell_id) then
-        H.Spell_Def.Nuke(audits, damage, spell_name, owner_mob)
+    -- Track damage for both players and pets.
+    if Res.Spells.Damaging[spellId] then
+        H.SpellDef.Nuke(audits, damage, spellName, ownerMob)
     else
-        H.Offense.CatalogNoDamageHit(audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, spell_name)
+        H.Offense.CatalogNoDamageHit(audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, spellName)
     end
 
-    -- Not tracking these for pets right now.
-    if not owner_mob then
-        -- Full Mitigation; track unmitigated damage if it isn't absorbed by a shadow.
-        local full = false
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MAGIC, damage, message_id, Ashita.Message.SHADOW_ABSORPTION, true) end
-        if not full then H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_MAGIC, damage) end
+    -- Not tracking mitigation, MP drain, or enfeebling for pets at this time.
+    if not ownerMob then
+        local fullMitigation = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MAGIC, damage, messageId, Ashita.Message.SHADOW_ABSORPTION, true)
 
-        if Res.Spells.Get_MP_Drain(spell_id) then H.Offense.Hit(audits, DB.Trackable.DEF_MP_DRAIN, damage) end
-        if Res.Spells.Get_Enfeeble(spell_id) then H.Offense.Hit(audits, DB.Trackable.DEF_ENFEEBLING, damage) end
+        -- Player was hit by the spell.
+        if not fullMitigation then
+            if Res.Spells.Damaging[spellId] then
+                H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_MAGIC, damage)
+
+            elseif Res.Spells.MP_Drain[spellId] then
+                H.Offense.Hit(audits, DB.Trackable.DEF_MP_DRAIN, damage)
+
+            elseif Res.Spells.Enfeebling[spellId] then
+                H.Offense.Hit(audits, DB.Trackable.DEF_ENFEEBLING, damage)
+            end
+        end
     end
 
-    if no_damage then damage = -1 end
+    -- Set battle log flags.
+    if noDamage then
+        damage = -1
+    end
 
     return damage
 end
@@ -97,57 +118,61 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Handles spells that damage enemies.
 ------------------------------------------------------------------------------------------------------
----@param audits table
----@param damage number
----@param spell_name string
----@param owner_mob? table
+---@param audits    table
+---@param damage    number
+---@param spellName string
+---@param ownerMob? table
 ------------------------------------------------------------------------------------------------------
-H.Spell_Def.Nuke = function(audits, damage, spell_name, owner_mob)
+H.SpellDef.Nuke = function(audits, damage, spellName, ownerMob)
     local trackable = DB.Trackable.DEF_NUKING
-    if owner_mob then trackable = DB.Trackable.DEF_NUKING_PET end
-    H.Defense.GrandTotals(audits, damage, owner_mob)
-    H.Offense.CatalogHit(audits, trackable, damage, spell_name)
+
+    if ownerMob then
+        trackable = DB.Trackable.DEF_NUKING_PET
+    end
+
+    H.Defense.GrandTotals(audits, damage, ownerMob)
+    H.Offense.CatalogHit(audits, trackable, damage, spellName)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Adds spell damage taken to the battle log.
 -- ------------------------------------------------------------------------------------------------------
----@param actor_mob table the mob data of the entity receiving the action.
----@param spell_id integer
----@param spell_data table
----@param spell_name string
----@param damage number
----@param target_count integer
+---@param actorMob    table   the mob data of the entity receiving the action.
+---@param spellData   table
+---@param spellName   string
+---@param damage      number
+---@param targetCount integer
 -- ------------------------------------------------------------------------------------------------------
-H.Spell_Def.Blog = function(actor_mob, spell_id, spell_data, spell_name, damage, target_count)
-    local blog_note = ""
-    if target_count > 1 then blog_note = "TGTs: " .. tostring(target_count) end
-    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_SPELL, spell_name, damage, blog_note, spell_data)
+H.SpellDef.Blog = function(actorMob, spellData, spellName, damage, targetCount)
+    local blog_note = targetCount > 1 and string.format("TGTs: %d", targetCount) or ""
+
+    Blog.Add(actorMob.name, nil, Blog.Action_Type.MOB_SPELL, spellName, damage, blog_note, spellData)
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Convenient function to build the audit table.
 ------------------------------------------------------------------------------------------------------
----@param actor_mob table
----@param target_mob table
----@param owner_mob? table this will not be nil if the actor is a pet.
+---@param actorMob  table
+---@param targetMob table
+---@param ownerMob? table this will not be nil if the actor is a pet.
 ---@return table
 ------------------------------------------------------------------------------------------------------
-H.Spell_Def.Audits = function(actor_mob, target_mob, owner_mob)
-    local player_name = actor_mob.name
-    local target_name = target_mob.name
-    local pet_name = nil
+H.SpellDef.Audits = function(actorMob, targetMob, ownerMob)
+    local playerName = actorMob.name
+    local targetName = targetMob.name
+    local petName
 
-    if owner_mob then
-        pet_name = target_mob.name
-        target_name = owner_mob.name
+    if ownerMob then
+        petName    = targetMob.name
+        targetName = ownerMob.name
     end
 
     -- These are switched compared to offense.
-    local audits = {
-        player_name = target_name,
-        target_name = player_name,
-        pet_name = pet_name,
+    local audits =
+    {
+        player_name = targetName,
+        target_name = playerName,
+        pet_name    = petName,
     }
 
     return audits

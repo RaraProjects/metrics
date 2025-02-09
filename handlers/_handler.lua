@@ -130,7 +130,7 @@ H.Action_Packet_Spell = function(action, actor_mob, target_pet_owner_mob, pet_ow
     if is_offense then
         H.Spell.Action(action, actor_mob, pet_owner_mob, is_offense)
     elseif is_defense then
-        H.Spell_Def.Action(action, actor_mob, target_pet_owner_mob, is_defense)
+        H.SpellDef.Action(action, actor_mob, target_pet_owner_mob, is_defense)
     end
 end
 

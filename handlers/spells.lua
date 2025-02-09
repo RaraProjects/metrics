@@ -83,7 +83,7 @@ H.Spell.Target_Parse = function(spell_data, result, actor_mob, target_mob, owner
         return 0, false
 
     -- Enfeebles shouldn't come with damage.
-    elseif Res.Spells.Get_Enfeeble(spell_id) then
+    elseif Res.Spells.Enfeebling[spell_id] then
         damage = H.Spell.Enfeebling_And_DoTs(audits, DB.Trackable.SPELLS_ENFEEBLING, damage, spell_name, message_id, owner_mob)
 
     -- Some DoTs come with initial damage. Damage gets handled inside the enfeeble function.
@@ -170,12 +170,12 @@ H.Spell.Count = function(audits, spell_id, spell_name, hit, mp_cost, is_burst, t
 
     elseif Res.Spells.Get_Debuff_Removal(spell_id) then trackable = DB.Trackable.SPELLS_DEBUFF_REMOVAL
     elseif Res.Spells.Get_Buff(spell_id)           then if is_pet then trackable = DB.Trackable.PET_SPELL_BUFFS else trackable = DB.Trackable.SPELLS_BUFFS end
-    elseif Res.Spells.Get_Damaging(spell_id)       then if is_pet then trackable = DB.Trackable.PET_NUKING      else trackable = DB.Trackable.SPELLS_NUKING end
-    elseif Res.Spells.Get_Enfeeble(spell_id)       then if is_pet then trackable = DB.Trackable.PET_ENFEEBLING  else trackable = DB.Trackable.SPELLS_ENFEEBLING end
+    elseif Res.Spells.Damaging[spell_id]           then if is_pet then trackable = DB.Trackable.PET_NUKING      else trackable = DB.Trackable.SPELLS_NUKING end
+    elseif Res.Spells.Enfeebling[spell_id]         then if is_pet then trackable = DB.Trackable.PET_ENFEEBLING  else trackable = DB.Trackable.SPELLS_ENFEEBLING end
     elseif Res.Spells.Get_DoT(spell_id)            then if is_pet then trackable = DB.Trackable.PET_DOT         else trackable = DB.Trackable.SPELLS_DOT end
     elseif Res.Spells.Get_Enspell(spell_id)        then trackable = DB.Trackable.MELEE_ENSPELL
     elseif Res.Spells.Get_Spikes(spell_id)         then trackable = DB.Trackable.SPELLS_SPIKE_DAMAGE
-    elseif Res.Spells.Get_MP_Drain(spell_id)       then trackable = DB.Trackable.SPELLS_MP_DRAIN
+    elseif Res.Spells.MP_Drain[spell_id]           then trackable = DB.Trackable.SPELLS_MP_DRAIN
     elseif Res.Spells.Get_Buff_Song(spell_id)      then trackable = DB.Trackable.SPELLS_BUFF_SONG
     elseif Ashita.Spell.Skill(spell_id) == 44      then trackable = DB.Trackable.SPELLS_GEOMANCY
     end
@@ -206,7 +206,7 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
     local blog_note = ""
     local space = ""
 
-    if Res.Spells.Get_Damaging(spell_id) or Res.Spells.Get_MP_Drain(spell_id) then
+    if Res.Spells.Damaging[spell_id] or Res.Spells.MP_Drain[spell_id] then
         -- Show magic burst message.
         if is_burst then
             blog_note = Blog.Enum.MAGIC_BURST
@@ -233,7 +233,7 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
         end
         Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.DEBUFF_REMOVAL, spell_name, -1, blog_note, spell_data)
 
-    elseif Res.Spells.Get_Enfeeble(spell_id) or Res.Spells.Get_DoT(spell_id) then
+    elseif Res.Spells.Enfeebling[spell_id] or Res.Spells.Get_DoT(spell_id) then
         local action_type = Blog.Action_Type.MAGIC_ENFEEBLE
         if     damage == -1     then blog_note = Blog.Enum.NO_EFFECT
         elseif damage == -2     then blog_note = Blog.Enum.RESIST
@@ -245,7 +245,7 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
             action_type = Blog.Action_Type.DISPEL
             damage = -1
 
-        elseif Res.Spells.Get_Enfeeble(spell_id) then
+        elseif Res.Spells.Enfeebling[spell_id] then
             damage = -1
         end
 

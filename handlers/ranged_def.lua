@@ -9,19 +9,20 @@ H.RangedDef = { }
 ---@param logDefense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
 H.RangedDef.Action = function(action, actorMob, ownerMob, logDefense)
-    if not logDefense then return nil end
+    if not logDefense then
+        return nil
+    end
+
+    -- Keep the mob list up-to-date.
+    if Ashita.Mob.IsMonster(actorMob) then
+        DB.Lists.Check.MobExists(actorMob.name)
+    end
 
     local damage = 0
 
     for _, target in pairs(action.targets) do
         local targetMob = Ashita.Mob.GetMobByID(target.id)
-        if targetMob then
-            -- Keep the mob list up-to-date.
-            if Ashita.Mob.IsMonster(actorMob) then
-                DB.Lists.Check.MobExists(actorMob.name)
-            end
-
-            -- Loop through actions on the target.
+        if targetMob and (Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.Is_Lurking()) then
             for _, actionData in pairs(target.actions) do
                 damage = damage + H.RangedDef.Parse(actionData, actorMob, targetMob, ownerMob)
             end
