@@ -106,7 +106,7 @@ H.Ranged.Message = function(audits, damage, message_id, overall_ranged_type, own
         H.Offense.Hit(audits, overall_ranged_type, damage)
         H.Offense.Miss(audits, DB.Trackable.RANGED_SQUARE_HIT)
         H.Offense.Miss(audits, DB.Trackable.RANGED_TRUE_STRIKE)
-        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
+        H.Offense.UpdateRecentAccuracy(audits, true, owner_mob)
 
     -- PUP Ranged Attack
     elseif message_id == Ashita.Message.WEAPONSKILL_DAMAGE then
@@ -116,38 +116,38 @@ H.Ranged.Message = function(audits, damage, message_id, overall_ranged_type, own
         H.Offense.Miss(audits, overall_ranged_type)
         H.Offense.Miss(audits, DB.Trackable.RANGED_SQUARE_HIT)
         H.Offense.Miss(audits, DB.Trackable.RANGED_TRUE_STRIKE)
-        H.Offense.Update_Recent_Accuracy(audits, false, owner_mob)
+        H.Offense.UpdateRecentAccuracy(audits, false, owner_mob)
 
     elseif message_id == Ashita.Message.RANGE_SQUARE_HIT then
         H.Offense.Hit(audits, overall_ranged_type, damage)
         H.Offense.Hit(audits, DB.Trackable.RANGED_SQUARE_HIT, damage)
         H.Offense.Miss(audits, DB.Trackable.RANGED_TRUE_STRIKE)
-        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
+        H.Offense.UpdateRecentAccuracy(audits, true, owner_mob)
 
     elseif message_id == Ashita.Message.RANGE_TRUESTRIKE then
         H.Offense.Hit(audits, overall_ranged_type, damage)
         H.Offense.Hit(audits, DB.Trackable.RANGED_TRUE_STRIKE, damage)
         H.Offense.Miss(audits, DB.Trackable.RANGED_SQUARE_HIT)
-        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
+        H.Offense.UpdateRecentAccuracy(audits, true, owner_mob)
 
     -- Critical hits will not negatively impact true strike or square hit rates.
     elseif message_id == Ashita.Message.RANGE_CRITICAL_HIT then
         was_critical_hit = true
         H.Offense.Hit(audits, overall_ranged_type, damage, true)
-        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
+        H.Offense.UpdateRecentAccuracy(audits, true, owner_mob)
 
     -- Shadows have no impact on recent accuracy.
     elseif message_id == Ashita.Message.SHADOW_ABSORPTION then
-        H.Offense.No_Damage_Hit(audits, overall_ranged_type, DB.Metric.SHADOW_ABSORPTION)
+        H.Offense.NoDamageHit(audits, overall_ranged_type, DB.Metric.SHADOW_ABSORPTION)
 
     elseif message_id == Ashita.Message.MOB_HEAL_MELEE then
-        H.Offense.Mob_Heal(audits, overall_ranged_type, damage)
-        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
+        H.Offense.MobHeal(audits, overall_ranged_type, damage)
+        H.Offense.UpdateRecentAccuracy(audits, true, owner_mob)
 
     -- PUP ranged hits will not negatively impact true strike or square hit rates.
     elseif message_id == Ashita.Message.WEAPONSKILL_DAMAGE then
         H.Offense.Hit(audits, overall_ranged_type, damage)
-        H.Offense.Update_Recent_Accuracy(audits, true, owner_mob)
+        H.Offense.UpdateRecentAccuracy(audits, true, owner_mob)
 
     else
         Debug.Error.Add(Debug.Error.ERROR, "H.Ranged.Message", "Player {" .. tostring(audits.player_name) .. "} had unhandled ranged message: {"
@@ -177,7 +177,7 @@ H.Ranged.Additional_Effect = function(audits, result)
         -- Additional elemental damage from ammunition.
         if message_id == Ashita.Message.ENDAMAGE then
             if animation_id then
-                local effect_name = Res.Game.Get_Additional_Effect_Animation(animation_id)
+                local effect_name = Res.Game.Effect_Animation[animation_id]
                 additional_damage = param
                 H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, additional_damage)
                 H.Offense.CatalogHit(audits, DB.Trackable.RANGED_ENDAMAGE, additional_damage, effect_name)
@@ -185,8 +185,8 @@ H.Ranged.Additional_Effect = function(audits, result)
 
         -- Debuff effect from ammunition.
         elseif message_id == Ashita.Message.ENDEBUFF then
-            local buff = Res.Buffs.Get_Buff(param)
-            if buff then H.Offense.Catalog_No_Damage_Hit(audits, DB.Trackable.RANGED_ENDEBUFF, buff.en) end
+            local buff = Res.Buffs.List[param]
+            if buff then H.Offense.CatalogNoDamageHit(audits, DB.Trackable.RANGED_ENDEBUFF, buff.en) end
 
         -- Additional damage from bloody bolts.
         elseif message_id == Ashita.Message.ENDRAIN then

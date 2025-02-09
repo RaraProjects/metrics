@@ -154,7 +154,7 @@ H.Ability.Parse = function(abilityId, abilityData, actionData, actorMob, targetN
             Loot.Add_Received_Item(actorMob.name, "Gil", damage)
 
         elseif Res.Abilities.Maneuvers[offsetId] then
-            H.Offense.Catalog_No_Damage_Hit(audits, DB.Trackable.MANEUVER, abilityName)
+            H.Offense.CatalogNoDamageHit(audits, DB.Trackable.MANEUVER, abilityName)
             if actionData.message == Ashita.Message.MANEUVER_OVERLOAD then
                 DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, DB.Metric.OVERLOAD)
                 DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, DB.Trackable.MANEUVER, abilityName, DB.Metric.OVERLOAD)

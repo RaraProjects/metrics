@@ -415,7 +415,7 @@ end
 ---@param hit boolean
 ---@param owner_mob? table
 ------------------------------------------------------------------------------------------------------
-H.Offense.Update_Recent_Accuracy = function(audits, hit, owner_mob)
+H.Offense.UpdateRecentAccuracy = function(audits, hit, owner_mob)
     if not owner_mob then DB.Accuracy.Update(audits.player_name, hit) end
 end
 
@@ -451,7 +451,7 @@ end
 ---@param trackable string
 ---@param metric string
 ------------------------------------------------------------------------------------------------------
-H.Offense.No_Damage_Hit = function(audits, trackable, metric)
+H.Offense.NoDamageHit = function(audits, trackable, metric)
     H.Offense.Hit(audits, trackable, 0)
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, metric)
@@ -465,7 +465,7 @@ end
 ---@param trackable string player melee or pet melee.
 ---@param damage integer
 ------------------------------------------------------------------------------------------------------
-H.Offense.Mob_Heal = function(audits, trackable, damage)
+H.Offense.MobHeal = function(audits, trackable, damage)
     H.Offense.Hit(audits, trackable, 0)
     DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.HITS_ON_TARGET)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.MOB_HEALING)
@@ -491,7 +491,7 @@ end
 ---@param trackable string
 ---@param action_name string
 ------------------------------------------------------------------------------------------------------
-H.Offense.Catalog_No_Damage_Hit = function(audits, trackable, action_name)
+H.Offense.CatalogNoDamageHit = function(audits, trackable, action_name)
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
     DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
     DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_TARGET)

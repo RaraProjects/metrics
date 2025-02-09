@@ -225,7 +225,7 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
         Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.ALL_HEALING, spell_name, damage, blog_note, spell_data)
 
     elseif Res.Spells.Get_Debuff_Removal(spell_id) then
-        local buff = Res.Buffs.Get_Buff(damage)
+        local buff = Res.Buffs.List[damage]
         if damage == -1 then
             blog_note = Blog.Enum.NO_EFFECT
         elseif buff and spell_id == 143 then    -- Erase
@@ -240,7 +240,7 @@ H.Spell.Blog = function(audits, spell_id, spell_data, spell_name, damage, is_bur
         elseif damage == 999999 then damage = -1  -- For things like Poison
 
         elseif Res.Spells.Get_Dispel(spell_id) then
-            local buff = Res.Buffs.Get_Buff(damage)
+            local buff = Res.Buffs.List[damage]
             if buff then blog_note = buff.en end
             action_type = Blog.Action_Type.DISPEL
             damage = -1
@@ -278,8 +278,8 @@ H.Spell.Nuke = function(audits, spell_name, damage, message_id, burst)
 
     -- Shadow absorption (not tracking for pets)
     if not audits.pet_name and H.Message_No_Damage_Hit(message_id) then
-        H.Offense.No_Damage_Hit(audits, discrete, DB.Metric.SHADOW_ABSORPTION)
-        H.Offense.Catalog_No_Damage_Hit(audits, discrete, spell_name)
+        H.Offense.NoDamageHit(audits, discrete, DB.Metric.SHADOW_ABSORPTION)
+        H.Offense.CatalogNoDamageHit(audits, discrete, spell_name)
 
     -- If not absorbed by shadows then go through the damage process.
     else
@@ -367,7 +367,7 @@ H.Spell.Enfeebling_And_DoTs = function(audits, trackable, damage, spell_name, me
     elseif H.Message_No_Effect(message_id) then
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
         H.Offense.Hit(audits, overall, 0)
-        H.Offense.Catalog_No_Damage_Hit(audits, trackable, spell_name)
+        H.Offense.CatalogNoDamageHit(audits, trackable, spell_name)
         damage = -1
 
     -- Resists
@@ -380,7 +380,7 @@ H.Spell.Enfeebling_And_DoTs = function(audits, trackable, damage, spell_name, me
     else
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
         H.Offense.Hit(audits, overall, 0)
-        H.Offense.Catalog_No_Damage_Hit(audits, trackable, spell_name)
+        H.Offense.CatalogNoDamageHit(audits, trackable, spell_name)
 
         -- Preserve the damage for dispels since it is the buff ID.
         if not H.Message_Dispel(message_id) then damage = 999999 end

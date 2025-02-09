@@ -231,7 +231,7 @@ H.Melee_Def.AdditionalEffect = function(audits, actionData, animationId, message
     local additionalDamage = actionData.add_effect_param or 0
 
     if messageId == Ashita.Message.ADDITIONAL_DAMAGE and animationId then
-        local enspellName = Res.Spells.Enspell_Type[animationId]
+        local enspellName = Res.Spells.EnspellType[animationId]
 
         if enspellName then
             H.Defense.GrandTotals(audits, additionalDamage)

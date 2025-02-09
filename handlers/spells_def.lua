@@ -75,7 +75,7 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     if Res.Spells.Get_Damaging(spell_id) then
         H.Spell_Def.Nuke(audits, damage, spell_name, owner_mob)
     else
-        H.Offense.Catalog_No_Damage_Hit(audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, spell_name)
+        H.Offense.CatalogNoDamageHit(audits, DB.Trackable.DEF_NO_DAMAGE_SPELLS, spell_name)
     end
 
     -- Not tracking these for pets right now.

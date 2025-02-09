@@ -236,7 +236,7 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
 
     -- The player debuffs the mob. (this situation may not exist)
     elseif H.Message_Debuff(message_id) then
-        H.Offense.Catalog_No_Damage_Hit(audits, audits.trackable, ws_name)
+        H.Offense.CatalogNoDamageHit(audits, audits.trackable, ws_name)
         is_no_damage = true
 
     -- A pet does damage to the mob.
@@ -284,7 +284,7 @@ H.TP.Damage_Mitigation = function(audits, damage, message_id, ws_name, owner_mob
     -- Player's shadow absorbs the ability.
     elseif H.Message_No_Damage_Hit(message_id) then
         H.Offense.GrandTotals(audits, 0, owner_mob)
-        H.Offense.Catalog_No_Damage_Hit(audits, audits.trackable, ws_name)
+        H.Offense.CatalogNoDamageHit(audits, audits.trackable, ws_name)
         damage = 0
         shadow = true
     end

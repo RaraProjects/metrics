@@ -10,7 +10,7 @@ Res.Spells.Enspell = {
     [105] = {id=105,en="Enwater",ja="エンウォータ",cast_time=3,duration=180,element=5,icon_id=177,icon_id_nq=5,levels={[5]=27},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=105,requirements=1,skill=34,status=99,targets=1,type="WhiteMagic"},
 }
 
-Res.Spells.Enspell_Type = {
+Res.Spells.EnspellType = {
     [1] = "Enfire",
     [2] = "Enblizzard",
     [3] = "Enaero",
