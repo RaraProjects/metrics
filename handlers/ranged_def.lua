@@ -21,8 +21,9 @@ H.RangedDef.Action = function(action, actorMob, ownerMob, logDefense)
     local damage = 0
 
     for _, target in pairs(action.targets) do
-        local targetMob = Ashita.Mob.GetMobByID(target.id)
-        if targetMob and (Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.Is_Lurking()) then
+        local targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
+
+        if Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.Is_Lurking() then
             for _, actionData in pairs(target.actions) do
                 damage = damage + H.RangedDef.Parse(actionData, actorMob, targetMob, ownerMob)
             end
@@ -66,7 +67,7 @@ H.RangedDef.Parse = function(actionData, actorMob, targetMob, ownerMob)
     }
 
     -- No damage Messages (miss, third eye, shadows, etc.)
-    local noDamage = H.NoDamageMessages(actionData)
+    local noDamage = H.MessageNoDamage(messageId)
     if noDamage then
         damage = 0
     end

@@ -20,8 +20,7 @@ H.Melee.Action = function(action, actorMob, ownerMob, logOffense)
 
 	for _, target in pairs(action.targets) do
 		for _, actionData in pairs(target.actions) do
-            local targetMob = Ashita.Mob.GetMobByID(target.id)
-            targetMob = targetMob or { name = DB.Enum.DEBUG }
+            local targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
 
             -- Keep the mob list up-to-date.
             if Ashita.Mob.IsMonster(targetMob) then
@@ -93,7 +92,7 @@ H.Melee.Parse = function(actionData, actorName, targetName, ownerMob)
     local messageId         = actionData.message
     local reactionId        = actionData.reaction
     local throwing          = animationId == Ashita.AttackAnimation.DAKEN
-    local noDamage          = H.NoDamageMessages(actionData)
+    local noDamage          = H.MessageNoDamage(messageId)
     local meleeTypeBroad    = DB.Trackable.MELEE_OVERALL
     local meleeTypeDiscrete = H.Melee.MeleeType(animationId)
     local petName

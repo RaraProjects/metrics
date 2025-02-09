@@ -30,8 +30,9 @@ H.SpellDef.Action = function(action, actorMob, ownerMob, logDefense)
 
     -- Loop through target actions.
     for _, target in pairs(action.targets) do
-        local targetMob = Ashita.Mob.GetMobByID(target.id)
-        if targetMob and (Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.Is_Lurking()) then
+        local targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
+
+        if Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.Is_Lurking() then
             ownerMob = Ashita.Mob.PetOwner(targetMob)   -- Need to recheck for AOEs.
 
             for _, actionData in pairs(target.actions) do
@@ -69,9 +70,9 @@ H.SpellDef.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob
 
     local spellId   = spellData.Index
     local spellName = Ashita.Spell.Name(spellId, spellData)
-    local noDamage  = H.NoDamageMessages(actionData)
+    local messageId = actionData.message
+    local noDamage  = H.MessageNoDamage(messageId)
     local damage    = actionData.param or 0
-    local messageId = actionData.message or 0
     local audits    = H.SpellDef.Audits(actorMob, targetMob, ownerMob)
 
     local tag = "H.Spell_Def.Parse"
@@ -98,7 +99,7 @@ H.SpellDef.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob
             if Res.Spells.Damaging[spellId] then
                 H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_MAGIC, damage)
 
-            elseif Res.Spells.MP_Drain[spellId] then
+            elseif Res.Spells.MpDrain[spellId] then
                 H.Offense.Hit(audits, DB.Trackable.DEF_MP_DRAIN, damage)
 
             elseif Res.Spells.Enfeebling[spellId] then

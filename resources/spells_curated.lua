@@ -71,7 +71,7 @@ Res.Spells.Avatar = {
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.Debuff_Removal = {
+Res.Spells.DebuffRemoval = {
     [14] = {id=14,en="Poisona",ja="ポイゾナ",cast_time=1,element=6,icon_id=114,icon_id_nq=6,levels={[3]=6,[20]=10},mp_cost=8,prefix="/magic",range=12,recast=5,recast_id=14,requirements=5,skill=33,targets=29,type="WhiteMagic"},
     [15] = {id=15,en="Paralyna",ja="パラナ",cast_time=1,element=6,icon_id=114,icon_id_nq=6,levels={[3]=9,[20]=12},mp_cost=12,prefix="/magic",range=12,recast=5,recast_id=15,requirements=5,skill=33,targets=29,type="WhiteMagic"},
     [16] = {id=16,en="Blindna",ja="ブライナ",cast_time=1,element=6,icon_id=114,icon_id_nq=6,levels={[3]=14,[20]=17},mp_cost=16,prefix="/magic",range=12,recast=10,recast_id=16,requirements=5,skill=33,targets=29,type="WhiteMagic"},
@@ -447,7 +447,7 @@ Res.Spells.DoT = {
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.MP_Drain = {
+Res.Spells.MpDrain = {
     [247] = {id=247,en="Aspir",ja="アスピル",cast_time=3,element=7,icon_id=238,icon_id_nq=15,levels={[4]=25,[8]=20,[20]=36,[21]=30},mp_cost=10,prefix="/magic",range=12,recast=60,recast_id=247,requirements=2,skill=37,targets=32,type="BlackMagic"},
     [248] = {id=248,en="Aspir II",ja="アスピルII",cast_time=3,element=7,icon_id=239,icon_id_nq=15,levels={[4]=83,[8]=78,[20]=97,[21]=90},mp_cost=5,prefix="/magic",range=12,recast=11,recast_id=248,requirements=2,skill=37,targets=32,type="BlackMagic"},
     [521] = {id=521,en="MP Drainkiss",ja="MP吸収キッス",blu_points=4,cast_time=4,element=7,icon_id=-1,icon_id_nq=63,levels={[16]=42},mp_cost=20,prefix="/magic",range=2,recast=26,recast_id=521,requirements=0,skill=43,targets=32,type="BlueMagic"},

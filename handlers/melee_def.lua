@@ -23,8 +23,9 @@ H.MeleeDef.Action = function(action, actorMob, ownerMob, logDefense)
     local targetMob
 
     for _, target in pairs(action.targets) do
-        targetMob = Ashita.Mob.GetMobByID(target.id)
-        if targetMob and (Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.Is_Lurking()) then
+        targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
+
+        if Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.Is_Lurking() then
             for _, actionData in pairs(target.actions) do
 			    local newDamage, newCounterDamage = H.MeleeDef.Parse(actionData, actorMob.name, targetMob.name, ownerMob)
                 totalDamage = totalDamage + newDamage
@@ -73,7 +74,7 @@ H.MeleeDef.Parse = function(actionData, actorName, targetName, ownerMob)
     }
 
     -- No damage Messages (miss, third eye, shadows, etc.)
-    local noDamage = H.NoDamageMessages(actionData)
+    local noDamage = H.MessageNoDamage(messageId)
     if noDamage then
         damage = 0
     end

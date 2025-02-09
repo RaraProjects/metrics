@@ -222,7 +222,7 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
     damage, hit, is_no_damage = H.TP.Damage_Mitigation(audits, damage, message_id, ws_name, owner_mob)
 
     -- The player drains the mob's MP.
-    if H.Message_MP_Drain(message_id) then
+    if H.MessageMPDrain(message_id) then
         H.Offense.CatalogHit(audits, DB.Trackable.WEAPONSKILL_MP_DRAIN, damage, ws_name)
         is_mp_drain = true
 
@@ -231,7 +231,7 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
         is_no_damage = true
 
     -- The player dispels the mob. (this situation may not exist)
-    elseif H.Message_Dispel(message_id) then
+    elseif H.MessageDispel(message_id) then
         is_no_damage = true
 
     -- The player debuffs the mob. (this situation may not exist)
@@ -282,7 +282,7 @@ H.TP.Damage_Mitigation = function(audits, damage, message_id, ws_name, owner_mob
         miss   = true
 
     -- Player's shadow absorbs the ability.
-    elseif H.Message_No_Damage_Hit(message_id) then
+    elseif H.MessageNoDamage(message_id) then
         H.Offense.GrandTotals(audits, 0, owner_mob)
         H.Offense.CatalogNoDamageHit(audits, audits.trackable, ws_name)
         damage = 0

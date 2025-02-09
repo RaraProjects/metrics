@@ -156,22 +156,6 @@ H.Action_Packet_TP_Move = function(action, actor_mob, target_pet_owner_mob, pet_
 end
 
 ------------------------------------------------------------------------------------------------------
--- Checks the action message to see if it would have been a hit, but was just mitigated.
-------------------------------------------------------------------------------------------------------
----@param message_id integer
----@return boolean
-------------------------------------------------------------------------------------------------------
-H.Message_No_Damage_Hit = function(message_id)
-    return message_id == Ashita.Message.PERFECT_DODGE or
-           message_id == Ashita.Message.MELEE_PARRY or
-           message_id == Ashita.Message.THIRD_EYE_ANTICIPATION or
-           message_id == Ashita.Message.SHADOW_ABSORPTION or
-           message_id == Ashita.Message.WEAPONSKILL_NO_EFFECT or
-           message_id == Ashita.Message.MOB_HEAL_MELEE or
-           message_id == Ashita.Message.MOB_HEAL_RANGED
-end
-
-------------------------------------------------------------------------------------------------------
 -- Checks the action message to see if it is a completely missed action.
 ------------------------------------------------------------------------------------------------------
 ---@param message_id integer
@@ -188,20 +172,19 @@ end
 -- Need to set the damage to zero for these cases.
 -- Counter isn't included here because that message is a spike message.
 ------------------------------------------------------------------------------------------------------
----@param result table
+---@param messageId Ashita.Message
 ---@return boolean whether or not the damage from this should be treated as actual damage or not.
 ------------------------------------------------------------------------------------------------------
-H.NoDamageMessages = function(result)
-    local message_id = result.message
-    return message_id == Ashita.Message.PERFECT_DODGE or
-           message_id == Ashita.Message.MELEE_MISS or
-           message_id == Ashita.Message.WEAPONSKILL_MISS or
-           message_id == Ashita.Message.MELEE_PARRY or
-           message_id == Ashita.Message.THIRD_EYE_ANTICIPATION or
-           message_id == Ashita.Message.RANGE_MISS or
-           message_id == Ashita.Message.SHADOW_ABSORPTION or
-           message_id == Ashita.Message.MOB_HEAL_MELEE or
-           message_id == Ashita.Message.MOB_HEAL_RANGED
+H.MessageNoDamage = function(messageId)
+    return messageId == Ashita.Message.PERFECT_DODGE or
+           messageId == Ashita.Message.MELEE_MISS or
+           messageId == Ashita.Message.WEAPONSKILL_MISS or
+           messageId == Ashita.Message.MELEE_PARRY or
+           messageId == Ashita.Message.THIRD_EYE_ANTICIPATION or
+           messageId == Ashita.Message.RANGE_MISS or
+           messageId == Ashita.Message.SHADOW_ABSORPTION or
+           messageId == Ashita.Message.MOB_HEAL_MELEE or
+           messageId == Ashita.Message.MOB_HEAL_RANGED
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -229,7 +212,7 @@ end
 ---@param message_id integer
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Message_Magic_Burst = function(message_id)
+H.MessageMagicBurst = function(message_id)
     return message_id == Ashita.Message.SPELL_MAGIC_BURST_PRIMARY or
            message_id == Ashita.Message.SPELL_MAGIC_BURST_ADDITIONAL or
            message_id == Ashita.Message.SPELL_MAGIC_BURST_ENFEEBLE_PRIMARY or
@@ -247,7 +230,7 @@ end
 ---@param message_id integer
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Message_No_Effect = function(message_id)
+H.MessageNoEffect = function(message_id)
     return message_id == Ashita.Message.SPELL_NO_EFFECT or
            message_id == Ashita.Message.SPELL_EFFECT_FAIL or
            message_id == Ashita.Message.SPELL_COMPLETE_RESIST
@@ -315,7 +298,7 @@ end
 ---@param message_id integer
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Message_Dispel = function(message_id)
+H.MessageDispel = function(message_id)
     return message_id == Ashita.Message.ABILITY_REMOVE_STATUS_EFFECT_PRIMARY or
            message_id == Ashita.Message.ABILITY_REMOVE_STATUS_EFFECT_PRIMARY_2 or
            message_id == Ashita.Message.SPELL_REMOVE_STATUS_EFFECT_PRIMARY or
@@ -342,7 +325,7 @@ end
 ---@param message_id integer
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Message_MP_Drain = function(message_id)
+H.MessageMPDrain = function(message_id)
     return message_id == Ashita.Message.WEAPONSKILL_MP_DRAIN or
            message_id == Ashita.Message.SPELL_MP_DRAIN or
            message_id == Ashita.Message.SPELL_MAGIC_BURST_MP_DRAIN
@@ -506,7 +489,7 @@ end
 ---@param hit boolean
 ---@param mp_spent? integer If the action is spell
 ------------------------------------------------------------------------------------------------------
-H.Offense.Action_Used = function(audits, trackable, action_name, hit, mp_spent)
+H.Offense.ActionUsed = function(audits, trackable, action_name, hit, mp_spent)
     if hit then
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
         DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_USE)

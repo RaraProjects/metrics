@@ -15,17 +15,16 @@ H.Ranged.Action = function(action, actorMob, logOffense)
     local damage = 0
 
     for _, target in pairs(action.targets) do
-        local targetMob = Ashita.Mob.GetMobByID(target.id)
-        if targetMob then
-            -- Keep the mob list up-to-date.
-            if Ashita.Mob.IsMonster(targetMob) then
-                DB.Lists.Check.MobExists(targetMob.name)
-            end
+        local targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
 
-            -- Loop through actions on the target.
-            for _, actionData in pairs(target.actions) do
-                damage = damage + H.Ranged.Parse(actionData, actorMob, targetMob)
-            end
+        -- Keep the mob list up-to-date.
+        if Ashita.Mob.IsMonster(targetMob) then
+            DB.Lists.Check.MobExists(targetMob.name)
+        end
+
+        -- Loop through actions on the target.
+        for _, actionData in pairs(target.actions) do
+            damage = damage + H.Ranged.Parse(actionData, actorMob, targetMob)
         end
     end
 
@@ -56,7 +55,7 @@ H.Ranged.Parse = function(actionData, actorMob, targetMob, ownerMob)
 
     local damage          = actionData.param
     local messageId       = actionData.message
-    local noDamage        = H.NoDamageMessages(actionData)
+    local noDamage        = H.MessageNoDamage(messageId)
     local playerName      = actorMob.name
     local rangedTrackable = DB.Trackable.RANGED_OVERALL
     local petName

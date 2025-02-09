@@ -25,17 +25,16 @@ H.Ability.Action = function(action, actorMob, logOffense)
     local targetMob
 
     for _, target in pairs(action.targets) do
-        targetMob = Ashita.Mob.GetMobByID(target.id)
-        if targetMob then
-            -- Keep the mob list up-to-date.
-            if Ashita.Mob.IsMonster(targetMob) then
-                DB.Lists.Check.MobExists(targetMob.name)
-            end
+        targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
 
-            -- Loop through actions on the target.
-            for _, actionData in pairs(target.actions) do
-                totalDamage = totalDamage + H.Ability.Parse(abilityId, abilityData, actionData, actorMob, targetMob.name)
-            end
+        -- Keep the mob list up-to-date.
+        if Ashita.Mob.IsMonster(targetMob) then
+            DB.Lists.Check.MobExists(targetMob.name)
+        end
+
+        -- Loop through actions on the target.
+        for _, actionData in pairs(target.actions) do
+            totalDamage = totalDamage + H.Ability.Parse(abilityId, abilityData, actionData, actorMob, targetMob.name)
         end
     end
 
