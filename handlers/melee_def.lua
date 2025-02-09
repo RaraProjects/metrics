@@ -1,4 +1,4 @@
-H.Melee_Def = { }
+H.MeleeDef = { }
 
 -- ------------------------------------------------------------------------------------------------------
 -- Parse the melee attack (defense) packet.
@@ -8,7 +8,7 @@ H.Melee_Def = { }
 ---@param ownerMob   table|nil (if pet) the mob data of the entity's owner.
 ---@param logDefense boolean   if this action should actually be logged.
 -- ------------------------------------------------------------------------------------------------------
-H.Melee_Def.Action = function(action, actorMob, ownerMob, logDefense)
+H.MeleeDef.Action = function(action, actorMob, ownerMob, logDefense)
 	if not logDefense then
         return nil
     end
@@ -27,14 +27,14 @@ H.Melee_Def.Action = function(action, actorMob, ownerMob, logDefense)
 
             -- Loop through actions on the target.
             for _, actionData in pairs(target.actions) do
-			    local newDamage, newCounterDamage = H.Melee_Def.Parse(actionData, actorMob.name, targetMob.name, ownerMob)
+			    local newDamage, newCounterDamage = H.MeleeDef.Parse(actionData, actorMob.name, targetMob.name, ownerMob)
                 totalDamage = totalDamage + newDamage
                 counterDamage = counterDamage + newCounterDamage
             end
         end
     end
 
-    H.Melee_Def.Blog(actorMob, totalDamage, counterDamage)
+    H.MeleeDef.Blog(actorMob, totalDamage, counterDamage)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ end
 ---@param ownerMob?  table  if the action was from a pet then this will hold the owner's mob.
 ---@return integer, integer
 ------------------------------------------------------------------------------------------------------
-H.Melee_Def.Parse = function(actionData, actorName, targetName, ownerMob)
+H.MeleeDef.Parse = function(actionData, actorName, targetName, ownerMob)
     Debug.Packet.AddAction(actorName, targetName, "Melee Def.", actionData)
 
     local damage            = actionData.param
@@ -101,7 +101,7 @@ H.Melee_Def.Parse = function(actionData, actorName, targetName, ownerMob)
             H.Defense.Mitigation(audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, damage, messageId, Ashita.Message.THIRD_EYE_ANTICIPATION, true)
 
         if not fullMitigation then
-            fullMitigation, counterDamage = H.Melee_Def.Counter(audits, actionData)
+            fullMitigation, counterDamage = H.MeleeDef.Counter(audits, actionData)
         end
 
         -- Only some damage was mitigated.
@@ -129,8 +129,8 @@ H.Melee_Def.Parse = function(actionData, actorName, targetName, ownerMob)
         end
 
         H.Defense.Crit(audits, damage, messageId)
-        H.Melee_Def.Spikes(audits, actionData)
-        damage = damage + H.Melee_Def.AdditionalEffect(audits, actionData, effectAnimationId, effectMessageId)
+        H.MeleeDef.Spikes(audits, actionData)
+        damage = damage + H.MeleeDef.AdditionalEffect(audits, actionData, effectAnimationId, effectMessageId)
     end
 
     -- Set battle log flags.
@@ -148,7 +148,7 @@ end
 ---@param damage        integer
 ---@param counterDamage integer
 -- ------------------------------------------------------------------------------------------------------
-H.Melee_Def.Blog = function(actorMob, damage, counterDamage)
+H.MeleeDef.Blog = function(actorMob, damage, counterDamage)
     local note = (counterDamage and counterDamage > 0) and string.format("Counter: %d", counterDamage) or ""
     Blog.Add(actorMob.name, nil, Blog.Action_Type.MOB_MELEE, DB.Trackable.MELEE_OVERALL, damage, note)
 end
@@ -160,7 +160,7 @@ end
 ---@param actionData table  the ID of the entity animation when taking a hit.
 ---@return boolean, integer
 ------------------------------------------------------------------------------------------------------
-H.Melee_Def.Counter = function(audits, actionData)
+H.MeleeDef.Counter = function(audits, actionData)
     local counterDamage = 0
 
     -- Combined spike message check because blaze spikes etc. also has a spike effect.
@@ -183,7 +183,7 @@ end
 ---@param audits     table Contains necessary entity audit data; helps save on parameter slots.
 ---@param actionData table action data
 ------------------------------------------------------------------------------------------------------
-H.Melee_Def.Spikes = function(audits, actionData)
+H.MeleeDef.Spikes = function(audits, actionData)
     if not actionData.has_spike_effect then
         return nil
     end
@@ -223,7 +223,7 @@ end
 ---@param messageId   Ashita.Message         numberic identifier for system chat messages.
 ---@return integer
 ------------------------------------------------------------------------------------------------------
-H.Melee_Def.AdditionalEffect = function(audits, actionData, animationId, messageId)
+H.MeleeDef.AdditionalEffect = function(audits, actionData, animationId, messageId)
     if not actionData.has_add_effect then
         return 0
     end

@@ -1,104 +1,112 @@
-H.Ranged_Def = {}
+H.RangedDef = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Parse the ranged attack packet.
 ------------------------------------------------------------------------------------------------------
----@param action table action packet data.
----@param actor_mob table the mob data of the entity performing the action.
----@param owner_mob? table
----@param log_defense boolean if this action should actually be logged.
+---@param action     table   action packet data.
+---@param actorMob   table   the mob data of the entity performing the action.
+---@param ownerMob?  table
+---@param logDefense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-H.Ranged_Def.Action = function(action, actor_mob, owner_mob, log_defense)
-    if not log_defense then return nil end
-    local result, target_mob
+H.RangedDef.Action = function(action, actorMob, ownerMob, logDefense)
+    if not logDefense then return nil end
+
     local damage = 0
 
-    for target_index, target_value in pairs(action.targets) do
-        for action_index, _ in pairs(target_value.actions) do
-            result = action.targets[target_index].actions[action_index]
-            target_mob = Ashita.Mob.GetMobByID(action.targets[target_index].id)
-            if target_mob then
-                if Ashita.Mob.IsMonster(actor_mob) then DB.Lists.Check.MobExists(actor_mob.name) end
-                damage = damage + H.Ranged_Def.Parse(result, actor_mob, target_mob, owner_mob)
+    for _, target in pairs(action.targets) do
+        local targetMob = Ashita.Mob.GetMobByID(target.id)
+        if targetMob then
+            -- Keep the mob list up-to-date.
+            if Ashita.Mob.IsMonster(actorMob) then
+                DB.Lists.Check.MobExists(actorMob.name)
+            end
+
+            -- Loop through actions on the target.
+            for _, actionData in pairs(target.actions) do
+                damage = damage + H.RangedDef.Parse(actionData, actorMob, targetMob, ownerMob)
             end
         end
     end
 
-    Blog.Add(actor_mob.name, nil, Blog.Action_Type.MOB_RANGED, DB.Trackable.RANGED_OVERALL, damage)
+    Blog.Add(actorMob.name, nil, Blog.Action_Type.MOB_RANGED, DB.Trackable.RANGED_OVERALL, damage)
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Set data for a ranged attack action.
 ------------------------------------------------------------------------------------------------------
----@param result table contains all the information for the action.
----@param actor_mob table name of the mob that did the action.
----@param target_mob table name of the target player that received the action.
----@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
+---@param actionData table contains all the information for the action.
+---@param actorMob   table name of the mob that did the action.
+---@param targetMob  table name of the target player that received the action.
+---@param ownerMob?  table if the action was from a pet then this will hold the owner's mob.
 ---@return number
 ------------------------------------------------------------------------------------------------------
-H.Ranged_Def.Parse = function(result, actor_mob, target_mob, owner_mob)
-    if not actor_mob or not target_mob then return 0 end
+H.RangedDef.Parse = function(actionData, actorMob, targetMob, ownerMob)
+    Debug.Packet.AddAction(actorMob.name, targetMob.name, "Ranged Def.", actionData)
 
-    Debug.Packet.AddAction(actor_mob.name, target_mob.name, "Ranged Def.", result)
-    local damage      = result.param
-    local message_id  = result.message
-    local player_name = target_mob.name
-    local mob_name    = actor_mob.name
-    local ranged_trackable = DB.Trackable.DEF_RANGED
+    local damage          = actionData.param
+    local messageId       = actionData.message
+    local playerName      = targetMob.name
+    local mobName         = actorMob.name
+    local rangedTrackable = DB.Trackable.DEF_RANGED
+    local petName
 
     -- Need special handling for pets
-    local pet_name = nil
-    if owner_mob then
-        pet_name = target_mob.name
-        player_name = owner_mob.name
-        ranged_trackable = DB.Trackable.DEF_RANGED_PET
+    if ownerMob then
+        petName         = targetMob.name
+        playerName      = ownerMob.name
+        rangedTrackable = DB.Trackable.DEF_RANGED_PET
     end
 
-    local audits = {
-        player_name = player_name,
-        target_name = mob_name,
-        pet_name = pet_name,
+    local audits =
+    {
+        player_name = playerName,
+        target_name = mobName,
+        pet_name    = petName,
     }
 
-    -- No damage Messages
-    local no_damage = H.NoDamageMessages(result)
-    if no_damage then damage = 0 end
-
-    H.Defense.GrandTotals(audits, damage, owner_mob)
-
-    -- Need to handle pets here because they aren't handled below.
-    if owner_mob then
-        if damage > 0 then
-            H.Offense.Hit(audits, ranged_trackable, damage)
-            H.Offense.MinMax(audits, ranged_trackable, damage)
-        else
-            H.Offense.Miss(audits, ranged_trackable)
-        end
+    -- No damage Messages (miss, third eye, shadows, etc.)
+    local noDamage = H.NoDamageMessages(actionData)
+    if noDamage then
+        damage = 0
     end
 
+    -- Add to total damage taken metrics.
+    H.Defense.GrandTotals(audits, damage, ownerMob)
+
+    -- Mitigation from pets is not tracked at this time.
+    if ownerMob then
+        if damage > 0 then
+            H.Offense.Hit(audits, rangedTrackable, damage)
+            H.Offense.MinMax(audits, rangedTrackable, damage)
+        else
+            H.Offense.Miss(audits, rangedTrackable)
+        end
+
     -- There is an order of operations to defensive actions. Need to protect the denominator.
-    -- Not tracking damage mitigation for pets at this time.
-    if not owner_mob then
+    else
         -- Full Mitigation
-        local full = false
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION_RANGED, damage, message_id, Ashita.Message.RANGE_MISS, true) end
-        if not full then full = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_RANGED, damage, message_id, Ashita.Message.SHADOW_ABSORPTION, true) end
+        local fullMitigation =
+            H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION_RANGED, damage, messageId, Ashita.Message.RANGE_MISS, true) or
+            H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_RANGED, damage, messageId, Ashita.Message.SHADOW_ABSORPTION, true)
 
         -- Full damage mitigation just increments attempts.
-        if full then
-            H.Offense.Miss(audits, ranged_trackable)
+        if fullMitigation then
+            H.Offense.Miss(audits, rangedTrackable)
 
         -- Totally unmitigated hit.
         else
-            H.Offense.Hit(audits, ranged_trackable, damage)
-            H.Offense.MinMax(audits, ranged_trackable, damage)
+            H.Offense.Hit(audits, rangedTrackable, damage)
+            H.Offense.MinMax(audits, rangedTrackable, damage)
             H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_RANGED, damage)
         end
 
-        H.Defense.Crit(audits, damage, message_id)
+        H.Defense.Crit(audits, damage, messageId)
     end
 
-    if no_damage then damage = -1 end
+    -- Set battle log flags.
+    if noDamage then
+        damage = -1
+    end
 
     return damage
 end

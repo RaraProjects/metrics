@@ -112,7 +112,7 @@ H.Action_Packet_Melee = function(action, actor_mob, target_pet_owner_mob, pet_ow
     if is_offense then
         H.Melee.Action(action, actor_mob, pet_owner_mob, is_offense)
     elseif is_defense then
-        H.Melee_Def.Action(action, actor_mob, target_pet_owner_mob, is_defense)
+        H.MeleeDef.Action(action, actor_mob, target_pet_owner_mob, is_defense)
     end
 end
 
