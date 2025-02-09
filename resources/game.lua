@@ -1,6 +1,6 @@
 Res.Game = T{}
 
-Res.Game.Effect_Animation = T{
+Res.Game.EffectAnimation = T{
     [1]  = "Fire",
     [2]  = "Ice",
     [3]  = "Wind",

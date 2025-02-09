@@ -373,9 +373,9 @@ H.Melee.AdditionalEffect = function(audits, actionData)
             H.Offense.CatalogHit(audits, DB.Trackable.MELEE_ENSPELL, additionalDamage, enspellName)
         end
 
-    -- Endamage from a weapon or ammo.
+    -- Endamage from a weapon.
     elseif messageId == Ashita.Message.ENDAMAGE and animationId then
-        local effectName = Res.Game.Effect_Animation[animationId]
+        local effectName = Res.Game.EffectAnimation[animationId]
 
         if effectName then
             additionalDamage = param
@@ -383,7 +383,7 @@ H.Melee.AdditionalEffect = function(audits, actionData)
             H.Offense.CatalogHit(audits, DB.Trackable.MELEE_ENDAMAGE, additionalDamage, effectName)
         end
 
-    -- Debuff applied by a weapon or ammo.
+    -- Debuff applied by a weapon.
     elseif messageId == Ashita.Message.ENDEBUFF then
         local buff = Res.Buffs.List[param]
 
