@@ -19,7 +19,7 @@ H.Melee_Def.Action = function(action, actor_mob, owner_mob, log_defense)
 			result = action.targets[target_index].actions[action_index]
 			target_mob = Ashita.Mob.GetMobByID(action.targets[target_index].id)
             if target_mob then
-                if Ashita.Mob.IsMonster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
+                if Ashita.Mob.IsMonster(actor_mob) then DB.Lists.Check.MobExists(actor_mob.name) end
 			    local new_damage, new_counter_damage = H.Melee_Def.Parse(result, actor_mob.name, target_mob.name, owner_mob)
                 damage = damage + new_damage
                 counter_damage = counter_damage + new_counter_damage
@@ -40,7 +40,7 @@ end
 ---@return integer, integer
 ------------------------------------------------------------------------------------------------------
 H.Melee_Def.Parse = function(result, actor_name, target_name, owner_mob)
-    Debug.Packet.Add_Action(actor_name, target_name, "Melee Def.", result)
+    Debug.Packet.AddAction(actor_name, target_name, "Melee Def.", result)
     local damage              = result.param
     local reaction_id         = result.reaction
     local message_id          = result.message
@@ -182,13 +182,13 @@ H.Melee_Def.Spikes = function(audits, result)
             H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, damage)
 
             if spike_animation == Ashita.EffectAnimation.FIRE then
-                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Blaze Spikes")
+                H.Offense.CatalogHit(audits, spike_trackable, damage, "Blaze Spikes")
 
             elseif spike_animation == Ashita.EffectAnimation.ICE then
-                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Ice Spikes")
+                H.Offense.CatalogHit(audits, spike_trackable, damage, "Ice Spikes")
 
             elseif spike_animation == Ashita.EffectAnimation.THUNDER then
-                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Shock Spikes")
+                H.Offense.CatalogHit(audits, spike_trackable, damage, "Shock Spikes")
 
             else
                 DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
@@ -217,7 +217,7 @@ H.Melee_Def.Additional_Effect = function(audits, result, animation_id, message_i
             if animation_id and Res.Spells.Get_Enspell_Type(animation_id) then
                 local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
                 H.Defense.Grand_Totals(audits, additional_damage)
-                H.Offense.Catalog_Hit(audits, DB.Trackable.DEF_NUKING, additional_damage, enspell_name)
+                H.Offense.CatalogHit(audits, DB.Trackable.DEF_NUKING, additional_damage, enspell_name)
 
                 -- Need to undo the counts because Grand Totals is also called in the main parse function.
                 DB.Data.Update(DB.Update_Mode.INC, -1, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.HITS_ON_TARGET)

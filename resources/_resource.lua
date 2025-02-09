@@ -27,43 +27,13 @@ Res.Monster.Get_Full_List = function(ability_id)
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Checks whether an ability is a PUP maneuver ability.
--- ------------------------------------------------------------------------------------------------------
----@param ability_id integer
----@return table
--- ------------------------------------------------------------------------------------------------------
-Res.Abilities.Get_Maneuver = function(ability_id)
-    return Res.Abilities.Maneuvers[ability_id]
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Checks whether an ability is a COR Phantom Roll ability.
--- ------------------------------------------------------------------------------------------------------
----@param ability_id integer
----@return table
--- ------------------------------------------------------------------------------------------------------
-Res.Abilities.Get_Roll = function(ability_id)
-    return Res.Abilities.Phantom_Roll[ability_id]
-end
-
--- ------------------------------------------------------------------------------------------------------
 -- Gets phantrom roll lucky/unlucky stats.
 -- ------------------------------------------------------------------------------------------------------
 ---@param ability_id integer
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Res.Abilities.Get_Roll_Lucky = function(ability_id)
-    return Res.Abilities.Phantom_Roll_Lucky[ability_id]
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Checks whether an ability is a pet command ability.
--- ------------------------------------------------------------------------------------------------------
----@param ability_id integer
----@return table
--- ------------------------------------------------------------------------------------------------------
-Res.Abilities.Get_Pet_Command = function(ability_id)
-    return Res.Abilities.Pet_Commands[ability_id]
+    return Res.Abilities.PhantomRollLucky[ability_id]
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -72,7 +42,7 @@ end
 ---@param ability_id integer
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Res.Avatar.Get_Rage = function(ability_id)
+Res.Avatar.GetRage = function(ability_id)
     return Res.Avatar.Rage[ability_id]
 end
 
@@ -92,7 +62,7 @@ end
 ---@param ability_id integer
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Res.Avatar.Get_Healing = function(ability_id)
+Res.Avatar.GetHealing = function(ability_id)
     return Res.Avatar.Healing[ability_id]
 end
 
@@ -227,52 +197,12 @@ Res.Spells.Get_Buff_Song = function(spell_id)
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Checks whether the ability does damage.
--- ------------------------------------------------------------------------------------------------------
----@param ability_id integer
----@return table
--- ------------------------------------------------------------------------------------------------------
-Res.Abilities.Get_Damaging = function(ability_id)
-    return Res.Abilities.Damaging[ability_id]
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Checks whether the ability does heals a player.
--- ------------------------------------------------------------------------------------------------------
----@param ability_id integer
----@return table
--- ------------------------------------------------------------------------------------------------------
-Res.Abilities.Get_Player_Healing = function(ability_id)
-    return Res.Abilities.Healing[ability_id]
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Checks whether the ability heals a pet.
--- ------------------------------------------------------------------------------------------------------
----@param ability_id integer
----@return table
--- ------------------------------------------------------------------------------------------------------
-Res.Abilities.Get_Pet_Healing = function(ability_id)
-    return Res.Abilities.Pet_Healing[ability_id]
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Checks whether the ability recovers MP.
--- ------------------------------------------------------------------------------------------------------
----@param ability_id integer
----@return table
--- ------------------------------------------------------------------------------------------------------
-Res.Abilities.Get_MP_Recovery = function(ability_id)
-    return Res.Abilities.MP_Recovery[ability_id]
-end
-
--- ------------------------------------------------------------------------------------------------------
 -- Checks whether the ability is a damaging wyvern breath.
 -- ------------------------------------------------------------------------------------------------------
 ---@param ability_id integer
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Res.Pets.Get_Damaging_Wyvern_Breath = function(ability_id)
+Res.Pets.GetDamagingWyvernBreath = function(ability_id)
     return Res.Pets.Damaging_Wyvern_Breath[ability_id]
 end
 
@@ -282,7 +212,7 @@ end
 ---@param ability_id integer
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Res.Pets.Get_Healing_Wyvern_Breath = function(ability_id)
+Res.Pets.GetHealingWyvernBreath = function(ability_id)
     return Res.Pets.Healing_Wyvern_Breath[ability_id]
 end
 

@@ -9,7 +9,9 @@ DB.Enum = {
     MAX_DAMAGE  = 100000,
 }
 
-DB.Trackable = {
+---@enum DB.Trackable
+DB.Trackable =
+{
     TOTAL_DAMAGE                  = "Total Damage",
     TOTAL_DAMAGE_NO_SKILLCHAIN    = "Total Damage No Skillchain",
     ALL_HEAL                      = "All Sources Healing",
@@ -105,7 +107,9 @@ DB.Trackable = {
     DEFAULT                       = "Unknown Melee Type",
 }
 
-DB.Metric = {
+---@enum DB.Metric
+DB.Metric =
+{
     TOTAL                   = "Total",
     ATTEMPTS_ON_USE         = "Attempts on Use",
     ATTEMPTS_ON_TARGET      = "Attempts on Target",         -- Used primarily for AOE debuff tracking.
@@ -154,7 +158,9 @@ DB.Metric = {
     GUARD                   = "Guard",                      -- Delete this?
 }
 
-DB.Update_Mode = {
+---@enum DB.UpdateMode
+DB.Update_Mode =
+{
     INC = "inc",
     SET = "set",
 }

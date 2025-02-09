@@ -56,7 +56,7 @@ end
 ---@param action string
 ---@param result table
 ------------------------------------------------------------------------------------------------------
-Debug.Packet.Add_Action = function(entity, target, action, result)
+Debug.Packet.AddAction = function(entity, target, action, result)
     if #Debug.Packet.Action_Log >= Debug.Packet.Limit then table.remove(Debug.Packet.Action_Log, Debug.Packet.Limit) end
     local entry = {
         Time   = os.date("%X"),

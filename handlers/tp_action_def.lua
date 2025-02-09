@@ -40,7 +40,7 @@ H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.GetMobByID(action.targets[target_index].id)
             if target_mob and (Ashita.Party.IsAffiliate(target_mob.name) or Ashita.Mob.PetOwner(target_mob) or Parse.Config.Is_Lurking()) then
-                if Ashita.Mob.IsMonster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
+                if Ashita.Mob.IsMonster(actor_mob) then DB.Lists.Check.MobExists(actor_mob.name) end
 
                 -- Need to recheck for AOEs.
                 owner_mob = Ashita.Mob.PetOwner(target_mob)
@@ -103,7 +103,7 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
-    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "TP Def", result)
+    Debug.Packet.AddAction(actor_mob.name, target_mob.name, "TP Def", result)
     local damage     = result.param
     local message_id = result.message
     local audits = H.TP_Def.Audits(actor_mob, owner_mob, target_mob)
@@ -116,7 +116,7 @@ H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws
     -- The mob drains the player's MP.
     if H.Message_MP_Drain(message_id) then
         H.Offense.Catalog_No_Damage_Hit(audits, audits.trackable, ws_name)
-        H.Offense.Catalog_Hit(audits, DB.Trackable.DEF_MP_DRAIN, damage, ws_name)
+        H.Offense.CatalogHit(audits, DB.Trackable.DEF_MP_DRAIN, damage, ws_name)
 
     -- The mob drains the player's TP.
     elseif H.Message_TP_Drain(message_id) then
@@ -133,9 +133,9 @@ H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws
     -- The mob's attack deals damage. This also includes HP drained from the player.
     elseif H.Message_Damaging(message_id) or H.Message_HP_Drain(message_id) then
         H.Defense.Grand_Totals(audits, damage, owner_mob)
-        H.Offense.Catalog_Hit(audits, audits.trackable, damage, ws_name)
+        H.Offense.CatalogHit(audits, audits.trackable, damage, ws_name)
         if not owner_mob then H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_TP_ACTION, damage) end
-        if H.Message_HP_Drain(message_id) then H.Offense.Catalog_Hit(audits, DB.Trackable.DEF_MP_DRAIN, damage, ws_name) end
+        if H.Message_HP_Drain(message_id) then H.Offense.CatalogHit(audits, DB.Trackable.DEF_MP_DRAIN, damage, ws_name) end
 
     -- Just for information gathering purposes.
     else
@@ -165,7 +165,7 @@ H.TP_Def.Damage_Mitigation = function(audits, damage, message_id, ws_name, owner
     -- Mob misses the player.
     if H.Message_No_Damage_Miss(message_id) then
         H.Defense.Grand_Totals(audits, 0, owner_mob)
-        H.Offense.Catalog_Hit(audits, audits.trackable, 0, ws_name)
+        H.Offense.CatalogHit(audits, audits.trackable, 0, ws_name)
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.HITS_ON_TARGET)
         damage = 0
         miss   = true

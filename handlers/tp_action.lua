@@ -32,7 +32,7 @@ H.TP.Action = function(action, actor_mob, log_offense)
     for _, target_data in pairs(action.targets) do
         target_mob = Ashita.Mob.GetMobByID(target_data.id)
         if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
-        if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+        if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.MobExists(target_mob.name) end
 
         for _, action_data in pairs(target_data.actions) do
             -- Abilities marked as weaponskills
@@ -89,7 +89,7 @@ H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
     for _, target_data in pairs(action.targets) do
         target_mob = Ashita.Mob.GetMobByID(target_data.id)
         if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
-        if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+        if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.MobExists(target_mob.name) end
 
         for _, action_data in pairs(target_data.actions) do
             local action_id = action_data.param
@@ -99,26 +99,26 @@ H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
                 skill_name = skill_data.en
 
                 -- Avatar Healing
-                if Res.Avatar.Get_Healing(action_id) then
+                if Res.Avatar.GetHealing(action_id) then
                     is_tracked = true
                     trackable = DB.Trackable.PET_HEALING
 
                 -- Avatar Rage and Ward
-                elseif Res.Avatar.Get_Rage(action_id) or Res.Avatar.Get_Ward(action_id) then
+                elseif Res.Avatar.GetRage(action_id) or Res.Avatar.Get_Ward(action_id) then
                     is_tracked = true
                     trackable = DB.Trackable.PET_TP
 
                 -- Wyvern Damaging Breath
-                elseif Res.Pets.Get_Damaging_Wyvern_Breath(action_id) then
+                elseif Res.Pets.GetDamagingWyvernBreath(action_id) then
                     is_tracked = true
                     trackable = DB.Trackable.PET_TP
-                    skill_name = Res.Pets.Get_Damaging_Wyvern_Breath(action_id).en
+                    skill_name = Res.Pets.GetDamagingWyvernBreath(action_id).en
 
                 -- Wyvern Healing Breath
-                elseif Res.Pets.Get_Healing_Wyvern_Breath(action_id) then
+                elseif Res.Pets.GetHealingWyvernBreath(action_id) then
                     is_tracked = true
                     trackable = DB.Trackable.PET_HEALING
-                    skill_name = Res.Pets.Get_Healing_Wyvern_Breath(action_id).en
+                    skill_name = Res.Pets.GetHealingWyvernBreath(action_id).en
                 end
             end
         end
@@ -158,7 +158,7 @@ H.TP.Monster_Action = function(action, actor_mob, log_offense)
     for _, target_data in pairs(action.targets) do
         target_mob = Ashita.Mob.GetMobByID(target_data.id)
         if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
-        if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+        if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.MobExists(target_mob.name) end
 
         for _, action_data in pairs(target_data.actions) do
 
@@ -180,6 +180,9 @@ H.TP.Monster_Action = function(action, actor_mob, log_offense)
             end
         end
     end
+
+
+    print(tostring(skill_name) .. " " .. tostring(tp_damage))
 
     local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
     H.TP.Pet_Skill_Attempts(audits, audits.trackable, skill_name)
@@ -210,7 +213,7 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
-    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Weaponskill", result)
+    Debug.Packet.AddAction(actor_mob.name, target_mob.name, "Weaponskill", result)
     local damage       = result.param
     local message_id   = result.message
     local audits       = H.TP.Audits(actor_mob, owner_mob, target_mob)
@@ -223,7 +226,7 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
 
     -- The player drains the mob's MP.
     if H.Message_MP_Drain(message_id) then
-        H.Offense.Catalog_Hit(audits, DB.Trackable.WEAPONSKILL_MP_DRAIN, damage, ws_name)
+        H.Offense.CatalogHit(audits, DB.Trackable.WEAPONSKILL_MP_DRAIN, damage, ws_name)
         is_mp_drain = true
 
     -- The player drains the mob's TP.
@@ -242,12 +245,12 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
     -- A pet does damage to the mob.
     elseif owner_mob and H.Message_Damaging(message_id) then
         DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
-        H.Offense.Catalog_Hit(audits, audits.trackable, damage, ws_name)
+        H.Offense.CatalogHit(audits, audits.trackable, damage, ws_name)
 
     -- The player damages or drains HP from the mob.
     elseif H.Message_Damaging(message_id) or H.Message_HP_Drain(message_id) then
-        H.Offense.Catalog_Hit(audits, audits.trackable, damage, ws_name)
-        if H.Message_HP_Drain(message_id) then H.Offense.Catalog_Hit(audits, DB.Trackable.SPELLS_HP_DRAIN, damage, ws_name) end
+        H.Offense.CatalogHit(audits, audits.trackable, damage, ws_name)
+        if H.Message_HP_Drain(message_id) then H.Offense.CatalogHit(audits, DB.Trackable.SPELLS_HP_DRAIN, damage, ws_name) end
 
     -- Just for information gathering purposes.
     else
@@ -277,7 +280,7 @@ H.TP.Damage_Mitigation = function(audits, damage, message_id, ws_name, owner_mob
     -- Mob misses the player.
     if H.Message_No_Damage_Miss(message_id) then
         H.Offense.Grand_Totals(audits, 0, owner_mob)
-        H.Offense.Catalog_Hit(audits, audits.trackable, 0, ws_name)
+        H.Offense.CatalogHit(audits, audits.trackable, 0, ws_name)
         damage = 0
         miss   = true
 
@@ -309,7 +312,7 @@ H.TP.Skillchain_Parse = function(result, actor_mob, target_mob, ws_name)
         sc_name   = Res.WS.Get_Skillchain(sc_id)
         sc_damage = result.add_effect_param
         local audits = {player_name = actor_mob.name, target_name = target_mob.name}
-        H.Offense.Catalog_Hit(audits, DB.Trackable.SKILLCHAIN, sc_damage, sc_name)
+        H.Offense.CatalogHit(audits, DB.Trackable.SKILLCHAIN, sc_damage, sc_name)
         H.TP.SC_Step = H.TP.SC_Step + 1
     else
         H.TP.SC_Opener = actor_mob.name

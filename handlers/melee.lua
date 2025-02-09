@@ -23,7 +23,7 @@ H.Melee.Action = function(action, actor_mob, owner_mob, log_offense)
 			target_mob = Ashita.Mob.GetMobByID(action.targets[target_index].id)
 			if not target_mob then target_mob = {name = DB.Enum.DEBUG} end
             if target_mob then
-                if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+                if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.MobExists(target_mob.name) end
                 details = H.Melee.Parse(result, actor_mob.name, target_mob.name, owner_mob)
 
                 -- Special handling for tracking multi-attacks.
@@ -141,7 +141,7 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 H.Melee.Parse = function(result, player_name, target_name, owner_mob)
-    Debug.Packet.Add_Action(player_name, target_name, "Melee", result)
+    Debug.Packet.AddAction(player_name, target_name, "Melee", result)
 
     local animation_id = result.animation
     local damage       = result.param
@@ -358,7 +358,7 @@ H.Melee.Additional_Effect = function(audits, result)
                 local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
                 additional_damage = param
                 H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, additional_damage)
-                H.Offense.Catalog_Hit(audits, DB.Trackable.MELEE_ENSPELL, additional_damage, enspell_name)
+                H.Offense.CatalogHit(audits, DB.Trackable.MELEE_ENSPELL, additional_damage, enspell_name)
             end
 
         elseif message_id == Ashita.Message.ENDAMAGE then
@@ -366,7 +366,7 @@ H.Melee.Additional_Effect = function(audits, result)
                 local effect_name = Res.Game.Get_Additional_Effect_Animation(animation_id)
                 additional_damage = param
                 H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, additional_damage)
-                H.Offense.Catalog_Hit(audits, DB.Trackable.MELEE_ENDAMAGE, additional_damage, effect_name)
+                H.Offense.CatalogHit(audits, DB.Trackable.MELEE_ENDAMAGE, additional_damage, effect_name)
             end
 
         elseif message_id == Ashita.Message.ENDEBUFF then
@@ -408,13 +408,13 @@ H.Melee.Spikes = function(audits, result, owner_mob)
             H.Offense.Hit(audits, DB.Trackable.DEF_NUKING, damage)
 
             if spike_animation == Ashita.EffectAnimation.FIRE then
-                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Blaze Spikes")
+                H.Offense.CatalogHit(audits, spike_trackable, damage, "Blaze Spikes")
 
             elseif spike_animation == Ashita.EffectAnimation.ICE then
-                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Ice Spikes")
+                H.Offense.CatalogHit(audits, spike_trackable, damage, "Ice Spikes")
 
             elseif spike_animation == Ashita.EffectAnimation.THUNDER then
-                H.Offense.Catalog_Hit(audits, spike_trackable, damage, "Shock Spikes")
+                H.Offense.CatalogHit(audits, spike_trackable, damage, "Shock Spikes")
             end
 
         elseif spike_message == Ashita.Message.MELEE_COUNTER then

@@ -92,7 +92,7 @@ H.Pick_Action_Category = function(action, actor_mob, target_pet_owner_mob, pet_o
     elseif category ==  9 then -- Do nothing (Begin or Interrupt Item Usage)
     elseif category == 11 then H.Action_Packet_TP_Move(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense, mob_self_buff)
     elseif category == 12 then -- Do nothing (Begin Ranged Attack)
-    elseif category == 13 then H.Ability.Pet_Action(action, actor_mob, is_offense)
+    elseif category == 13 then H.Ability.PetAction(action, actor_mob, is_offense)
     elseif category == 14 then H.Ability.Action(action, actor_mob, is_offense)
     elseif category == 15 then H.Ability.Action(action, actor_mob, is_offense)
     end
@@ -480,7 +480,7 @@ end
 ---@param action_name string
 ---@param critical_hit? boolean
 ------------------------------------------------------------------------------------------------------
-H.Offense.Catalog_Hit = function(audits, trackable, damage, action_name, critical_hit)
+H.Offense.CatalogHit = function(audits, trackable, damage, action_name, critical_hit)
     DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, action_name, audits.pet_name, critical_hit)
 end
 

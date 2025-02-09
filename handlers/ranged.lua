@@ -17,7 +17,7 @@ H.Ranged.Action = function(action, actor_mob, log_offense)
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.GetMobByID(action.targets[target_index].id)
             if target_mob then
-                if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+                if Ashita.Mob.IsMonster(target_mob) then DB.Lists.Check.MobExists(target_mob.name) end
                 damage = damage + H.Ranged.Parse(result, actor_mob, target_mob)
             end
         end
@@ -48,7 +48,7 @@ end
 H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
     if not actor_mob or not target_mob then return 0 end
 
-    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Ranged", result)
+    Debug.Packet.AddAction(actor_mob.name, target_mob.name, "Ranged", result)
     local damage     = result.param
     local message_id = result.message
     local no_damage  = H.No_Damage_Messages(result)
@@ -180,7 +180,7 @@ H.Ranged.Additional_Effect = function(audits, result)
                 local effect_name = Res.Game.Get_Additional_Effect_Animation(animation_id)
                 additional_damage = param
                 H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, additional_damage)
-                H.Offense.Catalog_Hit(audits, DB.Trackable.RANGED_ENDAMAGE, additional_damage, effect_name)
+                H.Offense.CatalogHit(audits, DB.Trackable.RANGED_ENDAMAGE, additional_damage, effect_name)
             end
 
         -- Debuff effect from ammunition.

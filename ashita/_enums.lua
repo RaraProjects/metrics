@@ -30,6 +30,22 @@ Ashita.AbilityOffset =
     PET     = 512,
 }
 
+---@enum Ashita.AbilityType
+Ashita.AbilityType =
+{
+    NORMAL             = 1,
+    PET_LOGISTICS      = 2,
+    PET_ABILITY        = 6,     -- Rage Blood Pacts and Wyvern Breaths (damaging and healing)
+    BLOOD_PACT_WARD    = 10,
+    CURING_WALTZ       = 12,
+    STEP               = 13,
+    ANIMATING_FLOURISH = 14,
+    SPECTRAL_JIG       = 16,
+    BUILDING_FLOURISH  = 17,
+    RUNE_ENCHANTMENT   = 21,
+    SWIPE              = 23,
+}
+
 ---@enum Ashita.EntityType
 Ashita.EntityType =
 {

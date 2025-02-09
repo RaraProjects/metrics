@@ -197,7 +197,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param target_name string
 ------------------------------------------------------------------------------------------------------
-DB.Lists.Check.Mob_Exists = function(target_name)
+DB.Lists.Check.MobExists = function(target_name)
 	if target_name ~= DB.Enum.DEBUG and not DB.Tracking.Initialized_Mobs[target_name] then
 		DB.Tracking.Initialized_Mobs[target_name] = true
 		table.insert(DB.Sorted.Mobs, target_name)

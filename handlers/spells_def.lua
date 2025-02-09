@@ -25,7 +25,7 @@ H.Spell_Def.Action = function(action, actor_mob, owner_mob, log_defense)
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.GetMobByID(action.targets[target_index].id)
             if target_mob and (Ashita.Party.IsAffiliate(target_mob.name) or Ashita.Mob.PetOwner(target_mob) or Parse.Config.Is_Lurking()) then
-                if Ashita.Mob.IsMonster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
+                if Ashita.Mob.IsMonster(actor_mob) then DB.Lists.Check.MobExists(actor_mob.name) end
                 owner_mob = Ashita.Mob.PetOwner(target_mob)    -- Need to recheck for AOEs.
                 new_damage = H.Spell_Def.Parse(spell_data, result, actor_mob, target_mob, owner_mob)
                 if not new_damage then new_damage = 0 end
@@ -53,7 +53,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mob)
-    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Spell Def", result)
+    Debug.Packet.AddAction(actor_mob.name, target_mob.name, "Spell Def", result)
     if not spell_data then return 0 end
 
     -- Need to double check each target in case a pet gets hit by AOE and wasn't the primary target.
@@ -106,7 +106,7 @@ H.Spell_Def.Nuke = function(audits, damage, spell_name, owner_mob)
     local trackable = DB.Trackable.DEF_NUKING
     if owner_mob then trackable = DB.Trackable.DEF_NUKING_PET end
     H.Defense.Grand_Totals(audits, damage, owner_mob)
-    H.Offense.Catalog_Hit(audits, trackable, damage, spell_name)
+    H.Offense.CatalogHit(audits, trackable, damage, spell_name)
 end
 
 -- ------------------------------------------------------------------------------------------------------

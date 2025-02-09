@@ -510,14 +510,14 @@ Debug.Unit.Tests.Ability.Avatar_Rage = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
     local damage = 100
-    local action_id = 846
+    local action_id = 550
     local action_name = "Flaming Crush"
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.Ability.Pet_Action(action, Debug.Unit.Mob.PET, true)
+    H.Ability.PetAction(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}
@@ -633,14 +633,14 @@ Debug.Unit.Tests.Ability.Avatar_Ward = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
     local damage = 100
-    local action_id = 853
+    local action_id = 564
     local action_name = "Earthen Ward"
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.Ability.Pet_Action(action, Debug.Unit.Mob.PET, true)
+    H.Ability.PetAction(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}
@@ -715,14 +715,14 @@ Debug.Unit.Tests.Ability.Avatar_Healing = function()
     local target_name = Debug.Unit.Mob.ENEMY.name
     local pet_name = Debug.Unit.Mob.PET.name
     local damage = 100
-    local action_id = 906
+    local action_id = 512
     local action_name = "Healing Ruby"
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.Ability.Pet_Action(action, Debug.Unit.Mob.PET, true)
+    H.Ability.PetAction(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}
@@ -836,7 +836,7 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Damage = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.Ability.Pet_Action(action, Debug.Unit.Mob.PET, true)
+    H.Ability.PetAction(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = true
 
     local player = {}
@@ -958,7 +958,7 @@ Debug.Unit.Tests.Ability.Wyvern_Breath_Healing = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id, damage))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.Ability.Pet_Action(action, Debug.Unit.Mob.PET, true)
+    H.Ability.PetAction(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}

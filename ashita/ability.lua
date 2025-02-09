@@ -24,10 +24,19 @@ Ashita.Ability = { }
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Ability.GetByID = function(id)
     if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Abiliity.GetByID", "Parameter \"id\" was " .. tostring(id))
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Abiliity.GetByID", string.format("Parameter \"id\" was %s.", tostring(id)))
     end
 
-    return AshitaCore:GetResourceManager():GetAbilityById(id)
+    local abilityData = AshitaCore:GetResourceManager():GetAbilityById(id)
+
+    if not abilityData then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.GetByID", string.format("No ability data: ID {%s}.", tostring(id)))
+        abilityData = { Id = id, Name = string.format("(%s) UNK Ability", tostring(id)), Type = 0 }
+    else
+        abilityData = { Id = id, Name = Ashita.Ability.Name(id, abilityData), Type = abilityData.Type }
+    end
+
+    return abilityData
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -39,7 +48,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Ability.Name = function(id, data)
     if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.Name", "Parameter \"id\" was " .. tostring(id))
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.Name", string.format("Parameter \"id\" was %s.", tostring(id)))
     end
 
     local ability = data or Ashita.Ability.GetByID(id)
@@ -58,7 +67,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Ability.RecastID = function(id)
     if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.RecastID", "Parameter \"id\" was " .. tostring(id))
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.RecastID", string.format("Parameter \"id\" was %s.", tostring(id)))
     end
 
     local memoryManager = AshitaCore:GetMemoryManager()

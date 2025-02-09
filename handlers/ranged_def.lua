@@ -18,7 +18,7 @@ H.Ranged_Def.Action = function(action, actor_mob, owner_mob, log_defense)
             result = action.targets[target_index].actions[action_index]
             target_mob = Ashita.Mob.GetMobByID(action.targets[target_index].id)
             if target_mob then
-                if Ashita.Mob.IsMonster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
+                if Ashita.Mob.IsMonster(actor_mob) then DB.Lists.Check.MobExists(actor_mob.name) end
                 damage = damage + H.Ranged_Def.Parse(result, actor_mob, target_mob, owner_mob)
             end
         end
@@ -39,7 +39,7 @@ end
 H.Ranged_Def.Parse = function(result, actor_mob, target_mob, owner_mob)
     if not actor_mob or not target_mob then return 0 end
 
-    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Ranged Def.", result)
+    Debug.Packet.AddAction(actor_mob.name, target_mob.name, "Ranged Def.", result)
     local damage      = result.param
     local message_id  = result.message
     local player_name = target_mob.name
