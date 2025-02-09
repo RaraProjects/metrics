@@ -191,7 +191,7 @@ end
 ---@param result table
 ---@return boolean whether or not the damage from this should be treated as actual damage or not.
 ------------------------------------------------------------------------------------------------------
-H.No_Damage_Messages = function(result)
+H.NoDamageMessages = function(result)
     local message_id = result.message
     return message_id == Ashita.Message.PERFECT_DODGE or
            message_id == Ashita.Message.MELEE_MISS or
@@ -400,7 +400,7 @@ end
 ---@param damage number
 ---@param owner_mob? table
 ------------------------------------------------------------------------------------------------------
-H.Offense.Grand_Totals = function(audits, damage, owner_mob)
+H.Offense.GrandTotals = function(audits, damage, owner_mob)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
     DB.Total_Damage = DB.Total_Damage + damage
@@ -545,7 +545,7 @@ end
 ---@param damage integer whether or not the animation is a NIN auto throwing attack.
 ---@param was_critical_hit? boolean
 ------------------------------------------------------------------------------------------------------
-H.Offense.Min_Max = function(audits, trackable, damage, was_critical_hit)
+H.Offense.MinMax = function(audits, trackable, damage, was_critical_hit)
     local metric_min = DB.Metric.MIN
     local metric_max = DB.Metric.MAX
 
@@ -569,7 +569,7 @@ end
 ---@param damage number
 ---@param owner_mob? table
 ------------------------------------------------------------------------------------------------------
-H.Defense.Grand_Totals = function(audits, damage, owner_mob)
+H.Defense.GrandTotals = function(audits, damage, owner_mob)
     if owner_mob then
         H.Offense.Hit(audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, damage)
     else

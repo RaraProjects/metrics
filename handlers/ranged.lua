@@ -51,7 +51,7 @@ H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
     Debug.Packet.AddAction(actor_mob.name, target_mob.name, "Ranged", result)
     local damage     = result.param
     local message_id = result.message
-    local no_damage  = H.No_Damage_Messages(result)
+    local no_damage  = H.NoDamageMessages(result)
 
     -- Need special handling for pets
     local player_name = actor_mob.name
@@ -74,8 +74,8 @@ H.Ranged.Parse = function(result, actor_mob, target_mob, owner_mob)
 
     -- Avoid setting any damage data if the shot missed or healed a mob or something.
     if not no_damage then
-        H.Offense.Grand_Totals(audits, damage, owner_mob)
-        H.Offense.Min_Max(audits, ranged_type, damage, was_critical_hit)
+        H.Offense.GrandTotals(audits, damage, owner_mob)
+        H.Offense.MinMax(audits, ranged_type, damage, was_critical_hit)
     end
 
     -- This has its own damage separate from the intiial ranged shot.
@@ -191,7 +191,7 @@ H.Ranged.Additional_Effect = function(audits, result)
         -- Additional damage from bloody bolts.
         elseif message_id == Ashita.Message.ENDRAIN then
             additional_damage = param
-            H.Offense.Grand_Totals(audits, param)                       -- Bloody Bolt is net additional damage.
+            H.Offense.GrandTotals(audits, param)                       -- Bloody Bolt is net additional damage.
             H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, param)   -- Bloody Bolt is net additional damage.
             H.Offense.Hit(audits, DB.Trackable.RANGED_ENDRAIN, param)
 

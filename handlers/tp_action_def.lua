@@ -132,7 +132,7 @@ H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws
 
     -- The mob's attack deals damage. This also includes HP drained from the player.
     elseif H.Message_Damaging(message_id) or H.Message_HP_Drain(message_id) then
-        H.Defense.Grand_Totals(audits, damage, owner_mob)
+        H.Defense.GrandTotals(audits, damage, owner_mob)
         H.Offense.CatalogHit(audits, audits.trackable, damage, ws_name)
         if not owner_mob then H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_TP_ACTION, damage) end
         if H.Message_HP_Drain(message_id) then H.Offense.CatalogHit(audits, DB.Trackable.DEF_MP_DRAIN, damage, ws_name) end
@@ -164,7 +164,7 @@ H.TP_Def.Damage_Mitigation = function(audits, damage, message_id, ws_name, owner
 
     -- Mob misses the player.
     if H.Message_No_Damage_Miss(message_id) then
-        H.Defense.Grand_Totals(audits, 0, owner_mob)
+        H.Defense.GrandTotals(audits, 0, owner_mob)
         H.Offense.CatalogHit(audits, audits.trackable, 0, ws_name)
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.HITS_ON_TARGET)
         damage = 0
@@ -172,7 +172,7 @@ H.TP_Def.Damage_Mitigation = function(audits, damage, message_id, ws_name, owner
 
     -- Player's shadow absorbs the ability.
     elseif H.Message_No_Damage_Hit(message_id) then
-        H.Defense.Grand_Totals(audits, 0, owner_mob)
+        H.Defense.GrandTotals(audits, 0, owner_mob)
         H.Offense.Catalog_No_Damage_Hit(audits, audits.trackable, ws_name)
         DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_SHADOWS_TP_ACTION, DB.Metric.HITS_ON_TARGET)
         damage = 0

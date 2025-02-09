@@ -62,7 +62,7 @@ H.Spell_Def.Parse = function(spell_data, result, actor_mob, target_mob, owner_mo
     local spell_id   = spell_data.Index
     local spell_name = Ashita.Spell.Name(spell_id, spell_data)
     local damage     = result.param or 0
-    local no_damage  = H.No_Damage_Messages(result)
+    local no_damage  = H.NoDamageMessages(result)
     local message_id = result.message
     local audits = H.Spell_Def.Audits(actor_mob, target_mob, owner_mob)
 
@@ -105,7 +105,7 @@ end
 H.Spell_Def.Nuke = function(audits, damage, spell_name, owner_mob)
     local trackable = DB.Trackable.DEF_NUKING
     if owner_mob then trackable = DB.Trackable.DEF_NUKING_PET end
-    H.Defense.Grand_Totals(audits, damage, owner_mob)
+    H.Defense.GrandTotals(audits, damage, owner_mob)
     H.Offense.CatalogHit(audits, trackable, damage, spell_name)
 end
 

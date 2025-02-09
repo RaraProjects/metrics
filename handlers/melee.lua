@@ -148,7 +148,7 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
     local message_id   = result.message
     local reaction_id  = result.reaction
     local throwing     = animation_id == Ashita.AttackAnimation.DAKEN
-    local no_damage    = H.No_Damage_Messages(result)
+    local no_damage    = H.NoDamageMessages(result)
     local melee_type_broad    = DB.Trackable.MELEE_OVERALL
     local melee_type_discrete = H.Melee.Melee_Type(animation_id)
 
@@ -176,10 +176,10 @@ H.Melee.Parse = function(result, player_name, target_name, owner_mob)
 
     -- Avoid setting any damage data if the strike missed or healed a mob or something.
     if not no_damage then
-        H.Offense.Grand_Totals(audits, damage, owner_mob)
+        H.Offense.GrandTotals(audits, damage, owner_mob)
         H.Melee.Guarded(audits, melee_type_broad, reaction_id)
-        H.Offense.Min_Max(audits, melee_type_broad, damage, was_critical_hit)
-        H.Offense.Min_Max(audits, melee_type_discrete, damage, was_critical_hit)
+        H.Offense.MinMax(audits, melee_type_broad, damage, was_critical_hit)
+        H.Offense.MinMax(audits, melee_type_discrete, damage, was_critical_hit)
     end
 
     if no_damage then damage = 0 end
@@ -354,8 +354,8 @@ H.Melee.Additional_Effect = function(audits, result)
         local param        = result.add_effect_param   -- This is either damage or the type of debuff applied.
 
         if message_id == Ashita.Message.ADDITIONAL_DAMAGE then
-            if animation_id and Res.Spells.Get_Enspell_Type(animation_id) then
-                local enspell_name = Res.Spells.Get_Enspell_Type(animation_id)
+            if animation_id and Res.Spells.Enspell_Type[animation_id] then
+                local enspell_name = Res.Spells.Enspell_Type[animation_id]
                 additional_damage = param
                 H.Offense.Hit(audits, DB.Trackable.SPELLS_OVERALL, additional_damage)
                 H.Offense.CatalogHit(audits, DB.Trackable.MELEE_ENSPELL, additional_damage, enspell_name)
@@ -402,7 +402,7 @@ H.Melee.Spikes = function(audits, result, owner_mob)
         local spike_animation = result.spike_effect_animation
         local spike_message   = result.spike_effect_message
         local spike_trackable = DB.Trackable.DEF_SPIKES
-        H.Defense.Grand_Totals(audits, damage)
+        H.Defense.GrandTotals(audits, damage)
 
         if spike_message == Ashita.Message.SPIKE_DAMAGE then
             H.Offense.Hit(audits, DB.Trackable.DEF_NUKING, damage)

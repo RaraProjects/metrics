@@ -61,16 +61,16 @@ H.Ranged_Def.Parse = function(result, actor_mob, target_mob, owner_mob)
     }
 
     -- No damage Messages
-    local no_damage = H.No_Damage_Messages(result)
+    local no_damage = H.NoDamageMessages(result)
     if no_damage then damage = 0 end
 
-    H.Defense.Grand_Totals(audits, damage, owner_mob)
+    H.Defense.GrandTotals(audits, damage, owner_mob)
 
     -- Need to handle pets here because they aren't handled below.
     if owner_mob then
         if damage > 0 then
             H.Offense.Hit(audits, ranged_trackable, damage)
-            H.Offense.Min_Max(audits, ranged_trackable, damage)
+            H.Offense.MinMax(audits, ranged_trackable, damage)
         else
             H.Offense.Miss(audits, ranged_trackable)
         end
@@ -91,7 +91,7 @@ H.Ranged_Def.Parse = function(result, actor_mob, target_mob, owner_mob)
         -- Totally unmitigated hit.
         else
             H.Offense.Hit(audits, ranged_trackable, damage)
-            H.Offense.Min_Max(audits, ranged_trackable, damage)
+            H.Offense.MinMax(audits, ranged_trackable, damage)
             H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_RANGED, damage)
         end
 

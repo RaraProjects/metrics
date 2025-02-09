@@ -27,7 +27,7 @@ H.Ability.Action = function(action, actorMob, logOffense)
     for _, target in pairs(action.targets) do
         targetMob = Ashita.Mob.GetMobByID(target.id)
         if targetMob then
-            -- Keep the mob lise up-to-date.
+            -- Keep the mob list up-to-date.
             if Ashita.Mob.IsMonster(targetMob) then
                 DB.Lists.Check.MobExists(targetMob.name)
             end
@@ -73,7 +73,7 @@ H.Ability.PetAction = function(action, actorMob, logOffense)
     for _, target in pairs(action.targets) do
         targetMob = Ashita.Mob.GetMobByID(target.id)
         if targetMob then
-            -- Keep the mob lise up-to-date.
+            -- Keep the mob list up-to-date.
             if Ashita.Mob.IsMonster(targetMob) then
                 DB.Lists.Check.MobExists(targetMob.name)
             end

@@ -181,9 +181,6 @@ H.TP.Monster_Action = function(action, actor_mob, log_offense)
         end
     end
 
-
-    print(tostring(skill_name) .. " " .. tostring(tp_damage))
-
     local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
     H.TP.Pet_Skill_Attempts(audits, audits.trackable, skill_name)
     if tp_damage > 0 then H.TP.Pet_Skill_Hit(audits, audits.trackable, skill_name) end
@@ -279,14 +276,14 @@ H.TP.Damage_Mitigation = function(audits, damage, message_id, ws_name, owner_mob
 
     -- Mob misses the player.
     if H.Message_No_Damage_Miss(message_id) then
-        H.Offense.Grand_Totals(audits, 0, owner_mob)
+        H.Offense.GrandTotals(audits, 0, owner_mob)
         H.Offense.CatalogHit(audits, audits.trackable, 0, ws_name)
         damage = 0
         miss   = true
 
     -- Player's shadow absorbs the ability.
     elseif H.Message_No_Damage_Hit(message_id) then
-        H.Offense.Grand_Totals(audits, 0, owner_mob)
+        H.Offense.GrandTotals(audits, 0, owner_mob)
         H.Offense.Catalog_No_Damage_Hit(audits, audits.trackable, ws_name)
         damage = 0
         shadow = true

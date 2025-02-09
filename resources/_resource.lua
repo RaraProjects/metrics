@@ -77,16 +77,6 @@ Res.Spells.Get_Enspell = function(spell_id)
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Checks the type of enspell (element) based on the animation ID.
--- ------------------------------------------------------------------------------------------------------
----@param animation_id integer
----@return string
--- ------------------------------------------------------------------------------------------------------
-Res.Spells.Get_Enspell_Type = function(animation_id)
-    return Res.Spells.Enspell_Type[animation_id]
-end
-
--- ------------------------------------------------------------------------------------------------------
 -- Checks whether the spell is a healing spell.
 -- ------------------------------------------------------------------------------------------------------
 ---@param spell_id integer
