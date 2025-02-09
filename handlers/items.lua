@@ -1,16 +1,21 @@
-H.Item = {}
+H.Item = { }
 
 -- ------------------------------------------------------------------------------------------------------
 -- Parse the finish item use packet.
 -- ------------------------------------------------------------------------------------------------------
----@param action table action packet data.
----@param actor_mob table
+---@param action   table action packet data.
+---@param actorMob table
 -- ------------------------------------------------------------------------------------------------------
-H.Item.Action = function(action, actor_mob)
-    if not action then return nil end
-    if not actor_mob then return nil end
-    if not Ashita.Mob.IsMe(actor_mob.name) then return nil end
-    local item_id = action.param
-    local dedication_item = Res.Items.Get_Dedication(item_id)
-    if dedication_item then XP.Dedication.Set(dedication_item, true) end
+H.Item.Action = function(action, actorMob)
+    if not action or not actorMob or not Ashita.Mob.IsMe(actorMob.name) then
+        return nil
+    end
+
+    local itemId = action.param
+    local dedicationItem = Res.Items.Dedication[itemId]
+
+    -- Set dedication status (XP Boost) if a dedication item was used.
+    if dedicationItem then
+        XP.Dedication.Set(dedicationItem, true)
+    end
 end

@@ -18,10 +18,10 @@ XP.Dedication.Check = function()
 
     -- If dedication buff is active, but we don't know what boost item was used, fall back to the default if configured.
     elseif XP.Dedication.Is_Active and XP.Dedication.Need_Defaulting then
-        local default_item = Res.Items.Get_Dedication(0)    -- Default to Unknown item.
+        local default_item = Res.Items.Dedication[0]    -- Default to Unknown item.
         if XP.Settings.Boost_Defaulting_Enabled then
             local default_item_id = Res.Items.Get_Dedication_ID_From_Name(XP.Settings.Boost_Item_Default_Name)
-            default_item = Res.Items.Get_Dedication(default_item_id)
+            default_item = Res.Items.Dedication[default_item_id]
         end
         XP.Dedication.Set(default_item)
 
