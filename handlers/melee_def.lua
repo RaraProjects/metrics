@@ -20,7 +20,7 @@ H.MeleeDef.Action = function(action, actorMob, ownerMob, logDefense)
 
 	local totalDamage   = 0
     local counterDamage = 0
-    local targetMob
+    local targetMob     = { }
 
     for _, target in pairs(action.targets) do
         targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }

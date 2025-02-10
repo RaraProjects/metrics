@@ -1005,7 +1005,7 @@ Debug.Unit.Tests.Defense.Ranged_Hit = function()
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, nil, Ashita.Message.RANGE_HIT))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.TpDef.MonsterAction(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
     local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
@@ -1077,7 +1077,7 @@ Debug.Unit.Tests.Defense.Ranged_Miss = function()
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, nil, Ashita.Message.RANGE_MISS))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.TpDef.MonsterAction(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
     local target_lists = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
@@ -1977,7 +1977,7 @@ Debug.Unit.Tests.Defense.TP = function()
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.TpDef.MonsterAction(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
     local player_catalog = {}
@@ -2064,7 +2064,7 @@ Debug.Unit.Tests.Defense.TP_Miss = function()
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.TpDef.MonsterAction(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
     local player_catalog = {}
@@ -2130,7 +2130,7 @@ Debug.Unit.Tests.Defense.TP_Shadow = function()
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.TpDef.MonsterAction(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
     local player_catalog = {}
@@ -2202,7 +2202,7 @@ Debug.Unit.Tests.Defense.TP_MP = function()
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.TpDef.MonsterAction(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
     local player_catalog = {}
@@ -2283,7 +2283,7 @@ Debug.Unit.Tests.Defense.TP_No_Damage_Skill_Hit = function()
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.TpDef.MonsterAction(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
     local player_catalog = {}
@@ -2356,7 +2356,7 @@ Debug.Unit.Tests.Defense.TP_AOE = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, damage, nil, nil, message))
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER_TWO.id, damage_two, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.TpDef.MonsterAction(action, Debug.Unit.Mob.ENEMY, nil, true)
 
     local player = {}
     local player_catalog = {}
@@ -2549,7 +2549,7 @@ Debug.Unit.Tests.Defense.TP_Pet = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PET.id, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, Debug.Unit.Mob.PLAYER, true)
+    H.TpDef.MonsterAction(action, Debug.Unit.Mob.ENEMY, Debug.Unit.Mob.PLAYER, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}
@@ -2667,7 +2667,7 @@ Debug.Unit.Tests.Defense.TP_Pet_AOE_Primary = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PLAYER.id_num, player_damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, Debug.Unit.Mob.PLAYER, true)
+    H.TpDef.MonsterAction(action, Debug.Unit.Mob.ENEMY, Debug.Unit.Mob.PLAYER, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}
@@ -2886,7 +2886,7 @@ Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.PET.id, pet_damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.TP_Def.Monster_Action(action, Debug.Unit.Mob.ENEMY, nil, true)
+    H.TpDef.MonsterAction(action, Debug.Unit.Mob.ENEMY, nil, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}
@@ -2907,15 +2907,15 @@ Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary = function()
     player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.TOTAL] = player_damage
     player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.MIN] = player_damage
     player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.MAX] = player_damage
-    player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1
     player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_TARGET] = 1
-    player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1
     player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET] = {}
     player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.TOTAL] = pet_damage
     player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MIN] = pet_damage
     player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MAX] = pet_damage
+    player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_USE] = 1
     player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
     player[player_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][mob_name][DB.Trackable.DEF_EVASION_TP_ACTION] = {}
     player[player_name][mob_name][DB.Trackable.DEF_EVASION_TP_ACTION][DB.Metric.ATTEMPTS_ON_TARGET] = 1
@@ -2946,15 +2946,15 @@ Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary = function()
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.TOTAL] = player_damage
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.MIN] = player_damage
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.MAX] = player_damage
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_TARGET] = 1
-    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET] = {}
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.TOTAL] = pet_damage
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MIN] = pet_damage
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MAX] = pet_damage
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_USE] = 1
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
     player_catalog[player_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     player[player_name][all_mobs] = {}
@@ -2962,15 +2962,15 @@ Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary = function()
     player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE][DB.Metric.TOTAL] = player_damage
     player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE][DB.Metric.MIN] = player_damage
     player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE][DB.Metric.MAX] = player_damage
-    player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1
     player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_TARGET] = 1
-    player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1
     player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET] = {}
     player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.TOTAL] = pet_damage
     player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MIN] = pet_damage
     player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MAX] = pet_damage
+    player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_USE] = 1
     player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
     player[player_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player[player_name][all_mobs][DB.Trackable.DEF_EVASION_TP_ACTION] = {}
     player[player_name][all_mobs][DB.Trackable.DEF_EVASION_TP_ACTION][DB.Metric.ATTEMPTS_ON_TARGET] = 1
@@ -3001,27 +3001,27 @@ Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary = function()
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.TOTAL] = player_damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.MIN] = player_damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.MAX] = player_damage
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_TARGET] = 1
-    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET] = {}
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.TOTAL] = pet_damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MIN] = pet_damage
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MAX] = pet_damage
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_USE] = 1
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_TARGET] = 1
+    player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_USE] = 1
     player_catalog[player_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     -- Damage done to the pet.
     pet[player_name][pet_name][mob_name] = {}
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_TP_MOVE] = {}
-    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1       -- These might be benign junk.
-    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1   -- These might be benign junk.
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET] = {}
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.TOTAL] = pet_damage
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MIN] = pet_damage
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MAX] = pet_damage
+    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_USE] = 1       -- These might be benign junk.
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet[player_name][pet_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_USE] = 1   -- These might be benign junk.
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
     pet[player_name][pet_name][mob_name][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = pet_damage
@@ -3032,25 +3032,24 @@ Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary = function()
 
     pet_catalog[player_name][pet_name][mob_name] = {}
     pet_catalog[player_name][pet_name][mob_name][action_name] = {}
-    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE] = {}
-    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1      -- These might be benign junk.
-    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1  -- These might be benign junk.
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET] = {}
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.TOTAL] = pet_damage
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MIN] = pet_damage
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MAX] = pet_damage
+    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_USE] = 1      -- These might be benign junk.
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_USE] = 1  -- These might be benign junk.
     pet_catalog[player_name][pet_name][mob_name][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     pet[player_name][pet_name][all_mobs] = {}
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_TP_MOVE] = {}
-    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1       -- These might be benign junk.
-    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1   -- These might be benign junk.
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET] = {}
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.TOTAL] = pet_damage
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MIN] = pet_damage
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MAX] = pet_damage
+    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_USE] = 1       -- These might be benign junk.
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_USE] = 1   -- These might be benign junk.
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET] = {}
     pet[player_name][pet_name][all_mobs][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET][DB.Metric.TOTAL] = pet_damage
@@ -3061,14 +3060,13 @@ Debug.Unit.Tests.Defense.TP_Pet_AOE_Secondary = function()
 
     pet_catalog[player_name][pet_name][all_mobs] = {}
     pet_catalog[player_name][pet_name][all_mobs][action_name] = {}
-    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE] = {}
-    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.HITS_ON_USE] = 1      -- These might be benign junk.
-    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE][DB.Metric.ATTEMPTS_ON_USE] = 1  -- These might be benign junk.
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET] = {}
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.TOTAL] = pet_damage
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MIN] = pet_damage
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.MAX] = pet_damage
+    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_USE] = 1      -- These might be benign junk.
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.HITS_ON_TARGET] = 1
+    pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_USE] = 1  -- These might be benign junk.
     pet_catalog[player_name][pet_name][all_mobs][action_name][DB.Trackable.DEF_TP_MOVE_PET][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
     local battle_log = {

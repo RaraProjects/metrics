@@ -93,7 +93,7 @@ H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
 
         for _, action_data in pairs(target_data.actions) do
             local action_id = action_data.param
-            local skill_data = H.TP.Pet_Skill_Data(action_id, actor_mob)
+            local skill_data = H.TP.PetSkillData(action_id, actor_mob)
 
             if skill_data then
                 skill_name = skill_data.en
@@ -145,7 +145,7 @@ H.TP.Monster_Action = function(action, actor_mob, log_offense)
     if not log_offense then return false end
     local owner_mob = Ashita.Mob.PetOwner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
 
-    local skill_data = H.TP.Pet_Skill_Data(action.param, actor_mob)
+    local skill_data = H.TP.PetSkillData(action.param, actor_mob)
     if not skill_data then return nil end
 
     local skill_name   = skill_data.en
@@ -240,14 +240,14 @@ H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id,
         is_no_damage = true
 
     -- A pet does damage to the mob.
-    elseif owner_mob and H.Message_Damaging(message_id) then
+    elseif owner_mob and H.MessageDamaging(message_id) then
         DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
         H.Offense.CatalogHit(audits, audits.trackable, damage, ws_name)
 
     -- The player damages or drains HP from the mob.
-    elseif H.Message_Damaging(message_id) or H.Message_HP_Drain(message_id) then
+    elseif H.MessageDamaging(message_id) or H.MessageHpDrain(message_id) then
         H.Offense.CatalogHit(audits, audits.trackable, damage, ws_name)
-        if H.Message_HP_Drain(message_id) then H.Offense.CatalogHit(audits, DB.Trackable.SPELLS_HP_DRAIN, damage, ws_name) end
+        if H.MessageHpDrain(message_id) then H.Offense.CatalogHit(audits, DB.Trackable.SPELLS_HP_DRAIN, damage, ws_name) end
 
     -- Just for information gathering purposes.
     else
@@ -275,7 +275,7 @@ H.TP.Damage_Mitigation = function(audits, damage, message_id, ws_name, owner_mob
     local shadow = false
 
     -- Mob misses the player.
-    if H.Message_No_Damage_Miss(message_id) then
+    if H.MessageNoDamageMiss(message_id) then
         H.Offense.GrandTotals(audits, 0, owner_mob)
         H.Offense.CatalogHit(audits, audits.trackable, 0, ws_name)
         damage = 0
@@ -464,7 +464,7 @@ end
 ---@param actor_mob table
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-H.TP.Pet_Skill_Data = function(action_id, actor_mob)
+H.TP.PetSkillData = function(action_id, actor_mob)
     local skill_data = Res.Monster.Get_Full_List(action_id)
     if not skill_data then
         Debug.Error.Add(Debug.Error.ERROR, "H.TP.Pet_Skill_Data", "Actor {" .. tostring(actor_mob.name) .. "} used TP move {" .. tostring(action_id)

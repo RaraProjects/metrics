@@ -149,9 +149,9 @@ H.Action_Packet_TP_Move = function(action, actor_mob, target_pet_owner_mob, pet_
     if is_offense then
         H.TP.Monster_Action(action, actor_mob, is_offense)
     elseif is_defense then
-        H.TP_Def.Monster_Action(action, actor_mob, pet_owner_mob, is_defense)
+        H.TpDef.MonsterAction(action, actor_mob, pet_owner_mob, is_defense)
     elseif mob_self_buff then
-        H.TP_Def.Mob_Self_Target(action, actor_mob)
+        H.TpDef.MobSelfTarget(action, actor_mob)
     end
 end
 
@@ -161,7 +161,7 @@ end
 ---@param message_id integer
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Message_No_Damage_Miss = function(message_id)
+H.MessageNoDamageMiss = function(message_id)
     return message_id == Ashita.Message.MELEE_MISS or
            message_id == Ashita.Message.WEAPONSKILL_MISS or
            message_id == Ashita.Message.RANGE_MISS
@@ -193,7 +193,7 @@ end
 ---@param message_id integer
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Message_Damaging = function(message_id)
+H.MessageDamaging = function(message_id)
     return message_id == Ashita.Message.ABILITY_DAMAGE_1 or
            message_id == Ashita.Message.ABILITY_DAMAGE_2 or
            message_id == Ashita.Message.WEAPONSKILL_DAMAGE or
@@ -313,7 +313,7 @@ end
 ---@param message_id integer
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Message_HP_Drain = function(message_id)
+H.MessageHpDrain = function(message_id)
     return message_id == Ashita.Message.WEAPONSKILL_HP_DRAIN or
            message_id == Ashita.Message.SPELL_HP_DRAIN or
            message_id == Ashita.Message.SPELL_MAGIC_BURST_HP_DRAIN

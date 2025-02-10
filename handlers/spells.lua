@@ -106,7 +106,7 @@ H.Spell.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob)
         H.Offense.CatalogHit(audits, trackable, damage, spellName, isBurst)
 
     -- Check for magic bursts. Enfeebles shouldn't be caught in this because they are an earlier check.
-    elseif H.Message_Damaging(messageId) then
+    elseif H.MessageDamaging(messageId) then
         H.Spell.Nuke(audits, spellName, damage, messageId, isBurst)
 
     -- Spells that involve HP recovery.
@@ -377,7 +377,7 @@ H.Spell.EnfeeblingAndDoTs = function(audits, trackable, damage, spellName, messa
     end
 
     -- Damaging DoTs like Dia, Bio, Helix
-    if H.Message_Damaging(messageId) then
+    if H.MessageDamaging(messageId) then
         H.Offense.Hit(audits, overall, damage)
         H.Offense.CatalogHit(audits, trackable, damage, spellName)
 
