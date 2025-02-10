@@ -8,8 +8,8 @@ Ashita.Mob = { }
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.GetIndexByID = function(id)
-    if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Mob.GetIndexByID", "Parameter \"id\" was " .. tostring(id))
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Mob.GetIndexByID", "Parameter \"id\" was nil.")
     end
 
     local index = bit.band(id, 0x7FF)
@@ -35,8 +35,8 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.GetMobByID = function(id)
-    if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Mob.GetMobByID", "Parameter \"id\" was " .. tostring(id))
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Mob.GetMobByID", "Parameter \"id\" was nil.")
     end
 
     return Ashita.Mob.Data(id, true)
@@ -49,8 +49,8 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.GetMobByIndex = function(index)
-    if not index or math.type(index) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Mob.GetMobByIndex", "Parameter \"id\" was " .. tostring(index))
+    if not index then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Mob.GetMobByIndex", "Parameter \"index\" was nil.")
     end
 
     return Ashita.Mob.Data(index)
@@ -81,7 +81,7 @@ Ashita.Mob.Data = function(id, convertId)
     -- Sometimes players and pets can have blank names.
     entity.name = entityManager:GetName(index)
     if entity.name == "" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Mob.Data", "Encountered a blank mob name. ID {" .. tostring(id) .. "}.")
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Mob.Data", string.format("Encountered a blank mob name. ID {%d}.", id or 0))
         entity.name = DB.Enum.DEBUG
     end
 
