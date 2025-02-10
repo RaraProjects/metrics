@@ -23,15 +23,15 @@ Ashita.Ability = { }
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Ability.GetByID = function(id)
-    if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Abiliity.GetByID", string.format("Parameter \"id\" was %s.", tostring(id)))
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Abiliity.GetByID", string.format("Parameter \"id\" was nil."))
     end
 
     local abilityData = AshitaCore:GetResourceManager():GetAbilityById(id)
 
     if not abilityData then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.GetByID", string.format("No ability data: ID {%s}.", tostring(id)))
-        abilityData = { Id = id, Name = string.format("(%s) UNK Ability", tostring(id)), Type = 0 }
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.GetByID", string.format("No ability data: ID {%d}.", id or 0))
+        abilityData = { Id = id, Name = string.format("(%d) UNK Ability", id or 0), Type = 0 }
     else
         abilityData = { Id = id, Name = Ashita.Ability.Name(id, abilityData), Type = abilityData.Type }
     end
@@ -47,8 +47,8 @@ end
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Ability.Name = function(id, data)
-    if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.Name", string.format("Parameter \"id\" was %s.", tostring(id)))
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.Name", string.format("Parameter \"id\" was nil."))
     end
 
     local ability = data or Ashita.Ability.GetByID(id)
@@ -66,8 +66,8 @@ end
 ---@return number
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Ability.RecastID = function(id)
-    if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.RecastID", string.format("Parameter \"id\" was %s.", tostring(id)))
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.RecastID", string.format("Parameter \"id\" was nil."))
     end
 
     local memoryManager = AshitaCore:GetMemoryManager()

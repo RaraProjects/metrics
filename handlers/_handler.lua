@@ -87,7 +87,7 @@ H.Pick_Action_Category = function(action, actor_mob, target_pet_owner_mob, pet_o
     elseif category ==  4 then H.Action_Packet_Spell(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense)
     elseif category ==  5 then H.Item.Action(action, actor_mob)
     elseif category ==  6 then H.Ability.Action(action, actor_mob, is_offense)
-    elseif category ==  7 then H.TP.Begin_Monster_Action(action, actor_mob, is_offense)
+    elseif category ==  7 then H.TP.BeginMonsterAction(action, actor_mob, is_offense)
     elseif category ==  8 then -- Do nothing (Begin Spellcasting)
     elseif category ==  9 then -- Do nothing (Begin or Interrupt Item Usage)
     elseif category == 11 then H.Action_Packet_TP_Move(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense, mob_self_buff)
@@ -147,7 +147,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Action_Packet_TP_Move = function(action, actor_mob, target_pet_owner_mob, pet_owner_mob, is_offense, is_defense, mob_self_buff)
     if is_offense then
-        H.TP.Monster_Action(action, actor_mob, is_offense)
+        H.TP.MonsterAction(action, actor_mob, is_offense)
     elseif is_defense then
         H.TpDef.MonsterAction(action, actor_mob, pet_owner_mob, is_defense)
     elseif mob_self_buff then
@@ -512,7 +512,7 @@ end
 ---@param trackable string
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-H.Offense.Weaponskill_TP = function(audits, tp, ws_name, trackable)
+H.Offense.WeaponskillTP = function(audits, tp, ws_name, trackable)
     if not tp or tp < 0 then tp = 0 end
     if tp > 3000 then tp = 3000 end
     DB.Data.Update(DB.Update_Mode.INC, tp, audits, trackable, DB.Metric.TP_SPENT)

@@ -406,7 +406,7 @@ Debug.Unit.Tests.TP_Action.Pet_Hit = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
+    H.TP.MonsterAction(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}
@@ -521,7 +521,7 @@ Debug.Unit.Tests.TP_Action.Pet_Miss = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
+    H.TP.MonsterAction(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}
@@ -608,7 +608,7 @@ Debug.Unit.Tests.TP_Action.Pet_Hit_AOE = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID_Two, damage_two, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
+    H.TP.MonsterAction(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}
@@ -823,7 +823,7 @@ Debug.Unit.Tests.TP_Action.Pet_No_Damage = function()
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     Debug.Unit.Has_Pet = true
-    H.TP.Monster_Action(action, Debug.Unit.Mob.PET, true)
+    H.TP.MonsterAction(action, Debug.Unit.Mob.PET, true)
     Debug.Unit.Has_Pet = false
 
     local player = {}

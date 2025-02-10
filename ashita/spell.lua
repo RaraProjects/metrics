@@ -8,8 +8,8 @@ Ashita.Spell = { }
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Spell.GetByID = function(id)
-    if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.GetByID", string.format("Parameter \"id\" was {%s}.", tostring(id)))
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.GetByID", string.format("Parameter \"id\" was nil."))
     end
 
     return AshitaCore:GetResourceManager():GetSpellById(id)
@@ -24,8 +24,8 @@ end
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Spell.Name = function(id, data)
-    if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.Name", string.format("Parameter \"id\" was {%s}.", tostring(id)))
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.Name", string.format("Parameter \"id\" was nil."))
     end
 
     local spell = data or Ashita.Spell.GetByID(id)
@@ -46,8 +46,8 @@ end
 ---@return number
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Spell.MP = function(id, data)
-    if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.MP", string.format("Parameter \"id\" was {%s}.", tostring(id)))
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.MP", string.format("Parameter \"id\" was nil."))
     end
 
     local spell = data or Ashita.Spell.GetByID(id)
@@ -68,8 +68,8 @@ end
 ---@return number
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Spell.Skill = function(id, data)
-    if not id or math.type(id) ~= "integer" then
-        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.Skill", string.format("Parameter \"id\" was {%s}.", tostring(id)))
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.Skill", string.format("Parameter \"id\" was nil."))
     end
 
     local spell = data or Ashita.Spell.GetByID(id)

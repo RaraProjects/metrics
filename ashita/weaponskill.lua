@@ -10,5 +10,5 @@ Ashita.WS = { }
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Ashita.WS.GetByID = function(id)
-    return Res.WS.Get_Full_List(id) or Res.WS.Get_Missing(id) or { }
+    return Res.WS.Full_List[id] or Res.WS.Missing[id] or { }
 end
