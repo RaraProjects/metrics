@@ -388,11 +388,11 @@ H.TP.WeaponskillWrapUp = function(actorMob, targetMob, damage, wsName, scName, w
 
     -- Update non-target loop hits and attempts.
     DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, wsName, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, wsName, DB.Metric.ATTEMPTS_ON_USE)
 
     if damage > 0 or wasHit then
         DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
-        DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, wsName, DB.Metric.HITS_ON_USE)
+        DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, wsName, DB.Metric.HITS_ON_USE)
     end
 
     if scName ~= DB.Enum.DEBUG then
@@ -411,15 +411,15 @@ end
 H.TP.SkillchainHit = function(audits, scName)
     -- Total Attempts
     DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, DB.Trackable.SKILLCHAIN, scName, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, DB.Trackable.SKILLCHAIN, scName, DB.Metric.ATTEMPTS_ON_USE)
 
     -- Successfull SC Count
     DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.HITS_ON_USE)
-    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, DB.Trackable.SKILLCHAIN, scName, DB.Metric.HITS_ON_USE)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, DB.Trackable.SKILLCHAIN, scName, DB.Metric.HITS_ON_USE)
 
     -- Credit to skillchain closer.
     DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_CLOSED)
-    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, DB.Trackable.SKILLCHAIN, scName, DB.Metric.SKILLCHAIN_CLOSED)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, DB.Trackable.SKILLCHAIN, scName, DB.Metric.SKILLCHAIN_CLOSED)
 
     -- Credit to skillchain opener (except for multistep skillchains).
     if H.TP.SkillchainStep <= 2 then
@@ -429,7 +429,7 @@ H.TP.SkillchainHit = function(audits, scName)
             target_name = audits.target_name,
         }
         DB.Data.Update(DB.UpdateMode.INC, 1, scAudits, DB.Trackable.SKILLCHAIN, DB.Metric.SKILLCHAIN_OPENED)
-        DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, scAudits, DB.Trackable.SKILLCHAIN, scName, DB.Metric.SKILLCHAIN_OPENED)
+        DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, scAudits, DB.Trackable.SKILLCHAIN, scName, DB.Metric.SKILLCHAIN_OPENED)
     end
 end
 
@@ -442,7 +442,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.PetSkillAttempts = function(audits, trackable, skillName)
     DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.ATTEMPTS_ON_USE)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -454,7 +454,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.TP.PetSkillHit = function(audits, trackable, skillName)
     DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
-    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.HITS_ON_USE)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.HITS_ON_USE)
 end
 
 -- ------------------------------------------------------------------------------------------------------

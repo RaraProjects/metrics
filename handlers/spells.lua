@@ -345,7 +345,7 @@ H.Spell.Healing = function(audits, spellName, damage)
     local overcure = math.max(0, DB.Catalog.Get(audits.player_name, trackable, spellName, DB.Metric.MAX) - damage)
     if overcure > 0 then
         DB.Data.Update(DB.UpdateMode.INC, overcure, audits, trackable, DB.Metric.OVERCURE)
-        DB.Catalog.Update_Metric(DB.UpdateMode.INC, overcure, audits, trackable, spellName, DB.Metric.OVERCURE)
+        DB.Catalog.UpdateMetric(DB.UpdateMode.INC, overcure, audits, trackable, spellName, DB.Metric.OVERCURE)
     end
 
     -- Healing Received tracked for party and alliance members only. Self-healing is ignored.
@@ -385,7 +385,7 @@ H.Spell.EnfeeblingAndDoTs = function(audits, trackable, damage, spellName, messa
         if damage == 0 then
             DB.Data.Update(DB.UpdateMode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
             DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-            DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, spellName, DB.Metric.HITS_ON_TARGET)
+            DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, spellName, DB.Metric.HITS_ON_TARGET)
         end
 
     -- No Effects: These will not negatively impact resist metrics.

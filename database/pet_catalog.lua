@@ -54,7 +54,7 @@ DB.Pet_Catalog.Initialize = function(player_name, pet_name, target_name, action_
 	end
 
 	-- Initialize tracking tables.
-	DB.Pet_Catalog.Initialize_Tracking(trackable, player_name, pet_name)
+	DB.Pet_Catalog.InitializeTracking(trackable, player_name, pet_name)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -65,7 +65,7 @@ end
 ---@param pet_name string
 ---@return boolean true: successful initialization; false: error
 ------------------------------------------------------------------------------------------------------
-DB.Pet_Catalog.Initialize_Tracking = function(trackable, player_name, pet_name)
+DB.Pet_Catalog.InitializeTracking = function(trackable, player_name, pet_name)
 	-- Early quit out to prevent crashing.
 	local caller = "DB.Pet_Catalog.Initialize_Tracking"
 	if DB.IsValueEmpty(caller, trackable,   "Trackable") then return false end

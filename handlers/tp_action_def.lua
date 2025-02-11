@@ -64,11 +64,11 @@ H.TpDef.MonsterAction = function(action, actorMob, ownerMob, logDefense)
     -- Counts
     local audits = H.TpDef.Audits(actorMob, targetOwnerMob, targetMob)
     DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.ATTEMPTS_ON_USE)
 
     if isUseHit then
         DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
-        DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.HITS_ON_USE)
+        DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.HITS_ON_USE)
     end
 
     -- Battle Log

@@ -464,7 +464,7 @@ end
 ---@param critical_hit? boolean
 ------------------------------------------------------------------------------------------------------
 H.Offense.CatalogHit = function(audits, trackable, damage, action_name, critical_hit)
-    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, trackable, damage, action_name, audits.pet_name, critical_hit)
+    DB.Catalog.UpdateDamage(audits.player_name, audits.target_name, trackable, damage, action_name, audits.pet_name, critical_hit)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -477,8 +477,8 @@ end
 H.Offense.CatalogNoDamageHit = function(audits, trackable, action_name)
     DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
     DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
-    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_TARGET)
-    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_TARGET)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -492,14 +492,14 @@ end
 H.Offense.ActionUsed = function(audits, trackable, action_name, hit, mp_spent)
     if hit then
         DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
-        DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_USE)
+        DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_USE)
     end
     DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
 
     if mp_spent then
         DB.Data.Update(DB.UpdateMode.INC, mp_spent, audits, trackable, DB.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(DB.UpdateMode.INC, mp_spent, audits, trackable, action_name, DB.Metric.MP_SPENT)
+        DB.Catalog.UpdateMetric(DB.UpdateMode.INC, mp_spent, audits, trackable, action_name, DB.Metric.MP_SPENT)
     end
 end
 
@@ -516,7 +516,7 @@ H.Offense.WeaponskillTP = function(audits, tp, ws_name, trackable)
     if not tp or tp < 0 then tp = 0 end
     if tp > 3000 then tp = 3000 end
     DB.Data.Update(DB.UpdateMode.INC, tp, audits, trackable, DB.Metric.TP_SPENT)
-    DB.Catalog.Update_Metric(DB.UpdateMode.INC, tp, audits, trackable, ws_name, DB.Metric.TP_SPENT)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, tp, audits, trackable, ws_name, DB.Metric.TP_SPENT)
     return tp
 end
 

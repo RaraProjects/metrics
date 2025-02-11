@@ -125,7 +125,7 @@ end
 ---@param damage number damage value to be logged.
 ---@param critical_hit? boolean whether or not a critical hit or magic burst took place.
 ------------------------------------------------------------------------------------------------------
-DB.Data.Update_Damage = function(audits, trackable, damage, critical_hit)
+DB.Data.UpdateDamage = function(audits, trackable, damage, critical_hit)
 	-- Increment grand totals if necessary. There is an all damage track and a no-skillchain track.
     if DB.IsTotalDamageTrackable(trackable) then
     	DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
