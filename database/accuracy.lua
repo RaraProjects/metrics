@@ -1,44 +1,57 @@
-DB.Accuracy = T{}
+DB.Accuracy = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Keeps a tally of the last running accuracy limit amount of hit attempts.
 -- This is called by the action handling functions.
 ------------------------------------------------------------------------------------------------------
----@param player_name string primary index for the Running_Accuracy_Data table
----@param hit boolean if true then there was a hit; miss otherwise
+---@param playerName string  primary index for the Running_Accuracy_Data table
+---@param hit        boolean if true then there was a hit; miss otherwise
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Accuracy.Update = function(player_name, hit)
-	if not DB.Tracking.RunningAccuracy[player_name] then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Accuracy.Update", "Player {" .. tostring(player_name) .. "} is missing in accuracy tracker.")
+DB.Accuracy.Update = function(playerName, hit)
+	local accuracyData = DB.Tracking.RunningAccuracy[playerName]
+
+	if not accuracyData then
+		local errorMessage = string.format("Player {%s} is missing in accuracy tracker.", tostring(playerName))
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Accuracy.Update", errorMessage)
 		return false
 	end
-	local max = #DB.Tracking.RunningAccuracy[player_name]
-    if max >= Metrics.Model.Running_Accuracy_Limit then table.remove(DB.Tracking.RunningAccuracy[player_name], Metrics.Model.Running_Accuracy_Limit) end
-	table.insert(DB.Tracking.RunningAccuracy[player_name], 1, hit)
+
+    if #accuracyData >= Metrics.Model.Running_Accuracy_Limit then
+		table.remove(accuracyData)
+	end
+
+	table.insert(accuracyData, 1, hit)
+
 	return true
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Returns the players accuracy for the last running accuracy limit amount of attempts.
 ------------------------------------------------------------------------------------------------------
----@param player_name string primary index for the Running_Accuracy_Data table
+---@param playerName string primary index for the Running_Accuracy_Data table
 ---@return table {hits, count}
 ------------------------------------------------------------------------------------------------------
-DB.Accuracy.Get = function(player_name)
+DB.Accuracy.Get = function(playerName)
+	local accuracyData = DB.Tracking.RunningAccuracy[playerName]
+
 	-- This error can occur in mini mode when trying to load data before the player has been initialized. Not a big deal.
-	if not DB.Tracking.RunningAccuracy[player_name] then
-		Debug.Error.Add(Debug.Error.ERROR, "DB.Accuracy.Get", "Player {" .. tostring(player_name) .. "} is missing in accuracy tracker.")
-		return {0, 0}
+	if not accuracyData then
+		local errorMessage = string.format("Player {%s} is missing in accuracy tracker.", tostring(playerName))
+		Debug.Error.Add(Debug.Error.ERROR, "DB.Accuracy.Get", errorMessage)
+		return { 0, 0 }
 	end
-	local hits = 0
+
+	local hits  = 0
 	local count = 0
 
 	-- Tally how hits the player had in the last {running accuracy limit} amount of attempts.
-	for _, value in pairs(DB.Tracking.RunningAccuracy[player_name]) do
-		if value then hits = hits + 1 end
+	for _, value in pairs(accuracyData) do
+		if value then
+			hits = hits + 1
+		end
 		count = count + 1
 	end
 
-	return {hits, count}
+	return { hits, count }
 end
