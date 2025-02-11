@@ -92,7 +92,7 @@ Overview.Parse.Melee = function()
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         local row = 1
         for rank, data in ipairs(sorted_damage) do
-            if rank <= Parse.Config.Rank_Cutoff() then
+            if rank <= Parse.Config.RankCutoff() then
                 local player_name = data[1]
                 local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
@@ -154,7 +154,7 @@ Overview.Parse.Ranged = function()
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         local row = 1
         for rank, data in ipairs(sorted_damage) do
-            if rank <= Parse.Config.Rank_Cutoff() then
+            if rank <= Parse.Config.RankCutoff() then
                 local player_name = data[1]
                 local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
@@ -220,7 +220,7 @@ Overview.Parse.Weaponskills = function()
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         local row = 1
         for rank, data in ipairs(sorted_damage) do
-            if rank <= Parse.Config.Rank_Cutoff() then
+            if rank <= Parse.Config.RankCutoff() then
                 local player_name = data[1]
                 local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
@@ -240,7 +240,7 @@ Overview.Parse.Weaponskills = function()
                     row = row + 1
 
                     -- Specific Weaponskills
-                    if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
+                    if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][player_name] then
                         local sorted_catalog_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
                         for _, single_data in ipairs(sorted_catalog_damage) do
                             action_name = single_data[1]
@@ -306,7 +306,7 @@ Overview.Parse.Nukes = function()
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         local row = 1
         for rank, data in ipairs(sorted_damage) do
-            if rank <= Parse.Config.Rank_Cutoff() then
+            if rank <= Parse.Config.RankCutoff() then
                 local player_name = data[1]
                 local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
@@ -325,7 +325,7 @@ Overview.Parse.Nukes = function()
                     row = row + 1
 
                     -- Specific Nuke Spells
-                    if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
+                    if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][player_name] then
                         local sorted_catalog_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
                         for _, single_data in ipairs(sorted_catalog_damage) do
                             action_name = single_data[1]
@@ -387,7 +387,7 @@ Overview.Parse.Pets = function()
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         local row = 1
         for rank, data in ipairs(sorted_damage) do
-            if rank <= Parse.Config.Rank_Cutoff() then
+            if rank <= Parse.Config.RankCutoff() then
                 local player_name = data[1]
                 local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
@@ -463,7 +463,7 @@ Overview.Parse.Healing = function()
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         local row = 1
         for rank, data in ipairs(sorted_damage) do
-            if rank <= Parse.Config.Rank_Cutoff() then
+            if rank <= Parse.Config.RankCutoff() then
                 local player_name = data[1]
                 local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then
@@ -482,7 +482,7 @@ Overview.Parse.Healing = function()
                     row = row + 1
 
                     -- Specific Healing Spells
-                    if DB.Tracking.Trackable[trackable] and DB.Tracking.Trackable[trackable][player_name] then
+                    if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][player_name] then
                         local sorted_catalog_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
                         for _, single_data in ipairs(sorted_catalog_damage) do
                             action_name = single_data[1]
@@ -544,7 +544,7 @@ Overview.Parse.Defense = function()
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         local row = 1
         for rank, data in ipairs(sorted_damage) do
-            if rank <= Parse.Config.Rank_Cutoff() then
+            if rank <= Parse.Config.RankCutoff() then
                 local player_name = data[1]
                 local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
                 if damage > 0 then

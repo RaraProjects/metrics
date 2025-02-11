@@ -329,7 +329,7 @@ Focus.Melee.Multi_Attack = function(player_name)
         }
 
         for _, data in ipairs(multi_attack_metrics) do
-            if DB.Tracking.Multi_Attack[player_name] and DB.Tracking.Multi_Attack[player_name][data.count] then
+            if DB.Tracking.MultiAttack[player_name] and DB.Tracking.MultiAttack[player_name][data.count] then
                 UI.TableNextColumn() UI.Text("- " .. data.count)
                 UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_MAIN_HAND, data.count)
                 UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_MAIN_HAND, data.damage, nil, true)

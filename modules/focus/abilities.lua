@@ -44,8 +44,8 @@ end
 ---@param make_brief? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Abilities.Damaging = function(player_name, trackable, header, make_brief)
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
     local col_flags   = Focus.Catalog.Column_Flags
@@ -102,8 +102,8 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Abilities.Abilities_General = function(player_name)
     local trackable = DB.Trackable.ABILITY_GENERAL
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
     local col_flags   = Focus.Catalog.Column_Flags
@@ -137,8 +137,8 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Abilities.Mauevers = function(player_name)
     local trackable = DB.Trackable.MANEUVER
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
     local col_flags   = Focus.Catalog.Column_Flags
@@ -179,8 +179,8 @@ end
 Focus.Abilities.Phantom_Roll = function(player_name, full)
     if not player_name then return nil end
     local trackable = DB.Trackable.PHANTOM_ROLL
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     local col_flags   = Focus.Column_Flags
     local table_flags = Focus.Table_Flags

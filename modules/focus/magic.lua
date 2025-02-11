@@ -125,8 +125,8 @@ Focus.Magic.Damaging_Spell = function(player_name, trackable, header, make_brief
     local width       = Column.Widths.Standard
 
     -- Error Protection
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     -- Default nuking.
     local metric_total = DB.Metric.TOTAL
@@ -227,8 +227,8 @@ Focus.Magic.No_Damage_Spell = function(player_name, trackable, header, make_brie
     end
 
     -- Error Protection
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     if UI.BeginTable("No damage spells", columns, table_flags) then
         UI.TableSetupColumn(header,       col_flags, name_width)
@@ -288,8 +288,8 @@ Focus.Magic.Debuff = function(player_name, hide_mp)
     local width       = Column.Widths.Standard
 
     local trackable = DB.Trackable.SPELLS_ENFEEBLING
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     local columns = 4
     if hide_mp then columns = columns - 1 end
@@ -337,8 +337,8 @@ Focus.Magic.Basic_Spell = function(player_name, trackable, header, no_mp)
     local width       = Column.Widths.Standard
 
     -- Error Protection
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     local columns = 3
     if no_mp then columns = columns - 1 end

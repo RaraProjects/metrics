@@ -11,9 +11,9 @@ Focus.WS.Display = function(player_name, hide_publish)
     local trackable_mp = DB.Trackable.WEAPONSKILL_MP_DRAIN
     local trackable_sc = DB.Trackable.SKILLCHAIN
 
-    local weaponskills_found   = DB.Tracking.Trackable[trackable_ws] and DB.Tracking.Trackable[trackable_ws][player_name]
-    local mp_weaponskill_found = DB.Tracking.Trackable[trackable_mp] and DB.Tracking.Trackable[trackable_mp][player_name]
-    local skillchains_found    = DB.Tracking.Trackable[trackable_sc] and DB.Tracking.Trackable[trackable_sc][player_name]
+    local weaponskills_found   = DB.Tracking.Trackables[trackable_ws] and DB.Tracking.Trackables[trackable_ws][player_name]
+    local mp_weaponskill_found = DB.Tracking.Trackables[trackable_mp] and DB.Tracking.Trackables[trackable_mp][player_name]
+    local skillchains_found    = DB.Tracking.Trackables[trackable_sc] and DB.Tracking.Trackables[trackable_sc][player_name]
 
     -- No data found message.
     if not weaponskills_found and not skillchains_found and not mp_weaponskill_found then
@@ -48,8 +48,8 @@ Focus.WS.Weaponskill = function(player_name, make_brief, is_mp_drain)
     local trackable = DB.Trackable.WEAPONSKILL
     if is_mp_drain then trackable = DB.Trackable.WEAPONSKILL_MP_DRAIN end
 
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
     local col_flags   = Focus.Catalog.Column_Flags
@@ -119,8 +119,8 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.WS.Skillchains = function(player_name, make_brief)
     local trackable = DB.Trackable.SKILLCHAIN
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
     local col_flags   = Focus.Catalog.Column_Flags
@@ -129,7 +129,7 @@ Focus.WS.Skillchains = function(player_name, make_brief)
 
     local columns = 7
     if make_brief then columns = 3 end
-    local including_skillchain = Parse.Config.Include_SC_Damage()
+    local including_skillchain = Parse.Config.IncludeSkillchainDamage()
     if including_skillchain and not make_brief then columns = columns + 1 end
 
     if UI.BeginTable(trackable, columns, table_flags) then

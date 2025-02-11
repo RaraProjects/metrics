@@ -176,7 +176,7 @@ DB.Pet_Single_Trackable = {
 	PET_MAGIC      = DB.Trackable.PET_GENERAL_MAGIC,
 }
 
-DB.Healing_Max_Defaults = {
+DB.HealingMaxDefaults = {
     ["Cure"]       = 50,	-- 35
     ["Cure II"]    = 150, 	-- 102
     ["Cure III"]   = 250, 	-- 212
@@ -191,7 +191,7 @@ DB.Healing_Max_Defaults = {
 }
 
 -- This is the configurable healing max used for overcure.
-DB.Healing_Max = {
+DB.HealingMax = {
     ["Cure"]       = 50,
     ["Cure II"]    = 150,
     ["Cure III"]   = 250,

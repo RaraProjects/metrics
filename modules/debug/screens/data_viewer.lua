@@ -17,7 +17,7 @@ Debug.Data_View.Populate = function()
 
     stack = {}
     if UI.TreeNode("DB.Parse_Catalog") then
-        for index, value in pairs(DB.Parse_Catalog) do
+        for index, value in pairs(DB.ParseCatalog) do
             if UI.TreeNode(tostring(index)) then
                 Debug.Data_View.Node(stack, value)
                 UI.TreePop()
@@ -28,7 +28,7 @@ Debug.Data_View.Populate = function()
 
     stack = {}
     if UI.TreeNode("DB.Pet_Parse") then
-        for index, value in pairs(DB.Pet_Parse) do
+        for index, value in pairs(DB.PetParse) do
             if UI.TreeNode(tostring(index)) then
                 Debug.Data_View.Node(stack, value)
                 UI.TreePop()
@@ -39,7 +39,7 @@ Debug.Data_View.Populate = function()
 
     stack = {}
     if UI.TreeNode("DB.Pet_Parse_Catalog") then
-        for index, value in pairs(DB.Pet_Parse_Catalog) do
+        for index, value in pairs(DB.PetParseCatalog) do
             if UI.TreeNode(tostring(index)) then
                 Debug.Data_View.Node(stack, value)
                 UI.TreePop()
@@ -70,7 +70,7 @@ Debug.Data_View.Node = function(stack, data)
             table.remove(stack)
         else
             if value and value > 0 then
-                if not (DB.Metric_Needs_Max_Value(index) and value == DB.Enum.MAX_DAMAGE) then
+                if not (DB.MetricNeedsMaxValue(index) and value == DB.Enum.MAX_DAMAGE) then
                     for _, v in ipairs(stack) do
                         UI.Text(tostring(v)) UI.SameLine() UI.Text("|") UI.SameLine()
                     end

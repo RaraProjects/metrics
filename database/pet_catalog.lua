@@ -14,29 +14,29 @@ DB.Pet_Catalog = {}
 DB.Pet_Catalog.Initialize = function(player_name, pet_name, target_name, action_name, trackable)
 	-- Early quit out to prevent crashing.
 	local caller = "DB.Pet_Catalog.Initialize"
-	if DB.Is_Value_Empty(caller, player_name, "Player") then return false end
-	if DB.Is_Value_Empty(caller, target_name, "Target") then return false end
-	if DB.Is_Value_Empty(caller, pet_name,    "Pet")    then return false end
+	if DB.IsValueEmpty(caller, player_name, "Player") then return false end
+	if DB.IsValueEmpty(caller, target_name, "Target") then return false end
+	if DB.IsValueEmpty(caller, pet_name,    "Pet")    then return false end
 
 	-- Don't want to overwrite data node if it already exists. This is for mob specfic data.
 	local initialization_list = {}
-	if not DB.Pet_Parse_Catalog[player_name] then DB.Pet_Parse_Catalog[player_name] = {} end
-	if not DB.Pet_Parse_Catalog[player_name][pet_name] then DB.Pet_Parse_Catalog[player_name][pet_name] = {} end
-	if not DB.Pet_Parse_Catalog[player_name][pet_name][target_name] then DB.Pet_Parse_Catalog[player_name][pet_name][target_name] = {} end
-	if not DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name] then DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name] = {} end
-	if not DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable] then
-		DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable] = {}
+	if not DB.PetParseCatalog[player_name] then DB.PetParseCatalog[player_name] = {} end
+	if not DB.PetParseCatalog[player_name][pet_name] then DB.PetParseCatalog[player_name][pet_name] = {} end
+	if not DB.PetParseCatalog[player_name][pet_name][target_name] then DB.PetParseCatalog[player_name][pet_name][target_name] = {} end
+	if not DB.PetParseCatalog[player_name][pet_name][target_name][action_name] then DB.PetParseCatalog[player_name][pet_name][target_name][action_name] = {} end
+	if not DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable] then
+		DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable] = {}
 		table.insert(initialization_list, target_name)
 	end
 
 	-- Don't want to overwrite data node if it already exists. This is for all mob data.
 	local all_mobs = DB.Enum.ALL_MOBS
-	if not DB.Pet_Parse_Catalog[player_name] then DB.Pet_Parse_Catalog[player_name] = {} end
-	if not DB.Pet_Parse_Catalog[player_name][pet_name] then DB.Pet_Parse_Catalog[player_name][pet_name] = {} end
-	if not DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs] then DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs] = {} end
-	if not DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs][action_name] then DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs][action_name] = {} end
-	if not DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs][action_name][trackable] then
-		DB.Pet_Parse_Catalog[player_name][pet_name][all_mobs][action_name][trackable] = {}
+	if not DB.PetParseCatalog[player_name] then DB.PetParseCatalog[player_name] = {} end
+	if not DB.PetParseCatalog[player_name][pet_name] then DB.PetParseCatalog[player_name][pet_name] = {} end
+	if not DB.PetParseCatalog[player_name][pet_name][all_mobs] then DB.PetParseCatalog[player_name][pet_name][all_mobs] = {} end
+	if not DB.PetParseCatalog[player_name][pet_name][all_mobs][action_name] then DB.PetParseCatalog[player_name][pet_name][all_mobs][action_name] = {} end
+	if not DB.PetParseCatalog[player_name][pet_name][all_mobs][action_name][trackable] then
+		DB.PetParseCatalog[player_name][pet_name][all_mobs][action_name][trackable] = {}
 		table.insert(initialization_list, all_mobs)
 	end
 
@@ -45,7 +45,7 @@ DB.Pet_Catalog.Initialize = function(player_name, pet_name, target_name, action_
 	if #initialization_list == 0 then return nil end
 	for _, initialization_target in ipairs(initialization_list) do
 		for _, metric in pairs(DB.Metric) do
-			if DB.Metric_Needs_Max_Value(metric) then
+			if DB.MetricNeedsMaxValue(metric) then
 				DB.Pet_Catalog.Set(DB.Enum.MAX_DAMAGE, player_name, pet_name, initialization_target, action_name, trackable, metric)
 			else
 				DB.Pet_Catalog.Set(0, player_name, pet_name, initialization_target, action_name, trackable, metric)
@@ -68,13 +68,13 @@ end
 DB.Pet_Catalog.Initialize_Tracking = function(trackable, player_name, pet_name)
 	-- Early quit out to prevent crashing.
 	local caller = "DB.Pet_Catalog.Initialize_Tracking"
-	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return false end
-	if DB.Is_Value_Empty(caller, player_name, "Player")    then return false end
-	if DB.Is_Value_Empty(caller, pet_name,    "Pet")       then return false end
+	if DB.IsValueEmpty(caller, trackable,   "Trackable") then return false end
+	if DB.IsValueEmpty(caller, player_name, "Player")    then return false end
+	if DB.IsValueEmpty(caller, pet_name,    "Pet")       then return false end
 
-	if not DB.Tracking.Pet_Trackable[trackable] then DB.Tracking.Pet_Trackable[trackable] = {} end
-	if not DB.Tracking.Pet_Trackable[trackable][player_name] then DB.Tracking.Pet_Trackable[trackable][player_name] = {} end
-	if not DB.Tracking.Pet_Trackable[trackable][player_name][pet_name] then DB.Tracking.Pet_Trackable[trackable][player_name][pet_name] = {} end
+	if not DB.Tracking.PetTrackables[trackable] then DB.Tracking.PetTrackables[trackable] = {} end
+	if not DB.Tracking.PetTrackables[trackable][player_name] then DB.Tracking.PetTrackables[trackable][player_name] = {} end
+	if not DB.Tracking.PetTrackables[trackable][player_name][pet_name] then DB.Tracking.PetTrackables[trackable][player_name][pet_name] = {} end
 	return true
 end
 
@@ -97,25 +97,25 @@ DB.Pet_Catalog.Set = function(value, player_name, pet_name, target_name, action_
 	-- Early quit out to prevent crashing.
 	-- Can't quit out early for blank metric nodes because this is used for initialization.
 	local caller = "DB.Pet_Catalog.Set"
-	if DB.Is_Value_Empty(caller, player_name, "Player")    then return false end
-	if DB.Is_Value_Empty(caller, target_name, "Target")    then return false end
-	if DB.Is_Value_Empty(caller, pet_name,    "Pet")       then return false end
-	if DB.Is_Value_Empty(caller, action_name, "Action")    then return false end
-	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return false end
-	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return false end
-	if DB.Is_Value_Empty(caller, value,       "Value")     then return false end
+	if DB.IsValueEmpty(caller, player_name, "Player")    then return false end
+	if DB.IsValueEmpty(caller, target_name, "Target")    then return false end
+	if DB.IsValueEmpty(caller, pet_name,    "Pet")       then return false end
+	if DB.IsValueEmpty(caller, action_name, "Action")    then return false end
+	if DB.IsValueEmpty(caller, trackable,   "Trackable") then return false end
+	if DB.IsValueEmpty(caller, metric,      "Metric")    then return false end
+	if DB.IsValueEmpty(caller, value,       "Value")     then return false end
 	if not DB.Pet_Catalog.Is_Index_Node_Initialized(caller, true, player_name, pet_name, target_name, action_name) then return false end
 
 	-- Don't set an unfiltered minimum if the mob specific minimum isn't less than the unfiltered one.
-	if DB.Metric_Needs_Max_Value(metric) and target_name == DB.Enum.ALL_MOBS
-	and DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable]
-	and DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric]
-	and value >= DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric] then
+	if DB.MetricNeedsMaxValue(metric) and target_name == DB.Enum.ALL_MOBS
+	and DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable]
+	and DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable][metric]
+	and value >= DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable][metric] then
 		return false
 	end
 
 	-- Apply the change.
-	DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric] = value
+	DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable][metric] = value
 
 	return true
 end
@@ -139,18 +139,18 @@ DB.Pet_Catalog.Inc = function(value, player_name, pet_name, target_name, action_
 	-- Early quit out to prevent crashing.
 	-- Can't quit out early for blank metric nodes because this is used for initialization.
 	local caller = "DB.Pet_Catalog.Inc"
-	if DB.Is_Value_Empty(caller, player_name, "Player")    then return false end
-	if DB.Is_Value_Empty(caller, target_name, "Target")    then return false end
-	if DB.Is_Value_Empty(caller, pet_name,    "Pet")       then return false end
-	if DB.Is_Value_Empty(caller, action_name, "Action")    then return false end
-	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return false end
-	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return false end
-	if DB.Is_Value_Empty(caller, value,       "Value")     then return false end
+	if DB.IsValueEmpty(caller, player_name, "Player")    then return false end
+	if DB.IsValueEmpty(caller, target_name, "Target")    then return false end
+	if DB.IsValueEmpty(caller, pet_name,    "Pet")       then return false end
+	if DB.IsValueEmpty(caller, action_name, "Action")    then return false end
+	if DB.IsValueEmpty(caller, trackable,   "Trackable") then return false end
+	if DB.IsValueEmpty(caller, metric,      "Metric")    then return false end
+	if DB.IsValueEmpty(caller, value,       "Value")     then return false end
 	if not DB.Pet_Catalog.Is_Index_Node_Initialized(caller, true, player_name, pet_name, target_name, action_name) then return false end
 	if not DB.Pet_Catalog.Is_Metric_Node_Initialized(caller, true, player_name, pet_name, target_name, action_name, trackable, metric) then return false end
 
-	DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric]
-	= DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric] + value
+	DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable][metric]
+	= DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable][metric] + value
 
 	return true
 end
@@ -169,22 +169,22 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Get = function(player_name, pet_name, trackable, action_name, metric, temporary_mob_focus)
 	local caller = "DB.Pet_Catalog.Inc"
-	if DB.Is_Value_Empty(caller, player_name, "Player")    then return 0 end
-	if DB.Is_Value_Empty(caller, pet_name,    "Pet")       then return 0 end
-	if DB.Is_Value_Empty(caller, action_name, "Action")    then return 0 end
-	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return 0 end
-	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return 0 end
+	if DB.IsValueEmpty(caller, player_name, "Player")    then return 0 end
+	if DB.IsValueEmpty(caller, pet_name,    "Pet")       then return 0 end
+	if DB.IsValueEmpty(caller, action_name, "Action")    then return 0 end
+	if DB.IsValueEmpty(caller, trackable,   "Trackable") then return 0 end
+	if DB.IsValueEmpty(caller, metric,      "Metric")    then return 0 end
 
 	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
 	if (Throttle.Is_Enabled() and not Throttle.Allow_Calculation()) and not temporary_mob_focus then
-		if DB.Pet_Catalog_Cache[player_name] and DB.Pet_Catalog_Cache[player_name][pet_name] and DB.Pet_Catalog_Cache[player_name][pet_name][action_name]
-		and DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable] and DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable][metric] then
-			return DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable][metric]
+		if DB.PetCatalogCache[player_name] and DB.PetCatalogCache[player_name][pet_name] and DB.PetCatalogCache[player_name][pet_name][action_name]
+		and DB.PetCatalogCache[player_name][pet_name][action_name][trackable] and DB.PetCatalogCache[player_name][pet_name][action_name][trackable][metric] then
+			return DB.PetCatalogCache[player_name][pet_name][action_name][trackable][metric]
 		end
 	end
 
 	local value = 0
-	if DB.Metric_Needs_Max_Value(metric) then value = DB.Enum.MAX_DAMAGE end
+	if DB.MetricNeedsMaxValue(metric) then value = DB.Enum.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	local target_index = mob_focus
 	if temporary_mob_focus then target_index = temporary_mob_focus end
@@ -192,16 +192,16 @@ DB.Pet_Catalog.Get = function(player_name, pet_name, trackable, action_name, met
 	-- Get the data.
 	if DB.Pet_Catalog.Is_Index_Node_Initialized(caller, false, player_name, pet_name, target_index, action_name) then
 		if DB.Pet_Catalog.Is_Metric_Node_Initialized(caller, false, player_name, pet_name, target_index, action_name, trackable, metric) then
-			value = DB.Pet_Parse_Catalog[player_name][pet_name][target_index][action_name][trackable][metric]
+			value = DB.PetParseCatalog[player_name][pet_name][target_index][action_name][trackable][metric]
 		end
 	end
 
 	-- Cache for performance.
-	if not DB.Pet_Catalog_Cache[player_name] then DB.Pet_Catalog_Cache[player_name] = {} end
-	if not DB.Pet_Catalog_Cache[player_name][pet_name] then DB.Pet_Catalog_Cache[player_name][pet_name] = {} end
-	if not DB.Pet_Catalog_Cache[player_name][pet_name][action_name] then DB.Pet_Catalog_Cache[player_name][pet_name][action_name] = {} end
-	if not DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable] then DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable] = {} end
-	DB.Pet_Catalog_Cache[player_name][pet_name][action_name][trackable][metric] = value
+	if not DB.PetCatalogCache[player_name] then DB.PetCatalogCache[player_name] = {} end
+	if not DB.PetCatalogCache[player_name][pet_name] then DB.PetCatalogCache[player_name][pet_name] = {} end
+	if not DB.PetCatalogCache[player_name][pet_name][action_name] then DB.PetCatalogCache[player_name][pet_name][action_name] = {} end
+	if not DB.PetCatalogCache[player_name][pet_name][action_name][trackable] then DB.PetCatalogCache[player_name][pet_name][action_name][trackable] = {} end
+	DB.PetCatalogCache[player_name][pet_name][action_name][trackable][metric] = value
 
 	return value
 end
@@ -218,8 +218,8 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Is_Index_Node_Initialized = function(caller, write_error, player_name, pet_name, target_name, action_name)
-	if not DB.Pet_Parse_Catalog or not DB.Pet_Parse_Catalog[player_name] or not DB.Pet_Parse_Catalog[player_name][pet_name]
-	or not DB.Pet_Parse_Catalog[player_name][pet_name][target_name] then
+	if not DB.PetParseCatalog or not DB.PetParseCatalog[player_name] or not DB.PetParseCatalog[player_name][pet_name]
+	or not DB.PetParseCatalog[player_name][pet_name][target_name] then
 		if write_error then
 			Debug.Error.Add(Debug.Error.ERROR, caller, "Not initialized in DB.Pet_Parse_Catalog[" .. tostring(player_name) .. "]["
 			.. tostring(pet_name) .. "][" .. tostring(target_name) .. "][" .. tostring(action_name) .. "].")
@@ -243,9 +243,9 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 DB.Pet_Catalog.Is_Metric_Node_Initialized = function(caller, write_error, player_name, pet_name, target_name, action_name, trackable, metric)
-	if not DB.Pet_Parse_Catalog or not DB.Pet_Parse_Catalog[player_name] or not DB.Pet_Parse_Catalog[player_name][pet_name] or not DB.Pet_Parse_Catalog[player_name][pet_name][target_name]
-	or not DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name] or not DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable]
-	or not DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable][metric] then
+	if not DB.PetParseCatalog or not DB.PetParseCatalog[player_name] or not DB.PetParseCatalog[player_name][pet_name] or not DB.PetParseCatalog[player_name][pet_name][target_name]
+	or not DB.PetParseCatalog[player_name][pet_name][target_name][action_name] or not DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable]
+	or not DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable][metric] then
 		if write_error then
 			Debug.Error.Add(Debug.Error.ERROR, caller, "Metric not initialized in DB.Pet_Parse_Catalog[" .. tostring(player_name)
 			.. "][" .. tostring(pet_name) .. "][" .. tostring(target_name) .. "][" .. tostring(action_name) .. "][" .. tostring(trackable)

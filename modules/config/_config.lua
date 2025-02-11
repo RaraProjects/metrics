@@ -394,9 +394,9 @@ end
 -- Set the healing threshold defaults to prevent overcure with Divine Seal.
 ------------------------------------------------------------------------------------------------------
 Config.Widget.Healing = function(spell)
-    local healing_threshold = {[1] = DB.Healing_Max[spell]}
+    local healing_threshold = {[1] = DB.HealingMax[spell]}
     if UI.DragInt(spell, healing_threshold, 1, 0, 3000, "%d", ImGuiSliderFlags_None) then
-        DB.Healing_Max[spell] = healing_threshold[1]
+        DB.HealingMax[spell] = healing_threshold[1]
     end
 end
 

@@ -65,7 +65,7 @@ Column.Acc.By_Type = function(player_name, trackable, threshold, critical_hit, a
     end
 
     -- Colors.
-    if not threshold then threshold = DB.Settings.Accuracy_Warning end
+    if not threshold then threshold = DB.Settings.AccuracyWarning end
     local color = Column.Acc.Color_Selection(hits, attempts, threshold)
 
     return Column.Output.Percent(hits, attempts, color, false, justify, raw)
@@ -95,7 +95,7 @@ Column.Acc.By_Type_Pet = function(player_name, pet_name, trackable, action_name,
         attempts = DB.Pet_Data.Get(player_name, pet_name, trackable, attempt_metric)
     end
 
-    local color = Column.Acc.Color_Selection(hits, attempts, DB.Settings.Accuracy_Warning)
+    local color = Column.Acc.Color_Selection(hits, attempts, DB.Settings.AccuracyWarning)
 
     return Column.Output.Percent(hits, attempts, color, false, justify)
 end
@@ -110,7 +110,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Acc.Recent = function(player_name, justify)
     local accuracy = DB.Accuracy.Get(player_name)
-    local color    = Column.Acc.Color_Selection(accuracy[1], accuracy[2], DB.Settings.Accuracy_Warning)
+    local color    = Column.Acc.Color_Selection(accuracy[1], accuracy[2], DB.Settings.AccuracyWarning)
     return Column.Output.Percent(accuracy[1], accuracy[2], color, false, justify)
 end
 

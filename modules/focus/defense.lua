@@ -230,8 +230,8 @@ Focus.Defense.Healing_Received = function(player_name)
 
     -- Error Protection
     local trackable = DB.Trackable.DEF_HEALING_RECEIVED
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     local col_flags   = Focus.Column_Flags
     local table_flags = Focus.Table_Flags
@@ -280,8 +280,8 @@ Focus.Defense.TP_Move = function(player_name, trackable)
     local width       = Column.Widths.Standard
 
     -- Error Protection
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     local action_string = "TP Move"
     local on_target = true

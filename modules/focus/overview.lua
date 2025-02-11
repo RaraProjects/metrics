@@ -378,8 +378,8 @@ Focus.Overview.Pet_TP = function(player_name)
 
         local has_data = false
         local row = 1
-        if not DB.Tracking.Initialized_Pets[player_name] then DB.Tracking.Initialized_Pets[player_name] = {} end
-        for pet_name, _ in pairs(DB.Tracking.Initialized_Pets[player_name]) do
+        if not DB.Tracking.InitializedPets[player_name] then DB.Tracking.InitializedPets[player_name] = {} end
+        for pet_name, _ in pairs(DB.Tracking.InitializedPets[player_name]) do
             DB.Lists.Sort.Pet_Catalog_Damage(player_name, pet_name)
             for _, data in ipairs(DB.Sorted.Pet_Catalog_Damage) do
                 has_data = true

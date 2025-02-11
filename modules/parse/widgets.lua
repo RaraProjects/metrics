@@ -95,7 +95,7 @@ Parse.Widgets.Acc_Limit = function()
     UI.SetNextItemWidth(Parse.Config.Slider_Width)
     if UI.DragInt("Recent Accuracy Lookback", acc_limit, 0.1, 10, 50, "%d", ImGuiSliderFlags_None) then
         Metrics.Model.Running_Accuracy_Limit = acc_limit[1]
-        DB.Tracking.Running_Accuracy = {}
+        DB.Tracking.RunningAccuracy = {}
     end
     UI.SameLine() Window_Manager.Widgets.HelpMarker("Recent accuracy calculates based off of {X} many attack attempts.")
 end

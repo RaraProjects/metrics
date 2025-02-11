@@ -19,7 +19,7 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 DB.Attack_Speed.Update = function(player_name)
-    if not DB.Tracking.Running_Attack_Speed[player_name] then
+    if not DB.Tracking.RunningAttackSpeed[player_name] then
 		Debug.Error.Add(Debug.Error.ERROR, "DB.Attack_Speed.Update", "Player {" .. tostring(player_name) .. "} is missing from attack speed tracker.")
 		return false
 	end
@@ -39,14 +39,14 @@ DB.Attack_Speed.Update = function(player_name)
     if skip then return false end
 
     -- Add the new speed to the attack speed tracking buckets.
-    local size = #DB.Tracking.Running_Attack_Speed[player_name]
-    if size >= DB.Attack_Speed.Max_Windows then table.remove(DB.Tracking.Running_Attack_Speed[player_name], DB.Attack_Speed.Max_Windows) end
-	table.insert(DB.Tracking.Running_Attack_Speed[player_name], 1, rate)
-    local new_size = #DB.Tracking.Running_Attack_Speed[player_name]
+    local size = #DB.Tracking.RunningAttackSpeed[player_name]
+    if size >= DB.Attack_Speed.Max_Windows then table.remove(DB.Tracking.RunningAttackSpeed[player_name], DB.Attack_Speed.Max_Windows) end
+	table.insert(DB.Tracking.RunningAttackSpeed[player_name], 1, rate)
+    local new_size = #DB.Tracking.RunningAttackSpeed[player_name]
 
     -- Average the attack speed.
     local total = 0
-    for _, attack_speed in pairs(DB.Tracking.Running_Attack_Speed[player_name]) do
+    for _, attack_speed in pairs(DB.Tracking.RunningAttackSpeed[player_name]) do
         total = total + attack_speed
     end
     local average = total / new_size

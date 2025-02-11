@@ -33,7 +33,7 @@ end
 DB.Lists.Sort.Players = function()
 	local name_sort = {}
 	table.insert(name_sort, DB.Widgets.Dropdown.Enum.NONE)
-	for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
+	for player_name, _ in pairs(DB.Tracking.InitializedPlayers) do
 		table.insert(name_sort, player_name)
 	end
 	table.sort(name_sort)
@@ -45,13 +45,13 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return table
 ------------------------------------------------------------------------------------------------------
-DB.Lists.Sort.Total_Damage = function()
+DB.Lists.Sort.TotalDamage = function()
 	local sorted_damage = {}
 	local damage = nil
 
 	-- Loop through players to get their total damage.
-	for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
-		if Parse.Config.Include_SC_Damage() then
+	for player_name, _ in pairs(DB.Tracking.InitializedPlayers) do
+		if Parse.Config.IncludeSkillchainDamage() then
 			damage = DB.Data.Get(player_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
 		else
 			damage = DB.Data.Get(player_name, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
@@ -82,7 +82,7 @@ DB.Lists.Sort.Damage_By_Type = function(trackable)
 	local damage = nil
 
 	-- Loop through players to get their total trackable damage.
-	for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
+	for player_name, _ in pairs(DB.Tracking.InitializedPlayers) do
 		damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
 		table.insert(sorted_damage, {player_name, damage})
 	end
@@ -110,14 +110,14 @@ DB.Lists.Sort.Catalog_Damage = function(player_name, focus_type)
 		.. "} Focus Type {" .. tostring(focus_type) .. "}.")
 		return {}
 	end
-	if not DB.Tracking.Trackable[focus_type] or not DB.Tracking.Trackable[focus_type][player_name] then
+	if not DB.Tracking.Trackables[focus_type] or not DB.Tracking.Trackables[focus_type][player_name] then
 		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Sort.Catalog_Damage", "Tracking uninitialized: Player {" .. tostring(player_name)
 		.. "} does not have data for focus type {" .. tostring(focus_type) .. "}.")
 		return {}
 	end
 
 	local sorted_damage = {}
-	for action_name, _ in pairs(DB.Tracking.Trackable[focus_type][player_name]) do
+	for action_name, _ in pairs(DB.Tracking.Trackables[focus_type][player_name]) do
 		table.insert(sorted_damage, {action_name, DB.Catalog.Get(player_name, focus_type, action_name, DB.Metric.TOTAL)})
 	end
 
@@ -157,15 +157,15 @@ DB.Lists.Populate.Pet_Damage = function(player_name)
 		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Populate.Pet_Damage", "player_name is nil.")
 		return nil
 	end
-	if not DB or not DB.Tracking or not DB.Tracking.Initialized_Pets or not DB.Tracking.Initialized_Pets[player_name] then
+	if not DB or not DB.Tracking or not DB.Tracking.InitializedPets or not DB.Tracking.InitializedPets[player_name] then
 		Debug.Error.Add(Debug.Error.ERROR, "DB.Lists.Populate.Pet_Damage", "Initialized pets is nil for player {" .. tostring(player_name) .. "}.")
 		return nil
 	end
 
 	DB.Sorted.Pet_Damage = {}
 	local damage = 0
-	for pet_name, _ in pairs(DB.Tracking.Initialized_Pets[player_name]) do
-		if Parse.Config.Include_SC_Damage() then
+	for pet_name, _ in pairs(DB.Tracking.InitializedPets[player_name]) do
+		if Parse.Config.IncludeSkillchainDamage() then
 			damage = DB.Pet_Data.Get(player_name, pet_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
 		else
 			damage = DB.Pet_Data.Get(player_name, pet_name, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
@@ -185,7 +185,7 @@ DB.Lists.Populate.Pet_Catalog_Damage = function(player_name, pet_name)
 	DB.Sorted.Pet_Catalog_Damage = {}
 	for _, trackable in pairs(DB.Pet_Single_Trackable) do
 		if DB.Lists.Check.Pet_Catalog_Exists(trackable, player_name, pet_name) then
-			for action_name, _ in pairs(DB.Tracking.Pet_Trackable[trackable][player_name][pet_name]) do
+			for action_name, _ in pairs(DB.Tracking.PetTrackables[trackable][player_name][pet_name]) do
 				table.insert(DB.Sorted.Pet_Catalog_Damage, {action_name, 999, trackable})
 			end
 		end
@@ -198,8 +198,8 @@ end
 ---@param target_name string
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Check.MobExists = function(target_name)
-	if target_name ~= DB.Enum.DEBUG and not DB.Tracking.Initialized_Mobs[target_name] then
-		DB.Tracking.Initialized_Mobs[target_name] = true
+	if target_name ~= DB.Enum.DEBUG and not DB.Tracking.InitializedMobs[target_name] then
+		DB.Tracking.InitializedMobs[target_name] = true
 		table.insert(DB.Sorted.Mobs, target_name)
 		table.sort(DB.Sorted.Mobs)
 	end
@@ -214,7 +214,7 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Check.Catalog_Exists = function(player_name, focus_type)
-	if not DB.Tracking.Trackable[focus_type] or not DB.Tracking.Trackable[focus_type][player_name] then return false end
+	if not DB.Tracking.Trackables[focus_type] or not DB.Tracking.Trackables[focus_type][player_name] then return false end
 	return true
 end
 
@@ -228,8 +228,8 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Check.Pet_Catalog_Exists = function(trackable, player_name, pet_name)
-	if not DB.Tracking.Pet_Trackable[trackable] then return false end
-	if not DB.Tracking.Pet_Trackable[trackable][player_name] then return false end
-	if not DB.Tracking.Pet_Trackable[trackable][player_name][pet_name] then return false end
+	if not DB.Tracking.PetTrackables[trackable] then return false end
+	if not DB.Tracking.PetTrackables[trackable][player_name] then return false end
+	if not DB.Tracking.PetTrackables[trackable][player_name][pet_name] then return false end
 	return true
 end

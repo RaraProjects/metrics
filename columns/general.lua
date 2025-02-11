@@ -34,7 +34,7 @@ Column.General.Percent_Party_Total = function(player_name, trackable, justify, r
     local player_total = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(player_total)
     local party_total = 0
-    for name, _ in pairs(DB.Tracking.Initialized_Players) do
+    for name, _ in pairs(DB.Tracking.InitializedPlayers) do
         party_total = party_total + DB.Data.Get(name, trackable, DB.Metric.TOTAL)
     end
     if raw then return Column.String.Format_Percent(player_total, party_total) end
@@ -55,7 +55,7 @@ Column.General.Percent_Party_Total_Action = function(player_name, action_name, t
     local action_total = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(action_total)
     local party_total = 0
-    for name, _ in pairs(DB.Tracking.Initialized_Players) do
+    for name, _ in pairs(DB.Tracking.InitializedPlayers) do
         party_total = party_total + DB.Data.Get(name, trackable, DB.Metric.TOTAL)
     end
     if raw then return Column.String.Format_Percent(action_total, party_total) end
@@ -76,7 +76,7 @@ Column.General.Percent_Party_Total_Pet = function(player_name, pet_name, trackab
     local pet_total = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(pet_total)
     local party_total = 0
-    for name, _ in pairs(DB.Tracking.Initialized_Players) do
+    for name, _ in pairs(DB.Tracking.InitializedPlayers) do
         party_total = party_total + DB.Data.Get(name, trackable, DB.Metric.TOTAL)
     end
     if raw then return Column.String.Format_Percent(pet_total, party_total) end

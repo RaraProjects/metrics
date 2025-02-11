@@ -33,7 +33,7 @@ File.Save_Data = function()
                 for trackable, _ in pairs(DB.Parse[player_name][target_name]) do
                     for metric, data in pairs(DB.Parse[player_name][target_name][trackable]) do
                         if data and data > 0 then
-                            if not (DB.Metric_Needs_Max_Value(metric) and data >= DB.Enum.MAX_DAMAGE) then
+                            if not (DB.MetricNeedsMaxValue(metric) and data >= DB.Enum.MAX_DAMAGE) then
                                 file:write(tostring(player_name) .. File.Delimiter ..
                                            tostring("")          .. File.Delimiter ..
                                            tostring(target_name) .. File.Delimiter ..
@@ -49,13 +49,13 @@ File.Save_Data = function()
         end
 
         -- Basic Pet Data
-        for player_name, _ in pairs(DB.Pet_Parse) do
-            for pet_name, _ in pairs(DB.Pet_Parse[player_name]) do
-                for target_name, _ in pairs(DB.Pet_Parse[player_name][pet_name]) do
-                    for trackable, _ in pairs(DB.Pet_Parse[player_name][pet_name][target_name]) do
-                        for metric, data in pairs(DB.Pet_Parse[player_name][pet_name][target_name][trackable]) do
+        for player_name, _ in pairs(DB.PetParse) do
+            for pet_name, _ in pairs(DB.PetParse[player_name]) do
+                for target_name, _ in pairs(DB.PetParse[player_name][pet_name]) do
+                    for trackable, _ in pairs(DB.PetParse[player_name][pet_name][target_name]) do
+                        for metric, data in pairs(DB.PetParse[player_name][pet_name][target_name][trackable]) do
                             if data and data > 0 then
-                                if not (DB.Metric_Needs_Max_Value(metric) and data >= DB.Enum.MAX_DAMAGE) then
+                                if not (DB.MetricNeedsMaxValue(metric) and data >= DB.Enum.MAX_DAMAGE) then
                                     file:write(tostring(player_name) .. File.Delimiter ..
                                                tostring(pet_name)    .. File.Delimiter ..
                                                tostring(target_name) .. File.Delimiter ..
@@ -72,13 +72,13 @@ File.Save_Data = function()
         end
 
         -- Catalog Player Data
-        for player_name, _ in pairs(DB.Parse_Catalog) do
-            for target_name, _ in pairs(DB.Parse_Catalog[player_name]) do
-                for action_name, _ in pairs(DB.Parse_Catalog[player_name][target_name]) do
-                    for trackable, _ in pairs(DB.Parse_Catalog[player_name][target_name][action_name]) do
-                        for metric, data in pairs(DB.Parse_Catalog[player_name][target_name][action_name][trackable]) do
+        for player_name, _ in pairs(DB.ParseCatalog) do
+            for target_name, _ in pairs(DB.ParseCatalog[player_name]) do
+                for action_name, _ in pairs(DB.ParseCatalog[player_name][target_name]) do
+                    for trackable, _ in pairs(DB.ParseCatalog[player_name][target_name][action_name]) do
+                        for metric, data in pairs(DB.ParseCatalog[player_name][target_name][action_name][trackable]) do
                             if data and data > 0 then
-                                if not (DB.Metric_Needs_Max_Value(metric) and data >= DB.Enum.MAX_DAMAGE) then
+                                if not (DB.MetricNeedsMaxValue(metric) and data >= DB.Enum.MAX_DAMAGE) then
                                     file:write(tostring(player_name)  .. File.Delimiter ..
                                                 tostring("")          .. File.Delimiter ..
                                                 tostring(target_name) .. File.Delimiter ..
@@ -95,14 +95,14 @@ File.Save_Data = function()
         end
 
         -- Catalog Pet Data
-        for player_name, _ in pairs(DB.Pet_Parse_Catalog) do
-            for pet_name, _ in pairs(DB.Pet_Parse_Catalog[player_name]) do
-                for target_name, _ in pairs(DB.Pet_Parse_Catalog[player_name][pet_name]) do
-                    for action_name, _ in pairs(DB.Pet_Parse_Catalog[player_name][pet_name][target_name]) do
-                        for trackable, _ in pairs(DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name]) do
-                            for metric, data in pairs(DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable]) do
+        for player_name, _ in pairs(DB.PetParseCatalog) do
+            for pet_name, _ in pairs(DB.PetParseCatalog[player_name]) do
+                for target_name, _ in pairs(DB.PetParseCatalog[player_name][pet_name]) do
+                    for action_name, _ in pairs(DB.PetParseCatalog[player_name][pet_name][target_name]) do
+                        for trackable, _ in pairs(DB.PetParseCatalog[player_name][pet_name][target_name][action_name]) do
+                            for metric, data in pairs(DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable]) do
                                 if data and data > 0 then
-                                    if not (DB.Metric_Needs_Max_Value(metric) and data >= DB.Enum.MAX_DAMAGE) then
+                                    if not (DB.MetricNeedsMaxValue(metric) and data >= DB.Enum.MAX_DAMAGE) then
                                         file:write(tostring(player_name)  .. File.Delimiter ..
                                                     tostring(pet_name)    .. File.Delimiter ..
                                                     tostring(target_name) .. File.Delimiter ..
@@ -178,7 +178,7 @@ File.Save_Loot = function()
                 .. tostring("Item Count") .. File.Delimiter .. tostring("Defeated Count (Mobs)") .. "\n")
 
         local entity_type = "Player"
-        for player_name, item_data in pairs(DB.Tracking.Received_Items) do
+        for player_name, item_data in pairs(DB.Tracking.ReceivedItems) do
             for item_name, item_count in pairs(item_data) do
                 file:write(
                 tostring(entity_type) .. File.Delimiter .. tostring(player_name) .. File.Delimiter .. tostring(item_name) .. File.Delimiter ..
@@ -187,9 +187,9 @@ File.Save_Loot = function()
         end
 
         entity_type = "Mob"
-        for mob_name, item_data in pairs(DB.Tracking.Drop_Rates) do
+        for mob_name, item_data in pairs(DB.Tracking.DropRates) do
             for item_name, drop_count in pairs(item_data) do
-                local defeated_count = DB.Tracking.Defeated_Mobs[mob_name] or 1
+                local defeated_count = DB.Tracking.DefeatedMobs[mob_name] or 1
                 file:write(
                 tostring(entity_type) .. File.Delimiter .. tostring(mob_name) .. File.Delimiter .. tostring(item_name) .. File.Delimiter ..
                 tostring(drop_count) .. File.Delimiter .. tostring(defeated_count) .. "\n")

@@ -19,9 +19,9 @@ Report.Publishing.Overall = function()
         -- Chat header.
         Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, "Total Damage and Accuracy") coroutine.sleep(Report.Publishing.Delay)
 
-        local sorted_damage = DB.Lists.Sort.Total_Damage()
+        local sorted_damage = DB.Lists.Sort.TotalDamage()
         for rank, data in ipairs(sorted_damage) do
-            if rank <= Parse.Config.Rank_Cutoff() then
+            if rank <= Parse.Config.RankCutoff() then
 
                 local player_name = data[1]
                 local player_total = Column.Damage.Total(player_name, false, false, true)
@@ -69,7 +69,7 @@ Report.Publishing.Damage_By_Type = function(trackable)
         -- Loop through the data.
         local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
         for rank, data in ipairs(sorted_damage) do
-            if rank <= Parse.Config.Rank_Cutoff() then
+            if rank <= Parse.Config.RankCutoff() then
 
                 local player_name = data[1]
                 local player_damage = Column.Damage.By_Type(player_name, trackable, nil, nil, false, nil, true)

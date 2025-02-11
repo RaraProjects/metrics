@@ -11,8 +11,8 @@ DB.Data = {}
 DB.Data.Initialize = function(player_name, target_name)
 	-- Early quit out to prevent crashing.
 	local caller = "DB.Data.Initialize"
-	if DB.Is_Value_Empty(caller, player_name, "Player") then return false end
-	if DB.Is_Value_Empty(caller, target_name, "Target") then return false end
+	if DB.IsValueEmpty(caller, player_name, "Player") then return false end
+	if DB.IsValueEmpty(caller, target_name, "Target") then return false end
 
 	-- Don't want to overwrite data node if it already exists. This is for mob specfic data.
 	local initialization_list = {}
@@ -37,7 +37,7 @@ DB.Data.Initialize = function(player_name, target_name)
 
 			DB.Parse[player_name][initialization_target][trackable] = {}
 			for _, metric in pairs(DB.Metric) do
-				if DB.Metric_Needs_Max_Value(metric) then
+				if DB.MetricNeedsMaxValue(metric) then
 					DB.Data.Set(DB.Enum.MAX_DAMAGE, player_name, initialization_target, trackable, metric)
 				else
 					DB.Data.Set(0, player_name, initialization_target, trackable, metric)
@@ -58,13 +58,13 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 DB.Data.Initialize_Player_Tracking_Tables = function(player_name)
-	if player_name and player_name ~= "" and not DB.Tracking.Initialized_Players[player_name] then
-		DB.Tracking.Initialized_Players[player_name] = true
+	if player_name and player_name ~= "" and not DB.Tracking.InitializedPlayers[player_name] then
+		DB.Tracking.InitializedPlayers[player_name] = true
 		DB.Lists.Sort.Players()
-		DB.Tracking.Running_Accuracy[player_name] = {}
-		DB.Tracking.Running_Damage[player_name] = 0
-		DB.Tracking.Running_Attack_Speed[player_name] = {}
-		DB.Tracking.Multi_Attack[player_name] = {}
+		DB.Tracking.RunningAccuracy[player_name] = {}
+		DB.Tracking.RunningDamage[player_name] = 0
+		DB.Tracking.RunningAttackSpeed[player_name] = {}
+		DB.Tracking.MultiAttack[player_name] = {}
 	end
 end
 
@@ -90,8 +90,8 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	local target_name = audits.target_name
 	local pet_name    = audits.pet_name
 
-	if DB.Is_Value_Empty(caller, player_name, "Player") then return nil end
-	if DB.Is_Value_Empty(caller, target_name, "Target") then return nil end
+	if DB.IsValueEmpty(caller, player_name, "Player") then return nil end
+	if DB.IsValueEmpty(caller, target_name, "Target") then return nil end
 
 	DB.Data.Initialize(player_name, target_name)
 	if pet_name then DB.Pet_Data.Initialize(player_name, pet_name, target_name) end
@@ -127,12 +127,12 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Update_Damage = function(audits, trackable, damage, critical_hit)
 	-- Increment grand totals if necessary. There is an all damage track and a no-skillchain track.
-    if DB.Is_Total_Damage_Trackable(trackable) then
+    if DB.IsTotalDamageTrackable(trackable) then
     	DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
-		DB.Total_Damage = DB.Total_Damage + damage
+		DB.TotalDamage = DB.TotalDamage + damage
 		if trackable ~= DB.Trackable.SKILLCHAIN then
 			DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
-			DB.Total_Damage_No_Skillchain = DB.Total_Damage_No_Skillchain + damage
+			DB.TotalDamageNoSkillchain = DB.TotalDamageNoSkillchain + damage
 		end
     end
 
@@ -199,15 +199,15 @@ DB.Data.Set = function(value, player_name, target_name, trackable, metric)
 	-- Early quit out to prevent crashing.
 	-- Can't quit out early for blank metric nodes because this is used for initialization.
 	local caller = "DB.Data.Set"
-	if DB.Is_Value_Empty(caller, player_name, "Player")    then return false end
-	if DB.Is_Value_Empty(caller, target_name, "Target")    then return false end
-	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return false end
-	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return false end
-	if DB.Is_Value_Empty(caller, value,       "Value")     then return false end
+	if DB.IsValueEmpty(caller, player_name, "Player")    then return false end
+	if DB.IsValueEmpty(caller, target_name, "Target")    then return false end
+	if DB.IsValueEmpty(caller, trackable,   "Trackable") then return false end
+	if DB.IsValueEmpty(caller, metric,      "Metric")    then return false end
+	if DB.IsValueEmpty(caller, value,       "Value")     then return false end
 	if not DB.Data.Is_Index_Node_Initialized(caller, true, player_name, target_name) then return false end
 
 	-- Don't set an unfiltered minimum if the mob specific minimum isn't less than the unfiltered one.
-	if DB.Metric_Needs_Max_Value(metric) and target_name == DB.Enum.ALL_MOBS
+	if DB.MetricNeedsMaxValue(metric) and target_name == DB.Enum.ALL_MOBS
 	and DB.Parse[player_name][target_name][trackable][metric]
 	and value >= DB.Parse[player_name][target_name][trackable][metric] then
 		return false
@@ -232,11 +232,11 @@ end
 DB.Data.Inc = function(value, player_name, target_name, trackable, metric)
 	-- Early quit out to prevent crashing.
 	local caller = "DB.Data.Inc"
-	if DB.Is_Value_Empty(caller, player_name, "Player")    then return false end
-	if DB.Is_Value_Empty(caller, target_name, "Target")    then return false end
-	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return false end
-	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return false end
-	if DB.Is_Value_Empty(caller, value,       "Value")     then return false end
+	if DB.IsValueEmpty(caller, player_name, "Player")    then return false end
+	if DB.IsValueEmpty(caller, target_name, "Target")    then return false end
+	if DB.IsValueEmpty(caller, trackable,   "Trackable") then return false end
+	if DB.IsValueEmpty(caller, metric,      "Metric")    then return false end
+	if DB.IsValueEmpty(caller, value,       "Value")     then return false end
 	if not DB.Data.Is_Index_Node_Initialized(caller, true, player_name, target_name) then return false end
 	if not DB.Data.Is_Metric_Node_Initialized(caller, true, player_name, target_name, trackable, metric) then return false end
 
@@ -258,9 +258,9 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Get = function(player_name, trackable, metric, temporary_mob_focus)
 	local caller = "DB.Data.Get"
-	if DB.Is_Value_Empty(caller, player_name, "Player")    then return 0 end
-	if DB.Is_Value_Empty(caller, trackable,   "Trackable") then return 0 end
-	if DB.Is_Value_Empty(caller, metric,      "Metric")    then return 0 end
+	if DB.IsValueEmpty(caller, player_name, "Player")    then return 0 end
+	if DB.IsValueEmpty(caller, trackable,   "Trackable") then return 0 end
+	if DB.IsValueEmpty(caller, metric,      "Metric")    then return 0 end
 
 	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
 	if (Throttle.Is_Enabled() and not Throttle.Allow_Calculation()) and not temporary_mob_focus then
@@ -272,7 +272,7 @@ DB.Data.Get = function(player_name, trackable, metric, temporary_mob_focus)
 	-- The target index will just be the mob focus unless a temporary focus is passed in.
 	-- The mob focus will handle the ALL_MOBS too.
 	local value = 0
-	if DB.Metric_Needs_Max_Value(metric) then value = DB.Enum.MAX_DAMAGE end
+	if DB.MetricNeedsMaxValue(metric) then value = DB.Enum.MAX_DAMAGE end
 	local mob_focus = DB.Widgets.Util.Get_Mob_Focus()
 	local target_index = mob_focus
 	if temporary_mob_focus then target_index = temporary_mob_focus end

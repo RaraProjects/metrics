@@ -9,13 +9,13 @@ DB.Accuracy = T{}
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 DB.Accuracy.Update = function(player_name, hit)
-	if not DB.Tracking.Running_Accuracy[player_name] then
+	if not DB.Tracking.RunningAccuracy[player_name] then
 		Debug.Error.Add(Debug.Error.ERROR, "DB.Accuracy.Update", "Player {" .. tostring(player_name) .. "} is missing in accuracy tracker.")
 		return false
 	end
-	local max = #DB.Tracking.Running_Accuracy[player_name]
-    if max >= Metrics.Model.Running_Accuracy_Limit then table.remove(DB.Tracking.Running_Accuracy[player_name], Metrics.Model.Running_Accuracy_Limit) end
-	table.insert(DB.Tracking.Running_Accuracy[player_name], 1, hit)
+	local max = #DB.Tracking.RunningAccuracy[player_name]
+    if max >= Metrics.Model.Running_Accuracy_Limit then table.remove(DB.Tracking.RunningAccuracy[player_name], Metrics.Model.Running_Accuracy_Limit) end
+	table.insert(DB.Tracking.RunningAccuracy[player_name], 1, hit)
 	return true
 end
 
@@ -27,7 +27,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Accuracy.Get = function(player_name)
 	-- This error can occur in mini mode when trying to load data before the player has been initialized. Not a big deal.
-	if not DB.Tracking.Running_Accuracy[player_name] then
+	if not DB.Tracking.RunningAccuracy[player_name] then
 		Debug.Error.Add(Debug.Error.ERROR, "DB.Accuracy.Get", "Player {" .. tostring(player_name) .. "} is missing in accuracy tracker.")
 		return {0, 0}
 	end
@@ -35,7 +35,7 @@ DB.Accuracy.Get = function(player_name)
 	local count = 0
 
 	-- Tally how hits the player had in the last {running accuracy limit} amount of attempts.
-	for _, value in pairs(DB.Tracking.Running_Accuracy[player_name]) do
+	for _, value in pairs(DB.Tracking.RunningAccuracy[player_name]) do
 		if value then hits = hits + 1 end
 		count = count + 1
 	end

@@ -12,8 +12,8 @@ Focus.Catalog.Column_Width = Column.Widths.Standard
 ---@param suffix? string append a suffix to the header to help distinguish between melee and ranged.
 ------------------------------------------------------------------------------------------------------
 Focus.Catalog.Endamage = function(player_name, trackable, suffix)
-    if not DB.Tracking.Trackable[trackable] then return nil end
-    if not DB.Tracking.Trackable[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] then return nil end
+    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
     local col_flags   = Focus.Catalog.Column_Flags
@@ -66,8 +66,8 @@ end
 ---@param suffix? string append a suffix to the header to help distinguish between melee and ranged.
 ------------------------------------------------------------------------------------------------------
 Focus.Catalog.Endebuff = function(player_name, focus_type, suffix)
-    if not DB.Tracking.Trackable[focus_type] then return nil end
-    if not DB.Tracking.Trackable[focus_type][player_name] then return nil end
+    if not DB.Tracking.Trackables[focus_type] then return nil end
+    if not DB.Tracking.Trackables[focus_type][player_name] then return nil end
 
     local table_flags = Focus.Catalog.Table_Flags
     local col_flags   = Focus.Catalog.Column_Flags

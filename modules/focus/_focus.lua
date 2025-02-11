@@ -71,8 +71,8 @@ end
 -- Resets the focus settings.
 ------------------------------------------------------------------------------------------------------
 Focus.Reset_Settings = function()
-    for index, _ in pairs(DB.Healing_Max) do
-        DB.Healing_Max[index] = DB.Healing_Max_Defaults[index]
+    for index, _ in pairs(DB.HealingMax) do
+        DB.HealingMax[index] = DB.HealingMaxDefaults[index]
     end
 end
 
@@ -149,7 +149,7 @@ Focus.Overall_Damage_Breakdown = function(player_name)
     local width       = Column.Widths.Percent
 
     local pet = DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
-    local including_skillchain = Parse.Config.Include_SC_Damage()
+    local including_skillchain = Parse.Config.IncludeSkillchainDamage()
 
     local columns = 7
     if pet > 0 then columns = columns + 1 end

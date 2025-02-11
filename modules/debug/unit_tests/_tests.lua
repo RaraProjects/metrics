@@ -395,9 +395,9 @@ Debug.Unit.Check_Result = function(test_name, package)
     local misc           = package.misc or {}
 
     error_message, error_count = Debug.Unit.Test_Player("DB.Parse", DB.Parse, player, error_message, error_count)
-    error_message, error_count = Debug.Unit.Test_Player_Catalog("DB.Parse_Catalog", DB.Parse_Catalog, player_catalog, error_message, error_count)
-    error_message, error_count = Debug.Unit.Test_Pet_Database("DB.Pet_Parse", DB.Pet_Parse, pet, error_message, error_count)
-    error_message, error_count = Debug.Unit.Test_Pet_Catalog_Database("DB.Pet_Parse_Catalog", DB.Pet_Parse_Catalog, pet_catalog, error_message, error_count)
+    error_message, error_count = Debug.Unit.Test_Player_Catalog("DB.Parse_Catalog", DB.ParseCatalog, player_catalog, error_message, error_count)
+    error_message, error_count = Debug.Unit.Test_Pet_Database("DB.Pet_Parse", DB.PetParse, pet, error_message, error_count)
+    error_message, error_count = Debug.Unit.Test_Pet_Catalog_Database("DB.Pet_Parse_Catalog", DB.PetParseCatalog, pet_catalog, error_message, error_count)
     error_message, error_count = Debug.Unit.Check_Battle_Log(package.battle_log, error_message, error_count)
     error_message, error_count = Debug.Unit.Check_Misc_Data(misc, error_message, error_count)
 
@@ -448,7 +448,7 @@ Debug.Unit.Test_Player = function(name, database, test_cases, error_message, err
                                 local test_case_value = test_cases[player_name][target_name][trackable][metric]
                                 if test_case_value == database_value then
                                     -- Pass (Match)
-                                elseif DB.Metric_Needs_Max_Value(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
+                                elseif DB.MetricNeedsMaxValue(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
                                     -- Pass (Default Minimum)
                                 elseif test_case_value == 0 then
                                     -- Pass (Default Zero)
@@ -459,7 +459,7 @@ Debug.Unit.Test_Player = function(name, database, test_cases, error_message, err
                                 end
 
                             -- I don't set minimums for every metric in the unit tests. Filter out defaulted minimums if not explicitly stated in the test case.
-                            elseif DB.Metric_Needs_Max_Value(metric) then
+                            elseif DB.MetricNeedsMaxValue(metric) then
                                 if database_value == DB.Enum.MAX_DAMAGE then
                                     -- Pass (Default Minimum)
                                 else
@@ -572,7 +572,7 @@ Debug.Unit.Test_Player_Catalog = function(name, database, test_cases, error_mess
                                             local test_case_value = test_cases[player_name][target_name][action_name][trackable][metric]
                                             if test_case_value == database_value then
                                                 -- Pass (Match)
-                                            elseif DB.Metric_Needs_Max_Value(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
+                                            elseif DB.MetricNeedsMaxValue(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
                                                 -- Pass (Default Minimum)
                                             elseif test_case_value == 0 then
                                                 -- Pass (Default Zero)
@@ -584,7 +584,7 @@ Debug.Unit.Test_Player_Catalog = function(name, database, test_cases, error_mess
                                             end
 
                                         -- I don't set minimums for every metric in the unit tests. Filter out defaulted minimums if not explicitly stated in the test case.
-                                        elseif DB.Metric_Needs_Max_Value(metric) then
+                                        elseif DB.MetricNeedsMaxValue(metric) then
                                             if database_value == DB.Enum.MAX_DAMAGE then
                                                 -- Pass (Default Minimum)
                                             else
@@ -692,7 +692,7 @@ Debug.Unit.Test_Pet_Database = function(name, database, test_cases, error_messag
                                         local test_case_value = test_cases[player_name][pet_name][target_name][trackable][metric]
                                         if test_case_value == database_value then
                                             -- Pass (Match)
-                                        elseif DB.Metric_Needs_Max_Value(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
+                                        elseif DB.MetricNeedsMaxValue(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
                                             -- Pass (Default Minimum)
                                         elseif test_case_value == 0 then
                                             -- Pass (Default Zero)
@@ -704,7 +704,7 @@ Debug.Unit.Test_Pet_Database = function(name, database, test_cases, error_messag
                                         end
 
                                     -- I don't set minimums for every metric in the unit tests. Filter out defaulted minimums if not explicitly stated in the test case.
-                                    elseif DB.Metric_Needs_Max_Value(metric) then
+                                    elseif DB.MetricNeedsMaxValue(metric) then
                                         if database_value == DB.Enum.MAX_DAMAGE then
                                             -- Pass (Default Minimum)
                                         else
@@ -824,7 +824,7 @@ Debug.Unit.Test_Pet_Catalog_Database = function(name, database, test_cases, erro
 
                                         -- If the trackable exists in the database and the test case then check the metric.
                                         else
-                                            for metric, database_value in pairs(DB.Pet_Parse_Catalog[player_name][pet_name][target_name][action_name][trackable]) do
+                                            for metric, database_value in pairs(DB.PetParseCatalog[player_name][pet_name][target_name][action_name][trackable]) do
 
                                                 -- Test data that the database data exists in the test cases.
                                                 -- If the test data exists.
@@ -833,7 +833,7 @@ Debug.Unit.Test_Pet_Catalog_Database = function(name, database, test_cases, erro
                                                     local test_case_value = test_cases[player_name][pet_name][target_name][action_name][trackable][metric]
                                                     if test_case_value == database_value then
                                                         -- Pass (Match)
-                                                    elseif DB.Metric_Needs_Max_Value(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
+                                                    elseif DB.MetricNeedsMaxValue(metric) and test_case_value == DB.Enum.MAX_DAMAGE then
                                                         -- Pass (Default Minimum)
                                                     elseif test_case_value == 0 then
                                                         -- Pass (Default Zero)
@@ -846,7 +846,7 @@ Debug.Unit.Test_Pet_Catalog_Database = function(name, database, test_cases, erro
                                                     end
 
                                                 -- I don't set minimums for every metric in the unit tests. Filter out defaulted minimums if not explicitly stated in the test case.
-                                                elseif DB.Metric_Needs_Max_Value(metric) then
+                                                elseif DB.MetricNeedsMaxValue(metric) then
                                                     if database_value == DB.Enum.MAX_DAMAGE then
                                                         -- Pass (Default Minimum)
                                                     else
@@ -987,13 +987,13 @@ end
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Check_Misc_Data = function(expected_data, error_message, error_count)
     if not expected_data then return error_message, error_count end
-    if expected_data["Total Damage"] and expected_data["Total Damage"] ~= DB.Total_Damage then
+    if expected_data["Total Damage"] and expected_data["Total Damage"] ~= DB.TotalDamage then
         error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Misc - Total Damage: Expected {"
-        .. tostring(expected_data["Total Damage"]) .. "} got {" .. tostring(DB.Total_Damage) .. "}.")
+        .. tostring(expected_data["Total Damage"]) .. "} got {" .. tostring(DB.TotalDamage) .. "}.")
     end
-    if expected_data["Total Damage No Skillchain"] and expected_data["Total Damage No Skillchain"] ~= DB.Total_Damage_No_Skillchain then
+    if expected_data["Total Damage No Skillchain"] and expected_data["Total Damage No Skillchain"] ~= DB.TotalDamageNoSkillchain then
         error_message, error_count = Debug.Unit.Add_Error(error_message, error_count, "Misc - Total Damage No Skillchain: Expected {"
-        .. tostring(expected_data["Total Damage No Skillchain"]) .. "} got {" .. tostring(DB.Total_Damage_No_Skillchain) .. "}.")
+        .. tostring(expected_data["Total Damage No Skillchain"]) .. "} got {" .. tostring(DB.TotalDamageNoSkillchain) .. "}.")
     end
     return error_message, error_count
 end

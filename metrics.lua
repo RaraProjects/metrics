@@ -160,7 +160,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             local actor_mob = Ashita.Mob.GetMobByIndex(data.actor_index)
             if Ashita.Party.IsAffiliate(actor_mob.name) or Ashita.Mob.PetOwner(actor_mob) then
                 local target_mob = Ashita.Mob.GetMobByIndex(data.target_index)
-                DB.Defeated_Mob(target_mob.name)
+                DB.TallyDefeatedMob(target_mob.name)
                 Blog.Add(target_mob.name, nil, Blog.Action_Type.MOB_DEATH, Blog.Enum.MOB_DEATH, nil, "------------")
             end
 

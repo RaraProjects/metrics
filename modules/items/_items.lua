@@ -70,20 +70,20 @@ Loot.Dropped = function(data)
     local mob_name = mob.name
 
     -- Track total drops.
-    if not DB.Tracking.Total_Items[item_name] then DB.Tracking.Total_Items[item_name] = 0 end
-    DB.Tracking.Total_Items[item_name] = DB.Tracking.Total_Items[item_name] + 1
+    if not DB.Tracking.TotalItems[item_name] then DB.Tracking.TotalItems[item_name] = 0 end
+    DB.Tracking.TotalItems[item_name] = DB.Tracking.TotalItems[item_name] + 1
 
     -- Track mob specific drops.
-    if not DB.Tracking.Drop_Rates[mob_name] then DB.Tracking.Drop_Rates[mob_name] = {} end
-    if not DB.Tracking.Drop_Rates[mob_name][item_name] then DB.Tracking.Drop_Rates[mob_name][item_name] = 0 end
-    DB.Tracking.Drop_Rates[mob_name][item_name] = DB.Tracking.Drop_Rates[mob_name][item_name] + 1
+    if not DB.Tracking.DropRates[mob_name] then DB.Tracking.DropRates[mob_name] = {} end
+    if not DB.Tracking.DropRates[mob_name][item_name] then DB.Tracking.DropRates[mob_name][item_name] = 0 end
+    DB.Tracking.DropRates[mob_name][item_name] = DB.Tracking.DropRates[mob_name][item_name] + 1
 
     -- Sort the items alphabetically.
     Loot.Sorted_Items_All = {}
-    for item in pairs(DB.Tracking.Total_Items) do table.insert(Loot.Sorted_Items_All, item) end
+    for item in pairs(DB.Tracking.TotalItems) do table.insert(Loot.Sorted_Items_All, item) end
     table.sort(Loot.Sorted_Items_All, function(a, b) return a < b end)
 
-    Loot.Sorted_Items_Mob = Loot.Sort_Nested_Table(DB.Tracking.Drop_Rates)
+    Loot.Sorted_Items_Mob = Loot.Sort_Nested_Table(DB.Tracking.DropRates)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -134,12 +134,12 @@ Loot.Add_Received_Item = function(recipient_name, item_name, item_count)
     recipient_name = recipient_name or "Unknown"
     item_count = item_count or 1
 
-    if not DB.Tracking.Received_Items[recipient_name] then DB.Tracking.Received_Items[recipient_name] = {} end
-    if not DB.Tracking.Received_Items[recipient_name][item_name] then DB.Tracking.Received_Items[recipient_name][item_name] = 0 end
-    DB.Tracking.Received_Items[recipient_name][item_name] = DB.Tracking.Received_Items[recipient_name][item_name] + item_count
+    if not DB.Tracking.ReceivedItems[recipient_name] then DB.Tracking.ReceivedItems[recipient_name] = {} end
+    if not DB.Tracking.ReceivedItems[recipient_name][item_name] then DB.Tracking.ReceivedItems[recipient_name][item_name] = 0 end
+    DB.Tracking.ReceivedItems[recipient_name][item_name] = DB.Tracking.ReceivedItems[recipient_name][item_name] + item_count
 
     -- Sort the items alphabetically.
-    Loot.Sorted_Items_Player = Loot.Sort_Nested_Table(DB.Tracking.Received_Items)
+    Loot.Sorted_Items_Player = Loot.Sort_Nested_Table(DB.Tracking.ReceivedItems)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -187,7 +187,7 @@ Loot.All_Items = function()
         for _, item_name in pairs(Loot.Sorted_Items_All) do
             if Loot.Config.Show_Item(item_name) then
                 UI.TableNextColumn() UI.Text(tostring(item_name))
-                UI.TableNextColumn() UI.Text(tostring(DB.Tracking.Total_Items[item_name]))
+                UI.TableNextColumn() UI.Text(tostring(DB.Tracking.TotalItems[item_name]))
                 Window_Manager.Table_Row_Color(1)
             end
             items_obtained = items_obtained + 1
@@ -226,9 +226,9 @@ Loot.Player_Items = function()
 
             -- Items
             for _, item_name  in pairs(item_data) do
-                if Loot.Config.Show_Item(item_name) and DB.Tracking.Received_Items[player_name] and DB.Tracking.Received_Items[player_name][item_name] then
+                if Loot.Config.Show_Item(item_name) and DB.Tracking.ReceivedItems[player_name] and DB.Tracking.ReceivedItems[player_name][item_name] then
                     UI.TableNextColumn() UI.Text("- " .. tostring(item_name))
-                    UI.TableNextColumn() UI.Text(tostring(DB.Tracking.Received_Items[player_name][item_name]))
+                    UI.TableNextColumn() UI.Text(tostring(DB.Tracking.ReceivedItems[player_name][item_name]))
                     Window_Manager.Table_Row_Color(0)
                 end
             end
@@ -264,18 +264,18 @@ Loot.Mob_Items = function()
 
         -- Mob
         for _, mob_name in pairs(DB.Lists.Get.Mob()) do
-            if DB.Tracking.Defeated_Mobs[mob_name] then
-                local mob_deaths = DB.Tracking.Defeated_Mobs[mob_name]
+            if DB.Tracking.DefeatedMobs[mob_name] then
+                local mob_deaths = DB.Tracking.DefeatedMobs[mob_name]
                 UI.TableNextColumn() UI.Text(tostring(mob_name))
                 UI.TableNextColumn() UI.Text(tostring(mob_deaths))
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                 Window_Manager.Table_Row_Color(1)
 
                 -- Items
-                if Loot.Sorted_Items_Mob[mob_name] and DB.Tracking.Drop_Rates[mob_name] then
+                if Loot.Sorted_Items_Mob[mob_name] and DB.Tracking.DropRates[mob_name] then
                     for _, item_name in pairs(Loot.Sorted_Items_Mob[mob_name]) do
-                        if Loot.Config.Show_Item(item_name) and DB.Tracking.Drop_Rates[mob_name][item_name] then
-                            local drop_count = DB.Tracking.Drop_Rates[mob_name][item_name]
+                        if Loot.Config.Show_Item(item_name) and DB.Tracking.DropRates[mob_name][item_name] then
+                            local drop_count = DB.Tracking.DropRates[mob_name][item_name]
                             UI.TableNextColumn() UI.Text("- " .. tostring(item_name))
                             UI.TableNextColumn() UI.Text(tostring(drop_count))
                             UI.TableNextColumn() UI.Text(Column.String.Format_Percent(drop_count, mob_deaths))

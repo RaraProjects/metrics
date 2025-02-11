@@ -164,7 +164,7 @@ H.Melee.MultiAttack = function(details, ownerMob, multAttack)
         [8] = { count = DB.Metric.MULTI_ATTACK_8, damage = DB.Metric.MULTI_ATTACK_8_DAMAGE },
     }
 
-    DB.Tracking.Multi_Attack[playerName] = DB.Tracking.Multi_Attack[playerName] or { }
+    DB.Tracking.MultiAttack[playerName] = DB.Tracking.MultiAttack[playerName] or { }
 
     for type, data in pairs(multAttack) do
         local multiSwings = data.swings
@@ -173,7 +173,7 @@ H.Melee.MultiAttack = function(details, ownerMob, multAttack)
         local metrics     = multiAttackMetrics[multiSwings]
 
         if metrics then
-            DB.Tracking.Multi_Attack[playerName][metrics.count] = true
+            DB.Tracking.MultiAttack[playerName][metrics.count] = true
             DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, metrics.count)                  -- Specific multi-attack count (even if it's one).
             DB.Data.Update(DB.Update_Mode.INC, multiDamage, details.audits, type, metrics.damage)       -- Specific multi-attack damage.
 

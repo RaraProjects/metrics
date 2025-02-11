@@ -12,10 +12,10 @@ Focus.Pets.Display = function(player_name)
     -- Pet specific subtabs.
     local pet_total   = DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
     local pet_healing = DB.Data.Get(player_name, DB.Trackable.PET_HEALING, DB.Metric.TOTAL)
-    if (pet_total <= 0 and pet_healing <= 0) or not DB.Tracking.Initialized_Pets[player_name] then return nil end
+    if (pet_total <= 0 and pet_healing <= 0) or not DB.Tracking.InitializedPets[player_name] then return nil end
 
     if UI.BeginTabBar("Pet Tabs", Window_Manager.Tabs.Flags) then
-        for pet_name, _ in pairs(DB.Tracking.Initialized_Pets[player_name]) do
+        for pet_name, _ in pairs(DB.Tracking.InitializedPets[player_name]) do
             if UI.BeginTabItem(pet_name) then
                 Focus.Pets.Pet_Sub_Tab(player_name, pet_name)
                 UI.EndTabItem()
@@ -126,7 +126,7 @@ end
 ---@param pet_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Pets.Pet_Sub_Tab = function(player_name, pet_name)
-    if not DB.Tracking.Initialized_Pets[player_name] then
+    if not DB.Tracking.InitializedPets[player_name] then
         Debug.Error.Add(Debug.Error.ERROR, "Focus.Pets.Single", "Tried to loop through pets of unitialized player in the focus window.")
         return nil
     end

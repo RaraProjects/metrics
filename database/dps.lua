@@ -25,8 +25,8 @@ DB.DPS.Mode_Header = "DPS Mode"
 ------------------------------------------------------------------------------------------------------
 DB.DPS.Inc_Buffer = function(player_name, damage)
     if not player_name or not damage then return nil end
-    if not DB.Tracking.Running_Damage[player_name] then DB.Tracking.Running_Damage[player_name] = 0 end
-	DB.Tracking.Running_Damage[player_name] = DB.Tracking.Running_Damage[player_name] + damage
+    if not DB.Tracking.RunningDamage[player_name] then DB.Tracking.RunningDamage[player_name] = 0 end
+	DB.Tracking.RunningDamage[player_name] = DB.Tracking.RunningDamage[player_name] + damage
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -36,8 +36,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.DPS.Get_Buffer = function(player_name)
     if not player_name then return 0 end
-    if not DB.Tracking.Running_Damage[player_name] then return 0 end
-    return DB.Tracking.Running_Damage[player_name]
+    if not DB.Tracking.RunningDamage[player_name] then return 0 end
+    return DB.Tracking.RunningDamage[player_name]
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ end
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 DB.DPS.Clear_Buffer = function(player_name)
-    DB.Tracking.Running_Damage[player_name] = 0
+    DB.Tracking.RunningDamage[player_name] = 0
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.DPS.Create_Snapshot = function()
     -- Create the Snapshots
-    for player_name, _ in pairs(DB.Tracking.Initialized_Players) do
+    for player_name, _ in pairs(DB.Tracking.InitializedPlayers) do
         if not DB.DPS.Snapshots[player_name] then DB.DPS.Snapshots[player_name] = T{} end
         if not DB.DPS.DPS_Graph[player_name] then DB.DPS.DPS_Graph[player_name] = T{} end
         local buffer_damage = DB.DPS.Get_Buffer(player_name)

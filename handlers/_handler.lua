@@ -386,8 +386,8 @@ end
 H.Offense.GrandTotals = function(audits, damage, owner_mob)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
     DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
-    DB.Total_Damage = DB.Total_Damage + damage
-    DB.Total_Damage_No_Skillchain = DB.Total_Damage_No_Skillchain + damage
+    DB.TotalDamage = DB.TotalDamage + damage
+    DB.TotalDamageNoSkillchain = DB.TotalDamageNoSkillchain + damage
     if owner_mob then DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL) end
 end
 

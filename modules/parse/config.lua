@@ -301,7 +301,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Include_SC_Damage = function()
+Parse.Config.IncludeSkillchainDamage = function()
     return Parse.Settings.Include_SC_Damage
 end
 
@@ -310,7 +310,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Rank_Cutoff = function()
+Parse.Config.RankCutoff = function()
     return Parse.Settings.Rank_Cutoff
 end
 
