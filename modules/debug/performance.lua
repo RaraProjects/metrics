@@ -12,7 +12,7 @@ Debug.Performance.Add_Load = function()
         for y = 1,  Debug.Performance.Mobs_To_Add do
             player_name = "Player " .. tostring(x)
             mob_name = "Mob " .. tostring(y)
-            DB.Data.Update(DB.Update_Mode.INC, 25, {player_name = player_name,  target_name = mob_name}, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
+            DB.Data.Update(DB.UpdateMode.INC, 25, {player_name = player_name,  target_name = mob_name}, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
         end
     end
 end

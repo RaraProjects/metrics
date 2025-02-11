@@ -225,5 +225,5 @@ H.Ranged.Distance = function(audits, actorMob, targetMob, trackable)
     -- Clamp distance between 0 and 30.
     local distance = math.max(0, math.min(Ashita.Mob.Distance(actorMob, targetMob), 30))
 
-    DB.Data.Update(DB.Update_Mode.INC, distance, audits, trackable, DB.Metric.SHOT_DISTANCE)
+    DB.Data.Update(DB.UpdateMode.INC, distance, audits, trackable, DB.Metric.SHOT_DISTANCE)
 end

@@ -100,12 +100,12 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	local update_list = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
 	for _, update_target in ipairs(update_list) do
-		if mode == DB.Update_Mode.INC then
+		if mode == DB.UpdateMode.INC then
 			DB.Data.Inc(value, player_name, update_target, trackable, metric)
 			if pet_name then
 				DB.Pet_Data.Inc(value, player_name, pet_name, update_target, trackable, metric)
 			end
-		elseif mode == DB.Update_Mode.SET then
+		elseif mode == DB.UpdateMode.SET then
 			DB.Data.Set(value, player_name, update_target, trackable, metric)
 			if pet_name then
 				DB.Pet_Data.Set(value, player_name, pet_name, update_target, trackable, metric)
@@ -114,7 +114,7 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	end
 
 	-- Increment the running damage count for DPS if this is a total damage increase.
-	if mode == DB.Update_Mode.INC and trackable == DB.Trackable.TOTAL_DAMAGE and metric == DB.Metric.TOTAL then DB.DPS.Inc_Buffer(player_name, value) end
+	if mode == DB.UpdateMode.INC and trackable == DB.Trackable.TOTAL_DAMAGE and metric == DB.Metric.TOTAL then DB.DPS.Inc_Buffer(player_name, value) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -128,10 +128,10 @@ end
 DB.Data.Update_Damage = function(audits, trackable, damage, critical_hit)
 	-- Increment grand totals if necessary. There is an all damage track and a no-skillchain track.
     if DB.IsTotalDamageTrackable(trackable) then
-    	DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+    	DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
 		DB.TotalDamage = DB.TotalDamage + damage
 		if trackable ~= DB.Trackable.SKILLCHAIN then
-			DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
+			DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
 			DB.TotalDamageNoSkillchain = DB.TotalDamageNoSkillchain + damage
 		end
     end
@@ -149,15 +149,15 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Update_Damage_Basic = function(audits, trackable, damage, critical_hit)
 	-- Increment the trackable specific totals.
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.TOTAL)
+    DB.Data.Update(DB.UpdateMode.INC, damage, audits, trackable, DB.Metric.TOTAL)
 
 	if critical_hit then
-		DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.CRITICAL_COUNT)
-    	DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.CRITICAL_DAMAGE)
+		DB.Data.Update(DB.UpdateMode.INC,      1, audits, trackable, DB.Metric.CRITICAL_COUNT)
+    	DB.Data.Update(DB.UpdateMode.INC, damage, audits, trackable, DB.Metric.CRITICAL_DAMAGE)
 	end
 
 	-- Log an attempt on the target.
-	DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+	DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
 
 	-- Set trackable hits and minimums
 	local min_metric = (critical_hit and DB.Metric.CRITICAL_MIN) or DB.Metric.MIN
@@ -166,21 +166,21 @@ DB.Data.Update_Damage_Basic = function(audits, trackable, damage, critical_hit)
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
 	-- We log a hit on the target here too since we have a damage check.
 	if damage > 0 then
-		DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
+		DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
 		if audits.pet_name then
 			if damage < DB.Pet_Data.Get(audits.player_name, audits.pet_name, trackable, min_metric, audits.target_name) then
-				DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, min_metric)
+				DB.Data.Update(DB.UpdateMode.SET, damage, audits, trackable, min_metric)
 			end
 		else
 			if damage < DB.Data.Get(audits.player_name, trackable, min_metric, audits.target_name) then
-				DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, min_metric)
+				DB.Data.Update(DB.UpdateMode.SET, damage, audits, trackable, min_metric)
 			end
 		end
 	end
 
 	-- Set trackable maximums
 	if damage > DB.Data.Get(audits.player_name, trackable, max_metric, audits.target_name) then
-		DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, max_metric)
+		DB.Data.Update(DB.UpdateMode.SET, damage, audits, trackable, max_metric)
 	end
 end
 

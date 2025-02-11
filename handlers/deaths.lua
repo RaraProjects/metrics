@@ -17,7 +17,7 @@ H.Death.Action = function(actorMob, targetMob)
         target_name = actorMob.name,
     }
 
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEATH, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEATH, DB.Metric.TOTAL)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEATH, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEATH, DB.Metric.TOTAL)
     Blog.Add(targetMob.name, nil, Blog.Action_Type.PLAYER_DEATH, Blog.Enum.PLAYER_DEATH, nil, actorMob.name)
 end

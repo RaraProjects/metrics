@@ -64,10 +64,10 @@ H.Melee.Action = function(action, actorMob, ownerMob, logOffense)
         DB.Attack_Speed.Update(actorMob.name)
 
         if overallHit then
-            DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.HITS_ON_USE)
+            DB.Data.Update(DB.UpdateMode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.HITS_ON_USE)
         end
 
-        DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
+        DB.Data.Update(DB.UpdateMode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     end
 
     H.Melee.Blog(actorMob, ownerMob, damage + additionalDamage)
@@ -174,30 +174,30 @@ H.Melee.MultiAttack = function(details, ownerMob, multAttack)
 
         if metrics then
             DB.Tracking.MultiAttack[playerName][metrics.count] = true
-            DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, metrics.count)                  -- Specific multi-attack count (even if it's one).
-            DB.Data.Update(DB.Update_Mode.INC, multiDamage, details.audits, type, metrics.damage)       -- Specific multi-attack damage.
+            DB.Data.Update(DB.UpdateMode.INC, 1, details.audits, type, metrics.count)                  -- Specific multi-attack count (even if it's one).
+            DB.Data.Update(DB.UpdateMode.INC, multiDamage, details.audits, type, metrics.damage)       -- Specific multi-attack damage.
 
             -- How many times an attack round contained a specific melee type.
             if hasHit then
-                DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, DB.Metric.HITS_ON_USE)
+                DB.Data.Update(DB.UpdateMode.INC, 1, details.audits, type, DB.Metric.HITS_ON_USE)
             end
 
             -- Kind of benign. All hits should have an attempt associated though.
-            DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, type, DB.Metric.ATTEMPTS_ON_USE)
+            DB.Data.Update(DB.UpdateMode.INC, 1, details.audits, type, DB.Metric.ATTEMPTS_ON_USE)
 
             -- Total multi-attack rate.
             if multiSwings > 1 then
                 hasMulti = true
-                DB.Data.Update(DB.Update_Mode.INC, 1,           details.audits, type, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
-                DB.Data.Update(DB.Update_Mode.INC, multiDamage, details.audits, type, DB.Metric.MULTI_ATTACK_TOTAL)
-                DB.Data.Update(DB.Update_Mode.INC, multiDamage, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_TOTAL)
+                DB.Data.Update(DB.UpdateMode.INC, 1,           details.audits, type, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
+                DB.Data.Update(DB.UpdateMode.INC, multiDamage, details.audits, type, DB.Metric.MULTI_ATTACK_TOTAL)
+                DB.Data.Update(DB.UpdateMode.INC, multiDamage, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_TOTAL)
             end
         end
     end
 
     -- Only count one multi attack per attack round for the overall metric. Otherwise there is >100% for overall multi rate.
     if hasMulti then
-        DB.Data.Update(DB.Update_Mode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
+        DB.Data.Update(DB.UpdateMode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.MULTI_ATTACK_HIT_ON_USE)
     end
 end
 
@@ -244,7 +244,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Melee.Guarded = function(audits, meleeTypeOverall, reactionId)
     if reactionId == Ashita.AttackReaction.GUARD then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, meleeTypeOverall, DB.Metric.GUARD)
+        DB.Data.Update(DB.UpdateMode.INC, 1, audits, meleeTypeOverall, DB.Metric.GUARD)
     end
 end
 
@@ -341,8 +341,8 @@ end
 ---@param meleeTypeSpecific DB.Trackable main-hand, off-hand, etc.
 ------------------------------------------------------------------------------------------------------
 H.Melee.Dodge = function(audits, meleeTypeOverall, meleeTypeSpecific)
-    DB.Data.Update(DB.Update_Mode.INC, -1, audits, meleeTypeOverall,  DB.Metric.ATTEMPTS_ON_TARGET)
-    DB.Data.Update(DB.Update_Mode.INC, -1, audits, meleeTypeSpecific, DB.Metric.ATTEMPTS_ON_TARGET)
+    DB.Data.Update(DB.UpdateMode.INC, -1, audits, meleeTypeOverall,  DB.Metric.ATTEMPTS_ON_TARGET)
+    DB.Data.Update(DB.UpdateMode.INC, -1, audits, meleeTypeSpecific, DB.Metric.ATTEMPTS_ON_TARGET)
 end
 
 ------------------------------------------------------------------------------------------------------

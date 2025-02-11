@@ -183,7 +183,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Lists.Populate.Pet_Catalog_Damage = function(player_name, pet_name)
 	DB.Sorted.Pet_Catalog_Damage = {}
-	for _, trackable in pairs(DB.Pet_Single_Trackable) do
+	for _, trackable in pairs(DB.PetSingleTrackables) do
 		if DB.Lists.Check.Pet_Catalog_Exists(trackable, player_name, pet_name) then
 			for action_name, _ in pairs(DB.Tracking.PetTrackables[trackable][player_name][pet_name]) do
 				table.insert(DB.Sorted.Pet_Catalog_Damage, {action_name, 999, trackable})

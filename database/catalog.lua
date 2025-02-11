@@ -96,12 +96,12 @@ DB.Catalog.Update_Damage = function(player_name, target_name, trackable, damage,
 	-- Everything after this is for the catalog.
 
 	-- Total Damage
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, damage, audits, trackable, action_name, DB.Metric.TOTAL)
-	if critical_hit then DB.Catalog.Update_Metric(DB.Update_Mode.INC, damage, audits, trackable, action_name, DB.Metric.CRITICAL_DAMAGE) end
+    DB.Catalog.Update_Metric(DB.UpdateMode.INC, damage, audits, trackable, action_name, DB.Metric.TOTAL)
+	if critical_hit then DB.Catalog.Update_Metric(DB.UpdateMode.INC, damage, audits, trackable, action_name, DB.Metric.CRITICAL_DAMAGE) end
 
 	-- Attempts on the target.
-	DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
-	if critical_hit then DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.CRITICAL_COUNT) end
+	DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
+	if critical_hit then DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.CRITICAL_COUNT) end
 
 	-- Set trackable hits and minimums
 	local min_metric = (critical_hit and DB.Metric.CRITICAL_MIN) or DB.Metric.MIN
@@ -109,11 +109,11 @@ DB.Catalog.Update_Damage = function(player_name, target_name, trackable, damage,
 
     if damage > 0 then
 		-- Log hits here since we have a damage check.
-		DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_TARGET)
+		DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_TARGET)
 
 		-- Minimum damage.
 		if damage < DB.Catalog.Get(player_name, trackable, action_name, min_metric, audits.target_name) then
-			DB.Catalog.Update_Metric(DB.Update_Mode.SET, damage, audits, trackable, action_name, min_metric)
+			DB.Catalog.Update_Metric(DB.UpdateMode.SET, damage, audits, trackable, action_name, min_metric)
 		end
     end
 
@@ -124,7 +124,7 @@ DB.Catalog.Update_Damage = function(player_name, target_name, trackable, damage,
 		end
 
 		-- Maximum damage.
-		DB.Catalog.Update_Metric(DB.Update_Mode.SET, damage, audits, trackable, action_name, max_metric)
+		DB.Catalog.Update_Metric(DB.UpdateMode.SET, damage, audits, trackable, action_name, max_metric)
     end
 end
 
@@ -162,12 +162,12 @@ DB.Catalog.Update_Metric = function(mode, value, audits, trackable, action_name,
 	local update_list = {[1] = target_name, [2] = DB.Enum.ALL_MOBS}
 
 	for _, update_target in ipairs(update_list) do
-		if mode == DB.Update_Mode.INC then
+		if mode == DB.UpdateMode.INC then
 			DB.Catalog.Inc(value, player_name, update_target, action_name, trackable, metric)
 			if pet_name then
 				DB.Pet_Catalog.Inc(value, player_name, pet_name, update_target, action_name, trackable, metric)
 			end
-		elseif mode == DB.Update_Mode.SET then
+		elseif mode == DB.UpdateMode.SET then
 			DB.Catalog.Set(value, player_name, update_target, action_name, trackable, metric)
 			if pet_name then
 				DB.Pet_Catalog.Set(value, player_name, pet_name, update_target, action_name, trackable, metric)

@@ -142,11 +142,11 @@ H.Spell.IsActionBlocked = function(action, actorMob)
             local audits    = H.Spell.Audits(actorMob, Ashita.Mob.GetMobByID(target.id))
 
             if messageId == Ashita.Message.IS_PARALYZED or messageId == Ashita.Message.IS_PARALYZED_2 then
-                DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.ALL_PARALYZE, DB.Metric.HITS_ON_USE)
+                DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.ALL_PARALYZE, DB.Metric.HITS_ON_USE)
                 isBlocked = true
 
             elseif messageId == Ashita.Message.IS_INTIMIDATED then
-                DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.ALL_INTIMIDATE, DB.Metric.HITS_ON_USE)
+                DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.ALL_INTIMIDATE, DB.Metric.HITS_ON_USE)
                 isBlocked = true
             end
         end
@@ -207,9 +207,9 @@ H.Spell.Count = function(audits, spellId, spellName, hit, mpCost, targetCount)
 
     -- Overall mana tracking. Be careful to not double dip on MP Spent for general spells.
     if isPet and trackable ~= DB.Trackable.PET_GENERAL_MAGIC then
-        DB.Data.Update(DB.Update_Mode.INC, mpCost, audits, DB.Trackable.PET_GENERAL_MAGIC, DB.Metric.MP_SPENT)
+        DB.Data.Update(DB.UpdateMode.INC, mpCost, audits, DB.Trackable.PET_GENERAL_MAGIC, DB.Metric.MP_SPENT)
     elseif trackable ~= DB.Trackable.SPELLS_OVERALL then
-        DB.Data.Update(DB.Update_Mode.INC, mpCost, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.MP_SPENT)
+        DB.Data.Update(DB.UpdateMode.INC, mpCost, audits, DB.Trackable.SPELLS_OVERALL, DB.Metric.MP_SPENT)
     end
 end
 
@@ -344,8 +344,8 @@ H.Spell.Healing = function(audits, spellName, damage)
     -- Overcure
     local overcure = math.max(0, DB.Catalog.Get(audits.player_name, trackable, spellName, DB.Metric.MAX) - damage)
     if overcure > 0 then
-        DB.Data.Update(DB.Update_Mode.INC, overcure, audits, trackable, DB.Metric.OVERCURE)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, overcure, audits, trackable, spellName, DB.Metric.OVERCURE)
+        DB.Data.Update(DB.UpdateMode.INC, overcure, audits, trackable, DB.Metric.OVERCURE)
+        DB.Catalog.Update_Metric(DB.UpdateMode.INC, overcure, audits, trackable, spellName, DB.Metric.OVERCURE)
     end
 
     -- Healing Received tracked for party and alliance members only. Self-healing is ignored.
@@ -383,14 +383,14 @@ H.Spell.EnfeeblingAndDoTs = function(audits, trackable, damage, spellName, messa
 
         -- Need to supplement counts just in case the damage was zero but it wasn't resisted.
         if damage == 0 then
-            DB.Data.Update(DB.Update_Mode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
-            DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-            DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, spellName, DB.Metric.HITS_ON_TARGET)
+            DB.Data.Update(DB.UpdateMode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
+            DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
+            DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, spellName, DB.Metric.HITS_ON_TARGET)
         end
 
     -- No Effects: These will not negatively impact resist metrics.
     elseif H.MessageNoEffect(messageId) then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
+        DB.Data.Update(DB.UpdateMode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
         H.Offense.Hit(audits, overall, 0)
         H.Offense.CatalogNoDamageHit(audits, trackable, spellName)
         damage = -1
@@ -403,7 +403,7 @@ H.Spell.EnfeeblingAndDoTs = function(audits, trackable, damage, spellName, messa
 
     -- Effect Landed
     else
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
+        DB.Data.Update(DB.UpdateMode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
         H.Offense.Hit(audits, overall, 0)
         H.Offense.CatalogNoDamageHit(audits, trackable, spellName)
 

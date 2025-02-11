@@ -384,11 +384,11 @@ end
 ---@param owner_mob? table
 ------------------------------------------------------------------------------------------------------
 H.Offense.GrandTotals = function(audits, damage, owner_mob)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
+    DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+    DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
     DB.TotalDamage = DB.TotalDamage + damage
     DB.TotalDamageNoSkillchain = DB.TotalDamageNoSkillchain + damage
-    if owner_mob then DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL) end
+    if owner_mob then DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL) end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -423,7 +423,7 @@ end
 ---@param trackable string
 ------------------------------------------------------------------------------------------------------
 H.Offense.Miss = function(audits, trackable)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -436,8 +436,8 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Offense.NoDamageHit = function(audits, trackable, metric)
     H.Offense.Hit(audits, trackable, 0)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, metric)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, metric)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -450,8 +450,8 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Offense.MobHeal = function(audits, trackable, damage)
     H.Offense.Hit(audits, trackable, 0)
-    DB.Data.Update(DB.Update_Mode.INC,      1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-    DB.Data.Update(DB.Update_Mode.INC, damage, audits, trackable, DB.Metric.MOB_HEALING)
+    DB.Data.Update(DB.UpdateMode.INC,      1, audits, trackable, DB.Metric.HITS_ON_TARGET)
+    DB.Data.Update(DB.UpdateMode.INC, damage, audits, trackable, DB.Metric.MOB_HEALING)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -475,10 +475,10 @@ end
 ---@param action_name string
 ------------------------------------------------------------------------------------------------------
 H.Offense.CatalogNoDamageHit = function(audits, trackable, action_name)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_TARGET)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
+    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_TARGET)
+    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_TARGET)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -491,15 +491,15 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Offense.ActionUsed = function(audits, trackable, action_name, hit, mp_spent)
     if hit then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_USE)
+        DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+        DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.HITS_ON_USE)
     end
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
 
     if mp_spent then
-        DB.Data.Update(DB.Update_Mode.INC, mp_spent, audits, trackable, DB.Metric.MP_SPENT)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, mp_spent, audits, trackable, action_name, DB.Metric.MP_SPENT)
+        DB.Data.Update(DB.UpdateMode.INC, mp_spent, audits, trackable, DB.Metric.MP_SPENT)
+        DB.Catalog.Update_Metric(DB.UpdateMode.INC, mp_spent, audits, trackable, action_name, DB.Metric.MP_SPENT)
     end
 end
 
@@ -515,8 +515,8 @@ end
 H.Offense.WeaponskillTP = function(audits, tp, ws_name, trackable)
     if not tp or tp < 0 then tp = 0 end
     if tp > 3000 then tp = 3000 end
-    DB.Data.Update(DB.Update_Mode.INC, tp, audits, trackable, DB.Metric.TP_SPENT)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, tp, audits, trackable, ws_name, DB.Metric.TP_SPENT)
+    DB.Data.Update(DB.UpdateMode.INC, tp, audits, trackable, DB.Metric.TP_SPENT)
+    DB.Catalog.Update_Metric(DB.UpdateMode.INC, tp, audits, trackable, ws_name, DB.Metric.TP_SPENT)
     return tp
 end
 
@@ -538,10 +538,10 @@ H.Offense.MinMax = function(audits, trackable, damage, was_critical_hit)
     end
 
     if damage > 0 and (damage < DB.Data.Get(audits.player_name, trackable, metric_min, audits.target_name)) then
-        DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, metric_min)
+        DB.Data.Update(DB.UpdateMode.SET, damage, audits, trackable, metric_min)
     end
     if damage > DB.Data.Get(audits.player_name, trackable, metric_max, audits.target_name) then
-        DB.Data.Update(DB.Update_Mode.SET, damage, audits, trackable, metric_max)
+        DB.Data.Update(DB.UpdateMode.SET, damage, audits, trackable, metric_max)
     end
 end
 
@@ -575,7 +575,7 @@ H.Defense.Mitigation = function(audits, trackable, damage, message_id, message_c
     local mitigation_occurred = false
     if message_id == message_check then
         H.Offense.Hit(audits, trackable, damage)
-        if no_damage_hit then DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET) end
+        if no_damage_hit then DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET) end
         mitigation_occurred = true
     else
         H.Offense.Miss(audits, trackable)

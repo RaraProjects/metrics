@@ -207,9 +207,9 @@ H.MeleeDef.Spikes = function(audits, actionData)
             H.Offense.CatalogHit(audits, spikeTrackable, damage, "Shock Spikes")
 
         else
-            DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
-            DB.Data.Update(DB.Update_Mode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
-            DB.Data.Update(DB.Update_Mode.INC, damage, audits, spikeTrackable, DB.Metric.TOTAL)
+            DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+            DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
+            DB.Data.Update(DB.UpdateMode.INC, damage, audits, spikeTrackable, DB.Metric.TOTAL)
         end
     end
 end
@@ -238,8 +238,8 @@ H.MeleeDef.AdditionalEffect = function(audits, actionData, animationId, messageI
             H.Offense.CatalogHit(audits, DB.Trackable.DEF_NUKING, additionalDamage, enspellName)
 
             -- Need to undo the counts because Grand Totals is also called in the main parse function.
-            DB.Data.Update(DB.Update_Mode.INC, -1, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.HITS_ON_TARGET)
-            DB.Data.Update(DB.Update_Mode.INC, -1, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.ATTEMPTS_ON_TARGET)
+            DB.Data.Update(DB.UpdateMode.INC, -1, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.HITS_ON_TARGET)
+            DB.Data.Update(DB.UpdateMode.INC, -1, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.ATTEMPTS_ON_TARGET)
         end
     end
 

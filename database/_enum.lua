@@ -1,11 +1,11 @@
-DB.Enum = {
+---@enum DB.Enum
+DB.Enum =
+{
     ALL_MOBS    = "!All Mobs",
     BLANK       = "",
-    CATALOG     = "catalog",
     COMBINED    = "combined",
     DEBUG       = "¯\\_(ツ)_/¯",
     IGNORE      = "ignore",
-	PET_CATALOG = "pet_catalog",
     MAX_DAMAGE  = 100000,
 }
 
@@ -159,14 +159,15 @@ DB.Metric =
 }
 
 ---@enum DB.UpdateMode
-DB.Update_Mode =
+DB.UpdateMode =
 {
     INC = "inc",
     SET = "set",
 }
 
 -- Used in lists to find all the actions that pets have done.
-DB.Pet_Single_Trackable = {
+DB.PetSingleTrackables =
+{
 	PET_WS         = DB.Trackable.PET_TP,
 	PET_HEAL       = DB.Trackable.PET_HEALING,
     PET_BUFF       = DB.Trackable.PET_SPELL_BUFFS,
@@ -176,7 +177,8 @@ DB.Pet_Single_Trackable = {
 	PET_MAGIC      = DB.Trackable.PET_GENERAL_MAGIC,
 }
 
-DB.HealingMaxDefaults = {
+DB.HealingMaxDefaults =
+{
     ["Cure"]       = 50,	-- 35
     ["Cure II"]    = 150, 	-- 102
     ["Cure III"]   = 250, 	-- 212
@@ -191,7 +193,8 @@ DB.HealingMaxDefaults = {
 }
 
 -- This is the configurable healing max used for overcure.
-DB.HealingMax = {
+DB.HealingMax =
+{
     ["Cure"]       = 50,
     ["Cure II"]    = 150,
     ["Cure III"]   = 250,

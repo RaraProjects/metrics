@@ -63,12 +63,12 @@ H.TpDef.MonsterAction = function(action, actorMob, ownerMob, logDefense)
 
     -- Counts
     local audits = H.TpDef.Audits(actorMob, targetOwnerMob, targetMob)
-    DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
-    DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, skillName, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.ATTEMPTS_ON_USE)
 
     if isUseHit then
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
-        DB.Catalog.Update_Metric(DB.Update_Mode.INC, 1, audits, trackable, skillName, DB.Metric.HITS_ON_USE)
+        DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+        DB.Catalog.Update_Metric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.HITS_ON_USE)
     end
 
     -- Battle Log
@@ -178,7 +178,7 @@ H.TpDef.DamageMitigation = function(audits, damage, messageId, actionName, owner
     if H.MessageNoDamageMiss(messageId) then
         H.Defense.GrandTotals(audits, 0, ownerMob)
         H.Offense.CatalogHit(audits, audits.trackable, 0, actionName)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.HITS_ON_TARGET)
+        DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.HITS_ON_TARGET)
         damage = 0
         miss   = true
 
@@ -186,7 +186,7 @@ H.TpDef.DamageMitigation = function(audits, damage, messageId, actionName, owner
     elseif H.MessageNoDamage(messageId) then
         H.Defense.GrandTotals(audits, 0, ownerMob)
         H.Offense.CatalogNoDamageHit(audits, audits.trackable, actionName)
-        DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_SHADOWS_TP_ACTION, DB.Metric.HITS_ON_TARGET)
+        DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_SHADOWS_TP_ACTION, DB.Metric.HITS_ON_TARGET)
         damage = 0
         shadow = true
     end
@@ -194,10 +194,10 @@ H.TpDef.DamageMitigation = function(audits, damage, messageId, actionName, owner
     -- Set attempts. Not tracking mitigation for pets.
     if not ownerMob then
         if miss then
-            DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.ATTEMPTS_ON_TARGET)
+            DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.ATTEMPTS_ON_TARGET)
         else
-            DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.ATTEMPTS_ON_TARGET)
-            DB.Data.Update(DB.Update_Mode.INC, 1, audits, DB.Trackable.DEF_SHADOWS_TP_ACTION, DB.Metric.ATTEMPTS_ON_TARGET)
+            DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.ATTEMPTS_ON_TARGET)
+            DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_SHADOWS_TP_ACTION, DB.Metric.ATTEMPTS_ON_TARGET)
         end
     end
 
