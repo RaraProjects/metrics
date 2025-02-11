@@ -98,7 +98,7 @@ DB.Initialize = function(isManualReset)
 		DB.HealingMax[spell] = threshold
 	end
 
-	DB.Attack_Speed.Reset()
+	DB.AttackSpeed.Reset()
 
 	Timers.Reset(Timers.Enum.Names.PARSE)
 end

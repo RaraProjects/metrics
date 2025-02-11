@@ -61,7 +61,7 @@ H.Melee.Action = function(action, actorMob, ownerMob, logOffense)
     -- Keep track of how many melee cycles have occurred (1 per packet).
     -- Don't calculate for pets.
     if not ownerMob then
-        DB.Attack_Speed.Update(actorMob.name)
+        DB.AttackSpeed.Update(actorMob.name)
 
         if overallHit then
             DB.Data.Update(DB.UpdateMode.INC, 1, details.audits, DB.Trackable.MELEE_OVERALL, DB.Metric.HITS_ON_USE)

@@ -9,7 +9,7 @@ Column.Attack_Speed = T{}
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Attack_Speed.Get = function(player_name, justify, raw)
-    local speed = DB.Attack_Speed.Get(player_name)
+    local speed = DB.AttackSpeed.Get(player_name)
 
     local color = Res.Colors.Basic.WHITE
     if speed == 0 then color = Res.Colors.Basic.DIM end
