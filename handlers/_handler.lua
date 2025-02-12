@@ -413,7 +413,7 @@ end
 ---@param critical_hit? boolean
 ------------------------------------------------------------------------------------------------------
 H.Offense.Hit = function(audits, trackable, damage, critical_hit)
-    DB.Data.Update_Damage_Basic(audits, trackable, damage, critical_hit)
+    DB.Data.UpdateDamageBasic(audits, trackable, damage, critical_hit)
 end
 
 ------------------------------------------------------------------------------------------------------

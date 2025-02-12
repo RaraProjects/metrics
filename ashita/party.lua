@@ -123,7 +123,7 @@ Ashita.Party.Refresh = function(playerName, node)
 
             if memberMob and name ~= "" then
                 Ashita.Party.List[name] = partyNumber
-                DB.Data.Initialize_Player_Tracking_Tables(name)
+                DB.Data.InitializePlayerTrackingTables(name)
 
                 local mainJob      = data:GetMemberMainJob(slot)
                 local mainJobLevel = data:GetMemberMainJobLevel(slot)
