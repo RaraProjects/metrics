@@ -13,7 +13,7 @@ XP.Dedication.Check = function()
 
     -- There is a zone delay to prevent checking boost status while buffs are temporarily gone after zoning.
     if not XP.Dedication.Is_Active and not Ashita.States.Zoning and XP.Dedication.Need_Clear and
-    Timers.Get_Duration(Timers.Enum.Names.ZONE) > XP.Dedication.Zone_Delay then
+    Timers.GetDuration(Timers.Enum.Names.ZONE) > XP.Dedication.Zone_Delay then
         XP.Dedication.Clear()
 
     -- If dedication buff is active, but we don't know what boost item was used, fall back to the default if configured.

@@ -91,7 +91,7 @@ end
 ---@param name string name of the timer to check.
 ---@return number
 ------------------------------------------------------------------------------------------------------
-timers.Get_Duration = function(name)
+timers.GetDuration = function(name)
     local duration = 0
     if timers.Timers[name] then
         duration = timers.Timers[name].Duration
@@ -113,7 +113,7 @@ end
 ------------------------------------------------------------------------------------------------------
 timers.Check = function(name, countdown)
     if timers.Timers[name] then
-        local duration = timers.Get_Duration(name)
+        local duration = timers.GetDuration(name)
         if countdown then
             return timers.Format((countdown * 60) - duration)
         else
@@ -129,14 +129,14 @@ end
 ---@param name string name of the timer to check.
 ------------------------------------------------------------------------------------------------------
 timers.Cycle = function(name)
-    local duration = timers.Get_Duration(name)
+    local duration = timers.GetDuration(name)
     if name == Timers.Enum.Names.AUTOPAUSE then
         if duration > timers.Tresholds.AUTOPAUSE then
             timers.Pause(timers.Enum.Names.PARSE)
         end
     elseif name == Timers.Enum.Names.DPS then
-        if duration > DB.DPS.Snapshot_Time then
-            DB.DPS.Create_Snapshot()
+        if duration > DB.DPS.SnapshotTime then
+            DB.DPS.CreateSnapshot()
             timers.Reset(Timers.Enum.Names.DPS)
         end
     end

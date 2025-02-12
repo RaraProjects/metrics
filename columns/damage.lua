@@ -25,7 +25,7 @@ Column.Damage.By_Type = function(player_name, trackable, metric, action_name, pe
     local color = Column.String.Color_Zero(trackable_damage)
 
     if percent_player then
-        local total_damage = Column.Damage.Raw_Total_Player_Damage(player_name)
+        local total_damage = Column.Damage.RawTotalPlayerDamage(player_name)
         if trackable == DB.Trackable.SPELLS_HEALING or trackable == DB.Trackable.ABILITY_HEALING or
            trackable == DB.Trackable.PET_HEALING or trackable == DB.Trackable.ALL_HEAL then
             total_damage = DB.Data.Get(player_name, DB.Trackable.ALL_HEAL, DB.Metric.TOTAL)
@@ -96,7 +96,7 @@ Column.Damage.By_Type_Crit = function(player_name, damage_type, percent, justify
     local color = Column.String.Color_Zero(crit_damage)
 
     if percent then
-        local total_damage = Column.Damage.Raw_Total_Player_Damage(player_name)
+        local total_damage = Column.Damage.RawTotalPlayerDamage(player_name)
         return Column.Output.Percent(crit_damage, total_damage, color, false, justify)
     end
 
@@ -459,7 +459,7 @@ Column.Damage.Burst = function(player_name, percent, magic_only, justify)
     local focused_damage = DB.Data.Get(player_name, DB.Trackable.SPELLS_OVERALL, DB.Metric.MAGIC_BURST_DAMAGE)
     local color = Column.String.Color_Zero(focused_damage)
     if percent then
-        local total_damage = Column.Damage.Raw_Total_Player_Damage(player_name)
+        local total_damage = Column.Damage.RawTotalPlayerDamage(player_name)
         if magic_only then
             total_damage = DB.Data.Get(player_name, DB.Trackable.SPELLS_OVERALL, DB.Metric.TOTAL)
         end
@@ -478,7 +478,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Total = function(player_name, percent, justify, raw)
-    local grand_total = Column.Damage.Raw_Total_Player_Damage(player_name)
+    local grand_total = Column.Damage.RawTotalPlayerDamage(player_name)
     local color = Column.String.Color_Zero(grand_total)
 
     if percent then
@@ -515,7 +515,7 @@ end
 ---@param justify? boolean whether or not to right justify the text
 ------------------------------------------------------------------------------------------------------
 Column.Damage.DPS = function(player_name, justify)
-    local dps = DB.DPS.Get_DPS(player_name)
+    local dps = DB.DPS.GetDPS(player_name)
     local color = Column.String.Color_Zero(dps)
     return UI.TextColored(color, Column.String.Format_Number(dps, justify))
 end
@@ -526,7 +526,7 @@ end
 ---@param justify? boolean whether or not to right justify the text
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Max_DPS = function(player_name, justify)
-    local max_dps = DB.DPS.Get_Max_DPS(player_name)
+    local max_dps = DB.DPS.GetMaxDPS(player_name)
     local color = Column.String.Color_Zero(max_dps)
     return UI.TextColored(color, Column.String.Format_Number(max_dps, justify))
 end
@@ -537,7 +537,7 @@ end
 ---@param player_name string
 ---@return number
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Raw_Total_Player_Damage = function(player_name)
+Column.Damage.RawTotalPlayerDamage = function(player_name)
     if player_name then
         if Parse.Config.IncludeSkillchainDamage() then
             return DB.Data.Get(player_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
@@ -582,7 +582,7 @@ end
 Column.Damage.Parse_DPS = function(justify)
     local dps = 0
     for player_name, _ in pairs(DB.Tracking.InitializedPlayers) do
-        dps = dps + DB.DPS.Get_DPS(player_name)
+        dps = dps + DB.DPS.GetDPS(player_name)
     end
     local color = Column.String.Color_Zero(dps)
     return UI.TextColored(color, Column.String.Format_Number(dps, justify))

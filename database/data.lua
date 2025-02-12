@@ -122,7 +122,7 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	if mode == DB.UpdateMode.INC and
 	   trackable == DB.Trackable.TOTAL_DAMAGE and
 	   metric == DB.Metric.TOTAL then
-		DB.DPS.Inc_Buffer(playerName, value)
+		DB.DPS.IncBuffer(playerName, value)
 	end
 end
 

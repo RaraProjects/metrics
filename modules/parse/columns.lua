@@ -63,7 +63,7 @@ table.insert(Parse.Column_Content, {
 -- DPS
 table.insert(Parse.Column_Content, {
     Condition = function() return Parse.Settings.Show_DPS end,
-    Header    = function() return DB.DPS.Column_Header() end,
+    Header    = function() return DB.DPS.ColumnHeader() end,
     Content   = function(player_name) Column.Attack_Speed.Get(player_name, true) end,
     Total     = function() Column.Damage.Parse_DPS(true) end,
     Is_Mini   = true,
