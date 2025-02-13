@@ -88,8 +88,8 @@ Column.Acc.By_Type_Pet = function(player_name, pet_name, trackable, action_name,
     local hits     = 0
     local attempts = 0
     if action_name then
-        hits     = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, hit_metric)
-        attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, attempt_metric)
+        hits     = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, hit_metric)
+        attempts = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, attempt_metric)
     else
         hits     = DB.Pet_Data.Get(player_name, pet_name, trackable, hit_metric)
         attempts = DB.Pet_Data.Get(player_name, pet_name, trackable, attempt_metric)

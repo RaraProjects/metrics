@@ -49,7 +49,7 @@ DB.Catalog.Initialize = function(playerName, targetName, actionName, trackable, 
 
 	-- Make sure the pet catalog is also initialized if necessary.
 	if petName then
-		DB.Pet_Catalog.Initialize(playerName, petName, targetName, actionName, trackable)
+		DB.PetCatalog.Initialize(playerName, petName, targetName, actionName, trackable)
 	end
 
 	-- Initialize data nodes.
@@ -187,13 +187,13 @@ DB.Catalog.UpdateMetric = function(mode, value, audits, trackable, actionName, m
 		if mode == DB.UpdateMode.INC then
 			DB.Catalog.Inc(value, playerName, updateTarget, actionName, trackable, metric)
 			if petName then
-				DB.Pet_Catalog.Inc(value, playerName, petName, updateTarget, actionName, trackable, metric)
+				DB.PetCatalog.Inc(value, playerName, petName, updateTarget, actionName, trackable, metric)
 			end
 
 		elseif mode == DB.UpdateMode.SET then
 			DB.Catalog.Set(value, playerName, updateTarget, actionName, trackable, metric)
 			if petName then
-				DB.Pet_Catalog.Set(value, playerName, petName, updateTarget, actionName, trackable, metric)
+				DB.PetCatalog.Set(value, playerName, petName, updateTarget, actionName, trackable, metric)
 			end
 		end
 	end
@@ -202,7 +202,7 @@ DB.Catalog.UpdateMetric = function(mode, value, audits, trackable, actionName, m
 	DB.Tracking.Trackables[trackable][playerName][actionName] = true
 
 	if petName then
-		if not DB.Pet_Catalog.InitializeTracking(trackable, playerName, petName) then
+		if not DB.PetCatalog.InitializeTracking(trackable, playerName, petName) then
 			return false
 		end
 

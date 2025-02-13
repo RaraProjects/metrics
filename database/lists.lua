@@ -156,10 +156,10 @@ end
 -- Checks if the player has any cataloged data for the specified focus type.
 -- Can use this to check if there is anything to publish via report before attempting to do so.
 ------------------------------------------------------------------------------------------------------
----@param playerName string name of the player that did the cataloged action
----@param focusType  string the trackable that is of interest.
+---@param playerName string       name of the player that did the cataloged action
+---@param trackable  DB.Trackable the trackable that is of interest.
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-DB.Lists.CatalogExists = function(playerName, focusType)
-	return  DB.Tracking.Trackables[focusType] and DB.Tracking.Trackables[focusType][playerName] or false
+DB.Lists.CatalogExists = function(playerName, trackable)
+	return  DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][playerName] or false
 end

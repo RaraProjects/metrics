@@ -54,7 +54,7 @@ Column.Damage.By_Type_Pet = function(player_name, pet_name, trackable, metric, a
     local trackable_damage = 0
 
     if action_name then
-        trackable_damage = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, metric)
+        trackable_damage = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, metric)
     else
         trackable_damage = DB.Pet_Data.Get(player_name, pet_name, trackable, metric)
     end
@@ -209,8 +209,8 @@ Column.Damage.Pet_Average = function(player_name, pet_name, trackable, action_na
     local damage = 0
 
     if action_name then
-        hits   = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.HITS_ON_TARGET)
-        damage = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.TOTAL)
+        hits   = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.HITS_ON_TARGET)
+        damage = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.TOTAL)
     else
         hits   = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.HITS_ON_TARGET)
         damage = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.TOTAL)
@@ -296,7 +296,7 @@ Column.Damage.Pet_Attempts = function(player_name, pet_name, trackable, action_n
 
     local attempts = 0
     if action_name then
-        attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, attempt_metric)
+        attempts = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, attempt_metric)
     else
         attempts = DB.Pet_Data.Get(player_name, pet_name, trackable, attempt_metric)
     end
@@ -394,8 +394,8 @@ Column.Damage.Average_Pet_TP = function(player_name, pet_name, trackable, action
     local attempts = 0
 
     if action_name then
-        tp       = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.TP_SPENT)
-        attempts = DB.Pet_Catalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
+        tp       = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.TP_SPENT)
+        attempts = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.ATTEMPTS_ON_USE)
     else
         tp       = DB.Data.Get(player_name, trackable, DB.Metric.TP_SPENT)
         attempts = DB.Data.Get(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
