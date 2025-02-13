@@ -56,14 +56,14 @@ Column.Damage.By_Type_Pet = function(player_name, pet_name, trackable, metric, a
     if action_name then
         trackable_damage = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, metric)
     else
-        trackable_damage = DB.Pet_Data.Get(player_name, pet_name, trackable, metric)
+        trackable_damage = DB.PetData.Get(player_name, pet_name, trackable, metric)
     end
     if DB.MetricNeedsMaxValue(metric) and trackable_damage >= DB.Enum.MAX_DAMAGE then trackable_damage = 0 end
 
     local color = Column.String.Color_Zero(trackable_damage)
 
     if percent_pet then
-        local total_damage = DB.Pet_Data.Get(player_name, pet_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+        local total_damage = DB.PetData.Get(player_name, pet_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
         return UI.TextColored(color, Column.String.Format_Percent(trackable_damage, total_damage))
     end
 
@@ -212,8 +212,8 @@ Column.Damage.Pet_Average = function(player_name, pet_name, trackable, action_na
         hits   = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.HITS_ON_TARGET)
         damage = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, DB.Metric.TOTAL)
     else
-        hits   = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.HITS_ON_TARGET)
-        damage = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.TOTAL)
+        hits   = DB.PetData.Get(player_name, pet_name, trackable, DB.Metric.HITS_ON_TARGET)
+        damage = DB.PetData.Get(player_name, pet_name, trackable, DB.Metric.TOTAL)
     end
 
     local color = Column.String.Color_Zero(hits)
@@ -298,7 +298,7 @@ Column.Damage.Pet_Attempts = function(player_name, pet_name, trackable, action_n
     if action_name then
         attempts = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, attempt_metric)
     else
-        attempts = DB.Pet_Data.Get(player_name, pet_name, trackable, attempt_metric)
+        attempts = DB.PetData.Get(player_name, pet_name, trackable, attempt_metric)
     end
 
     local color = Column.String.Color_Zero(attempts)
@@ -419,7 +419,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Pet_By_Type = function(player_name, pet_name, damage_type, percent, justify, all_total)
-    local focused_damage = DB.Pet_Data.Get(player_name, pet_name, damage_type, DB.Metric.TOTAL)
+    local focused_damage = DB.PetData.Get(player_name, pet_name, damage_type, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(focused_damage)
     if percent then
         local total_damage = DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
@@ -440,7 +440,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Column.Damage.Healing_Player = function(player_name, pet_name, damage_type, justify)
     local healing = DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
-    if pet_name then healing = DB.Pet_Data.Get(player_name, pet_name, damage_type, DB.Metric.TOTAL) end
+    if pet_name then healing = DB.PetData.Get(player_name, pet_name, damage_type, DB.Metric.TOTAL) end
     local color = Column.String.Color_Zero(healing)
     local player_healing = DB.Data.Get(player_name, DB.Trackable.ALL_HEAL, DB.Metric.TOTAL)
     return UI.TextColored(color, Column.String.Format_Percent(healing, player_healing, justify))

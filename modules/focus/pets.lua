@@ -135,19 +135,19 @@ Focus.Pets.Pet_Sub_Tab = function(player_name, pet_name)
     Focus.Pets.Pet_Specific_TP_Moves(player_name, pet_name, DB.Trackable.PET_TP, "TP Move")
 
     local trackable = DB.Trackable.PET_NUKING
-    local nuking = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.TOTAL) > 0
+    local nuking = DB.PetData.Get(player_name, pet_name, trackable, DB.Metric.TOTAL) > 0
     if nuking then Focus.Pets.Pet_Specific_TP_Moves(player_name, pet_name, trackable, "Nuking") end
 
     trackable = DB.Trackable.PET_ENFEEBLING
-    local enfeeble = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.HITS_ON_USE) > 0
+    local enfeeble = DB.PetData.Get(player_name, pet_name, trackable, DB.Metric.HITS_ON_USE) > 0
     if enfeeble then Focus.Pets.Pet_Specific_Non_Damaging_Spells(player_name, pet_name, trackable, "Enfeebling") end
 
     trackable = DB.Trackable.PET_HEALING
-    local healing = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.TOTAL) > 0
+    local healing = DB.PetData.Get(player_name, pet_name, trackable, DB.Metric.TOTAL) > 0
     if healing then Focus.Pets.Pet_Specific_TP_Moves(player_name, pet_name, trackable, "Healing") end
 
     trackable = DB.Trackable.PET_SPELL_BUFFS
-    local buffs = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.HITS_ON_USE) > 0
+    local buffs = DB.PetData.Get(player_name, pet_name, trackable, DB.Metric.HITS_ON_USE) > 0
     if buffs then Focus.Pets.Pet_Specific_Non_Damaging_Spells(player_name, pet_name, trackable, "Buffs", true) end
 end
 
@@ -188,7 +188,7 @@ Focus.Pets.Pet_Specific_Total = function(player_name, pet_name)
         table.insert(damage_types, {header = "TP Move", trackable = DB.Trackable.PET_TP})
 
         for _, data in ipairs(damage_types) do
-            if DB.Pet_Data.Get(player_name, pet_name, data.trackable, DB.Metric.TOTAL) > 0 then
+            if DB.PetData.Get(player_name, pet_name, data.trackable, DB.Metric.TOTAL) > 0 then
                 UI.TableNextColumn() UI.Text("- " .. data.header)
                 UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, data.trackable)
                 UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, data.trackable, true, nil, true)
@@ -199,7 +199,7 @@ Focus.Pets.Pet_Specific_Total = function(player_name, pet_name)
             end
         end
 
-        local pet_healing = DB.Pet_Data.Get(player_name, pet_name, DB.Trackable.PET_HEALING, DB.Metric.TOTAL)
+        local pet_healing = DB.PetData.Get(player_name, pet_name, DB.Trackable.PET_HEALING, DB.Metric.TOTAL)
         if pet_healing > 0 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("Healing")

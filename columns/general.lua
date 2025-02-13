@@ -73,7 +73,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.General.Percent_Party_Total_Pet = function(player_name, pet_name, trackable, justify, raw)
-    local pet_total = DB.Pet_Data.Get(player_name, pet_name, trackable, DB.Metric.TOTAL)
+    local pet_total = DB.PetData.Get(player_name, pet_name, trackable, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(pet_total)
     local party_total = 0
     for name, _ in pairs(DB.Tracking.InitializedPlayers) do

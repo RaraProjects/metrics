@@ -33,7 +33,10 @@ DB.Data.Initialize = function(playerName, targetName)
 
 	-- Initialize data nodes.
 	-- Need to set minimum high manually to capture accurate minimums.
-	if #initializationList == 0 then return false end
+	if #initializationList == 0 then
+		return false
+	end
+
 	for _, initializationTarget in ipairs(initializationList) do
 		for _, trackable in pairs(DB.Trackable) do
 			DB.Parse[playerName][initializationTarget][trackable] = { }
@@ -98,7 +101,7 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 
 	DB.Data.Initialize(playerName, targetName)
 	if petName then
-		DB.Pet_Data.Initialize(playerName, petName, targetName)
+		DB.PetData.Initialize(playerName, petName, targetName)
 	end
 
 	-- Set the data; loop once for mob-specific data and a second time for all mob data.
@@ -108,12 +111,12 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 		if mode == DB.UpdateMode.INC then
 			DB.Data.Inc(value, playerName, updateTarget, trackable, metric)
 			if petName then
-				DB.Pet_Data.Inc(value, playerName, petName, updateTarget, trackable, metric)
+				DB.PetData.Inc(value, playerName, petName, updateTarget, trackable, metric)
 			end
 		elseif mode == DB.UpdateMode.SET then
 			DB.Data.Set(value, playerName, updateTarget, trackable, metric)
 			if petName then
-				DB.Pet_Data.Set(value, playerName, petName, updateTarget, trackable, metric)
+				DB.PetData.Set(value, playerName, petName, updateTarget, trackable, metric)
 			end
 		end
 	end
@@ -179,7 +182,7 @@ DB.Data.UpdateDamageBasic = function(audits, trackable, damage, isCriticalHit)
 		DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
 
 		if audits.pet_name then
-			if damage < DB.Pet_Data.Get(audits.player_name, audits.pet_name, trackable, minMetric, audits.target_name) then
+			if damage < DB.PetData.Get(audits.player_name, audits.pet_name, trackable, minMetric, audits.target_name) then
 				DB.Data.Update(DB.UpdateMode.SET, damage, audits, trackable, minMetric)
 			end
 		else

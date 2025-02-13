@@ -91,8 +91,8 @@ Column.Acc.By_Type_Pet = function(player_name, pet_name, trackable, action_name,
         hits     = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, hit_metric)
         attempts = DB.PetCatalog.Get(player_name, pet_name, trackable, action_name, attempt_metric)
     else
-        hits     = DB.Pet_Data.Get(player_name, pet_name, trackable, hit_metric)
-        attempts = DB.Pet_Data.Get(player_name, pet_name, trackable, attempt_metric)
+        hits     = DB.PetData.Get(player_name, pet_name, trackable, hit_metric)
+        attempts = DB.PetData.Get(player_name, pet_name, trackable, attempt_metric)
     end
 
     local color = Column.Acc.Color_Selection(hits, attempts, DB.Settings.AccuracyWarning)

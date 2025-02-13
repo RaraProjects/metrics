@@ -21,7 +21,7 @@ DB.PetCatalog.Initialize = function(playerName, petName, targetName, actionName,
 	end
 
 	-- Don't want to overwrite data node if it already exists. This is for mob specfic data.
-	local initializationList = {}
+	local initializationList = { }
 	if not DB.PetParseCatalog[playerName] then DB.PetParseCatalog[playerName] = { } end
 	if not DB.PetParseCatalog[playerName][petName] then DB.PetParseCatalog[playerName][petName] = { } end
 	if not DB.PetParseCatalog[playerName][petName][targetName] then DB.PetParseCatalog[playerName][petName][targetName] = { } end
@@ -48,12 +48,12 @@ DB.PetCatalog.Initialize = function(playerName, petName, targetName, actionName,
 		return nil
 	end
 
-	for _, initialization_target in ipairs(initializationList) do
+	for _, initializationTarget in ipairs(initializationList) do
 		for _, metric in pairs(DB.Metric) do
 			if DB.MetricNeedsMaxValue(metric) then
-				DB.PetCatalog.Set(DB.Enum.MAX_DAMAGE, playerName, petName, initialization_target, actionName, trackable, metric)
+				DB.PetCatalog.Set(DB.Enum.MAX_DAMAGE, playerName, petName, initializationTarget, actionName, trackable, metric)
 			else
-				DB.PetCatalog.Set(0, playerName, petName, initialization_target, actionName, trackable, metric)
+				DB.PetCatalog.Set(0, playerName, petName, initializationTarget, actionName, trackable, metric)
 			end
 		end
 	end

@@ -142,7 +142,7 @@ DB.Lists.GetSortedPetDamage = function(playerName)
 
 	for petName, _ in pairs(DB.Tracking.InitializedPets[playerName]) do
 		local trackable = Parse.Config.IncludeSkillchainDamage() and DB.Trackable.TOTAL_DAMAGE or DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN
-		sortedDamage[#sortedDamage + 1] = { petName, DB.Pet_Data.Get(playerName, petName, trackable, DB.Metric.TOTAL) or 0 }
+		sortedDamage[#sortedDamage + 1] = { petName, DB.PetData.Get(playerName, petName, trackable, DB.Metric.TOTAL) or 0 }
 	end
 
 	table.sort(sortedDamage, function (a, b)

@@ -25,7 +25,7 @@ DB.Catalog.Initialize = function(playerName, targetName, actionName, trackable, 
 	-- Initializations
 	DB.Data.Initialize(playerName, targetName)
 	if petName then
-		DB.Pet_Data.Initialize(playerName, petName, targetName)
+		DB.PetData.Initialize(playerName, petName, targetName)
 	end
 
 	-- Don't want to overwrite data node if it already exists. This is for mob specfic data.
