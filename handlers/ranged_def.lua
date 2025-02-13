@@ -15,7 +15,7 @@ H.RangedDef.Action = function(action, actorMob, ownerMob, logDefense)
 
     -- Keep the mob list up-to-date.
     if Ashita.Mob.IsMonster(actorMob) then
-        DB.Lists.Check.MobExists(actorMob.name)
+        DB.Lists.AddToInitializedMobs(actorMob.name)
     end
 
     local damage = 0

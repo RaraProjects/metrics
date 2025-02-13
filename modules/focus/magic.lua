@@ -169,7 +169,7 @@ Focus.Magic.Damaging_Spell = function(player_name, trackable, header, make_brief
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, metric_max) end
         Window_Manager.Table_Row_Color(1)
 
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
@@ -253,7 +253,7 @@ Focus.Magic.No_Damage_Spell = function(player_name, trackable, header, make_brie
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MAX) end
         Window_Manager.Table_Row_Color(1)
 
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
@@ -307,7 +307,7 @@ Focus.Magic.Debuff = function(player_name, hide_mp)
         if not hide_mp then UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable) end
         Window_Manager.Table_Row_Color(1)
 
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
@@ -354,7 +354,7 @@ Focus.Magic.Basic_Spell = function(player_name, trackable, header, no_mp)
         UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable)
         Window_Manager.Table_Row_Color(1)
 
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]

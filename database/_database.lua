@@ -85,11 +85,10 @@ DB.Initialize = function(isManualReset)
 	DB.Tracking.ReceivedItems      = { }
 	DB.Tracking.DropRates          = { }
 
-	DB.Sorted.Players = { [1] = DB.Widgets.Dropdown.Enum.NONE }
-	DB.Sorted.Mobs    = { [1] = DB.Enum.ALL_MOBS }
+	DB.Lists.Mobs = { [1] = DB.Enum.ALL_MOBS }
 
 	DB.HealingMax = { }
-	DB.Widgets.Dropdown.Player.Focus = DB.Widgets.Dropdown.Enum.NONE
+	DB.Widgets.Dropdown.Player.Focus = DB.Enum.NONE
 	DB.Widgets.Dropdown.Player.Index = 1
 	DB.Widgets.Dropdown.Mob.Focus    = DB.Enum.ALL_MOBS
 	DB.Widgets.Dropdown.Mob.Index    = 1
@@ -120,7 +119,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.GetTeamDamageByType = function(trackable)
 	local totalDamage  = 0
-	local sortedDamage = DB.Lists.Sort.TotalDamage()
+	local sortedDamage = DB.Lists.GetSortedDamage()
 	local rankCutoff   = Parse.Config.RankCutoff()
 
 	for rank, data in ipairs(sortedDamage) do

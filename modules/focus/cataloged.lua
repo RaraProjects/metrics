@@ -40,7 +40,7 @@ Focus.Catalog.Endamage = function(player_name, trackable, suffix)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX)
         Window_Manager.Table_Row_Color(1)
 
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
@@ -80,7 +80,7 @@ Focus.Catalog.Endebuff = function(player_name, focus_type, suffix)
         UI.TableSetupColumn("Procs", col_flags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, focus_type)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, focus_type)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]

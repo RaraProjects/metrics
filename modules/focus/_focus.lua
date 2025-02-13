@@ -82,7 +82,7 @@ end
 Focus.Content = function()
     local unselected = false
     local player_name = DB.Widgets.Util.Get_Player_Focus()
-    if player_name == DB.Widgets.Dropdown.Enum.NONE then unselected = true end
+    if player_name == DB.Enum.NONE then unselected = true end
 
     -- Toolbar buttons
     -- Focus.Config.Settings_Button()                           -- Settings (No settings to display so removed)

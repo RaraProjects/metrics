@@ -39,7 +39,7 @@ H.TP.Action = function(action, actorMob, logOffense)
 
         -- Keep the mob list up-to-date.
         if Ashita.Mob.IsMonster(targetMob) then
-            DB.Lists.Check.MobExists(targetMob.name)
+            DB.Lists.AddToInitializedMobs(targetMob.name)
         end
 
         for _, actionData in pairs(target.actions) do
@@ -111,7 +111,7 @@ H.TP.BeginMonsterAction = function(action, actorMob, logOffense)
 
         -- Keep the mob list up-to-date.
         if Ashita.Mob.IsMonster(targetMob) then
-            DB.Lists.Check.MobExists(targetMob.name)
+            DB.Lists.AddToInitializedMobs(targetMob.name)
         end
 
         for _, actionData in pairs(target.actions) do
@@ -186,7 +186,7 @@ H.TP.MonsterAction = function(action, actorMob, logOffense)
 
         -- Keep the mob list up-to-date.
         if Ashita.Mob.IsMonster(targetMob) then
-            DB.Lists.Check.MobExists(targetMob.name)
+            DB.Lists.AddToInitializedMobs(targetMob.name)
         end
 
         for _, actionData in pairs(target.actions) do

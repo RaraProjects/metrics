@@ -197,7 +197,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Player_Filter = function(entry)
     if not entry then return false end
-    if Blog.Widgets.Player_Focus == DB.Widgets.Dropdown.Enum.NONE then return true end
+    if Blog.Widgets.Player_Focus == DB.Enum.NONE then return true end
     return entry.Player.Value == Blog.Widgets.Player_Focus
 end
 

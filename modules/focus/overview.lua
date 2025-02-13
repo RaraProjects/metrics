@@ -380,8 +380,8 @@ Focus.Overview.Pet_TP = function(player_name)
         local row = 1
         if not DB.Tracking.InitializedPets[player_name] then DB.Tracking.InitializedPets[player_name] = {} end
         for pet_name, _ in pairs(DB.Tracking.InitializedPets[player_name]) do
-            DB.Lists.Sort.Pet_Catalog_Damage(player_name, pet_name)
-            for _, data in ipairs(DB.Sorted.Pet_Catalog_Damage) do
+            local sortedDamage = DB.Lists.GetSortedPetCatalogDamage(player_name, pet_name)
+            for _, data in ipairs(sortedDamage) do
                 has_data = true
                 local action_name = data[1]
                 local trackable = data[3]

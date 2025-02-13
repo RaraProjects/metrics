@@ -36,7 +36,7 @@ H.Spell.Action = function(action, actorMob, ownerMob, logOffense)
 
         -- Keep the mob list up-to-date.
         if Ashita.Mob.IsMonster(targetMob) then
-            DB.Lists.Check.MobExists(targetMob.name)
+            DB.Lists.AddToInitializedMobs(targetMob.name)
         end
 
         for _, actionData in pairs(target.actions) do

@@ -76,7 +76,7 @@ Focus.Abilities.Damaging = function(player_name, trackable, header, make_brief)
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MAX) end
         Window_Manager.Table_Row_Color(1)
 
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
@@ -115,7 +115,7 @@ Focus.Abilities.Abilities_General = function(player_name)
         UI.TableSetupColumn("Uses", col_flags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
         local row = 1
         for _, data in ipairs(sorted_damage) do
@@ -156,7 +156,7 @@ Focus.Abilities.Mauevers = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.OVERLOAD)
         Window_Manager.Table_Row_Color(1)
 
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
@@ -209,7 +209,7 @@ Focus.Abilities.Phantom_Roll = function(player_name, full)
         UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.BUSTS)
         Window_Manager.Table_Row_Color(1)
 
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]

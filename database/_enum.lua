@@ -2,6 +2,7 @@
 DB.Enum =
 {
     ALL_MOBS    = "!All Mobs",
+    NONE        = "!NONE",
     BLANK       = "",
     COMBINED    = "combined",
     DEBUG       = "¯\\_(ツ)_/¯",

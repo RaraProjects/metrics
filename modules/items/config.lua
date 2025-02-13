@@ -35,7 +35,7 @@ Loot.Config.Loot_Mode_Dropdown = function()
             UI.EndCombo()
         end
     else
-        if UI.BeginCombo("Loot Mode", DB.Widgets.Dropdown.Enum.NONE, flags) then
+        if UI.BeginCombo("Loot Mode", DB.Enum.NONE, flags) then
             UI.EndCombo()
         end
     end

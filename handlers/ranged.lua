@@ -19,7 +19,7 @@ H.Ranged.Action = function(action, actorMob, logOffense)
 
         -- Keep the mob list up-to-date.
         if Ashita.Mob.IsMonster(targetMob) then
-            DB.Lists.Check.MobExists(targetMob.name)
+            DB.Lists.AddToInitializedMobs(targetMob.name)
         end
 
         -- Loop through actions on the target.

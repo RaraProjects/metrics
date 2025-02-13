@@ -1,6 +1,6 @@
 Blog.Widgets = {}
 
-Blog.Widgets.Player_Focus = DB.Widgets.Dropdown.Enum.NONE
+Blog.Widgets.Player_Focus = DB.Enum.NONE
 Blog.Widgets.Player_Index = 1
 
 Blog.Widgets.Action_Buffer = {}
@@ -92,7 +92,7 @@ end
 -- Creates a dropdown menu to show only damage done by a certain entity.
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.Player_Filter = function()
-    local list = DB.Lists.Get.Players() or T{}
+    local list = DB.Lists.Players or { }
     local flags = DB.Widgets.Dropdown.Flags
     if list[1] then
         UI.SetNextItemWidth(DB.Widgets.Dropdown.Width)
@@ -110,7 +110,7 @@ Blog.Widgets.Player_Filter = function()
             UI.EndCombo()
         end
     else
-        if UI.BeginCombo(DB.Widgets.Dropdown.Enum.FOCUS, DB.Widgets.Dropdown.Enum.NONE, flags) then
+        if UI.BeginCombo(DB.Widgets.Dropdown.Enum.FOCUS, DB.Enum.NONE, flags) then
             UI.EndCombo()
         end
     end

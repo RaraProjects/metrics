@@ -255,8 +255,8 @@ Focus.Pets.Pet_Specific_TP_Moves = function(player_name, pet_name, trackable, he
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
-        DB.Lists.Sort.Pet_Catalog_Damage(player_name, pet_name)
-        for _, data in ipairs(DB.Sorted.Pet_Catalog_Damage) do
+        local sortedDamage = DB.Lists.GetSortedPetCatalogDamage(player_name, pet_name)
+        for _, data in ipairs(sortedDamage) do
             local action_name = data[1]
             local action_trackable = data[3]
             if trackable == action_trackable then
@@ -312,8 +312,8 @@ Focus.Pets.Pet_Specific_Non_Damaging_Spells = function(player_name, pet_name, tr
         Window_Manager.Table_Row_Color(row)
         row = row + 1
 
-        DB.Lists.Sort.Pet_Catalog_Damage(player_name, pet_name)
-        for _, data in ipairs(DB.Sorted.Pet_Catalog_Damage) do
+        local sortedDamage = DB.Lists.GetSortedPetCatalogDamage(player_name, pet_name)
+        for _, data in ipairs(sortedDamage) do
             local action_name = data[1]
             local action_trackable = data[3]
             if trackable == action_trackable then

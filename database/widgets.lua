@@ -6,12 +6,11 @@ DB.Widgets.Dropdown = {}
 DB.Widgets.Dropdown.Enum = {
     MOB   = "Mob Filter",
     FOCUS = "Player",
-    NONE  = "!NONE",
 }
 DB.Widgets.Dropdown.Width = 150
 DB.Widgets.Dropdown.Flags = ImGuiComboFlags_None
 DB.Widgets.Dropdown.Player = {}
-DB.Widgets.Dropdown.Player.Focus = DB.Widgets.Dropdown.Enum.NONE
+DB.Widgets.Dropdown.Player.Focus = DB.Enum.NONE
 DB.Widgets.Dropdown.Player.Index = 1
 DB.Widgets.Dropdown.Mob = {}
 DB.Widgets.Dropdown.Mob.Focus = DB.Enum.ALL_MOBS
@@ -21,7 +20,7 @@ DB.Widgets.Dropdown.Mob.Index = 1
 -- Creates a dropdown menu to show only damage done to a certain mob.
 ------------------------------------------------------------------------------------------------------
 DB.Widgets.Mob_Filter = function()
-    local list = DB.Lists.Get.Mob()
+    local list = DB.Lists.Mobs
     local flags = DB.Widgets.Dropdown.Flags
     if list[1] then
         UI.SetNextItemWidth(DB.Widgets.Dropdown.Width)
@@ -70,7 +69,7 @@ end
 -- Creates a dropdown menu to show only damage done by a certain entity.
 ------------------------------------------------------------------------------------------------------
 DB.Widgets.Player_Filter = function()
-    local list = DB.Lists.Get.Players()
+    local list = DB.Lists.Players
     local flags = DB.Widgets.Dropdown.Flags
     if list[1] then
         UI.SetNextItemWidth(DB.Widgets.Dropdown.Width)
@@ -88,7 +87,7 @@ DB.Widgets.Player_Filter = function()
             UI.EndCombo()
         end
     else
-        if UI.BeginCombo(DB.Widgets.Dropdown.Enum.FOCUS, DB.Widgets.Dropdown.Enum.NONE, flags) then
+        if UI.BeginCombo(DB.Widgets.Dropdown.Enum.FOCUS, DB.Enum.NONE, flags) then
             UI.EndCombo()
         end
     end
@@ -115,7 +114,7 @@ end
 ---@param player_string string
 ------------------------------------------------------------------------------------------------------
 DB.Widgets.Util.Player_Switch = function(player_string)
-    local list = DB.Lists.Get.Players()
+    local list = DB.Lists.Players
     local found = false
     for n, player_name in pairs(list) do
         if not found then

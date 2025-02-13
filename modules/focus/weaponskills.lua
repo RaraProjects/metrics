@@ -89,7 +89,7 @@ Focus.WS.Weaponskill = function(player_name, make_brief, is_mp_drain)
         Window_Manager.Table_Row_Color(1)
 
         -- Specific Weaponskills
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
@@ -155,7 +155,7 @@ Focus.WS.Skillchains = function(player_name, make_brief)
         Window_Manager.Table_Row_Color(1)
 
         -- Specific Skillchains
-        local sorted_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]

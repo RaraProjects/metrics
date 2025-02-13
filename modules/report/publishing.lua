@@ -19,7 +19,7 @@ Report.Publishing.Overall = function()
         -- Chat header.
         Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, "Total Damage and Accuracy") coroutine.sleep(Report.Publishing.Delay)
 
-        local sorted_damage = DB.Lists.Sort.TotalDamage()
+        local sorted_damage = DB.Lists.GetSortedDamage()
         for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.RankCutoff() then
 
@@ -67,7 +67,7 @@ Report.Publishing.Damage_By_Type = function(trackable)
         Ashita.Chat.AddToChat(Report.Publishing.Chat_Mode.Prefix, "Total " .. tostring(trackable) .. tostring(suffix)) coroutine.sleep(Report.Publishing.Delay)
 
         -- Loop through the data.
-        local sorted_damage = DB.Lists.Sort.Damage_By_Type(trackable)
+        local sorted_damage = DB.Lists.GetSortedDamage(trackable)
         for rank, data in ipairs(sorted_damage) do
             if rank <= Parse.Config.RankCutoff() then
 
@@ -104,7 +104,7 @@ Report.Publishing.Catalog = function(player_name, trackable)
     end
 
     if not trackable then trackable = DB.Trackable.WEAPONSKILL end
-    if not DB.Lists.Check.Catalog_Exists(player_name, trackable) then
+    if not DB.Lists.CatalogExists(player_name, trackable) then
         Ashita.Chat.Echo(tostring(player_name) .. " doesn't have " .. tostring(trackable) .. " data to publish.")
         return nil
     end
@@ -119,7 +119,7 @@ Report.Publishing.Catalog = function(player_name, trackable)
 
         -- Loop through weaponskill data.
         local action_name
-        local sorted_catalog_damage = DB.Lists.Sort.Catalog_Damage(player_name, trackable)
+        local sorted_catalog_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         for _, data in ipairs(sorted_catalog_damage) do
             action_name = data[1]
             local total = Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name, false, false, true)

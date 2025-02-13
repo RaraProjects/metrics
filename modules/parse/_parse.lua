@@ -112,7 +112,7 @@ end
 ---@param player table
 ------------------------------------------------------------------------------------------------------
 Parse.Data_Rows = function(player)
-    local sorted_damage = DB.Lists.Sort.TotalDamage()
+    local sorted_damage = DB.Lists.GetSortedDamage()
 
     for rank, data in ipairs(sorted_damage) do
         if rank <= Parse.Config.RankCutoff() or data[1] == player.name then

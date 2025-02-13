@@ -45,7 +45,7 @@ Overview.Content = function()
         Overview.Parse.Content()
     elseif Overview.Mode == Overview.Modes.FOCUS then
         local player_name = DB.Widgets.Util.Get_Player_Focus()
-        if player_name == DB.Widgets.Dropdown.Enum.NONE then
+        if player_name == DB.Enum.NONE then
             Focus.Screenshot_Mode[1] = false
             return nil
         end

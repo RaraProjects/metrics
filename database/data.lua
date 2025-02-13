@@ -61,7 +61,7 @@ end
 DB.Data.InitializePlayerTrackingTables = function(playerName)
 	if playerName and playerName ~= "" and not DB.Tracking.InitializedPlayers[playerName] then
 		DB.Tracking.InitializedPlayers[playerName] = true
-		DB.Lists.Sort.Players()
+		DB.Lists.SortInitializedPlayers()
 		DB.Tracking.RunningAccuracy[playerName]    = { }
 		DB.Tracking.RunningDamage[playerName]      = 0
 		DB.Tracking.RunningAttackSpeed[playerName] = { }

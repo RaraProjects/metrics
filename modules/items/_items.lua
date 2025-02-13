@@ -263,7 +263,7 @@ Loot.Mob_Items = function()
         local mobs_defeated = 0
 
         -- Mob
-        for _, mob_name in pairs(DB.Lists.Get.Mob()) do
+        for _, mob_name in pairs(DB.Lists.Mobs) do
             if DB.Tracking.DefeatedMobs[mob_name] then
                 local mob_deaths = DB.Tracking.DefeatedMobs[mob_name]
                 UI.TableNextColumn() UI.Text(tostring(mob_name))
