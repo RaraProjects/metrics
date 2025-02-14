@@ -89,7 +89,7 @@ Parse.Toolbar = function()
         UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Reset_Button()
         if Parse.Confirmation then UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Reset_Confirmation_Button() end
         if Parse.Settings.Lurk_Mode then UI.SameLine() UI.Text(" Lurking...") end
-        if Parse.Settings.Show_Filter then DB.Widgets.Mob_Filter() end
+        if Parse.Settings.Show_Filter then DB.Widgets.DropdownMobFilter() end
         Parse.Widgets.Clock()
     end
 end

@@ -295,7 +295,7 @@ DB.Data.Get = function(playerName, trackable, metric, tempMobFocus)
 	-- The target index will just be the mob focus unless a temporary focus is passed in.
 	-- The mob focus will handle the ALL_MOBS too.
 	local value       = DB.MetricNeedsMaxValue(metric) and DB.Enum.MAX_DAMAGE or 0
-	local targetIndex = tempMobFocus or DB.Widgets.Util.Get_Mob_Focus()
+	local targetIndex = tempMobFocus or DB.Widgets.GetMobFocus()
 
 	-- Get the data.
 	if DB.Data.IsIndexNodeInitialized(caller, false, playerName, targetIndex) then

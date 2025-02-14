@@ -93,10 +93,10 @@ end
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.Player_Filter = function()
     local list = DB.Lists.Players or { }
-    local flags = DB.Widgets.Dropdown.Flags
+    local flags = DB.Widgets.DropdownFlags
     if list[1] then
-        UI.SetNextItemWidth(DB.Widgets.Dropdown.Width)
-        if UI.BeginCombo(DB.Widgets.Dropdown.Enum.FOCUS, list[Blog.Widgets.Player_Index], flags) then
+        UI.SetNextItemWidth(DB.Widgets.DropdownWidth)
+        if UI.BeginCombo(DB.Widgets.DropdownPlayerFilterHeader, list[Blog.Widgets.Player_Index], flags) then
             for n = 1, #list, 1 do
                 local is_selected = Blog.Widgets.Player_Index == n
                 if UI.Selectable(list[n], is_selected) then
@@ -110,7 +110,7 @@ Blog.Widgets.Player_Filter = function()
             UI.EndCombo()
         end
     else
-        if UI.BeginCombo(DB.Widgets.Dropdown.Enum.FOCUS, DB.Enum.NONE, flags) then
+        if UI.BeginCombo(DB.Widgets.DropdownPlayerFilterHeader, DB.Enum.NONE, flags) then
             UI.EndCombo()
         end
     end

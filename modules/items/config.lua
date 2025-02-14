@@ -18,10 +18,10 @@ Loot.Config.Defaults = T{
 ------------------------------------------------------------------------------------------------------
 Loot.Config.Loot_Mode_Dropdown = function()
     local list = Loot.Modes
-    local flags = DB.Widgets.Dropdown.Flags
+    local flags = DB.Widgets.DropdownFlags
 
     if list[1] then
-        UI.SetNextItemWidth(DB.Widgets.Dropdown.Width)
+        UI.SetNextItemWidth(DB.Widgets.DropdownWidth)
         if UI.BeginCombo("Loot Mode", list[Loot.Settings.Loot_Mode], flags) then
             for n = 1, #list, 1 do
                 local is_selected = Loot.Settings.Loot_Mode == n
@@ -45,7 +45,7 @@ end
 -- Creates an input text box for the action filter.
 ------------------------------------------------------------------------------------------------------
 Loot.Config.Item_Filter_Input = function()
-    UI.SetNextItemWidth(DB.Widgets.Dropdown.Width) UI.InputText("Item Filter", Loot.Item_Buffer, 100, ImGuiInputTextFlags_AutoSelectAll)
+    UI.SetNextItemWidth(DB.Widgets.DropdownWidth) UI.InputText("Item Filter", Loot.Item_Buffer, 100, ImGuiInputTextFlags_AutoSelectAll)
 end
 
 ------------------------------------------------------------------------------------------------------

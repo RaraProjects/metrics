@@ -319,7 +319,7 @@ DB.Catalog.Get = function(playerName, trackable, actionName, metric, tempMobFocu
 	end
 
 	local value       = DB.MetricNeedsMaxValue(metric) and DB.Enum.MAX_DAMAGE or 0
-	local targetIndex = tempMobFocus or DB.Widgets.Util.Get_Mob_Focus()
+	local targetIndex = tempMobFocus or DB.Widgets.GetMobFocus()
 
 	-- Get the data.
 	if DB.Catalog.IsIndexNodeInitialized(caller, false, playerName, targetIndex, actionName) then

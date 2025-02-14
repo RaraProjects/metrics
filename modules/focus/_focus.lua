@@ -81,7 +81,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Content = function()
     local unselected = false
-    local player_name = DB.Widgets.Util.Get_Player_Focus()
+    local player_name = DB.Widgets.GetPlayerFocus()
     if player_name == DB.Enum.NONE then unselected = true end
 
     -- Toolbar buttons
@@ -96,8 +96,8 @@ Focus.Content = function()
     end
 
     -- Filters
-    DB.Widgets.Player_Filter() UI.SameLine() UI.Text("  ") UI.SameLine()
-    DB.Widgets.Mob_Filter()
+    DB.Widgets.DropdownPlayerFilter() UI.SameLine() UI.Text("  ") UI.SameLine()
+    DB.Widgets.DropdownMobFilter()
 
     -- Quit early if no player is currently being focused.
     if unselected then

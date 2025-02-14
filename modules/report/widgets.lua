@@ -28,7 +28,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Report.Widgets.Chat_Mode = function()
     local list  = Ashita.Chat.Modes
-    local flags = DB.Widgets.Dropdown.Flags
+    local flags = DB.Widgets.DropdownFlags
     local title = "Chat Mode"
     if list[1] then
         UI.SetNextItemWidth(150)

@@ -202,7 +202,7 @@ DB.PetCatalog.Get = function(playerName, petName, trackable, actionName, metric,
 	end
 
 	local value       = DB.MetricNeedsMaxValue(metric) and DB.Enum.MAX_DAMAGE or 0
-	local targetIndex = tempMobFocus or DB.Widgets.Util.Get_Mob_Focus()
+	local targetIndex = tempMobFocus or DB.Widgets.GetMobFocus()
 
 	-- Get the data.
 	if DB.PetCatalog.IsIndexNodeInitialized(caller, false, playerName, petName, targetIndex, actionName) then

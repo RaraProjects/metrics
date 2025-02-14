@@ -88,10 +88,11 @@ DB.Initialize = function(isManualReset)
 	DB.Lists.Mobs = { [1] = DB.Enum.ALL_MOBS }
 
 	DB.HealingMax = { }
-	DB.Widgets.Dropdown.Player.Focus = DB.Enum.NONE
-	DB.Widgets.Dropdown.Player.Index = 1
-	DB.Widgets.Dropdown.Mob.Focus    = DB.Enum.ALL_MOBS
-	DB.Widgets.Dropdown.Mob.Index    = 1
+
+	DB.Widgets.DropdownPlayerFilterFocus = DB.Enum.NONE
+	DB.Widgets.DropdownPlayerFilterIndex = 1
+	DB.Widgets.DropdownMobFilterFocus = DB.Enum.ALL_MOBS
+	DB.Widgets.DropdownMobFilterIndex = 1
 
 	for spell, threshold in pairs(DB.HealingMaxDefaults) do
 		DB.HealingMax[spell] = threshold

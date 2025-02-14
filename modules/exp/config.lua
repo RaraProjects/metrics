@@ -93,7 +93,7 @@ XP.Config.Populate = function()
     " This only comes into play if the boost item is unknown.")
 
     if XP.Settings.Boost_Defaulting_Enabled then
-        local dropdown_flags = DB.Widgets.Dropdown.Flags
+        local dropdown_flags = DB.Widgets.DropdownFlags
         local list = Res.Items.Get_Dedication_Selection()
         if list[1] then
             UI.SetNextItemWidth(XP.Config.Dropdown_Width)
@@ -184,7 +184,7 @@ XP.Config.Populate = function()
 
     if XP.Settings.Show_Total_XP_Gained then
         UI.Separator()
-        local dropdown_flags = DB.Widgets.Dropdown.Flags
+        local dropdown_flags = DB.Widgets.DropdownFlags
         local list = XP.Config.Total_Mode_List
         if list[1] then
             UI.SetNextItemWidth(XP.Config.Dropdown_Width)
