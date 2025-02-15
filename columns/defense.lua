@@ -17,8 +17,8 @@ Column.Defense.Damage_Taken_By_Type = function(player_name, trackable, percent, 
 
     if percent then
         local total_damage = DB.Data.Get(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
-        if raw then return Column.String.Format_Percent(total, total_damage) end
-        return UI.TextColored(color, Column.String.Format_Percent(total, total_damage, justify))
+        if raw then return Column.String.FormatPercent(total, total_damage) end
+        return UI.TextColored(color, Column.String.FormatPercent(total, total_damage, justify))
     end
 
     if raw then return Column.String.Format_Number(total) end
@@ -86,7 +86,7 @@ Column.Defense.Average_Damage_By_Type = function(player_name, trackable, justify
     color = Column.String.Color_Zero(damage)
 
     if raw then return average_damage end
-    return UI.TextColored(color, Column.String.Format_Percent(damage, count, justify, true))
+    return UI.TextColored(color, Column.String.FormatPercent(damage, count, justify, true))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -106,5 +106,5 @@ Column.Defense.Damage_Reduction = function(player_name, trackable, justify)
 
     color = Column.String.Color_Zero(average_reduced_damage)
 
-    return UI.TextColored(color, Column.String.Format_Percent(average_melee - average_reduced_damage, average_melee, justify))
+    return UI.TextColored(color, Column.String.FormatPercent(average_melee - average_reduced_damage, average_melee, justify))
 end

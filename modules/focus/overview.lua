@@ -364,8 +364,8 @@ end
 Focus.Overview.Pet_TP = function(player_name)
     if not player_name then return nil end
 
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
+    local col_flags = Focus.ColumnFlags
+    local table_flags = Focus.TableFlags
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
@@ -390,7 +390,7 @@ Focus.Overview.Pet_TP = function(player_name)
                 UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, trackable, action_name)
                 UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, action_name, trackable)
                 UI.TableNextColumn() Column.Damage.Average_Pet_TP(player_name, pet_name, trackable, action_name)
-                Window_Manager.Table_Row_Color(row)
+                Window_Manager.TableRowColor(row)
                 row = row + 1
             end
         end

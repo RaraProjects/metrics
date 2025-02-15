@@ -16,9 +16,9 @@ Column.General.Fraction = function(player_name, trackable, metric_numerator, met
     local numerator = DB.Data.Get(player_name, trackable, metric_numerator)
     local color = Column.String.Color_Zero(numerator)
     local denominator = DB.Data.Get(player_name, trackable, metric_denominator)
-    if not denominator or denominator <= 0 then return UI.TextColored(color, Column.String.Format_Percent(0, 0, justify)) end
-    if raw then return Column.String.Format_Percent(numerator, denominator) end
-    return UI.TextColored(color, Column.String.Format_Percent(numerator, denominator, justify, no_scaling))
+    if not denominator or denominator <= 0 then return UI.TextColored(color, Column.String.FormatPercent(0, 0, justify)) end
+    if raw then return Column.String.FormatPercent(numerator, denominator) end
+    return UI.TextColored(color, Column.String.FormatPercent(numerator, denominator, justify, no_scaling))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -37,8 +37,8 @@ Column.General.Percent_Party_Total = function(player_name, trackable, justify, r
     for name, _ in pairs(DB.Tracking.InitializedPlayers) do
         party_total = party_total + DB.Data.Get(name, trackable, DB.Metric.TOTAL)
     end
-    if raw then return Column.String.Format_Percent(player_total, party_total) end
-    return UI.TextColored(color, Column.String.Format_Percent(player_total, party_total, justify))
+    if raw then return Column.String.FormatPercent(player_total, party_total) end
+    return UI.TextColored(color, Column.String.FormatPercent(player_total, party_total, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -58,8 +58,8 @@ Column.General.Percent_Party_Total_Action = function(player_name, action_name, t
     for name, _ in pairs(DB.Tracking.InitializedPlayers) do
         party_total = party_total + DB.Data.Get(name, trackable, DB.Metric.TOTAL)
     end
-    if raw then return Column.String.Format_Percent(action_total, party_total) end
-    return UI.TextColored(color, Column.String.Format_Percent(action_total, party_total))
+    if raw then return Column.String.FormatPercent(action_total, party_total) end
+    return UI.TextColored(color, Column.String.FormatPercent(action_total, party_total))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -79,6 +79,6 @@ Column.General.Percent_Party_Total_Pet = function(player_name, pet_name, trackab
     for name, _ in pairs(DB.Tracking.InitializedPlayers) do
         party_total = party_total + DB.Data.Get(name, trackable, DB.Metric.TOTAL)
     end
-    if raw then return Column.String.Format_Percent(pet_total, party_total) end
-    return UI.TextColored(color, Column.String.Format_Percent(pet_total, party_total, justify))
+    if raw then return Column.String.FormatPercent(pet_total, party_total) end
+    return UI.TextColored(color, Column.String.FormatPercent(pet_total, party_total, justify))
 end

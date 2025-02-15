@@ -49,8 +49,8 @@ end
 -- Overview Clocks
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Clock = function()
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
+    local col_flags = Focus.ColumnFlags
+    local table_flags = Focus.TableFlags
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
@@ -71,8 +71,8 @@ end
 -- Populates the Parse melee overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Melee = function()
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
+    local col_flags = Focus.ColumnFlags
+    local table_flags = Focus.TableFlags
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
@@ -106,7 +106,7 @@ Overview.Parse.Melee = function()
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX)
-                    Window_Manager.Table_Row_Color(row)
+                    Window_Manager.TableRowColor(row)
                     row = row + 1
                 end
             end
@@ -132,8 +132,8 @@ end
 -- Populates the Parse melee overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Ranged = function()
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
+    local col_flags = Focus.ColumnFlags
+    local table_flags = Focus.TableFlags
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
@@ -169,7 +169,7 @@ Overview.Parse.Ranged = function()
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX)
-                    Window_Manager.Table_Row_Color(row)
+                    Window_Manager.TableRowColor(row)
                     row = row + 1
                 end
             end
@@ -196,8 +196,8 @@ end
 -- Populates the Parse weaponskill overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Weaponskills = function()
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
+    local col_flags = Focus.ColumnFlags
+    local table_flags = Focus.TableFlags
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
@@ -236,7 +236,7 @@ Overview.Parse.Weaponskills = function()
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                    Window_Manager.Table_Row_Color(1)
+                    Window_Manager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Weaponskills
@@ -256,7 +256,7 @@ Overview.Parse.Weaponskills = function()
                             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
                             UI.TableNextColumn() Focus.Catalog.Min(player_name, action_name, trackable)
                             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name)
-                            Window_Manager.Table_Row_Color(0)
+                            Window_Manager.TableRowColor(0)
                         end
                     end
                 end
@@ -283,8 +283,8 @@ end
 -- Populates the Parse nuking overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Nukes = function()
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
+    local col_flags = Focus.ColumnFlags
+    local table_flags = Focus.TableFlags
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
@@ -321,7 +321,7 @@ Overview.Parse.Nukes = function()
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.HITS_ON_USE)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                    Window_Manager.Table_Row_Color(1)
+                    Window_Manager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Nuke Spells
@@ -340,7 +340,7 @@ Overview.Parse.Nukes = function()
                             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
                             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name)
                             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name)
-                            Window_Manager.Table_Row_Color(0)
+                            Window_Manager.TableRowColor(0)
                         end
                     end
                 end
@@ -367,8 +367,8 @@ end
 -- Populates the Parse pet overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Pets = function()
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
+    local col_flags = Focus.ColumnFlags
+    local table_flags = Focus.TableFlags
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
@@ -400,7 +400,7 @@ Overview.Parse.Pets = function()
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, nil, nil, true)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, nil, nil, true)
-                    Window_Manager.Table_Row_Color(1)
+                    Window_Manager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Pets
@@ -416,7 +416,7 @@ Overview.Parse.Pets = function()
                         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable, true)
                         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_MELEE_OVERALL, true)
                         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true)
-                        Window_Manager.Table_Row_Color(0)
+                        Window_Manager.TableRowColor(0)
                     end
                 end
             end
@@ -440,8 +440,8 @@ end
 -- Populates the Parse healing overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Healing = function()
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
+    local col_flags = Focus.ColumnFlags
+    local table_flags = Focus.TableFlags
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
@@ -478,7 +478,7 @@ Overview.Parse.Healing = function()
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.HITS_ON_USE)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                    Window_Manager.Table_Row_Color(1)
+                    Window_Manager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Healing Spells
@@ -497,7 +497,7 @@ Overview.Parse.Healing = function()
                             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
                             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name)
                             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name)
-                            Window_Manager.Table_Row_Color(0)
+                            Window_Manager.TableRowColor(0)
                         end
                     end
                 end
@@ -524,8 +524,8 @@ end
 -- Populates the Parse melee overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Defense = function()
-    local col_flags = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
+    local col_flags = Focus.ColumnFlags
+    local table_flags = Focus.TableFlags
     local name_width = Column.Widths.Name
     local width = Column.Widths.Standard
 
@@ -557,7 +557,7 @@ Overview.Parse.Defense = function()
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_NUKING, true)
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_TP_MOVE, true)
                     UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.DEF_EVASION_MELEE, 0)
-                    Window_Manager.Table_Row_Color(row)
+                    Window_Manager.TableRowColor(row)
                     row = row + 1
                 end
             end

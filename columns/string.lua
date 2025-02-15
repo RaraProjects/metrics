@@ -89,7 +89,7 @@ end
 ---@param no_scaling? boolean do not scale the fraction by 100.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.String.Format_Percent = function(numerator, denominator, justify, no_scaling)
+Column.String.FormatPercent = function(numerator, denominator, justify, no_scaling)
     local format = "%.1f"
     if justify then format = "%8.1f" end
 

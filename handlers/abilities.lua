@@ -146,11 +146,11 @@ H.Ability.Parse = function(abilityId, abilityData, actionData, actorMob, targetN
             H.Offense.CatalogHit(audits, DB.Trackable.ABILITY_MP_RECOVERY, damage, abilityName)
 
         elseif abilityId == Res.Abilities.STEAL and damage > 0 then
-            local item_name = Ashita.Item.GetItemName(damage)
-            Loot.Add_Received_Item(actorMob.name, item_name, 1)
+            local itemName = Ashita.Item.GetItemName(damage)
+            Loot.NonDrop(actorMob.name, itemName, 1)
 
         elseif abilityId == Res.Abilities.MUG and damage > 0 then
-            Loot.Add_Received_Item(actorMob.name, "Gil", damage)
+            Loot.NonDrop(actorMob.name, "Gil", damage)
 
         elseif Res.Abilities.Maneuvers[offsetId] then
             H.Offense.CatalogNoDamageHit(audits, DB.Trackable.MANEUVER, abilityName)

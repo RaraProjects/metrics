@@ -53,5 +53,5 @@ Column.Spell.Unit_Per_MP = function(player_name, trackable)
     local mp = DB.Data.Get(player_name, trackable, DB.Metric.MP_SPENT)
     local unit = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(unit)
-    return UI.TextColored(color, Column.String.Format_Percent(unit, mp, false, true))
+    return UI.TextColored(color, Column.String.FormatPercent(unit, mp, false, true))
 end

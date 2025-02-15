@@ -59,6 +59,6 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Output.Percent = function(numerator, denominator, color, no_scaling, justify, raw)
-    if raw then return Column.String.Format_Percent(numerator, denominator, justify, no_scaling) end
-    return UI.TextColored(color, Column.String.Format_Percent(numerator, denominator, justify, no_scaling))
+    if raw then return Column.String.FormatPercent(numerator, denominator, justify, no_scaling) end
+    return UI.TextColored(color, Column.String.FormatPercent(numerator, denominator, justify, no_scaling))
 end

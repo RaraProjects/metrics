@@ -39,8 +39,8 @@ Focus.Tabs.Switch = {
     [Focus.Tabs.Names.DEFENSE]   = nil,
 }
 
-Focus.Column_Flags = Column.Flags.None
-Focus.Table_Flags  = Window_Manager.Table.Flags.Fixed_Borders
+Focus.ColumnFlags = Column.Flags.None
+Focus.TableFlags  = Window_Manager.Table.Flags.Fixed_Borders
 
 Focus.Screenshot_Flags = bit.bor(
     ImGuiWindowFlags_AlwaysAutoResize,
@@ -180,7 +180,7 @@ Focus.Overall_Damage_Breakdown = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, nil, nil, true)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING, nil, nil, true)
         if pet > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL, nil, nil, true) end
-        Window_Manager.Table_Row_Color(1)
+        Window_Manager.TableRowColor(1)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Raw")
@@ -192,7 +192,7 @@ Focus.Overall_Damage_Breakdown = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING)
         if pet > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL) end
-        Window_Manager.Table_Row_Color(0)
+        Window_Manager.TableRowColor(0)
 
         UI.EndTable()
     end

@@ -74,7 +74,7 @@ Focus.Abilities.Damaging = function(player_name, trackable, header, make_brief)
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.TOTAL) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MIN) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MAX) end
-        Window_Manager.Table_Row_Color(1)
+        Window_Manager.TableRowColor(1)
 
         local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
@@ -88,7 +88,7 @@ Focus.Abilities.Damaging = function(player_name, trackable, header, make_brief)
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.TOTAL, action_name) end
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MIN, action_name) end
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MAX, action_name) end
-            Window_Manager.Table_Row_Color(0)
+            Window_Manager.TableRowColor(0)
         end
 
         UI.EndTable()
@@ -122,7 +122,7 @@ Focus.Abilities.Abilities_General = function(player_name)
             action_name = data[1]
             UI.TableNextColumn() UI.Text(action_name)
             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
-            Window_Manager.Table_Row_Color(row)
+            Window_Manager.TableRowColor(row)
             row = row + 1
         end
 
@@ -154,7 +154,7 @@ Focus.Abilities.Mauevers = function(player_name)
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.OVERLOAD)
-        Window_Manager.Table_Row_Color(1)
+        Window_Manager.TableRowColor(1)
 
         local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
@@ -163,7 +163,7 @@ Focus.Abilities.Mauevers = function(player_name)
             UI.TableNextColumn() UI.Text("- " .. action_name)
             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.OVERLOAD, action_name)
-            Window_Manager.Table_Row_Color(0)
+            Window_Manager.TableRowColor(0)
         end
 
         UI.EndTable()
@@ -182,8 +182,8 @@ Focus.Abilities.Phantom_Roll = function(player_name, full)
     if not DB.Tracking.Trackables[trackable] then return nil end
     if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
-    local col_flags   = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
+    local col_flags   = Focus.ColumnFlags
+    local table_flags = Focus.TableFlags
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
@@ -207,7 +207,7 @@ Focus.Abilities.Phantom_Roll = function(player_name, full)
         if full then UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY_11) end
         UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.UNLUCKY)
         UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.BUSTS)
-        Window_Manager.Table_Row_Color(1)
+        Window_Manager.TableRowColor(1)
 
         local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
@@ -220,7 +220,7 @@ Focus.Abilities.Phantom_Roll = function(player_name, full)
             if full then UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY_11, action_name) end
             UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.UNLUCKY, action_name)
             UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.BUSTS, action_name)
-            Window_Manager.Table_Row_Color(0)
+            Window_Manager.TableRowColor(0)
         end
 
         UI.EndTable()
@@ -236,8 +236,8 @@ end
 Focus.Abilities.From_List = function(player_name, ability_list)
     if not player_name or not ability_list then return nil end
 
-    local col_flags   = Focus.Column_Flags
-    local table_flags = Focus.Table_Flags
+    local col_flags   = Focus.ColumnFlags
+    local table_flags = Focus.TableFlags
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
@@ -251,7 +251,7 @@ Focus.Abilities.From_List = function(player_name, ability_list)
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text(ability_name)
             UI.TableNextColumn() Column.Damage.Attempts(player_name, DB.Trackable.ABILITY_OVERALL, nil, ability_name)
-            Window_Manager.Table_Row_Color(row)
+            Window_Manager.TableRowColor(row)
             row = row + 1
         end
 

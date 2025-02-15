@@ -49,7 +49,7 @@ Focus.Pets.Total = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, nil, true)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
-        Window_Manager.Table_Row_Color(row)
+        Window_Manager.TableRowColor(row)
         row = row + 1
 
         local damage_types = {}
@@ -64,7 +64,7 @@ Focus.Pets.Total = function(player_name)
                 UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable)
                 UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable)
-                Window_Manager.Table_Row_Color(row)
+                Window_Manager.TableRowColor(row)
                 row = row + 1
             end
         end
@@ -75,7 +75,7 @@ Focus.Pets.Total = function(player_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_HEALING)
             UI.TableNextColumn() Column.Damage.Healing_Player(player_name, nil, DB.Trackable.PET_HEALING)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.Table_Row_Color(row)
+            Window_Manager.TableRowColor(row)
             row = row + 1
         end
 
@@ -110,7 +110,7 @@ Focus.Pets.Damage_Taken = function(player_name)
             if DB.Data.Get(player_name, data.trackable, DB.Metric.TOTAL) > data.damage then
                 UI.TableNextColumn() UI.Text(data.header)
                 UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable)
-                Window_Manager.Table_Row_Color(row)
+                Window_Manager.TableRowColor(row)
                 row = row + 1
             end
         end
@@ -178,7 +178,7 @@ Focus.Pets.Pet_Specific_Total = function(player_name, pet_name)
         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable, true, nil, true)
         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable, true)
         UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, trackable)
-        Window_Manager.Table_Row_Color(row)
+        Window_Manager.TableRowColor(row)
         row = row + 1
 
         local damage_types = {}
@@ -194,7 +194,7 @@ Focus.Pets.Pet_Specific_Total = function(player_name, pet_name)
                 UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, data.trackable, true, nil, true)
                 UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, data.trackable, true)
                 UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, data.trackable)
-                Window_Manager.Table_Row_Color(row)
+                Window_Manager.TableRowColor(row)
                 row = row + 1
             end
         end
@@ -207,7 +207,7 @@ Focus.Pets.Pet_Specific_Total = function(player_name, pet_name)
             UI.TableNextColumn() Column.Damage.Healing_Player(player_name, pet_name, DB.Trackable.PET_HEALING)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.Table_Row_Color(row)
+            Window_Manager.TableRowColor(row)
             row = row + 1
         end
         UI.EndTable()
@@ -252,7 +252,7 @@ Focus.Pets.Pet_Specific_TP_Moves = function(player_name, pet_name, trackable, he
         UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, trackable, DB.Metric.MIN)
         UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, trackable, DB.Metric.MAX)
-        Window_Manager.Table_Row_Color(row)
+        Window_Manager.TableRowColor(row)
         row = row + 1
 
         local sortedDamage = DB.Lists.GetSortedPetCatalogDamage(player_name, pet_name)
@@ -268,7 +268,7 @@ Focus.Pets.Pet_Specific_TP_Moves = function(player_name, pet_name, trackable, he
                 UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, action_trackable, nil, action_name)
                 UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, action_trackable, DB.Metric.MIN, action_name)
                 UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, action_trackable, DB.Metric.MAX, action_name)
-                Window_Manager.Table_Row_Color(row)
+                Window_Manager.TableRowColor(row)
                 row = row + 1
             end
         end
@@ -309,7 +309,7 @@ Focus.Pets.Pet_Specific_Non_Damaging_Spells = function(player_name, pet_name, tr
         if not is_buff then UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, trackable) end
         if not is_buff then UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, trackable) end
         UI.TableNextColumn() Column.Damage.Pet_Attempts(player_name, pet_name, trackable)
-        Window_Manager.Table_Row_Color(row)
+        Window_Manager.TableRowColor(row)
         row = row + 1
 
         local sortedDamage = DB.Lists.GetSortedPetCatalogDamage(player_name, pet_name)
@@ -321,7 +321,7 @@ Focus.Pets.Pet_Specific_Non_Damaging_Spells = function(player_name, pet_name, tr
                 if not is_buff then UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, action_trackable, action_name) end
                 if not is_buff then UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, action_trackable, action_name) end
                 UI.TableNextColumn() Column.Damage.Pet_Attempts(player_name, pet_name, action_trackable, action_name)
-                Window_Manager.Table_Row_Color(row)
+                Window_Manager.TableRowColor(row)
                 row = row + 1
             end
         end

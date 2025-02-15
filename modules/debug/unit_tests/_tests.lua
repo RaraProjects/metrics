@@ -77,7 +77,7 @@ end
 -- Populates the Unit Test Window.
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Populate = function()
-    local col_flags = Focus.Column_Flags
+    local col_flags = Focus.ColumnFlags
 
     local row = 1
     if UI.BeginTable("Unit Tests", 4) then
@@ -95,7 +95,7 @@ Debug.Unit.Populate = function()
                 UI.TableNextColumn() UI.TextColored(result.color, result.result)
                 UI.TableNextColumn() UI.Text(tostring(result.count))
                 UI.TableNextColumn() UI.Text(result.message)
-                Window_Manager.Table_Row_Color(row)
+                Window_Manager.TableRowColor(row)
                 row = row + 1
             end
         end

@@ -26,5 +26,5 @@ Column.Proc.Distance_Correction = function(player_name, correction_type, justify
     local correction_hits = DB.Data.Get(player_name, correction_type, DB.Metric.HITS_ON_USE)
     local color = Column.String.Color_Zero(correction_hits)
     if ranged_shots == 0 or correction_hits == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
-    return UI.TextColored(color, Column.String.Format_Percent(correction_hits, ranged_shots))
+    return UI.TextColored(color, Column.String.FormatPercent(correction_hits, ranged_shots))
 end

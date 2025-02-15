@@ -61,7 +61,7 @@ require("windows.!window")
 require("columns.!column")
 require("modules.config._config")
 require("modules.exp._exp")
-require("modules.items._items")
+require("modules.loot._loot")
 require("modules.parse._parse")
 require("modules.focus._focus")
 require("modules.battle log._battle_log")
@@ -157,11 +157,19 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
 
         -- Killing a mob.
         if data.message == Ashita.Message.MOB_KILL then
-            local actor_mob = Ashita.Mob.GetMobByIndex(data.actor_index)
-            if Ashita.Party.IsAffiliate(actor_mob.name) or Ashita.Mob.PetOwner(actor_mob) then
+            local actorMob = Ashita.Mob.GetMobByIndex(data.actor_index)
+            if Ashita.Party.IsAffiliate(actorMob.name) or Ashita.Mob.PetOwner(actorMob) then
                 local target_mob = Ashita.Mob.GetMobByIndex(data.target_index)
                 DB.TallyDefeatedMob(target_mob.name)
                 Blog.Add(target_mob.name, nil, Blog.Action_Type.MOB_DEATH, Blog.Enum.MOB_DEATH, nil, "------------")
+            end
+
+        elseif data.message == Ashita.Message.DEATH_FALL then
+            local actorMob   = Ashita.Mob.GetMobByIndex(data.actor_index)
+            local claimerMob = Ashita.Mob.GetMobByID(actorMob.claim_id)
+            if Ashita.Party.IsAffiliate(claimerMob.name) or Ashita.Mob.PetOwner(claimerMob) then
+                DB.TallyDefeatedMob(actorMob.name)
+                Blog.Add(actorMob.name, nil, Blog.Action_Type.MOB_DEATH, Blog.Enum.MOB_DEATH, nil, "------------")
             end
 
         -- Being defeated by a mob.
@@ -176,7 +184,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
         elseif data.message == Ashita.Message.GIL_ACTOR or data.message == Ashita.Message.GIL_TARGET or data.message == Ashita.Message.GIL_MUG then
             local actor_mob = Ashita.Mob.GetMobByIndex(data.target_index)
             if Ashita.Party.IsAffiliate(actor_mob.name) or Ashita.Mob.PetOwner(actor_mob) then
-                Loot.Add_Received_Item(actor_mob.name, "Gil", data.param1)
+                Loot.NonDrop(actor_mob.name, "Gil", data.param1)
             end
         end
 

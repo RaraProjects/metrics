@@ -16,8 +16,8 @@ Column.Healing.Total = function(player_name, percent, justify, raw)
     local color = Column.String.Color_Zero(total_healing)
     if percent then
         local total_damage = Column.Damage.RawTotalPlayerDamage(player_name)
-        if raw then return Column.String.Format_Percent(total_healing, total_damage) end
-        return UI.TextColored(color, Column.String.Format_Percent(total_healing, total_damage, justify))
+        if raw then return Column.String.FormatPercent(total_healing, total_damage) end
+        return UI.TextColored(color, Column.String.FormatPercent(total_healing, total_damage, justify))
     end
     if raw then return Column.String.Format_Number(total_healing) end
     return UI.TextColored(color, Column.String.Format_Number(total_healing, justify))
