@@ -6,6 +6,7 @@ Window_Manager.Widgets.Slider_Width = 100
 -- Creates a help text marker.
 ------------------------------------------------------------------------------------------------------
 Window_Manager.Widgets.HelpMarker = function(text)
+    UI.SameLine()
     UI.TextDisabled("(?)")
     if UI.IsItemHovered() then
         UI.BeginTooltip()
@@ -44,7 +45,7 @@ Window_Manager.Widgets.Alpha = function()
         elseif alpha[1] > 1 then alpha[1] = 1 end
         Window_Manager.Settings.Alpha = alpha[1]
     end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("Window transparency.")
+    Window_Manager.Widgets.HelpMarker("Window transparency.")
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -59,5 +60,5 @@ Window_Manager.Widgets.Window_Scale = function()
         Window_Manager.Settings.Window_Scaling = window_scale[1]
         Window_Manager.Reset_Scaling_Flags()
     end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("Adjust window element size.")
+    Window_Manager.Widgets.HelpMarker("Adjust window element size.")
 end

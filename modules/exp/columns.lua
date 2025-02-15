@@ -1,12 +1,13 @@
-XP.Columns = {}
+XP.Columns = { }
 
-XP.Columns.Display_Count = 2
+XP.Columns.DisplayCount = 2
 
 -- ------------------------------------------------------------------------------------------------------
 -- Calculates the number of columns to show in the table.
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Count = function()
     local columns = 2
+
     if XP.Settings.Show_Job                 then columns = columns + 1 end
     if XP.Settings.Show_Base_Rate           then columns = columns + 1 end
     if XP.Settings.Show_Kill_Rate           then columns = columns + 1 end
@@ -26,292 +27,285 @@ XP.Columns.Count = function()
     if XP.Settings.Show_Boost_Item          then columns = columns + 1 end
     if XP.Settings.Show_Boost_Rate          then columns = columns + 1 end
     if XP.Settings.Show_Boost_Max           then columns = columns + 1 end
-    XP.Columns.Display_Count = columns
-    Window_Manager.Set_Bar_Delay()
+
+    XP.Columns.DisplayCount = columns
+
+    Window_Manager.SetBarDelay()
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Creates a column that shows the player's level, job, and subjob with color.
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Job = function()
-    local job_data    = Ashita.Player.JobData()
-    local main_string = job_data.main .. string.format("%02d", job_data.main_level)
-    local sub_string  = job_data.sub .. string.format("%02d", job_data.sub_level)
-    if job_data.sub == "NON" then sub_string = "" end
+    local jobData = Ashita.Player.JobData()
+    local mainJob = string.format("%s%02d", jobData.main, jobData.main_level)
+    local subJob  = string.format("%s%02d", jobData.sub, jobData.sub_level)
 
-    UI.TextColored(job_data.main_color, main_string)
+    UI.TextColored(jobData.main_color, mainJob)
     UI.SameLine() UI.Text("/") UI.SameLine()
-    UI.TextColored(job_data.sub_color, sub_string)
+    UI.TextColored(jobData.sub_color, subJob)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get chain timer.
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Chain = function()
-    local chain = tostring(XP.Chains.Current)
-    if XP.Chains.Current < 0 then chain = "-" end
-    XP.Chains.Timer() UI.SameLine() UI.Text(" (" .. chain .. ")")
+    local chainNumber = XP.Tracking.Chains.Current
+    local chainString = string.format("(%s)", (chainNumber < 0) and "-" or chainNumber)
+
+    XP.Chains.Timer() UI.SameLine() UI.Text(chainString)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Returns the average kill time in seconds.
 -- ------------------------------------------------------------------------------------------------------
----@param last_xp_time integer
----@param kill_times table
+---@param lastXpInstant integer
+---@param killTimes     table
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Average_Kill_Time = function(last_xp_time, kill_times)
-    if last_xp_time == 0 then return -1 end
-    local duration = os.time() - last_xp_time
-    local total = 0
-    local count = 0
-    for _, time in ipairs(kill_times) do
-        total = total + time
-        count = count + 1
+XP.Columns.AverageKillTime = function(lastXpInstant, killTimes)
+    if lastXpInstant == 0 then
+        return -1
     end
-    if count == 0 then return duration end
-    local average = total / count
-    return average
+
+    local duration = os.time() - lastXpInstant
+    local count = #killTimes
+
+    if count == 0 then
+        return duration
+    end
+
+    local totalTime = 0
+
+    for _, time in ipairs(killTimes) do
+        totalTime = totalTime + time
+    end
+
+    return totalTime / count
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get total experience / limit points.
 -- ------------------------------------------------------------------------------------------------------
----@param type integer
+---@param xpType integer
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Total_XP = function(type)
-    local return_string = ""
-
+XP.Columns.TotalXP = function(xpType)
     -- Split mode: Base XP (+Bonus XP)
     if XP.Config.Total_Mode == "Split" then
-        local base_xp  = XP.Tracking.Metric.Experience_Base
-        local bonus_xp = XP.Tracking.Metric.Experience_Boosted
-        if type == XP.Type.LIMIT then
-            base_xp  = XP.Tracking.Metric.Limit_Base
-            bonus_xp = XP.Tracking.Metric.Limit_Boosted
-        end
-        return_string = string.format("%d", base_xp) .. " (+" .. string.format("%d", bonus_xp) .. ")"
+        local baseXp  = (xpType == XP.Type.LIMIT) and XP.Tracking.Limit.Base or XP.Tracking.EXP.Base
+        local bonusXp = (xpType == XP.Type.LIMIT) and XP.Tracking.Limit.Boosted or XP.Tracking.EXP.Boosted
 
-    -- Combined mode: Total XP
-    else
-        local total_xp = XP.Tracking.Metric.Experience_Total
-        if type == XP.Type.LIMIT then total_xp = XP.Tracking.Metric.Limit_Total end
-        return_string = string.format("%d", total_xp)
+        return string.format("%d (+%d)", baseXp, bonusXp)
     end
 
-    return return_string
+    -- Combined mode: Total XP
+    local totalXp = (xpType == XP.Type.LIMIT) and XP.Tracking.Limit.Total or XP.Tracking.EXP.Total
+
+    return string.format("%d", totalXp)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Returns the player's tnl/tnm.
 -- ------------------------------------------------------------------------------------------------------
----@param xp_type integer
----@param raw? boolean
+---@param xpType integer
+---@param raw?   boolean
 ---@return integer|string
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.TNL = function(xp_type, raw)
+XP.Columns.TNL = function(xpType, raw)
+    local xpData =
+    {
+        [XP.Type.EXPERIENCE] = function() return Ashita.Player.CurrentXP(),      Ashita.Player.LevelMaxXP() end,
+        [XP.Type.LIMIT]      = function() return Ashita.Player.CurrentLimit(),   10000 end,
+        [XP.Type.CAPACITY]   = function() return XP.Tracking.Capacity.Total,     30000 end,
+        [XP.Type.EXEMPLAR]   = function() return XP.Tracking.Exemplar.IntoLevel, XP.Tracking.Exemplar.LevelMax end,
+    }
+
     local current = 0
     local needed  = 0
 
-    if xp_type == XP.Type.EXPERIENCE then
-        current = Ashita.Player.CurrentXP()
-        needed  = Ashita.Player.LevelMaxXP()
-
-    elseif xp_type == XP.Type.LIMIT then
-        current = Ashita.Player.CurrentLimit()
-        needed = 10000
-
-    elseif xp_type == XP.Type.CAPACITY then
-        current = XP.Tracking.Metric.Capacity_Current
-        needed  = 30000
-
-    elseif xp_type == XP.Type.EXEMPLAR then
-        current = XP.Tracking.Metric.Exemplar_Current
-        needed  = XP.Tracking.Metric.Exemplar_Max
+    if xpData[xpType] then
+        current, needed = xpData[xpType]()
     end
 
-    if current == 0 then current = 1 end
+    current   = math.max(current, 1)
+    local tnl = math.max(needed - current, 0)
 
-    local tnl = needed - current
-    if raw then return tnl end
+    if raw then
+        return tnl
+    end
 
-    -- Show Current/Max
-    if XP.Settings.Show_Level_Max then return tostring(current) .. "/" .. tostring(needed) end
-    return string.format("%d", tnl)
+    return XP.Settings.Show_Level_Max and string.format("%d/%d", current, needed) or string.format("%d", tnl)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Returns the average XP per kill.
 -- ------------------------------------------------------------------------------------------------------
----@param xp_type integer
----@param base_only? boolean
----@param boost_only? boolean
+---@param xpType     integer
+---@param baseOnly?  boolean
+---@param boostOnly? boolean
 ---@return number
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Average_XP = function(xp_type, base_only, boost_only)
-    local last_xp_gain_time = 0
-    local xp_list = {}
+XP.Columns.AverageXP = function(xpType, baseOnly, boostOnly)
+    local averageWindows = XP.Tracking.AverageWindows
 
-    if xp_type == XP.Type.EXPERIENCE or xp_type == XP.Type.LIMIT then
-        last_xp_gain_time = XP.Tracking.Last_XP_Gain_Time
-        xp_list = XP.Tracking.Per_Kill_Base_And_Boost
-        if base_only then
-            xp_list = XP.Tracking.Per_Kill_Base_XP_Only
-        elseif boost_only then
-            xp_list = XP.Tracking.Per_Kill_Boost_Only
-        end
+    local xpData =
+    {
+        [XP.Type.EXPERIENCE] =
+        {
+            instant = XP.Tracking.EXP.LastXpInstant or 0,
+            list    = (baseOnly and averageWindows.ExpBase) or (boostOnly and averageWindows.ExpBoost) or averageWindows.ExpTotal or { },
+        },
+        [XP.Type.LIMIT] =
+        {
+            instant = XP.Tracking.EXP.LastXpInstant or 0,
+            list    = (baseOnly and averageWindows.ExpBase) or (boostOnly and averageWindows.ExpBoost) or averageWindows.ExpTotal or { },
+        },
+        [XP.Type.CAPACITY] =
+        {
+            instant = XP.Tracking.Capacity.LastXpInstant or 0,
+            list    = averageWindows.CapacityBase or { },
+        },
+        [XP.Type.EXEMPLAR] =
+        {
+            instant = XP.Tracking.Exemplar.LastXpInstant or 0,
+            list    = averageWindows.ExemplarBase or { },
+        },
+    }
 
-    elseif xp_type == XP.Type.CAPACITY then
-        last_xp_gain_time = XP.Tracking.Last_CP_Gain_Time
-        xp_list = XP.Tracking.Per_Kill_Capacity_Base
+    local data = xpData[xpType]
 
-    elseif xp_type == XP.Type.EXEMPLAR then
-        last_xp_gain_time = XP.Tracking.Last_EP_Gain_Time
-        xp_list = XP.Tracking.Per_Kill_Exemplar_Base
+    if not data or data.instant == 0 or #data.list == 0 then
+        return 0
     end
 
-    if last_xp_gain_time == 0 then return 0 end
+    local totalXP = 0
 
-    local total = 0
-    local count = 0
-
-    for _, xp_amount in ipairs(xp_list) do
-        total = total + xp_amount
-        count = count + 1
+    for _, xpAmount in ipairs(data.list) do
+        totalXP = totalXP + xpAmount
     end
 
-    if count == 0 then return 0 end
-    return total / count
+    return totalXP / #data.list
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Returns the average XP per hour.
 -- ------------------------------------------------------------------------------------------------------
----@param xp_type integer
----@param base_only? boolean
+---@param xpType    integer
+---@param baseOnly? boolean
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Average_Rate = function(xp_type, base_only)
-    local last_xp_gain_time = 0
-    local kill_times = {}
-    local show_dedication = false
+XP.Columns.Average_Rate = function(xpType, baseOnly)
+    local xpData =
+    {
+        [XP.Type.EXPERIENCE] = { XP.Tracking.EXP.LastXpInstant,      XP.Tracking.EXP.KillTimes,      true  },
+        [XP.Type.LIMIT]      = { XP.Tracking.EXP.LastXpInstant,      XP.Tracking.EXP.KillTimes,      true  },
+        [XP.Type.CAPACITY]   = { XP.Tracking.Capacity.LastXpInstant, XP.Tracking.Capacity.KillTimes, false },
+        [XP.Type.EXEMPLAR]   = { XP.Tracking.Exemplar.LastXpInstant, XP.Tracking.Exemplar.KillTimes, false },
+    }
 
-    if xp_type == XP.Type.EXPERIENCE or xp_type == XP.Type.LIMIT then
-        last_xp_gain_time = XP.Tracking.Last_XP_Gain_Time
-        kill_times = XP.Tracking.Kill_Times_XP
-        show_dedication = true
+    local lastXpInstant, killTimes, showDedication = table.unpack(xpData[xpType] or { })
 
-    elseif xp_type == XP.Type.CAPACITY then
-        last_xp_gain_time = XP.Tracking.Last_CP_Gain_Time
-        kill_times = XP.Tracking.Kill_Times_CP
-
-    elseif xp_type == XP.Type.EXEMPLAR then
-        last_xp_gain_time = XP.Tracking.Last_EP_Gain_Time
-        kill_times = XP.Tracking.Kill_Times_EP
+    -- Need to add some type checks here to satify the type restrictions on AverageKillTime.
+    if not lastXpInstant or type(lastXpInstant) ~= "integer" or lastXpInstant == 0 or type(killTimes) ~= "table" then
+        return "0"
     end
-
-    if last_xp_gain_time == 0 then return string.format("%d", 0) end
 
     -- Get the average experience points.
-    local average_xp = XP.Columns.Average_XP(xp_type, base_only)
-    if average_xp <= 0 then return string.format("%d", 0) end
+    local averageXp = XP.Columns.AverageXP(xpType, baseOnly)
 
-    -- Get the average kill speed.
-    local kill_speed = XP.Columns.Average_Kill_Time(last_xp_gain_time, kill_times)
-    if kill_speed <= 0 then return string.format("%d", 0) end
-
-    -- Rate calculation.
-    local final = (average_xp / kill_speed) * 3600
-
-    local abbreviate = false
-    if final >= 100000 then
-        final = final / 1000
-        abbreviate = true
+    if averageXp <= 0 then
+        return "0"
     end
 
-    local return_string = string.format("%d", final)
+    -- Get the average kill speed.
+    local killSpeed = XP.Columns.AverageKillTime(lastXpInstant, killTimes)
 
-    if abbreviate then return_string = return_string .. "K" end
-    if not base_only and show_dedication and XP.Dedication.Is_Active then return_string = return_string .. "*" end
+    if killSpeed <= 0 then
+        return "0"
+    end
 
-    return return_string
+    -- Rate calculation.
+    local xpRate     = (averageXp / killSpeed) * 3600
+    local rateString = (xpRate >= 100000) and string.format("%dK", xpRate / 1000) or string.format("%d", xpRate)
+
+    -- Append dedication icon if dedication is active.
+    if not baseOnly and showDedication and XP.Dedication.IsActive then
+        rateString = string.format("%s*", rateString)
+    end
+
+    return rateString
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Calculates the estimated time to level given XP rate.
 -- ------------------------------------------------------------------------------------------------------
----@param xp_type integer
+---@param xpType integer
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Time_To_Level = function(xp_type)
-    if not xp_type then xp_type = XP.Type.EXPERIENCE end
+XP.Columns.TimeToLevel = function(xpType)
     local color = Res.Colors.Basic.WHITE
 
-    local last_xp_gain_time = 0
-    local kill_times        = {}
+    local xpData =
+    {
+        [XP.Type.EXPERIENCE] = { XP.Tracking.EXP.LastXpInstant,      XP.Tracking.EXP.KillTimes      },
+        [XP.Type.LIMIT]      = { XP.Tracking.EXP.LastXpInstant,      XP.Tracking.EXP.KillTimes      },
+        [XP.Type.CAPACITY]   = { XP.Tracking.Capacity.LastXpInstant, XP.Tracking.Capacity.KillTimes },
+        [XP.Type.EXEMPLAR]   = { XP.Tracking.Exemplar.LastXpInstant, XP.Tracking.Exemplar.KillTimes },
+    }
 
-    if xp_type == XP.Type.EXPERIENCE or xp_type == XP.Type.LIMIT then
-        last_xp_gain_time = XP.Tracking.Last_XP_Gain_Time
-        kill_times        = XP.Tracking.Kill_Times_XP
+    local data = xpData[xpType]
 
-    elseif xp_type == XP.Type.CAPACITY then
-        last_xp_gain_time = XP.Tracking.Last_CP_Gain_Time
-        kill_times        = XP.Tracking.Kill_Times_CP
-
-    elseif xp_type == XP.Type.EXEMPLAR then
-        last_xp_gain_time = XP.Tracking.Last_EP_Gain_Time
-        kill_times        = XP.Tracking.Kill_Times_EP
-
-    else
+    if not data then
         return UI.TextColored(color, Timers.Format(0))
     end
 
-    if last_xp_gain_time == 0 then return UI.TextColored(color, "--:--:--") end
+    local lastXpGainTime, killTimes = table.unpack(data)
+    local averageXp = XP.Columns.AverageXP(xpType)
 
-    local duration = os.time() - last_xp_gain_time
-    local tnl      = XP.Columns.TNL(xp_type, true)
+    if lastXpGainTime == 0 or averageXp <= 0 or type(killTimes) ~= "table" then
+        return UI.TextColored(color, "--:--:--")
+    end
 
-    local average_xp = XP.Columns.Average_XP(xp_type)
-    if average_xp <= 0 then return UI.TextColored(color, "--:--:--") end
+    local duration    = os.time() - lastXpGainTime
+    local tnl         = XP.Columns.TNL(xpType, true)
+    local killSpeed   = XP.Columns.AverageKillTime(lastXpGainTime, killTimes)
+    local killsNeeded = tnl / averageXp
+    local totalTime   = killSpeed * killsNeeded
+    local finalTime   = math.max(totalTime - duration, 0)
 
-    color = Res.Colors.Basic.WHITE
-    local kill_speed = XP.Columns.Average_Kill_Time(last_xp_gain_time, kill_times)
-
-    local kills_needed = tnl / average_xp
-    local total_time = kill_speed * kills_needed
-    local final_time = total_time - duration
-    if final_time < 0 then final_time = 0 end
-
-    return UI.TextColored(color, Timers.Format(final_time))
+    return UI.TextColored(color, Timers.Format(finalTime))
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Calculates the estimated time to finish dedication given XP rate.
 -- ------------------------------------------------------------------------------------------------------
----@param xp_type? integer
+---@param xpType? integer
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Time_To_Finish_Dedication = function(xp_type)
+XP.Columns.TimeToFinishDedication = function(xpType)
     local color = Res.Colors.Basic.WHITE
+    local exp   = XP.Tracking.EXP
+    xpType      = xpType or XP.Type.EXPERIENCE
 
-    if not XP.Dedication.Is_Active or XP.Tracking.Last_XP_Gain_Time == 0 then return UI.TextColored(color, "--:--:--") end
-    local duration = os.time() - XP.Tracking.Last_XP_Gain_Time
+    if not XP.Dedication.IsActive or exp.LastXpInstant == 0 then
+        return UI.TextColored(color, "--:--:--")
+    end
 
-    if not xp_type then xp_type = XP.Type.EXPERIENCE end
-    local dedication_remaining = XP.Dedication.XP_Remaining()
-    if xp_type == XP.Type.LIMIT then dedication_remaining = Ashita.Player.ExpTNM() end
+    local duration       = os.time() - exp.LastXpInstant
+    local boostRemaining = (xpType == XP.Type.LIMIT) and Ashita.Player.ExpTNM() or XP.Dedication.XpRemaining()
+    local averageXp      = XP.Columns.AverageXP(xpType, nil, true)
 
-    local average_xp = XP.Columns.Average_XP(xp_type, nil, true)
-    if average_xp <= 0 then return UI.TextColored(color, "--:--:--") end
+    if averageXp <= 0 then
+        return UI.TextColored(color, "--:--:--")
+    end
 
-    color = Res.Colors.Basic.WHITE
-    local kill_speed = XP.Columns.Average_Kill_Time(XP.Tracking.Last_XP_Gain_Time, XP.Tracking.Kill_Times_XP)
-    local kills_needed = dedication_remaining / average_xp
-    local total_time = kill_speed * kills_needed
-    local final_time = total_time - duration
-    if final_time < 0 then final_time = 0 end
-    return UI.TextColored(color, Timers.Format(final_time))
+    local killSpeed   = XP.Columns.AverageKillTime(exp.LastXpInstant, exp.KillTimes)
+    local killsNeeded = boostRemaining / averageXp
+    local totalTime   = killSpeed * killsNeeded
+    local finalTime   = math.max(totalTime - duration, 0)
+
+    return UI.TextColored(color, Timers.Format(finalTime))
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -319,8 +313,8 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Max_Chain = function()
-    return tostring(XP.Tracking.Metric.Max_Chain)
+XP.Columns.MaxChain = function()
+    return tostring(XP.Tracking.Chains.Max)
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -328,27 +322,37 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Zone_Time = function()
+XP.Columns.ZoneTime = function()
     return Timers.Check(Timers.Enum.Names.ZONE)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Displays how far the player is through their dedication charge.
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Dedication_Progress = function()
-    if not XP.Dedication.Is_Active then return "None" end
-    local bonus_xp = XP.Settings.Boost_XP_Acquired
-    local max_xp = XP.Settings.Boost_Item_Max
-    local denominator = tostring(max_xp)
-    if not max_xp or max_xp <= 0 then denominator = "???" end
-    return string.format("%d", bonus_xp) .. "/" .. denominator
+XP.Columns.DedicationProgress = function()
+    if not XP.Dedication.IsActive then
+        return "None"
+    end
+
+    local bonusXP     = XP.Settings.Boost_XP_Acquired
+    local maxXP       = XP.Settings.Boost_Item_Max
+
+    if not maxXP or maxXP <= 0 then
+        return string.format("%d/???", bonusXP)
+    end
+
+    return string.format("%d/%d", bonusXP, maxXP)
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Displays how much the dedication bonus is.
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Dedication_Bonus = function()
+XP.Columns.DedicationBonus = function()
     local rate = XP.Settings.Boost_Item_Rate
-    if rate < 0 then return "???" end
-    return tostring(rate) .. "%"
+
+    if rate < 0 then
+        return "???"
+    end
+
+    return string.format("%d%%", rate)
 end

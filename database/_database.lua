@@ -55,7 +55,7 @@ require("database.widgets")
 ---@param isManualReset? boolean true: manual reset; false: normal initialization
 ------------------------------------------------------------------------------------------------------
 DB.Initialize = function(isManualReset)
-	if Report.Settings.Auto_Save and isManualReset then
+	if Report and Report.Settings and Report.Settings.Auto_Save and isManualReset then
 		File.Save_Data()
 		File.Save_Battlelog()
 	end

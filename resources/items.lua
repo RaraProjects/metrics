@@ -1,6 +1,7 @@
-Res.Items = T{}
+Res.Items = { }
 
-Res.Items.Dedication = T{
+Res.Items.Dedication =
+{
     [0]     = {name = "Unknown",          boost = -1,  max = -1},
     [8191]  = {name = "Wandering Heroes", boost = 75,  max = 10000},
     [15793] = {name = "Anniversary Ring", boost = 100, max = 3000},
@@ -10,7 +11,8 @@ Res.Items.Dedication = T{
 }
 
 -- Used for item dropdown selection.
-Res.Items.Dedication_Selection = T{
+Res.Items.Dedication_Selection =
+{
     [1] = "Chariot Band",       -- 15761
     [2] = "Emperor Band",       -- 15763
     [3] = "Empress Band",       -- 15762
@@ -18,7 +20,8 @@ Res.Items.Dedication_Selection = T{
     [5] = "Anniversary Ring",   -- 15793
 }
 
-Res.Items.Dedication_Name_To_ID = T{
+Res.Items.DedicationItemNameToId =
+{
     ["Chariot Band"]     = 15761,
     ["Emperor Band"]     = 15763,
     ["Empress Band"]     = 15762,

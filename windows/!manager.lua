@@ -163,7 +163,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Starts a timer for progress bars to delay their loading to prevent slow screen resizing.
 ------------------------------------------------------------------------------------------------------
-Window_Manager.Set_Bar_Delay = function()
+Window_Manager.SetBarDelay = function()
     Window_Manager.Bar_Delay = Socket.gettime()
 end
 

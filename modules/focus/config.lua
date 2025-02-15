@@ -27,7 +27,7 @@ Focus.Config.Display = function()
         if UI.Checkbox("Misc Actions", {Focus.Settings.Show_Misc_Actions}) then
             Focus.Settings.Show_Misc_Actions = not Focus.Settings.Show_Misc_Actions
         end
-        UI.SameLine() Window_Manager.Widgets.HelpMarker("Shows uncategorized actions in the catalog lists. "
+        Window_Manager.Widgets.HelpMarker("Shows uncategorized actions in the catalog lists. "
                                               .."Sometimes these lists can get quite long and take up a lot of space. "
                                               .."Turn this off if you aren't interested in seeing those.")
 

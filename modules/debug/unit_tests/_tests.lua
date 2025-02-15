@@ -70,6 +70,7 @@ Debug.Unit.Mob.PET_TWO = {
 Debug.Unit.Reset = function()
     DB.Initialize(true)
     Blog.Initialize()
+    XP.Initialize()
 end
 
 ------------------------------------------------------------------------------------------------------

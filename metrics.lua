@@ -134,19 +134,19 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0x00A then
         Ashita.Player.Zoning(false)
         Timers.Reset(Timers.Enum.Names.ZONE)
-        Window_Manager.Set_Bar_Delay()
+        Window_Manager.SetBarDelay()
         XP.Chains.End()
 
     -- CP/EP Update: The current and max of these need to be tracked manually.
     -- Based off of Points.
     -- https://github.com/Shinzaku/Points
-    elseif packet.id == 0x061 then XP.Tracking.Update_EP_Into_Level(packet.data)
-    elseif packet.id == 0x063 then XP.Tracking.Update_CP_Into_Level(packet.data)
+    elseif packet.id == 0x061 then XP.OnExemplarUpdate(packet.data)
+    elseif packet.id == 0x063 then XP.OnCapacityUpdate(packet.data)
 
     elseif packet.id == 0x0C8 then Ashita.Party.NeedRefresh = true                     -- Alliance Update
     elseif packet.id == 0x0DD then Ashita.Party.NeedRefresh = true                     -- Party Member Update
-    elseif packet.id == 0x02D then XP.Handle_Packet(packet.data)                        -- Experience Points
-    elseif packet.id == 0x037 then if XP.Is_Initialized then XP.Dedication.Check() end  -- Player Update
+    elseif packet.id == 0x02D then XP.OnXpGained(packet.data)                        -- Experience Points
+    elseif packet.id == 0x037 then if XP.IsInitialized then XP.Dedication.Refresh() end  -- Player Update
     elseif packet.id == 0x028 then H.Start_Action_Packet(packet)                        -- Action Packet
 
     -- Action Messages

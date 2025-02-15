@@ -26,7 +26,7 @@ Report.Config.Display = function()
     if UI.Checkbox("Auto Save", {Report.Settings.Auto_Save}) then
         Report.Settings.Auto_Save = not Report.Settings.Auto_Save
     end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("Automatically save an export of the database as a CSV whenver you "
+    Window_Manager.Widgets.HelpMarker("Automatically save an export of the database as a CSV whenver you "
                                           .."reset the database or re/unload the addon (like shutting down).")
     UI.Separator()
     local damage_threshold = {[1] = Report.Settings.Damage_Threshold}

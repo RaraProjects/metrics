@@ -1,7 +1,7 @@
 Window_Manager.Theme = {}
 
 Window_Manager.Theme.Is_Set = false
-Window_Manager.Theme.Table_Row_Bg = {0.00, 0.00, 0.00, 0.00}
+Window_Manager.Theme.TableRowBg = {0.00, 0.00, 0.00, 0.00}
 
 ------------------------------------------------------------------------------------------------------
 -- Change the window themes.
@@ -36,15 +36,15 @@ Window_Manager.Theme.Set = function()
     if not Window_Manager.Theme.Is_Set then
         if Window_Manager.Settings.Style == 0 then
             Window_Manager.Theme.Apply_Custom(Themes.Default)
-            Window_Manager.Theme.Table_Row_Bg = {0.18, 0.20, 0.23, 1.00}
+            Window_Manager.Theme.TableRowBg = {0.18, 0.20, 0.23, 1.00}
         elseif Window_Manager.Settings.Style == 1 then
             UI.StyleColorsDark()
-            Window_Manager.Theme.Table_Row_Bg = {0.06, 0.06, 0.06, 1.00}
+            Window_Manager.Theme.TableRowBg = {0.06, 0.06, 0.06, 1.00}
         elseif Window_Manager.Settings.Style == 2 then
             UI.StyleColorsLight()
         elseif Window_Manager.Settings.Style == 3 then
             UI.StyleColorsClassic()
-            Window_Manager.Theme.Table_Row_Bg = {0.00, 0.00, 0.00, 1.00}
+            Window_Manager.Theme.TableRowBg = {0.00, 0.00, 0.00, 1.00}
         else
             Window_Manager.Theme.Apply_Custom(Themes.Default)
         end

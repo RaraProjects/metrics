@@ -56,7 +56,7 @@ end)
 Settings_File.register(XP.File, "settings_update", function(settings)
     if settings ~= nil then
         XP.Initialize(settings)
-        XP.Is_Initialized = false
+        XP.IsInitialized = false
         Settings_File.save(XP.File)
     end
 end)

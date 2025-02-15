@@ -97,7 +97,7 @@ Parse.Widgets.Acc_Limit = function()
         Metrics.Model.Running_Accuracy_Limit = acc_limit[1]
         DB.Tracking.RunningAccuracy = {}
     end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("Recent accuracy calculates based off of {X} many attack attempts.")
+    Window_Manager.Widgets.HelpMarker("Recent accuracy calculates based off of {X} many attack attempts.")
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -109,5 +109,5 @@ Parse.Widgets.Player_Limit = function()
     if UI.DragInt("Player Limit", cutoff, 0.1, 0, 18, "%d", ImGuiSliderFlags_None) then
         Parse.Settings.Rank_Cutoff = cutoff[1]
     end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("How many players are listed on the Team table.")
+    Window_Manager.Widgets.HelpMarker("How many players are listed on the Team table.")
 end
