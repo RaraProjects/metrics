@@ -21,8 +21,8 @@ Column.Defense.Damage_Taken_By_Type = function(player_name, trackable, percent, 
         return UI.TextColored(color, Column.String.FormatPercent(total, total_damage, justify))
     end
 
-    if raw then return Column.String.Format_Number(total) end
-    return UI.TextColored(color, Column.String.Format_Number(total, justify))
+    if raw then return Column.String.FormatNumber(total) end
+    return UI.TextColored(color, Column.String.FormatNumber(total, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ Column.Defense.Damage_Mitigation = function(player_name, trackable, ranged, just
     -- How many times the damage mitigation has proc'd.
     local procs = DB.Data.Get(player_name, trackable, DB.Metric.HITS_ON_TARGET)
     local color = Column.String.Color_Zero(procs)
-    if procs == 0 then return UI.TextColored(color, Column.String.Format_Number(procs)) end
+    if procs == 0 then return UI.TextColored(color, Column.String.FormatNumber(procs)) end
 
     -- What is the average unmitigated melee damage? (We ignore ranged evasions here)
     local unmitigated_trackable = DB.Trackable.DEF_UNMITIGATED_MELEE
@@ -59,7 +59,7 @@ Column.Defense.Damage_Mitigation = function(player_name, trackable, ranged, just
     if damage_mitigated < 0 then damage_mitigated = 0 end
 
     color = Column.String.Color_Zero(damage_mitigated)
-    return UI.TextColored(color, Column.String.Format_Number(damage_mitigated, justify))
+    return UI.TextColored(color, Column.String.FormatNumber(damage_mitigated, justify))
 end
 
 ------------------------------------------------------------------------------------------------------

@@ -150,7 +150,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 H.MeleeDef.Blog = function(actorMob, damage, counterDamage)
     local note = (counterDamage and counterDamage > 0) and string.format("Counter: %d", counterDamage) or ""
-    Blog.Add(actorMob.name, nil, Blog.Action_Type.MOB_MELEE, DB.Trackable.MELEE_OVERALL, damage, note)
+    Blog.Add(actorMob.name, nil, Blog.ActionType.MOB_MELEE, DB.Trackable.MELEE_OVERALL, damage, note)
 end
 
 ------------------------------------------------------------------------------------------------------

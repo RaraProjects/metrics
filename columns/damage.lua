@@ -67,7 +67,7 @@ Column.Damage.By_Type_Pet = function(player_name, pet_name, trackable, metric, a
         return UI.TextColored(color, Column.String.FormatPercent(trackable_damage, total_damage))
     end
 
-    return UI.TextColored(color, Column.String.Format_Number(trackable_damage))
+    return UI.TextColored(color, Column.String.FormatNumber(trackable_damage))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -218,7 +218,7 @@ Column.Damage.Pet_Average = function(player_name, pet_name, trackable, action_na
 
     local color = Column.String.Color_Zero(hits)
 
-    if hits == 0 or damage == 0 then return UI.TextColored(color, Column.String.Format_Number(0)) end
+    if hits == 0 or damage == 0 then return UI.TextColored(color, Column.String.FormatNumber(0)) end
     return UI.TextColored(color, Column.String.FormatPercent(damage, hits, false, true))
 end
 
@@ -246,7 +246,7 @@ Column.Damage.Hits = function(player_name, trackable, action_name, on_target)
 
     local color = Column.String.Color_Zero(hits)
 
-    return UI.TextColored(color, Column.String.Format_Number(hits))
+    return UI.TextColored(color, Column.String.FormatNumber(hits))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -274,8 +274,8 @@ Column.Damage.Attempts = function(player_name, trackable, attempt_metric, action
 
     local color = Column.String.Color_Zero(attempts)
 
-    if raw then return Column.String.Format_Number(attempts) end
-    return UI.TextColored(color, Column.String.Format_Number(attempts))
+    if raw then return Column.String.FormatNumber(attempts) end
+    return UI.TextColored(color, Column.String.FormatNumber(attempts))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -303,7 +303,7 @@ Column.Damage.Pet_Attempts = function(player_name, pet_name, trackable, action_n
 
     local color = Column.String.Color_Zero(attempts)
 
-    return UI.TextColored(color, Column.String.Format_Number(attempts))
+    return UI.TextColored(color, Column.String.FormatNumber(attempts))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -426,7 +426,7 @@ Column.Damage.Pet_By_Type = function(player_name, pet_name, damage_type, percent
         if all_total then total_damage = DB.Data.Get(player_name, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL) end
         return UI.TextColored(color, Column.String.FormatPercent(focused_damage, total_damage, justify))
     end
-    return UI.TextColored(color, Column.String.Format_Number(focused_damage, justify))
+    return UI.TextColored(color, Column.String.FormatNumber(focused_damage, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -465,7 +465,7 @@ Column.Damage.Burst = function(player_name, percent, magic_only, justify)
         end
         return UI.TextColored(color, Column.String.FormatPercent(focused_damage, total_damage, justify))
     end
-    return UI.TextColored(color, Column.String.Format_Number(focused_damage, justify))
+    return UI.TextColored(color, Column.String.FormatNumber(focused_damage, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -487,8 +487,8 @@ Column.Damage.Total = function(player_name, percent, justify, raw)
         return UI.TextColored(color, Column.String.FormatPercent(grand_total, party_damage, justify))
     end
 
-    if raw then return Column.String.Format_Number(grand_total) end
-    return UI.TextColored(color, Column.String.Format_Number(grand_total, justify))
+    if raw then return Column.String.FormatNumber(grand_total) end
+    return UI.TextColored(color, Column.String.FormatNumber(grand_total, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -517,7 +517,7 @@ end
 Column.Damage.DPS = function(player_name, justify)
     local dps = DB.DPS.GetDPS(player_name)
     local color = Column.String.Color_Zero(dps)
-    return UI.TextColored(color, Column.String.Format_Number(dps, justify))
+    return UI.TextColored(color, Column.String.FormatNumber(dps, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -528,7 +528,7 @@ end
 Column.Damage.Max_DPS = function(player_name, justify)
     local max_dps = DB.DPS.GetMaxDPS(player_name)
     local color = Column.String.Color_Zero(max_dps)
-    return UI.TextColored(color, Column.String.Format_Number(max_dps, justify))
+    return UI.TextColored(color, Column.String.FormatNumber(max_dps, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -560,7 +560,7 @@ Column.Damage.Trackable_Total = function(trackable, justify)
         damage = damage + DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
     end
     local color = Column.String.Color_Zero(damage)
-    return UI.TextColored(color, Column.String.Format_Number(damage, justify))
+    return UI.TextColored(color, Column.String.FormatNumber(damage, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -571,7 +571,7 @@ end
 Column.Damage.Parse_Total = function(justify)
     local damage = DB.GetTeamDamage()
     local color = Column.String.Color_Zero(damage)
-    return UI.TextColored(color, Column.String.Format_Number(damage, justify))
+    return UI.TextColored(color, Column.String.FormatNumber(damage, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -585,7 +585,7 @@ Column.Damage.Parse_DPS = function(justify)
         dps = dps + DB.DPS.GetDPS(player_name)
     end
     local color = Column.String.Color_Zero(dps)
-    return UI.TextColored(color, Column.String.Format_Number(dps, justify))
+    return UI.TextColored(color, Column.String.FormatNumber(dps, justify))
 end
 
 ------------------------------------------------------------------------------------------------------

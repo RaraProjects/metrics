@@ -147,7 +147,7 @@ end
 H.SpellDef.Blog = function(actorMob, spellData, spellName, damage, targetCount)
     local blog_note = targetCount > 1 and string.format("TGTs: %d", targetCount) or ""
 
-    Blog.Add(actorMob.name, nil, Blog.Action_Type.MOB_SPELL, spellName, damage, blog_note, spellData)
+    Blog.Add(actorMob.name, nil, Blog.ActionType.MOB_SPELL, spellName, damage, blog_note, spellData)
 end
 
 ------------------------------------------------------------------------------------------------------

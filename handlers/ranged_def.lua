@@ -30,7 +30,7 @@ H.RangedDef.Action = function(action, actorMob, ownerMob, logDefense)
         end
     end
 
-    Blog.Add(actorMob.name, nil, Blog.Action_Type.MOB_RANGED, DB.Trackable.RANGED_OVERALL, damage)
+    Blog.Add(actorMob.name, nil, Blog.ActionType.MOB_RANGED, DB.Trackable.RANGED_OVERALL, damage)
 end
 
 ------------------------------------------------------------------------------------------------------

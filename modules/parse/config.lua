@@ -258,7 +258,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Is_Masking_Names = function()
+Parse.Config.IsMaskingNames = function()
     return Parse.Settings.Mask_Names
 end
 

@@ -19,8 +19,8 @@ Column.Healing.Total = function(player_name, percent, justify, raw)
         if raw then return Column.String.FormatPercent(total_healing, total_damage) end
         return UI.TextColored(color, Column.String.FormatPercent(total_healing, total_damage, justify))
     end
-    if raw then return Column.String.Format_Number(total_healing) end
-    return UI.TextColored(color, Column.String.Format_Number(total_healing, justify))
+    if raw then return Column.String.FormatNumber(total_healing) end
+    return UI.TextColored(color, Column.String.FormatNumber(total_healing, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -33,5 +33,5 @@ end
 Column.Healing.Overcure = function(player_name, justify)
     local overcure = DB.Data.Get(player_name, DB.Trackable.SPELLS_HEALING, DB.Metric.OVERCURE)
     local color = Column.String.Color_Zero(overcure)
-    return UI.TextColored(color, Column.String.Format_Number(overcure, justify))
+    return UI.TextColored(color, Column.String.FormatNumber(overcure, justify))
 end

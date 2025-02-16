@@ -42,8 +42,8 @@ Column.Output = {}
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Output.Number = function(value, color, justify, raw)
-    if raw then return Column.String.Format_Number(value) end
-    return UI.TextColored(color, Column.String.Format_Number(value, justify))
+    if raw then return Column.String.FormatNumber(value) end
+    return UI.TextColored(color, Column.String.FormatNumber(value, justify))
 end
 
 ------------------------------------------------------------------------------------------------------

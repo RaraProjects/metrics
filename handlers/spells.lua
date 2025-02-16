@@ -244,12 +244,12 @@ H.Spell.Blog = function(audits, spellId, spellData, spellName, damage, isBurst, 
             blogNote = Blog.Enum.MAGIC_BURST
         end
         appendTargetCount()
-        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.MAGIC_OFFENSIVE, spellName, damage, blogNote, spellData)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.ActionType.MAGIC_OFFENSIVE, spellName, damage, blogNote, spellData)
 
     -- Healing
     elseif Res.Spells.Healing[spellId] then
         appendTargetCount()
-        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.ALL_HEALING, spellName, damage, blogNote, spellData)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.ActionType.ALL_HEALING, spellName, damage, blogNote, spellData)
 
     -- Debuff Removal
     elseif Res.Spells.DebuffRemoval[spellId] then
@@ -262,11 +262,11 @@ H.Spell.Blog = function(audits, spellId, spellData, spellName, damage, isBurst, 
             end
         end
 
-        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.DEBUFF_REMOVAL, spellName, -1, blogNote, spellData)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.ActionType.DEBUFF_REMOVAL, spellName, -1, blogNote, spellData)
 
     -- Enfeebling and DoTs
     elseif Res.Spells.Enfeebling[spellId] or Res.Spells.DoT[spellId] then
-        local action_type = Blog.Action_Type.MAGIC_ENFEEBLE
+        local action_type = Blog.ActionType.MAGIC_ENFEEBLE
         if damage == -1 then
             blogNote = Blog.Enum.NO_EFFECT
 
@@ -277,7 +277,7 @@ H.Spell.Blog = function(audits, spellId, spellData, spellName, damage, isBurst, 
             damage = -1
 
         elseif Res.Spells.Dispel[spellId] then
-            action_type = Blog.Action_Type.DISPEL
+            action_type = Blog.ActionType.DISPEL
             local buff  = Res.Buffs.List[damage]
             if buff then
                 blogNote = buff.en
@@ -293,10 +293,10 @@ H.Spell.Blog = function(audits, spellId, spellData, spellName, damage, isBurst, 
     -- Bard Songs
     elseif Res.Spells.Buff_Songs[spellId] then
         appendTargetCount(true)
-        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.SONG_BUFFS, spellName, nil, blogNote, spellData)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.ActionType.SONG_BUFFS, spellName, nil, blogNote, spellData)
 
     else
-        Blog.Add(audits.player_name, audits.pet_name, Blog.Action_Type.MAGIC_MISC, spellName, nil, blogNote, spellData)
+        Blog.Add(audits.player_name, audits.pet_name, Blog.ActionType.MAGIC_MISC, spellName, nil, blogNote, spellData)
 
     end
 end

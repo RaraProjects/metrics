@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author  = "Metra"
 addon.name    = "Metrics"
-addon.version = "01.04.25.00"
+addon.version = "02.15.25.00"
 
 _Globals = {}
 _Globals.Initialized = false
@@ -79,9 +79,17 @@ require("initialization")
 -- https://github.com/ocornut/imgui/blob/master/imgui_tables.cpp
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('d3d_present', 'present_cb', function()
-    if not _Globals.Initialized then return nil end
-    if not Ashita.Player.IsLoggedIn() then return nil end
-    if Debug.Is_Enabled() and Debug.Show_Demo then UI.ShowDemoWindow() end
+    if not _Globals.Initialized then
+        return nil
+    end
+
+    if not Ashita.Player.IsLoggedIn() then
+        return nil
+    end
+
+    if Debug.Is_Enabled() and Debug.Show_Demo then
+        UI.ShowDemoWindow()
+    end
 
     Throttle.Throttle()                     -- Throttling for performance.
     XP.Initialize()                         -- Need to initialize here because some things aren't ready when addon loads.
@@ -97,6 +105,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
         Overview.Window.Populate(Overview.Content)
         Config.Window.Populate(Config.Content)
         Debug.Window.Populate(Debug.Content)
+
         if Window_Manager.Settings.Multi_Window then
             Parse.Window.Populate(Parse.Content)
             Focus.Window.Populate(Focus.Content)
@@ -105,6 +114,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
             Loot.Window.Populate(Loot.Content)
             Report.Window.Populate(Report.Content)
         end
+
         Throttle.Block()
     end
 end)
@@ -132,10 +142,14 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
 
     -- End Zone
     elseif packet.id == 0x00A then
-        Ashita.Player.Zoning(false)
-        Timers.Reset(Timers.Enum.Names.ZONE)
+        Ashita.Player.Zoning(false)             -- Clear zoning flag.
+        Timers.Reset(Timers.Enum.Names.ZONE)    -- Reset time in zone timer.
         Window_Manager.SetBarDelay()
-        XP.Chains.End()
+        XP.Chains.End()                         -- Reset any XP chains.
+
+        -- Add zone event to the battle log.
+        -- Can't add the zone because member structure doesn't load fast enough after zone.
+        Blog.Add("System", nil, Blog.ActionType.ZONE, "Zone", -1)
 
     -- CP/EP Update: The current and max of these need to be tracked manually.
     -- Based off of Points.
@@ -143,11 +157,20 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0x061 then XP.OnExemplarUpdate(packet.data)
     elseif packet.id == 0x063 then XP.OnCapacityUpdate(packet.data)
 
-    elseif packet.id == 0x0C8 then Ashita.Party.NeedRefresh = true                     -- Alliance Update
-    elseif packet.id == 0x0DD then Ashita.Party.NeedRefresh = true                     -- Party Member Update
-    elseif packet.id == 0x02D then XP.OnXpGained(packet.data)                        -- Experience Points
-    elseif packet.id == 0x037 then if XP.IsInitialized then XP.Dedication.Refresh() end  -- Player Update
-    elseif packet.id == 0x028 then H.Start_Action_Packet(packet)                        -- Action Packet
+    -- Alliance Update
+    elseif packet.id == 0x0C8 then Ashita.Party.NeedRefresh = true
+
+    -- Party Member Update
+    elseif packet.id == 0x0DD then Ashita.Party.NeedRefresh = true
+
+    -- Experience Points
+    elseif packet.id == 0x02D then XP.OnXpGained(packet.data)
+
+    -- Player Update
+    elseif packet.id == 0x037 then if XP.IsInitialized then XP.Dedication.Refresh() end
+
+    -- Action Packet
+    elseif packet.id == 0x028 then H.Start_Action_Packet(packet)
 
     -- Action Messages
     elseif packet.id == 0x029 then
@@ -161,7 +184,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             if Ashita.Party.IsAffiliate(actorMob.name) or Ashita.Mob.PetOwner(actorMob) then
                 local target_mob = Ashita.Mob.GetMobByIndex(data.target_index)
                 DB.TallyDefeatedMob(target_mob.name)
-                Blog.Add(target_mob.name, nil, Blog.Action_Type.MOB_DEATH, Blog.Enum.MOB_DEATH, nil, "------------")
+                Blog.Add(target_mob.name, nil, Blog.ActionType.MOB_DEATH, Blog.Enum.MOB_DEATH, nil, "------------")
             end
 
         elseif data.message == Ashita.Message.DEATH_FALL then
@@ -169,7 +192,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
             local claimerMob = Ashita.Mob.GetMobByID(actorMob.claim_id)
             if Ashita.Party.IsAffiliate(claimerMob.name) or Ashita.Mob.PetOwner(claimerMob) then
                 DB.TallyDefeatedMob(actorMob.name)
-                Blog.Add(actorMob.name, nil, Blog.Action_Type.MOB_DEATH, Blog.Enum.MOB_DEATH, nil, "------------")
+                Blog.Add(actorMob.name, nil, Blog.ActionType.MOB_DEATH, Blog.Enum.MOB_DEATH, nil, "------------")
             end
 
         -- Being defeated by a mob.

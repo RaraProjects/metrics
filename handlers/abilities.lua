@@ -199,13 +199,13 @@ H.Ability.Blog = function(actorMob, abilityData, abilityId, damage)
         if abilityId == Res.Abilities.CHIVALRY then
             note = Ashita.Party.Refresh(actorMob.name, Ashita.PlayerAttributes.TP)
         end
-        Blog.Add(actorMob.name, nil, Blog.Action_Type.ABILITY, abilityData.Name, damage, note)
+        Blog.Add(actorMob.name, nil, Blog.ActionType.ABILITY, abilityData.Name, damage, note)
 
     elseif Res.Abilities.Healing[abilityId] or Res.Abilities.PetHealing[abilityId] then
-        Blog.Add(actorMob.name, nil, Blog.Action_Type.MAGIC_HEALING, abilityData.Name, damage)
+        Blog.Add(actorMob.name, nil, Blog.ActionType.MAGIC_HEALING, abilityData.Name, damage)
 
     elseif Res.Abilities.PetCommands[offsetId] then
-        Blog.Add(actorMob.name, nil, Blog.Action_Type.PET_COMMAND, abilityData.Name, damage)
+        Blog.Add(actorMob.name, nil, Blog.ActionType.PET_COMMAND, abilityData.Name, damage)
 
     elseif Res.Abilities.PhantomRoll[offsetId] then
         local lucky_details = Res.Abilities.PhantomRollLucky[abilityId - Ashita.AbilityOffset.ABILITY]
@@ -221,11 +221,11 @@ H.Ability.Blog = function(actorMob, abilityData, abilityId, damage)
                 suffix = " BUST!"
             end
 
-            Blog.Add(actorMob.name, nil, Blog.Action_Type.PHANTOM_ROLL, abilityData.Name, nil, string.format("Roll: %d%s", damage, suffix), abilityData)
+            Blog.Add(actorMob.name, nil, Blog.ActionType.PHANTOM_ROLL, abilityData.Name, nil, string.format("Roll: %d%s", damage, suffix), abilityData)
         end
 
     else
-        Blog.Add(actorMob.name, nil, Blog.Action_Type.ABILITY, abilityData.Name)
+        Blog.Add(actorMob.name, nil, Blog.ActionType.ABILITY, abilityData.Name)
     end
 end
 
@@ -242,13 +242,13 @@ end
 H.Ability.PetBlog = function(actorMob, ownerMob, abilityData, abilityId, damage, targetCount)
     if damage > 0 then
         if Res.Pets.BloodPactRage[abilityId] then
-            Blog.Add(ownerMob.name, actorMob.name, Blog.Action_Type.PET_TP, abilityData.Name, damage)
+            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, abilityData.Name, damage)
 
         elseif Res.Pets.Healing[abilityId] then
-            Blog.Add(ownerMob.name, actorMob.name, Blog.Action_Type.ALL_HEALING, abilityData.Name, damage)
+            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.ALL_HEALING, abilityData.Name, damage)
 
         elseif Res.Pets.BloodPactWard[abilityId] then
-            Blog.Add(ownerMob.name, actorMob.name, Blog.Action_Type.PET_TP, abilityData.Name, nil, string.format("TGTs: %d", targetCount), abilityData)
+            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, abilityData.Name, nil, string.format("TGTs: %d", targetCount), abilityData)
         end
     end
 end

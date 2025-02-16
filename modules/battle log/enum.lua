@@ -1,4 +1,6 @@
-Blog.Enum = {
+---@enum Blog.Enum
+Blog.Enum =
+{
     IGNORE            = "ignore",
     MAGIC_BURST       = "BURST!",
     MISS              = "MISS!",
@@ -20,7 +22,9 @@ Blog.Enum = {
 }
 
 -- Used for blog filtering.
-Blog.Action_Type = {
+---@enum Blog.ActionType
+Blog.ActionType =
+{
     ABILITY         = "Ability",
     ALL_HEALING     = "Healing",
     DEBUFF_REMOVAL  = "Debuff Removal",
@@ -43,4 +47,5 @@ Blog.Action_Type = {
     SKILLCHAIN      = "Skillchain",
     SONG_BUFFS      = "Bard Song Buffs",
     WEAPONSKILL     = "Weaponskill",
+    ZONE            = "Zone",
 }

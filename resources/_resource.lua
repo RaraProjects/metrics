@@ -18,26 +18,21 @@ Themes = require("resources.themes")
 -- ------------------------------------------------------------------------------------------------------
 -- Gets an elemental color.
 -- ------------------------------------------------------------------------------------------------------
----@param element_id integer
+---@param elementId integer
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Res.Colors.Get_Element = function(element_id)
-    local color = Res.Colors.Elements[element_id]
-    if not color then color = Res.Colors.Basic.WHITE end
-    return color
+Res.Colors.GetElement = function(elementId)
+    return Res.Colors.Elements[elementId] or Res.Colors.Basic.WHITE
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Gets a job color.
 -- ------------------------------------------------------------------------------------------------------
----@param job_id integer
+---@param jobId integer
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Res.Colors.Get_Job = function(job_id)
-    if not job_id then return Res.Colors.Basic.WHITE end
-    local color = Res.Colors.Jobs[job_id]
-    if not color then color = Res.Colors.Basic.WHITE end
-    return color
+Res.Colors.GetJob = function(jobId)
+    return jobId and Res.Colors.Jobs[jobId] or Res.Colors.Basic.WHITE
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -56,10 +51,9 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Gets job information.
 -- ------------------------------------------------------------------------------------------------------
----@param job_id integer
+---@param jobId integer
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Res.Jobs.Get_Job = function(job_id)
-    if not job_id then return Res.Jobs.List[0] end
-    return Res.Jobs.List[job_id]
+Res.Jobs.GetJob = function(jobId)
+    return jobId and Res.Jobs.List[jobId] or Res.Jobs.List[0]
 end

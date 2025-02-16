@@ -218,7 +218,7 @@ H.TpDef.Blog = function(actorMob, damage, skillName, targetCount, isNoDamage)
 
     damage = isNoDamage and -1 or damage
 
-    Blog.Add(actorMob.name, nil, Blog.Action_Type.MOB_TP, skillName, damage, note)
+    Blog.Add(actorMob.name, nil, Blog.ActionType.MOB_TP, skillName, damage, note)
 end
 
 -- ------------------------------------------------------------------------------------------------------

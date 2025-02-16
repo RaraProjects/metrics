@@ -231,7 +231,7 @@ Focus.Melee.Action_Blocked = function(player_name, paralyzed, intimidated)
 
         for _, data in ipairs(blocked) do
             UI.TableNextColumn() UI.Text(tostring(data.header))
-            UI.TableNextColumn() UI.Text(Column.String.Format_Number(DB.Data.Get(player_name, data.trackable, data.metric)))
+            UI.TableNextColumn() UI.Text(Column.String.FormatNumber(DB.Data.Get(player_name, data.trackable, data.metric)))
             Window_Manager.TableRowColor(row)
             row = row + 1
         end

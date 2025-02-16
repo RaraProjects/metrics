@@ -73,10 +73,10 @@ H.TP.Action = function(action, actorMob, logOffense)
         tpDamage = 0
     end
 
-    Blog.Add(actorMob.name, nil, Blog.Action_Type.WEAPONSKILL, wsName, tpDamage, tp, wsData)
+    Blog.Add(actorMob.name, nil, Blog.ActionType.WEAPONSKILL, wsName, tpDamage, tp, wsData)
 
     if scDamage > 0 then
-        Blog.Add(actorMob.name, nil, Blog.Action_Type.SKILLCHAIN, scName, scDamage)
+        Blog.Add(actorMob.name, nil, Blog.ActionType.SKILLCHAIN, scName, scDamage)
     end
 end
 
@@ -220,7 +220,7 @@ H.TP.MonsterAction = function(action, actorMob, logOffense)
     -- Update the battle log.
     if ownerMob then
         tpDamage = isUseNoDamage and -1 or tpDamage
-        Blog.Add(ownerMob.name, actorMob.name, Blog.Action_Type.PET_TP, skillName, tpDamage)
+        Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, skillName, tpDamage)
     end
 
     return true

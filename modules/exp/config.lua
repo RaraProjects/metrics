@@ -1,19 +1,19 @@
 XP.Config = { }
 
 XP.Config.Defaults = T{
-    X       = 100,
-    Y       = 100,
-    Visible = { false },
+    X                        = 100,
+    Y                        = 100,
+    Visible                  = { false },
 
     -- GUI
-    Show_Background     = false,
-    Mini_Mode_Enabled   = false,
-    Small_Progress_Bars = true,
-    Show_Level_Max      = false,        -- Makes the TNL column be Current/Max.
+    Show_Background          = false,
+    Mini_Mode_Enabled        = false,
+    Small_Progress_Bars      = true,
+    Show_Level_Max           = false,   -- Makes the TNL column be Current/Max.
 
     -- Progress Bars
-    Show_XP_Progress_Bar    = true,
-    Show_Boost_Progress_Bar = true,
+    Show_XP_Progress_Bar     = true,
+    Show_Boost_Progress_Bar  = true,
 
     -- Columns Flags
     Show_Job                 = true,
@@ -40,10 +40,10 @@ XP.Config.Defaults = T{
     Boost_Defaulting_Enabled = false,
     Boost_Item_Default_Name  = "Anniversary Ring",
     Boost_Item_Default_Index = 1,
-    Boost_Item_Name   = "None",
-    Boost_Item_Rate   = 0,
-    Boost_Item_Max    = 0,
-    Boost_XP_Acquired = 0,          -- This is the amount of boost XP aquired. Need to save between sessions.
+    Boost_Item_Name          = "None",
+    Boost_Item_Rate          = 0,
+    Boost_Item_Max           = 0,
+    Boost_XP_Acquired        = 0,       -- This is the amount of boost XP aquired. Need to save between sessions.
 }
 
 XP.Config.Total_Mode_List =

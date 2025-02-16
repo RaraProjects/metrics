@@ -7,16 +7,16 @@ Column.String = T{}
 ------------------------------------------------------------------------------------------------------
 Column.String.Format_Name = function(player_name)
     if not player_name then player_name = "Player" end
-    if Parse.Config.Is_Masking_Names() then return Column.String.Job(player_name, Parse.Config.Is_Hiding_Subjob()) end
+    if Parse.Config.IsMaskingNames() then return Column.String.Job(player_name, Parse.Config.Is_Hiding_Subjob()) end
 
     local job = Res.Jobs.List[0]
     if Ashita.Party.Jobs[player_name] then
-        job = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
+        job = Res.Jobs.GetJob(Ashita.Party.Jobs[player_name].main)
         if not job then job = Res.Jobs.List[0] end
     end
 
     local color = Res.Colors.Basic.WHITE
-    if Parse.Config.Is_Colored_Name() then color = Res.Colors.Get_Job(job.id) end
+    if Parse.Config.Is_Colored_Name() then color = Res.Colors.GetJob(job.id) end
 
     UI.TextColored(color, player_name)
 end
@@ -34,17 +34,17 @@ Column.String.Job = function(player_name, hide_subjob)
     if hide_subjob then anon_string = "NON0" end
     if not player_name or not Ashita.Party.Jobs[player_name] then UI.TextColored(color, anon_string) return nil end
 
-    local main = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
+    local main = Res.Jobs.GetJob(Ashita.Party.Jobs[player_name].main)
     local main_level = Ashita.Party.Jobs[player_name].main_level
     if not main then main = Res.Jobs.List[0] end
-    local main_color = Res.Colors.Get_Job(main.id)
+    local main_color = Res.Colors.GetJob(main.id)
     UI.TextColored(main_color, string.format("%s%02d", main.ens, main_level))
 
     if not hide_subjob then
-        local sub = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].sub)
+        local sub = Res.Jobs.GetJob(Ashita.Party.Jobs[player_name].sub)
         local sub_level = Ashita.Party.Jobs[player_name].sub_level
         if not sub then sub = Res.Jobs.List[0] end
-        local sub_color = Res.Colors.Get_Job(sub.id)
+        local sub_color = Res.Colors.GetJob(sub.id)
         UI.SameLine() UI.Text("/") UI.SameLine()
         UI.TextColored(sub_color, string.format("%s%02d", sub.ens, sub_level))
     end
@@ -58,7 +58,7 @@ end
 ---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.String.Format_Number = function(number, justify)
+Column.String.FormatNumber = function(number, justify)
     local format = "%d"
     if justify then format = "%8d" end
     if Parse.Config.Condensed_Numbers() then return Column.String.Compact_Number(number, justify) end
@@ -104,7 +104,7 @@ Column.String.FormatPercent = function(numerator, denominator, justify, no_scali
         format = "%d"
         local top = string.format(format, numerator)
         local bottom = string.format(format, denominator)
-        return Column.String.Set_Length(tostring(top) .. "/" .. tostring(bottom), 8)
+        return Column.String.SetLength(tostring(top) .. "/" .. tostring(bottom), 8)
     end
 
     return ret_value
@@ -194,7 +194,7 @@ end
 ---@param limit number
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.String.Set_Length = function(string, limit)
+Column.String.SetLength = function(string, limit)
     local length = string.len(string)
     if length >= limit then return string end
     local chars_needed = limit - length

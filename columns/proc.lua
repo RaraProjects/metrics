@@ -10,7 +10,7 @@ Column.Proc = {}
 Column.Proc.Deaths = function(player_name, justify)
     local death_count = DB.Data.Get(player_name, DB.Trackable.DEATH, DB.Metric.ATTEMPTS_ON_USE)
     local color = Column.String.Color_Zero(death_count)
-    return UI.TextColored(color, Column.String.Format_Number(death_count, justify))
+    return UI.TextColored(color, Column.String.FormatNumber(death_count, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -25,6 +25,6 @@ Column.Proc.Distance_Correction = function(player_name, correction_type, justify
     local ranged_shots = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_USE)
     local correction_hits = DB.Data.Get(player_name, correction_type, DB.Metric.HITS_ON_USE)
     local color = Column.String.Color_Zero(correction_hits)
-    if ranged_shots == 0 or correction_hits == 0 then return UI.TextColored(color, Column.String.Format_Number(0, justify)) end
+    if ranged_shots == 0 or correction_hits == 0 then return UI.TextColored(color, Column.String.FormatNumber(0, justify)) end
     return UI.TextColored(color, Column.String.FormatPercent(correction_hits, ranged_shots))
 end

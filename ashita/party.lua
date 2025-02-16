@@ -10,6 +10,8 @@ Ashita.Party.RefreshTime      = os.time()
 -- Get party data. I'm trying to mimic the windower.ffxi.get_party() function.
 -- Windower: https://github.com/Windower/Lua/wiki/FFXI-Functions
 -- ------------------------------------------------------------------------------------------------------
+---@return table
+-- ------------------------------------------------------------------------------------------------------
 Ashita.Party.Get = function()
     local data = AshitaCore:GetMemoryManager():GetParty()
     if not data then

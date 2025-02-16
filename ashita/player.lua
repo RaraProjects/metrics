@@ -63,11 +63,11 @@ Ashita.Player.JobData = function()
 
     -- Helper function to get job data.
     local function getJobData(jobId)
-        local job = Res.Jobs.Get_Job(jobId)
+        local job = Res.Jobs.GetJob(jobId)
         if not job then
             job = Res.Jobs.List[0]
         end
-        local jobColor = Res.Colors.Get_Job(job.id)
+        local jobColor = Res.Colors.GetJob(job.id)
         local jobShort = job.ens
         return jobShort, player:GetJobLevel(jobId), jobColor
     end

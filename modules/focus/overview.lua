@@ -9,7 +9,7 @@ Focus.Overview.Display = function(player_name)
     if not player_name or not Ashita.Party.Jobs[player_name] then return Focus.Overview.Anon() end
     if not Ashita.Party.Jobs[player_name].main then return Focus.Overview.Anon() end -- Mob in player list crash prevention.
 
-    local main = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
+    local main = Res.Jobs.GetJob(Ashita.Party.Jobs[player_name].main)
     if not main then Focus.Overview.Anon() end
 
     local job_id = main.id
