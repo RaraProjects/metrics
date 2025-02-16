@@ -11,7 +11,7 @@ Column.Damage = {}
 ---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.By_Type = function(player_name, trackable, metric, action_name, percent_player, justify, raw)
+Column.Damage.ByType = function(player_name, trackable, metric, action_name, percent_player, justify, raw)
     if not metric then metric = DB.Metric.TOTAL end
     local trackable_damage = 0
 
@@ -114,7 +114,7 @@ end
 ---@param raw? boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.By_Type_Average = function(player_name, trackable, damage_metric, action_name, justify, raw)
+Column.Damage.ByTypeAverage = function(player_name, trackable, damage_metric, action_name, justify, raw)
     local damage = 0
     local hits   = 0
     if not damage_metric then damage_metric = DB.Metric.TOTAL end

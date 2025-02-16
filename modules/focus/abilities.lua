@@ -1,35 +1,39 @@
-Focus.Abilities = {}
+Focus.Abilities = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Loads data to the ability drop down inside the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param hide_publish? boolean
+---@param playerName   string
+---@param hidePublish? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.Abilities.Display = function(player_name, hide_publish)
-    local ability_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_DAMAGING,    DB.Metric.ATTEMPTS_ON_USE)
-    local rolls         = DB.Data.Get(player_name, DB.Trackable.PHANTOM_ROLL,        DB.Metric.ATTEMPTS_ON_USE)
-    local maneuvers     = DB.Data.Get(player_name, DB.Trackable.MANEUVER,            DB.Metric.ATTEMPTS_ON_USE)
-    local healing_total = DB.Data.Get(player_name, DB.Trackable.ABILITY_HEALING,     DB.Metric.ATTEMPTS_ON_USE)
-    local mp_recovery   = DB.Data.Get(player_name, DB.Trackable.ABILITY_MP_RECOVERY, DB.Metric.ATTEMPTS_ON_USE)
-    local misc_count    = DB.Data.Get(player_name, DB.Trackable.ABILITY_GENERAL,     DB.Metric.ATTEMPTS_ON_USE)
+Focus.Abilities.Display = function(playerName, hidePublish)
+    local abilityTotal = DB.Data.Get(playerName, DB.Trackable.ABILITY_DAMAGING,    DB.Metric.ATTEMPTS_ON_USE)
+    local rolls        = DB.Data.Get(playerName, DB.Trackable.PHANTOM_ROLL,        DB.Metric.ATTEMPTS_ON_USE)
+    local maneuvers    = DB.Data.Get(playerName, DB.Trackable.MANEUVER,            DB.Metric.ATTEMPTS_ON_USE)
+    local healingTotal = DB.Data.Get(playerName, DB.Trackable.ABILITY_HEALING,     DB.Metric.ATTEMPTS_ON_USE)
+    local mpRecovery   = DB.Data.Get(playerName, DB.Trackable.ABILITY_MP_RECOVERY, DB.Metric.ATTEMPTS_ON_USE)
+    local miscCount    = DB.Data.Get(playerName, DB.Trackable.ABILITY_GENERAL,     DB.Metric.ATTEMPTS_ON_USE)
 
-    local has_data = rolls > 0 or maneuvers > 0 or ability_total > 0 or healing_total > 0 or mp_recovery > 0 or misc_count > 0
+    local hasData = rolls > 0 or maneuvers > 0 or abilityTotal > 0 or healingTotal > 0 or mpRecovery > 0 or miscCount > 0
 
-    if has_data then
-        if ability_total > 0 then Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_DAMAGING, "Damaging") end
-        if rolls > 0         then Focus.Abilities.Phantom_Roll(player_name, true) end
-        if maneuvers > 0     then Focus.Abilities.Mauevers(player_name) end
-        if healing_total > 0 then Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_HEALING, "Healing") end
-        if mp_recovery > 0   then Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_MP_RECOVERY, "MP Recovery") end
-        if misc_count > 0 then
+    if hasData then
+        if abilityTotal > 0 then Focus.Abilities.Damaging(playerName, DB.Trackable.ABILITY_DAMAGING, "Damaging") end
+        if rolls > 0        then Focus.Abilities.PhantomRoll(playerName, true) end
+        if maneuvers > 0    then Focus.Abilities.Mauevers(playerName) end
+        if healingTotal > 0 then Focus.Abilities.Damaging(playerName, DB.Trackable.ABILITY_HEALING, "Healing") end
+        if mpRecovery > 0   then Focus.Abilities.Damaging(playerName, DB.Trackable.ABILITY_MP_RECOVERY, "MP Recovery") end
+        if miscCount > 0    then
             if Focus.Settings.Show_Misc_Actions then
-                Focus.Abilities.Abilities_General(player_name)
+                Focus.Abilities.AbilitiesGeneral(playerName)
             else
                 UI.Text("Enable Misc. Actions to see additional data.")
             end
         end
-        if not hide_publish then Focus.Abilities.Publish(player_name, ability_total, healing_total) end
+
+        if not hidePublish then
+            Focus.Abilities.Publish(playerName, abilityTotal, healingTotal)
+        end
+
     else
         UI.Text("No ability data available for this player.")
     end
@@ -38,56 +42,55 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets up the table for abilities inside the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param trackable string a trackable from the data model.
----@param header string header title for the name column.
----@param make_brief? boolean
+---@param playerName string
+---@param trackable  DB.Trackable a trackable from the data model.
+---@param header     string       header title for the name column.
+---@param makeBrief? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.Abilities.Damaging = function(player_name, trackable, header, make_brief)
-    if not DB.Tracking.Trackables[trackable] then return nil end
-    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
+Focus.Abilities.Damaging = function(playerName, trackable, header, makeBrief)
+    if not DB.Tracking.Trackables[trackable] or not not DB.Tracking.Trackables[trackable][playerName] then
+        return nil
+    end
 
-    local table_flags = Focus.Catalog.Table_Flags
-    local col_flags   = Focus.Catalog.Column_Flags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+    local colFlags  = Focus.Catalog.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
 
-    local columns = 8
-    if make_brief then columns = 3 end
-
-    if UI.BeginTable(trackable, columns, table_flags) then
-        UI.TableSetupColumn(header,     col_flags, name_width)
-        UI.TableSetupColumn("Average",  col_flags, width)
-        if not make_brief then UI.TableSetupColumn("%Player",  col_flags, width) end
-        if not make_brief then UI.TableSetupColumn("Accuracy", col_flags, width) end
-        UI.TableSetupColumn("Uses",     col_flags, width)
-        if not make_brief then UI.TableSetupColumn("Total",    col_flags, width) end
-        if not make_brief then UI.TableSetupColumn("Minimum",  col_flags, width) end
-        if not make_brief then UI.TableSetupColumn("Maximum",  col_flags, width) end
+    if UI.BeginTable(trackable, makeBrief and 3 or 8, Focus.Catalog.TableFlags) then
+        UI.TableSetupColumn(                      header,     colFlags, nameWidth)
+        UI.TableSetupColumn(                      "Average",  colFlags, width)
+        if not makeBrief then UI.TableSetupColumn("%Player",  colFlags, width) end
+        if not makeBrief then UI.TableSetupColumn("Accuracy", colFlags, width) end
+        UI.TableSetupColumn(                      "Uses",     colFlags, width)
+        if not makeBrief then UI.TableSetupColumn("Total",    colFlags, width) end
+        if not makeBrief then UI.TableSetupColumn("Minimum",  colFlags, width) end
+        if not makeBrief then UI.TableSetupColumn("Maximum",  colFlags, width) end
         UI.TableHeadersRow()
 
-        UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name, trackable)
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.TOTAL, nil, true) end
-        if not make_brief then UI.TableNextColumn() Column.Acc.By_Type(player_name,            trackable) end
-        UI.TableNextColumn()                        Column.Damage.Attempts(player_name,        trackable)
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.TOTAL) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MIN) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MAX) end
+        UI.TableNextColumn()                       UI.Text("Total")
+        UI.TableNextColumn()                       Column.Damage.ByTypeAverage(playerName, trackable)
+        if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,        trackable, DB.Metric.TOTAL, nil, true) end
+        if not makeBrief then UI.TableNextColumn() Column.Acc.ByType(playerName,           trackable) end
+        UI.TableNextColumn()                       Column.Damage.Attempts(playerName,      trackable)
+        if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,        trackable, DB.Metric.TOTAL) end
+        if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,        trackable, DB.Metric.MIN) end
+        if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,        trackable, DB.Metric.MAX) end
         WindowManager.TableRowColor(1)
 
-        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
-        local action_name
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
-            UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn()                        Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.TOTAL, action_name, true) end
-            if not make_brief then UI.TableNextColumn() Column.Acc.By_Type(player_name,            trackable, nil, nil, action_name) end
-            UI.TableNextColumn()                        Column.Damage.Attempts(player_name,        trackable, nil, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.TOTAL, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MIN, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,         trackable, DB.Metric.MAX, action_name) end
+        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+        for _, data in ipairs(sortedDamage) do
+            local actionName = data[1]
+
+            UI.TableNextColumn()                       UI.Text(string.format("- %s", actionName))
+            UI.TableNextColumn()                       Column.Damage.ByTypeAverage(playerName, trackable, nil, actionName)
+            if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,        trackable, DB.Metric.TOTAL, actionName, true) end
+            if not makeBrief then UI.TableNextColumn() Column.Acc.ByType(playerName,           trackable, nil, nil, actionName) end
+            UI.TableNextColumn()                       Column.Damage.Attempts(playerName,      trackable, nil, actionName)
+            if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,        trackable, DB.Metric.TOTAL, actionName) end
+            if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,        trackable, DB.Metric.MIN, actionName) end
+            if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,        trackable, DB.Metric.MAX, actionName) end
+
             WindowManager.TableRowColor(0)
         end
 
@@ -98,30 +101,33 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets up the table for general abilities inside the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
+---@param playerName string
 ------------------------------------------------------------------------------------------------------
-Focus.Abilities.Abilities_General = function(player_name)
+Focus.Abilities.AbilitiesGeneral = function(playerName)
     local trackable = DB.Trackable.ABILITY_GENERAL
-    if not DB.Tracking.Trackables[trackable] then return nil end
-    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
-    local table_flags = Focus.Catalog.Table_Flags
-    local col_flags   = Focus.Catalog.Column_Flags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+    if not playerName or not DB.Tracking.Trackables[trackable] or not DB.Tracking.Trackables[trackable][playerName] then
+        return nil
+    end
 
-    if UI.BeginTable(trackable, 2, table_flags) then
-        UI.TableSetupColumn("General", col_flags, name_width)
-        UI.TableSetupColumn("Uses", col_flags, width)
+    local colFlags  = Focus.Catalog.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
+
+    if UI.BeginTable(trackable, 2, Focus.Catalog.TableFlags) then
+        UI.TableSetupColumn("General", colFlags, nameWidth)
+        UI.TableSetupColumn("Uses",    colFlags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
-        local action_name
+        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
         local row = 1
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
-            UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
+
+        for _, data in ipairs(sortedDamage) do
+            local actionName = data[1]
+
+            UI.TableNextColumn() UI.Text(actionName)
+            UI.TableNextColumn() Column.Damage.Attempts(playerName, trackable, nil, actionName)
+
             WindowManager.TableRowColor(row)
             row = row + 1
         end
@@ -133,36 +139,39 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets up the table for general abilities inside the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
+---@param playerName string
 ------------------------------------------------------------------------------------------------------
-Focus.Abilities.Mauevers = function(player_name)
+Focus.Abilities.Mauevers = function(playerName)
     local trackable = DB.Trackable.MANEUVER
-    if not DB.Tracking.Trackables[trackable] then return nil end
-    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
-    local table_flags = Focus.Catalog.Table_Flags
-    local col_flags   = Focus.Catalog.Column_Flags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+    if not playerName or not DB.Tracking.Trackables[trackable] or not DB.Tracking.Trackables[trackable][playerName] then
+        return nil
+    end
 
-    if UI.BeginTable(trackable, 3, table_flags) then
-        UI.TableSetupColumn("Maneuver", col_flags, name_width)
-        UI.TableSetupColumn("Uses", col_flags, width)
-        UI.TableSetupColumn("Overload", col_flags, width)
+    local colFlags  = Focus.Catalog.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
+
+    if UI.BeginTable(trackable, 3, Focus.Catalog.TableFlags) then
+        UI.TableSetupColumn("Maneuver", colFlags, nameWidth)
+        UI.TableSetupColumn("Uses",     colFlags, width)
+        UI.TableSetupColumn("Overload", colFlags, width)
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.OVERLOAD)
+        UI.TableNextColumn() Column.Damage.Attempts(playerName, trackable)
+        UI.TableNextColumn() Column.Damage.ByType(playerName,   trackable, DB.Metric.OVERLOAD)
         WindowManager.TableRowColor(1)
 
-        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
-        local action_name
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
-            UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.OVERLOAD, action_name)
+        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+        for _, data in ipairs(sortedDamage) do
+            local actionName = data[1]
+
+            UI.TableNextColumn() UI.Text(string.format("- %s", actionName))
+            UI.TableNextColumn() Column.Damage.Attempts(playerName, trackable, nil, actionName)
+            UI.TableNextColumn() Column.Damage.ByType(playerName,   trackable, DB.Metric.OVERLOAD, actionName)
+
             WindowManager.TableRowColor(0)
         end
 
@@ -173,53 +182,53 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Shows phantom roll overview stats.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param full? boolean
+---@param playerName string
+---@param full?      boolean
 ------------------------------------------------------------------------------------------------------
-Focus.Abilities.Phantom_Roll = function(player_name, full)
-    if not player_name then return nil end
+Focus.Abilities.PhantomRoll = function(playerName, full)
     local trackable = DB.Trackable.PHANTOM_ROLL
-    if not DB.Tracking.Trackables[trackable] then return nil end
-    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
-    local col_flags   = Focus.ColumnFlags
-    local table_flags = Focus.TableFlags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+    if not playerName or not DB.Tracking.Trackables[trackable] or not DB.Tracking.Trackables[trackable][playerName] then
+        return nil
+    end
 
-    local columns = 5
-    if full then columns = columns + 2 end
+    local colFlags  = Focus.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
+    local columns   = 5 + (full and 2 or 0)
 
-    if UI.BeginTable("Phantom Roll", columns, table_flags) then
-        UI.TableSetupColumn("Phantom Roll", col_flags, name_width)
-        UI.TableSetupColumn("Rolls", col_flags, width)
-        if full then UI.TableSetupColumn("Re-Rolls", col_flags, width) end
-        UI.TableSetupColumn("%Lucky", col_flags, width)
-        if full then UI.TableSetupColumn("%Lucky 11", col_flags, width) end
-        UI.TableSetupColumn("%Unlucky", col_flags, width)
-        UI.TableSetupColumn("%Busts", col_flags, width)
+    if UI.BeginTable("Phantom Roll", columns, Focus.TableFlags) then
+        UI.TableSetupColumn(             "Phantom Roll", colFlags, nameWidth)
+        UI.TableSetupColumn(             "Rolls",        colFlags, width)
+        if full then UI.TableSetupColumn("Re-Rolls",     colFlags, width) end
+        UI.TableSetupColumn(             "%Lucky",       colFlags, width)
+        if full then UI.TableSetupColumn("%Lucky 11",    colFlags, width) end
+        UI.TableSetupColumn(             "%Unlucky",     colFlags, width)
+        UI.TableSetupColumn(             "%Busts",       colFlags, width)
         UI.TableHeadersRow()
 
-        UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn()              Column.Damage.Attempts(player_name,  trackable, nil, nil, true)
-        if full then UI.TableNextColumn() Column.Damage.By_Type(player_name,   trackable, DB.Metric.REROLL) end
-        UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY)
-        if full then UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY_11) end
-        UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.UNLUCKY)
-        UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.BUSTS)
+        UI.TableNextColumn()              UI.Text("Total")
+        UI.TableNextColumn()              Column.Damage.Attempts(playerName,  trackable, nil, nil, true)
+        if full then UI.TableNextColumn() Column.Damage.ByType(playerName,    trackable, DB.Metric.REROLL) end
+        UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.LUCKY)
+        if full then UI.TableNextColumn() Column.Acc.Phantom_Roll(playerName, DB.Metric.LUCKY_11) end
+        UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.UNLUCKY)
+        UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.BUSTS)
         WindowManager.TableRowColor(1)
 
-        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
-        local action_name
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
-            UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn()              Column.Damage.Attempts(player_name,  trackable, nil, action_name, true)
-            if full then UI.TableNextColumn() Column.Damage.By_Type(player_name,   trackable, DB.Metric.REROLL, action_name) end
-            UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY, action_name)
-            if full then UI.TableNextColumn() Column.Acc.Phantom_Roll(player_name, DB.Metric.LUCKY_11, action_name) end
-            UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.UNLUCKY, action_name)
-            UI.TableNextColumn()              Column.Acc.Phantom_Roll(player_name, DB.Metric.BUSTS, action_name)
+        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+        for _, data in ipairs(sortedDamage) do
+            local actionName = data[1]
+
+            UI.TableNextColumn()              UI.Text(string.format("- %s", actionName))
+            UI.TableNextColumn()              Column.Damage.Attempts(playerName,  trackable, nil, actionName, true)
+            if full then UI.TableNextColumn() Column.Damage.ByType(playerName,    trackable, DB.Metric.REROLL, actionName) end
+            UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.LUCKY, actionName)
+            if full then UI.TableNextColumn() Column.Acc.Phantom_Roll(playerName, DB.Metric.LUCKY_11, actionName) end
+            UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.UNLUCKY, actionName)
+            UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.BUSTS, actionName)
+
             WindowManager.TableRowColor(0)
         end
 
@@ -230,27 +239,28 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Shows ability overview stats.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param ability_list table
+---@param playerName  string
+---@param abilityList table
 ------------------------------------------------------------------------------------------------------
-Focus.Abilities.From_List = function(player_name, ability_list)
-    if not player_name or not ability_list then return nil end
+Focus.Abilities.FromList = function(playerName, abilityList)
+    if not playerName or not abilityList then
+        return nil
+    end
 
-    local col_flags   = Focus.ColumnFlags
-    local table_flags = Focus.TableFlags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+    local colFlags  = Focus.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
 
-    if UI.BeginTable("Ability", 2, table_flags) then
-        UI.TableSetupColumn("Abilities", col_flags, name_width)
-        UI.TableSetupColumn("Uses", col_flags, width)
+    if UI.BeginTable("Ability", 2, Focus.TableFlags) then
+        UI.TableSetupColumn("Abilities", colFlags, nameWidth)
+        UI.TableSetupColumn("Uses",      colFlags, width)
         UI.TableHeadersRow()
 
         local row = 1
-        for _, ability_name in ipairs(ability_list) do
+        for _, abilityName in ipairs(abilityList) do
             UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(ability_name)
-            UI.TableNextColumn() Column.Damage.Attempts(player_name, DB.Trackable.ABILITY_OVERALL, nil, ability_name)
+            UI.TableNextColumn() UI.Text(abilityName)
+            UI.TableNextColumn() Column.Damage.Attempts(playerName, DB.Trackable.ABILITY_OVERALL, nil, abilityName)
             WindowManager.TableRowColor(row)
             row = row + 1
         end
@@ -262,16 +272,20 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets up ability publishing buttons from within the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param ability_total number
----@param healing_total number
+---@param playerName   string
+---@param abilityTotal number
+---@param healingTotal number
 ------------------------------------------------------------------------------------------------------
-Focus.Abilities.Publish = function(player_name, ability_total, healing_total)
-    if ability_total > 0 then
-        Report.Widgets.Button(player_name, DB.Trackable.ABILITY_DAMAGING, "Publish Abilities")
+Focus.Abilities.Publish = function(playerName, abilityTotal, healingTotal)
+    if abilityTotal > 0 then
+        Report.Widgets.Button(playerName, DB.Trackable.ABILITY_DAMAGING, "Publish Abilities")
     end
-    if healing_total > 0 then
-        if ability_total > 0 then UI.SameLine() UI.Text(" ") UI.SameLine() end
-        Report.Widgets.Button(player_name, DB.Trackable.ABILITY_HEALING, "Publish Healing")
+
+    if healingTotal > 0 then
+        if abilityTotal > 0 then
+            UI.SameLine() UI.Text(" ") UI.SameLine()
+        end
+
+        Report.Widgets.Button(playerName, DB.Trackable.ABILITY_HEALING, "Publish Healing")
     end
 end

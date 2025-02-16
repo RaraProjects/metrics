@@ -113,7 +113,7 @@ Config.Section.Revert = function()
     if UI.Button("Revert to Default Settings") then
         WindowManager.Config.Reset()
         Parse.Config.Reset()
-        Focus.Reset_Settings()
+        Focus.ResetSettings()
         Blog.Config.Reset()
         Report.Config.Reset()
         Metrics.Model.Running_Accuracy_Limit = DB.Defaults.Running_Accuracy_Limit

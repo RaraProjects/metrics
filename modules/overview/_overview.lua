@@ -46,7 +46,7 @@ Overview.Content = function()
     elseif Overview.Mode == Overview.Modes.FOCUS then
         local player_name = DB.Widgets.GetPlayerFocus()
         if player_name == DB.Enum.NONE then
-            Focus.Screenshot_Mode[1] = false
+            Focus.ScreenshotMode[1] = false
             return nil
         end
         Overview.Focus.Content(player_name)
@@ -58,7 +58,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Button that opens the overview window with focus content.
 ------------------------------------------------------------------------------------------------------
-Overview.Screenshot_Button = function()
+Overview.ScreenshotButton = function()
     if UI.SmallButton("Screenshot") then
         if Overview.Mode == Overview.Modes.FOCUS then
             Overview.Window.ToggleVisibility()

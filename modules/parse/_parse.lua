@@ -84,7 +84,7 @@ Parse.Toolbar = function()
         Parse.Widgets.Settings_Button()
         UI.SameLine() UI.Text(" ") UI.SameLine() Overview.Overview_Button()
         UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Filter_Button()
-        UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.Percent_Details()
+        UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.PercentDetails()
         UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Timer_Button()
         UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Reset_Button()
         if Parse.Confirmation then UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Reset_Confirmation_Button() end

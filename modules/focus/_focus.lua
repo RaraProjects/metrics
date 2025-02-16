@@ -1,4 +1,4 @@
-Focus = {}
+Focus = { }
 
 require("modules.focus.config")
 require("modules.focus.melee")
@@ -17,8 +17,9 @@ Focus.Title  = "Metrics - Focus"
 Focus.Module = "Focus"
 Focus.File   = "focus"
 
-Focus.Tabs = {}
-Focus.Tabs.Names = {
+Focus.Tabs = { }
+Focus.Tabs.Names =
+{
     OVERVIEW  = "Overview",
     MELEE     = "Melee",
     RANGED    = "Ranged",
@@ -28,7 +29,10 @@ Focus.Tabs.Names = {
     PETS      = "Pets",
     DEFENSE   = "Defense",
 }
-Focus.Tabs.Switch = {
+
+-- Used to switch to different tabs via text commands.
+Focus.Tabs.Switch =
+{
     [Focus.Tabs.Names.OVERVIEW]  = nil,
     [Focus.Tabs.Names.MELEE]     = nil,
     [Focus.Tabs.Names.RANGED]    = nil,
@@ -42,11 +46,14 @@ Focus.Tabs.Switch = {
 Focus.ColumnFlags = Column.Flags.None
 Focus.TableFlags  = WindowManager.Table.Flags.Fixed_Borders
 
-Focus.Screenshot_Flags = bit.bor(
+Focus.ScreenshotFlags = bit.bor
+(
     ImGuiWindowFlags_AlwaysAutoResize,
     ImGuiWindowFlags_NoSavedSettings,
-    ImGuiWindowFlags_NoNav)
-Focus.Screenshot_Mode = {false}
+    ImGuiWindowFlags_NoNav
+)
+
+Focus.ScreenshotMode = { false }
 
 ------------------------------------------------------------------------------------------------------
 -- Initializes the Focus screen.
@@ -58,11 +65,12 @@ Focus.Initialize = function(settings)
     Focus.Settings = settings or Settings_File.load(Focus.Config.Defaults, Focus.File)
 
     -- Create the Focus Window.
-    Focus.Window = Window:New({
-        Name     = Focus.Name,
-        Title    = Focus.Title,
-        Module   = Focus.Module,
-        Settings = Focus.Settings,
+    Focus.Window = Window:New
+    ({
+        Name       = Focus.Name,
+        Title      = Focus.Title,
+        Module     = Focus.Module,
+        Settings   = Focus.Settings,
         Show_Title = true,
     })
 end
@@ -70,7 +78,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Resets the focus settings.
 ------------------------------------------------------------------------------------------------------
-Focus.Reset_Settings = function()
+Focus.ResetSettings = function()
     for index, _ in pairs(DB.HealingMax) do
         DB.HealingMax[index] = DB.HealingMaxDefaults[index]
     end
@@ -80,19 +88,17 @@ end
 -- Loads the focus data to the screen.
 ------------------------------------------------------------------------------------------------------
 Focus.Content = function()
-    local unselected = false
-    local player_name = DB.Widgets.GetPlayerFocus()
-    if player_name == DB.Enum.NONE then unselected = true end
+    local playerName = DB.Widgets.GetPlayerFocus()
+    local unselected = playerName == DB.Enum.NONE
 
-    -- Toolbar buttons
-    -- Focus.Config.Settings_Button()                           -- Settings (No settings to display so removed)
-    -- UI.SameLine() UI.Text(" ") UI.SameLine()
-    Focus.Config.Percent_Details()                              -- % Details
+    -- Toolbar Buttons
+    Focus.Config.PercentDetails()                   -- % Details
     UI.SameLine() UI.Text(" ") UI.SameLine()
-    Focus.Config.Misc_Actions()                                 -- Misc Actions
+    Focus.Config.MiscActions()                      -- Misc Actions
+
     if not unselected then
         UI.SameLine() UI.Text(" ") UI.SameLine()
-        Overview.Screenshot_Button()                            -- Screenshot
+        Overview.ScreenshotButton()                 -- Screenshot
     end
 
     -- Filters
@@ -103,32 +109,36 @@ Focus.Content = function()
     if unselected then
         UI.Separator()
         UI.Text("No player selected.")
-        if Debug.Is_Enabled() then UI.SameLine() UI.Text(WindowManager.Menu.GetMenuName()) end
+
+        if Debug.Is_Enabled() then
+            UI.SameLine() UI.Text(WindowManager.Menu.GetMenuName())
+        end
+
         return nil
     end
 
     -- Proceed to display if a player is selected
-    Column.String.Job(player_name)
-    UI.Separator() Focus.Overall_Damage_Breakdown(player_name) UI.Separator()
+    Column.String.Job(playerName)
+    UI.Separator() Focus.OverallDamageBreakdown(playerName) UI.Separator()
 
     -- Load tab bar and tab content.
     if UI.BeginTabBar("Focus Tabs", WindowManager.Tabs.Flags) then
 
-        local tabs = {}
-        table.insert(tabs, {tab = Focus.Tabs.Names.OVERVIEW,  display_function = Focus.Overview.Display})
-        table.insert(tabs, {tab = Focus.Tabs.Names.MELEE,     display_function = Focus.Melee.Display})
-        table.insert(tabs, {tab = Focus.Tabs.Names.RANGED,    display_function = Focus.Ranged.Display})
-        table.insert(tabs, {tab = Focus.Tabs.Names.MAGIC,     display_function = Focus.Magic.Display})
-        table.insert(tabs, {tab = Focus.Tabs.Names.DEFENSE,   display_function = Focus.Defense.Display})
-        table.insert(tabs, {tab = Focus.Tabs.Names.WS,        display_function = Focus.WS.Display})
-        table.insert(tabs, {tab = Focus.Tabs.Names.ABILITIES, display_function = Focus.Abilities.Display})
-        table.insert(tabs, {tab = Focus.Tabs.Names.PETS,      display_function = Focus.Pets.Display})
+        local tabs = { }
+        table.insert(tabs, { tab = Focus.Tabs.Names.OVERVIEW,  display_function = Focus.Overview.Display  })
+        table.insert(tabs, { tab = Focus.Tabs.Names.MELEE,     display_function = Focus.Melee.Display     })
+        table.insert(tabs, { tab = Focus.Tabs.Names.RANGED,    display_function = Focus.Ranged.Display    })
+        table.insert(tabs, { tab = Focus.Tabs.Names.MAGIC,     display_function = Focus.Magic.Display     })
+        table.insert(tabs, { tab = Focus.Tabs.Names.DEFENSE,   display_function = Focus.Defense.Display   })
+        table.insert(tabs, { tab = Focus.Tabs.Names.WS,        display_function = Focus.WS.Display        })
+        table.insert(tabs, { tab = Focus.Tabs.Names.ABILITIES, display_function = Focus.Abilities.Display })
+        table.insert(tabs, { tab = Focus.Tabs.Names.PETS,      display_function = Focus.Pets.Display      })
 
         -- Load tabs
         for _, data in ipairs(tabs) do
             if UI.BeginTabItem(data.tab, false, Focus.Tabs.Switch[data.tab]) then
                 Focus.Tabs.Switch[data.tab] = nil
-                data.display_function(player_name)
+                data.display_function(playerName)
                 UI.EndTabItem()
             end
         end
@@ -141,57 +151,77 @@ end
 -- Shows a breakdown of overall player damage by type.
 -- This is displayed at the top of the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
+---@param playerName string
 ------------------------------------------------------------------------------------------------------
-Focus.Overall_Damage_Breakdown = function(player_name)
-    local col_flags   = Column.Flags.None
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
-    local width       = Column.Widths.Percent
+Focus.OverallDamageBreakdown = function(playerName)
+    local colFlags   = Column.Flags.None
+    local tableFlags = WindowManager.Table.Flags.Fixed_Borders
+    local width      = Column.Widths.Percent
 
-    local pet = DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
-    local including_skillchain = Parse.Config.IncludeSkillchainDamage()
+    local pet                 = DB.Data.Get(playerName, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
+    local includingSkillchain = Parse.Config.IncludeSkillchainDamage()
+    local columns             = 7 + (pet > 0 and 1 or 0) + (includingSkillchain and 1 or 0)
 
-    local columns = 7
-    if pet > 0 then columns = columns + 1 end
-    if including_skillchain then columns = columns + 1 end
+    if UI.BeginTable("Overall", columns, tableFlags) then
+        -- Headers
+        UI.TableSetupColumn("Type",    colFlags, width)
+        UI.TableSetupColumn("Total",   colFlags, width)
+        UI.TableSetupColumn("Melee",   colFlags, width)
+        UI.TableSetupColumn("Ranged",  colFlags, width)
+        UI.TableSetupColumn("WS",      colFlags, width)
 
-    if UI.BeginTable("Overall", columns, table_flags) then
-        UI.TableSetupColumn("Type",    col_flags, width)
-        UI.TableSetupColumn("Total",   col_flags, width)
-        UI.TableSetupColumn("Melee",   col_flags, width)
-        UI.TableSetupColumn("Ranged",  col_flags, width)
-        UI.TableSetupColumn("WS",      col_flags, width)
-        if including_skillchain then UI.TableSetupColumn("SC", col_flags, width) end
-        UI.TableSetupColumn("Magic",   col_flags, width)
-        UI.TableSetupColumn("Ability", col_flags, width)
-        if pet > 0 then UI.TableSetupColumn("Pet", col_flags, width) end
+        if includingSkillchain then
+            UI.TableSetupColumn("SC",  colFlags, width)
+        end
+
+        UI.TableSetupColumn("Magic",   colFlags, width)
+        UI.TableSetupColumn("Ability", colFlags, width)
+
+        if pet > 0 then
+            UI.TableSetupColumn("Pet", colFlags, width)
+        end
         UI.TableHeadersRow()
 
-        local total_trackable = DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN
-        if including_skillchain then total_trackable = DB.Trackable.TOTAL_DAMAGE end
+        local totalTrackable = includingSkillchain and DB.Trackable.TOTAL_DAMAGE or DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN
 
-        UI.TableNextRow()
+        -- Percentages
         UI.TableNextColumn() UI.Text("Percent")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, total_trackable, nil, nil, true)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_OVERALL, nil, nil, true)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL, nil, nil, true)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL, nil, nil, true)
-        if including_skillchain then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN, nil, nil, true) end
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, nil, nil, true)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING, nil, nil, true)
-        if pet > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL, nil, nil, true) end
+        UI.TableNextColumn() Column.Damage.ByType(playerName, totalTrackable, nil, nil, true)
+        UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.MELEE_OVERALL, nil, nil, true)
+        UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.RANGED_OVERALL, nil, nil, true)
+        UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.WEAPONSKILL, nil, nil, true)
+
+        if includingSkillchain then
+            UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.SKILLCHAIN, nil, nil, true)
+        end
+
+        UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.SPELLS_OVERALL, nil, nil, true)
+        UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.ABILITY_DAMAGING, nil, nil, true)
+
+        if pet > 0 then
+            UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.PET_OVERALL, nil, nil, true)
+        end
         WindowManager.TableRowColor(1)
 
+        -- Raw Values
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Raw")
-        UI.TableNextColumn() Column.Damage.Total(player_name)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.MELEE_OVERALL)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.RANGED_OVERALL)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.WEAPONSKILL)
-        if including_skillchain then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SKILLCHAIN) end
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING)
-        if pet > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL) end
+        UI.TableNextColumn() Column.Damage.Total(playerName)
+        UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.MELEE_OVERALL)
+        UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.RANGED_OVERALL)
+        UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.WEAPONSKILL)
+
+        if includingSkillchain then
+            UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.SKILLCHAIN)
+        end
+
+        UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.SPELLS_OVERALL)
+        UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.ABILITY_DAMAGING)
+
+        if pet > 0 then
+            UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.PET_OVERALL)
+        end
+
         WindowManager.TableRowColor(0)
 
         UI.EndTable()

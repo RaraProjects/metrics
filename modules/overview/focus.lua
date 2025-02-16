@@ -6,7 +6,7 @@ Overview.Focus = {}
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
 Overview.Focus.Content = function(player_name)
-    UI.Text("Overall") Focus.Overall_Damage_Breakdown(player_name)
+    UI.Text("Overall") Focus.OverallDamageBreakdown(player_name)
     UI.Separator() UI.Text("Melee")        Focus.Melee.Display(player_name)
     UI.Separator() UI.Text("Ranged")       Focus.Ranged.Display(player_name)
     UI.Separator() UI.Text("Weaponskills") Focus.WS.Display(player_name, true)

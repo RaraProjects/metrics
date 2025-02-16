@@ -32,7 +32,7 @@ end
 ---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Acc.By_Type = function(player_name, trackable, threshold, critical_hit, action_name, justify, raw)
+Column.Acc.ByType = function(player_name, trackable, threshold, critical_hit, action_name, justify, raw)
     local hit_metric     = DB.Metric.HITS_ON_TARGET
     local attempt_metric = DB.Metric.ATTEMPTS_ON_TARGET
     local hits, attempts

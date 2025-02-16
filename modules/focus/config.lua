@@ -47,7 +47,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Shows percent details checkbox.
 ------------------------------------------------------------------------------------------------------
-Focus.Config.Percent_Details = function()
+Focus.Config.PercentDetails = function()
     local active = Focus.Config.Show_Percent_Details
     if UI.SmallButton("% Details") then
         Focus.Config.Percent_Toggle()
@@ -64,7 +64,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Toggles miscellaneous actions.
 ------------------------------------------------------------------------------------------------------
-Focus.Config.Misc_Actions = function()
+Focus.Config.MiscActions = function()
     if UI.SmallButton("Misc. Actions") then
         Focus.Settings.Show_Misc_Actions = not Focus.Settings.Show_Misc_Actions
     end

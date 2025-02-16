@@ -46,9 +46,9 @@ Focus.Pets.Total = function(player_name)
 
         local trackable = DB.Trackable.PET_OVERALL
         UI.TableNextColumn() UI.Text("Total Damage")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, nil, nil, true)
-        UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
+        UI.TableNextColumn() Column.Damage.ByType(player_name, trackable)
+        UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, nil, nil, true)
+        UI.TableNextColumn() Column.Acc.ByType(player_name, trackable)
         WindowManager.TableRowColor(row)
         row = row + 1
 
@@ -61,9 +61,9 @@ Focus.Pets.Total = function(player_name)
         for _, data in ipairs(damage_types) do
             if DB.Data.Get(player_name, data.trackable, DB.Metric.TOTAL) > 0 then
                 UI.TableNextColumn() UI.Text("- " .. data.header)
-                UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable)
-                UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
-                UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable)
+                UI.TableNextColumn() Column.Damage.ByType(player_name, data.trackable)
+                UI.TableNextColumn() Column.Damage.ByType(player_name, data.trackable, nil, nil, true)
+                UI.TableNextColumn() Column.Acc.ByType(player_name, data.trackable)
                 WindowManager.TableRowColor(row)
                 row = row + 1
             end
@@ -72,7 +72,7 @@ Focus.Pets.Total = function(player_name)
         local healing = DB.Data.Get(player_name, DB.Trackable.PET_HEALING, DB.Metric.TOTAL)
         if healing > 0 then
             UI.TableNextColumn() UI.Text("Healing")
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_HEALING)
+            UI.TableNextColumn() Column.Damage.ByType(player_name, DB.Trackable.PET_HEALING)
             UI.TableNextColumn() Column.Damage.Healing_Player(player_name, nil, DB.Trackable.PET_HEALING)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             WindowManager.TableRowColor(row)

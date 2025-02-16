@@ -122,7 +122,7 @@ Focus.Defense.Auxiliary = function(player_name)
                 UI.TableNextColumn() UI.Text(data.header)
                 UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, data.trackable)
                 UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable, true)
-                UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0)
+                UI.TableNextColumn() Column.Acc.ByType(player_name, data.trackable, 0)
                 UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable)
                 WindowManager.TableRowColor(row)
                 row = row + 1
@@ -177,7 +177,7 @@ Focus.Defense.Mitigation = function(player_name)
         for _, data in ipairs(full_mitigation_trackables) do
             if DB.Data.Get(player_name, data.trackable, DB.Metric.HITS_ON_TARGET) > 0 then
                 UI.TableNextColumn() UI.Text(data.header)
-                UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0)
+                UI.TableNextColumn() Column.Acc.ByType(player_name, data.trackable, 0)
                 UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, data.trackable)
                 if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
                 if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
@@ -196,7 +196,7 @@ Focus.Defense.Mitigation = function(player_name)
         for _, data in ipairs(partial_mitigation_trackables) do
             if DB.Data.Get(player_name, data.trackable, DB.Metric.HITS_ON_TARGET) > 0 then
                 UI.TableNextColumn() UI.Text(data.header)
-                UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0)
+                UI.TableNextColumn() Column.Acc.ByType(player_name, data.trackable, 0)
                 UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, data.trackable, data.ranged)
                 if show_dt then UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, data.trackable) end
                 if show_dt then UI.TableNextColumn() Column.Defense.Damage_Reduction(player_name, data.trackable) end
@@ -246,8 +246,8 @@ Focus.Defense.Healing_Received = function(player_name)
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL)
-        UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
+        UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.TOTAL)
+        UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable)
         UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable)
         WindowManager.TableRowColor(1)
 
@@ -256,8 +256,8 @@ Focus.Defense.Healing_Received = function(player_name)
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
-            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
+            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.TOTAL, action_name)
+            UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable, nil, action_name)
             UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable, action_name)
             WindowManager.TableRowColor(0)
         end
@@ -303,11 +303,11 @@ Focus.Defense.TP_Move = function(player_name, trackable)
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
+        UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable)
         UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, nil, on_target)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.TOTAL)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MIN)
-        UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MAX)
+        UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.TOTAL)
+        UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.MIN)
+        UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.MAX)
         WindowManager.TableRowColor(1)
 
         local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
@@ -315,11 +315,11 @@ Focus.Defense.TP_Move = function(player_name, trackable)
         for _, data in ipairs(sorted_damage) do
             action_name = data[1]
             UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
+            UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable, nil, action_name)
             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name, on_target)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.TOTAL, action_name)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MIN, action_name)
-            UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MAX, action_name)
+            UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.TOTAL, action_name)
+            UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.MIN, action_name)
+            UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.MAX, action_name)
             WindowManager.TableRowColor(0)
         end
 
