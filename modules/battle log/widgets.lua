@@ -9,7 +9,7 @@ Blog.Widgets.ActionBuffer = { }
 ------------------------------------------------------------------------------------------------------
 Blog.Widgets.SettingsButton = function()
     if UI.SmallButton("Settings") then
-        Config.Button_Toggle(Config.Enum.File.BLOG)
+        Config.ButtonToggle(Config.ModuleFile.BLOG)
     end
 end
 

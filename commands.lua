@@ -11,12 +11,12 @@ ashita.events.register('command', 'command_cb', function (e)
 
         -- Help Text
         if not arg then
-            if Config.Settings_Mode ~= Config.Enum.File.CONFIG and Config.Window.Is_Visible() then
-                Config.Settings_Mode = Config.Enum.File.CONFIG
-            elseif Config.Settings_Mode ~= Config.Enum.File.CONFIG and not Config.Window.Is_Visible() then
-                Config.Settings_Mode = Config.Enum.File.CONFIG
+            if Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG and Config.Window.Is_Visible() then
+                Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
+            elseif Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG and not Config.Window.Is_Visible() then
+                Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
                 Config.Window.Show()
-            elseif Config.Settings_Mode == Config.Enum.File.CONFIG then
+            elseif Config.ActiveSettingsWindow == Config.ModuleFile.CONFIG then
                 Config.Window.Toggle_Visibility()
             end
 

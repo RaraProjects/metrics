@@ -19,7 +19,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Settings_Button = function()
     if UI.SmallButton("Settings") then
-        Config.Button_Toggle(Config.Enum.File.PARSE)
+        Config.ButtonToggle(Config.ModuleFile.PARSE)
     end
 end
 

@@ -307,7 +307,7 @@ end
 ------------------------------------------------------------------------------------------------------
 XP.Config.SettingsButton = function()
     if UI.SmallButton("Settings") then
-        Config.Button_Toggle(Config.Enum.File.EXP)
+        Config.ButtonToggle(Config.ModuleFile.EXP)
     end
 end
 

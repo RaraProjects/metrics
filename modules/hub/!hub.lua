@@ -96,7 +96,7 @@ Hub.Single_Window = function()
         end
         if UI.BeginTabItem(Config.Name, false, Window_Manager.Is_Module_Active(Config.Name)) then
             Window_Manager.Clear_Module_Switch(Config.Name)
-            Config.Settings_Mode = Config.Enum.File.CONFIG
+            Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
             Config.Content()
             UI.EndTabItem()
         end
@@ -218,11 +218,11 @@ Hub.Settings_Button = function()
     end
     if UI.Button(Config.Name) then
         -- Don't toggle off if config window is open and not showing settings.
-        if not (Config.Window.Is_Visible() and Config.Settings_Mode ~= Config.Enum.File.CONFIG) then
+        if not (Config.Window.Is_Visible() and Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG) then
             if Window_Manager.Settings.Multi_Window then Config.Window.Toggle_Visibility() end
         end
         Window_Manager.Settings.Active_Window = Config.Name
-        Config.Settings_Mode = Config.Enum.File.CONFIG
+        Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
     end
     if not active then UI.PopStyleColor(3) end
 end

@@ -1,23 +1,23 @@
-Config = {}
+Config = { }
 
 Config.Defaults = T{
-    X = 100,
-    Y = 150,
-    Visible = {false},
+    X       = 100,
+    Y       = 150,
+    Visible = { false },
 }
 
-Config.Enum = {}
-Config.Enum.File = {
-    PARSE    = "parse",
-    FOCUS    = "focus",
+Config.ModuleFile =
+{
     BLOG     = "blog",
-    WINDOW   = "window",
-    DATABASE = "database",
-    REPORT   = "report",
     CONFIG   = "config",    -- Just used for Settings Mode.
+    DATABASE = "database",
     EXP      = "exp",
-    OVERVIEW = "overview",
+    FOCUS    = "focus",
     HUB      = "hub",
+    OVERVIEW = "overview",
+    PARSE    = "parse",
+    REPORT   = "report",
+    WINDOW   = "window",
 }
 
 Config.Name   = "Settings"
@@ -25,13 +25,12 @@ Config.Title  = "Metrics - Help"
 Config.Module = "Config"
 Config.File   = "config"
 
-Config.Section = {}
-Config.Widget  = {}
+Config.Section = { }
+Config.Widget  = { }
 
-Config.Settings_Mode = Config.Enum.File.CONFIG
-Config.Full_Width  = 120
-Config.Short_Width = 75
-Config.Desc_Width  = 300
+Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
+Config.WidthFull  = 120
+Config.WidthShort = 75
 
 ------------------------------------------------------------------------------------------------------
 -- Initializes the Settings screen.
@@ -40,10 +39,11 @@ Config.Desc_Width  = 300
 ------------------------------------------------------------------------------------------------------
 Config.Initialize = function(settings)
     -- Get saved settings from file.
-    Config.Settings = Settings_File.load(Config.Defaults, Config.File)
+    Config.Settings = settings or Settings_File.load(Config.Defaults, Config.File)
 
     -- Create the Settings Window.
-    Config.Window = Window:New({
+    Config.Window = Window:New
+    ({
         Name       = Config.Name,
         Title      = Config.Title,
         Module     = Config.Module,
@@ -58,43 +58,51 @@ end
 -- Each module provides its own settings content.
 ------------------------------------------------------------------------------------------------------
 Config.Content = function()
-    local tab_flags = Window_Manager.Tabs.Flags
+    local contentFunction =
+    {
+        [Config.ModuleFile.PARSE]  = Parse.Config.Display,
+        [Config.ModuleFile.FOCUS]  = Focus.Config.Display,
+        [Config.ModuleFile.BLOG]   = Blog.Config.Display,
+        [Config.ModuleFile.EXP]    = XP.Config.Populate,
+        [Config.ModuleFile.REPORT] = Report.Config.Display,
+        [Config.ModuleFile.CONFIG] = Config.Display
+    }
 
-    if Config.Settings_Mode == Config.Enum.File.PARSE then
-        Parse.Config.Display()
+    local content = contentFunction[Config.ActiveSettingsWindow]
 
-    elseif Config.Settings_Mode == Config.Enum.File.FOCUS then
-        Focus.Config.Display()
+    if content and type(content) == "function" then
+        content()
+    end
+end
 
-    elseif Config.Settings_Mode == Config.Enum.File.BLOG then
-        Blog.Config.Display()
+------------------------------------------------------------------------------------------------------
+-- Shows settings that affect the Config screen.
+------------------------------------------------------------------------------------------------------
+Config.Display = function()
+    local tabFlags = Window_Manager.Tabs.Flags
 
-    elseif Config.Settings_Mode == Config.Enum.File.EXP then
-        XP.Config.Populate()
-
-    elseif Config.Settings_Mode == Config.Enum.File.REPORT then
-        Report.Config.Display()
-
-    elseif Config.Settings_Mode == Config.Enum.File.CONFIG then
-        if UI.BeginTabBar("Focus Tabs", tab_flags) then
-            if UI.BeginTabItem("Help", tab_flags) then
-                Config.Section.Text_Commands()
-                UI.EndTabItem()
-            end
-            if UI.BeginTabItem("Focus", tab_flags) then
-                Config.Section.Focus()
-                UI.EndTabItem()
-            end
-            if UI.BeginTabItem("GUI", tab_flags) then
-                Window_Manager.Config.Display()
-                UI.EndTabItem()
-            end
-            if UI.BeginTabItem("Revert", tab_flags) then
-                Config.Section.Revert()
-                UI.EndTabItem()
-            end
-            UI.EndTabBar()
+    if UI.BeginTabBar("Focus Tabs", tabFlags) then
+        if UI.BeginTabItem("Help", tabFlags) then
+            Config.Section.TextCommands()
+            UI.EndTabItem()
         end
+
+        if UI.BeginTabItem("Focus", tabFlags) then
+            Config.Section.Focus()
+            UI.EndTabItem()
+        end
+
+        if UI.BeginTabItem("GUI", tabFlags) then
+            Window_Manager.Config.Display()
+            UI.EndTabItem()
+        end
+
+        if UI.BeginTabItem("Revert", tabFlags) then
+            Config.Section.Revert()
+            UI.EndTabItem()
+        end
+
+        UI.EndTabBar()
     end
 end
 
@@ -102,29 +110,24 @@ end
 -- Revert and collapse setting buttons.
 ------------------------------------------------------------------------------------------------------
 Config.Section.Revert = function()
-    local clicked = 0
     if UI.Button("Revert to Default Settings") then
-        clicked = 1
-        if clicked and 1 then
-            Window_Manager.Config.Reset()
-            Parse.Config.Reset()
-            Focus.Reset_Settings()
-            Blog.Config.Reset()
-            Report.Config.Reset()
-            Metrics.Model.Running_Accuracy_Limit = DB.Defaults.Running_Accuracy_Limit
-        end
+        Window_Manager.Config.Reset()
+        Parse.Config.Reset()
+        Focus.Reset_Settings()
+        Blog.Config.Reset()
+        Report.Config.Reset()
+        Metrics.Model.Running_Accuracy_Limit = DB.Defaults.Running_Accuracy_Limit
     end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Shows text commands the user can use.
 ------------------------------------------------------------------------------------------------------
-Config.Section.Text_Commands = function()
+Config.Section.TextCommands = function()
     if UI.BeginTable("Help General", 2, Window_Manager.Table.Flags.Borders) then
         UI.TableSetupColumn("Col1")
         UI.TableSetupColumn("Col2")
 
-        UI.TableNextRow()
         UI.TableNextColumn() UI.Text("GitHub")
         UI.TableNextColumn() UI.Text("https://github.com/RaraProjects/metrics")
         Window_Manager.TableRowColor(1)
@@ -146,12 +149,11 @@ Config.Section.Text_Commands = function()
 
     if UI.CollapsingHeader("Commands: General") then
         if UI.BeginTable("General Commands", 3, Window_Manager.Table.Flags.Borders) then
-            UI.TableSetupColumn("Full", Column.Flags.None, Config.Full_Width)
-            UI.TableSetupColumn("Short", Column.Flags.None, Config.Short_Width)
+            UI.TableSetupColumn("Full",        Column.Flags.None, Config.WidthFull)
+            UI.TableSetupColumn("Short",       Column.Flags.None, Config.WidthShort)
             UI.TableSetupColumn("Description", Column.Flags.None)
             UI.TableHeadersRow()
 
-            UI.TableNextRow()
             UI.TableNextColumn() UI.Text("{none}")
             UI.TableNextColumn()
             UI.TableNextColumn() UI.Text("Toggles settings window.")
@@ -183,12 +185,11 @@ Config.Section.Text_Commands = function()
 
     if UI.CollapsingHeader("Commands: Switch Tabs/Windows") then
         if UI.BeginTable("Switch Commands", 3, Window_Manager.Table.Flags.Borders) then
-            UI.TableSetupColumn("Full", Column.Flags.None, Config.Full_Width)
-            UI.TableSetupColumn("Short", Column.Flags.None, Config.Short_Width)
+            UI.TableSetupColumn("Full",        Column.Flags.None, Config.WidthFull)
+            UI.TableSetupColumn("Short",       Column.Flags.None, Config.WidthShort)
             UI.TableSetupColumn("Description", Column.Flags.None)
             UI.TableHeadersRow()
 
-            UI.TableNextRow()
             UI.TableNextColumn() UI.Text("parse")
             UI.TableNextColumn() UI.Text("")
             UI.TableNextColumn() UI.Text("Switch to the Parse tab.")
@@ -215,12 +216,11 @@ Config.Section.Text_Commands = function()
 
     if UI.CollapsingHeader("Commands: Parse") then
         if UI.BeginTable("Parse Commands", 3, Window_Manager.Table.Flags.Borders) then
-            UI.TableSetupColumn("Full", Column.Flags.None, Config.Full_Width)
-            UI.TableSetupColumn("Short", Column.Flags.None, Config.Short_Width)
+            UI.TableSetupColumn("Full",        Column.Flags.None, Config.WidthFull)
+            UI.TableSetupColumn("Short",       Column.Flags.None, Config.WidthShort)
             UI.TableSetupColumn("Description", Column.Flags.None)
             UI.TableHeadersRow()
 
-            UI.TableNextRow()
             UI.TableNextColumn() UI.Text("full")
             UI.TableNextColumn() UI.Text("f")
             UI.TableNextColumn() UI.Text("Shows Parse in full mode.")
@@ -262,12 +262,11 @@ Config.Section.Text_Commands = function()
 
     if UI.CollapsingHeader("Commands: Focus") then
         if UI.BeginTable("Focus Commands", 3, Window_Manager.Table.Flags.Borders) then
-            UI.TableSetupColumn("Full", Column.Flags.None, Config.Full_Width)
-            UI.TableSetupColumn("Short", Column.Flags.None, Config.Short_Width)
+            UI.TableSetupColumn("Full",        Column.Flags.None, Config.WidthFull)
+            UI.TableSetupColumn("Short",       Column.Flags.None, Config.WidthShort)
             UI.TableSetupColumn("Description", Column.Flags.None)
             UI.TableHeadersRow()
 
-            UI.TableNextRow()
             UI.TableNextColumn() UI.Text("player {name}")
             UI.TableNextColumn() UI.Text("pl {name}")
             UI.TableNextColumn() UI.Text("Focus on a player in the Focus tab. Partial matching works.")
@@ -314,12 +313,11 @@ Config.Section.Text_Commands = function()
 
     if UI.CollapsingHeader("Commands: XP") then
         if UI.BeginTable("XP Commands", 3, Window_Manager.Table.Flags.Borders) then
-            UI.TableSetupColumn("Full", Column.Flags.None, Config.Full_Width)
-            UI.TableSetupColumn("Short", Column.Flags.None, Config.Short_Width)
+            UI.TableSetupColumn("Full",        Column.Flags.None, Config.WidthFull)
+            UI.TableSetupColumn("Short",       Column.Flags.None, Config.WidthShort)
             UI.TableSetupColumn("Description", Column.Flags.None)
             UI.TableHeadersRow()
 
-            UI.TableNextRow()
             UI.TableNextColumn() UI.Text("xp")
             UI.TableNextColumn() UI.Text("")
             UI.TableNextColumn() UI.Text("Toggles the XP window.")
@@ -331,12 +329,11 @@ Config.Section.Text_Commands = function()
 
     if UI.CollapsingHeader("Commands: Report") then
         if UI.BeginTable("Report Commands", 3, Window_Manager.Table.Flags.Borders) then
-            UI.TableSetupColumn("Full", Column.Flags.None, Config.Full_Width)
-            UI.TableSetupColumn("Short", Column.Flags.None, Config.Short_Width)
+            UI.TableSetupColumn("Full",        Column.Flags.None, Config.WidthFull)
+            UI.TableSetupColumn("Short",       Column.Flags.None, Config.WidthShort)
             UI.TableSetupColumn("Description", Column.Flags.None)
             UI.TableHeadersRow()
 
-            UI.TableNextRow()
             UI.TableNextColumn() UI.Text("rep total")
             UI.TableNextColumn() UI.Text("")
             UI.TableNextColumn() UI.Text("Publishes total damage and accuracy report in chat.")
@@ -366,7 +363,8 @@ end
 -- Shows settings that affect the Focus screen.
 ------------------------------------------------------------------------------------------------------
 Config.Section.Focus = function()
-    local col_flags = Column.Flags.None
+    local colFlags = Column.Flags.None
+
     UI.Text("Set max healing thresholds for overcure.")
     UI.BulletText("Otherwise Divine Seal will mess up the calculations.")
     UI.BulletText("Set each value to be about your max healing for each spell.")
@@ -374,8 +372,8 @@ Config.Section.Focus = function()
     UI.BulletText("Curagas should be amount healed per person--not in total.")
 
     if UI.BeginTable("Battle Log", 2) then
-        UI.TableSetupColumn("Col 1", col_flags)
-        UI.TableSetupColumn("Col 2", col_flags)
+        UI.TableSetupColumn("Col 1", colFlags)
+        UI.TableSetupColumn("Col 2", colFlags)
 
         UI.TableNextColumn() Config.Widget.Healing("Cure")
         UI.TableNextColumn() Config.Widget.Healing("Curaga")
@@ -394,23 +392,28 @@ end
 -- Set the healing threshold defaults to prevent overcure with Divine Seal.
 ------------------------------------------------------------------------------------------------------
 Config.Widget.Healing = function(spell)
-    local healing_threshold = {[1] = DB.HealingMax[spell]}
-    if UI.DragInt(spell, healing_threshold, 1, 0, 3000, "%d", ImGuiSliderFlags_None) then
-        DB.HealingMax[spell] = healing_threshold[1]
+    local healingThreshold = { DB.HealingMax[spell] }
+
+    if UI.DragInt(spell, healingThreshold, 1, 0, 3000, "%d", ImGuiSliderFlags_None) then
+        DB.HealingMax[spell] = healingThreshold[1]
     end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Allows toggling and mode switching with the UI buttons.
 ------------------------------------------------------------------------------------------------------
----@param settings_mode string
+---@param settingsMode string
 ------------------------------------------------------------------------------------------------------
-Config.Button_Toggle = function(settings_mode)
-    if not settings_mode then return nil end
-    if Config.Window.Is_Visible() and Config.Settings_Mode == settings_mode then
+Config.ButtonToggle = function(settingsMode)
+    if not settingsMode then
+        return nil
+    end
+
+    if Config.Window.Is_Visible() and Config.ActiveSettingsWindow == settingsMode then
         Config.Window.Hide()
+
     else
-        Config.Settings_Mode = settings_mode
+        Config.ActiveSettingsWindow = settingsMode
         Config.Window.Show()
     end
 end

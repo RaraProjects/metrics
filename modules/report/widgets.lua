@@ -5,7 +5,7 @@ Report.Widgets = {}
 ------------------------------------------------------------------------------------------------------
 Report.Widgets.Settings_Button = function()
     if UI.SmallButton("Settings") then
-        Config.Button_Toggle(Config.Enum.File.REPORT)
+        Config.ButtonToggle(Config.ModuleFile.REPORT)
     end
 end
 

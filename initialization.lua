@@ -1,10 +1,10 @@
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Database settings.
 ------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.DATABASE, "settings_update", function(settings)
+Settings_File.register(Config.ModuleFile.DATABASE, "settings_update", function(settings)
     if settings ~= nil then
         Metrics.Model = settings
-        Settings_File.save(Config.Enum.File.DATABASE)
+        Settings_File.save(Config.ModuleFile.DATABASE)
     end
 end)
 
@@ -41,12 +41,12 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Window settings.
 ------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.WINDOW, "settings_update", function(settings)
+Settings_File.register(Config.ModuleFile.WINDOW, "settings_update", function(settings)
     if settings ~= nil then
         Window_Manager.Settings = settings
         Window_Manager.Theme.Is_Set = false
         Window_Manager.Settings_Reset()
-        Settings_File.save(Config.Enum.File.WINDOW)
+        Settings_File.save(Config.ModuleFile.WINDOW)
     end
 end)
 
@@ -106,7 +106,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('load', 'load_cb', function()
     Metrics = T{
-        Model  = Settings_File.load(DB.Defaults, Config.Enum.File.DATABASE),
+        Model  = Settings_File.load(DB.Defaults, Config.ModuleFile.DATABASE),
     }
 
     Metrics.Debug = {}
@@ -145,13 +145,13 @@ end)
 -- Save settings when the addon is unloaded.
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('unload', 'unload_cb', function()
-    Settings_File.save(Config.Enum.File.DATABASE)
+    Settings_File.save(Config.ModuleFile.DATABASE)
     Settings_File.save(Parse.File)
     Settings_File.save(Focus.File)
     Settings_File.save(Blog.File)
     Settings_File.save(XP.File)
     Settings_File.save(Loot.File)
-    Settings_File.save(Config.Enum.File.WINDOW)
+    Settings_File.save(Config.ModuleFile.WINDOW)
     Settings_File.save(Report.File)
     Settings_File.save(Overview.File)
     Settings_File.save(Hub.File)
