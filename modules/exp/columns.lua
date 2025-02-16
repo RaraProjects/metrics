@@ -51,7 +51,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.Chain = function()
     local chainNumber = XP.Tracking.Chains.Current
-    local chainString = string.format("(%s)", (chainNumber < 0) and "-" or chainNumber)
+    local chainString = string.format(" (%s)", (chainNumber < 0) and "-" or chainNumber)
 
     XP.Chains.Timer() UI.SameLine() UI.Text(chainString)
 end
@@ -195,7 +195,7 @@ end
 ---@param baseOnly? boolean
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
-XP.Columns.Average_Rate = function(xpType, baseOnly)
+XP.Columns.AverageRate = function(xpType, baseOnly)
     local xpData =
     {
         [XP.Type.EXPERIENCE] = { XP.Tracking.EXP.LastXpInstant,      XP.Tracking.EXP.KillTimes,      true  },
@@ -204,10 +204,18 @@ XP.Columns.Average_Rate = function(xpType, baseOnly)
         [XP.Type.EXEMPLAR]   = { XP.Tracking.Exemplar.LastXpInstant, XP.Tracking.Exemplar.KillTimes, false },
     }
 
-    local lastXpInstant, killTimes, showDedication = table.unpack(xpData[xpType] or { })
+    local data = xpData[xpType]
+
+    if not data then
+        return "0"
+    end
+
+    local lastXpInstant  = data[1] or 0
+    local killTimes      = data[2] or { }
+    local showDedication = data[3] or false
 
     -- Need to add some type checks here to satify the type restrictions on AverageKillTime.
-    if not lastXpInstant or type(lastXpInstant) ~= "integer" or lastXpInstant == 0 or type(killTimes) ~= "table" then
+    if not lastXpInstant or lastXpInstant == 0 then
         return "0"
     end
 
@@ -260,10 +268,11 @@ XP.Columns.TimeToLevel = function(xpType)
         return UI.TextColored(color, Timers.Format(0))
     end
 
-    local lastXpGainTime, killTimes = table.unpack(data)
-    local averageXp = XP.Columns.AverageXP(xpType)
+    local lastXpGainTime = data[1] or 1
+    local killTimes      = data[2] or { }
+    local averageXp      = XP.Columns.AverageXP(xpType)
 
-    if lastXpGainTime == 0 or averageXp <= 0 or type(killTimes) ~= "table" then
+    if lastXpGainTime == 0 or averageXp <= 0 then
         return UI.TextColored(color, "--:--:--")
     end
 

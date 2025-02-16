@@ -110,50 +110,51 @@ XP.DisplayTable = function()
     local levelString = (xpType == XP.Type.LIMIT) and "M"  or "L"
 
     UI.PushStyleColor(ImGuiCol_TableRowBg, Window_Manager.Theme.TableRowBg)
+
     if UI.BeginTable("XP Metrics", XP.Columns.DisplayCount, tableFlags) then
-        if XP.Settings.Show_Job                 then UI.TableSetupColumn("Job", flags) end
-        UI.TableSetupColumn("Chain", flags)
-        UI.TableSetupColumn("*" .. typeString .. "/hr", flags)
-        if XP.Settings.Show_Base_Rate           then UI.TableSetupColumn(typeString .. "/hr",  flags) end
-        if XP.Settings.Show_Time_To_Level       then UI.TableSetupColumn("~TT" .. levelString, flags) end
-        if XP.Settings.Show_Boost_Time_To_Level then UI.TableSetupColumn("TTB",                flags) end
-        if XP.Settings.Show_TNL                 then UI.TableSetupColumn("TN" .. levelString,  flags) end
-        if XP.Settings.Show_Capacity_Base_Rate  then UI.TableSetupColumn("CP/hr",              flags) end
-        if XP.Settings.Show_Time_To_Job_Point   then UI.TableSetupColumn("~TTJP",              flags) end
-        if XP.Settings.Show_TNJP                then UI.TableSetupColumn("TNJP",               flags) end
-        if XP.Settings.Show_Exemplar_Base_Rate  then UI.TableSetupColumn("EP/hr",              flags) end
-        if XP.Settings.Show_Time_To_Mastery     then UI.TableSetupColumn("~TTML",              flags) end
-        if XP.Settings.Show_TNML                then UI.TableSetupColumn("TNML",               flags) end
-        if XP.Settings.Show_Kill_Rate           then UI.TableSetupColumn("Time/Kill",          flags) end
-        if XP.Settings.Show_Average_XP          then UI.TableSetupColumn("XP/Kill",            flags) end
-        if XP.Settings.Show_Total_XP_Gained     then UI.TableSetupColumn("Total",              flags) end
-        if XP.Settings.Show_Max_Chain           then UI.TableSetupColumn("Max Chain",          flags) end
-        if XP.Settings.Show_Zone_Time           then UI.TableSetupColumn("Zone Time",          flags) end
-        if XP.Settings.Show_Boost_Item          then UI.TableSetupColumn("Bonus",              flags) end
-        if XP.Settings.Show_Boost_Rate          then UI.TableSetupColumn("Bonus %",            flags) end
-        if XP.Settings.Show_Boost_Max           then UI.TableSetupColumn("Bonus Max",          flags) end
+        if XP.Settings.Show_Job                 then UI.TableSetupColumn("Job",                               flags) end
+                                                     UI.TableSetupColumn("Chain",                             flags)
+                                                     UI.TableSetupColumn(string.format("*%s/hr", typeString), flags)
+        if XP.Settings.Show_Base_Rate           then UI.TableSetupColumn(string.format("%s/hr", typeString),  flags) end
+        if XP.Settings.Show_Time_To_Level       then UI.TableSetupColumn(string.format("~TT%s", levelString), flags) end
+        if XP.Settings.Show_Boost_Time_To_Level then UI.TableSetupColumn("TTB",                               flags) end
+        if XP.Settings.Show_TNL                 then UI.TableSetupColumn(string.format("TN%s", levelString),  flags) end
+        if XP.Settings.Show_Capacity_Base_Rate  then UI.TableSetupColumn("CP/hr",                             flags) end
+        if XP.Settings.Show_Time_To_Job_Point   then UI.TableSetupColumn("~TTJP",                             flags) end
+        if XP.Settings.Show_TNJP                then UI.TableSetupColumn("TNJP",                              flags) end
+        if XP.Settings.Show_Exemplar_Base_Rate  then UI.TableSetupColumn("EP/hr",                             flags) end
+        if XP.Settings.Show_Time_To_Mastery     then UI.TableSetupColumn("~TTML",                             flags) end
+        if XP.Settings.Show_TNML                then UI.TableSetupColumn("TNML",                              flags) end
+        if XP.Settings.Show_Kill_Rate           then UI.TableSetupColumn("Time/Kill",                         flags) end
+        if XP.Settings.Show_Average_XP          then UI.TableSetupColumn("XP/Kill",                           flags) end
+        if XP.Settings.Show_Total_XP_Gained     then UI.TableSetupColumn("Total",                             flags) end
+        if XP.Settings.Show_Max_Chain           then UI.TableSetupColumn("Max Chain",                         flags) end
+        if XP.Settings.Show_Zone_Time           then UI.TableSetupColumn("Zone Time",                         flags) end
+        if XP.Settings.Show_Boost_Item          then UI.TableSetupColumn("Bonus",                             flags) end
+        if XP.Settings.Show_Boost_Rate          then UI.TableSetupColumn("Bonus %",                           flags) end
+        if XP.Settings.Show_Boost_Max           then UI.TableSetupColumn("Bonus Max",                         flags) end
         UI.TableHeadersRow()
 
         -- Content
         if XP.Settings.Show_Job                 then UI.TableNextColumn() XP.Columns.Job() end
                                                      UI.TableNextColumn() XP.Columns.Chain()
-                                                     UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(xpType))
-        if XP.Settings.Show_Base_Rate           then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(xpType, true)) end
+                                                     UI.TableNextColumn() UI.Text(XP.Columns.AverageRate(xpType))
+        if XP.Settings.Show_Base_Rate           then UI.TableNextColumn() UI.Text(XP.Columns.AverageRate(xpType, true)) end
         if XP.Settings.Show_Time_To_Level       then UI.TableNextColumn() XP.Columns.TimeToLevel(xpType) end
         if XP.Settings.Show_Boost_Time_To_Level then UI.TableNextColumn() XP.Columns.TimeToFinishDedication(xpType) end
         if XP.Settings.Show_TNL                 then UI.TableNextColumn() UI.Text(XP.Columns.TNL(xpType)) end
-        if XP.Settings.Show_Capacity_Base_Rate  then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(XP.Type.CAPACITY)) end
+        if XP.Settings.Show_Capacity_Base_Rate  then UI.TableNextColumn() UI.Text(XP.Columns.AverageRate(XP.Type.CAPACITY)) end
         if XP.Settings.Show_Time_To_Job_Point   then UI.TableNextColumn() XP.Columns.TimeToLevel(XP.Type.CAPACITY) end
         if XP.Settings.Show_TNJP                then UI.TableNextColumn() UI.Text(XP.Columns.TNL(XP.Type.CAPACITY)) end
-        if XP.Settings.Show_Exemplar_Base_Rate  then UI.TableNextColumn() UI.Text(XP.Columns.Average_Rate(XP.Type.EXEMPLAR)) end
+        if XP.Settings.Show_Exemplar_Base_Rate  then UI.TableNextColumn() UI.Text(XP.Columns.AverageRate(XP.Type.EXEMPLAR)) end
         if XP.Settings.Show_Time_To_Mastery     then UI.TableNextColumn() XP.Columns.TimeToLevel(XP.Type.EXEMPLAR) end
         if XP.Settings.Show_TNML                then UI.TableNextColumn() UI.Text(XP.Columns.TNL(XP.Type.EXEMPLAR)) end
         if XP.Settings.Show_Kill_Rate           then
-            local kill_time = XP.Columns.AverageKillTime(XP.Tracking.EXP.LastXpInstant, XP.Tracking.EXP.KillTimes)
-            if kill_time < 0 then
+            local killTime = XP.Columns.AverageKillTime(XP.Tracking.EXP.LastXpInstant, XP.Tracking.EXP.KillTimes)
+            if killTime < 0 then
                 UI.TableNextColumn() UI.Text("--:--")
             else
-                UI.TableNextColumn() UI.Text(Timers.Format(kill_time, true))
+                UI.TableNextColumn() UI.Text(Timers.Format(killTime, true))
             end
         end
         if XP.Settings.Show_Average_XP          then UI.TableNextColumn() UI.Text(string.format("%d", XP.Columns.AverageXP(xpType))) end
@@ -181,7 +182,7 @@ XP.OnXpGained = function(rawPacket)
     end
 
     -- Parse the packet. Added a short circuit here for unit testing.
-    local parsedPacket = Debug.Is_Enabled() and rawPacket or Ashita.Packets.EXP(rawPacket)
+    local parsedPacket = Ashita.Packets.EXP(rawPacket)
     if not parsedPacket then
         return nil
     end

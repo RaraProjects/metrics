@@ -230,10 +230,10 @@ XP.Tracking.DebugContent = function()
         UI.TableNextColumn() UI.Text(string.format("%.2f", (XP.Columns.AverageXP(xpTypes.EXEMPLAR))))
 
         UI.TableNextColumn() UI.Text("XP/hr")
-        UI.TableNextColumn() UI.Text(tostring(XP.Columns.Average_Rate(xpTypes.EXPERIENCE)))
-        UI.TableNextColumn() UI.Text(tostring(XP.Columns.Average_Rate(xpTypes.LIMIT)))
-        UI.TableNextColumn() UI.Text(tostring(XP.Columns.Average_Rate(xpTypes.CAPACITY)))
-        UI.TableNextColumn() UI.Text(tostring(XP.Columns.Average_Rate(xpTypes.EXEMPLAR)))
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.AverageRate(xpTypes.EXPERIENCE)))
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.AverageRate(xpTypes.LIMIT)))
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.AverageRate(xpTypes.CAPACITY)))
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.AverageRate(xpTypes.EXEMPLAR)))
 
         UI.EndTable()
     end
