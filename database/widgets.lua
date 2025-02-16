@@ -71,7 +71,7 @@ DB.Widgets.DropdownDPS = function(width)
         UI.EndCombo()
     end
 
-    Window_Manager.Widgets.HelpMarker
+    WindowManager.Widgets.HelpMarker
     (
         "Average DPS is your total damage divided by the parse duration timer. The timer only runs while actions " ..
         "are taking place by your affiliates near you so idle time by the party won't hurt your DPS by much. " ..
@@ -108,7 +108,7 @@ DB.Widgets.DropdownMobFilter = function()
         UI.EndCombo()
     end
 
-    Window_Manager.Widgets.HelpMarker
+    WindowManager.Widgets.HelpMarker
     (
         "You can filter to show only data for actions taken against mobs with a specific name.\n" ..
         "Notes:\n" ..
@@ -146,7 +146,7 @@ DB.Widgets.DropdownPlayerFilter = function()
         UI.EndCombo()
     end
 
-    Window_Manager.Widgets.HelpMarker
+    WindowManager.Widgets.HelpMarker
     (
         "Pick a player that you would like to see more detailed stats for.\n"
     )

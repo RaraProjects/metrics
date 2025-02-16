@@ -1,22 +1,23 @@
-Window = {}
+Window = { }
 
-function Window:New(init_settings)
+function Window:New(initSettings)
 
-    local self = {}
-    init_settings = init_settings or {}
+    local self = { }
+    initSettings = initSettings or { }
 
-    local name       = init_settings.Name       or "Default"
-    local title      = init_settings.Title      or "Default Title"
-    local module     = init_settings.Module     or "Default"
-    local settings   = init_settings.Settings   or {}
-    local show_title = init_settings.Show_Title or false
-    local show_bg    = true
+    local name      = initSettings.Name       or "Default"
+    local title     = initSettings.Title      or "Default Title"
+    local module    = initSettings.Module     or "Default"
+    local settings  = initSettings.Settings   or { }
+    local showTitle = initSettings.Show_Title or false
+    local showBg    = true
 
-    local need_position_reset = true
-    local scaling_set = false
-    local visible = {settings.Visible[1]}
+    local needPositionReset = true
+    local isScalingSet      = false
+    local isVisible         = { settings.Visible[1] }
 
-    local flags_default = bit.bor(
+    local flagDefaults = bit.bor
+    (
         ImGuiWindowFlags_AlwaysAutoResize,  -- This prevents manual resizing, but without it things look messed up.
         ImGuiWindowFlags_NoSavedSettings,
         ImGuiWindowFlags_NoNav
@@ -28,25 +29,41 @@ function Window:New(init_settings)
     ---@param content? function
     ------------------------------------------------------------------------------------------------------
     self.Populate = function(content)
-        visible[1] = Window_Manager.Get_Visibility(module)
-        if Ashita.Player.IsZoning() or not visible[1] then return nil end
+        isVisible[1] = WindowManager.GetVisibility(module)
 
-        UI.PushStyleVar(ImGuiStyleVar_Alpha, Window_Manager.Config.Get_Alpha())
-        UI.PushStyleVar(ImGuiStyleVar_CellPadding, {10, 1})
-        UI.PushStyleVar(ImGuiStyleVar_WindowPadding, {7, 3})
-        UI.PushStyleVar(ImGuiStyleVar_ItemSpacing, {0, 5})
-        UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, {5, 0})
+        if Ashita.Player.IsZoning() or not isVisible[1] then
+            return nil
+        end
 
-        local flags = flags_default
-        if not Window_Manager.Settings.Show_Title and not show_title then flags = bit.bor(flags, ImGuiWindowFlags_NoTitleBar) end
-        if not show_bg then flags = bit.bor(flags, ImGuiWindowFlags_NoBackground) end
-        self.Check_Position()
+        UI.PushStyleVar(ImGuiStyleVar_Alpha, WindowManager.Config.GetAlpha())
+        UI.PushStyleVar(ImGuiStyleVar_CellPadding,      { 10, 1 })
+        UI.PushStyleVar(ImGuiStyleVar_WindowPadding,    { 7,  3 })
+        UI.PushStyleVar(ImGuiStyleVar_ItemSpacing,      { 0,  5 })
+        UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 5,  0 })
 
-        if UI.Begin(title, visible, flags) then
-            self.Update_Settings()
-            self.Set_Scaling()
-            Window_Manager.Theme.Set()
-            if content then content() end
+        local flags = flagDefaults
+
+        -- Title Bar
+        if not WindowManager.Settings.Show_Title and not showTitle then
+            flags = bit.bor(flags, ImGuiWindowFlags_NoTitleBar)
+        end
+
+        -- Background
+        if not showBg then
+            flags = bit.bor(flags, ImGuiWindowFlags_NoBackground)
+        end
+
+        self.CheckPosition()
+
+        if UI.Begin(title, isVisible, flags) then
+            self.UpdateSettings()
+            self.SetScaling()
+            WindowManager.Theme.Set()
+
+            if content and type(content) == "function" then
+                content()
+            end
+
             UI.End()
         end
 
@@ -56,83 +73,85 @@ function Window:New(init_settings)
     ------------------------------------------------------------------------------------------------------
     -- Checks if the position of the window needs to be reset ex: switching characters.
     ------------------------------------------------------------------------------------------------------
-    self.Check_Position = function()
-        if need_position_reset then
-            UI.SetNextWindowPos({settings.X, settings.Y}, ImGuiCond_Always)
-            need_position_reset = false
+    self.CheckPosition = function()
+        if needPositionReset then
+            UI.SetNextWindowPos({ settings.X, settings.Y }, ImGuiCond_Always)
+            needPositionReset = false
         end
     end
 
     ------------------------------------------------------------------------------------------------------
     -- Updates the window position for the settings file.
     ------------------------------------------------------------------------------------------------------
-    self.Update_Settings = function()
+    self.UpdateSettings = function()
         settings.X, settings.Y = UI.GetWindowPos()
-        settings.Visible[1] = visible[1]
+        settings.Visible[1]    = isVisible[1]
     end
 
     ------------------------------------------------------------------------------------------------------
     -- Checks whether the window is currently visible.
     ------------------------------------------------------------------------------------------------------
-    self.Is_Visible = function()
-        return visible[1]
+    ---@return boolean
+    ------------------------------------------------------------------------------------------------------
+    self.IsVisible = function()
+        return isVisible[1]
     end
 
     ------------------------------------------------------------------------------------------------------
     -- Toggles window visibility.
     ------------------------------------------------------------------------------------------------------
-    self.Toggle_Visibility = function()
-        visible[1] = not visible[1]
-        settings.Visible[1] = visible[1]
+    self.ToggleVisibility = function()
+        isVisible[1]        = not isVisible[1]
+        settings.Visible[1] = isVisible[1]
     end
 
     ------------------------------------------------------------------------------------------------------
     -- Makes the window visible.
     ------------------------------------------------------------------------------------------------------
     self.Show = function()
-        visible[1] = true
-        settings.Visible[1] = visible[1]
+        isVisible[1]        = true
+        settings.Visible[1] = isVisible[1]
     end
 
     ------------------------------------------------------------------------------------------------------
     -- Makes the window invisible.
     ------------------------------------------------------------------------------------------------------
     self.Hide = function()
-        visible[1] = false
-        settings.Visible[1] = visible[1]
+        isVisible[1]        = false
+        settings.Visible[1] = isVisible[1]
     end
 
     ------------------------------------------------------------------------------------------------------
     -- Makes the window active either by switching to the tab or by toggling the window.
     ------------------------------------------------------------------------------------------------------
-    self.Make_Active = function()
-        Window_Manager.Switch_Module(name)
-        self.Toggle_Visibility()
+    self.MakeActive = function()
+        WindowManager.SwitchModule(name)
+        self.ToggleVisibility()
     end
 
     ------------------------------------------------------------------------------------------------------
     -- Forces the position to need a reset for cases like character switch.
     ------------------------------------------------------------------------------------------------------
-    self.Settings_Reset = function()
-        need_position_reset = true
-        scaling_set = false
+    self.SettingsReset = function()
+        needPositionReset = true
+        isScalingSet      = false
     end
 
     ------------------------------------------------------------------------------------------------------
     -- Sets the window scaling.
     ------------------------------------------------------------------------------------------------------
-    self.Set_Scaling = function()
-        if not scaling_set then
-            UI.SetWindowFontScale(Window_Manager.Config.Get_Scaling())
-            scaling_set = true
+    self.SetScaling = function()
+        if not isScalingSet then
+            UI.SetWindowFontScale(WindowManager.Config.GetScaling())
+            isScalingSet = true
         end
     end
 
     ------------------------------------------------------------------------------------------------------
     -- Forces the scaling flag to reset after toggling the scaling setting.
     ------------------------------------------------------------------------------------------------------
-    self.Force_Scaling_Reset = function()
-        scaling_set = false
+    self.ForceScalingReset = function()
+        isScalingSet = false
     end
 
     ------------------------------------------------------------------------------------------------------
@@ -140,12 +159,12 @@ function Window:New(init_settings)
     ------------------------------------------------------------------------------------------------------
     ---@param background boolean
     ------------------------------------------------------------------------------------------------------
-    self.Set_Background = function(background)
-        show_bg = background
+    self.SetBackground = function(background)
+        showBg = background
     end
 
     -- Adds this window to the Window Manager list of windows.
-    Window_Manager.Add_Window(module, module, self)
+    WindowManager.AddWindow(module, module, self)
 
     return self
 end

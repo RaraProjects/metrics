@@ -39,7 +39,7 @@ XP.ShowResetConfirmation = false
 -- Initializes the XP module.
 -- ------------------------------------------------------------------------------------------------------
 XP.Initialize = function(settings)
-    if not XP.IsInitialized and Ashita and Res and Window_Manager and UI and DB and Column then
+    if not XP.IsInitialized and Ashita and Res and WindowManager and UI and DB and Column then
         -- Get saved settings from file.
         XP.Settings = settings or Settings_File.load(XP.Config.Defaults, XP.File)
 
@@ -52,7 +52,7 @@ XP.Initialize = function(settings)
             Settings = XP.Settings,
         })
 
-        XP.Window.Set_Background(XP.Settings.Show_Background)
+        XP.Window.SetBackground(XP.Settings.Show_Background)
 
         -- Dedication
         local needsReset = XP.Settings.Boost_Item_Rate <= 0
@@ -85,7 +85,7 @@ XP.Content = function()
     XP.DisplayTable()
     XP.Tracking.DebugContent()
 
-    if Window_Manager.Can_Bar_Load() then
+    if WindowManager.CanBarLoad() then
         XP.Widgets.LevelProgressBar()
         XP.Widgets.BoostProgressBar()
     else
@@ -109,7 +109,7 @@ XP.DisplayTable = function()
     local typeString  = (xpType == XP.Type.LIMIT) and "LP" or "XP"
     local levelString = (xpType == XP.Type.LIMIT) and "M"  or "L"
 
-    UI.PushStyleColor(ImGuiCol_TableRowBg, Window_Manager.Theme.TableRowBg)
+    UI.PushStyleColor(ImGuiCol_TableRowBg, WindowManager.Theme.TableRowBg)
 
     if UI.BeginTable("XP Metrics", XP.Columns.DisplayCount, tableFlags) then
         if XP.Settings.Show_Job                 then UI.TableSetupColumn("Job",                               flags) end

@@ -1,30 +1,34 @@
-Window_Manager.Theme = {}
+WindowManager.Theme = { }
 
-Window_Manager.Theme.Is_Set = false
-Window_Manager.Theme.TableRowBg = {0.00, 0.00, 0.00, 0.00}
+WindowManager.Theme.IsSet      = false
+WindowManager.Theme.TableRowBg = { 0.00, 0.00, 0.00, 0.00 }
 
 ------------------------------------------------------------------------------------------------------
 -- Change the window themes.
 -- Modeled from the ImGui demo.
 -- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
 ------------------------------------------------------------------------------------------------------
-Window_Manager.Theme.Choose = function()
+WindowManager.Theme.Choose = function()
     UI.Text("Theme (will affect other ImGui based addons)")
-    if UI.RadioButton("Default ", {Window_Manager.Settings.Style}, 0) then
-        Window_Manager.Settings.Style = 0
-        Window_Manager.Theme.Is_Set = false
+
+    if UI.RadioButton("Default ", { WindowManager.Settings.Style }, 0) then
+        WindowManager.Settings.Style = 0
+        WindowManager.Theme.IsSet    = false
     end
+
     UI.SameLine()
-    if UI.RadioButton("Dark ", {Window_Manager.Settings.Style}, 1) then
-        Window_Manager.Settings.Style = 1
-        Window_Manager.Theme.Is_Set = false
+    if UI.RadioButton("Dark ", { WindowManager.Settings.Style }, 1) then
+        WindowManager.Settings.Style = 1
+        WindowManager.Theme.IsSet    = false
     end
+
     UI.SameLine()
-    if UI.RadioButton("Classic ", {Window_Manager.Settings.Style}, 3) then
-        Window_Manager.Settings.Style = 3
-        Window_Manager.Theme.Is_Set = false
+    if UI.RadioButton("Classic ", { WindowManager.Settings.Style }, 3) then
+        WindowManager.Settings.Style = 3
+        WindowManager.Theme.IsSet    = false
     end
-    Window_Manager.Theme.Set()
+
+    WindowManager.Theme.Set()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -32,23 +36,32 @@ end
 -- Modeled from the ImGui demo.
 -- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
 ------------------------------------------------------------------------------------------------------
-Window_Manager.Theme.Set = function()
-    if not Window_Manager.Theme.Is_Set then
-        if Window_Manager.Settings.Style == 0 then
-            Window_Manager.Theme.Apply_Custom(Themes.Default)
-            Window_Manager.Theme.TableRowBg = {0.18, 0.20, 0.23, 1.00}
-        elseif Window_Manager.Settings.Style == 1 then
+WindowManager.Theme.Set = function()
+    if not WindowManager.Theme.IsSet then
+        -- Default
+        if WindowManager.Settings.Style == 0 then
+            WindowManager.Theme.ApplyCustom(Themes.Default)
+            WindowManager.Theme.TableRowBg = { 0.18, 0.20, 0.23, 1.00 }
+
+        -- Dark
+        elseif WindowManager.Settings.Style == 1 then
             UI.StyleColorsDark()
-            Window_Manager.Theme.TableRowBg = {0.06, 0.06, 0.06, 1.00}
-        elseif Window_Manager.Settings.Style == 2 then
+            WindowManager.Theme.TableRowBg = { 0.06, 0.06, 0.06, 1.00 }
+
+        -- Light (Not Used)
+        elseif WindowManager.Settings.Style == 2 then
             UI.StyleColorsLight()
-        elseif Window_Manager.Settings.Style == 3 then
+
+        -- Classic
+        elseif WindowManager.Settings.Style == 3 then
             UI.StyleColorsClassic()
-            Window_Manager.Theme.TableRowBg = {0.00, 0.00, 0.00, 1.00}
+            WindowManager.Theme.TableRowBg = { 0.00, 0.00, 0.00, 1.00 }
+
         else
-            Window_Manager.Theme.Apply_Custom(Themes.Default)
+            WindowManager.Theme.ApplyCustom(Themes.Default)
         end
-        Window_Manager.Theme.Is_Set = true
+
+        WindowManager.Theme.IsSet = true
     end
 end
 
@@ -57,10 +70,10 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param theme table defined in resources.themes.
 ------------------------------------------------------------------------------------------------------
-Window_Manager.Theme.Apply_Custom = function(theme)
-    for flag_name, flag_value in pairs(Themes.Elements) do
-        if theme[flag_name] then
-            UI.PushStyleColor(flag_value, theme[flag_name])
+WindowManager.Theme.ApplyCustom = function(theme)
+    for flagName, flagValue in pairs(Themes.Elements) do
+        if theme[flagName] then
+            UI.PushStyleColor(flagValue, theme[flagName])
         end
     end
 end

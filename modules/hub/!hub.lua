@@ -31,7 +31,7 @@ end
 Hub.Content = function()
     -- If Multi Window mode is enabled then just show the buttons here. The rest of the content is handled
     -- in the primary screen refresh event.
-    if Window_Manager.Settings.Multi_Window then
+    if WindowManager.Settings.Multi_Window then
         Hub.Buttons()
 
     -- Only show the Mini or Nano mode if they are enabled while in Single Window mode.
@@ -63,39 +63,39 @@ end
 -- Shows Metrics in a single window with tabs.
 ------------------------------------------------------------------------------------------------------
 Hub.Single_Window = function()
-    if UI.BeginTabBar("Tabs", Window_Manager.Tabs.Flags) then
-        if UI.BeginTabItem(Parse.Name, false, Window_Manager.Is_Module_Active(Parse.Name)) then
-            Window_Manager.Clear_Module_Switch(Parse.Name)
+    if UI.BeginTabBar("Tabs", WindowManager.Tabs.Flags) then
+        if UI.BeginTabItem(Parse.Name, false, WindowManager.IsModuleActive(Parse.Name)) then
+            WindowManager.ClearModuleSwitch(Parse.Name)
             Parse.Content()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem(Focus.Name, false, Window_Manager.Is_Module_Active(Focus.Name)) then
-            Window_Manager.Clear_Module_Switch(Focus.Name)
+        if UI.BeginTabItem(Focus.Name, false, WindowManager.IsModuleActive(Focus.Name)) then
+            WindowManager.ClearModuleSwitch(Focus.Name)
             Focus.Content()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem(Blog.Name, false, Window_Manager.Is_Module_Active(Blog.Name)) then
-            Window_Manager.Clear_Module_Switch(Blog.Name)
+        if UI.BeginTabItem(Blog.Name, false, WindowManager.IsModuleActive(Blog.Name)) then
+            WindowManager.ClearModuleSwitch(Blog.Name)
             Blog.Content()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem(XP.Name, false, Window_Manager.Is_Module_Active(XP.Name)) then
-            Window_Manager.Clear_Module_Switch(XP.Name)
+        if UI.BeginTabItem(XP.Name, false, WindowManager.IsModuleActive(XP.Name)) then
+            WindowManager.ClearModuleSwitch(XP.Name)
             XP.Content()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem(Loot.Name, false, Window_Manager.Is_Module_Active(Loot.Name)) then
-            Window_Manager.Clear_Module_Switch(Loot.Name)
+        if UI.BeginTabItem(Loot.Name, false, WindowManager.IsModuleActive(Loot.Name)) then
+            WindowManager.ClearModuleSwitch(Loot.Name)
             Loot.Content()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem(Report.Name, false, Window_Manager.Is_Module_Active(Report.Name)) then
-            Window_Manager.Clear_Module_Switch(Report.Name)
+        if UI.BeginTabItem(Report.Name, false, WindowManager.IsModuleActive(Report.Name)) then
+            WindowManager.ClearModuleSwitch(Report.Name)
             Report.Content()
             UI.EndTabItem()
         end
-        if UI.BeginTabItem(Config.Name, false, Window_Manager.Is_Module_Active(Config.Name)) then
-            Window_Manager.Clear_Module_Switch(Config.Name)
+        if UI.BeginTabItem(Config.Name, false, WindowManager.IsModuleActive(Config.Name)) then
+            WindowManager.ClearModuleSwitch(Config.Name)
             Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
             Config.Content()
             UI.EndTabItem()
@@ -108,15 +108,15 @@ end
 -- Toggles the Parse window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Parse_Button = function()
-    local active = Parse.Window.Is_Visible()
+    local active = Parse.Window.IsVisible()
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Parse.Name) then
-        if Window_Manager.Settings.Multi_Window then Parse.Window.Toggle_Visibility() end
-        Window_Manager.Settings.Active_Window = Parse.Name
+        if WindowManager.Settings.Multi_Window then Parse.Window.ToggleVisibility() end
+        WindowManager.Settings.Active_Window = Parse.Name
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -125,15 +125,15 @@ end
 -- Toggles the Focus window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Focus_Button = function()
-    local active = Focus.Window.Is_Visible()
+    local active = Focus.Window.IsVisible()
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Focus.Name) then
-        if Window_Manager.Settings.Multi_Window then Focus.Window.Toggle_Visibility() end
-        Window_Manager.Settings.Active_Window = Focus.Name
+        if WindowManager.Settings.Multi_Window then Focus.Window.ToggleVisibility() end
+        WindowManager.Settings.Active_Window = Focus.Name
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -142,15 +142,15 @@ end
 -- Toggles the Battle Log window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Battle_Log_Button = function()
-    local active = Blog.Window.Is_Visible()
+    local active = Blog.Window.IsVisible()
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Blog.Name) then
-        if Window_Manager.Settings.Multi_Window then Blog.Window.Toggle_Visibility() end
-        Window_Manager.Settings.Active_Window = Blog.Name
+        if WindowManager.Settings.Multi_Window then Blog.Window.ToggleVisibility() end
+        WindowManager.Settings.Active_Window = Blog.Name
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -159,15 +159,15 @@ end
 -- Toggles the XP window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.XP_Button = function()
-    local active = XP.Window.Is_Visible()
+    local active = XP.Window.IsVisible()
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(XP.Name) then
-        if Window_Manager.Settings.Multi_Window then XP.Window.Toggle_Visibility() end
-        Window_Manager.Settings.Active_Window = XP.Name
+        if WindowManager.Settings.Multi_Window then XP.Window.ToggleVisibility() end
+        WindowManager.Settings.Active_Window = XP.Name
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -176,15 +176,15 @@ end
 -- Toggles the Loot window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Loot_Button = function()
-    local active = Loot.Window.Is_Visible()
+    local active = Loot.Window.IsVisible()
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Loot.Name) then
-        if Window_Manager.Settings.Multi_Window then Loot.Window.Toggle_Visibility() end
-        Window_Manager.Settings.Active_Window = Loot.Name
+        if WindowManager.Settings.Multi_Window then Loot.Window.ToggleVisibility() end
+        WindowManager.Settings.Active_Window = Loot.Name
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -193,15 +193,15 @@ end
 -- Toggles the Report window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Report_Button = function()
-    local active = Report.Window.Is_Visible()
+    local active = Report.Window.IsVisible()
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Report.Name) then
-        if Window_Manager.Settings.Multi_Window then Report.Window.Toggle_Visibility() end
-        Window_Manager.Settings.Active_Window = Report.Name
+        if WindowManager.Settings.Multi_Window then Report.Window.ToggleVisibility() end
+        WindowManager.Settings.Active_Window = Report.Name
     end
     if not active then UI.PopStyleColor(3) end
 end
@@ -210,7 +210,7 @@ end
 -- Toggles the Settings window visibility.
 ------------------------------------------------------------------------------------------------------
 Hub.Settings_Button = function()
-    local active = Config.Window.Is_Visible()
+    local active = Config.Window.IsVisible()
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
@@ -218,10 +218,10 @@ Hub.Settings_Button = function()
     end
     if UI.Button(Config.Name) then
         -- Don't toggle off if config window is open and not showing settings.
-        if not (Config.Window.Is_Visible() and Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG) then
-            if Window_Manager.Settings.Multi_Window then Config.Window.Toggle_Visibility() end
+        if not (Config.Window.IsVisible() and Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG) then
+            if WindowManager.Settings.Multi_Window then Config.Window.ToggleVisibility() end
         end
-        Window_Manager.Settings.Active_Window = Config.Name
+        WindowManager.Settings.Active_Window = Config.Name
         Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
     end
     if not active then UI.PopStyleColor(3) end
@@ -232,15 +232,15 @@ end
 ------------------------------------------------------------------------------------------------------
 Hub.Debug_Button = function()
     if not Debug.Is_Enabled() then return nil end
-    local active = Debug.Window.Is_Visible()
+    local active = Debug.Window.IsVisible()
     if not active then
         UI.PushStyleColor(ImGuiCol_Button, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonHovered, Res.Colors.Basic.INACTIVE)
         UI.PushStyleColor(ImGuiCol_ButtonActive, Res.Colors.Basic.INACTIVE)
     end
     if UI.Button(Debug.Name) then
-        if Window_Manager.Settings.Multi_Window then Debug.Window.Toggle_Visibility() end
-        Window_Manager.Settings.Active_Window = Debug.Name
+        if WindowManager.Settings.Multi_Window then Debug.Window.ToggleVisibility() end
+        WindowManager.Settings.Active_Window = Debug.Name
     end
     if not active then UI.PopStyleColor(3) end
 end

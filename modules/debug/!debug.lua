@@ -73,7 +73,7 @@ Debug.Content = function()
     local col_flags = Column.Flags.None
     local width = 150
 
-    if UI.BeginTable("Debug Functions", 3, Window_Manager.Table.Flags.None) then
+    if UI.BeginTable("Debug Functions", 3, WindowManager.Table.Flags.None) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)

@@ -172,7 +172,7 @@ Parse.Config.Show_Column_Group = function(columns, group_name, hide_buttons)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
         for _, data in ipairs(columns) do
-            UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox(data.header, Parse.Settings, data.setting)
+            UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox(data.header, Parse.Settings, data.setting)
             if data.help and type(data.help) == "function" then data.help() end
         end
 

@@ -390,7 +390,7 @@ Focus.Overview.Pet_TP = function(player_name)
                 UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, trackable, action_name)
                 UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, action_name, trackable)
                 UI.TableNextColumn() Column.Damage.Average_Pet_TP(player_name, pet_name, trackable, action_name)
-                Window_Manager.TableRowColor(row)
+                WindowManager.TableRowColor(row)
                 row = row + 1
             end
         end

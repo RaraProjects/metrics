@@ -1,9 +1,9 @@
-Window_Manager.Menu = {}
+WindowManager.Menu = { }
 
-Window_Manager.Menu.Module  = "FFXiMain.dll"
-Window_Manager.Menu.Pattern = "8B480C85C974??8B510885D274??3B05"
+WindowManager.Menu.Module  = "FFXiMain.dll"
+WindowManager.Menu.Pattern = "8B480C85C974??8B510885D274??3B05"
 
-Window_Manager.Menu.Types = T{
+WindowManager.Menu.Types = T{
     fulllog  = true,    -- Expanded chat log
     equip    = true,    -- Equipment menu
     inventor = true,    -- Inventory
@@ -88,14 +88,19 @@ Window_Manager.Menu.Types = T{
 -- ------------------------------------------------------------------------------------------------------
 ---@return string, integer
 -- ------------------------------------------------------------------------------------------------------
-function Window_Manager.Menu.Get_Menu_Name()
-    local menu = ashita.memory.find(Window_Manager.Menu.Module, 0, Window_Manager.Menu.Pattern, 16, 0)
-    local pointer = ashita.memory.read_uint32(menu)
-    local pointer_value = ashita.memory.read_uint32(pointer)
-    if pointer_value == 0 then return "", 0 end
-    local menu_header = ashita.memory.read_uint32(pointer_value + 4)
-    local menu_name = ashita.memory.read_string(menu_header + 0x46, 16)
-    return string.gsub(menu_name, "\x00", "")
+function WindowManager.Menu.GetMenuName()
+    local menu         = ashita.memory.find(WindowManager.Menu.Module, 0, WindowManager.Menu.Pattern, 16, 0)
+    local pointer      = ashita.memory.read_uint32(menu)
+    local pointerValue = ashita.memory.read_uint32(pointer)
+
+    if pointerValue == 0 then
+        return "", 0
+    end
+
+    local menuHeader = ashita.memory.read_uint32(pointerValue + 4)
+    local menuName   = ashita.memory.read_string(menuHeader + 0x46, 16)
+
+    return string.gsub(menuName, "\x00", "")
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -103,13 +108,16 @@ end
 -- ------------------------------------------------------------------------------------------------------
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-function Window_Manager.Menu.Hide()
-    local menu_name = Window_Manager.Menu.Get_Menu_Name()
-    if not menu_name then return true end
+function WindowManager.Menu.Hide()
+    local menuName = WindowManager.Menu.GetMenuName()
+
+    if not menuName then
+        return true
+    end
 
     -- Get rid of prefix junk and clip off trailing spaces.
-    menu_name = string.sub(menu_name, 9)
-    menu_name = string.gsub(menu_name, " ", "")
+    menuName = string.sub(menuName, 9)
+    menuName = string.gsub(menuName, " ", "")
 
-    return Window_Manager.Menu.Types[menu_name]
+    return WindowManager.Menu.Types[menuName]
 end

@@ -216,7 +216,7 @@ Loot.AllItems = function()
             if Loot.Config.ShowItem(itemName) then
                 UI.TableNextColumn() UI.Text(tostring(itemName))
                 UI.TableNextColumn() UI.Text(tostring(DB.Tracking.TotalItems[itemName]))
-                Window_Manager.TableRowColor(1)
+                WindowManager.TableRowColor(1)
             end
 
             itemsObtained = itemsObtained + 1
@@ -251,14 +251,14 @@ Loot.PlayerItems = function()
         for playerName, itemData in pairs(Loot.SortedItemsPlayer) do
             UI.TableNextColumn() UI.Text(tostring(playerName))
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.TableRowColor(1)
+            WindowManager.TableRowColor(1)
 
             -- Items
             for _, itemName  in pairs(itemData) do
                 if Loot.Config.ShowItem(itemName) and DB.Tracking.ReceivedItems[playerName] and DB.Tracking.ReceivedItems[playerName][itemName] then
                     UI.TableNextColumn() UI.Text(string.format("- %s", tostring(itemName)))
                     UI.TableNextColumn() UI.Text(tostring(DB.Tracking.ReceivedItems[playerName][itemName]))
-                    Window_Manager.TableRowColor(0)
+                    WindowManager.TableRowColor(0)
                 end
             end
 
@@ -299,7 +299,7 @@ Loot.MobItems = function()
                 UI.TableNextColumn() UI.Text(tostring(mobName))
                 UI.TableNextColumn() UI.Text(tostring(mobDeaths))
                 UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                Window_Manager.TableRowColor(1)
+                WindowManager.TableRowColor(1)
 
                 -- Items
                 if Loot.SortedItemsMob[mobName] and DB.Tracking.DropRates[mobName] then
@@ -309,7 +309,7 @@ Loot.MobItems = function()
                             UI.TableNextColumn() UI.Text(string.format("- %s", tostring(itemName)))
                             UI.TableNextColumn() UI.Text(tostring(dropCount))
                             UI.TableNextColumn() UI.Text(Column.String.FormatPercent(dropCount, mobDeaths))
-                            Window_Manager.TableRowColor(0)
+                            WindowManager.TableRowColor(0)
                         end
                     end
                 end

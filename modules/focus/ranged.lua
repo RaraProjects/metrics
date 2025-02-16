@@ -67,7 +67,7 @@ Focus.Ranged.Total = function(player_name, make_brief)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable)
             UI.TableNextColumn() Column.Damage.Shot_Distance(player_name)
         end
-        Window_Manager.TableRowColor(1)
+        WindowManager.TableRowColor(1)
 
         UI.EndTable()
     end
@@ -103,7 +103,7 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
         UI.TableNextColumn() Column.Damage.Average_By_Type_Critical_Only(player_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, trackable, true)
         UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, 0, true)
-        Window_Manager.TableRowColor(row)
+        WindowManager.TableRowColor(row)
         row = row + 1
 
         -- Data columns for damage that contributes to total damage without a proc rate.
@@ -116,7 +116,7 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, data.trackable)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 
@@ -126,7 +126,7 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, DB.Trackable.RANGED_ENASPIR)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 
@@ -136,7 +136,7 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, DB.Metric.MOB_HEALING)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 
@@ -149,7 +149,7 @@ Focus.Ranged.Auxiliary = function(player_name, endamage, endrain, enaspir)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() Column.General.Fraction(player_name, data.trackable, data.metric, DB.Metric.HITS_ON_TARGET)
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 
@@ -192,14 +192,14 @@ Focus.Ranged.Min_Max = function(player_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MIN)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MAX)
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
 
             UI.TableNextColumn() UI.Text("- Critical")
             UI.TableNextColumn() Column.Damage.Average_By_Type_Critical_Only(player_name, data.trackable)
             UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, data.trackable, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.CRITICAL_MIN)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.CRITICAL_MAX)
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 

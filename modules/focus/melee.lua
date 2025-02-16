@@ -81,9 +81,9 @@ Focus.Melee.Total = function(player_name, make_brief)
                 if has_multi then UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, data.trackable, DB.Metric.MULTI_ATTACK_HIT_ON_USE, data.total) end
             end
             if data.header == "Total" then
-                Window_Manager.TableRowColor(1)
+                WindowManager.TableRowColor(1)
             else
-                Window_Manager.TableRowColor(0)
+                WindowManager.TableRowColor(0)
             end
         end
 
@@ -103,7 +103,7 @@ Focus.Melee.Total = function(player_name, make_brief)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, trackable, 0, true)
                 if has_multi then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
             end
-            Window_Manager.TableRowColor(0)
+            WindowManager.TableRowColor(0)
         end
 
         UI.EndTable()
@@ -146,7 +146,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() Column.Damage.Average_By_Type_Critical_Only(player_name, data.trackable)
             UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, data.trackable, true)
             UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0, true)
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 
@@ -160,7 +160,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, data.trackable)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 
@@ -174,7 +174,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, data.trackable)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 
@@ -185,7 +185,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, DB.Metric.MOB_HEALING)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 
@@ -198,7 +198,7 @@ Focus.Melee.Auxiliary = function(player_name, endamage)
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() Column.General.Fraction(player_name, data.trackable, data.metric, DB.Metric.HITS_ON_TARGET)
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 
@@ -232,7 +232,7 @@ Focus.Melee.Action_Blocked = function(player_name, paralyzed, intimidated)
         for _, data in ipairs(blocked) do
             UI.TableNextColumn() UI.Text(tostring(data.header))
             UI.TableNextColumn() UI.Text(Column.String.FormatNumber(DB.Data.Get(player_name, data.trackable, data.metric)))
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 
@@ -276,14 +276,14 @@ Focus.Melee.Min_Max = function(player_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, nil, nil, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MIN)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.MAX)
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
 
             UI.TableNextColumn() UI.Text("- Critical")
             UI.TableNextColumn() Column.Damage.Average_By_Type_Critical_Only(player_name, data.trackable)
             UI.TableNextColumn() Column.Damage.By_Type_Crit(player_name, data.trackable, true)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.CRITICAL_MIN)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, data.trackable, DB.Metric.CRITICAL_MAX)
-            Window_Manager.TableRowColor(row)
+            WindowManager.TableRowColor(row)
             row = row + 1
         end
 
@@ -316,7 +316,7 @@ Focus.Melee.Multi_Attack = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_MAIN_HAND, DB.Metric.MULTI_ATTACK_TOTAL, nil, true)
         UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND,  DB.Metric.MULTI_ATTACK_HIT_ON_USE)
         UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_OFF_HAND,  DB.Metric.MULTI_ATTACK_TOTAL, nil, true)
-        Window_Manager.TableRowColor(1)
+        WindowManager.TableRowColor(1)
 
         local multi_attack_metrics = {
             [1] = {count = DB.Metric.MULTI_ATTACK_2, damage = DB.Metric.MULTI_ATTACK_2_DAMAGE},
@@ -335,7 +335,7 @@ Focus.Melee.Multi_Attack = function(player_name)
                 UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_MAIN_HAND, data.damage, nil, true)
                 UI.TableNextColumn() Column.Acc.Multi_Attack(player_name, DB.Trackable.MELEE_OFF_HAND,  data.count)
                 UI.TableNextColumn() Column.Damage.By_Type(player_name,   DB.Trackable.MELEE_OFF_HAND,  data.damage, nil, true)
-                Window_Manager.TableRowColor(0)
+                WindowManager.TableRowColor(0)
             end
         end
 

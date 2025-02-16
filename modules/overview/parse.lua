@@ -106,7 +106,7 @@ Overview.Parse.Melee = function()
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX)
-                    Window_Manager.TableRowColor(row)
+                    WindowManager.TableRowColor(row)
                     row = row + 1
                 end
             end
@@ -169,7 +169,7 @@ Overview.Parse.Ranged = function()
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX)
-                    Window_Manager.TableRowColor(row)
+                    WindowManager.TableRowColor(row)
                     row = row + 1
                 end
             end
@@ -236,7 +236,7 @@ Overview.Parse.Weaponskills = function()
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                    Window_Manager.TableRowColor(1)
+                    WindowManager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Weaponskills
@@ -256,7 +256,7 @@ Overview.Parse.Weaponskills = function()
                             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
                             UI.TableNextColumn() Focus.Catalog.Min(player_name, action_name, trackable)
                             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name)
-                            Window_Manager.TableRowColor(0)
+                            WindowManager.TableRowColor(0)
                         end
                     end
                 end
@@ -321,7 +321,7 @@ Overview.Parse.Nukes = function()
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.HITS_ON_USE)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                    Window_Manager.TableRowColor(1)
+                    WindowManager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Nuke Spells
@@ -340,7 +340,7 @@ Overview.Parse.Nukes = function()
                             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
                             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name)
                             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name)
-                            Window_Manager.TableRowColor(0)
+                            WindowManager.TableRowColor(0)
                         end
                     end
                 end
@@ -400,7 +400,7 @@ Overview.Parse.Pets = function()
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_MELEE_OVERALL, nil, nil, true)
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_TP, nil, nil, true)
-                    Window_Manager.TableRowColor(1)
+                    WindowManager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Pets
@@ -416,7 +416,7 @@ Overview.Parse.Pets = function()
                         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable, true)
                         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_MELEE_OVERALL, true)
                         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, DB.Trackable.PET_TP, true)
-                        Window_Manager.TableRowColor(0)
+                        WindowManager.TableRowColor(0)
                     end
                 end
             end
@@ -478,7 +478,7 @@ Overview.Parse.Healing = function()
                     UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.HITS_ON_USE)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                    Window_Manager.TableRowColor(1)
+                    WindowManager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Healing Spells
@@ -497,7 +497,7 @@ Overview.Parse.Healing = function()
                             UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
                             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name)
                             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name)
-                            Window_Manager.TableRowColor(0)
+                            WindowManager.TableRowColor(0)
                         end
                     end
                 end
@@ -557,7 +557,7 @@ Overview.Parse.Defense = function()
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_NUKING, true)
                     UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_TP_MOVE, true)
                     UI.TableNextColumn() Column.Acc.By_Type(player_name, DB.Trackable.DEF_EVASION_MELEE, 0)
-                    Window_Manager.TableRowColor(row)
+                    WindowManager.TableRowColor(row)
                     row = row + 1
                 end
             end

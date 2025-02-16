@@ -86,7 +86,7 @@ Focus.WS.Weaponskill = function(player_name, make_brief, is_mp_drain)
         UI.TableNextColumn()                        Column.Damage.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT)
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MIN) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MAX) end
-        Window_Manager.TableRowColor(1)
+        WindowManager.TableRowColor(1)
 
         -- Specific Weaponskills
         local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
@@ -104,7 +104,7 @@ Focus.WS.Weaponskill = function(player_name, make_brief, is_mp_drain)
             UI.TableNextColumn()                        Column.Damage.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT, action_name)
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MIN, action_name) end
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name,          trackable, DB.Metric.MAX, action_name) end
-            Window_Manager.TableRowColor(0)
+            WindowManager.TableRowColor(0)
         end
 
         UI.EndTable()
@@ -152,7 +152,7 @@ Focus.WS.Skillchains = function(player_name, make_brief)
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN) end
         if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX) end
-        Window_Manager.TableRowColor(1)
+        WindowManager.TableRowColor(1)
 
         -- Specific Skillchains
         local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
@@ -168,7 +168,7 @@ Focus.WS.Skillchains = function(player_name, make_brief)
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name) end
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name) end
             if not make_brief then UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name) end
-            Window_Manager.TableRowColor(0)
+            WindowManager.TableRowColor(0)
         end
 
         UI.EndTable()

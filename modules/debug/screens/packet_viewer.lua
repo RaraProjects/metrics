@@ -74,7 +74,7 @@ end
 Debug.Packet.Populate_Action = function()
     Debug.Packet.Action_Filter_Input()
     local table_size = {0, Debug.Packet.Size * 8}
-    if UI.BeginTable("Action Packet Log", 21, Window_Manager.Table.Flags.Scrollable, table_size) then
+    if UI.BeginTable("Action Packet Log", 21, WindowManager.Table.Flags.Scrollable, table_size) then
         Debug.Packet.Action_Headers()
         for _, data in ipairs(Debug.Packet.Action_Log) do
             if Debug.Packet.Action_Name_Filter(data) then Debug.Packet.Action_Rows(data) end
@@ -163,7 +163,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Debug.Packet.Populate_Message = function()
     local table_size = {0, Debug.Packet.Size * 8}
-    if UI.BeginTable("Message Packet Log", 11, Window_Manager.Table.Flags.Scrollable, table_size) then
+    if UI.BeginTable("Message Packet Log", 11, WindowManager.Table.Flags.Scrollable, table_size) then
         Debug.Packet.Message_Headers()
         for _, data in ipairs(Debug.Packet.Message_Log) do
             Debug.Packet.Message_Rows(data)
@@ -228,7 +228,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Debug.Packet.Populate_Item = function()
     local table_size = {0, Debug.Packet.Size * 8}
-    if UI.BeginTable("Item Packet Log", 12, Window_Manager.Table.Flags.Scrollable, table_size) then
+    if UI.BeginTable("Item Packet Log", 12, WindowManager.Table.Flags.Scrollable, table_size) then
         Debug.Packet.Item_Headers()
         for _, data in ipairs(Debug.Packet.Item_Log) do
             Debug.Packet.Item_Rows(data)

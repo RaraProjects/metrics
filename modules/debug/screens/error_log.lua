@@ -44,7 +44,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Debug.Error.Populate = function(type)
     table.sort(Debug.Error.Log, function(a, b) return a.Tag < b.Tag end)
-    if UI.BeginTable("Error Log", 3, Window_Manager.Table.Flags.Borders) then
+    if UI.BeginTable("Error Log", 3, WindowManager.Table.Flags.Borders) then
         Debug.Error.Headers(type)
         for _, data in pairs(Debug.Error.Log) do
             if data.Type == type then Debug.Error.Rows(data) end

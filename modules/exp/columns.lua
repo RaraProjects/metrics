@@ -30,7 +30,7 @@ XP.Columns.Count = function()
 
     XP.Columns.DisplayCount = columns
 
-    Window_Manager.SetBarDelay()
+    WindowManager.SetBarDelay()
 end
 
 -- ------------------------------------------------------------------------------------------------------

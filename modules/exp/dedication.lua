@@ -99,5 +99,5 @@ XP.Dedication.Clear = function()
     XP.Settings.Boost_XP_Acquired = 0
     XP.Dedication.NeedDefaulting  = true
     XP.Dedication.AwaitingClear   = false
-    Window_Manager.SetBarDelay()
+    WindowManager.SetBarDelay()
 end

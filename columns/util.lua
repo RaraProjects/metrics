@@ -16,12 +16,12 @@ Column.Util.Focus = function(player_name)
 
         -- If in multi-window mode toggle open and closing if the focus is already the given player.
         -- Always jump to Focus if in non-Window mode.
-        if focus_check ~= DB.Widgets.GetPlayerFocus() or not Window_Manager.Settings.Multi_Window then
+        if focus_check ~= DB.Widgets.GetPlayerFocus() or not WindowManager.Settings.Multi_Window then
             DB.Widgets.PlayerSwitch(player_name)
-            Window_Manager.Switch_Module(Focus.Name)
+            WindowManager.SwitchModule(Focus.Name)
             Focus.Window.Show()
         else
-            Focus.Window.Toggle_Visibility()
+            Focus.Window.ToggleVisibility()
         end
     end
     UI.PopID()

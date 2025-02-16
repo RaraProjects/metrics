@@ -1,6 +1,6 @@
 Focus.Catalog = {}
 
-Focus.Catalog.Table_Flags  = Window_Manager.Table.Flags.Fixed_Borders
+Focus.Catalog.Table_Flags  = WindowManager.Table.Flags.Fixed_Borders
 Focus.Catalog.Column_Flags = Column.Flags.None
 Focus.Catalog.Column_Width = Column.Widths.Standard
 
@@ -38,7 +38,7 @@ Focus.Catalog.Endamage = function(player_name, trackable, suffix)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX)
-        Window_Manager.TableRowColor(1)
+        WindowManager.TableRowColor(1)
 
         local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
@@ -51,7 +51,7 @@ Focus.Catalog.Endamage = function(player_name, trackable, suffix)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MIN, action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.MAX, action_name)
-            Window_Manager.TableRowColor(0)
+            WindowManager.TableRowColor(0)
         end
 
         UI.EndTable()

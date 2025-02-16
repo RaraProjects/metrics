@@ -61,7 +61,7 @@ end
 Overview.Screenshot_Button = function()
     if UI.SmallButton("Screenshot") then
         if Overview.Mode == Overview.Modes.FOCUS then
-            Overview.Window.Toggle_Visibility()
+            Overview.Window.ToggleVisibility()
         else
             Overview.Window.Show()
             Overview.Mode = Overview.Modes.FOCUS
@@ -75,7 +75,7 @@ end
 Overview.Overview_Button = function()
     if UI.SmallButton("Overview") then
         if Overview.Mode == Overview.Modes.PARSE then
-            Overview.Window.Toggle_Visibility()
+            Overview.Window.ToggleVisibility()
         else
             Overview.Window.Show()
             Overview.Mode = Overview.Modes.PARSE

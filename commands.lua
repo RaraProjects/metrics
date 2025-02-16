@@ -11,21 +11,21 @@ ashita.events.register('command', 'command_cb', function (e)
 
         -- Help Text
         if not arg then
-            if Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG and Config.Window.Is_Visible() then
+            if Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG and Config.Window.IsVisible() then
                 Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
-            elseif Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG and not Config.Window.Is_Visible() then
+            elseif Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG and not Config.Window.IsVisible() then
                 Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
                 Config.Window.Show()
             elseif Config.ActiveSettingsWindow == Config.ModuleFile.CONFIG then
-                Config.Window.Toggle_Visibility()
+                Config.Window.ToggleVisibility()
             end
 
         -- General Settings
         elseif arg == "show" or arg == "s" then
-            if not Window_Manager.Is_Masked() then Hub.Window.Show() end
-            Window_Manager.Toggle_Mask()
+            if not WindowManager.IsMasked() then Hub.Window.Show() end
+            WindowManager.ToggleMask()
         elseif arg == "hub" then
-            Hub.Window.Toggle_Visibility()
+            Hub.Window.ToggleVisibility()
         elseif arg == "debug" then
             Debug.Toggle()
         elseif arg == "nano" or arg == "n" then
@@ -52,7 +52,7 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "lurk" then
             Parse.Config.Toggle_Lurk_Mode()
         elseif arg == "mouse" then
-            Window_Manager.Toggle_Mouse()
+            WindowManager.ToggleMouse()
 
         -- XP
         elseif arg == "xp" and sub_command then
@@ -72,11 +72,11 @@ ashita.events.register('command', 'command_cb', function (e)
             end
 
         -- Primary module switching.
-        elseif arg == "team" or arg == "parse" then Parse.Window.Make_Active()
-        elseif arg == "focus" then                  Focus.Window.Make_Active()
-        elseif arg == "log" or arg == "bl" then     Blog.Window.Make_Active()
-        elseif arg == "xp" then                     XP.Window.Make_Active()
-        elseif arg == "report" or arg == "rep" then Report.Window.Make_Active()
+        elseif arg == "team" or arg == "parse" then Parse.Window.MakeActive()
+        elseif arg == "focus" then                  Focus.Window.MakeActive()
+        elseif arg == "log" or arg == "bl" then     Blog.Window.MakeActive()
+        elseif arg == "xp" then                     XP.Window.MakeActive()
+        elseif arg == "report" or arg == "rep" then Report.Window.MakeActive()
 
         -- Player selection
         elseif arg == "player" or arg == "pl" then
@@ -94,7 +94,7 @@ ashita.events.register('command', 'command_cb', function (e)
             Focus.Tabs.Switch[Focus.Tabs.Names.MAGIC] = ImGuiTabItemFlags_SetSelected
         elseif arg == "ability" or arg == "abil" then
             Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES] = ImGuiTabItemFlags_SetSelected
-        elseif (arg == "pet" or arg == "p") and Window_Manager.Tabs.Active == Focus.Name then
+        elseif (arg == "pet" or arg == "p") and WindowManager.Tabs.Active == Focus.Name then
             Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = ImGuiTabItemFlags_SetSelected
         elseif arg == "defense" or arg == "def" then
             Focus.Tabs.Switch[Focus.Tabs.Names.DEFENSE] = ImGuiTabItemFlags_SetSelected

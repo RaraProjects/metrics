@@ -46,7 +46,7 @@ Report.Section.Chat_Reports = function()
     local width = Column.Widths.Report
     UI.Text("Chat Reports")
     Report.Widgets.Chat_Mode()
-    if UI.BeginTable("Chat Reports", 4, Window_Manager.Table.Flags.None) then
+    if UI.BeginTable("Chat Reports", 4, WindowManager.Table.Flags.None) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
@@ -88,7 +88,7 @@ Report.Section.File = function()
         UI.Text("        You may notice a stagger when saving it.")
     end
 
-    if UI.BeginTable("Save File", 4, Window_Manager.Table.Flags.None) then
+    if UI.BeginTable("Save File", 4, WindowManager.Table.Flags.None) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)

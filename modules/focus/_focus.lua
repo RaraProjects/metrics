@@ -40,7 +40,7 @@ Focus.Tabs.Switch = {
 }
 
 Focus.ColumnFlags = Column.Flags.None
-Focus.TableFlags  = Window_Manager.Table.Flags.Fixed_Borders
+Focus.TableFlags  = WindowManager.Table.Flags.Fixed_Borders
 
 Focus.Screenshot_Flags = bit.bor(
     ImGuiWindowFlags_AlwaysAutoResize,
@@ -103,7 +103,7 @@ Focus.Content = function()
     if unselected then
         UI.Separator()
         UI.Text("No player selected.")
-        if Debug.Is_Enabled() then UI.SameLine() UI.Text(Window_Manager.Menu.Get_Menu_Name()) end
+        if Debug.Is_Enabled() then UI.SameLine() UI.Text(WindowManager.Menu.GetMenuName()) end
         return nil
     end
 
@@ -112,7 +112,7 @@ Focus.Content = function()
     UI.Separator() Focus.Overall_Damage_Breakdown(player_name) UI.Separator()
 
     -- Load tab bar and tab content.
-    if UI.BeginTabBar("Focus Tabs", Window_Manager.Tabs.Flags) then
+    if UI.BeginTabBar("Focus Tabs", WindowManager.Tabs.Flags) then
 
         local tabs = {}
         table.insert(tabs, {tab = Focus.Tabs.Names.OVERVIEW,  display_function = Focus.Overview.Display})
@@ -145,7 +145,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overall_Damage_Breakdown = function(player_name)
     local col_flags   = Column.Flags.None
-    local table_flags = Window_Manager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.Fixed_Borders
     local width       = Column.Widths.Percent
 
     local pet = DB.Data.Get(player_name, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
@@ -180,7 +180,7 @@ Focus.Overall_Damage_Breakdown = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL, nil, nil, true)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING, nil, nil, true)
         if pet > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL, nil, nil, true) end
-        Window_Manager.TableRowColor(1)
+        WindowManager.TableRowColor(1)
 
         UI.TableNextRow()
         UI.TableNextColumn() UI.Text("Raw")
@@ -192,7 +192,7 @@ Focus.Overall_Damage_Breakdown = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.SPELLS_OVERALL)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.ABILITY_DAMAGING)
         if pet > 0 then UI.TableNextColumn() Column.Damage.By_Type(player_name, DB.Trackable.PET_OVERALL) end
-        Window_Manager.TableRowColor(0)
+        WindowManager.TableRowColor(0)
 
         UI.EndTable()
     end

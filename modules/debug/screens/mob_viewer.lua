@@ -5,7 +5,7 @@ Debug.Mob = {}
 ------------------------------------------------------------------------------------------------------
 Debug.Mob.Populate = function(mob)
     if mob then
-        if UI.BeginTable("table1", 2, Window_Manager.Table.Flags.Team) then
+        if UI.BeginTable("table1", 2, WindowManager.Table.Flags.Team) then
             Debug.Mob.Headers()
             Debug.Mob.Rows(mob)
             UI.EndTable()

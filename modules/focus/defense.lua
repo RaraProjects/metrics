@@ -25,7 +25,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Defense.Damage_Taken = function(player_name, make_brief)
     local col_flags   = Column.Flags.None
-    local table_flags = Window_Manager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.Fixed_Borders
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
@@ -80,9 +80,9 @@ Focus.Defense.Damage_Taken = function(player_name, make_brief)
                     if pet > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable_pet) end
                 end
                 if data.header == "Total" then
-                    Window_Manager.TableRowColor(1)
+                    WindowManager.TableRowColor(1)
                 else
-                    Window_Manager.TableRowColor(0)
+                    WindowManager.TableRowColor(0)
                 end
             end
         end
@@ -98,7 +98,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Defense.Auxiliary = function(player_name)
     local col_flags   = Column.Flags.None
-    local table_flags = Window_Manager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.Fixed_Borders
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
@@ -124,7 +124,7 @@ Focus.Defense.Auxiliary = function(player_name)
                 UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable, true)
                 UI.TableNextColumn() Column.Acc.By_Type(player_name, data.trackable, 0)
                 UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable)
-                Window_Manager.TableRowColor(row)
+                WindowManager.TableRowColor(row)
                 row = row + 1
             end
         end
@@ -140,7 +140,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Defense.Mitigation = function(player_name)
     local col_flags   = Column.Flags.None
-    local table_flags = Window_Manager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.Fixed_Borders
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
@@ -181,7 +181,7 @@ Focus.Defense.Mitigation = function(player_name)
                 UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, data.trackable)
                 if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
                 if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
-                Window_Manager.TableRowColor(row)
+                WindowManager.TableRowColor(row)
                 row = row + 1
                 mitigation_found = true
             end
@@ -200,7 +200,7 @@ Focus.Defense.Mitigation = function(player_name)
                 UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, data.trackable, data.ranged)
                 if show_dt then UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, data.trackable) end
                 if show_dt then UI.TableNextColumn() Column.Defense.Damage_Reduction(player_name, data.trackable) end
-                Window_Manager.TableRowColor(row)
+                WindowManager.TableRowColor(row)
                 row = row + 1
                 mitigation_found = true
             end
@@ -249,7 +249,7 @@ Focus.Defense.Healing_Received = function(player_name)
         UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL)
         UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable)
         UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable)
-        Window_Manager.TableRowColor(1)
+        WindowManager.TableRowColor(1)
 
         local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
@@ -259,7 +259,7 @@ Focus.Defense.Healing_Received = function(player_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name, trackable, DB.Metric.TOTAL, action_name)
             UI.TableNextColumn() Column.Damage.By_Type_Average(player_name, trackable, nil, action_name)
             UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable, action_name)
-            Window_Manager.TableRowColor(0)
+            WindowManager.TableRowColor(0)
         end
 
         UI.EndTable()
@@ -274,7 +274,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Defense.TP_Move = function(player_name, trackable)
     if not trackable then return nil end
-    local table_flags = Window_Manager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.Fixed_Borders
     local col_flags   = Column.Flags.None
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
@@ -308,7 +308,7 @@ Focus.Defense.TP_Move = function(player_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.TOTAL)
         UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MIN)
         UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MAX)
-        Window_Manager.TableRowColor(1)
+        WindowManager.TableRowColor(1)
 
         local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
         local action_name
@@ -320,7 +320,7 @@ Focus.Defense.TP_Move = function(player_name, trackable)
             UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.TOTAL, action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MIN, action_name)
             UI.TableNextColumn() Column.Damage.By_Type(player_name,  trackable, DB.Metric.MAX, action_name)
-            Window_Manager.TableRowColor(0)
+            WindowManager.TableRowColor(0)
         end
 
         UI.EndTable()

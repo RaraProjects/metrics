@@ -9,7 +9,7 @@ XP.Widgets.TrackingButton = function()
 
         if UI.SmallButton("Tracking") then
             XP.Tracking.ShowDebug = not XP.Tracking.ShowDebug
-            Window_Manager.SetBarDelay()
+            WindowManager.SetBarDelay()
         end
     end
 end

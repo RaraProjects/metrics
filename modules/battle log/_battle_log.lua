@@ -39,7 +39,7 @@ Blog.Tables =
 ---@param settings? table settings that come from the Ashita settings_update event.
 ------------------------------------------------------------------------------------------------------
 Blog.Initialize = function(settings)
-    if not (Ashita and Res and Window_Manager and UI and Column) then
+    if not (Ashita and Res and WindowManager and UI and Column) then
         return nil
     end
 
@@ -87,7 +87,7 @@ Blog.Content = function()
     end
 
     -- Primary content loop.
-    if UI.BeginTable("Blog", columns, Window_Manager.Table.Flags.Scrollable, tableSize) then
+    if UI.BeginTable("Blog", columns, WindowManager.Table.Flags.Scrollable, tableSize) then
         Blog.Display.Headers()
 
         local start = ((Blog.Page - 1) * visibleLength) + 1

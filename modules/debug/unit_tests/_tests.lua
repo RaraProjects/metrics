@@ -95,7 +95,7 @@ Debug.Unit.Populate = function()
                 UI.TableNextColumn() UI.TextColored(result.color, result.result)
                 UI.TableNextColumn() UI.Text(tostring(result.count))
                 UI.TableNextColumn() UI.Text(result.message)
-                Window_Manager.TableRowColor(row)
+                WindowManager.TableRowColor(row)
                 row = row + 1
             end
         end

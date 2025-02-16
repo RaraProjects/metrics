@@ -73,12 +73,12 @@ XP.Config.Populate = function()
         UI.TableNextColumn()
         if UI.Checkbox("Show Background", {XP.Settings.Show_Background}) then
             XP.Settings.Show_Background = not XP.Settings.Show_Background
-            XP.Window.Set_Background(XP.Settings.Show_Background)
+            XP.Window.SetBackground(XP.Settings.Show_Background)
         end
 
         UI.TableNextColumn()
-        Window_Manager.Widgets.Toggle_Checkbox("Show XP Max", XP.Settings, "Show_Level_Max")
-        Window_Manager.Widgets.HelpMarker
+        WindowManager.Widgets.ToggleCheckbox("Show XP Max", XP.Settings, "Show_Level_Max")
+        WindowManager.Widgets.HelpMarker
         (
             "Makes the TNL column Current/Max."
         )
@@ -87,9 +87,9 @@ XP.Config.Populate = function()
         if UI.Checkbox("Boost Defaults", {XP.Settings.Boost_Defaulting_Enabled}) then
             XP.Settings.Boost_Defaulting_Enabled = not XP.Settings.Boost_Defaulting_Enabled
             XP.Dedication.Refresh()
-            Window_Manager.SetBarDelay()
+            WindowManager.SetBarDelay()
         end
-        Window_Manager.Widgets.HelpMarker
+        WindowManager.Widgets.HelpMarker
         (
             "If Metrics is loaded when you already have the dedication buff it doesn't know which item you used." ..
             " you can use this setting as a backup. This allows Metrics to know the boost rate and boost max." ..
@@ -114,7 +114,7 @@ XP.Config.Populate = function()
                     XP.Settings.Boost_Item_Default_Index = index
                     XP.Settings.Boost_Item_Default_Name  = mode
                     XP.Dedication.Refresh()
-                    Window_Manager.SetBarDelay()
+                    WindowManager.SetBarDelay()
                 end
 
                 if isSelected then
@@ -135,10 +135,10 @@ XP.Config.Populate = function()
         UI.TableSetupColumn("Col 2", colFlags, width)
         UI.TableSetupColumn("Col 3", colFlags, width)
 
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("XP Progress",    XP.Settings, "Show_XP_Progress_Bar")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Boost Progress", XP.Settings, "Show_Boost_Progress_Bar")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Small Bars",     XP.Settings, "Small_Progress_Bars")
-        Window_Manager.Widgets.HelpMarker
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("XP Progress",    XP.Settings, "Show_XP_Progress_Bar")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Boost Progress", XP.Settings, "Show_Boost_Progress_Bar")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Small Bars",     XP.Settings, "Small_Progress_Bars")
+        WindowManager.Widgets.HelpMarker
         (
             "In order to see the percentage of progress bars, the bars need to be a certain height." ..
             " If you don't need to see the percentage and want more compact progress bars then turn this on."
@@ -156,15 +156,15 @@ XP.Config.Populate = function()
         UI.TableSetupColumn("Col 2", colFlags, width)
         UI.TableSetupColumn("Col 3", colFlags, width)
 
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Job",           XP.Settings, "Show_Job")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Kill Speed",    XP.Settings, "Show_Kill_Rate")
-        Window_Manager.Widgets.HelpMarker
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Job",           XP.Settings, "Show_Job")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Kill Speed",    XP.Settings, "Show_Kill_Rate")
+        WindowManager.Widgets.HelpMarker
         (
             "Seconds per kill for mobs that grant XP."
         )
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Average XP",    XP.Settings, "Show_Average_XP")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Time in Zone",  XP.Settings, "Show_Zone_Time")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Max Chain",     XP.Settings, "Show_Max_Chain")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Average XP",    XP.Settings, "Show_Average_XP")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Time in Zone",  XP.Settings, "Show_Zone_Time")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Max Chain",     XP.Settings, "Show_Max_Chain")
         XP.Columns.Count()
 
         UI.EndTable()
@@ -179,24 +179,24 @@ XP.Config.Populate = function()
         UI.TableSetupColumn("Col 2", colFlags, width)
         UI.TableSetupColumn("Col 3", colFlags, width)
 
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Time to Boost", XP.Settings, "Show_Boost_Time_To_Level")
-        Window_Manager.Widgets.HelpMarker
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Time to Boost", XP.Settings, "Show_Boost_Time_To_Level")
+        WindowManager.Widgets.HelpMarker
         (
             "An estimation on how long it will be until your boost effect wears off."
         )
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Boost Item",    XP.Settings, "Show_Boost_Item")
-        Window_Manager.Widgets.HelpMarker
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Boost Item",    XP.Settings, "Show_Boost_Item")
+        WindowManager.Widgets.HelpMarker
         (
             "Shows which boost item you used (if known). If you already had the dedication buff before loading" ..
             " then Metrics will not know which item was used or what the rate is."
         )
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Boost Rate",    XP.Settings, "Show_Boost_Rate")
-        Window_Manager.Widgets.HelpMarker
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Boost Rate",    XP.Settings, "Show_Boost_Rate")
+        WindowManager.Widgets.HelpMarker
         (
             "The XP boost rate that is currently active (if known)."
         )
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Boost Max",     XP.Settings, "Show_Boost_Max")
-        Window_Manager.Widgets.HelpMarker
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Boost Max",     XP.Settings, "Show_Boost_Max")
+        WindowManager.Widgets.HelpMarker
         (
             "The maximum XP boost you can get from your current dedication buff (if known)."
         )
@@ -214,21 +214,21 @@ XP.Config.Populate = function()
         UI.TableSetupColumn("Col 2", colFlags, width)
         UI.TableSetupColumn("Col 3", colFlags, width)
 
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Time to Level", XP.Settings, "Show_Time_To_Level")
-        Window_Manager.Widgets.HelpMarker
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Time to Level", XP.Settings, "Show_Time_To_Level")
+        WindowManager.Widgets.HelpMarker
         (
             "An estimation on how long it will be until you level."
         )
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Base XP Rate",  XP.Settings, "Show_Base_Rate")
-        Window_Manager.Widgets.HelpMarker
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Base XP Rate",  XP.Settings, "Show_Base_Rate")
+        WindowManager.Widgets.HelpMarker
         (
             "Boosted and base XP are tracked separately. The default XP/hr columns includes boosted XP. This column" ..
             " always shows the base XP--as if you did not have the XP boost buff--so you can always know how your" ..
             " group is doing."
         )
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("TNL",           XP.Settings, "Show_TNL")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Total XP",      XP.Settings, "Show_Total_XP_Gained")
-        Window_Manager.Widgets.HelpMarker
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("TNL",           XP.Settings, "Show_TNL")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Total XP",      XP.Settings, "Show_Total_XP_Gained")
+        WindowManager.Widgets.HelpMarker
         (
             "How much XP you've gained this session."
         )
@@ -250,7 +250,7 @@ XP.Config.Populate = function()
                 if UI.Selectable(mode, isSelected) then
                     XP.Config.Total_Mode_Index = index
                     XP.Config.Total_Mode       = mode
-                    Window_Manager.SetBarDelay()
+                    WindowManager.SetBarDelay()
                 end
 
                 if isSelected then
@@ -260,7 +260,7 @@ XP.Config.Populate = function()
 
             UI.EndCombo()
         end
-        Window_Manager.Widgets.HelpMarker
+        WindowManager.Widgets.HelpMarker
         (
             "Choose whether you want to base and boosted XP combined in the Total XP column or if you" ..
             " want them separated out."
@@ -276,9 +276,9 @@ XP.Config.Populate = function()
         UI.TableSetupColumn("Col 2", colFlags, width)
         UI.TableSetupColumn("Col 3", colFlags, width)
 
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Base CP Rate",  XP.Settings, "Show_Capacity_Base_Rate")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Time to JP",    XP.Settings, "Show_Time_To_Job_Point")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("TNJP",          XP.Settings, "Show_TNJP")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Base CP Rate",  XP.Settings, "Show_Capacity_Base_Rate")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Time to JP",    XP.Settings, "Show_Time_To_Job_Point")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("TNJP",          XP.Settings, "Show_TNJP")
         XP.Columns.Count()
 
         UI.EndTable()
@@ -293,9 +293,9 @@ XP.Config.Populate = function()
         UI.TableSetupColumn("Col 2", colFlags, width)
         UI.TableSetupColumn("Col 3", colFlags, width)
 
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Base EP Rate",  XP.Settings, "Show_Exemplar_Base_Rate")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("Time to ML",    XP.Settings, "Show_Time_To_Mastery")
-        UI.TableNextColumn() Window_Manager.Widgets.Toggle_Checkbox("TNML",          XP.Settings, "Show_TNML")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Base EP Rate",  XP.Settings, "Show_Exemplar_Base_Rate")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Time to ML",    XP.Settings, "Show_Time_To_Mastery")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("TNML",          XP.Settings, "Show_TNML")
         XP.Columns.Count()
 
         UI.EndTable()

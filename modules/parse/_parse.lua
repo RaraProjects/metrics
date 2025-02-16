@@ -126,7 +126,7 @@ Parse.Data_Rows = function(player)
             end
 
         end
-        Window_Manager.TableRowColor(rank)
+        WindowManager.TableRowColor(rank)
     end
 end
 

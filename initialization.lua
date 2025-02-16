@@ -43,9 +43,9 @@ end)
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.ModuleFile.WINDOW, "settings_update", function(settings)
     if settings ~= nil then
-        Window_Manager.Settings = settings
-        Window_Manager.Theme.Is_Set = false
-        Window_Manager.Settings_Reset()
+        WindowManager.Settings = settings
+        WindowManager.Theme.IsSet = false
+        WindowManager.SettingsReset()
         Settings_File.save(Config.ModuleFile.WINDOW)
     end
 end)
@@ -125,7 +125,7 @@ ashita.events.register('load', 'load_cb', function()
         Report,
         Overview,
         DB,
-        Window_Manager
+        WindowManager
     }
     for _, module in ipairs(modules) do module.Initialize() end
 

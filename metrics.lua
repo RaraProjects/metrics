@@ -95,18 +95,18 @@ ashita.events.register('d3d_present', 'present_cb', function()
     XP.Initialize()                         -- Need to initialize here because some things aren't ready when addon loads.
     Ashita.Party.CheckRefreshTime()
     Ashita.Party.Refresh()
-    Window_Manager.Check_Mouse()
+    WindowManager.CheckMouse()
 
     Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
     Timers.Cycle(Timers.Enum.Names.DPS)
 
-    if not Window_Manager.Menu.Hide() and not Window_Manager.Is_Masked() then
+    if not WindowManager.Menu.Hide() and not WindowManager.IsMasked() then
         Hub.Window.Populate(Hub.Content)
         Overview.Window.Populate(Overview.Content)
         Config.Window.Populate(Config.Content)
         Debug.Window.Populate(Debug.Content)
 
-        if Window_Manager.Settings.Multi_Window then
+        if WindowManager.Settings.Multi_Window then
             Parse.Window.Populate(Parse.Content)
             Focus.Window.Populate(Focus.Content)
             Blog.Window.Populate(Blog.Content)
@@ -144,7 +144,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0x00A then
         Ashita.Player.Zoning(false)             -- Clear zoning flag.
         Timers.Reset(Timers.Enum.Names.ZONE)    -- Reset time in zone timer.
-        Window_Manager.SetBarDelay()
+        WindowManager.SetBarDelay()
         XP.Chains.End()                         -- Reset any XP chains.
 
         -- Add zone event to the battle log.

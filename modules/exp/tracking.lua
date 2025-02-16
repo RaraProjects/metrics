@@ -194,8 +194,8 @@ XP.Tracking.DebugContent = function()
     local capacity   = XP.Tracking.Capacity
     local exemplar   = XP.Tracking.Exemplar
 
-    UI.PushStyleColor(ImGuiCol_TableRowBg, Window_Manager.Theme.TableRowBg)
-    UI.PushStyleColor(ImGuiCol_TableRowBgAlt, Window_Manager.Theme.TableRowBg)
+    UI.PushStyleColor(ImGuiCol_TableRowBg, WindowManager.Theme.TableRowBg)
+    UI.PushStyleColor(ImGuiCol_TableRowBgAlt, WindowManager.Theme.TableRowBg)
 
     if UI.BeginTable("Current XP", 5, tableFlags) then
         UI.TableSetupColumn("Metric", flags)
