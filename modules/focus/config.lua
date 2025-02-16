@@ -1,22 +1,22 @@
-Focus.Config = {}
+Focus.Config = { }
 
 Focus.Config.Defaults = T{
-    X = 100,
-    Y = 100,
-    Visible = {false},
+    X                       = 100,
+    Y                       = 100,
+    Visible                 = { false },
     Show_Mitigation_Details = false,
-    Show_Misc_Actions = true,
+    Show_Misc_Actions       = true,
 }
 
-Focus.Config.Show_Percent_Details = false
-Focus.Config.Column_Flags = Column.Flags.None
-Focus.Config.Column_Width = Column.Widths.Settings
+Focus.Config.ShowPercentDetails = false
+Focus.Config.ColumnFlags        = Column.Flags.None
+Focus.Config.ColumnWidth        = Column.Widths.Settings
 
 ------------------------------------------------------------------------------------------------------
 -- Shows settings that affect the focus screens.
 ------------------------------------------------------------------------------------------------------
 Focus.Config.Display = function()
-    local col_flags = Focus.Config.Column_Flags
+    local col_flags = Focus.Config.ColumnFlags
 
     if UI.BeginTable("Focus General", 2) then
         UI.TableSetupColumn("Col 1", col_flags)
@@ -48,7 +48,7 @@ end
 -- Shows percent details checkbox.
 ------------------------------------------------------------------------------------------------------
 Focus.Config.PercentDetails = function()
-    local active = Focus.Config.Show_Percent_Details
+    local active = Focus.Config.ShowPercentDetails
     if UI.SmallButton("% Details") then
         Focus.Config.Percent_Toggle()
     end
@@ -58,7 +58,7 @@ end
 -- Toggles the percent details setting.
 ------------------------------------------------------------------------------------------------------
 Focus.Config.Percent_Toggle = function()
-    Focus.Config.Show_Percent_Details = not Focus.Config.Show_Percent_Details
+    Focus.Config.ShowPercentDetails = not Focus.Config.ShowPercentDetails
 end
 
 ------------------------------------------------------------------------------------------------------

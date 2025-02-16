@@ -100,7 +100,7 @@ Column.String.FormatPercent = function(numerator, denominator, justify, no_scali
     if denominator and denominator ~= 0 then percent = (numerator / denominator) * scaling end
     if percent ~= 0 then ret_value = string.format(format, percent) end
 
-    if Focus.Config.Show_Percent_Details and not Report.Publishing.Lock then
+    if Focus.Config.ShowPercentDetails and not Report.Publishing.Lock then
         format = "%d"
         local top = string.format(format, numerator)
         local bottom = string.format(format, denominator)

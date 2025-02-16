@@ -2,7 +2,6 @@ Focus.Catalog = { }
 
 Focus.Catalog.TableFlags  = WindowManager.Table.Flags.Fixed_Borders
 Focus.Catalog.ColumnFlags = Column.Flags.None
-Focus.Catalog.ColumnWidth = Column.Widths.Standard
 
 ------------------------------------------------------------------------------------------------------
 -- Sets up the table for a endamage inside the focus window.
@@ -12,45 +11,49 @@ Focus.Catalog.ColumnWidth = Column.Widths.Standard
 ---@param suffix?    string       append a suffix to the header to help distinguish between melee and ranged.
 ------------------------------------------------------------------------------------------------------
 Focus.Catalog.Endamage = function(playerName, trackable, suffix)
-    if not DB.Tracking.Trackables[trackable] then return nil end
-    if not DB.Tracking.Trackables[trackable][playerName] then return nil end
+    if not DB.Tracking.Trackables[trackable] or not DB.Tracking.Trackables[trackable][playerName] then
+        return nil
+    end
 
-    local table_flags = Focus.Catalog.TableFlags
-    local col_flags   = Focus.Catalog.ColumnFlags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+    local colFlags  = Focus.Catalog.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
 
-    if not suffix then suffix = "" end
-    if UI.BeginTable(trackable, 7, table_flags) then
-        UI.TableSetupColumn("Endamage" .. suffix, col_flags, name_width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("%Player", col_flags, width)
-        UI.TableSetupColumn("Procs",   col_flags, width)
-        UI.TableSetupColumn("Total",   col_flags, width)
-        UI.TableSetupColumn("Minimum", col_flags, width)
-        UI.TableSetupColumn("Maximum", col_flags, width)
+    suffix       = suffix or ""
+    local header = string.format("Endamage %s", suffix)
+
+    if UI.BeginTable(trackable, 7, Focus.Catalog.TableFlags) then
+        UI.TableSetupColumn(header,    colFlags, nameWidth)
+        UI.TableSetupColumn("Average", colFlags, width)
+        UI.TableSetupColumn("%Player", colFlags, width)
+        UI.TableSetupColumn("Procs",   colFlags, width)
+        UI.TableSetupColumn("Total",   colFlags, width)
+        UI.TableSetupColumn("Minimum", colFlags, width)
+        UI.TableSetupColumn("Maximum", colFlags, width)
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable)
         UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, nil, nil, true)
-        UI.TableNextColumn() Column.Damage.Hits(playerName, trackable, nil, true)
+        UI.TableNextColumn() Column.Damage.Hits(playerName,   trackable, nil, true)
         UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL)
         UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MIN)
         UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MAX)
         WindowManager.TableRowColor(1)
 
-        local sorted_damage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
-        local action_name
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
-            UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable, nil, action_name)
-            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, nil, action_name, true)
-            UI.TableNextColumn() Column.Damage.Hits(playerName, trackable, action_name, true)
-            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL, action_name)
-            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MIN, action_name)
-            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MAX, action_name)
+        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+        for _, data in ipairs(sortedDamage) do
+            local actionName = data[1]
+
+            UI.TableNextColumn() UI.Text(string.format("- %s", actionName))
+            UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable, nil, actionName)
+            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, nil, actionName, true)
+            UI.TableNextColumn() Column.Damage.Hits(playerName, trackable, actionName, true)
+            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL, actionName)
+            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MIN, actionName)
+            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MAX, actionName)
+
             WindowManager.TableRowColor(0)
         end
 
@@ -61,33 +64,37 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets up the table for endebuff inside the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param focus_type string a trackable from the data model.
----@param suffix? string append a suffix to the header to help distinguish between melee and ranged.
+---@param playerName string
+---@param trackable  DB.Trackable a trackable from the data model.
+---@param suffix?    string       append a suffix to the header to help distinguish between melee and ranged.
 ------------------------------------------------------------------------------------------------------
-Focus.Catalog.Endebuff = function(player_name, focus_type, suffix)
-    if not DB.Tracking.Trackables[focus_type] then return nil end
-    if not DB.Tracking.Trackables[focus_type][player_name] then return nil end
+Focus.Catalog.Endebuff = function(playerName, trackable, suffix)
+    if not DB.Tracking.Trackables[trackable] or not DB.Tracking.Trackables[trackable][playerName] then
+        return nil
+    end
 
-    local table_flags = Focus.Catalog.TableFlags
-    local col_flags   = Focus.Catalog.ColumnFlags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+    local colFlags  = Focus.Catalog.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
 
-    if not suffix then suffix = "" end
-    if UI.BeginTable(focus_type, 2, table_flags) then
-        UI.TableSetupColumn("Endebuff" .. suffix, col_flags, name_width)
-        UI.TableSetupColumn("Procs", col_flags, width)
+    suffix       = suffix or ""
+    local header = string.format("Endebuff %s", suffix)
+
+    if UI.BeginTable(trackable, 2, Focus.Catalog.TableFlags) then
+        UI.TableSetupColumn(header,  colFlags, nameWidth)
+        UI.TableSetupColumn("Procs", colFlags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, focus_type)
-        local action_name
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
+        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+        for _, data in ipairs(sortedDamage) do
+            local actionName = data[1]
+
             UI.TableNextRow()
-            UI.TableNextColumn() UI.Text(action_name)
-            UI.TableNextColumn() Column.Damage.Hits(player_name, focus_type, action_name, true)
+            UI.TableNextColumn() UI.Text(actionName)
+            UI.TableNextColumn() Column.Damage.Hits(playerName, trackable, actionName, true)
         end
+
         UI.EndTable()
     end
 end
@@ -95,15 +102,16 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Populates the Minimum column for a cataloged action.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param action_name string
----@param trackable string
+---@param playerName string
+---@param actionName string
+---@param trackable  DB.Trackable
 ------------------------------------------------------------------------------------------------------
-Focus.Catalog.Min = function(player_name, action_name, trackable)
-    local min = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.MIN)
+Focus.Catalog.Min = function(playerName, actionName, trackable)
+    local min = DB.Catalog.Get(playerName, trackable, actionName, DB.Metric.MIN)
+
     if min == DB.Enum.MAX_DAMAGE then
-        Column.Damage.ByType(player_name, trackable, DB.Enum.IGNORE, action_name)
+        Column.Damage.ByType(playerName, trackable, DB.Enum.IGNORE, actionName)
     else
-        Column.Damage.ByType(player_name, trackable, DB.Metric.MIN, action_name)
+        Column.Damage.ByType(playerName, trackable, DB.Metric.MIN, actionName)
     end
 end
