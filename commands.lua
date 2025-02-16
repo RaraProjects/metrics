@@ -42,7 +42,7 @@ ashita.events.register('command', 'command_cb', function (e)
         elseif arg == "clock" or arg == "c" then
             Parse.Config.Toggle_Clock()
         elseif arg == "percent" then
-            Focus.Config.Percent_Toggle()
+            Focus.Config.PercentToggle()
         elseif arg == "dps" then
             Parse.Config.Toggle_DPS()
         elseif arg == "speed" then
