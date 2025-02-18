@@ -105,7 +105,7 @@ end
 Focus.Overview.RDM = function(player_name)
     local ability_list = {[1] = "Convert"}
     local buff_list = {[1] = "Refresh", [2] = "Haste"}
-    if not Focus.Dependencies.Horizon_Mode() then buff_list = {[1] = "Refresh III", [2] = "Haste II"} end
+    if not Focus.Dependencies.HorizonMode() then buff_list = {[1] = "Refresh III", [2] = "Haste II"} end
     Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
     Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
     Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
@@ -169,7 +169,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.BST = function(player_name)
     local ability_list = {[1] = "Reward", [2] = "Call Beast"}
-    if not Focus.Dependencies.Horizon_Mode() then table.insert(ability_list, "Bestial Loyalty") end
+    if not Focus.Dependencies.HorizonMode() then table.insert(ability_list, "Bestial Loyalty") end
     Focus.Melee.Total(player_name, true)
     Focus.WS.Weaponskill(player_name, true)
     Focus.Overview.Pet_TP(player_name)
@@ -223,7 +223,7 @@ end
 Focus.Overview.NIN = function(player_name)
     local ability_list = {[1] = "Yonin"}
     local buff_list = {[1] = "Utsusemi: Ichi", [2] = "Utsusemi: Ni"}
-    if not Focus.Dependencies.Horizon_Mode() then table.insert(buff_list, "Utsusemi: San") end
+    if not Focus.Dependencies.HorizonMode() then table.insert(buff_list, "Utsusemi: San") end
     Focus.Melee.Total(player_name, true)
     Focus.WS.Weaponskill(player_name, true)
     Focus.Defense.DamageTaken(player_name, true)
