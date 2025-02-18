@@ -1,84 +1,97 @@
-Focus.Defense = {}
+Focus.Defense = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Loads data to the defense drop down inside the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
+---@param playerName string
 ------------------------------------------------------------------------------------------------------
-Focus.Defense.Display = function(player_name)
-    Focus.Defense.Damage_Taken(player_name)
-    Focus.Defense.Auxiliary(player_name)
-    Focus.Defense.Mitigation(player_name)
-    Focus.Defense.Healing_Received(player_name)
+Focus.Defense.Display = function(playerName)
+    Focus.Defense.DamageTaken(playerName)
+    Focus.Defense.Auxiliary(playerName)
+    Focus.Defense.Mitigation(playerName)
+    Focus.Defense.HealingReceived(playerName)
+
     UI.Separator()
 
-    Focus.Defense.TP_Move(player_name, DB.Trackable.DEF_TP_MOVE)
-    Focus.Defense.TP_Move(player_name, DB.Trackable.DEF_NUKING)
-    if Focus.Settings.Show_Misc_Actions then Focus.Defense.TP_Move(player_name, DB.Trackable.DEF_NO_DAMAGE_SPELLS) end
+    Focus.Defense.TpMove(playerName, DB.Trackable.DEF_TP_MOVE)
+    Focus.Defense.TpMove(playerName, DB.Trackable.DEF_NUKING)
+
+    if Focus.Settings.Show_Misc_Actions then
+        Focus.Defense.TpMove(playerName, DB.Trackable.DEF_NO_DAMAGE_SPELLS)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Shows damage taken breakdown.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param make_brief? boolean
+---@param playerName string
+---@param makeBrief? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.Defense.Damage_Taken = function(player_name, make_brief)
-    local col_flags   = Column.Flags.None
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+Focus.Defense.DamageTaken = function(playerName, makeBrief)
+    local colFlags   = Column.Flags.None
+    local tableFlags = WindowManager.Table.Flags.FixedBorders
+    local nameWidth  = Column.Widths.Name
+    local width      = Column.Widths.Standard
 
-    local melee  = DB.Data.Get(player_name, DB.Trackable.DEF_MELEE,   DB.Metric.TOTAL)
-    local ranged = DB.Data.Get(player_name, DB.Trackable.DEF_RANGED,  DB.Metric.TOTAL)
-    local magic  = DB.Data.Get(player_name, DB.Trackable.DEF_NUKING,  DB.Metric.TOTAL)
-    local tp     = DB.Data.Get(player_name, DB.Trackable.DEF_TP_MOVE, DB.Metric.TOTAL)
-    local pet    = DB.Data.Get(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
+    local melee  = DB.Data.Get(playerName, DB.Trackable.DEF_MELEE,                  DB.Metric.TOTAL)
+    local ranged = DB.Data.Get(playerName, DB.Trackable.DEF_RANGED,                 DB.Metric.TOTAL)
+    local magic  = DB.Data.Get(playerName, DB.Trackable.DEF_NUKING,                 DB.Metric.TOTAL)
+    local tp     = DB.Data.Get(playerName, DB.Trackable.DEF_TP_MOVE,                DB.Metric.TOTAL)
+    local pet    = DB.Data.Get(playerName, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, DB.Metric.TOTAL)
 
     local columns = 5
-    if make_brief then columns = columns - 1 end
-    if pet > 0 then columns = columns + 1 end
 
-    if UI.BeginTable("Damage Taken", columns, table_flags) then
-        if make_brief then
-            UI.TableSetupColumn("Damage Taken", col_flags, name_width)
-            UI.TableSetupColumn("Average",      col_flags, width)
-            UI.TableSetupColumn("%Party",       col_flags, width)
-            UI.TableSetupColumn("HP-",          col_flags, width)
-            if pet > 0 then UI.TableSetupColumn("Pet HP-", col_flags, width) end
+    if makeBrief then
+        columns = columns - 1
+    end
+
+    if pet > 0 then
+        columns = columns + 1
+    end
+
+    if UI.BeginTable("Damage Taken", columns, tableFlags) then
+        if makeBrief then
+            UI.TableSetupColumn("Damage Taken", colFlags, nameWidth)
+            UI.TableSetupColumn("Average",      colFlags, width)
+            UI.TableSetupColumn("%Party",       colFlags, width)
+            UI.TableSetupColumn("HP-",          colFlags, width)
+            if pet > 0 then UI.TableSetupColumn("Pet HP-", colFlags, width) end
         else
-            UI.TableSetupColumn("Damage Taken", col_flags, name_width)
-            UI.TableSetupColumn("Average",      col_flags, width)
-            UI.TableSetupColumn("%Player",      col_flags, width)
-            UI.TableSetupColumn("%Party",       col_flags, width)
-            UI.TableSetupColumn("HP-",          col_flags, width)
-            if pet > 0 then UI.TableSetupColumn("Pet HP-", col_flags, width) end
+            UI.TableSetupColumn("Damage Taken", colFlags, nameWidth)
+            UI.TableSetupColumn("Average",      colFlags, width)
+            UI.TableSetupColumn("%Player",      colFlags, width)
+            UI.TableSetupColumn("%Party",       colFlags, width)
+            UI.TableSetupColumn("HP-",          colFlags, width)
+            if pet > 0 then UI.TableSetupColumn("Pet HP-", colFlags, width) end
         end
         UI.TableHeadersRow()
 
-        local defense_trackables = {
-            [1] = {header = "Total",    trackable = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, trackable_pet = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, damage = 1},
-            [2] = {header = "- Melee",  trackable = DB.Trackable.DEF_MELEE,              trackable_pet = DB.Trackable.DEF_MELEE_PET,   damage = melee},
-            [3] = {header = "- Ranged", trackable = DB.Trackable.DEF_RANGED,             trackable_pet = DB.Trackable.DEF_RANGED_PET,  damage = ranged},
-            [4] = {header = "- Magic",  trackable = DB.Trackable.DEF_NUKING,             trackable_pet = DB.Trackable.DEF_NUKING_PET,  damage = magic},
-            [5] = {header = "- Mob TP", trackable = DB.Trackable.DEF_TP_MOVE,            trackable_pet = DB.Trackable.DEF_TP_MOVE_PET, damage = tp},
+        local defenseTrackables =
+        {
+            [1] = { header = "Total",    trackable = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, trackable_pet = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, damage = 1      },
+            [2] = { header = "- Melee",  trackable = DB.Trackable.DEF_MELEE,              trackable_pet = DB.Trackable.DEF_MELEE_PET,              damage = melee  },
+            [3] = { header = "- Ranged", trackable = DB.Trackable.DEF_RANGED,             trackable_pet = DB.Trackable.DEF_RANGED_PET,             damage = ranged },
+            [4] = { header = "- Magic",  trackable = DB.Trackable.DEF_NUKING,             trackable_pet = DB.Trackable.DEF_NUKING_PET,             damage = magic  },
+            [5] = { header = "- Mob TP", trackable = DB.Trackable.DEF_TP_MOVE,            trackable_pet = DB.Trackable.DEF_TP_MOVE_PET,            damage = tp     },
         }
 
-        for _, data in ipairs(defense_trackables) do
+        for _, data in ipairs(defenseTrackables) do
             if data.damage > 0 then
                 UI.TableNextColumn() UI.Text(data.header)
-                if make_brief then
-                    UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, data.trackable)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, data.trackable)
-                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable)
-                    if pet > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable_pet) end
+
+                if makeBrief then
+                    UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable)
+                    UI.TableNextColumn() Column.General.Percent_Party_Total(playerName, data.trackable)
+                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable)
+                    if pet > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable_pet) end
                 else
-                    UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, data.trackable)
-                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable, true)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, data.trackable)
-                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable)
-                    if pet > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable_pet) end
+                    UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable)
+                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable, true)
+                    UI.TableNextColumn() Column.General.Percent_Party_Total(playerName, data.trackable)
+                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable)
+                    if pet > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable_pet) end
                 end
+
                 if data.header == "Total" then
                     WindowManager.TableRowColor(1)
                 else
@@ -94,36 +107,38 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Shows miscellaneous damage breakdown.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
+---@param playerName string
 ------------------------------------------------------------------------------------------------------
-Focus.Defense.Auxiliary = function(player_name)
-    local col_flags   = Column.Flags.None
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+Focus.Defense.Auxiliary = function(playerName)
+    local colFlags   = Column.Flags.None
+    local tableFlags = WindowManager.Table.Flags.FixedBorders
+    local nameWidth  = Column.Widths.Name
+    local width      = Column.Widths.Standard
 
     local row = 1
-    if UI.BeginTable("Defense Auxiliary", 5, table_flags) then
-        UI.TableSetupColumn("Defense Auxiliary", col_flags, name_width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("%Player", col_flags, width)
-        UI.TableSetupColumn("%Proc",   col_flags, width)
-        UI.TableSetupColumn("HP-",     col_flags, width)
+
+    if UI.BeginTable("Defense Auxiliary", 5, tableFlags) then
+        UI.TableSetupColumn("Defense Auxiliary", colFlags, nameWidth)
+        UI.TableSetupColumn("Average",           colFlags, width)
+        UI.TableSetupColumn("%Player",           colFlags, width)
+        UI.TableSetupColumn("%Proc",             colFlags, width)
+        UI.TableSetupColumn("HP-",               colFlags, width)
         UI.TableHeadersRow()
 
-        local aux_trackables = {
-            [1] = {header = "Crits",     trackable = DB.Trackable.DEF_CRITICAL,  threshold = 1},
-            [2] = {header = "Countered", trackable = DB.Trackable.DEF_COUNTERED, threshold = DB.Data.Get(player_name, DB.Trackable.DEF_COUNTERED, DB.Metric.TOTAL)},
-            [3] = {header = "Spikes",    trackable = DB.Trackable.DEF_SPIKES,    threshold = DB.Data.Get(player_name, DB.Trackable.DEF_SPIKES, DB.Metric.TOTAL)},
+        local auxTrackables =
+        {
+            [1] = { header = "Crits",     trackable = DB.Trackable.DEF_CRITICAL,  threshold = 1 },
+            [2] = { header = "Countered", trackable = DB.Trackable.DEF_COUNTERED, threshold = DB.Data.Get(playerName, DB.Trackable.DEF_COUNTERED, DB.Metric.TOTAL) },
+            [3] = { header = "Spikes",    trackable = DB.Trackable.DEF_SPIKES,    threshold = DB.Data.Get(playerName, DB.Trackable.DEF_SPIKES, DB.Metric.TOTAL)    },
         }
 
-        for _, data in ipairs(aux_trackables) do
+        for _, data in ipairs(auxTrackables) do
             if data.threshold > 0 then
                 UI.TableNextColumn() UI.Text(data.header)
-                UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, data.trackable)
-                UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable, true)
-                UI.TableNextColumn() Column.Acc.ByType(player_name, data.trackable, 0)
-                UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(player_name, data.trackable)
+                UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable)
+                UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable, true)
+                UI.TableNextColumn() Column.Acc.ByType(playerName, data.trackable, 0)
+                UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable)
                 WindowManager.TableRowColor(row)
                 row = row + 1
             end
@@ -136,84 +151,84 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Shows miscellaneous damage breakdown.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
+---@param playerName string
 ------------------------------------------------------------------------------------------------------
-Focus.Defense.Mitigation = function(player_name)
-    local col_flags   = Column.Flags.None
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+Focus.Defense.Mitigation = function(playerName)
+    local colFlags   = Column.Flags.None
+    local tableFlags = WindowManager.Table.Flags.FixedBorders
+    local nameWidth  = Column.Widths.Name
+    local width      = Column.Widths.Standard
 
-    local shield_block = DB.Data.Get(player_name, DB.Trackable.DEF_SHIELD_BLOCK, DB.Metric.HITS_ON_TARGET)
-    local guard        = DB.Data.Get(player_name, DB.Trackable.DEF_GUARD,        DB.Metric.HITS_ON_TARGET)
-    local show_dt = shield_block > 0 or guard > 0
-
-    local columns = 3
-    if show_dt then columns = columns + 2 end
+    local shieldBlock = DB.Data.Get(playerName, DB.Trackable.DEF_SHIELD_BLOCK, DB.Metric.HITS_ON_TARGET)
+    local guard       = DB.Data.Get(playerName, DB.Trackable.DEF_GUARD,        DB.Metric.HITS_ON_TARGET)
+    local showDT      = shieldBlock > 0 or guard > 0
+    local columns     = 3 + (showDT and 2 or 0)
 
     local row = 1
-    if UI.BeginTable("Defense", columns, table_flags) then
-        UI.TableSetupColumn("Mitigation", col_flags, name_width)
-        UI.TableSetupColumn("%Proc",      col_flags, width)
-        UI.TableSetupColumn("~HP Saved",  col_flags, width)
-        if show_dt then UI.TableSetupColumn("~Damage",    col_flags, width) end
-        if show_dt then UI.TableSetupColumn("%DT-",       col_flags, width) end
+
+    if UI.BeginTable("Defense", columns, tableFlags) then
+        UI.TableSetupColumn("Mitigation", colFlags, nameWidth)
+        UI.TableSetupColumn("%Proc",      colFlags, width)
+        UI.TableSetupColumn("~HP Saved",  colFlags, width)
+        if showDT then UI.TableSetupColumn("~Damage", colFlags, width) end
+        if showDT then UI.TableSetupColumn("%DT-",    colFlags, width) end
         UI.TableHeadersRow()
 
         -- Full Mitigation
-        local full_mitigation_trackables = {}
-        table.insert(full_mitigation_trackables, {header = "Evasion (Melee)",  trackable = DB.Trackable.DEF_EVASION_MELEE})
-        table.insert(full_mitigation_trackables, {header = "Evasion (Ranged)", trackable = DB.Trackable.DEF_EVASION_RANGED})
-        table.insert(full_mitigation_trackables, {header = "Evasion (TP)",     trackable = DB.Trackable.DEF_EVASION_TP_ACTION})
-        table.insert(full_mitigation_trackables, {header = "Parry",            trackable = DB.Trackable.DEF_PARRY})
-        table.insert(full_mitigation_trackables, {header = "Shadows (Melee)",  trackable = DB.Trackable.DEF_SHADOWS_MELEE})
-        table.insert(full_mitigation_trackables, {header = "Shadows (Ranged)", trackable = DB.Trackable.DEF_SHADOWS_RANGED})
-        table.insert(full_mitigation_trackables, {header = "Shadows (Magic)",  trackable = DB.Trackable.DEF_SHADOWS_MAGIC})
-        table.insert(full_mitigation_trackables, {header = "Shadows (TP)",     trackable = DB.Trackable.DEF_SHADOWS_TP_ACTION})
-        table.insert(full_mitigation_trackables, {header = "Third Eye",        trackable = DB.Trackable.DEF_THIRD_EYE_ANTICIPATION})
-        table.insert(full_mitigation_trackables, {header = "Counter",          trackable = DB.Trackable.MELEE_COUNTER})
+        local fullMitigationTrackables = { }
+        table.insert(fullMitigationTrackables, { header = "Evasion (Melee)",  trackable = DB.Trackable.DEF_EVASION_MELEE })
+        table.insert(fullMitigationTrackables, { header = "Evasion (Ranged)", trackable = DB.Trackable.DEF_EVASION_RANGED })
+        table.insert(fullMitigationTrackables, { header = "Evasion (TP)",     trackable = DB.Trackable.DEF_EVASION_TP_ACTION })
+        table.insert(fullMitigationTrackables, { header = "Parry",            trackable = DB.Trackable.DEF_PARRY })
+        table.insert(fullMitigationTrackables, { header = "Shadows (Melee)",  trackable = DB.Trackable.DEF_SHADOWS_MELEE })
+        table.insert(fullMitigationTrackables, { header = "Shadows (Ranged)", trackable = DB.Trackable.DEF_SHADOWS_RANGED })
+        table.insert(fullMitigationTrackables, { header = "Shadows (Magic)",  trackable = DB.Trackable.DEF_SHADOWS_MAGIC })
+        table.insert(fullMitigationTrackables, { header = "Shadows (TP)",     trackable = DB.Trackable.DEF_SHADOWS_TP_ACTION })
+        table.insert(fullMitigationTrackables, { header = "Third Eye",        trackable = DB.Trackable.DEF_THIRD_EYE_ANTICIPATION })
+        table.insert(fullMitigationTrackables, { header = "Counter",          trackable = DB.Trackable.MELEE_COUNTER })
 
-        local mitigation_found = false
-        for _, data in ipairs(full_mitigation_trackables) do
-            if DB.Data.Get(player_name, data.trackable, DB.Metric.HITS_ON_TARGET) > 0 then
+        local mitigationFound = false
+        for _, data in ipairs(fullMitigationTrackables) do
+            if DB.Data.Get(playerName, data.trackable, DB.Metric.HITS_ON_TARGET) > 0 then
                 UI.TableNextColumn() UI.Text(data.header)
-                UI.TableNextColumn() Column.Acc.ByType(player_name, data.trackable, 0)
-                UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, data.trackable)
-                if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
-                if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
+                UI.TableNextColumn() Column.Acc.ByType(playerName, data.trackable, 0)
+                UI.TableNextColumn() Column.Defense.Damage_Mitigation(playerName, data.trackable)
+                if showDT then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
+                if showDT then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
                 WindowManager.TableRowColor(row)
                 row = row + 1
-                mitigation_found = true
+                mitigationFound = true
             end
         end
 
         -- Partial Mitigation
-        local partial_mitigation_trackables = {
-            [1] = {header = "Guard",        trackable = DB.Trackable.DEF_GUARD},
-            [2] = {header = "Shield Block", trackable = DB.Trackable.DEF_SHIELD_BLOCK},
+        local partialMitigationTrackables =
+        {
+            [1] = { header = "Guard",        trackable = DB.Trackable.DEF_GUARD },
+            [2] = { header = "Shield Block", trackable = DB.Trackable.DEF_SHIELD_BLOCK },
         }
 
-        for _, data in ipairs(partial_mitigation_trackables) do
-            if DB.Data.Get(player_name, data.trackable, DB.Metric.HITS_ON_TARGET) > 0 then
+        for _, data in ipairs(partialMitigationTrackables) do
+            if DB.Data.Get(playerName, data.trackable, DB.Metric.HITS_ON_TARGET) > 0 then
                 UI.TableNextColumn() UI.Text(data.header)
-                UI.TableNextColumn() Column.Acc.ByType(player_name, data.trackable, 0)
-                UI.TableNextColumn() Column.Defense.Damage_Mitigation(player_name, data.trackable, data.ranged)
-                if show_dt then UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(player_name, data.trackable) end
-                if show_dt then UI.TableNextColumn() Column.Defense.Damage_Reduction(player_name, data.trackable) end
+                UI.TableNextColumn() Column.Acc.ByType(playerName, data.trackable, 0)
+                UI.TableNextColumn() Column.Defense.Damage_Mitigation(playerName, data.trackable, data.ranged)
+                if showDT then UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable) end
+                if showDT then UI.TableNextColumn() Column.Defense.Damage_Reduction(playerName, data.trackable) end
                 WindowManager.TableRowColor(row)
                 row = row + 1
-                mitigation_found = true
+                mitigationFound = true
             end
         end
 
         -- No mitigation was found.
         -- A Total row doesn't work well with damage mitigation.
-        if not mitigation_found then
+        if not mitigationFound then
             UI.TableNextColumn() UI.Text("None Yet")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
             UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-            if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
-            if show_dt then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
+            if showDT then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
+            if showDT then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
         end
 
         UI.EndTable()
@@ -223,42 +238,45 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Shows healing received overview stats.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
+---@param playerName string
 ------------------------------------------------------------------------------------------------------
-Focus.Defense.Healing_Received = function(player_name)
-    if not player_name then return nil end
+Focus.Defense.HealingReceived = function(playerName)
+    if not playerName then
+        return nil
+    end
 
     -- Error Protection
     local trackable = DB.Trackable.DEF_HEALING_RECEIVED
-    if not DB.Tracking.Trackables[trackable] then return nil end
-    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] or not DB.Tracking.Trackables[trackable][playerName] then
+        return nil
+    end
 
-    local col_flags   = Focus.ColumnFlags
-    local table_flags = Focus.TableFlags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+    local colFlags   = Focus.ColumnFlags
+    local tableFlags = Focus.TableFlags
+    local nameWidth  = Column.Widths.Name
+    local width      = Column.Widths.Standard
 
-    if UI.BeginTable("Healing", 4, table_flags) then
-        UI.TableSetupColumn("Healing Received", col_flags, name_width)
-        UI.TableSetupColumn("HP+",     col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("MP-",     col_flags, width)
+    if UI.BeginTable("Healing", 4, tableFlags) then
+        UI.TableSetupColumn("Healing Received", colFlags, nameWidth)
+        UI.TableSetupColumn("HP+",     colFlags, width)
+        UI.TableSetupColumn("Average", colFlags, width)
+        UI.TableSetupColumn("MP-",     colFlags, width)
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.TOTAL)
-        UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable)
-        UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable)
+        UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL)
+        UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable)
+        UI.TableNextColumn() Column.Spell.MP_Used(playerName, trackable)
         WindowManager.TableRowColor(1)
 
-        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
-        local action_name
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
-            UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.TOTAL, action_name)
-            UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable, nil, action_name)
-            UI.TableNextColumn() Column.Spell.MP_Used(player_name, trackable, action_name)
+        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+        for _, data in ipairs(sortedDamage) do
+            local actionName = data[1]
+            UI.TableNextColumn() UI.Text(string.format("- %s", actionName))
+            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL, actionName)
+            UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable, nil, actionName)
+            UI.TableNextColumn() Column.Spell.MP_Used(playerName, trackable, actionName)
             WindowManager.TableRowColor(0)
         end
 
@@ -269,57 +287,63 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets up the table for a trackable drop down inside the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param trackable string a trackable from the data model.
+---@param playerName string
+---@param trackable  DB.Trackable a trackable from the data model.
 ------------------------------------------------------------------------------------------------------
-Focus.Defense.TP_Move = function(player_name, trackable)
-    if not trackable then return nil end
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
-    local col_flags   = Column.Flags.None
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
-
-    -- Error Protection
-    if not DB.Tracking.Trackables[trackable] then return nil end
-    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
-
-    local action_string = "TP Move"
-    local on_target = true
-    if trackable == DB.Trackable.DEF_NUKING then
-        action_string = "Spell - Damaging"
-        on_target = true
-    elseif trackable == DB.Trackable.DEF_NO_DAMAGE_SPELLS then
-        action_string = "Spell - Misc"
-        on_target = true
+Focus.Defense.TpMove = function(playerName, trackable)
+    if not trackable then
+        return nil
     end
 
-    if UI.BeginTable(trackable, 6, table_flags) then
-        UI.TableSetupColumn(action_string, col_flags, name_width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("Tries",   col_flags, width)
-        UI.TableSetupColumn("Total",   col_flags, width)
-        UI.TableSetupColumn("Minimum", col_flags, width)
-        UI.TableSetupColumn("Maximum", col_flags, width)
+    local tableFlags = WindowManager.Table.Flags.FixedBorders
+    local colFlags   = Column.Flags.None
+    local nameWidth  = Column.Widths.Name
+    local width      = Column.Widths.Standard
+
+    -- Error Protection
+    if not DB.Tracking.Trackables[trackable] or not DB.Tracking.Trackables[trackable][playerName] then
+        return nil
+    end
+
+    local actionString = "TP Move"
+    local onTarget     = true
+
+    if trackable == DB.Trackable.DEF_NUKING then
+        actionString = "Spell - Damaging"
+        onTarget     = true
+
+    elseif trackable == DB.Trackable.DEF_NO_DAMAGE_SPELLS then
+        actionString = "Spell - Misc"
+        onTarget     = true
+    end
+
+    if UI.BeginTable(trackable, 6, tableFlags) then
+        UI.TableSetupColumn(actionString, colFlags, nameWidth)
+        UI.TableSetupColumn("Average",    colFlags, width)
+        UI.TableSetupColumn("Tries",      colFlags, width)
+        UI.TableSetupColumn("Total",      colFlags, width)
+        UI.TableSetupColumn("Minimum",    colFlags, width)
+        UI.TableSetupColumn("Maximum",    colFlags, width)
         UI.TableHeadersRow()
 
         UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable)
-        UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, nil, on_target)
-        UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.TOTAL)
-        UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.MIN)
-        UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.MAX)
+        UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable)
+        UI.TableNextColumn() Column.Damage.Attempts(playerName, trackable, nil, nil, onTarget)
+        UI.TableNextColumn() Column.Damage.ByType(playerName,  trackable, DB.Metric.TOTAL)
+        UI.TableNextColumn() Column.Damage.ByType(playerName,  trackable, DB.Metric.MIN)
+        UI.TableNextColumn() Column.Damage.ByType(playerName,  trackable, DB.Metric.MAX)
         WindowManager.TableRowColor(1)
 
-        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
-        local action_name
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
-            UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable, nil, action_name)
-            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name, on_target)
-            UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.TOTAL, action_name)
-            UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.MIN, action_name)
-            UI.TableNextColumn() Column.Damage.ByType(player_name,  trackable, DB.Metric.MAX, action_name)
+        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+        for _, data in ipairs(sortedDamage) do
+            local actionName = data[1]
+            UI.TableNextColumn() UI.Text(string.format("- %s", actionName))
+            UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable, nil, actionName)
+            UI.TableNextColumn() Column.Damage.Attempts(playerName, trackable, nil, actionName, onTarget)
+            UI.TableNextColumn() Column.Damage.ByType(playerName,  trackable, DB.Metric.TOTAL, actionName)
+            UI.TableNextColumn() Column.Damage.ByType(playerName,  trackable, DB.Metric.MIN, actionName)
+            UI.TableNextColumn() Column.Damage.ByType(playerName,  trackable, DB.Metric.MAX, actionName)
             WindowManager.TableRowColor(0)
         end
 

@@ -119,7 +119,7 @@ end
 ---@param burst? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Magic.Damaging_Spell = function(player_name, trackable, header, make_brief, hide_mp, burst)
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.FixedBorders
     local col_flags   = Column.Flags.None
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
@@ -206,7 +206,7 @@ end
 ---@param make_brief? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Magic.No_Damage_Spell = function(player_name, trackable, header, make_brief)
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.FixedBorders
     local col_flags   = Column.Flags.None
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
@@ -331,7 +331,7 @@ end
 ---@param no_mp? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Magic.Basic_Spell = function(player_name, trackable, header, no_mp)
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.FixedBorders
     local col_flags   = Column.Flags.None
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard

@@ -44,7 +44,7 @@ Focus.Tabs.Switch =
 }
 
 Focus.ColumnFlags = Column.Flags.None
-Focus.TableFlags  = WindowManager.Table.Flags.Fixed_Borders
+Focus.TableFlags  = WindowManager.Table.Flags.FixedBorders
 
 Focus.ScreenshotFlags = bit.bor
 (
@@ -155,7 +155,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.OverallDamageBreakdown = function(playerName)
     local colFlags   = Column.Flags.None
-    local tableFlags = WindowManager.Table.Flags.Fixed_Borders
+    local tableFlags = WindowManager.Table.Flags.FixedBorders
     local width      = Column.Widths.Percent
 
     local pet                 = DB.Data.Get(playerName, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)

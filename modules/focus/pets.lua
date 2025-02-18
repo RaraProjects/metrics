@@ -32,7 +32,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Pets.Total = function(player_name)
     local col_flags   = Column.Flags.None
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.FixedBorders
     local name_width  = Column.Widths.Name
     local width        = Column.Widths.Standard
 
@@ -90,7 +90,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Pets.Damage_Taken = function(player_name)
     local col_flags   = Column.Flags.None
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.FixedBorders
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
 
@@ -158,7 +158,7 @@ end
 ---@param pet_name string
 ------------------------------------------------------------------------------------------------------
 Focus.Pets.Pet_Specific_Total = function(player_name, pet_name)
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.FixedBorders
     local col_flags   = Column.Flags.None
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
@@ -223,7 +223,7 @@ end
 ---@param header string
 ------------------------------------------------------------------------------------------------------
 Focus.Pets.Pet_Specific_TP_Moves = function(player_name, pet_name, trackable, header)
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.FixedBorders
     local col_flags   = Column.Flags.None
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard
@@ -287,7 +287,7 @@ end
 ---@param is_buff? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Pets.Pet_Specific_Non_Damaging_Spells = function(player_name, pet_name, trackable, header, is_buff)
-    local table_flags = WindowManager.Table.Flags.Fixed_Borders
+    local table_flags = WindowManager.Table.Flags.FixedBorders
     local col_flags   = Column.Flags.None
     local name_width  = Column.Widths.Name
     local width       = Column.Widths.Standard

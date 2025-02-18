@@ -19,12 +19,12 @@ WindowManager.Tabs.Active   = nil
 WindowManager.Table = { }
 WindowManager.Table.Flags =
 {
-    None = bit.bor(ImGuiTableFlags_None),
-    Resizable = bit.bor(ImGuiTableFlags_NoSavedSettings, ImGuiTableFlags_Resizable, ImGuiTableFlags_SizingStretchProp, ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
-    Borders = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
-    Fixed_Borders = bit.bor(ImGuiTableFlags_SizingFixedFit, ImGuiTableFlags_Resizable, ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_NoHostExtendX),
-    Team = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
-    Scrollable = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_ScrollY),
+    None         = bit.bor(ImGuiTableFlags_None),
+    Resizable    = bit.bor(ImGuiTableFlags_NoSavedSettings, ImGuiTableFlags_Resizable, ImGuiTableFlags_SizingStretchProp, ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
+    Borders      = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
+    FixedBorders = bit.bor(ImGuiTableFlags_SizingFixedFit, ImGuiTableFlags_Resizable, ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_NoHostExtendX),
+    Team         = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders),
+    Scrollable   = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_ScrollY),
 }
 
 WindowManager.BarDelay          = Socket.gettime()

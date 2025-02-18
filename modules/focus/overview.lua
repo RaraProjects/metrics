@@ -136,10 +136,10 @@ end
 Focus.Overview.PLD = function(player_name)
     local ability_list = {[1] = "Sentinel", [2] = "Rampart", [3] = "Cover", [4] = "Chivalry", [5] = "Shield Bash"}
     local buff_list = {[1] = "Enlight"}
-    Focus.Defense.Damage_Taken(player_name, true)
+    Focus.Defense.DamageTaken(player_name, true)
     Focus.Defense.Mitigation(player_name)
     Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
-    Focus.Defense.Healing_Received(player_name)
+    Focus.Defense.HealingReceived(player_name)
     Focus.Magic.Debuff(player_name)
     Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
     Focus.Abilities.FromList(player_name, ability_list)
@@ -226,9 +226,9 @@ Focus.Overview.NIN = function(player_name)
     if not Focus.Dependencies.Horizon_Mode() then table.insert(buff_list, "Utsusemi: San") end
     Focus.Melee.Total(player_name, true)
     Focus.WS.Weaponskill(player_name, true)
-    Focus.Defense.Damage_Taken(player_name, true)
+    Focus.Defense.DamageTaken(player_name, true)
     Focus.Defense.Mitigation(player_name)
-    Focus.Defense.Healing_Received(player_name)
+    Focus.Defense.HealingReceived(player_name)
     Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true, true)
     Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, true, true)
     Focus.Magic.Debuff(player_name, true)
@@ -348,9 +348,9 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.RUN = function(player_name)
     local buff_list = {[1] = "Foil", [2] = "Regen IV", [3] = "Refresh", [4] = "Phalanx", [5] = "Crusade",}
-    Focus.Defense.Damage_Taken(player_name, true)
+    Focus.Defense.DamageTaken(player_name, true)
     Focus.Defense.Mitigation(player_name)
-    Focus.Defense.Healing_Received(player_name)
+    Focus.Defense.HealingReceived(player_name)
     Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
     Focus.Abilities.Damaging(player_name, DB.Trackable.ABILITY_HEALING, "Healing", true)
     Focus.Abilities.AbilitiesGeneral(player_name)

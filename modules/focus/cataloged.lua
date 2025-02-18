@@ -1,6 +1,6 @@
 Focus.Catalog = { }
 
-Focus.Catalog.TableFlags  = WindowManager.Table.Flags.Fixed_Borders
+Focus.Catalog.TableFlags  = WindowManager.Table.Flags.FixedBorders
 Focus.Catalog.ColumnFlags = Column.Flags.None
 
 ------------------------------------------------------------------------------------------------------
