@@ -80,7 +80,7 @@ end
 Focus.Overview.WHM = function(player_name)
     local ability_list = {[1] = "Divine Seal", [2] = "Devotion"}
     local buff_list = {[1] = "Regen III", [2] = "Regen II", [3] = "Regen"}
-    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
+    Focus.Magic.NoDamageSpell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
     Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
     Focus.Abilities.FromList(player_name, ability_list)
 end
@@ -92,8 +92,8 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.BLM = function(player_name)
     local ability_list = {[1] = "Elemental Seal"}
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
     Focus.Abilities.FromList(player_name, ability_list)
 end
 
@@ -106,9 +106,9 @@ Focus.Overview.RDM = function(player_name)
     local ability_list = {[1] = "Convert"}
     local buff_list = {[1] = "Refresh", [2] = "Haste"}
     if not Focus.Dependencies.HorizonMode() then buff_list = {[1] = "Refresh III", [2] = "Haste II"} end
-    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
+    Focus.Magic.NoDamageSpell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
     Focus.Magic.Debuff(player_name)
     Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
     Focus.Abilities.FromList(player_name, ability_list)
@@ -138,7 +138,7 @@ Focus.Overview.PLD = function(player_name)
     local buff_list = {[1] = "Enlight"}
     Focus.Defense.DamageTaken(player_name, true)
     Focus.Defense.Mitigation(player_name)
-    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
+    Focus.Magic.NoDamageSpell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
     Focus.Defense.HealingReceived(player_name)
     Focus.Magic.Debuff(player_name)
     Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
@@ -156,8 +156,8 @@ Focus.Overview.DRK = function(player_name)
     Focus.Melee.Total(player_name, true)
     if ranged_damage > 0 then Focus.Ranged.Total(player_name, true) end
     Focus.WS.Weaponskill(player_name, true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
     Focus.Magic.Debuff(player_name)
     Focus.Abilities.FromList(player_name, ability_list)
 end
@@ -184,9 +184,9 @@ end
 Focus.Overview.BRD = function(player_name)
     Focus.Melee.Total(player_name, true)
     Focus.WS.Weaponskill(player_name, true)
-    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
+    Focus.Magic.NoDamageSpell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
     Focus.Magic.Debuff(player_name)
-    Focus.Magic.Basic_Spell(player_name, DB.Trackable.SPELLS_BUFF_SONG, "Buff Songs", true)
+    Focus.Magic.BasicSpell(player_name, DB.Trackable.SPELLS_BUFF_SONG, "Buff Songs", true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -229,8 +229,8 @@ Focus.Overview.NIN = function(player_name)
     Focus.Defense.DamageTaken(player_name, true)
     Focus.Defense.Mitigation(player_name)
     Focus.Defense.HealingReceived(player_name)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true, true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, true, true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true, true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, true, true)
     Focus.Magic.Debuff(player_name, true)
     Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells", true)
     Focus.Abilities.FromList(player_name, ability_list)
@@ -257,7 +257,7 @@ end
 Focus.Overview.SMN = function(player_name)
     Focus.Melee.Total(player_name, true)
     Focus.Overview.Pet_TP(player_name)
-    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
+    Focus.Magic.NoDamageSpell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
     Focus.Magic.Debuff(player_name)
 end
 
@@ -270,8 +270,8 @@ Focus.Overview.BLU = function(player_name)
     local ability_list = {[1] = "Burst Affinity", [2] = "Chain Affinity"}
     Focus.Melee.Total(player_name, true)
     Focus.WS.Weaponskill(player_name, true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true)
-    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke", true)
+    Focus.Magic.NoDamageSpell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
     Focus.Magic.Debuff(player_name)
     Focus.Abilities.FromList(player_name, ability_list)
 end
@@ -321,9 +321,9 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.SCH = function(player_name)
     local buff_list = {[1] = "Regen V"}
-    Focus.Magic.No_Damage_Spell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
+    Focus.Magic.NoDamageSpell(player_name, DB.Trackable.SPELLS_HEALING, "Healing Spells", true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
     Focus.Magic.From_List(player_name, DB.Trackable.SPELLS_BUFFS, buff_list, "Buff Spells")
     Focus.Abilities.AbilitiesGeneral(player_name)
 end
@@ -335,9 +335,9 @@ end
 ------------------------------------------------------------------------------------------------------
 Focus.Overview.GEO = function(player_name)
     local ability_list = {[1] = "Blaze of Glory", [2] = "Dematerialize", [3] = "Ecliptic Attrition", [4] = "Entrust", [5] = "Life Cycle"}
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
-    Focus.Magic.Damaging_Spell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
-    Focus.Magic.Basic_Spell(player_name, DB.Trackable.SPELLS_GEOMANCY, "Geomancy", true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (All)", true)
+    Focus.Magic.DamagingSpell(player_name, DB.Trackable.SPELLS_NUKING, "Nuke (Bursts)", true, false, true)
+    Focus.Magic.BasicSpell(player_name, DB.Trackable.SPELLS_GEOMANCY, "Geomancy", true)
     Focus.Abilities.FromList(player_name, ability_list)
 end
 

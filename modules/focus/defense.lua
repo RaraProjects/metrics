@@ -68,11 +68,11 @@ Focus.Defense.DamageTaken = function(playerName, makeBrief)
 
         local defenseTrackables =
         {
-            [1] = { header = "Total",    trackable = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, trackable_pet = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, damage = 1      },
-            [2] = { header = "- Melee",  trackable = DB.Trackable.DEF_MELEE,              trackable_pet = DB.Trackable.DEF_MELEE_PET,              damage = melee  },
-            [3] = { header = "- Ranged", trackable = DB.Trackable.DEF_RANGED,             trackable_pet = DB.Trackable.DEF_RANGED_PET,             damage = ranged },
-            [4] = { header = "- Magic",  trackable = DB.Trackable.DEF_NUKING,             trackable_pet = DB.Trackable.DEF_NUKING_PET,             damage = magic  },
-            [5] = { header = "- Mob TP", trackable = DB.Trackable.DEF_TP_MOVE,            trackable_pet = DB.Trackable.DEF_TP_MOVE_PET,            damage = tp     },
+            { header = "Total",    trackable = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, trackable_pet = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, damage = 1      },
+            { header = "- Melee",  trackable = DB.Trackable.DEF_MELEE,              trackable_pet = DB.Trackable.DEF_MELEE_PET,              damage = melee  },
+            { header = "- Ranged", trackable = DB.Trackable.DEF_RANGED,             trackable_pet = DB.Trackable.DEF_RANGED_PET,             damage = ranged },
+            { header = "- Magic",  trackable = DB.Trackable.DEF_NUKING,             trackable_pet = DB.Trackable.DEF_NUKING_PET,             damage = magic  },
+            { header = "- Mob TP", trackable = DB.Trackable.DEF_TP_MOVE,            trackable_pet = DB.Trackable.DEF_TP_MOVE_PET,            damage = tp     },
         }
 
         for _, data in ipairs(defenseTrackables) do
@@ -127,9 +127,9 @@ Focus.Defense.Auxiliary = function(playerName)
 
         local auxTrackables =
         {
-            [1] = { header = "Crits",     trackable = DB.Trackable.DEF_CRITICAL,  threshold = 1 },
-            [2] = { header = "Countered", trackable = DB.Trackable.DEF_COUNTERED, threshold = DB.Data.Get(playerName, DB.Trackable.DEF_COUNTERED, DB.Metric.TOTAL) },
-            [3] = { header = "Spikes",    trackable = DB.Trackable.DEF_SPIKES,    threshold = DB.Data.Get(playerName, DB.Trackable.DEF_SPIKES, DB.Metric.TOTAL)    },
+            { header = "Crits",     trackable = DB.Trackable.DEF_CRITICAL,  threshold = 1 },
+            { header = "Countered", trackable = DB.Trackable.DEF_COUNTERED, threshold = DB.Data.Get(playerName, DB.Trackable.DEF_COUNTERED, DB.Metric.TOTAL) },
+            { header = "Spikes",    trackable = DB.Trackable.DEF_SPIKES,    threshold = DB.Data.Get(playerName, DB.Trackable.DEF_SPIKES, DB.Metric.TOTAL)    },
         }
 
         for _, data in ipairs(auxTrackables) do
@@ -175,17 +175,19 @@ Focus.Defense.Mitigation = function(playerName)
         UI.TableHeadersRow()
 
         -- Full Mitigation
-        local fullMitigationTrackables = { }
-        table.insert(fullMitigationTrackables, { header = "Evasion (Melee)",  trackable = DB.Trackable.DEF_EVASION_MELEE })
-        table.insert(fullMitigationTrackables, { header = "Evasion (Ranged)", trackable = DB.Trackable.DEF_EVASION_RANGED })
-        table.insert(fullMitigationTrackables, { header = "Evasion (TP)",     trackable = DB.Trackable.DEF_EVASION_TP_ACTION })
-        table.insert(fullMitigationTrackables, { header = "Parry",            trackable = DB.Trackable.DEF_PARRY })
-        table.insert(fullMitigationTrackables, { header = "Shadows (Melee)",  trackable = DB.Trackable.DEF_SHADOWS_MELEE })
-        table.insert(fullMitigationTrackables, { header = "Shadows (Ranged)", trackable = DB.Trackable.DEF_SHADOWS_RANGED })
-        table.insert(fullMitigationTrackables, { header = "Shadows (Magic)",  trackable = DB.Trackable.DEF_SHADOWS_MAGIC })
-        table.insert(fullMitigationTrackables, { header = "Shadows (TP)",     trackable = DB.Trackable.DEF_SHADOWS_TP_ACTION })
-        table.insert(fullMitigationTrackables, { header = "Third Eye",        trackable = DB.Trackable.DEF_THIRD_EYE_ANTICIPATION })
-        table.insert(fullMitigationTrackables, { header = "Counter",          trackable = DB.Trackable.MELEE_COUNTER })
+        local fullMitigationTrackables =
+        {
+            { header = "Evasion (Melee)",  trackable = DB.Trackable.DEF_EVASION_MELEE          },
+            { header = "Evasion (Ranged)", trackable = DB.Trackable.DEF_EVASION_RANGED         },
+            { header = "Evasion (TP)",     trackable = DB.Trackable.DEF_EVASION_TP_ACTION      },
+            { header = "Parry",            trackable = DB.Trackable.DEF_PARRY                  },
+            { header = "Shadows (Melee)",  trackable = DB.Trackable.DEF_SHADOWS_MELEE          },
+            { header = "Shadows (Ranged)", trackable = DB.Trackable.DEF_SHADOWS_RANGED         },
+            { header = "Shadows (Magic)",  trackable = DB.Trackable.DEF_SHADOWS_MAGIC          },
+            { header = "Shadows (TP)",     trackable = DB.Trackable.DEF_SHADOWS_TP_ACTION      },
+            { header = "Third Eye",        trackable = DB.Trackable.DEF_THIRD_EYE_ANTICIPATION },
+            { header = "Counter",          trackable = DB.Trackable.MELEE_COUNTER              },
+        }
 
         local mitigationFound = false
         for _, data in ipairs(fullMitigationTrackables) do
@@ -204,8 +206,8 @@ Focus.Defense.Mitigation = function(playerName)
         -- Partial Mitigation
         local partialMitigationTrackables =
         {
-            [1] = { header = "Guard",        trackable = DB.Trackable.DEF_GUARD },
-            [2] = { header = "Shield Block", trackable = DB.Trackable.DEF_SHIELD_BLOCK },
+            { header = "Guard",        trackable = DB.Trackable.DEF_GUARD        },
+            { header = "Shield Block", trackable = DB.Trackable.DEF_SHIELD_BLOCK },
         }
 
         for _, data in ipairs(partialMitigationTrackables) do
@@ -266,7 +268,7 @@ Focus.Defense.HealingReceived = function(playerName)
         UI.TableNextColumn() UI.Text("Total")
         UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL)
         UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable)
-        UI.TableNextColumn() Column.Spell.MP_Used(playerName, trackable)
+        UI.TableNextColumn() Column.Spell.MpUsed(playerName, trackable)
         WindowManager.TableRowColor(1)
 
         local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
@@ -276,7 +278,7 @@ Focus.Defense.HealingReceived = function(playerName)
             UI.TableNextColumn() UI.Text(string.format("- %s", actionName))
             UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL, actionName)
             UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable, nil, actionName)
-            UI.TableNextColumn() Column.Spell.MP_Used(playerName, trackable, actionName)
+            UI.TableNextColumn() Column.Spell.MpUsed(playerName, trackable, actionName)
             WindowManager.TableRowColor(0)
         end
 

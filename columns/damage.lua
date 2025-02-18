@@ -317,7 +317,7 @@ end
 ---@param burst? boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Per_Unit = function(player_name, trackable, unit_metric, action_name, burst)
+Column.Damage.PerUnit = function(player_name, trackable, unit_metric, action_name, burst)
     local damage = 0
     local unit   = 0
 

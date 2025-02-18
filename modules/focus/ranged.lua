@@ -16,7 +16,7 @@ Focus.Ranged.Display = function(player_name)
     Focus.Ranged.Total(player_name)
     Focus.Ranged.Auxiliary(player_name, endamage, endrain, enaspir)
     Focus.Ranged.Min_Max(player_name)
-    if paralyzed > 0 or intimidated > 0 then Focus.Melee.Action_Blocked(player_name, paralyzed, intimidated) end
+    if paralyzed > 0 or intimidated > 0 then Focus.Melee.ActionBlocked(player_name, paralyzed, intimidated) end
 
     if endebuff > 0 or endamage > 0 then UI.Separator() end
     if endebuff > 0 then Focus.Catalog.Endebuff(player_name, DB.Trackable.RANGED_ENDEBUFF) end

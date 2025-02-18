@@ -15,7 +15,7 @@ Focus.Melee.Display = function(player_name)
     Focus.Melee.Total(player_name)
     Focus.Melee.Auxiliary(player_name, endamage)
     Focus.Melee.Min_Max(player_name)
-    if paralyzed > 0 or intimidated > 0 then Focus.Melee.Action_Blocked(player_name, paralyzed, intimidated) end
+    if paralyzed > 0 or intimidated > 0 then Focus.Melee.ActionBlocked(player_name, paralyzed, intimidated) end
     if has_multi then Focus.Melee.Multi_Attack(player_name) end
 
     if endebuff > 0 or endamage > 0 then UI.Separator() end
@@ -213,7 +213,7 @@ end
 ---@param paralyzed integer
 ---@param intimidated integer
 ------------------------------------------------------------------------------------------------------
-Focus.Melee.Action_Blocked = function(player_name, paralyzed, intimidated)
+Focus.Melee.ActionBlocked = function(player_name, paralyzed, intimidated)
     local col_flags   = Focus.ColumnFlags
     local table_flags = Focus.TableFlags
     local name_width  = Column.Widths.Name

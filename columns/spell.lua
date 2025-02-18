@@ -8,7 +8,7 @@ Column.Spell = {}
 ---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Spell.MP_Used = function(player_name, trackable, action_name, burst, justify)
+Column.Spell.MpUsed = function(player_name, trackable, action_name, burst, justify)
     if not trackable then trackable = DB.Trackable.SPELLS_OVERALL end
 
     local mp = 0
