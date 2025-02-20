@@ -177,7 +177,7 @@ Focus.Pets.Pet_Specific_Total = function(player_name, pet_name)
         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable)
         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable, true, nil, true)
         UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, trackable, true)
-        UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, trackable)
+        UI.TableNextColumn() Column.Acc.ByTypePet(player_name, pet_name, trackable)
         WindowManager.TableRowColor(row)
         row = row + 1
 
@@ -193,7 +193,7 @@ Focus.Pets.Pet_Specific_Total = function(player_name, pet_name)
                 UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, data.trackable)
                 UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, data.trackable, true, nil, true)
                 UI.TableNextColumn() Column.Damage.Pet_By_Type(player_name, pet_name, data.trackable, true)
-                UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, data.trackable)
+                UI.TableNextColumn() Column.Acc.ByTypePet(player_name, pet_name, data.trackable)
                 WindowManager.TableRowColor(row)
                 row = row + 1
             end
@@ -245,10 +245,10 @@ Focus.Pets.Pet_Specific_TP_Moves = function(player_name, pet_name, trackable, he
 
         local row = 1
         UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, trackable)
-        UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, trackable)
+        UI.TableNextColumn() Column.Damage.PetAverage(player_name, pet_name, trackable)
+        UI.TableNextColumn() Column.Acc.ByTypePet(player_name, pet_name, trackable)
         UI.TableNextColumn() Column.Damage.Pet_Attempts(player_name, pet_name, trackable)
-        UI.TableNextColumn() Column.Damage.Average_Pet_TP(player_name, pet_name, trackable)
+        UI.TableNextColumn() Column.Damage.AveragePetTP(player_name, pet_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, trackable)
         UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, trackable, DB.Metric.MIN)
         UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, trackable, DB.Metric.MAX)
@@ -261,10 +261,10 @@ Focus.Pets.Pet_Specific_TP_Moves = function(player_name, pet_name, trackable, he
             local action_trackable = data[3]
             if trackable == action_trackable then
                 UI.TableNextColumn() UI.Text("- " .. action_name)
-                UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, action_trackable, action_name)
-                UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, action_trackable, action_name)
+                UI.TableNextColumn() Column.Damage.PetAverage(player_name, pet_name, action_trackable, action_name)
+                UI.TableNextColumn() Column.Acc.ByTypePet(player_name, pet_name, action_trackable, action_name)
                 UI.TableNextColumn() Column.Damage.Pet_Attempts(player_name, pet_name, action_trackable, action_name)
-                UI.TableNextColumn() Column.Damage.Average_Pet_TP(player_name, pet_name, action_trackable, action_name)
+                UI.TableNextColumn() Column.Damage.AveragePetTP(player_name, pet_name, action_trackable, action_name)
                 UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, action_trackable, nil, action_name)
                 UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, action_trackable, DB.Metric.MIN, action_name)
                 UI.TableNextColumn() Column.Damage.By_Type_Pet(player_name, pet_name, action_trackable, DB.Metric.MAX, action_name)
@@ -306,8 +306,8 @@ Focus.Pets.Pet_Specific_Non_Damaging_Spells = function(player_name, pet_name, tr
 
         local row = 1
         UI.TableNextColumn() UI.Text("Total")
-        if not is_buff then UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, trackable) end
-        if not is_buff then UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, trackable) end
+        if not is_buff then UI.TableNextColumn() Column.Damage.PetAverage(player_name, pet_name, trackable) end
+        if not is_buff then UI.TableNextColumn() Column.Acc.ByTypePet(player_name, pet_name, trackable) end
         UI.TableNextColumn() Column.Damage.Pet_Attempts(player_name, pet_name, trackable)
         WindowManager.TableRowColor(row)
         row = row + 1
@@ -318,8 +318,8 @@ Focus.Pets.Pet_Specific_Non_Damaging_Spells = function(player_name, pet_name, tr
             local action_trackable = data[3]
             if trackable == action_trackable then
                 UI.TableNextColumn() UI.Text("- " .. action_name)
-                if not is_buff then UI.TableNextColumn() Column.Damage.Pet_Average(player_name, pet_name, action_trackable, action_name) end
-                if not is_buff then UI.TableNextColumn() Column.Acc.By_Type_Pet(player_name, pet_name, action_trackable, action_name) end
+                if not is_buff then UI.TableNextColumn() Column.Damage.PetAverage(player_name, pet_name, action_trackable, action_name) end
+                if not is_buff then UI.TableNextColumn() Column.Acc.ByTypePet(player_name, pet_name, action_trackable, action_name) end
                 UI.TableNextColumn() Column.Damage.Pet_Attempts(player_name, pet_name, action_trackable, action_name)
                 WindowManager.TableRowColor(row)
                 row = row + 1

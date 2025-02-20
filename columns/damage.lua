@@ -204,7 +204,7 @@ end
 ---@param action_name? string
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Pet_Average = function(player_name, pet_name, trackable, action_name)
+Column.Damage.PetAverage = function(player_name, pet_name, trackable, action_name)
     local hits   = 0
     local damage = 0
 
@@ -389,7 +389,7 @@ end
 ---@param trackable string
 ---@param action_name? string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Average_Pet_TP = function(player_name, pet_name, trackable, action_name)
+Column.Damage.AveragePetTP = function(player_name, pet_name, trackable, action_name)
     local tp = 0
     local attempts = 0
 

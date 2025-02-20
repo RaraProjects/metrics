@@ -81,7 +81,7 @@ end
 ---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Acc.By_Type_Pet = function(player_name, pet_name, trackable, action_name, justify)
+Column.Acc.ByTypePet = function(player_name, pet_name, trackable, action_name, justify)
     local hit_metric     = DB.Metric.HITS_ON_TARGET
     local attempt_metric = DB.Metric.ATTEMPTS_ON_TARGET
 

@@ -389,7 +389,7 @@ end
 ---@param header     string
 ---@param hideMP?    boolean      hide MP for things like NIN buffs.
 ------------------------------------------------------------------------------------------------------
-Focus.Magic.From_List = function(playerName, trackable, spellList, header, hideMP)
+Focus.Magic.FromList = function(playerName, trackable, spellList, header, hideMP)
     if not playerName or not spellList then
         return nil
     end
