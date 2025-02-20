@@ -138,7 +138,7 @@ end
 ---@param total_multi? boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Acc.Multi_Attack = function(player_name, melee_type, multi_attack_metric, total_multi)
+Column.Acc.MultiAttack = function(player_name, melee_type, multi_attack_metric, total_multi)
     local multi_attack  = DB.Data.Get(player_name, melee_type, multi_attack_metric)
     local attack_rounds = DB.Data.Get(player_name, melee_type, DB.Metric.ATTEMPTS_ON_USE)
 

@@ -80,7 +80,7 @@ end
 ---@param justify? boolean whether or not to right justify the text.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.By_Type_Crit = function(player_name, damage_type, percent, justify)
+Column.Damage.ByTypeCrit = function(player_name, damage_type, percent, justify)
     local crit_damage
 
     -- Get data
@@ -144,7 +144,7 @@ end
 ---@param justify? boolean whether or not to right justify the text
 ---@return number
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Average_By_Type_Exclude_Critical = function(player_name, trackable, justify)
+Column.Damage.AverageByTypeExcludeCritical = function(player_name, trackable, justify)
     -- Get the data.
     local damage      = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
     local crit_damage = DB.Data.Get(player_name, trackable, DB.Metric.CRITICAL_DAMAGE)
@@ -170,7 +170,7 @@ end
 ---@param justify? boolean whether or not to right justify the text.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Average_By_Type_Critical_Only = function(player_name, trackable, justify)
+Column.Damage.AverageByTypeCriticalOnly = function(player_name, trackable, justify)
     local crit_damage = 0
     local crit_count  = 0
 
