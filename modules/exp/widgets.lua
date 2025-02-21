@@ -4,7 +4,7 @@ XP.Widgets = { }
 -- Toggles XP tracking information showing.
 ------------------------------------------------------------------------------------------------------
 XP.Widgets.TrackingButton = function()
-    if Debug.Is_Enabled() then
+    if Debug.IsEnabled() then
         UI.SameLine() UI.Text(" ") UI.SameLine()
 
         if UI.SmallButton("Tracking") then

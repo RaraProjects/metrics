@@ -22,7 +22,7 @@ table.insert(Parse.Column_Content, {
 
 -- Name
 table.insert(Parse.Column_Content, {
-    Condition = function() return not Parse.Config.Is_Nano_Mode() end,
+    Condition = function() return not Parse.Config.IsNanoMode() end,
     Header    = function() return "Name" end,
     Content   = function(player_name) Column.String.Format_Name(player_name) end,
     Total     = function() UI.Text(" ") end,

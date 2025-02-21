@@ -359,7 +359,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Is_Mini_Mode = function()
+Parse.Config.IsMiniMode = function()
     return Parse.Settings.Display_Mode == Parse.Display_Modes.MINI
 end
 
@@ -376,7 +376,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Is_Nano_Mode = function()
+Parse.Config.IsNanoMode = function()
     return Parse.Settings.Display_Mode == Parse.Display_Modes.NANO
 end
 

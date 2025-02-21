@@ -63,7 +63,7 @@ Parse.Content = function()
 
     -- The full toolbar is only available in full mode.
     Parse.Toolbar()
-    if Parse.Config.Is_Mini_Mode() and Parse.Settings.Lurk_Mode then UI.Text(" Lurking...") end
+    if Parse.Config.IsMiniMode() and Parse.Settings.Lurk_Mode then UI.Text(" Lurking...") end
 
     local columns = Parse.Columns[Parse.Settings.Display_Mode]
 
@@ -99,7 +99,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Headers = function()
     for _, col in ipairs(Parse.Column_Content) do
-        if col.Condition() and (not Parse.Config.Is_Mini_Mode() or col.Is_Mini) and (not Parse.Config.Is_Nano_Mode() or col.Is_Nano) then
+        if col.Condition() and (not Parse.Config.IsMiniMode() or col.Is_Mini) and (not Parse.Config.IsNanoMode() or col.Is_Nano) then
             UI.TableSetupColumn(col.Header(), Column.Flags.None)
         end
     end
@@ -120,7 +120,7 @@ Parse.Data_Rows = function(player)
             -- Player specific content.
             local player_name = data[1]
             for _, col in ipairs(Parse.Column_Content) do
-                if col.Condition() and (not Parse.Config.Is_Mini_Mode() or col.Is_Mini) and (not Parse.Config.Is_Nano_Mode() or col.Is_Nano) then
+                if col.Condition() and (not Parse.Config.IsMiniMode() or col.Is_Mini) and (not Parse.Config.IsNanoMode() or col.Is_Nano) then
                     UI.TableNextColumn() col.Content(player_name)
                 end
             end
@@ -134,7 +134,7 @@ end
 -- Populate parse total row.
 ------------------------------------------------------------------------------------------------------
 Parse.Total_Row = function()
-    if Parse.Settings.Grand_Totals and not Parse.Config.Is_Nano_Mode() then
+    if Parse.Settings.Grand_Totals and not Parse.Config.IsNanoMode() then
         UI.TableNextRow()   -- Need to do this to get the color to apply to the total and not the last data row.
         UI.TableNextRow()
 
@@ -144,7 +144,7 @@ Parse.Total_Row = function()
         UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, row_bg_color)
 
         for _, col in ipairs(Parse.Column_Content) do
-            if col.Condition() and (not Parse.Config.Is_Mini_Mode() or col.Is_Mini) and (not Parse.Config.Is_Nano_Mode() or col.Is_Nano) then
+            if col.Condition() and (not Parse.Config.IsMiniMode() or col.Is_Mini) and (not Parse.Config.IsNanoMode() or col.Is_Nano) then
                 UI.TableNextColumn() col.Total()
             end
         end

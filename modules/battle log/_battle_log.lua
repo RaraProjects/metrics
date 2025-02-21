@@ -113,7 +113,7 @@ Blog.Content = function()
         UI.EndTable()
 
         -- Need this in the table scope so that I have access to start/stop/count.
-        if Debug.Is_Enabled() then
+        if Debug.IsEnabled() then
             UI.Text(string.format("Start: %d", start)) UI.SameLine() UI.Text(" ") UI.SameLine()
             UI.Text(string.format("Stop: %d", stop)) UI.SameLine() UI.Text(" ") UI.SameLine()
             UI.Text(string.format("Showing: %d", count))

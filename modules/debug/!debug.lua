@@ -45,7 +45,7 @@ require("modules.debug.unit_tests.xp")
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Debug.Is_Enabled = function()
+Debug.IsEnabled = function()
     return Debug.Enabled
 end
 

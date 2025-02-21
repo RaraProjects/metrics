@@ -87,7 +87,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
         return nil
     end
 
-    if Debug.Is_Enabled() and Debug.Show_Demo then
+    if Debug.IsEnabled() and Debug.Show_Demo then
         UI.ShowDemoWindow()
     end
 
@@ -176,7 +176,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     elseif packet.id == 0x029 then
         local data = Ashita.Packets.BuildMessage(packet.data)
         if not data then return nil end
-        if Debug.Is_Enabled() then Debug.Packet.Add_Message(data) end
+        if Debug.IsEnabled() then Debug.Packet.Add_Message(data) end
 
         -- Killing a mob.
         if data.message == Ashita.Message.MOB_KILL then
