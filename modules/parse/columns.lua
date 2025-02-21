@@ -214,7 +214,7 @@ table.insert(Parse.Column_Content, {
 table.insert(Parse.Column_Content, {
     Condition = function() return Parse.Settings.Show_Ranged_Distance end,
     Header    = function() return "R.Dist" end,
-    Content   = function(player_name) Column.Damage.Shot_Distance(player_name, true) end,
+    Content   = function(player_name) Column.Damage.ShotDistance(player_name, true) end,
     Total     = function() UI.Text(" ") end,
     Is_Mini   = false,
     Is_Nano   = false,

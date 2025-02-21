@@ -594,7 +594,7 @@ end
 ---@param player_name string
 ---@param justify? boolean whether or not to right justify the text
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Shot_Distance = function(player_name, justify)
+Column.Damage.ShotDistance = function(player_name, justify)
     local shot_distance = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.SHOT_DISTANCE)
     if shot_distance then shot_distance = shot_distance / 100 end
     local count = DB.Data.Get(player_name, DB.Trackable.RANGED_OVERALL, DB.Metric.ATTEMPTS_ON_TARGET)
