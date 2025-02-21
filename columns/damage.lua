@@ -49,7 +49,7 @@ end
 ---@param percent_pet? boolean whether or not the damage should be raw or percent.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.By_Type_Pet = function(player_name, pet_name, trackable, metric, action_name, percent_pet)
+Column.Damage.ByTypePet = function(player_name, pet_name, trackable, metric, action_name, percent_pet)
     if not metric then metric = DB.Metric.TOTAL end
     local trackable_damage = 0
 
@@ -290,7 +290,7 @@ end
 ---@param on_target? boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Pet_Attempts = function(player_name, pet_name, trackable, action_name, on_target)
+Column.Damage.PetAttempts = function(player_name, pet_name, trackable, action_name, on_target)
     local attempt_metric = DB.Metric.ATTEMPTS_ON_USE
     if on_target then attempt_metric = DB.Metric.ATTEMPTS_ON_TARGET end
 
@@ -418,7 +418,7 @@ end
 ---@param all_total? boolean controls denominator for %; true = pet total; false = all total
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Pet_By_Type = function(player_name, pet_name, damage_type, percent, justify, all_total)
+Column.Damage.PetByType = function(player_name, pet_name, damage_type, percent, justify, all_total)
     local focused_damage = DB.PetData.Get(player_name, pet_name, damage_type, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(focused_damage)
     if percent then
@@ -438,7 +438,7 @@ end
 ---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Healing_Player = function(player_name, pet_name, damage_type, justify)
+Column.Damage.HealingPlayer = function(player_name, pet_name, damage_type, justify)
     local healing = DB.Data.Get(player_name, damage_type, DB.Metric.TOTAL)
     if pet_name then healing = DB.PetData.Get(player_name, pet_name, damage_type, DB.Metric.TOTAL) end
     local color = Column.String.Color_Zero(healing)

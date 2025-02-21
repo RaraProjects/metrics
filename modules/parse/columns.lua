@@ -314,7 +314,7 @@ table.insert(Parse.Column_Content, {
 table.insert(Parse.Column_Content, {
     Condition = function() return Parse.Settings.Show_Damage_Taken end,
     Header    = function() return "DT" end,
-    Content   = function(player_name) Column.Defense.Damage_Taken_By_Type(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, false, true) end,
+    Content   = function(player_name) Column.Defense.DamageTakenByType(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, false, true) end,
     Total     = function() Column.Damage.Trackable_Total(DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, true) end,
     Is_Mini   = false,
     Is_Nano   = false,

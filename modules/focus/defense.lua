@@ -82,14 +82,14 @@ Focus.Defense.DamageTaken = function(playerName, makeBrief)
                 if makeBrief then
                     UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable)
                     UI.TableNextColumn() Column.General.Percent_Party_Total(playerName, data.trackable)
-                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable)
-                    if pet > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable_pet) end
+                    UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable)
+                    if pet > 0 then UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable_pet) end
                 else
                     UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable)
-                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable, true)
+                    UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable, true)
                     UI.TableNextColumn() Column.General.Percent_Party_Total(playerName, data.trackable)
-                    UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable)
-                    if pet > 0 then UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable_pet) end
+                    UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable)
+                    if pet > 0 then UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable_pet) end
                 end
 
                 if data.header == "Total" then
@@ -136,9 +136,9 @@ Focus.Defense.Auxiliary = function(playerName)
             if data.threshold > 0 then
                 UI.TableNextColumn() UI.Text(data.header)
                 UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable)
-                UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable, true)
+                UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable, true)
                 UI.TableNextColumn() Column.Acc.ByType(playerName, data.trackable, 0)
-                UI.TableNextColumn() Column.Defense.Damage_Taken_By_Type(playerName, data.trackable)
+                UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable)
                 WindowManager.TableRowColor(row)
                 row = row + 1
             end

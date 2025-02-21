@@ -10,7 +10,7 @@ Column.Defense = {}
 ---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Defense.Damage_Taken_By_Type = function(player_name, trackable, percent, justify, raw)
+Column.Defense.DamageTakenByType = function(player_name, trackable, percent, justify, raw)
     local total = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
 
     local color = Column.String.Color_Zero(total)
