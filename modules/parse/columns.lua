@@ -164,7 +164,7 @@ table.insert(Parse.Column_Content, {
 table.insert(Parse.Column_Content, {
     Condition = function() return Parse.Settings.Show_Weaponskill_TP end,
     Header    = function() return "WS ~TP." end,
-    Content   = function(player_name) Column.Damage.Per_Unit_Average(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.TP_SPENT, nil, true) end,
+    Content   = function(player_name) Column.Damage.PerUnitAverage(player_name, DB.Trackable.WEAPONSKILL, DB.Metric.TP_SPENT, nil, true) end,
     Total     = function() UI.Text(" ") end,
     Is_Mini   = false,
     Is_Nano   = false,

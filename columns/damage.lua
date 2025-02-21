@@ -360,7 +360,7 @@ end
 ---@param action_name? string
 ---@param justify? boolean
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Per_Unit_Average = function(player_name, trackable, unit_metric, action_name, justify)
+Column.Damage.PerUnitAverage = function(player_name, trackable, unit_metric, action_name, justify)
     local tp        = 0
     local attempts  = 0
 

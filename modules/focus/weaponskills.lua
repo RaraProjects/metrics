@@ -1,38 +1,39 @@
-Focus.WS = {}
+Focus.WS = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Loads data to the weaponskill and skillchain drop down inside the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param hide_publish? boolean
+---@param playerName   string
+---@param hidePublish? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.WS.Display = function(player_name, hide_publish)
-    local trackable_ws = DB.Trackable.WEAPONSKILL
-    local trackable_mp = DB.Trackable.WEAPONSKILL_MP_DRAIN
-    local trackable_sc = DB.Trackable.SKILLCHAIN
+Focus.WS.Display = function(playerName, hidePublish)
+    local trackableWS = DB.Trackable.WEAPONSKILL
+    local trackableMP = DB.Trackable.WEAPONSKILL_MP_DRAIN
+    local trackableSC = DB.Trackable.SKILLCHAIN
 
-    local weaponskills_found   = DB.Tracking.Trackables[trackable_ws] and DB.Tracking.Trackables[trackable_ws][player_name]
-    local mp_weaponskill_found = DB.Tracking.Trackables[trackable_mp] and DB.Tracking.Trackables[trackable_mp][player_name]
-    local skillchains_found    = DB.Tracking.Trackables[trackable_sc] and DB.Tracking.Trackables[trackable_sc][player_name]
+    local weaponskillsFound  = DB.Tracking.Trackables[trackableWS] and DB.Tracking.Trackables[trackableWS][playerName]
+    local mpWeaponskillFound = DB.Tracking.Trackables[trackableMP] and DB.Tracking.Trackables[trackableMP][playerName]
+    local skillchainsFound   = DB.Tracking.Trackables[trackableSC] and DB.Tracking.Trackables[trackableSC][playerName]
 
     -- No data found message.
-    if not weaponskills_found and not skillchains_found and not mp_weaponskill_found then
+    if not weaponskillsFound and not skillchainsFound and not mpWeaponskillFound then
         UI.Text("No weaponskill or skillchain data available for this player.")
     end
 
     -- Display the weaponskill and skillchain data.
-    if weaponskills_found   then Focus.WS.Weaponskill(player_name) end
-    if mp_weaponskill_found then Focus.WS.Weaponskill(player_name, nil, true) end
-    if skillchains_found    then Focus.WS.Skillchains(player_name) end
+    if weaponskillsFound  then Focus.WS.Weaponskill(playerName) end
+    if mpWeaponskillFound then Focus.WS.Weaponskill(playerName, nil, true) end
+    if skillchainsFound   then Focus.WS.Skillchains(playerName) end
 
     -- Publish buttons
-    if not hide_publish then
-        if weaponskills_found then
-            Report.Widgets.Button(player_name, trackable_ws, "Publish Weaponskills")
+    if not hidePublish then
+        if weaponskillsFound then
+            Report.Widgets.Button(playerName, trackableWS, "Publish Weaponskills")
         end
-        if skillchains_found then
+
+        if skillchainsFound then
             UI.SameLine() UI.Text(" ") UI.SameLine()
-            Report.Widgets.Button(player_name, trackable_sc, "Publish Skillchains")
+            Report.Widgets.Button(playerName, trackableSC, "Publish Skillchains")
         end
     end
 end
@@ -40,70 +41,68 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets up the table for the weaponskill list inside the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param make_brief? boolean
----@param is_mp_drain? boolean
+---@param playerName string
+---@param makeBrief? boolean
+---@param isMpDrain? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.WS.Weaponskill = function(player_name, make_brief, is_mp_drain)
-    local trackable = DB.Trackable.WEAPONSKILL
-    if is_mp_drain then trackable = DB.Trackable.WEAPONSKILL_MP_DRAIN end
+Focus.WS.Weaponskill = function(playerName, makeBrief, isMpDrain)
+    local trackable = isMpDrain and DB.Trackable.WEAPONSKILL_MP_DRAIN or DB.Trackable.WEAPONSKILL
 
-    if not DB.Tracking.Trackables[trackable] then return nil end
-    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
+    if not DB.Tracking.Trackables[trackable] or not DB.Tracking.Trackables[trackable][playerName] then
+        return nil
+    end
 
-    local table_flags = Focus.Catalog.TableFlags
-    local col_flags   = Focus.Catalog.ColumnFlags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
-
-    local columns = 10
-    if make_brief then columns = 4 end
+    local colFlags  = Focus.Catalog.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
+    local columns   = makeBrief and 4 or 10
 
     local header = "Weaponskill"
-    if is_mp_drain then header = header .. " (MP)" end
+    if isMpDrain then header = string.format("%s (MP)", header) end
 
-    if UI.BeginTable(trackable, columns, table_flags) then
-        UI.TableSetupColumn(header,     col_flags, name_width)
-        UI.TableSetupColumn("Average",  col_flags, width)
-        if not make_brief then UI.TableSetupColumn("%Player",  col_flags, width) end
-        UI.TableSetupColumn("Accuracy", col_flags, width)
-        if not make_brief then UI.TableSetupColumn("Attempts", col_flags, width) end
-        if not make_brief then UI.TableSetupColumn("Damage",   col_flags, width) end
-        if not make_brief then UI.TableSetupColumn("DMG/TP",   col_flags, width) end
-        UI.TableSetupColumn("~TP",      col_flags, width)
-        if not make_brief then UI.TableSetupColumn("Minimum",  col_flags, width) end
-        if not make_brief then UI.TableSetupColumn("Maximum",  col_flags, width) end
+    if UI.BeginTable(trackable, columns, Focus.Catalog.TableFlags) then
+        UI.TableSetupColumn(header,     colFlags, nameWidth)
+        UI.TableSetupColumn("Average",  colFlags, width)
+        if not makeBrief then UI.TableSetupColumn("%Player",  colFlags, width) end
+        UI.TableSetupColumn("Accuracy", colFlags, width)
+        if not makeBrief then UI.TableSetupColumn("Attempts", colFlags, width) end
+        if not makeBrief then UI.TableSetupColumn("Damage",   colFlags, width) end
+        if not makeBrief then UI.TableSetupColumn("DMG/TP",   colFlags, width) end
+        UI.TableSetupColumn("~TP",      colFlags, width)
+        if not makeBrief then UI.TableSetupColumn("Minimum",  colFlags, width) end
+        if not makeBrief then UI.TableSetupColumn("Maximum",  colFlags, width) end
         UI.TableHeadersRow()
 
         -- All Weaponskills
-        UI.TableNextColumn() UI.Text("Total")
-        UI.TableNextColumn()                        Column.Damage.ByTypeAverage(player_name,  trackable)
-        if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name,          trackable, nil, nil, true) end
-        UI.TableNextColumn()                        Column.Acc.ByType(player_name,             trackable)
-        if not make_brief then UI.TableNextColumn() Column.Damage.Attempts(player_name,         trackable) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name,          trackable) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.PerUnit(player_name,         trackable, DB.Metric.TP_SPENT) end
-        UI.TableNextColumn()                        Column.Damage.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT)
-        if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name,          trackable, DB.Metric.MIN) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name,          trackable, DB.Metric.MAX) end
+        UI.TableNextColumn()                       UI.Text("Total")
+        UI.TableNextColumn()                       Column.Damage.ByTypeAverage(playerName,  trackable)
+        if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,         trackable, nil, nil, true) end
+        UI.TableNextColumn()                       Column.Acc.ByType(playerName,            trackable)
+        if not makeBrief then UI.TableNextColumn() Column.Damage.Attempts(playerName,       trackable) end
+        if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,         trackable) end
+        if not makeBrief then UI.TableNextColumn() Column.Damage.PerUnit(playerName,        trackable, DB.Metric.TP_SPENT) end
+        UI.TableNextColumn()                       Column.Damage.PerUnitAverage(playerName, trackable, DB.Metric.TP_SPENT)
+        if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,         trackable, DB.Metric.MIN) end
+        if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,         trackable, DB.Metric.MAX) end
         WindowManager.TableRowColor(1)
 
         -- Specific Weaponskills
-        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
-        local action_name
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
+        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+        for _, data in ipairs(sortedDamage) do
+            local actionName = data[1]
+
             UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("- " .. action_name)
-            UI.TableNextColumn()                        Column.Damage.ByTypeAverage(player_name,  trackable, nil, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name,          trackable, nil, action_name, true) end
-            UI.TableNextColumn()                        Column.Acc.ByType(player_name,             trackable, nil, false, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.Attempts(player_name,         trackable, nil, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name,          trackable, nil, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.PerUnit(player_name,         trackable, DB.Metric.TP_SPENT, action_name) end
-            UI.TableNextColumn()                        Column.Damage.Per_Unit_Average(player_name, trackable, DB.Metric.TP_SPENT, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name,          trackable, DB.Metric.MIN, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name,          trackable, DB.Metric.MAX, action_name) end
+            UI.TableNextColumn()                       UI.Text(string.format("- %s", actionName))
+            UI.TableNextColumn()                       Column.Damage.ByTypeAverage(playerName,  trackable, nil, actionName)
+            if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,         trackable, nil, actionName, true) end
+            UI.TableNextColumn()                       Column.Acc.ByType(playerName,            trackable, nil, false, actionName)
+            if not makeBrief then UI.TableNextColumn() Column.Damage.Attempts(playerName,       trackable, nil, actionName) end
+            if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,         trackable, nil, actionName) end
+            if not makeBrief then UI.TableNextColumn() Column.Damage.PerUnit(playerName,        trackable, DB.Metric.TP_SPENT, actionName) end
+            UI.TableNextColumn()                       Column.Damage.PerUnitAverage(playerName, trackable, DB.Metric.TP_SPENT, actionName)
+            if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,         trackable, DB.Metric.MIN, actionName) end
+            if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,         trackable, DB.Metric.MAX, actionName) end
             WindowManager.TableRowColor(0)
         end
 
@@ -114,60 +113,64 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets up the table for the skillchain list inside the focus window.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param make_brief? boolean
+---@param playerName string
+---@param makeBrief? boolean
 ------------------------------------------------------------------------------------------------------
-Focus.WS.Skillchains = function(player_name, make_brief)
+Focus.WS.Skillchains = function(playerName, makeBrief)
     local trackable = DB.Trackable.SKILLCHAIN
-    if not DB.Tracking.Trackables[trackable] then return nil end
-    if not DB.Tracking.Trackables[trackable][player_name] then return nil end
 
-    local table_flags = Focus.Catalog.TableFlags
-    local col_flags   = Focus.Catalog.ColumnFlags
-    local name_width  = Column.Widths.Name
-    local width       = Column.Widths.Standard
+    if not DB.Tracking.Trackables[trackable] or not DB.Tracking.Trackables[trackable][playerName] then
+        return nil
+    end
 
-    local columns = 7
-    if make_brief then columns = 3 end
-    local including_skillchain = Parse.Config.IncludeSkillchainDamage()
-    if including_skillchain and not make_brief then columns = columns + 1 end
+    local colFlags  = Focus.Catalog.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
 
-    if UI.BeginTable(trackable, columns, table_flags) then
-        UI.TableSetupColumn("Skillchain", col_flags, name_width)
-        if not make_brief then UI.TableSetupColumn("Average", col_flags, width) end
-        if including_skillchain then UI.TableSetupColumn("%Player", col_flags, width) end
-        UI.TableSetupColumn("Opened",     col_flags, width)
-        UI.TableSetupColumn("Closed",     col_flags, width)
-        if not make_brief then UI.TableSetupColumn("Total",   col_flags, width) end
-        if not make_brief then UI.TableSetupColumn("Minimum", col_flags, width) end
-        if not make_brief then UI.TableSetupColumn("Maximum", col_flags, width) end
+    local columns = makeBrief and 3 or 7
+    local includingSkillchain = Parse.Config.IncludeSkillchainDamage()
+
+    if includingSkillchain and not makeBrief then
+        columns = columns + 1
+    end
+
+    if UI.BeginTable(trackable, columns, Focus.Catalog.TableFlags) then
+        UI.TableSetupColumn("Skillchain", colFlags, nameWidth)
+        if not makeBrief then UI.TableSetupColumn("Average", colFlags, width) end
+        if includingSkillchain then UI.TableSetupColumn("%Player", colFlags, width) end
+        UI.TableSetupColumn("Opened",     colFlags, width)
+        UI.TableSetupColumn("Closed",     colFlags, width)
+        if not makeBrief then UI.TableSetupColumn("Total",   colFlags, width) end
+        if not makeBrief then UI.TableSetupColumn("Minimum", colFlags, width) end
+        if not makeBrief then UI.TableSetupColumn("Maximum", colFlags, width) end
         UI.TableHeadersRow()
 
         -- All Skillchains
         UI.TableNextColumn() UI.Text("Total")
-        if not make_brief then UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable) end
-        if including_skillchain then UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, nil, nil, true) end
-        UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.SKILLCHAIN_OPENED)
-        UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.SKILLCHAIN_CLOSED)
-        if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name, trackable) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MIN) end
-        if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MAX) end
+        if not makeBrief then UI.TableNextColumn()       Column.Damage.ByTypeAverage(playerName, trackable) end
+        if includingSkillchain then UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, nil, nil, true) end
+        UI.TableNextColumn()                             Column.Damage.ByType(playerName, trackable, DB.Metric.SKILLCHAIN_OPENED)
+        UI.TableNextColumn()                             Column.Damage.ByType(playerName, trackable, DB.Metric.SKILLCHAIN_CLOSED)
+        if not makeBrief then UI.TableNextColumn()       Column.Damage.ByType(playerName, trackable) end
+        if not makeBrief then UI.TableNextColumn()       Column.Damage.ByType(playerName, trackable, DB.Metric.MIN) end
+        if not makeBrief then UI.TableNextColumn()       Column.Damage.ByType(playerName, trackable, DB.Metric.MAX) end
         WindowManager.TableRowColor(1)
 
         -- Specific Skillchains
-        local sorted_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
-        local action_name
-        for _, data in ipairs(sorted_damage) do
-            action_name = data[1]
+        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+        for _, data in ipairs(sortedDamage) do
+            local actionName = data[1]
+
             UI.TableNextRow()
-            UI.TableNextColumn() UI.Text("- " .. action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable, nil, action_name) end
-            if including_skillchain then UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.TOTAL, action_name, true) end
-            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.SKILLCHAIN_OPENED, action_name)
-            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.SKILLCHAIN_CLOSED, action_name)
-            if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.TOTAL, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MIN, action_name) end
-            if not make_brief then UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MAX, action_name) end
+            UI.TableNextColumn()                             UI.Text(string.format("- %s", actionName))
+            if not makeBrief then UI.TableNextColumn()       Column.Damage.ByTypeAverage(playerName, trackable, nil, actionName) end
+            if includingSkillchain then UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL, actionName, true) end
+            UI.TableNextColumn()                             Column.Damage.ByType(playerName, trackable, DB.Metric.SKILLCHAIN_OPENED, actionName)
+            UI.TableNextColumn()                             Column.Damage.ByType(playerName, trackable, DB.Metric.SKILLCHAIN_CLOSED, actionName)
+            if not makeBrief then UI.TableNextColumn()       Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL, actionName) end
+            if not makeBrief then UI.TableNextColumn()       Column.Damage.ByType(playerName, trackable, DB.Metric.MIN, actionName) end
+            if not makeBrief then UI.TableNextColumn()       Column.Damage.ByType(playerName, trackable, DB.Metric.MAX, actionName) end
             WindowManager.TableRowColor(0)
         end
 
