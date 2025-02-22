@@ -1,4 +1,4 @@
-Report = {}
+Report = { }
 
 require("modules.report.config")
 require("modules.report.publishing")
@@ -9,7 +9,7 @@ Report.Title  = "Metrics - Reporting"
 Report.Module = "Report"
 Report.File   = "report"
 
-Report.Section = {}
+Report.Section = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Initializes the Hub screen.
@@ -21,7 +21,8 @@ Report.Initialize = function(settings)
     Report.Settings = settings or Settings_File.load(Report.Config.Defaults, Report.File)
 
     -- Create the Overview Window.
-    Report.Window = Window:New({
+    Report.Window = Window:New
+    ({
         Name     = Report.Name,
         Title    = Report.Title,
         Module   = Report.Module,
@@ -33,24 +34,26 @@ end
 -- Creates some buttons to publish various party metrics to chat.
 ------------------------------------------------------------------------------------------------------
 Report.Content = function()
-    Report.Widgets.Settings_Button()
-    UI.Separator() Report.Section.Chat_Reports()
+    Report.Widgets.SettingsButton()
+    UI.Separator() Report.Section.ChatReports()
     UI.Separator() Report.Section.File()
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Builds the chat report section.
 ------------------------------------------------------------------------------------------------------
-Report.Section.Chat_Reports = function()
-    local col_flags = Column.Flags.None
-    local width = Column.Widths.Report
+Report.Section.ChatReports = function()
+    local colFlags = Column.Flags.None
+    local width    = Column.Widths.Report
+
     UI.Text("Chat Reports")
-    Report.Widgets.Chat_Mode()
+    Report.Widgets.ChatMode()
+
     if UI.BeginTable("Chat Reports", 4, WindowManager.Table.Flags.None) then
-        UI.TableSetupColumn("Col 1", col_flags, width)
-        UI.TableSetupColumn("Col 2", col_flags, width)
-        UI.TableSetupColumn("Col 3", col_flags, width)
-        UI.TableSetupColumn("Col 4", col_flags, width)
+        UI.TableSetupColumn("Col 1", colFlags, width)
+        UI.TableSetupColumn("Col 2", colFlags, width)
+        UI.TableSetupColumn("Col 3", colFlags, width)
+        UI.TableSetupColumn("Col 4", colFlags, width)
 
         -- The early returns are necessary for crash prevention.
         UI.TableNextRow()
@@ -59,13 +62,13 @@ Report.Section.Chat_Reports = function()
         UI.TableNextColumn()
         UI.TableNextColumn()
         --
-        UI.TableNextColumn() if UI.Button("Melee       ") then Report.Publishing.Damage_By_Type(DB.Trackable.MELEE_OVERALL) return nil end
-        UI.TableNextColumn() if UI.Button("Weaponskills") then Report.Publishing.Damage_By_Type(DB.Trackable.WEAPONSKILL) return nil end
-        UI.TableNextColumn() if UI.Button("Magic       ") then Report.Publishing.Damage_By_Type(DB.Trackable.SPELLS_OVERALL) return nil end
-        UI.TableNextColumn() if UI.Button("Pet         ") then Report.Publishing.Damage_By_Type(DB.Trackable.PET_OVERALL) return nil end
+        UI.TableNextColumn() if UI.Button("Melee       ") then Report.Publishing.DamageByType(DB.Trackable.MELEE_OVERALL) return nil end
+        UI.TableNextColumn() if UI.Button("Weaponskills") then Report.Publishing.DamageByType(DB.Trackable.WEAPONSKILL) return nil end
+        UI.TableNextColumn() if UI.Button("Magic       ") then Report.Publishing.DamageByType(DB.Trackable.SPELLS_OVERALL) return nil end
+        UI.TableNextColumn() if UI.Button("Pet         ") then Report.Publishing.DamageByType(DB.Trackable.PET_OVERALL) return nil end
         --
-        UI.TableNextColumn() if UI.Button("Abilities   ") then Report.Publishing.Damage_By_Type(DB.Trackable.ABILITY_DAMAGING) return nil end
-        UI.TableNextColumn() if UI.Button("Healing     ") then Report.Publishing.Damage_By_Type(DB.Trackable.ALL_HEAL) return nil end
+        UI.TableNextColumn() if UI.Button("Abilities   ") then Report.Publishing.DamageByType(DB.Trackable.ABILITY_DAMAGING) return nil end
+        UI.TableNextColumn() if UI.Button("Healing     ") then Report.Publishing.DamageByType(DB.Trackable.ALL_HEAL) return nil end
         UI.TableNextColumn()
         UI.TableNextColumn()
 
@@ -77,22 +80,22 @@ end
 -- Builds the file section.
 ------------------------------------------------------------------------------------------------------
 Report.Section.File = function()
-    local col_flags = Column.Flags.None
-    local width = Column.Widths.Report
+    local colFlags = Column.Flags.None
+    local width    = Column.Widths.Report
     UI.Text("Create CSV File")
     UI.Text("Files can be found in: /config/Metrics/")
 
-    local blog_length = #Blog.Log
-    if blog_length >= 50000 then
-        UI.Text("NOTICE: There are " .. tostring(blog_length) .. " entries in the battle log.")
+    local blogLength = #Blog.Log
+    if blogLength >= 50000 then
+        UI.Text("NOTICE: There are " .. tostring(blogLength) .. " entries in the battle log.")
         UI.Text("        You may notice a stagger when saving it.")
     end
 
     if UI.BeginTable("Save File", 4, WindowManager.Table.Flags.None) then
-        UI.TableSetupColumn("Col 1", col_flags, width)
-        UI.TableSetupColumn("Col 2", col_flags, width)
-        UI.TableSetupColumn("Col 3", col_flags, width)
-        UI.TableSetupColumn("Col 4", col_flags, width)
+        UI.TableSetupColumn("Col 1", colFlags, width)
+        UI.TableSetupColumn("Col 2", colFlags, width)
+        UI.TableSetupColumn("Col 3", colFlags, width)
+        UI.TableSetupColumn("Col 4", colFlags, width)
 
         UI.TableNextRow()
         UI.TableNextColumn()
@@ -100,16 +103,19 @@ Report.Section.File = function()
             File.Save_Data()
             return nil
         end
+
         UI.TableNextColumn()
         if UI.Button("Battle Log  ") then
             File.Save_Battlelog()
             return nil
         end
+
         UI.TableNextColumn()
         if UI.Button("Loot        ") then
             File.Save_Loot()
             return nil
         end
+
         UI.EndTable()
     end
 end

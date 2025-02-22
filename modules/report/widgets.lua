@@ -1,9 +1,9 @@
-Report.Widgets = {}
+Report.Widgets = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles the settings showing for the battle log.
 ------------------------------------------------------------------------------------------------------
-Report.Widgets.Settings_Button = function()
+Report.Widgets.SettingsButton = function()
     if UI.SmallButton("Settings") then
         Config.ButtonToggle(Config.ModuleFile.REPORT)
     end
@@ -12,42 +12,41 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Creates a button to publish certain cataloged actions to the screen.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param focus_type string
----@param caption? string
+---@param playerName string
+---@param trackable  DB.Trackable
+---@param caption?   string
 ------------------------------------------------------------------------------------------------------
-Report.Widgets.Button = function(player_name, focus_type, caption)
-    if not caption then caption = "Publish" end
+Report.Widgets.Button = function(playerName, trackable, caption)
+    caption = caption or "Publish"
+
     if UI.Button(caption) then
-        Report.Publishing.Catalog(player_name, focus_type)
+        Report.Publishing.Catalog(playerName, trackable)
     end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Creates a dropdown menu to chat mode options for publishing.
 ------------------------------------------------------------------------------------------------------
-Report.Widgets.Chat_Mode = function()
+Report.Widgets.ChatMode = function()
     local list  = Ashita.Chat.Modes
     local flags = DB.Widgets.DropdownFlags
-    local title = "Chat Mode"
-    if list[1] then
-        UI.SetNextItemWidth(150)
-        if UI.BeginCombo(title, list[Report.Publishing.Chat_Index].Name, flags) then
-            for n = 1, #list, 1 do
-                local is_selected = Report.Publishing.Chat_Index == n
-                if UI.Selectable(list[n].Name, is_selected) then
-                    Report.Publishing.Chat_Index = n
-                    Report.Publishing.Chat_Mode = list[n]
-                end
-                if is_selected then
-                    UI.SetItemDefaultFocus()
-                end
+
+    UI.SetNextItemWidth(150)
+
+    if UI.BeginCombo("Chat Mode", list[Report.Publishing.ChatIndex].Name or Ashita.ChatMode.PARTY, flags) then
+        for index, mode in ipairs(list) do
+            local isSelected = Report.Publishing.ChatIndex == index
+
+            if UI.Selectable(mode.Name, isSelected) then
+                Report.Publishing.ChatIndex = index
+                Report.Publishing.ChatMode  = mode
             end
-            UI.EndCombo()
+
+            if isSelected then
+                UI.SetItemDefaultFocus()
+            end
         end
-    else
-        if UI.BeginCombo(title, Ashita.ChatMode.PARTY, flags) then
-            UI.EndCombo()
-        end
+
+        UI.EndCombo()
     end
 end

@@ -64,11 +64,11 @@ ashita.events.register('command', 'command_cb', function (e)
             if report_type == "total" then
                 Report.Publishing.Overall()
             elseif report_type == "melee" then
-                Report.Publishing.Damage_By_Type(DB.Trackable.MELEE_OVERALL)
+                Report.Publishing.DamageByType(DB.Trackable.MELEE_OVERALL)
             elseif report_type == "ws" then
-                Report.Publishing.Damage_By_Type(DB.Trackable.WEAPONSKILL)
+                Report.Publishing.DamageByType(DB.Trackable.WEAPONSKILL)
             elseif report_type == "healing" then
-                Report.Publishing.Damage_By_Type(DB.Trackable.ALL_HEAL)
+                Report.Publishing.DamageByType(DB.Trackable.ALL_HEAL)
             end
 
         -- Primary module switching.

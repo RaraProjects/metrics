@@ -1,14 +1,14 @@
-Report.Config = {}
+Report.Config = { }
 
 Report.Config.Defaults = T{
-    X = 100,
-    Y = 100,
-    Visible = {false},
-    Damage_Threshold = 5,   -- Controls what damage percent is needed for showing up in a cross-player chat report.
-    Auto_Save = false,
+    X                = 100,
+    Y                = 100,
+    Visible          = { false },
+    Damage_Threshold = 5,           -- Controls what damage percent is needed for showing up in a cross-player chat report.
+    Auto_Save        = false,
 }
 
-Report.Config.Slider_Width = 100
+Report.Config.SliderWidth = 100
 
 ------------------------------------------------------------------------------------------------------
 -- Resets report settings.
@@ -26,13 +26,17 @@ Report.Config.Display = function()
     if UI.Checkbox("Auto Save", {Report.Settings.Auto_Save}) then
         Report.Settings.Auto_Save = not Report.Settings.Auto_Save
     end
-    WindowManager.Widgets.HelpMarker("Automatically save an export of the database as a CSV whenver you "
-                                          .."reset the database or re/unload the addon (like shutting down).")
+
+    WindowManager.Widgets.HelpMarker("Automatically save an export of the database as a CSV whenver you " ..
+                                     "reset the database or re/unload the addon (like shutting down).")
     UI.Separator()
-    local damage_threshold = {[1] = Report.Settings.Damage_Threshold}
+
+    local damageThreshold = { Report.Settings.Damage_Threshold }
+
     UI.Text("This does not affect the Publish button on the focus tab.")
-    UI.SetNextItemWidth(Report.Config.Slider_Width)
-    if UI.DragInt("Chat Report % Threshold", damage_threshold, 0.1, 0, 50, "%d", ImGuiSliderFlags_None) then
-        Report.Settings.Damage_Threshold = damage_threshold[1]
+    UI.SetNextItemWidth(Report.Config.SliderWidth)
+
+    if UI.DragInt("Chat Report % Threshold", damageThreshold, 0.1, 0, 50, "%d", ImGuiSliderFlags_None) then
+        Report.Settings.Damage_Threshold = damageThreshold[1]
     end
 end
