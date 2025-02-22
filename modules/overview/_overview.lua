@@ -1,4 +1,4 @@
-Overview = {}
+Overview = { }
 
 require("modules.overview.config")
 require("modules.overview.parse")
@@ -9,14 +9,14 @@ Overview.Title  = "Metrics - Overview"
 Overview.Module = "Overview"
 Overview.File   = "overview"
 
-
-
-Overview.Modes = {
+Overview.Modes =
+{
     PARSE = "Parse",
     FOCUS = "Focus",
     BLOG  = "Battle Log",
 }
-Overview.Mode = Overview.Modes.PARSE
+
+Overview.ActiveMode = Overview.Modes.PARSE
 
 ------------------------------------------------------------------------------------------------------
 -- Initializes the Hub screen.
@@ -28,11 +28,12 @@ Overview.Initialize = function(settings)
     Overview.Settings = settings or Settings_File.load(Overview.Config.Defaults, Overview.File)
 
     -- Create the Overview Window.
-    Overview.Window = Window:New({
-        Name     = Overview.Name,
-        Title    = Overview.Title,
-        Module   = Overview.Module,
-        Settings = Overview.Settings,
+    Overview.Window = Window:New
+    ({
+        Name       = Overview.Name,
+        Title      = Overview.Title,
+        Module     = Overview.Module,
+        Settings   = Overview.Settings,
         Show_Title = true,
     })
 end
@@ -41,15 +42,19 @@ end
 -- Opens a new window to show all tabs as a vertical column.
 ------------------------------------------------------------------------------------------------------
 Overview.Content = function()
-    if Overview.Mode == Overview.Modes.PARSE then
+    if Overview.ActiveMode == Overview.Modes.PARSE then
         Overview.Parse.Content()
-    elseif Overview.Mode == Overview.Modes.FOCUS then
-        local player_name = DB.Widgets.GetPlayerFocus()
-        if player_name == DB.Enum.NONE then
+
+    elseif Overview.ActiveMode == Overview.Modes.FOCUS then
+        local playerName = DB.Widgets.GetPlayerFocus()
+
+        if playerName == DB.Enum.NONE then
             Focus.ScreenshotMode[1] = false
             return nil
         end
-        Overview.Focus.Content(player_name)
+
+        Overview.Focus.Content(playerName)
+
     else
         UI.Text("No content.")
     end
@@ -60,11 +65,11 @@ end
 ------------------------------------------------------------------------------------------------------
 Overview.ScreenshotButton = function()
     if UI.SmallButton("Screenshot") then
-        if Overview.Mode == Overview.Modes.FOCUS then
+        if Overview.ActiveMode == Overview.Modes.FOCUS then
             Overview.Window.ToggleVisibility()
         else
             Overview.Window.Show()
-            Overview.Mode = Overview.Modes.FOCUS
+            Overview.ActiveMode = Overview.Modes.FOCUS
         end
     end
 end
@@ -72,13 +77,13 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Button that opens the overview window with parse content.
 ------------------------------------------------------------------------------------------------------
-Overview.Overview_Button = function()
+Overview.OverviewButton = function()
     if UI.SmallButton("Overview") then
-        if Overview.Mode == Overview.Modes.PARSE then
+        if Overview.ActiveMode == Overview.Modes.PARSE then
             Overview.Window.ToggleVisibility()
         else
             Overview.Window.Show()
-            Overview.Mode = Overview.Modes.PARSE
+            Overview.ActiveMode = Overview.Modes.PARSE
         end
     end
 end

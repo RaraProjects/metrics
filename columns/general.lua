@@ -30,7 +30,7 @@ end
 ---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.General.Percent_Party_Total = function(player_name, trackable, justify, raw)
+Column.General.PercentPartyTotal = function(player_name, trackable, justify, raw)
     local player_total = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(player_total)
     local party_total = 0
@@ -51,7 +51,7 @@ end
 ---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.General.Percent_Party_Total_Action = function(player_name, action_name, trackable, raw)
+Column.General.PercentPartyTotalAction = function(player_name, action_name, trackable, raw)
     local action_total = DB.Catalog.Get(player_name, trackable, action_name, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(action_total)
     local party_total = 0
@@ -72,7 +72,7 @@ end
 ---@param raw? boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.General.Percent_Party_Total_Pet = function(player_name, pet_name, trackable, justify, raw)
+Column.General.PercentPartyTotalPet = function(player_name, pet_name, trackable, justify, raw)
     local pet_total = DB.PetData.Get(player_name, pet_name, trackable, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(pet_total)
     local party_total = 0

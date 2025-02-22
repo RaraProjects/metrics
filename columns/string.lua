@@ -5,7 +5,7 @@ Column.String = T{}
 ------------------------------------------------------------------------------------------------------
 ---@param player_name string
 ------------------------------------------------------------------------------------------------------
-Column.String.Format_Name = function(player_name)
+Column.String.FormatName = function(player_name)
     if not player_name then player_name = "Player" end
     if Parse.Config.IsMaskingNames() then return Column.String.Job(player_name, Parse.Config.Is_Hiding_Subjob()) end
 

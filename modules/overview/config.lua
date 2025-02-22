@@ -1,9 +1,9 @@
-Overview.Config = {}
+Overview.Config = { }
 
 Overview.Config.Defaults = T{
-    X = 100,
-    Y = 100,
-    Visible = {false},
+    X                  = 100,
+    Y                  = 100,
+    Visible            = { false },
     Show_Timer         = true,
     Show_Melee         = false,
     Show_Ranged        = false,

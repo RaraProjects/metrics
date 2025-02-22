@@ -1,45 +1,46 @@
-Overview.Parse = {}
+Overview.Parse = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Overview Content
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Content = function()
-    Parse.Widgets.Mask_Names()
+    Parse.Widgets.MaskNames()
     UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.PercentDetails()
     Overview.Parse.Settings()
     UI.Separator()
-    if Overview.Settings.Show_Timer         then Overview.Parse.Clock() end
-    if Overview.Settings.Show_Melee         then Overview.Parse.Melee() end
-    if Overview.Settings.Show_Ranged        then Overview.Parse.Ranged() end
-    if Overview.Settings.Weaponskills       then Overview.Parse.Weaponskills() end
-    if Overview.Settings.Show_Nuking        then Overview.Parse.Nukes() end
-    if Overview.Settings.Show_Pets          then Overview.Parse.Pets() end
-    if Overview.Settings.Show_Healing       then Overview.Parse.Healing() end
-    if Overview.Settings.Show_Defense       then Overview.Parse.Defense() end
+
+    if Overview.Settings.Show_Timer   then Overview.Parse.Clock() end
+    if Overview.Settings.Show_Melee   then Overview.Parse.Melee() end
+    if Overview.Settings.Show_Ranged  then Overview.Parse.Ranged() end
+    if Overview.Settings.Weaponskills then Overview.Parse.Weaponskills() end
+    if Overview.Settings.Show_Nuking  then Overview.Parse.Nukes() end
+    if Overview.Settings.Show_Pets    then Overview.Parse.Pets() end
+    if Overview.Settings.Show_Healing then Overview.Parse.Healing() end
+    if Overview.Settings.Show_Defense then Overview.Parse.Defense() end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Parse Overview section selection.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Settings = function()
-    local col_flags = Column.Flags.None
-    local width = Column.Widths.Name
+    local colFlags = Column.Flags.None
+    local width    = Column.Widths.Name
 
     if UI.BeginTable("Parse Overview", 5) then
-        UI.TableSetupColumn("Col 1", col_flags, width)
-        UI.TableSetupColumn("Col 2", col_flags, width)
-        UI.TableSetupColumn("Col 3", col_flags, width)
-        UI.TableSetupColumn("Col 4", col_flags, width)
-        UI.TableSetupColumn("Col 5", col_flags, width)
+        UI.TableSetupColumn("Col 1", colFlags, width)
+        UI.TableSetupColumn("Col 2", colFlags, width)
+        UI.TableSetupColumn("Col 3", colFlags, width)
+        UI.TableSetupColumn("Col 4", colFlags, width)
+        UI.TableSetupColumn("Col 5", colFlags, width)
 
-        UI.TableNextColumn() if UI.Checkbox("Timer",         {Overview.Settings.Show_Timer})         then Overview.Settings.Show_Timer         = not Overview.Settings.Show_Timer end
-        UI.TableNextColumn() if UI.Checkbox("Melee",         {Overview.Settings.Show_Melee})         then Overview.Settings.Show_Melee         = not Overview.Settings.Show_Melee end
-        UI.TableNextColumn() if UI.Checkbox("Ranged",        {Overview.Settings.Show_Ranged})        then Overview.Settings.Show_Ranged        = not Overview.Settings.Show_Ranged end
-        UI.TableNextColumn() if UI.Checkbox("Weaponskills",  {Overview.Settings.Show_Weaponskills})  then Overview.Settings.Show_Weaponskills  = not Overview.Settings.Show_Weaponskills end
-        UI.TableNextColumn() if UI.Checkbox("Nuking",        {Overview.Settings.Show_Nuking})        then Overview.Settings.Show_Nuking        = not Overview.Settings.Show_Nuking end
-        UI.TableNextColumn() if UI.Checkbox("Pets",          {Overview.Settings.Show_Pets})          then Overview.Settings.Show_Pets          = not Overview.Settings.Show_Pets end
-        UI.TableNextColumn() if UI.Checkbox("Healing",       {Overview.Settings.Show_Healing})       then Overview.Settings.Show_Healing       = not Overview.Settings.Show_Healing end
-        UI.TableNextColumn() if UI.Checkbox("Defense",       {Overview.Settings.Show_Defense})       then Overview.Settings.Show_Defense       = not Overview.Settings.Show_Defense end
+        UI.TableNextColumn() if UI.Checkbox("Timer",        { Overview.Settings.Show_Timer        }) then Overview.Settings.Show_Timer        = not Overview.Settings.Show_Timer end
+        UI.TableNextColumn() if UI.Checkbox("Melee",        { Overview.Settings.Show_Melee        }) then Overview.Settings.Show_Melee        = not Overview.Settings.Show_Melee end
+        UI.TableNextColumn() if UI.Checkbox("Ranged",       { Overview.Settings.Show_Ranged       }) then Overview.Settings.Show_Ranged       = not Overview.Settings.Show_Ranged end
+        UI.TableNextColumn() if UI.Checkbox("Weaponskills", { Overview.Settings.Show_Weaponskills }) then Overview.Settings.Show_Weaponskills = not Overview.Settings.Show_Weaponskills end
+        UI.TableNextColumn() if UI.Checkbox("Nuking",       { Overview.Settings.Show_Nuking       }) then Overview.Settings.Show_Nuking       = not Overview.Settings.Show_Nuking end
+        UI.TableNextColumn() if UI.Checkbox("Pets",         { Overview.Settings.Show_Pets         }) then Overview.Settings.Show_Pets         = not Overview.Settings.Show_Pets end
+        UI.TableNextColumn() if UI.Checkbox("Healing",      { Overview.Settings.Show_Healing      }) then Overview.Settings.Show_Healing      = not Overview.Settings.Show_Healing end
+        UI.TableNextColumn() if UI.Checkbox("Defense",      { Overview.Settings.Show_Defense      }) then Overview.Settings.Show_Defense      = not Overview.Settings.Show_Defense end
 
         UI.EndTable()
     end
@@ -49,14 +50,13 @@ end
 -- Overview Clocks
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Clock = function()
-    local col_flags = Focus.ColumnFlags
-    local table_flags = Focus.TableFlags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
+    local colFlags   = Focus.ColumnFlags
+    local tableFlags = Focus.TableFlags
+    local nameWidth  = Column.Widths.Name
 
-    if UI.BeginTable("Clocks", 2, table_flags) then
-        UI.TableSetupColumn("Total Time", col_flags, name_width)
-        UI.TableSetupColumn("Active Time", col_flags, name_width)
+    if UI.BeginTable("Clocks", 2, tableFlags) then
+        UI.TableSetupColumn("Total Time",  colFlags, nameWidth)
+        UI.TableSetupColumn("Active Time", colFlags, nameWidth)
         UI.TableHeadersRow()
 
         UI.TableNextRow()
@@ -71,46 +71,48 @@ end
 -- Populates the Parse melee overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Melee = function()
-    local col_flags = Focus.ColumnFlags
-    local table_flags = Focus.TableFlags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
+    local colFlags  = Focus.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
     local trackable = DB.Trackable.MELEE_OVERALL
-    if UI.BeginTable("Melee", 9, table_flags) then
-        UI.TableSetupColumn("Melee",    col_flags, name_width)
-        UI.TableSetupColumn("Damage",   col_flags, width)
-        UI.TableSetupColumn("%Party",   col_flags, width)
-        UI.TableSetupColumn("Average",  col_flags, width)
-        UI.TableSetupColumn("Accuracy", col_flags, width)
-        UI.TableSetupColumn("%Crit",    col_flags, width)
-        UI.TableSetupColumn("Swings",   col_flags, width)
-        UI.TableSetupColumn("Minimum",  col_flags, width)
-        UI.TableSetupColumn("Maximum",  col_flags, width)
+
+    if UI.BeginTable("Melee", 9, Focus.TableFlags) then
+        UI.TableSetupColumn("Melee",    colFlags, nameWidth)
+        UI.TableSetupColumn("Damage",   colFlags, width)
+        UI.TableSetupColumn("%Party",   colFlags, width)
+        UI.TableSetupColumn("Average",  colFlags, width)
+        UI.TableSetupColumn("Accuracy", colFlags, width)
+        UI.TableSetupColumn("%Crit",    colFlags, width)
+        UI.TableSetupColumn("Swings",   colFlags, width)
+        UI.TableSetupColumn("Minimum",  colFlags, width)
+        UI.TableSetupColumn("Maximum",  colFlags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
         local row = 1
-        for rank, data in ipairs(sorted_damage) do
+
+        for rank, data in ipairs(sortedDamage) do
             if rank <= Parse.Config.RankCutoff() then
-                local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+                local playerName = data[1]
+                local damage     = DB.Data.Get(playerName, trackable, DB.Metric.TOTAL)
+
                 if damage > 0 then
                     UI.TableNextRow()
-                    UI.TableNextColumn() Column.String.Format_Name(player_name)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable)
-                    UI.TableNextColumn() Column.Acc.ByType(player_name, trackable)
-                    UI.TableNextColumn() Column.Acc.ByType(player_name, trackable, 0, true)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MIN)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MAX)
+                    UI.TableNextColumn() Column.String.FormatName(playerName)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable)
+                    UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, trackable)
+                    UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable)
+                    UI.TableNextColumn() Column.Acc.ByType(playerName, trackable)
+                    UI.TableNextColumn() Column.Acc.ByType(playerName, trackable, 0, true)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.ATTEMPTS_ON_USE)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MIN)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MAX)
                     WindowManager.TableRowColor(row)
                     row = row + 1
                 end
             end
         end
+
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
@@ -132,48 +134,50 @@ end
 -- Populates the Parse melee overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Ranged = function()
-    local col_flags = Focus.ColumnFlags
-    local table_flags = Focus.TableFlags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
+    local colFlags  = Focus.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
     local trackable = DB.Trackable.RANGED_OVERALL
-    if UI.BeginTable("Ranged", 10, table_flags) then
-        UI.TableSetupColumn("Ranged",    col_flags, name_width)
-        UI.TableSetupColumn("Damage",    col_flags, width)
-        UI.TableSetupColumn("%Party",    col_flags, width)
-        UI.TableSetupColumn("Average",   col_flags, width)
-        UI.TableSetupColumn("Accuracy",  col_flags, width)
-        UI.TableSetupColumn("%Crit",     col_flags, width)
-        UI.TableSetupColumn("Shot Dist", col_flags, width)
-        UI.TableSetupColumn("Shots",     col_flags, width)
-        UI.TableSetupColumn("Minimum",   col_flags, width)
-        UI.TableSetupColumn("Maximum",   col_flags, width)
+
+    if UI.BeginTable("Ranged", 10, Focus.TableFlags) then
+        UI.TableSetupColumn("Ranged",    colFlags, nameWidth)
+        UI.TableSetupColumn("Damage",    colFlags, width)
+        UI.TableSetupColumn("%Party",    colFlags, width)
+        UI.TableSetupColumn("Average",   colFlags, width)
+        UI.TableSetupColumn("Accuracy",  colFlags, width)
+        UI.TableSetupColumn("%Crit",     colFlags, width)
+        UI.TableSetupColumn("Shot Dist", colFlags, width)
+        UI.TableSetupColumn("Shots",     colFlags, width)
+        UI.TableSetupColumn("Minimum",   colFlags, width)
+        UI.TableSetupColumn("Maximum",   colFlags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
         local row = 1
-        for rank, data in ipairs(sorted_damage) do
+
+        for rank, data in ipairs(sortedDamage) do
             if rank <= Parse.Config.RankCutoff() then
-                local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+                local playerName = data[1]
+                local damage     = DB.Data.Get(playerName, trackable, DB.Metric.TOTAL)
+
                 if damage > 0 then
                     UI.TableNextRow()
-                    UI.TableNextColumn() Column.String.Format_Name(player_name)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable)
-                    UI.TableNextColumn() Column.Acc.ByType(player_name, trackable)
-                    UI.TableNextColumn() Column.Acc.ByType(player_name, trackable, 0, true)
-                    UI.TableNextColumn() Column.Damage.ShotDistance(player_name)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MIN)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MAX)
+                    UI.TableNextColumn() Column.String.FormatName(playerName)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable)
+                    UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, trackable)
+                    UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable)
+                    UI.TableNextColumn() Column.Acc.ByType(playerName, trackable)
+                    UI.TableNextColumn() Column.Acc.ByType(playerName, trackable, 0, true)
+                    UI.TableNextColumn() Column.Damage.ShotDistance(playerName)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.ATTEMPTS_ON_USE)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MIN)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MAX)
                     WindowManager.TableRowColor(row)
                     row = row + 1
                 end
             end
         end
+
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
@@ -196,72 +200,73 @@ end
 -- Populates the Parse weaponskill overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Weaponskills = function()
-    local col_flags = Focus.ColumnFlags
-    local table_flags = Focus.TableFlags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
+    local colFlags  = Focus.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
     local trackable = DB.Trackable.WEAPONSKILL
-    local action_name
 
-    if UI.BeginTable("WS", 10, table_flags) then
-        UI.TableSetupColumn("Weaponskill", col_flags, name_width)
-        UI.TableSetupColumn("Damage",      col_flags, width)
-        UI.TableSetupColumn("%Party",      col_flags, width)
-        UI.TableSetupColumn("Average",     col_flags, width)
-        UI.TableSetupColumn("Accuracy",    col_flags, width)
-        UI.TableSetupColumn("~TP",         col_flags, width)
-        UI.TableSetupColumn("DMG/TP",      col_flags, width)
-        UI.TableSetupColumn("Attempts",    col_flags, width)
-        UI.TableSetupColumn("Minimum",     col_flags, width)
-        UI.TableSetupColumn("Maximum",     col_flags, width)
+    if UI.BeginTable("WS", 10, Focus.TableFlags) then
+        UI.TableSetupColumn("Weaponskill", colFlags, nameWidth)
+        UI.TableSetupColumn("Damage",      colFlags, width)
+        UI.TableSetupColumn("%Party",      colFlags, width)
+        UI.TableSetupColumn("Average",     colFlags, width)
+        UI.TableSetupColumn("Accuracy",    colFlags, width)
+        UI.TableSetupColumn("~TP",         colFlags, width)
+        UI.TableSetupColumn("DMG/TP",      colFlags, width)
+        UI.TableSetupColumn("Attempts",    colFlags, width)
+        UI.TableSetupColumn("Minimum",     colFlags, width)
+        UI.TableSetupColumn("Maximum",     colFlags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
         local row = 1
-        for rank, data in ipairs(sorted_damage) do
+
+        for rank, data in ipairs(sortedDamage) do
             if rank <= Parse.Config.RankCutoff() then
-                local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+                local playerName = data[1]
+                local damage = DB.Data.Get(playerName, trackable, DB.Metric.TOTAL)
+
                 if damage > 0 then
                     -- Player Overall
                     UI.TableNextRow()
-                    UI.TableNextColumn() Column.String.Format_Name(player_name)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable)
-                    UI.TableNextColumn() Column.Acc.ByType(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.PerUnitAverage(player_name, trackable, DB.Metric.TP_SPENT)
-                    UI.TableNextColumn() Column.General.Fraction(player_name, trackable, DB.Metric.TOTAL, DB.Metric.TP_SPENT, false, false, true)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.ATTEMPTS_ON_USE)
+                    UI.TableNextColumn() Column.String.FormatName(playerName)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable)
+                    UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, trackable)
+                    UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable)
+                    UI.TableNextColumn() Column.Acc.ByType(playerName, trackable)
+                    UI.TableNextColumn() Column.Damage.PerUnitAverage(playerName, trackable, DB.Metric.TP_SPENT)
+                    UI.TableNextColumn() Column.General.Fraction(playerName, trackable, DB.Metric.TOTAL, DB.Metric.TP_SPENT, false, false, true)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.ATTEMPTS_ON_USE)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     WindowManager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Weaponskills
-                    if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][player_name] then
-                        local sorted_catalog_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
-                        for _, single_data in ipairs(sorted_catalog_damage) do
-                            action_name = single_data[1]
+                    if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][playerName] then
+                        local sortedCatalogDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+                        for _, singleData in ipairs(sortedCatalogDamage) do
+                            local actionName = singleData[1]
 
                             UI.TableNextRow()
-                            UI.TableNextColumn() UI.Text("> " .. tostring(action_name))
-                            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.TOTAL, action_name)
-                            UI.TableNextColumn() Column.General.Percent_Party_Total_Action(player_name, action_name, trackable)
-                            UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable, nil, action_name)
-                            UI.TableNextColumn() Column.Acc.ByType(player_name, trackable, nil, false, action_name)
-                            UI.TableNextColumn() Column.Damage.PerUnitAverage(player_name, trackable, DB.Metric.TP_SPENT, action_name)
-                            UI.TableNextColumn() Column.Damage.PerUnit(player_name, trackable, DB.Metric.TP_SPENT, action_name)
-                            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
-                            UI.TableNextColumn() Focus.Catalog.Min(player_name, action_name, trackable)
-                            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MAX, action_name)
+                            UI.TableNextColumn() UI.Text(string.format("> %s", tostring(actionName)))
+                            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL, actionName)
+                            UI.TableNextColumn() Column.General.PercentPartyTotalAction(playerName, actionName, trackable)
+                            UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable, nil, actionName)
+                            UI.TableNextColumn() Column.Acc.ByType(playerName, trackable, nil, false, actionName)
+                            UI.TableNextColumn() Column.Damage.PerUnitAverage(playerName, trackable, DB.Metric.TP_SPENT, actionName)
+                            UI.TableNextColumn() Column.Damage.PerUnit(playerName, trackable, DB.Metric.TP_SPENT, actionName)
+                            UI.TableNextColumn() Column.Damage.Attempts(playerName, trackable, nil, actionName)
+                            UI.TableNextColumn() Focus.Catalog.Min(playerName, actionName, trackable)
+                            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MAX, actionName)
                             WindowManager.TableRowColor(0)
                         end
                     end
                 end
             end
         end
+
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
@@ -283,69 +288,70 @@ end
 -- Populates the Parse nuking overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Nukes = function()
-    local col_flags = Focus.ColumnFlags
-    local table_flags = Focus.TableFlags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
+    local colFlags  = Focus.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
     local trackable = DB.Trackable.SPELLS_NUKING
-    local action_name
 
-    if UI.BeginTable("Nuke", 9, table_flags) then
-        UI.TableSetupColumn("Nuke",    col_flags, name_width)
-        UI.TableSetupColumn("Damage",  col_flags, width)
-        UI.TableSetupColumn("%Party",  col_flags, width)
-        UI.TableSetupColumn("Average", col_flags, width)
-        UI.TableSetupColumn("Bursts",  col_flags, width)
-        UI.TableSetupColumn("DMG/MP",  col_flags, width)
-        UI.TableSetupColumn("Casts",   col_flags, width)
-        UI.TableSetupColumn("Minimum", col_flags, width)
-        UI.TableSetupColumn("Maximum", col_flags, width)
+    if UI.BeginTable("Nuke", 9, Focus.TableFlags) then
+        UI.TableSetupColumn("Nuke",    colFlags, nameWidth)
+        UI.TableSetupColumn("Damage",  colFlags, width)
+        UI.TableSetupColumn("%Party",  colFlags, width)
+        UI.TableSetupColumn("Average", colFlags, width)
+        UI.TableSetupColumn("Bursts",  colFlags, width)
+        UI.TableSetupColumn("DMG/MP",  colFlags, width)
+        UI.TableSetupColumn("Casts",   colFlags, width)
+        UI.TableSetupColumn("Minimum", colFlags, width)
+        UI.TableSetupColumn("Maximum", colFlags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
         local row = 1
-        for rank, data in ipairs(sorted_damage) do
+
+        for rank, data in ipairs(sortedDamage) do
             if rank <= Parse.Config.RankCutoff() then
-                local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+                local playerName = data[1]
+                local damage = DB.Data.Get(playerName, trackable, DB.Metric.TOTAL)
+
                 if damage > 0 then
                     -- Player Overall
                     UI.TableNextRow()
-                    UI.TableNextColumn() Column.String.Format_Name(player_name)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MAGIC_BURST_COUNT)
-                    UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.HITS_ON_USE)
+                    UI.TableNextColumn() Column.String.FormatName(playerName)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable)
+                    UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, trackable)
+                    UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MAGIC_BURST_COUNT)
+                    UI.TableNextColumn() Column.Spell.UnitPerMP(playerName, trackable)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.HITS_ON_USE)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     WindowManager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Nuke Spells
-                    if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][player_name] then
-                        local sorted_catalog_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
-                        for _, single_data in ipairs(sorted_catalog_damage) do
-                            action_name = single_data[1]
+                    if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][playerName] then
+                        local sortedCatalogDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+                        for _, singleData in ipairs(sortedCatalogDamage) do
+                            local actionName = singleData[1]
 
                             UI.TableNextRow()
-                            UI.TableNextColumn() UI.Text("> " .. tostring(action_name))
-                            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.TOTAL, action_name)
-                            UI.TableNextColumn() Column.General.Percent_Party_Total_Action(player_name, action_name, trackable)
-                            UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable, nil, action_name)
-                            UI.TableNextColumn() Column.Single.Bursts(player_name, action_name)
-                            UI.TableNextColumn() Column.Damage.PerUnit(player_name, trackable, DB.Metric.MP_SPENT, action_name)
-                            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
-                            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MIN, action_name)
-                            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MAX, action_name)
+                            UI.TableNextColumn() UI.Text(string.format("> %s", tostring(actionName)))
+                            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL, actionName)
+                            UI.TableNextColumn() Column.General.PercentPartyTotalAction(playerName, actionName, trackable)
+                            UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable, nil, actionName)
+                            UI.TableNextColumn() Column.Single.Bursts(playerName, actionName)
+                            UI.TableNextColumn() Column.Damage.PerUnit(playerName, trackable, DB.Metric.MP_SPENT, actionName)
+                            UI.TableNextColumn() Column.Damage.Attempts(playerName, trackable, nil, actionName)
+                            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MIN, actionName)
+                            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MAX, actionName)
                             WindowManager.TableRowColor(0)
                         end
                     end
                 end
             end
         end
+
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
@@ -367,60 +373,63 @@ end
 -- Populates the Parse pet overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Pets = function()
-    local col_flags = Focus.ColumnFlags
-    local table_flags = Focus.TableFlags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
+    local colFlags  = Focus.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
     local trackable = DB.Trackable.PET_OVERALL
 
-    if UI.BeginTable("Pets", 7, table_flags) then
-        UI.TableSetupColumn("Pet",      col_flags, name_width)
-        UI.TableSetupColumn("Damage",   col_flags, width)
-        UI.TableSetupColumn("%Party",   col_flags, width)
-        UI.TableSetupColumn("Accuracy", col_flags, width)
-        UI.TableSetupColumn("%Player",  col_flags, width)
-        UI.TableSetupColumn("%Melee",   col_flags, width)
-        UI.TableSetupColumn("%TP Move", col_flags, width)
+    if UI.BeginTable("Pets", 7, Focus.TableFlags) then
+        UI.TableSetupColumn("Pet",      colFlags, nameWidth)
+        UI.TableSetupColumn("Damage",   colFlags, width)
+        UI.TableSetupColumn("%Party",   colFlags, width)
+        UI.TableSetupColumn("Accuracy", colFlags, width)
+        UI.TableSetupColumn("%Player",  colFlags, width)
+        UI.TableSetupColumn("%Melee",   colFlags, width)
+        UI.TableSetupColumn("%TP Move", colFlags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
         local row = 1
-        for rank, data in ipairs(sorted_damage) do
+
+        for rank, data in ipairs(sortedDamage) do
             if rank <= Parse.Config.RankCutoff() then
-                local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+                local playerName = data[1]
+                local damage = DB.Data.Get(playerName, trackable, DB.Metric.TOTAL)
+
                 if damage > 0 then
                     -- Player overall pet damage.
                     UI.TableNextRow()
-                    UI.TableNextColumn() Column.String.Format_Name(player_name)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
-                    UI.TableNextColumn() Column.Acc.ByType(player_name, DB.Trackable.PET_MELEE_DISCRETE)
+                    UI.TableNextColumn() Column.String.FormatName(playerName)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable)
+                    UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, trackable)
+                    UI.TableNextColumn() Column.Acc.ByType(playerName, DB.Trackable.PET_MELEE_DISCRETE)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, DB.Trackable.PET_MELEE_OVERALL, nil, nil, true)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, DB.Trackable.PET_TP, nil, nil, true)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.PET_MELEE_OVERALL, nil, nil, true)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, DB.Trackable.PET_TP, nil, nil, true)
                     WindowManager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Pets
-                    local pet_name = DB.Enum.DEBUG
-                    local sortedDamage = DB.Lists.GetSortedPetDamage(player_name)
-                    for _, pet_data in ipairs(sortedDamage) do
-                        pet_name = pet_data[1]
+                    local petName = DB.Enum.DEBUG
+                    local petSortedDamage = DB.Lists.GetSortedPetDamage(playerName)
+
+                    for _, petData in ipairs(petSortedDamage) do
+                        petName = petData[1]
+
                         UI.TableNextRow()
-                        UI.TableNextColumn() UI.Text("> " .. tostring(pet_name))
-                        UI.TableNextColumn() Column.Damage.PetByType(player_name, pet_name, trackable)
-                        UI.TableNextColumn() Column.General.Percent_Party_Total_Pet(player_name, pet_name, trackable)
-                        UI.TableNextColumn() Column.Acc.ByTypePet(player_name, pet_name, DB.Trackable.PET_MELEE_DISCRETE)
-                        UI.TableNextColumn() Column.Damage.PetByType(player_name, pet_name, trackable, true)
-                        UI.TableNextColumn() Column.Damage.PetByType(player_name, pet_name, DB.Trackable.PET_MELEE_OVERALL, true)
-                        UI.TableNextColumn() Column.Damage.PetByType(player_name, pet_name, DB.Trackable.PET_TP, true)
+                        UI.TableNextColumn() UI.Text(string.format("> %s", tostring(petName)))
+                        UI.TableNextColumn() Column.Damage.PetByType(playerName, petName, trackable)
+                        UI.TableNextColumn() Column.General.PercentPartyTotalPet(playerName, petName, trackable)
+                        UI.TableNextColumn() Column.Acc.ByTypePet(playerName, petName, DB.Trackable.PET_MELEE_DISCRETE)
+                        UI.TableNextColumn() Column.Damage.PetByType(playerName, petName, trackable, true)
+                        UI.TableNextColumn() Column.Damage.PetByType(playerName, petName, DB.Trackable.PET_MELEE_OVERALL, true)
+                        UI.TableNextColumn() Column.Damage.PetByType(playerName, petName, DB.Trackable.PET_TP, true)
                         WindowManager.TableRowColor(0)
                     end
                 end
             end
         end
+
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
@@ -440,69 +449,70 @@ end
 -- Populates the Parse healing overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Healing = function()
-    local col_flags = Focus.ColumnFlags
-    local table_flags = Focus.TableFlags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
+    local colFlags  = Focus.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
     local trackable = DB.Trackable.SPELLS_HEALING
-    local action_name
 
-    if UI.BeginTable("Healing Magic", 9, table_flags) then
-        UI.TableSetupColumn("Healing",  col_flags, name_width)
-        UI.TableSetupColumn("HP+",      col_flags, width)
-        UI.TableSetupColumn("%Party",   col_flags, width)
-        UI.TableSetupColumn("Average",  col_flags, width)
-        UI.TableSetupColumn("Overcure", col_flags, width)
-        UI.TableSetupColumn("HP+/MP", col_flags, width)
-        UI.TableSetupColumn("Casts",    col_flags, width)
-        UI.TableSetupColumn("Minimum",  col_flags, width)
-        UI.TableSetupColumn("Maximum",  col_flags, width)
+    if UI.BeginTable("Healing Magic", 9, Focus.TableFlags) then
+        UI.TableSetupColumn("Healing",  colFlags, nameWidth)
+        UI.TableSetupColumn("HP+",      colFlags, width)
+        UI.TableSetupColumn("%Party",   colFlags, width)
+        UI.TableSetupColumn("Average",  colFlags, width)
+        UI.TableSetupColumn("Overcure", colFlags, width)
+        UI.TableSetupColumn("HP+/MP",   colFlags, width)
+        UI.TableSetupColumn("Casts",    colFlags, width)
+        UI.TableSetupColumn("Minimum",  colFlags, width)
+        UI.TableSetupColumn("Maximum",  colFlags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
         local row = 1
-        for rank, data in ipairs(sorted_damage) do
+
+        for rank, data in ipairs(sortedDamage) do
             if rank <= Parse.Config.RankCutoff() then
-                local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+                local playerName = data[1]
+                local damage = DB.Data.Get(playerName, trackable, DB.Metric.TOTAL)
+
                 if damage > 0 then
                     -- Player Overall
                     UI.TableNextRow()
-                    UI.TableNextColumn() Column.String.Format_Name(player_name)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable)
-                    UI.TableNextColumn() Column.Healing.Overcure(player_name)
-                    UI.TableNextColumn() Column.Spell.Unit_Per_MP(player_name, trackable)
-                    UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.HITS_ON_USE)
+                    UI.TableNextColumn() Column.String.FormatName(playerName)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable)
+                    UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, trackable)
+                    UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable)
+                    UI.TableNextColumn() Column.Healing.Overcure(playerName)
+                    UI.TableNextColumn() Column.Spell.UnitPerMP(playerName, trackable)
+                    UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.HITS_ON_USE)
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---")
                     WindowManager.TableRowColor(1)
                     row = row + 1
 
                     -- Specific Healing Spells
-                    if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][player_name] then
-                        local sorted_catalog_damage = DB.Lists.GetSortedCatalogDamage(player_name, trackable)
-                        for _, single_data in ipairs(sorted_catalog_damage) do
-                            action_name = single_data[1]
+                    if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][playerName] then
+                        local sortedCatalogDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+
+                        for _, singleData in ipairs(sortedCatalogDamage) do
+                            local actionName = singleData[1]
 
                             UI.TableNextRow()
-                            UI.TableNextColumn() UI.Text("> " .. tostring(action_name))
-                            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.TOTAL, action_name)
-                            UI.TableNextColumn() Column.General.Percent_Party_Total_Action(player_name, action_name, trackable)
-                            UI.TableNextColumn() Column.Damage.ByTypeAverage(player_name, trackable, nil, action_name)
-                            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.OVERCURE, action_name)
-                            UI.TableNextColumn() Column.Damage.PerUnit(player_name, trackable, DB.Metric.MP_SPENT, action_name)
-                            UI.TableNextColumn() Column.Damage.Attempts(player_name, trackable, nil, action_name)
-                            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MIN, action_name)
-                            UI.TableNextColumn() Column.Damage.ByType(player_name, trackable, DB.Metric.MAX, action_name)
+                            UI.TableNextColumn() UI.Text(string.format("> %s", tostring(actionName)))
+                            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL, actionName)
+                            UI.TableNextColumn() Column.General.PercentPartyTotalAction(playerName, actionName, trackable)
+                            UI.TableNextColumn() Column.Damage.ByTypeAverage(playerName, trackable, nil, actionName)
+                            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.OVERCURE, actionName)
+                            UI.TableNextColumn() Column.Damage.PerUnit(playerName, trackable, DB.Metric.MP_SPENT, actionName)
+                            UI.TableNextColumn() Column.Damage.Attempts(playerName, trackable, nil, actionName)
+                            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MIN, actionName)
+                            UI.TableNextColumn() Column.Damage.ByType(playerName, trackable, DB.Metric.MAX, actionName)
                             WindowManager.TableRowColor(0)
                         end
                     end
                 end
             end
         end
+
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")
@@ -524,44 +534,46 @@ end
 -- Populates the Parse melee overview.
 ------------------------------------------------------------------------------------------------------
 Overview.Parse.Defense = function()
-    local col_flags = Focus.ColumnFlags
-    local table_flags = Focus.TableFlags
-    local name_width = Column.Widths.Name
-    local width = Column.Widths.Standard
-
+    local colFlags  = Focus.ColumnFlags
+    local nameWidth = Column.Widths.Name
+    local width     = Column.Widths.Standard
     local trackable = DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL
-    if UI.BeginTable("Defense", 8, table_flags) then
-        UI.TableSetupColumn("Damage Taken", col_flags, name_width)
-        UI.TableSetupColumn("HP-",      col_flags, width)
-        UI.TableSetupColumn("%Party",   col_flags, width)
-        UI.TableSetupColumn("%HP-Rec",  col_flags, width)
-        UI.TableSetupColumn("%Melee",   col_flags, width)
-        UI.TableSetupColumn("%Magic",   col_flags, width)
-        UI.TableSetupColumn("%Mob TP",  col_flags, width)
-        UI.TableSetupColumn("%Evasion", col_flags, width)
+
+    if UI.BeginTable("Defense", 8, Focus.TableFlags) then
+        UI.TableSetupColumn("Damage Taken", colFlags, nameWidth)
+        UI.TableSetupColumn("HP-",      colFlags, width)
+        UI.TableSetupColumn("%Party",   colFlags, width)
+        UI.TableSetupColumn("%HP-Rec",  colFlags, width)
+        UI.TableSetupColumn("%Melee",   colFlags, width)
+        UI.TableSetupColumn("%Magic",   colFlags, width)
+        UI.TableSetupColumn("%Mob TP",  colFlags, width)
+        UI.TableSetupColumn("%Evasion", colFlags, width)
         UI.TableHeadersRow()
 
-        local sorted_damage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
         local row = 1
-        for rank, data in ipairs(sorted_damage) do
+
+        for rank, data in ipairs(sortedDamage) do
             if rank <= Parse.Config.RankCutoff() then
-                local player_name = data[1]
-                local damage = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
+                local playerName = data[1]
+                local damage = DB.Data.Get(playerName, trackable, DB.Metric.TOTAL)
+
                 if damage > 0 then
                     UI.TableNextRow()
-                    UI.TableNextColumn() Column.String.Format_Name(player_name)
-                    UI.TableNextColumn() Column.Defense.DamageTakenByType(player_name, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, trackable)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(player_name, DB.Trackable.DEF_HEALING_RECEIVED)
-                    UI.TableNextColumn() Column.Defense.DamageTakenByType(player_name, DB.Trackable.DEF_MELEE, true)
-                    UI.TableNextColumn() Column.Defense.DamageTakenByType(player_name, DB.Trackable.DEF_NUKING, true)
-                    UI.TableNextColumn() Column.Defense.DamageTakenByType(player_name, DB.Trackable.DEF_TP_MOVE, true)
-                    UI.TableNextColumn() Column.Acc.ByType(player_name, DB.Trackable.DEF_EVASION_MELEE, 0)
+                    UI.TableNextColumn() Column.String.FormatName(playerName)
+                    UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL)
+                    UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, trackable)
+                    UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, DB.Trackable.DEF_HEALING_RECEIVED)
+                    UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, DB.Trackable.DEF_MELEE, true)
+                    UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, DB.Trackable.DEF_NUKING, true)
+                    UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, DB.Trackable.DEF_TP_MOVE, true)
+                    UI.TableNextColumn() Column.Acc.ByType(playerName, DB.Trackable.DEF_EVASION_MELEE, 0)
                     WindowManager.TableRowColor(row)
                     row = row + 1
                 end
             end
         end
+
         if row == 1 then
             UI.TableNextRow()
             UI.TableNextColumn() UI.Text("No data")

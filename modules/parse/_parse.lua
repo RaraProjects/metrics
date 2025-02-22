@@ -82,7 +82,7 @@ end
 Parse.Toolbar = function()
     if Parse.Config.Is_Full_Mode() then
         Parse.Widgets.Settings_Button()
-        UI.SameLine() UI.Text(" ") UI.SameLine() Overview.Overview_Button()
+        UI.SameLine() UI.Text(" ") UI.SameLine() Overview.OverviewButton()
         UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Filter_Button()
         UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.PercentDetails()
         UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.Timer_Button()

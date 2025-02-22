@@ -35,7 +35,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Toggles player name masking.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Mask_Names = function()
+Parse.Widgets.MaskNames = function()
     if UI.SmallButton("Mask Names") then
         Parse.Settings.Mask_Names = not Parse.Settings.Mask_Names
     end

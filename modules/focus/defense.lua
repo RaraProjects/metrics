@@ -81,13 +81,13 @@ Focus.Defense.DamageTaken = function(playerName, makeBrief)
 
                 if makeBrief then
                     UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(playerName, data.trackable)
+                    UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, data.trackable)
                     UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable)
                     if pet > 0 then UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable_pet) end
                 else
                     UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable)
                     UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable, true)
-                    UI.TableNextColumn() Column.General.Percent_Party_Total(playerName, data.trackable)
+                    UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, data.trackable)
                     UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable)
                     if pet > 0 then UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable_pet) end
                 end

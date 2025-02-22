@@ -49,7 +49,7 @@ end
 ---@param trackable string
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Spell.Unit_Per_MP = function(player_name, trackable)
+Column.Spell.UnitPerMP = function(player_name, trackable)
     local mp = DB.Data.Get(player_name, trackable, DB.Metric.MP_SPENT)
     local unit = DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
     local color = Column.String.Color_Zero(unit)
