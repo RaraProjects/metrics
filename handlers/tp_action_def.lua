@@ -46,7 +46,7 @@ H.TpDef.MonsterAction = function(action, actorMob, ownerMob, logDefense)
         targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
         targetOwnerMob = Ashita.Mob.PetOwner(targetMob)
 
-        if Ashita.Party.IsAffiliate(targetMob.name) or targetOwnerMob or Parse.Config.Is_Lurking() then
+        if Ashita.Party.IsAffiliate(targetMob.name) or targetOwnerMob or Parse.Config.IsLurking() then
             trackable = targetOwnerMob and DB.Trackable.DEF_TP_MOVE_PET or DB.Trackable.DEF_TP_MOVE
 
             for _, actionData in pairs(target.actions) do

@@ -25,7 +25,7 @@ H.MeleeDef.Action = function(action, actorMob, ownerMob, logDefense)
     for _, target in pairs(action.targets) do
         targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
 
-        if Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.Is_Lurking() then
+        if Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.IsLurking() then
             for _, actionData in pairs(target.actions) do
 			    local newDamage, newCounterDamage = H.MeleeDef.Parse(actionData, actorMob.name, targetMob.name, ownerMob)
                 totalDamage = totalDamage + newDamage

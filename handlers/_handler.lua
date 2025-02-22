@@ -54,7 +54,7 @@ H.Start_Action_Packet = function(packet)
         mob_self_buff = true
 
     -- Lurk mode detects all actions.
-    elseif Parse.Config.Is_Lurking() then
+    elseif Parse.Config.IsLurking() then
         -- If the actor is player so log offense.
         if Ashita.Mob.IsPlayer(actor_mob) then
             is_offense = true

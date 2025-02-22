@@ -1,23 +1,27 @@
-Parse.Widgets = {}
+Parse.Widgets = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Shows the parse duration clock.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Clock = function()
     if Parse.Settings.Show_Clock then
-        local pause_string = ""
-        if Timers.Is_Paused(Timers.Enum.Names.PARSE) then pause_string = " (||)" end
-        UI.Text("Total: " .. tostring(Timers.Check(Timers.Enum.Names.METRICS)))
+        local pauseString = ""
+
+        if Timers.Is_Paused(Timers.Enum.Names.PARSE) then
+            pauseString = " (||)"
+        end
+
+        UI.Text(string.format("Total: %s", tostring(Timers.Check(Timers.Enum.Names.METRICS))))
         UI.SameLine() UI.Text(" ") UI.SameLine()
-        UI.SameLine() UI.Text("Active: " .. tostring(Timers.Check(Timers.Enum.Names.PARSE)))
-        UI.SameLine() UI.Text(pause_string) Parse.Help.Timer_Duration_Help_Text()
+        UI.SameLine() UI.Text(string.format("Active: %s", tostring(Timers.Check(Timers.Enum.Names.PARSE))))
+        UI.SameLine() UI.Text(pauseString) Parse.Help.TimerDurationHelpText()
     end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles the settings showing for the parse window.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Settings_Button = function()
+Parse.Widgets.SettingsButton = function()
     if UI.SmallButton("Settings") then
         Config.ButtonToggle(Config.ModuleFile.PARSE)
     end
@@ -26,7 +30,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Toggles the mob filter showing for the parse window.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Filter_Button = function()
+Parse.Widgets.FilterButton = function()
     if UI.SmallButton("Filters") then
         Parse.Settings.Show_Filter = not Parse.Settings.Show_Filter
     end
@@ -44,7 +48,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Toggles the duration timer showing for the parse window.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Timer_Button = function()
+Parse.Widgets.TimerButton = function()
     if UI.SmallButton("Timer") then
         Parse.Settings.Show_Clock = not Parse.Settings.Show_Clock
     end
@@ -53,7 +57,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Toggles the Confirmation button showing for the parse window.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Reset_Button = function()
+Parse.Widgets.ResetButton = function()
     if UI.SmallButton("Reset") then
         Parse.Confirmation = not Parse.Confirmation
     end
@@ -62,7 +66,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Confirms database reset.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Reset_Confirmation_Button = function()
+Parse.Widgets.ResetConfirmationButton = function()
     if UI.SmallButton("I'm sure.") then
         DB.Initialize(true)
         Blog.Initialize()
@@ -90,24 +94,29 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Sets the running accuracy buffer limit.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Acc_Limit = function()
-    local acc_limit = {[1] = Metrics.Model.Running_Accuracy_Limit}
+Parse.Widgets.AccLimit = function()
+    local accLimit = { Metrics.Model.Running_Accuracy_Limit }
+
     UI.SetNextItemWidth(Parse.Config.Slider_Width)
-    if UI.DragInt("Recent Accuracy Lookback", acc_limit, 0.1, 10, 50, "%d", ImGuiSliderFlags_None) then
-        Metrics.Model.Running_Accuracy_Limit = acc_limit[1]
-        DB.Tracking.RunningAccuracy = {}
+
+    if UI.DragInt("Recent Accuracy Lookback", accLimit, 0.1, 10, 50, "%d", ImGuiSliderFlags_None) then
+        Metrics.Model.Running_Accuracy_Limit = accLimit[1]
+        DB.Tracking.RunningAccuracy = { }
     end
+
     WindowManager.Widgets.HelpMarker("Recent accuracy calculates based off of {X} many attack attempts.")
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Sets how many players can be shown on the Team screen.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Player_Limit = function()
+Parse.Widgets.PlayerLimit = function()
     UI.SetNextItemWidth(Parse.Config.Slider_Width)
-    local cutoff = {[1] = Parse.Settings.Rank_Cutoff}
+    local cutoff = { Parse.Settings.Rank_Cutoff }
+
     if UI.DragInt("Player Limit", cutoff, 0.1, 0, 18, "%d", ImGuiSliderFlags_None) then
         Parse.Settings.Rank_Cutoff = cutoff[1]
     end
+
     WindowManager.Widgets.HelpMarker("How many players are listed on the Team table.")
 end

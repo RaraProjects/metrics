@@ -23,7 +23,7 @@ H.RangedDef.Action = function(action, actorMob, ownerMob, logDefense)
     for _, target in pairs(action.targets) do
         local targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
 
-        if Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.Is_Lurking() then
+        if Ashita.Party.IsAffiliate(targetMob.name) or Ashita.Mob.PetOwner(targetMob) or Parse.Config.IsLurking() then
             for _, actionData in pairs(target.actions) do
                 damage = damage + H.RangedDef.Parse(actionData, actorMob, targetMob, ownerMob)
             end

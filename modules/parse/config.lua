@@ -1,11 +1,11 @@
-Parse.Config = {}
+Parse.Config = { }
 
 -- Default settings are saved to file.
 Parse.Config.Defaults = T{
-    X = 100,
-    Y = 100,
-    Visible = {false},
-    Display_Mode = Parse.Display_Modes.FULL,
+    X            = 100,
+    Y            = 100,
+    Visible      = { false },
+    Display_Mode = Parse.DisplayModes.FULL,
 
     -- General Settings
     Is_Horizon        = true,
@@ -18,7 +18,7 @@ Parse.Config.Defaults = T{
     Mask_Names        = false,
     Grand_Totals      = false,
     Show_Filter       = false,
-    Rank_Cutoff = 6,
+    Rank_Cutoff       = 6,
 
     -- Column Flags
     Show_Focus_Jump            = true,
@@ -58,63 +58,63 @@ Parse.Config.Column_Flags = Column.Flags.None
 Parse.Config.Column_Width = Column.Widths.Settings
 Parse.Config.Slider_Width = 100
 
-Parse.Config.General_Settings = {}
-table.insert(Parse.Config.General_Settings, {header = "Horizon Mode",      setting = "Is_Horizon",        help = Parse.Help.Horizon_Mode})
-table.insert(Parse.Config.General_Settings, {header = "Run Time",          setting = "Show_Clock",        help = Parse.Help.Help_Text_Clock})
-table.insert(Parse.Config.General_Settings, {header = "Include SC Damage", setting = "Include_SC_Damage", help = Parse.Help.Help_Text_SC_Damage})
-table.insert(Parse.Config.General_Settings, {header = "Short Numbers",     setting = "Condensed_Numbers", help = Parse.Help.Help_Text_Condensed_Numbers})
-table.insert(Parse.Config.General_Settings, {header = "Hide Sub Job",      setting = "Hide_Subjob"})
-table.insert(Parse.Config.General_Settings, {header = "Job Colors",        setting = "Name_Colors"})
-table.insert(Parse.Config.General_Settings, {header = "Mask Names",        setting = "Mask_Names",        help = Parse.Help.Help_Text_Mask_Names})
-table.insert(Parse.Config.General_Settings, {header = "Total Row",         setting = "Grand_Totals"})
-table.insert(Parse.Config.General_Settings, {header = "Lurk Mode",         setting = "Lurk_Mode",         help = Parse.Help.Help_Text_Lurk_Mode})
+Parse.Config.General_Settings = { }
+table.insert(Parse.Config.General_Settings, { header = "Horizon Mode",      setting = "Is_Horizon",        help = Parse.Help.HorizonMode              })
+table.insert(Parse.Config.General_Settings, { header = "Run Time",          setting = "Show_Clock",        help = Parse.Help.HelpTextClock            })
+table.insert(Parse.Config.General_Settings, { header = "Include SC Damage", setting = "Include_SC_Damage", help = Parse.Help.HelpTextScDamage         })
+table.insert(Parse.Config.General_Settings, { header = "Short Numbers",     setting = "Condensed_Numbers", help = Parse.Help.HelpTextCondensedNumbers })
+table.insert(Parse.Config.General_Settings, { header = "Hide Sub Job",      setting = "Hide_Subjob"                                                   })
+table.insert(Parse.Config.General_Settings, { header = "Job Colors",        setting = "Name_Colors"                                                   })
+table.insert(Parse.Config.General_Settings, { header = "Mask Names",        setting = "Mask_Names",        help = Parse.Help.HelpTextMaskNames        })
+table.insert(Parse.Config.General_Settings, { header = "Total Row",         setting = "Grand_Totals"                                                  })
+table.insert(Parse.Config.General_Settings, { header = "Lurk Mode",         setting = "Lurk_Mode",         help = Parse.Help.HelpTextLurkMode         })
 
-Parse.Config.Columns = {}
-Parse.Config.Columns.General = {}
-table.insert(Parse.Config.Columns.General, {header = "Focus Jump",         setting = "Show_Focus_Jump",   help = Parse.Help.Help_Text_Focus_Jump})
-table.insert(Parse.Config.Columns.General, {header = "Player Job",         setting = "Show_Jobs"})
-table.insert(Parse.Config.Columns.General, {header = "DPS",                setting = "Show_DPS"})
-table.insert(Parse.Config.Columns.General, {header = "Damage Taken",       setting = "Show_Damage_Taken"})
-table.insert(Parse.Config.Columns.General, {header = "Player Deaths",      setting = "Show_Player_Deaths"})
+Parse.Config.Columns = { }
+Parse.Config.Columns.General = { }
+table.insert(Parse.Config.Columns.General, { header = "Focus Jump",         setting = "Show_Focus_Jump",   help = Parse.Help.HelpTextFocusJump })
+table.insert(Parse.Config.Columns.General, { header = "Player Job",         setting = "Show_Jobs"                                              })
+table.insert(Parse.Config.Columns.General, { header = "DPS",                setting = "Show_DPS"                                               })
+table.insert(Parse.Config.Columns.General, { header = "Damage Taken",       setting = "Show_Damage_Taken"                                      })
+table.insert(Parse.Config.Columns.General, { header = "Player Deaths",      setting = "Show_Player_Deaths"                                     })
 
-Parse.Config.Columns.Accuracy = {}
-table.insert(Parse.Config.Columns.Accuracy, {header = "Recent",            setting = "Show_Accuracy_Recent"})
-table.insert(Parse.Config.Columns.Accuracy, {header = nil,                 setting = nil})
-table.insert(Parse.Config.Columns.Accuracy, {header = nil,                 setting = nil})
-table.insert(Parse.Config.Columns.Accuracy, {header = "Melee",             setting = "Show_Accuracy_Melee"})
-table.insert(Parse.Config.Columns.Accuracy, {header = "Ranged",            setting = "Show_Accuracy_Ranged"})
-table.insert(Parse.Config.Columns.Accuracy, {header = "Combined",          setting = "Show_Accuracy_Combined"})
+Parse.Config.Columns.Accuracy = { }
+table.insert(Parse.Config.Columns.Accuracy, { header = "Recent",            setting = "Show_Accuracy_Recent"   })
+table.insert(Parse.Config.Columns.Accuracy, { header = nil,                 setting = nil                      })
+table.insert(Parse.Config.Columns.Accuracy, { header = nil,                 setting = nil                      })
+table.insert(Parse.Config.Columns.Accuracy, { header = "Melee",             setting = "Show_Accuracy_Melee"    })
+table.insert(Parse.Config.Columns.Accuracy, { header = "Ranged",            setting = "Show_Accuracy_Ranged"   })
+table.insert(Parse.Config.Columns.Accuracy, { header = "Combined",          setting = "Show_Accuracy_Combined" })
 
-Parse.Config.Columns.Physical = {}
-table.insert(Parse.Config.Columns.Physical, {header = "Melee Damage",      setting = "Show_Total_Melee"})
-table.insert(Parse.Config.Columns.Physical, {header = "Melee Delay",       setting = "Show_Melee_Delay"})
-table.insert(Parse.Config.Columns.Physical, {header = nil,                 setting = nil})
-table.insert(Parse.Config.Columns.Physical, {header = "Ranged Damage",     setting = "Show_Total_Ranged"})
-table.insert(Parse.Config.Columns.Physical, {header = "Shot Distance",     setting = "Show_Ranged_Distance"})
-table.insert(Parse.Config.Columns.Physical, {header = nil,                 setting = nil})
-table.insert(Parse.Config.Columns.Physical, {header = "Melee Crit",        setting = "Show_Crit_Melee"})
-table.insert(Parse.Config.Columns.Physical, {header = "Ranged Crit",       setting = "Show_Crit_Ranged"})
-table.insert(Parse.Config.Columns.Physical, {header = "Combined Crit",     setting = "Show_Crit_Combined"})
-table.insert(Parse.Config.Columns.Physical, {header = "Abilities",         setting = "Show_Total_Ability"})
+Parse.Config.Columns.Physical = { }
+table.insert(Parse.Config.Columns.Physical, { header = "Melee Damage",      setting = "Show_Total_Melee"     })
+table.insert(Parse.Config.Columns.Physical, { header = "Melee Delay",       setting = "Show_Melee_Delay"     })
+table.insert(Parse.Config.Columns.Physical, { header = nil,                 setting = nil                    })
+table.insert(Parse.Config.Columns.Physical, { header = "Ranged Damage",     setting = "Show_Total_Ranged"    })
+table.insert(Parse.Config.Columns.Physical, { header = "Shot Distance",     setting = "Show_Ranged_Distance" })
+table.insert(Parse.Config.Columns.Physical, { header = nil,                 setting = nil                    })
+table.insert(Parse.Config.Columns.Physical, { header = "Melee Crit",        setting = "Show_Crit_Melee"      })
+table.insert(Parse.Config.Columns.Physical, { header = "Ranged Crit",       setting = "Show_Crit_Ranged"     })
+table.insert(Parse.Config.Columns.Physical, { header = "Combined Crit",     setting = "Show_Crit_Combined"   })
+table.insert(Parse.Config.Columns.Physical, { header = "Abilities",         setting = "Show_Total_Ability"   })
 
-Parse.Config.Columns.Weaponskills = {}
-table.insert(Parse.Config.Columns.Weaponskills, {header = "WS Damage",     setting = "Show_Total_Weaponskill"})
-table.insert(Parse.Config.Columns.Weaponskills, {header = "WS Average",    setting = "Show_Weaponskill_Average"})
-table.insert(Parse.Config.Columns.Weaponskills, {header = "WS ~TP",        setting = "Show_Weaponskill_TP"})
-table.insert(Parse.Config.Columns.Weaponskills, {header = "WS Accuracy",   setting = "Show_Accuracy_Weaponskill"})
-table.insert(Parse.Config.Columns.Weaponskills, {header = "SC Damage",     setting = "Show_Total_Skillchain"})
+Parse.Config.Columns.Weaponskills = { }
+table.insert(Parse.Config.Columns.Weaponskills, { header = "WS Damage",     setting = "Show_Total_Weaponskill"    })
+table.insert(Parse.Config.Columns.Weaponskills, { header = "WS Average",    setting = "Show_Weaponskill_Average"  })
+table.insert(Parse.Config.Columns.Weaponskills, { header = "WS ~TP",        setting = "Show_Weaponskill_TP"       })
+table.insert(Parse.Config.Columns.Weaponskills, { header = "WS Accuracy",   setting = "Show_Accuracy_Weaponskill" })
+table.insert(Parse.Config.Columns.Weaponskills, { header = "SC Damage",     setting = "Show_Total_Skillchain"     })
 
-Parse.Config.Columns.Magic = {}
-table.insert(Parse.Config.Columns.Magic, {header = "Nuking",               setting = "Show_Total_Nuking"})
-table.insert(Parse.Config.Columns.Magic, {header = "Healing",              setting = "Show_Total_Healing"})
+Parse.Config.Columns.Magic = { }
+table.insert(Parse.Config.Columns.Magic, { header = "Nuking",               setting = "Show_Total_Nuking"  })
+table.insert(Parse.Config.Columns.Magic, { header = "Healing",              setting = "Show_Total_Healing" })
 
-Parse.Config.Columns.Pets = {}
-table.insert(Parse.Config.Columns.Pets, {header = "Pet Total",             setting = "Show_Pet_Total"})
-table.insert(Parse.Config.Columns.Pets, {header = "Pet Accuracy",          setting = "Show_Pet_Accuracy"})
-table.insert(Parse.Config.Columns.Pets, {header = "Pet Melee",             setting = "Show_Pet_Melee"})
-table.insert(Parse.Config.Columns.Pets, {header = "Pet Ranged",            setting = "Show_Pet_Ranged"})
-table.insert(Parse.Config.Columns.Pets, {header = "Pet TP",                setting = "Show_Pet_TP_Move"})
-table.insert(Parse.Config.Columns.Pets, {header = "Pet Healing",           setting = "Show_Pet_Healing"})
+Parse.Config.Columns.Pets = { }
+table.insert(Parse.Config.Columns.Pets, { header = "Pet Total",             setting = "Show_Pet_Total"    })
+table.insert(Parse.Config.Columns.Pets, { header = "Pet Accuracy",          setting = "Show_Pet_Accuracy" })
+table.insert(Parse.Config.Columns.Pets, { header = "Pet Melee",             setting = "Show_Pet_Melee"    })
+table.insert(Parse.Config.Columns.Pets, { header = "Pet Ranged",            setting = "Show_Pet_Ranged"   })
+table.insert(Parse.Config.Columns.Pets, { header = "Pet TP",                setting = "Show_Pet_TP_Move"  })
+table.insert(Parse.Config.Columns.Pets, { header = "Pet Healing",           setting = "Show_Pet_Healing"  })
 
 ------------------------------------------------------------------------------------------------------
 -- Resets the Parse window to default settings.
@@ -123,57 +123,61 @@ Parse.Config.Reset = function()
     for setting, value in pairs(Parse.Config.Defaults) do
         Parse.Settings[setting] = value
     end
-    Parse.Refresh_Column_Count()
+
+    Parse.RefreshColumnCount()
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Shows settings that affect the Parse screens.
 ------------------------------------------------------------------------------------------------------
 Parse.Config.Display = function()
-    Parse.Config.Show_Column_Group(Parse.Config.General_Settings, "General Settings", true)
-    Parse.Widgets.Player_Limit()
+    Parse.Config.ShowColumnGroup(Parse.Config.General_Settings, "General Settings", true)
+    Parse.Widgets.PlayerLimit()
     UI.Separator()
-    Parse.Config.Show_Column_Group(Parse.Config.Columns.General, "General")
+    Parse.Config.ShowColumnGroup(Parse.Config.Columns.General, "General")
     DB.Widgets.DropdownDPS(Parse.Config.Slider_Width)
     UI.Separator()
-    Parse.Config.Show_Column_Group(Parse.Config.Columns.Accuracy, "Accuracy")
-    Parse.Widgets.Acc_Limit()
+    Parse.Config.ShowColumnGroup(Parse.Config.Columns.Accuracy, "Accuracy")
+    Parse.Widgets.AccLimit()
     UI.Separator()
-    Parse.Config.Show_Column_Group(Parse.Config.Columns.Physical, "Physical")
+    Parse.Config.ShowColumnGroup(Parse.Config.Columns.Physical, "Physical")
     UI.Separator()
-    Parse.Config.Show_Column_Group(Parse.Config.Columns.Weaponskills, "Weaponskills")
+    Parse.Config.ShowColumnGroup(Parse.Config.Columns.Weaponskills, "Weaponskills")
     UI.Separator()
-    Parse.Config.Show_Column_Group(Parse.Config.Columns.Magic, "Magic")
+    Parse.Config.ShowColumnGroup(Parse.Config.Columns.Magic, "Magic")
     UI.Separator()
-    Parse.Config.Show_Column_Group(Parse.Config.Columns.Pets, "Pets")
-    Parse.Refresh_Column_Count()
+    Parse.Config.ShowColumnGroup(Parse.Config.Columns.Pets, "Pets")
+    Parse.RefreshColumnCount()
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Shows a group of columns.
 ------------------------------------------------------------------------------------------------------
----@param columns table
----@param group_name string
----@param hide_buttons? boolean
+---@param columns      table
+---@param groupName    string
+---@param hideButtons? boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Show_Column_Group = function(columns, group_name, hide_buttons)
-    local col_flags = Parse.Config.Column_Flags
-    local width     = Parse.Config.Column_Width
+Parse.Config.ShowColumnGroup = function(columns, groupName, hideButtons)
+    local colFlags = Parse.Config.Column_Flags
+    local width    = Parse.Config.Column_Width
 
-    if hide_buttons then
-        UI.Text(tostring(group_name))
+    if hideButtons then
+        UI.Text(tostring(groupName))
     else
-        Parse.Config.Column_Group_Buttons(columns, group_name)
+        Parse.Config.ColumnGroupButtons(columns, groupName)
     end
 
-    if UI.BeginTable(tostring(group_name) .. " Columns", 3) then
-        UI.TableSetupColumn("Col 1", col_flags, width)
-        UI.TableSetupColumn("Col 2", col_flags, width)
-        UI.TableSetupColumn("Col 3", col_flags, width)
+    if UI.BeginTable(string.format("%s Columns", tostring(groupName)), 3) then
+        UI.TableSetupColumn("Col 1", colFlags, width)
+        UI.TableSetupColumn("Col 2", colFlags, width)
+        UI.TableSetupColumn("Col 3", colFlags, width)
 
         for _, data in ipairs(columns) do
             UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox(data.header, Parse.Settings, data.setting)
-            if data.help and type(data.help) == "function" then data.help() end
+
+            if data.help and type(data.help) == "function" then
+                data.help()
+            end
         end
 
         UI.EndTable()
@@ -183,32 +187,32 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Shows the All/None buttons for a column group.
 ------------------------------------------------------------------------------------------------------
----@param columns table
----@param group_name string
+---@param columns   table
+---@param groupName string
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Column_Group_Buttons = function(columns, group_name)
-    UI.PushID(tostring(group_name) .. " All")
+Parse.Config.ColumnGroupButtons = function(columns, groupName)
+    UI.PushID(string.format("%s All", tostring(groupName)))
     if UI.SmallButton("All") then
-        Parse.Config.Set_Column_Group(columns, true)
+        Parse.Config.SetColumnGroup(columns, true)
     end
 
     UI.SameLine() UI.Text(" ") UI.SameLine()
 
-    UI.PushID(tostring(group_name) .. " None")
+    UI.PushID(string.format("%s None", tostring(groupName)))
     if UI.SmallButton("None") then
-        Parse.Config.Set_Column_Group(columns, false)
+        Parse.Config.SetColumnGroup(columns, false)
     end
 
-    UI.SameLine() UI.Text(" " .. tostring(group_name))
+    UI.SameLine() UI.Text(string.format(" %s", tostring(groupName)))
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Sets a group of columns.
 ------------------------------------------------------------------------------------------------------
 ---@param columns table
----@param bool boolean
+---@param bool    boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Set_Column_Group = function(columns, bool)
+Parse.Config.SetColumnGroup = function(columns, bool)
     for _, data in ipairs(columns) do
         if data.setting and Parse.Settings[data.setting] ~= nil then
             Parse.Settings[data.setting] = bool
@@ -221,10 +225,10 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param bool boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Set_Pet_Columns = function(bool)
-    Parse.Settings.Show_Pet_Total = bool
+Parse.Config.SetPetColumns = function(bool)
+    Parse.Settings.Show_Pet_Total    = bool
     Parse.Settings.Show_Pet_Accuracy = bool
-    Parse.Refresh_Column_Count()
+    Parse.RefreshColumnCount()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -232,9 +236,8 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Is_Pet_Column_Enabled = function()
-    return Parse.Settings.Show_Pet_Accuracy
-    or Parse.Settings.Show_Pet_Total
+Parse.Config.IsPetColumnEnabled = function()
+    return Parse.Settings.Show_Pet_Accuracy or Parse.Settings.Show_Pet_Total
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -242,14 +245,14 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Is_Lurking = function()
+Parse.Config.IsLurking = function()
     return Parse.Settings.Lurk_Mode
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles Lurk Mode.
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Toggle_Lurk_Mode = function()
+Parse.Config.ToggleLurkMode = function()
     Parse.Settings.Lurk_Mode = not Parse.Settings.Lurk_Mode
 end
 
@@ -267,7 +270,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Is_Colored_Name = function()
+Parse.Config.IsColoredName = function()
     return Parse.Settings.Name_Colors
 end
 
@@ -276,24 +279,24 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Is_Hiding_Subjob = function()
+Parse.Config.IsHidingSubjob = function()
     return Parse.Settings.Hide_Subjob
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles DPS column visibility.
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Toggle_DPS = function()
+Parse.Config.ToggleDPS = function()
     Parse.Settings.Show_DPS = not Parse.Settings.Show_DPS
-    Parse.Refresh_Column_Count()
+    Parse.RefreshColumnCount()
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles Attack Speed column visibility.
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Toggle_Melee_Delay = function()
+Parse.Config.ToggleMeleeDelay = function()
     Parse.Settings.Show_Melee_Delay = not Parse.Settings.Show_Melee_Delay
-    Parse.Refresh_Column_Count()
+    Parse.RefreshColumnCount()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -319,21 +322,21 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Condensed_Numbers = function()
+Parse.Config.CondensedNumbers = function()
     return Parse.Settings.Condensed_Numbers
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles pet column flags.
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Toggle_Pet = function()
-    Parse.Config.Set_Pet_Columns(not Parse.Config.Is_Pet_Column_Enabled())
+Parse.Config.TogglePet = function()
+    Parse.Config.SetPetColumns(not Parse.Config.IsPetColumnEnabled())
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles the clock.
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Toggle_Clock = function()
+Parse.Config.ToggleClock = function()
     Parse.Settings.Show_Clock = not Parse.Settings.Show_Clock
 end
 
@@ -342,16 +345,16 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Is_Full_Mode = function()
-    return Parse.Settings.Display_Mode == Parse.Display_Modes.FULL
+Parse.Config.IsFullMode = function()
+    return Parse.Settings.Display_Mode == Parse.DisplayModes.FULL
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles full mode.
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Enabled_Full_Mode = function()
-    Parse.Settings.Display_Mode = Parse.Display_Modes.FULL
-    Parse.Refresh_Column_Count()
+Parse.Config.EnabledFullMode = function()
+    Parse.Settings.Display_Mode = Parse.DisplayModes.FULL
+    Parse.RefreshColumnCount()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -360,15 +363,15 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 Parse.Config.IsMiniMode = function()
-    return Parse.Settings.Display_Mode == Parse.Display_Modes.MINI
+    return Parse.Settings.Display_Mode == Parse.DisplayModes.MINI
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles mini mode.
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Enable_Mini_Mode = function()
-    Parse.Settings.Display_Mode = Parse.Display_Modes.MINI
-    Parse.Refresh_Column_Count()
+Parse.Config.EnableMiniMode = function()
+    Parse.Settings.Display_Mode = Parse.DisplayModes.MINI
+    Parse.RefreshColumnCount()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -377,13 +380,13 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 Parse.Config.IsNanoMode = function()
-    return Parse.Settings.Display_Mode == Parse.Display_Modes.NANO
+    return Parse.Settings.Display_Mode == Parse.DisplayModes.NANO
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles nano mode.
 ------------------------------------------------------------------------------------------------------
-Parse.Config.Enable_Nano_Mode = function()
-    Parse.Settings.Display_Mode = Parse.Display_Modes.NANO
-    Parse.Refresh_Column_Count()
+Parse.Config.EnableNanoMode = function()
+    Parse.Settings.Display_Mode = Parse.DisplayModes.NANO
+    Parse.RefreshColumnCount()
 end

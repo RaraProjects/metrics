@@ -554,7 +554,7 @@ end
 ---@param trackable string
 ---@param justify? boolean whether or not to right justify the text
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Trackable_Total = function(trackable, justify)
+Column.Damage.TrackableTotal = function(trackable, justify)
     local damage = 0
     for player_name, _ in pairs(DB.Tracking.InitializedPlayers) do
         damage = damage + DB.Data.Get(player_name, trackable, DB.Metric.TOTAL)
@@ -568,7 +568,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param justify? boolean whether or not to right justify the text
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Parse_Total = function(justify)
+Column.Damage.ParseTotal = function(justify)
     local damage = DB.GetTeamDamage()
     local color = Column.String.Color_Zero(damage)
     return UI.TextColored(color, Column.String.FormatNumber(damage, justify))
@@ -579,7 +579,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param justify? boolean whether or not to right justify the text
 ------------------------------------------------------------------------------------------------------
-Column.Damage.Parse_DPS = function(justify)
+Column.Damage.ParseDPS = function(justify)
     local dps = 0
     for player_name, _ in pairs(DB.Tracking.InitializedPlayers) do
         dps = dps + DB.DPS.GetDPS(player_name)

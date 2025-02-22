@@ -165,7 +165,7 @@ H.TP.MonsterAction = function(action, actorMob, logOffense)
 
     -- Check to see if the pet belongs to anyone in the party.
     local ownerMob = Ashita.Mob.PetOwner(actorMob)
-    if not ownerMob and not Parse.Config.Is_Lurking() then
+    if not ownerMob and not Parse.Config.IsLurking() then
         return nil
     end
 
