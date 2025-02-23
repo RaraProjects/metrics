@@ -314,6 +314,6 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Toggles mini mode.
 ------------------------------------------------------------------------------------------------------
-XP.Config.Toggle_Mini_Mode = function()
+XP.Config.ToggleMiniMode = function()
     XP.Settings.Mini_Mode_Enabled = not XP.Settings.Mini_Mode_Enabled
 end

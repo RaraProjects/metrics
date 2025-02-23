@@ -3,100 +3,143 @@
 -- Influenced by HXUI: https://github.com/tirem/HXUI
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('command', 'command_cb', function (e)
-    local command_args = e.command:lower():args()
+    local commandArgs = e.command:lower():args()
 ---@diagnostic disable-next-line: undefined-field
-    if table.contains({"/metrics"}, command_args[1]) or table.contains({"/met"}, command_args[1]) then
-        local arg = command_args[2]
-        local sub_command = command_args[3]
+    if table.contains({ "/metrics" }, commandArgs[1]) or table.contains({ "/met" }, commandArgs[1]) then
+        local argument   = commandArgs[2]
+        local subCommand = commandArgs[3]
 
         -- Help Text
-        if not arg then
+        if not argument then
             if Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG and Config.Window.IsVisible() then
                 Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
+
             elseif Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG and not Config.Window.IsVisible() then
                 Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
                 Config.Window.Show()
+
             elseif Config.ActiveSettingsWindow == Config.ModuleFile.CONFIG then
                 Config.Window.ToggleVisibility()
             end
 
         -- General Settings
-        elseif arg == "show" or arg == "s" then
-            if not WindowManager.IsMasked() then Hub.Window.Show() end
+        elseif argument == "show" or argument == "s" then
+            if not WindowManager.IsMasked() then
+                Hub.Window.Show()
+            end
+
             WindowManager.ToggleMask()
-        elseif arg == "hub" then
+
+        elseif argument == "hub" then
             Hub.Window.ToggleVisibility()
-        elseif arg == "debug" then
+
+        elseif argument == "debug" then
             Debug.Toggle()
-        elseif arg == "nano" or arg == "n" then
+
+        elseif argument == "nano" or argument == "n" then
             Parse.Config.EnableNanoMode()
-        elseif arg == "mini" or arg == "m" then
+
+        elseif argument == "mini" or argument == "m" then
             Parse.Config.EnableMiniMode()
-        elseif arg == "reset" or arg == "r" then
+
+        elseif argument == "reset" or argument == "r" then
             DB.Initialize(true)
             Blog.Initialize()
-        elseif arg == "full" or arg == "f" then
+
+        elseif argument == "full" or argument == "f" then
             Parse.Config.EnabledFullMode()
-        elseif (arg == "pet" or arg == "p") then
+
+        elseif argument == "pet" or argument == "p" then
             Parse.Config.TogglePet()
-        elseif arg == "clock" or arg == "c" then
+
+        elseif argument == "clock" or argument == "c" then
             Parse.Config.ToggleClock()
-        elseif arg == "percent" then
+
+        elseif argument == "percent" then
             Focus.Config.PercentToggle()
-        elseif arg == "dps" then
+
+        elseif argument == "dps" then
             Parse.Config.ToggleDPS()
-        elseif arg == "speed" then
+
+        elseif argument == "speed" then
             Parse.Config.ToggleMeleeDelay()
-        elseif arg == "throttle" then
+
+        elseif argument == "throttle" then
             Throttle.Toggle()
-        elseif arg == "lurk" then
+
+        elseif argument == "lurk" then
             Parse.Config.ToggleLurkMode()
-        elseif arg == "mouse" then
+
+        elseif argument == "mouse" then
             WindowManager.ToggleMouse()
 
         -- XP
-        elseif arg == "xp" and sub_command then
-            if sub_command == "mini" then XP.Config.Toggle_Mini_Mode() end
+        elseif argument == "xp" and subCommand then
+            if subCommand == "mini" then
+                XP.Config.ToggleMiniMode()
+            end
 
         -- General reports.
-        elseif arg == "report" or arg == "rep" then
-            local report_type = command_args[3]
-            if report_type == "total" then
+        elseif argument == "report" or argument == "rep" then
+            local reportType = commandArgs[3]
+
+            if reportType == "total" then
                 Report.Publishing.Overall()
-            elseif report_type == "melee" then
+
+            elseif reportType == "melee" then
                 Report.Publishing.DamageByType(DB.Trackable.MELEE_OVERALL)
-            elseif report_type == "ws" then
+
+            elseif reportType == "ws" then
                 Report.Publishing.DamageByType(DB.Trackable.WEAPONSKILL)
-            elseif report_type == "healing" then
+
+            elseif reportType == "healing" then
                 Report.Publishing.DamageByType(DB.Trackable.ALL_HEAL)
             end
 
         -- Primary module switching.
-        elseif arg == "team" or arg == "parse" then Parse.Window.MakeActive()
-        elseif arg == "focus" then                  Focus.Window.MakeActive()
-        elseif arg == "log" or arg == "bl" then     Blog.Window.MakeActive()
-        elseif arg == "xp" then                     XP.Window.MakeActive()
-        elseif arg == "report" or arg == "rep" then Report.Window.MakeActive()
+        elseif argument == "team" or argument == "parse" then
+            Parse.Window.MakeActive()
+
+        elseif argument == "focus" then
+            Focus.Window.MakeActive()
+
+        elseif argument == "log" or argument == "bl" then
+            Blog.Window.MakeActive()
+
+        elseif argument == "xp" then
+            XP.Window.MakeActive()
+
+        elseif argument == "report" or argument == "rep" then
+            Report.Window.MakeActive()
 
         -- Player selection
-        elseif arg == "player" or arg == "pl" then
-            local player_string = command_args[3]
-            if player_string then DB.Widgets.PlayerSwitch(player_string) end
+        elseif argument == "player" or argument == "pl" then
+            local playerString = commandArgs[3]
+
+            if playerString then
+                DB.Widgets.PlayerSwitch(playerString)
+            end
 
         -- Focus tab switching.
-        elseif arg == "melee" then
+        elseif argument == "melee" then
             Focus.Tabs.Switch[Focus.Tabs.Names.MELEE] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "ranged" then
+
+        elseif argument == "ranged" then
             Focus.Tabs.Switch[Focus.Tabs.Names.RANGED] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "ws" or arg == "weaponskill" then
+
+        elseif argument == "ws" or argument == "weaponskill" then
             Focus.Tabs.Switch[Focus.Tabs.Names.WS] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "magic" then
+
+        elseif argument == "magic" then
             Focus.Tabs.Switch[Focus.Tabs.Names.MAGIC] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "ability" or arg == "abil" then
+
+        elseif argument == "ability" or argument == "abil" then
             Focus.Tabs.Switch[Focus.Tabs.Names.ABILITIES] = ImGuiTabItemFlags_SetSelected
-        elseif (arg == "pet" or arg == "p") and WindowManager.Tabs.Active == Focus.Name then
+
+        elseif (argument == "pet" or argument == "p") and WindowManager.Tabs.Active == Focus.Name then
             Focus.Tabs.Switch[Focus.Tabs.Names.PETS] = ImGuiTabItemFlags_SetSelected
-        elseif arg == "defense" or arg == "def" then
+
+        elseif argument == "defense" or argument == "def" then
             Focus.Tabs.Switch[Focus.Tabs.Names.DEFENSE] = ImGuiTabItemFlags_SetSelected
         end
     end
