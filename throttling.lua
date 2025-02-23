@@ -1,15 +1,16 @@
-Throttle = T{}
-Throttle.Enabled = true
-Throttle.Mod = 15
-Throttle.Tick = 0
-Throttle.Need_Refresh = true
+Throttle = { }
+
+Throttle.Enabled     = true
+Throttle.Mod         = 15
+Throttle.Tick        = 0
+Throttle.NeedRefresh = true
 
 ------------------------------------------------------------------------------------------------------
 -- Provides a gate to throttle performance intensive calculations.
 ------------------------------------------------------------------------------------------------------
 Throttle.Throttle = function()
     Throttle.Tick = (Throttle.Tick + 1) % Throttle.Mod
-    if Throttle.Tick == 0 then Throttle.Need_Refresh = true end
+    Throttle.NeedRefresh = Throttle.Tick == 0
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -17,7 +18,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Throttle.Is_Enabled = function()
+Throttle.IsEnabled = function()
     return Throttle.Enabled
 end
 
@@ -33,13 +34,13 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-Throttle.Allow_Calculation = function()
-    return Throttle.Need_Refresh
+Throttle.AllowCalculation = function()
+    return Throttle.NeedRefresh
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Blocks calculation until the next throttle window opens up.
 ------------------------------------------------------------------------------------------------------
 Throttle.Block = function()
-    Throttle.Need_Refresh = false
+    Throttle.NeedRefresh = false
 end

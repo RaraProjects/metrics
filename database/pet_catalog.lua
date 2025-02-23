@@ -191,7 +191,7 @@ DB.PetCatalog.Get = function(playerName, petName, trackable, actionName, metric,
 	end
 
 	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
-	if (Throttle.Is_Enabled() and not Throttle.Allow_Calculation()) and not tempMobFocus then
+	if (Throttle.IsEnabled() and not Throttle.AllowCalculation()) and not tempMobFocus then
 		if DB.PetCatalogCache[playerName] and
 		   DB.PetCatalogCache[playerName][petName] and
 		   DB.PetCatalogCache[playerName][petName][actionName] and
