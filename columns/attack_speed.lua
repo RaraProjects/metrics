@@ -1,19 +1,20 @@
-Column.Attack_Speed = T{}
+Column.AttackSpeed = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Gets a player's attack speed.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param justify? boolean whether or not to right justify the text
----@param raw? boolean true: just output the raw value; false: output a column to a table.
+---@param playerName string
+---@param justify?   boolean whether or not to right justify the text
+---@param raw?       boolean true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Attack_Speed.Get = function(player_name, justify, raw)
-    local speed = DB.AttackSpeed.Get(player_name)
+Column.AttackSpeed.Get = function(playerName, justify, raw)
+    local speed = DB.AttackSpeed.Get(playerName)
+    local color = speed == 0 and Res.Colors.Basic.DIM or Res.Colors.Basic.WHITE
 
-    local color = Res.Colors.Basic.WHITE
-    if speed == 0 then color = Res.Colors.Basic.DIM end
+    if raw then
+        return Column.String.FormatDecimal(speed, justify)
+    end
 
-    if raw then return Column.String.Format_Decimal(speed, justify) end
-    return UI.TextColored(color, Column.String.Format_Decimal(speed, justify))
+    return UI.TextColored(color, Column.String.FormatDecimal(speed, justify))
 end

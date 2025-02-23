@@ -77,7 +77,7 @@ Report.Publishing.DamageByType = function(trackable)
 
                 local playerName    = data[1]
                 local playerDamage  = Column.Damage.ByType(playerName, trackable, nil, nil, false, nil, true)
-                local playerPercent = Column.Damage.Percent_Total_By_Type(playerName, trackable, nil, true)
+                local playerPercent = Column.Damage.PercentTotalByType(playerName, trackable, nil, true)
 
                 if tonumber(playerPercent) >= Report.Settings.Damage_Threshold then
                     local chatString = tostring(playerName) .. ": " .. tostring(playerDamage) .. " (" .. tostring(playerPercent) .. "%)"

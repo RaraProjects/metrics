@@ -210,10 +210,10 @@ Focus.Abilities.PhantomRoll = function(playerName, full)
         UI.TableNextColumn()              UI.Text("Total")
         UI.TableNextColumn()              Column.Damage.Attempts(playerName,  trackable, nil, nil, true)
         if full then UI.TableNextColumn() Column.Damage.ByType(playerName,    trackable, DB.Metric.REROLL) end
-        UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.LUCKY)
-        if full then UI.TableNextColumn() Column.Acc.Phantom_Roll(playerName, DB.Metric.LUCKY_11) end
-        UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.UNLUCKY)
-        UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.BUSTS)
+        UI.TableNextColumn()              Column.Acc.PhantomRoll(playerName, DB.Metric.LUCKY)
+        if full then UI.TableNextColumn() Column.Acc.PhantomRoll(playerName, DB.Metric.LUCKY_11) end
+        UI.TableNextColumn()              Column.Acc.PhantomRoll(playerName, DB.Metric.UNLUCKY)
+        UI.TableNextColumn()              Column.Acc.PhantomRoll(playerName, DB.Metric.BUSTS)
         WindowManager.TableRowColor(1)
 
         local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
@@ -224,10 +224,10 @@ Focus.Abilities.PhantomRoll = function(playerName, full)
             UI.TableNextColumn()              UI.Text(string.format("- %s", actionName))
             UI.TableNextColumn()              Column.Damage.Attempts(playerName,  trackable, nil, actionName, true)
             if full then UI.TableNextColumn() Column.Damage.ByType(playerName,    trackable, DB.Metric.REROLL, actionName) end
-            UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.LUCKY, actionName)
-            if full then UI.TableNextColumn() Column.Acc.Phantom_Roll(playerName, DB.Metric.LUCKY_11, actionName) end
-            UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.UNLUCKY, actionName)
-            UI.TableNextColumn()              Column.Acc.Phantom_Roll(playerName, DB.Metric.BUSTS, actionName)
+            UI.TableNextColumn()              Column.Acc.PhantomRoll(playerName, DB.Metric.LUCKY, actionName)
+            if full then UI.TableNextColumn() Column.Acc.PhantomRoll(playerName, DB.Metric.LUCKY_11, actionName) end
+            UI.TableNextColumn()              Column.Acc.PhantomRoll(playerName, DB.Metric.UNLUCKY, actionName)
+            UI.TableNextColumn()              Column.Acc.PhantomRoll(playerName, DB.Metric.BUSTS, actionName)
 
             WindowManager.TableRowColor(0)
         end

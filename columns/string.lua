@@ -1,52 +1,46 @@
-Column.String = T{}
+Column.String = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Formats the player name string.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
+---@param playerName string
 ------------------------------------------------------------------------------------------------------
-Column.String.FormatName = function(player_name)
-    if not player_name then player_name = "Player" end
-    if Parse.Config.IsMaskingNames() then return Column.String.Job(player_name, Parse.Config.IsHidingSubjob()) end
+Column.String.FormatName = function(playerName)
+    playerName = playerName or "Player"
 
-    local job = Res.Jobs.List[0]
-    if Ashita.Party.Jobs[player_name] then
-        job = Res.Jobs.GetJob(Ashita.Party.Jobs[player_name].main)
-        if not job then job = Res.Jobs.List[0] end
+    if Parse.Config.IsMaskingNames() then
+        return Column.String.Job(playerName, Parse.Config.IsHidingSubjob())
     end
 
-    local color = Res.Colors.Basic.WHITE
-    if Parse.Config.IsColoredName() then color = Res.Colors.GetJob(job.id) end
+    local job   = Res.Jobs.GetJob(Ashita.Party.Jobs[playerName] and Ashita.Party.Jobs[playerName].main) or Res.Jobs.List[0]
+    local color = Parse.Config.IsColoredName() and Res.Colors.GetJob(job.id) or Res.Colors.Basic.WHITE
 
-    UI.TextColored(color, player_name)
+    UI.TextColored(color, playerName)
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Formats the player job string.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param hide_subjob? boolean
+---@param playerName  string
+---@param hideSubjob? boolean
 ------------------------------------------------------------------------------------------------------
-Column.String.Job = function(player_name, hide_subjob)
-    local color = Res.Colors.Basic.WHITE
+Column.String.Job = function(playerName, hideSubjob)
+    local color      = Res.Colors.Basic.WHITE
+    local anonString = hideSubjob and "NON0" or "NON0/NON0"
+    local jobData    = playerName and Ashita.Party.Jobs[playerName]
 
-    local anon_string = "NON0/NON0"
-    if hide_subjob then anon_string = "NON0" end
-    if not player_name or not Ashita.Party.Jobs[player_name] then UI.TextColored(color, anon_string) return nil end
+    if not jobData then
+        UI.TextColored(color, anonString)
+        return nil
+    end
 
-    local main = Res.Jobs.GetJob(Ashita.Party.Jobs[player_name].main)
-    local main_level = Ashita.Party.Jobs[player_name].main_level
-    if not main then main = Res.Jobs.List[0] end
-    local main_color = Res.Colors.GetJob(main.id)
-    UI.TextColored(main_color, string.format("%s%02d", main.ens, main_level))
+    local main = Res.Jobs.GetJob(jobData.main) or Res.Jobs.List[0]
+    UI.TextColored(Res.Colors.GetJob(main.id), string.format("%s%02d", main.ens, jobData.main_level))
 
-    if not hide_subjob then
-        local sub = Res.Jobs.GetJob(Ashita.Party.Jobs[player_name].sub)
-        local sub_level = Ashita.Party.Jobs[player_name].sub_level
-        if not sub then sub = Res.Jobs.List[0] end
-        local sub_color = Res.Colors.GetJob(sub.id)
+    if not hideSubjob then
         UI.SameLine() UI.Text("/") UI.SameLine()
-        UI.TextColored(sub_color, string.format("%s%02d", sub.ens, sub_level))
+        local sub = Res.Jobs.GetJob(jobData.sub) or Res.Jobs.List[0]
+        UI.TextColored(Res.Colors.GetJob(sub.id), string.format("%s%02d", sub.ens, jobData.sub_level))
     end
 end
 
@@ -54,71 +48,79 @@ end
 -- Create a nicely formatted number string.
 -- I floor the number to get rid of any decimals. Decimals were a problem with the average column.
 ------------------------------------------------------------------------------------------------------
----@param number number this should be an actual number and not a string.
+---@param number   number this should be an actual number and not a string.
 ---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.String.FormatNumber = function(number, justify)
-    local format = "%d"
-    if justify then format = "%8d" end
-    if Parse.Config.CondensedNumbers() then return Column.String.Compact_Number(number, justify) end
-    number = math.floor(number)
-    return string.format(format, number)
+    local format = justify and "%8d" or "%d"
+
+    if Parse.Config.CondensedNumbers() then
+        return Column.String.CompactNumber(number, justify)
+    end
+
+    return string.format(format, math.floor(number))
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Create a nicely formatted decimal string.
 -- I floor the number to get rid of any decimals. Decimals were a problem with the average column.
 ------------------------------------------------------------------------------------------------------
----@param number number this should be an actual number and not a string.
+---@param number   number this should be an actual number and not a string.
 ---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.String.Format_Decimal = function(number, justify)
-    local format = "%2f"
-    if justify then format = "%8.2f" end
+Column.String.FormatDecimal = function(number, justify)
+    local format = justify and "%8.2f" or "%2f"
+
     return string.format(format, number)
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Calculates and formats a percent.
 ------------------------------------------------------------------------------------------------------
----@param numerator number The numerator for the percent.
----@param denominator number The denominator for the percent.
----@param justify? boolean whether or not to right justify the text
----@param no_scaling? boolean do not scale the fraction by 100.
+---@param numerator   number  The numerator for the percent.
+---@param denominator number  The denominator for the percent.
+---@param justify?    boolean whether or not to right justify the text
+---@param noScaling?  boolean do not scale the fraction by 100.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.String.FormatPercent = function(numerator, denominator, justify, no_scaling)
-    local format = "%.1f"
-    if justify then format = "%8.1f" end
+Column.String.FormatPercent = function(numerator, denominator, justify, noScaling)
+    local format   = justify and "%8.1f" or "%.1f"
+    local percent  = 0
+    local scaling  = noScaling and 1 or 100
+    local retValue = string.format(format, 0)
 
-    local percent = 0
-    local scaling = 100
-    if no_scaling then scaling = 1 end
-    local ret_value = string.format(format, 0)
-    if denominator and denominator ~= 0 then percent = (numerator / denominator) * scaling end
-    if percent ~= 0 then ret_value = string.format(format, percent) end
+    if denominator and denominator ~= 0 then
+        percent = (numerator / denominator) * scaling
+    end
+
+    if percent ~= 0 then
+        retValue = string.format(format, percent)
+    end
 
     if Focus.Config.ShowPercentDetails and not Report.Publishing.Lock then
-        format = "%d"
-        local top = string.format(format, numerator)
-        local bottom = string.format(format, denominator)
+        local top    = string.format("%d", numerator)
+        local bottom = string.format("%d", denominator)
+
         return Column.String.SetLength(tostring(top) .. "/" .. tostring(bottom), 8)
     end
 
-    return ret_value
+    return retValue
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Calculates and returns a raw percent as a number.
 ------------------------------------------------------------------------------------------------------
----@param numerator number The numerator for the percent.
+---@param numerator   number The numerator for the percent.
 ---@param denominator number The denominator for the percent.
 ---@return number
 ------------------------------------------------------------------------------------------------------
-Column.String.Raw_Percent = function(numerator, denominator)
-    if not denominator or denominator == 0 then return 0 end
+Column.String.RawPercent = function(numerator, denominator)
+    if not denominator or denominator == 0 then
+        return 0
+    end
+
     return numerator / denominator
 end
 
@@ -126,52 +128,61 @@ end
 -- Handles formatting numbers into a more compact easier to read mode (with rounding).
 -- Mode examples: Compact = 2.5M; Regular = 2,500,000
 ------------------------------------------------------------------------------------------------------
----@param number number this should be an actual number and not a string.
+---@param number   number this should be an actual number and not a string.
 ---@param justify? boolean whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.String.Compact_Number = function(number, justify)
-    number = number or 0
-
-    local display_number, suffix
+Column.String.CompactNumber = function(number, justify)
+    local displayNumber, suffix
     local length = 6
+    number = number or 0
 
     -- Millions
     if number >= 1000000 then
-        display_number = (number / 1000000)
+        displayNumber = number / 1000000
         suffix = " M"
         length = length - 2
+
     -- Thousands
     elseif number >= 1000 then
-        display_number = (number / 1000)
+        displayNumber = number / 1000
         suffix = " K"
         length = length - 2
+
     -- No adjustments necessary
     else
-        display_number = number
+        displayNumber = number
         suffix = ""
     end
 
-    local format = "%d"
-    if justify then format = "%" .. length .. "d" end
+    local format = justify and "%" .. length .. "d" or "%d"
 
-    if number == 0 then return string.format(format, number) end
+    if number == 0 then
+        return string.format(format, number)
+    end
 
-    return string.format(format, display_number) .. suffix
+    return string.format(format, displayNumber) .. suffix
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Truncates a string if it is too long.
 ------------------------------------------------------------------------------------------------------
----@param string string
----@param limit number
----@param ignore_dot? boolean
+---@param string     string
+---@param limit      number
+---@param ignoreDot? boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.String.Truncate = function(string, limit, ignore_dot)
+Column.String.Truncate = function(string, limit, ignoreDot)
     local length = string.len(string)
-    if length <= limit then return string end
-    if ignore_dot then return string.sub(string, 1, limit) end
+
+    if length <= limit then
+        return string
+    end
+
+    if ignoreDot then
+        return string.sub(string, 1, limit)
+    end
+
     return string.sub(string, 1, limit - 1) .. "."
 end
 
@@ -181,9 +192,8 @@ end
 ---@param value number
 ---@return table
 ------------------------------------------------------------------------------------------------------
-Column.String.Color_Zero = function(value)
-    if value == 0 then return Res.Colors.Basic.DIM end
-    return Res.Colors.Basic.WHITE
+Column.String.ColorZero = function(value)
+    return value == 0 and Res.Colors.Basic.DIM or Res.Colors.Basic.WHITE
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -191,12 +201,17 @@ end
 -- Assumes the string input has been truncated already.
 ------------------------------------------------------------------------------------------------------
 ---@param string string
----@param limit number
+---@param limit  number
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.String.SetLength = function(string, limit)
     local length = string.len(string)
-    if length >= limit then return string end
-    local chars_needed = limit - length
-    return string .. string.rep(" ", chars_needed)
+
+    if length >= limit then
+        return string
+    end
+
+    local charsNeeded = limit - length
+
+    return string .. string.rep(" ", charsNeeded)
 end

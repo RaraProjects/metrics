@@ -80,12 +80,12 @@ Focus.Defense.DamageTaken = function(playerName, makeBrief)
                 UI.TableNextColumn() UI.Text(data.header)
 
                 if makeBrief then
-                    UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable)
+                    UI.TableNextColumn() Column.Defense.AverageDamageByType(playerName, data.trackable)
                     UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, data.trackable)
                     UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable)
                     if pet > 0 then UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable_pet) end
                 else
-                    UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable)
+                    UI.TableNextColumn() Column.Defense.AverageDamageByType(playerName, data.trackable)
                     UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable, true)
                     UI.TableNextColumn() Column.General.PercentPartyTotal(playerName, data.trackable)
                     UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable)
@@ -135,7 +135,7 @@ Focus.Defense.Auxiliary = function(playerName)
         for _, data in ipairs(auxTrackables) do
             if data.threshold > 0 then
                 UI.TableNextColumn() UI.Text(data.header)
-                UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable)
+                UI.TableNextColumn() Column.Defense.AverageDamageByType(playerName, data.trackable)
                 UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable, true)
                 UI.TableNextColumn() Column.Acc.ByType(playerName, data.trackable, 0)
                 UI.TableNextColumn() Column.Defense.DamageTakenByType(playerName, data.trackable)
@@ -194,7 +194,7 @@ Focus.Defense.Mitigation = function(playerName)
             if DB.Data.Get(playerName, data.trackable, DB.Metric.HITS_ON_TARGET) > 0 then
                 UI.TableNextColumn() UI.Text(data.header)
                 UI.TableNextColumn() Column.Acc.ByType(playerName, data.trackable, 0)
-                UI.TableNextColumn() Column.Defense.Damage_Mitigation(playerName, data.trackable)
+                UI.TableNextColumn() Column.Defense.DamageMitigation(playerName, data.trackable)
                 if showDT then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
                 if showDT then UI.TableNextColumn() UI.TextColored(Res.Colors.Basic.DIM, "---") end
                 WindowManager.TableRowColor(row)
@@ -214,9 +214,9 @@ Focus.Defense.Mitigation = function(playerName)
             if DB.Data.Get(playerName, data.trackable, DB.Metric.HITS_ON_TARGET) > 0 then
                 UI.TableNextColumn() UI.Text(data.header)
                 UI.TableNextColumn() Column.Acc.ByType(playerName, data.trackable, 0)
-                UI.TableNextColumn() Column.Defense.Damage_Mitigation(playerName, data.trackable, data.ranged)
-                if showDT then UI.TableNextColumn() Column.Defense.Average_Damage_By_Type(playerName, data.trackable) end
-                if showDT then UI.TableNextColumn() Column.Defense.Damage_Reduction(playerName, data.trackable) end
+                UI.TableNextColumn() Column.Defense.DamageMitigation(playerName, data.trackable)
+                if showDT then UI.TableNextColumn() Column.Defense.AverageDamageByType(playerName, data.trackable) end
+                if showDT then UI.TableNextColumn() Column.Defense.DamageReduction(playerName, data.trackable) end
                 WindowManager.TableRowColor(row)
                 row = row + 1
                 mitigationFound = true
