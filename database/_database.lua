@@ -56,8 +56,8 @@ require("database.widgets")
 ------------------------------------------------------------------------------------------------------
 DB.Initialize = function(isManualReset)
 	if Report and Report.Settings and Report.Settings.Auto_Save and isManualReset then
-		File.Save_Data()
-		File.Save_Battlelog()
+		File.SaveData()
+		File.SaveBattlelog()
 	end
 
 	DB.Parse           = { }

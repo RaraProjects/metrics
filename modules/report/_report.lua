@@ -100,19 +100,19 @@ Report.Section.File = function()
         UI.TableNextRow()
         UI.TableNextColumn()
         if UI.Button("Database    ") then
-            File.Save_Data()
+            File.SaveData()
             return nil
         end
 
         UI.TableNextColumn()
         if UI.Button("Battle Log  ") then
-            File.Save_Battlelog()
+            File.SaveBattlelog()
             return nil
         end
 
         UI.TableNextColumn()
         if UI.Button("Loot        ") then
-            File.Save_Loot()
+            File.SaveLoot()
             return nil
         end
 

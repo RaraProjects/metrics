@@ -158,8 +158,8 @@ ashita.events.register('unload', 'unload_cb', function()
     Settings_File.save(Config.File)
 
     if Report.Settings.Auto_Save then
-        File.Save_Data()
-        File.Save_Battlelog()
-        File.Save_Loot()
+        File.SaveData()
+        File.SaveBattlelog()
+        File.SaveLoot()
     end
 end)
