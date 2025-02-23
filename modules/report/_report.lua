@@ -18,7 +18,7 @@ Report.Section = { }
 ------------------------------------------------------------------------------------------------------
 Report.Initialize = function(settings)
     -- Get saved settings from file.
-    Report.Settings = settings or Settings_File.load(Report.Config.Defaults, Report.File)
+    Report.Settings = settings or SettingsFile.load(Report.Config.Defaults, Report.File)
 
     -- Create the Overview Window.
     Report.Window = Window:New

@@ -120,24 +120,24 @@ H.TpDef.Parse = function(actionData, actorMob, targetMob, actionName, actionId, 
     damage, hit, isNoDamage = H.TpDef.DamageMitigation(audits, damage, messageId, actionName, ownerMob)
 
     -- The mob drains the player's MP.
-    if H.MessageMPDrain(messageId) then
+    if H.Messages.MpDrain(messageId) then
         H.Offense.CatalogNoDamageHit(audits, audits.trackable, actionName)
         H.Offense.CatalogHit(audits, DB.Trackable.DEF_MP_DRAIN, damage, actionName)
 
     -- The mob drains the player's TP.
-    elseif H.Message_TP_Drain(messageId) then
+    elseif H.Messages.TpDrain(messageId) then
 
     -- The mob dispels the player.
-    elseif H.MessageDispel(messageId) then
+    elseif H.Messages.Dispel(messageId) then
         isNoDamage = true
 
     -- The mob debuffs the player.
-    elseif H.Message_Debuff(messageId) then
+    elseif H.Messages.Debuff(messageId) then
         H.Offense.CatalogNoDamageHit(audits, audits.trackable, actionName)
         isNoDamage = true
 
     -- The mob's attack deals damage. This also includes HP drained from the player.
-    elseif H.MessageDamaging(messageId) or H.MessageHpDrain(messageId) then
+    elseif H.Messages.Damaging(messageId) or H.Messages.HpDrain(messageId) then
         H.Defense.GrandTotals(audits, damage, ownerMob)
         H.Offense.CatalogHit(audits, audits.trackable, damage, actionName)
 
@@ -145,7 +145,7 @@ H.TpDef.Parse = function(actionData, actorMob, targetMob, actionName, actionId, 
             H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_TP_ACTION, damage)
         end
 
-        if H.MessageHpDrain(messageId) then
+        if H.Messages.HpDrain(messageId) then
             H.Offense.CatalogHit(audits, DB.Trackable.DEF_MP_DRAIN, damage, actionName)
         end
 
@@ -175,7 +175,7 @@ H.TpDef.DamageMitigation = function(audits, damage, messageId, actionName, owner
     local shadow = false
 
     -- Mob misses the player.
-    if H.MessageNoDamageMiss(messageId) then
+    if H.Messages.NoDamageMiss(messageId) then
         H.Defense.GrandTotals(audits, 0, ownerMob)
         H.Offense.CatalogHit(audits, audits.trackable, 0, actionName)
         DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.HITS_ON_TARGET)
@@ -183,7 +183,7 @@ H.TpDef.DamageMitigation = function(audits, damage, messageId, actionName, owner
         miss   = true
 
     -- Player's shadow absorbs the ability.
-    elseif H.MessageNoDamage(messageId) then
+    elseif H.Messages.NoDamage(messageId) then
         H.Defense.GrandTotals(audits, 0, ownerMob)
         H.Offense.CatalogNoDamageHit(audits, audits.trackable, actionName)
         DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_SHADOWS_TP_ACTION, DB.Metric.HITS_ON_TARGET)

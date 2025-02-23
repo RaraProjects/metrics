@@ -92,7 +92,7 @@ H.Melee.Parse = function(actionData, actorName, targetName, ownerMob)
     local messageId         = actionData.message
     local reactionId        = actionData.reaction
     local throwing          = animationId == Ashita.AttackAnimation.DAKEN
-    local noDamage          = H.MessageNoDamage(messageId)
+    local noDamage          = H.Messages.NoDamage(messageId)
     local meleeTypeBroad    = DB.Trackable.MELEE_OVERALL
     local meleeTypeDiscrete = H.Melee.MeleeType(animationId)
     local petName

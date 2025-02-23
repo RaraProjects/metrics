@@ -74,7 +74,7 @@ H.MeleeDef.Parse = function(actionData, actorName, targetName, ownerMob)
     }
 
     -- No damage Messages (miss, third eye, shadows, etc.)
-    local noDamage = H.MessageNoDamage(messageId)
+    local noDamage = H.Messages.NoDamage(messageId)
     if noDamage then
         damage = 0
     end

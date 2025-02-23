@@ -74,11 +74,11 @@ H.Spell.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob)
     local spellName = Ashita.Spell.Name(spellId, spellData)
     local damage    = actionData.param or 0
     local messageId = actionData.message
-    local isBurst   = H.MessageMagicBurst(messageId)
+    local isBurst   = H.Messages.MagicBurst(messageId)
     local audits    = H.Spell.Audits(actorMob, targetMob, ownerMob)
 
     -- Shadow absorption
-    if H.MessageNoDamage(messageId) then
+    if H.Messages.NoDamage(messageId) then
         return 0, false
 
     -- Enfeebles shouldn't come with damage.
@@ -91,12 +91,12 @@ H.Spell.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob)
 
     -- Status removal spells can have No Effect just like enfeebles, so can't rely on the message.
     elseif Res.Spells.DebuffRemoval[spellId] then
-        if H.MessageNoEffect(messageId) then
+        if H.Messages.NoEffect(messageId) then
             damage = -1
         end
 
     -- MP Drain doesn't do damage.
-    elseif H.MessageMPDrain(messageId) then
+    elseif H.Messages.MpDrain(messageId) then
         local trackable = DB.Trackable.SPELLS_MP_DRAIN
 
         if ownerMob then
@@ -106,15 +106,15 @@ H.Spell.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob)
         H.Offense.CatalogHit(audits, trackable, damage, spellName, isBurst)
 
     -- Check for magic bursts. Enfeebles shouldn't be caught in this because they are an earlier check.
-    elseif H.MessageDamaging(messageId) then
+    elseif H.Messages.Damaging(messageId) then
         H.Spell.Nuke(audits, spellName, damage, messageId, isBurst)
 
     -- Spells that involve HP recovery.
-    elseif H.Message_Healing(messageId) then
+    elseif H.Messages.Healing(messageId) then
         H.Spell.Healing(audits, spellName, damage)
 
     -- General buffs.
-    elseif H.Message_Buff(messageId) then
+    elseif H.Messages.Buff(messageId) then
         -- Nothing special.
 
     else
@@ -316,7 +316,7 @@ H.Spell.Nuke = function(audits, spellName, damage, messageId, isBurst)
     local discrete = isPet and DB.Trackable.PET_NUKING  or DB.Trackable.SPELLS_NUKING
 
     -- Shadow absorption (not tracking for pets)
-    if not audits.pet_name and H.MessageNoDamage(messageId) then
+    if not audits.pet_name and H.Messages.NoDamage(messageId) then
         H.Offense.NoDamageHit(audits, discrete, DB.Metric.SHADOW_ABSORPTION)
         H.Offense.CatalogNoDamageHit(audits, discrete, spellName)
 
@@ -377,7 +377,7 @@ H.Spell.EnfeeblingAndDoTs = function(audits, trackable, damage, spellName, messa
     end
 
     -- Damaging DoTs like Dia, Bio, Helix
-    if H.MessageDamaging(messageId) then
+    if H.Messages.Damaging(messageId) then
         H.Offense.Hit(audits, overall, damage)
         H.Offense.CatalogHit(audits, trackable, damage, spellName)
 
@@ -389,14 +389,14 @@ H.Spell.EnfeeblingAndDoTs = function(audits, trackable, damage, spellName, messa
         end
 
     -- No Effects: These will not negatively impact resist metrics.
-    elseif H.MessageNoEffect(messageId) then
+    elseif H.Messages.NoEffect(messageId) then
         DB.Data.Update(DB.UpdateMode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
         H.Offense.Hit(audits, overall, 0)
         H.Offense.CatalogNoDamageHit(audits, trackable, spellName)
         damage = -1
 
     -- Resists
-    elseif H.Message_Resist(messageId) then
+    elseif H.Messages.Resist(messageId) then
         H.Offense.Miss(audits, overall)
         H.Offense.CatalogHit(audits, trackable, 0, spellName)
         damage = -2
@@ -408,7 +408,7 @@ H.Spell.EnfeeblingAndDoTs = function(audits, trackable, damage, spellName, messa
         H.Offense.CatalogNoDamageHit(audits, trackable, spellName)
 
         -- Preserve the damage for dispels since it is the buff ID.
-        if not H.MessageDispel(messageId) then
+        if not H.Messages.Dispel(messageId) then
             damage = 999999
         end
     end

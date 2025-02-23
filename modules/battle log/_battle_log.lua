@@ -44,7 +44,7 @@ Blog.Initialize = function(settings)
     end
 
     -- Get saved settings from file.
-    Blog.Settings = settings or Settings_File.load(Blog.Config.Defaults, Blog.File)
+    Blog.Settings = settings or SettingsFile.load(Blog.Config.Defaults, Blog.File)
 
     -- Create the Blog Window.
     Blog.Window = Window:New

@@ -71,7 +71,7 @@ H.SpellDef.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob
     local spellId   = spellData.Index
     local spellName = Ashita.Spell.Name(spellId, spellData)
     local messageId = actionData.message
-    local noDamage  = H.MessageNoDamage(messageId)
+    local noDamage  = H.Messages.NoDamage(messageId)
     local damage    = actionData.param or 0
     local audits    = H.SpellDef.Audits(actorMob, targetMob, ownerMob)
 

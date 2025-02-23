@@ -14,7 +14,7 @@ Hub.File   = "hub"
 ------------------------------------------------------------------------------------------------------
 Hub.Initialize = function(settings)
     -- Get saved settings from file.
-    Hub.Settings = settings or Settings_File.load(Hub.Config.Defaults, Hub.File)
+    Hub.Settings = settings or SettingsFile.load(Hub.Config.Defaults, Hub.File)
 
     -- Create the Hub Window.
     Hub.Window = Window:New

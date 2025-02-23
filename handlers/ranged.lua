@@ -55,7 +55,7 @@ H.Ranged.Parse = function(actionData, actorMob, targetMob, ownerMob)
 
     local damage          = actionData.param
     local messageId       = actionData.message
-    local noDamage        = H.MessageNoDamage(messageId)
+    local noDamage        = H.Messages.NoDamage(messageId)
     local playerName      = actorMob.name
     local rangedTrackable = DB.Trackable.RANGED_OVERALL
     local petName

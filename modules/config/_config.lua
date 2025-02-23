@@ -39,7 +39,7 @@ Config.WidthShort = 75
 ------------------------------------------------------------------------------------------------------
 Config.Initialize = function(settings)
     -- Get saved settings from file.
-    Config.Settings = settings or Settings_File.load(Config.Defaults, Config.File)
+    Config.Settings = settings or SettingsFile.load(Config.Defaults, Config.File)
 
     -- Create the Settings Window.
     Config.Window = Window:New

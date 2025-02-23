@@ -62,7 +62,7 @@ Focus.ScreenshotMode = { false }
 ------------------------------------------------------------------------------------------------------
 Focus.Initialize = function(settings)
     -- Get saved settings from file.
-    Focus.Settings = settings or Settings_File.load(Focus.Config.Defaults, Focus.File)
+    Focus.Settings = settings or SettingsFile.load(Focus.Config.Defaults, Focus.File)
 
     -- Create the Focus Window.
     Focus.Window = Window:New

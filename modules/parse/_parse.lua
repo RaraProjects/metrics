@@ -38,7 +38,7 @@ Parse.Confirmation  = false
 ------------------------------------------------------------------------------------------------------
 Parse.Initialize = function(settings)
     -- Get saved settings from file.
-    Parse.Settings = settings or Settings_File.load(Parse.Config.Defaults, Parse.File)
+    Parse.Settings = settings or SettingsFile.load(Parse.Config.Defaults, Parse.File)
 
     -- Create the Parse Window.
     Parse.Window = Window:New

@@ -27,19 +27,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author  = "Metra"
 addon.name    = "Metrics"
-addon.version = "02.15.25.00"
+addon.version = "02.22.25.00"
 
-_Globals = {}
+_Globals = { }
 _Globals.Initialized = false
 
-Settings_File = require("settings")
-Socket        = require("socket")   -- Needed for millisecond precision on timestamps for attack speed.
-Timers        = require("timers")
+SettingsFile = require("settings")
+Socket       = require("socket")   -- Needed for millisecond precision on timestamps for attack speed.
+Timers       = require("timers")
 
 -- This holds all of the settings for the various Metrics modules.
 -- It needs to be initialized after requiring "settings" because "settings" contains the definition for the "T" table modifier.
 -- The "T" table modifier is needed for the settings to save correctly without crashing on initial load.
-Metrics = T{}
+Metrics = T{ }
 
 -- Duplicate packet checking from Thorny by way of the parse addon.
 -- https://github.com/WinterSolstice8/parse/
@@ -47,8 +47,8 @@ FFI = require("ffi")
 FFI.cdef[[
     int32_t memcmp(const void* buff1, const void* buff2, size_t count);
 ]]
-LastChunkBuffer = T{}
-CurrentChunkBuffer = T{}
+LastChunkBuffer    = T{ }
+CurrentChunkBuffer = T{ }
 
 require("resources._resource")
 require("database._database")
@@ -79,11 +79,7 @@ require("initialization")
 -- https://github.com/ocornut/imgui/blob/master/imgui_tables.cpp
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('d3d_present', 'present_cb', function()
-    if not _Globals.Initialized then
-        return nil
-    end
-
-    if not Ashita.Player.IsLoggedIn() then
+    if not _Globals.Initialized or not Ashita.Player.IsLoggedIn() then
         return nil
     end
 
@@ -91,21 +87,28 @@ ashita.events.register('d3d_present', 'present_cb', function()
         UI.ShowDemoWindow()
     end
 
-    Throttle.Throttle()                     -- Throttling for performance.
-    XP.Initialize()                         -- Need to initialize here because some things aren't ready when addon loads.
+    -- Throttling for performance.
+    Throttle.Throttle()
+
+    -- Need to initialize here because some things aren't ready when addon loads.
+    XP.Initialize()
+
     Ashita.Party.CheckRefreshTime()
     Ashita.Party.Refresh()
+
     WindowManager.CheckMouse()
 
     Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
     Timers.Cycle(Timers.Enum.Names.DPS)
 
     if not WindowManager.Menu.Hide() and not WindowManager.IsMasked() then
+        -- Windows that always standalone.
         Hub.Window.Populate(Hub.Content)
         Overview.Window.Populate(Overview.Content)
         Config.Window.Populate(Config.Content)
         Debug.Window.Populate(Debug.Content)
 
+        -- Windows that standalone only in multi-window mode.
         if WindowManager.Settings.Multi_Window then
             Parse.Window.Populate(Parse.Content)
             Focus.Window.Populate(Focus.Content)
@@ -125,99 +128,34 @@ end)
 -- https://github.com/atom0s/XiPackets/tree/main/world/server/0x0028
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('packet_in', 'packet_in_cb', function(packet)
-    if not _Globals.Initialized then return nil end
-    if not packet then return nil end
-
-    -- Duplicate packet checking from Thorny by way of the parse addon.
-    -- https://github.com/WinterSolstice8/parse/
-	local is_duplicate = false
-	if not packet.injected then is_duplicate = Ashita.Packets.IsDuplicate(packet) end
-    if is_duplicate then
-        Debug.Error.Add(Debug.Error.WARNING, "Packet In", "Duplicate packet for packet {" .. tostring(packet.id) .. "} found.")
+    if not _Globals.Initialized or not packet or not packet.data then
         return nil
     end
 
-    -- Start Zone
-    if packet.id == 0x00B then Ashita.Player.Zoning(true)
+    -- Duplicate packet checking from Thorny by way of the parse addon.
+    -- https://github.com/WinterSolstice8/parse/
+	if not packet.injected and Ashita.Packets.IsDuplicate(packet) then
+        Debug.Error.Add(Debug.Error.WARNING, "Packet In", string.format("Duplicate packet for packet {%s} found.", tostring(packet.id)))
+        return nil
+    end
 
-    -- End Zone
-    elseif packet.id == 0x00A then
-        Ashita.Player.Zoning(false)             -- Clear zoning flag.
-        Timers.Reset(Timers.Enum.Names.ZONE)    -- Reset time in zone timer.
-        WindowManager.SetBarDelay()
-        XP.Chains.End()                         -- Reset any XP chains.
+    local handlers =
+    {
+        [ H.Packet.ZONE_START      ] = function() Ashita.Player.Zoning(true) end,
+        [ H.Packet.ZONE_END        ] = function() H.ZoningEnd() end,
+        [ H.Packet.EXAMPLAR_UPDATE ] = function() XP.OnExemplarUpdate(packet.data) end,
+        [ H.Packet.CAPACITY_UPDATE ] = function() XP.OnCapacityUpdate(packet.data) end,
+        [ H.Packet.ALLIANCE_UPDATE ] = function() Ashita.Party.NeedRefresh = true end,
+        [ H.Packet.PARTY_UPDATE    ] = function() Ashita.Party.NeedRefresh = true end,
+        [ H.Packet.XP_UPDATE       ] = function() XP.OnXpGained(packet.data) end,
+        [ H.Packet.PLAYER_UPDATE   ] = function() H.PlayerUpdate() end,
+        [ H.Packet.ACTION          ] = function() H.StartActionPacket(packet) end,
+        [ H.Packet.ACTION_MESSAGE  ] = function() H.ActionMessage(packet) end,
+        [ H.Packet.ITEM_DROPPED    ] = function() Loot.Dropped(packet.data) end,
+        [ H.Packet.ITEM_OBTAINED   ] = function() Loot.Obtained(packet.data) end,
+    }
 
-        -- Add zone event to the battle log.
-        -- Can't add the zone because member structure doesn't load fast enough after zone.
-        Blog.Add("System", nil, Blog.ActionType.ZONE, "Zone", -1)
-
-    -- CP/EP Update: The current and max of these need to be tracked manually.
-    -- Based off of Points.
-    -- https://github.com/Shinzaku/Points
-    elseif packet.id == 0x061 then XP.OnExemplarUpdate(packet.data)
-    elseif packet.id == 0x063 then XP.OnCapacityUpdate(packet.data)
-
-    -- Alliance Update
-    elseif packet.id == 0x0C8 then Ashita.Party.NeedRefresh = true
-
-    -- Party Member Update
-    elseif packet.id == 0x0DD then Ashita.Party.NeedRefresh = true
-
-    -- Experience Points
-    elseif packet.id == 0x02D then XP.OnXpGained(packet.data)
-
-    -- Player Update
-    elseif packet.id == 0x037 then if XP.IsInitialized then XP.Dedication.Refresh() end
-
-    -- Action Packet
-    elseif packet.id == 0x028 then H.Start_Action_Packet(packet)
-
-    -- Action Messages
-    elseif packet.id == 0x029 then
-        local data = Ashita.Packets.BuildMessage(packet.data)
-        if not data then return nil end
-        if Debug.IsEnabled() then Debug.Packet.Add_Message(data) end
-
-        -- Killing a mob.
-        if data.message == Ashita.Message.MOB_KILL then
-            local actorMob = Ashita.Mob.GetMobByIndex(data.actor_index)
-            if Ashita.Party.IsAffiliate(actorMob.name) or Ashita.Mob.PetOwner(actorMob) then
-                local target_mob = Ashita.Mob.GetMobByIndex(data.target_index)
-                DB.TallyDefeatedMob(target_mob.name)
-                Blog.Add(target_mob.name, nil, Blog.ActionType.MOB_DEATH, Blog.Enum.MOB_DEATH, nil, "------------")
-            end
-
-        elseif data.message == Ashita.Message.DEATH_FALL then
-            local actorMob   = Ashita.Mob.GetMobByIndex(data.actor_index)
-            local claimerMob = Ashita.Mob.GetMobByID(actorMob.claim_id)
-            if Ashita.Party.IsAffiliate(claimerMob.name) or Ashita.Mob.PetOwner(claimerMob) then
-                DB.TallyDefeatedMob(actorMob.name)
-                Blog.Add(actorMob.name, nil, Blog.ActionType.MOB_DEATH, Blog.Enum.MOB_DEATH, nil, "------------")
-            end
-
-        -- Being defeated by a mob.
-        elseif data.message == Ashita.Message.DEATH_FALL or data.message == Ashita.Message.DEATH then
-            local target_mob = Ashita.Mob.GetMobByIndex(data.target_index)
-            if Ashita.Party.IsAffiliate(target_mob.name) then
-                local actor_mob = Ashita.Mob.GetMobByIndex(data.actor_index)
-                H.Death.Action(actor_mob, target_mob)
-            end
-
-        -- Gil obtained from kill.
-        elseif data.message == Ashita.Message.GIL_ACTOR or data.message == Ashita.Message.GIL_TARGET or data.message == Ashita.Message.GIL_MUG then
-            local actor_mob = Ashita.Mob.GetMobByIndex(data.target_index)
-            if Ashita.Party.IsAffiliate(actor_mob.name) or Ashita.Mob.PetOwner(actor_mob) then
-                Loot.NonDrop(actor_mob.name, "Gil", data.param1)
-            end
-        end
-
-    -- Items dropped by monster.
-    elseif packet.id == 0x0D2 then
-        Loot.Dropped(packet.data)
-
-    -- Item actions like lotting and obtaining items.
-    elseif packet.id == 0x0D3 then
-        Loot.Obtained(packet.data)
-
+    if handlers[packet.id] then
+        pcall(handlers[packet.id])
     end
 end)

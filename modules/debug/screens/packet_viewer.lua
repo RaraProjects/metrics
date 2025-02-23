@@ -146,7 +146,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param data table
 ------------------------------------------------------------------------------------------------------
-Debug.Packet.Add_Message = function(data)
+Debug.Packet.AddMessage = function(data)
     if #Debug.Packet.Message_Log >= Debug.Packet.Limit then table.remove(Debug.Packet.Message_Log, Debug.Packet.Limit) end
     local entry = {
         Time    = os.date("%X"),

@@ -8,7 +8,7 @@ require("windows.config")
 require("windows.menu")
 
 WindowManager.WindowList = { }
-WindowManager.Settings   = Settings_File.load(WindowManager.Config.Defaults, "window")
+WindowManager.Settings   = SettingsFile.load(WindowManager.Config.Defaults, "window")
 WindowManager.Mask       = false -- Hides all windows.
 
 WindowManager.Tabs          = { }

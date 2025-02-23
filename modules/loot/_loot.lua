@@ -20,7 +20,7 @@ Loot.SortedItemsMob    = { }
 ------------------------------------------------------------------------------------------------------
 Loot.Initialize = function(settings)
     -- Get saved settings from file.
-    Loot.Settings = settings or Settings_File.load(Loot.Config.Defaults, Loot.File)
+    Loot.Settings = settings or SettingsFile.load(Loot.Config.Defaults, Loot.File)
 
     -- Create the Focus Window.
     Loot.Window = Window:New

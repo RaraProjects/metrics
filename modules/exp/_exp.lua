@@ -42,7 +42,7 @@ XP.ShowResetConfirmation = false
 XP.Initialize = function(settings)
     if not XP.IsInitialized and Ashita and Res and WindowManager and UI and DB and Column then
         -- Get saved settings from file.
-        XP.Settings = settings or Settings_File.load(XP.Config.Defaults, XP.File)
+        XP.Settings = settings or SettingsFile.load(XP.Config.Defaults, XP.File)
 
         -- Create the XP Window.
         XP.Window = Window:New
@@ -224,6 +224,7 @@ end
 
 -- ------------------------------------------------------------------------------------------------------
 -- CP needs to be tracked manually.
+-- https://github.com/Shinzaku/Points
 -- ------------------------------------------------------------------------------------------------------
 ---@param data table
 -- ------------------------------------------------------------------------------------------------------
@@ -237,6 +238,7 @@ end
 
 -- ------------------------------------------------------------------------------------------------------
 -- EP needs to be tracked manually.
+-- https://github.com/Shinzaku/Points
 -- ------------------------------------------------------------------------------------------------------
 ---@param data table
 -- ------------------------------------------------------------------------------------------------------

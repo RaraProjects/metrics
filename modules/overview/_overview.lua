@@ -25,7 +25,7 @@ Overview.ActiveMode = Overview.Modes.PARSE
 ------------------------------------------------------------------------------------------------------
 Overview.Initialize = function(settings)
     -- Get saved settings from file.
-    Overview.Settings = settings or Settings_File.load(Overview.Config.Defaults, Overview.File)
+    Overview.Settings = settings or SettingsFile.load(Overview.Config.Defaults, Overview.File)
 
     -- Create the Overview Window.
     Overview.Window = Window:New

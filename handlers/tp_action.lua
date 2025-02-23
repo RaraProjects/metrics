@@ -255,32 +255,32 @@ H.TP.WeaponskillParse = function(actionData, actorMob, targetMob, wsName, wsId, 
     damage, hit, isNoDamage = H.TP.DamageMitigation(audits, damage, messageId, wsName, ownerMob)
 
     -- The player drains the mob's MP.
-    if H.MessageMPDrain(messageId) then
+    if H.Messages.MpDrain(messageId) then
         H.Offense.CatalogHit(audits, DB.Trackable.WEAPONSKILL_MP_DRAIN, damage, wsName)
         isMpDrain = true
 
     -- The player drains the mob's TP.
-    elseif H.Message_TP_Drain(messageId) then
+    elseif H.Messages.TpDrain(messageId) then
         isNoDamage = true
 
     -- The player dispels the mob. (this situation may not exist)
-    elseif H.MessageDispel(messageId) then
+    elseif H.Messages.Dispel(messageId) then
         isNoDamage = true
 
     -- The player debuffs the mob. (this situation may not exist)
-    elseif H.Message_Debuff(messageId) then
+    elseif H.Messages.Debuff(messageId) then
         H.Offense.CatalogNoDamageHit(audits, audits.trackable, wsName)
         isNoDamage = true
 
     -- A pet does damage to the mob.
-    elseif ownerMob and H.MessageDamaging(messageId) then
+    elseif ownerMob and H.Messages.Damaging(messageId) then
         DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
         H.Offense.CatalogHit(audits, audits.trackable, damage, wsName)
 
     -- The player damages or drains HP from the mob.
-    elseif H.MessageDamaging(messageId) or H.MessageHpDrain(messageId) then
+    elseif H.Messages.Damaging(messageId) or H.Messages.HpDrain(messageId) then
         H.Offense.CatalogHit(audits, audits.trackable, damage, wsName)
-        if H.MessageHpDrain(messageId) then H.Offense.CatalogHit(audits, DB.Trackable.SPELLS_HP_DRAIN, damage, wsName) end
+        if H.Messages.HpDrain(messageId) then H.Offense.CatalogHit(audits, DB.Trackable.SPELLS_HP_DRAIN, damage, wsName) end
 
     -- Just for information gathering purposes.
     else
@@ -308,14 +308,14 @@ H.TP.DamageMitigation = function(audits, damage, messageId, wsName, ownerMob)
     local shadow = false
 
     -- Mob misses the player.
-    if H.MessageNoDamageMiss(messageId) then
+    if H.Messages.NoDamageMiss(messageId) then
         H.Offense.GrandTotals(audits, 0, ownerMob)
         H.Offense.CatalogHit(audits, audits.trackable, 0, wsName)
         damage = 0
         miss   = true
 
     -- Player's shadow absorbs the ability.
-    elseif H.MessageNoDamage(messageId) then
+    elseif H.Messages.NoDamage(messageId) then
         H.Offense.GrandTotals(audits, 0, ownerMob)
         H.Offense.CatalogNoDamageHit(audits, audits.trackable, wsName)
         damage = 0

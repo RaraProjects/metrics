@@ -67,7 +67,7 @@ H.RangedDef.Parse = function(actionData, actorMob, targetMob, ownerMob)
     }
 
     -- No damage Messages (miss, third eye, shadows, etc.)
-    local noDamage = H.MessageNoDamage(messageId)
+    local noDamage = H.Messages.NoDamage(messageId)
     if noDamage then
         damage = 0
     end
