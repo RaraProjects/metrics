@@ -1,6 +1,6 @@
 WindowManager.Widgets = { }
 
-WindowManager.Widgets.Slider_Width = 100
+WindowManager.Widgets.SliderWidth = 100
 
 ------------------------------------------------------------------------------------------------------
 -- Creates a help text marker.
@@ -45,7 +45,7 @@ end
 WindowManager.Widgets.Alpha = function()
     local alpha = { WindowManager.Settings.Alpha }
 
-    UI.SetNextItemWidth(WindowManager.Widgets.Slider_Width)
+    UI.SetNextItemWidth(WindowManager.Widgets.SliderWidth)
 
     if UI.DragFloat("Window Transparency", alpha, 0.005, 0.2, 1, "%.2f", ImGuiSliderFlags_None) then
         WindowManager.Settings.Alpha = math.clamp(alpha[1], 0.2, 1)
@@ -58,12 +58,12 @@ end
 -- Sets window scaling.
 ------------------------------------------------------------------------------------------------------
 WindowManager.Widgets.WindowScale = function()
-    local window_scale = { WindowManager.Settings.Window_Scaling }
+    local windowScale = { WindowManager.Settings.Window_Scaling }
 
-    UI.SetNextItemWidth(WindowManager.Widgets.Slider_Width)
+    UI.SetNextItemWidth(WindowManager.Widgets.SliderWidth)
 
-    if UI.DragFloat("Window Scaling", window_scale, 0.005, 0.7, 3, "%.2f", ImGuiSliderFlags_None) then
-        WindowManager.Settings.Window_Scaling = math.clamp(window_scale[1], 0.7, 3)
+    if UI.DragFloat("Window Scaling", windowScale, 0.005, 0.7, 3, "%.2f", ImGuiSliderFlags_None) then
+        WindowManager.Settings.Window_Scaling = math.clamp(windowScale[1], 0.7, 3)
         WindowManager.ResetScalingFlags()
     end
     WindowManager.Widgets.HelpMarker("Adjust window element size.")
