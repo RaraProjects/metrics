@@ -19,6 +19,7 @@ XP.File   = "exp"
 
 XP.TableFlags = bit.bor(ImGuiTableFlags_Borders)
 
+---@enum XP.Type
 XP.Type =
 {
     ERROR      = 0,

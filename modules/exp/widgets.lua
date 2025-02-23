@@ -44,7 +44,7 @@ end
 ------------------------------------------------------------------------------------------------------
 XP.Widgets.LevelProgressBar = function()
     if XP.Settings.Show_XP_Progress_Bar then
-        local color   = Res.Colors.Get_XP(XP.DisplayMode)
+        local color   = Res.Colors.GetXP(XP.DisplayMode)
         local height  = XP.FullBarHeight
         local caption = nil
 

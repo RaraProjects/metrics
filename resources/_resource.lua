@@ -1,4 +1,4 @@
-Res = {}
+Res = { }
 
 require("resources.weapon_skills_curated")
 require("resources.spells_curated")
@@ -10,9 +10,9 @@ require("resources.game")
 require("resources.jobs")
 require("resources.items")
 
-Res.WS.Full_List = require("resources.weapon_skills")
-Res.Monster = {}
-Res.Monster.Full_List = require("resources.monster_abilities")
+Res.WS.FullList      = require("resources.weapon_skills")
+Res.Monster          = { }
+Res.Monster.FullList = require("resources.monster_abilities")
 Themes = require("resources.themes")
 
 -- ------------------------------------------------------------------------------------------------------
@@ -38,14 +38,11 @@ end
 -- ------------------------------------------------------------------------------------------------------
 -- Gets xp color.
 -- ------------------------------------------------------------------------------------------------------
----@param xp_type integer
+---@param xpType XP.Type
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Res.Colors.Get_XP = function(xp_type)
-    if not xp_type then return Res.Colors.XP[1] end
-    local color = Res.Colors.XP[xp_type]
-    if not color then color = Res.Colors.XP[1] end
-    return color
+Res.Colors.GetXP = function(xpType)
+    return Res.Colors.XP[xpType] or Res.Colors.XP[1]
 end
 
 -- ------------------------------------------------------------------------------------------------------

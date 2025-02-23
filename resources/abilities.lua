@@ -1,11 +1,12 @@
-Res.Abilities = {}
+Res.Abilities = { }
 
 Res.Abilities.CHIVALRY = 670
 Res.Abilities.STEAL    = 553
 Res.Abilities.MUG      = 557
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.Damaging = {
+Res.Abilities.Damaging =
+{
     [538] = {id = 538, old_id = 26,  en = "Eagle Eye Shot"},
     [540] = {id = 540, old_id = 28,  en = "Mijin Gakure"},
     [558] = {id = 558, old_id = 46,  en = "Shield Bash"},
@@ -29,7 +30,8 @@ Res.Abilities.Damaging = {
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.Maneuvers = {
+Res.Abilities.Maneuvers =
+{
     [141] = {id=141,en="Fire Maneuver",ja="ファイアマニューバ",element=0,icon_id=505,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
     [142] = {id=142,en="Ice Maneuver",ja="アイスマニューバ",element=1,icon_id=506,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
     [143] = {id=143,en="Wind Maneuver",ja="ウィンドマニューバ",element=2,icon_id=507,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
@@ -41,7 +43,8 @@ Res.Abilities.Maneuvers = {
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.PhantomRoll = {
+Res.Abilities.PhantomRoll =
+{
     [98]  = {id=98,en="Fighter's Roll",ja="ファイターズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=310,targets=1,tp_cost=0,type="CorsairRoll"},
     [99]  = {id=99,en="Monk's Roll",ja="モンクスロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=311,targets=1,tp_cost=0,type="CorsairRoll"},
     [100] = {id=100,en="Healer's Roll",ja="ヒーラーズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=312,targets=1,tp_cost=0,type="CorsairRoll"},
@@ -75,7 +78,8 @@ Res.Abilities.PhantomRoll = {
     [391] = {id=391,en="Runeist's Roll",ja="ルーニストロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=600,targets=1,tp_cost=0,type="CorsairRoll"},
 }
 
-Res.Abilities.PhantomRollLucky = {
+Res.Abilities.PhantomRollLucky =
+{
     [98]  = {lucky = 5, unlucky = 9},  -- Fighters
     [99]  = {lucky = 3, unlucky = 7},  -- Monks
     [100] = {lucky = 3, unlucky = 7},  -- Healers
@@ -110,7 +114,8 @@ Res.Abilities.PhantomRollLucky = {
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.Healing = {
+Res.Abilities.Healing =
+{
     [541] = {id = 541, oldid = 29,  en = "Spirit Surge"},
     [550] = {id = 550, oldid = 38,  en = "Chakra"},
     [702] = {id = 702, oldid = 190, en = "Curing Waltz"},
@@ -122,20 +127,23 @@ Res.Abilities.Healing = {
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.PetHealing = {
+Res.Abilities.PetHealing =
+{
     [590] = {id = 590, oldid = 78,  en = "Reward"},
     [592] = {id = 592, oldid = 80,  en = "Spirit Link"},
     [649] = {id = 649, oldid = 137, en = "Repair"},
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.MPRecovery = {
+Res.Abilities.MPRecovery =
+{
     [666] = {id = 666, oldid = 154, en = "Devotion"},
     [670] = {id = 670, oldid = 158, en = "Chivalry"},
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.PetCommands = {
+Res.Abilities.PetCommands =
+{
     [69] = {id=69,en="Fight",ja="たたかえ",element=6,icon_id=423,mp_cost=0,prefix="/pet",range=11,recast_id=100,targets=32,tp_cost=0,type="PetCommand"},
     [70] = {id=70,en="Heel",ja="もどれ",element=6,icon_id=423,mp_cost=0,prefix="/pet",range=11,recast_id=101,targets=1,tp_cost=0,type="PetCommand"},
     [71] = {id=71,en="Leave",ja="かえれ",element=6,icon_id=423,mp_cost=0,prefix="/pet",range=11,recast_id=101,targets=1,tp_cost=0,type="PetCommand"},

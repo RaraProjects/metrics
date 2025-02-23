@@ -1,6 +1,7 @@
 -- Automatically generated file: Spells
 
-return {
+return
+{
     [1] = {id=1,en="Cure",ja="ケアル",cast_time=2,element=6,icon_id=86,icon_id_nq=6,levels={[3]=1,[5]=3,[7]=5,[20]=5},mp_cost=8,prefix="/magic",range=12,recast=5,recast_id=1,requirements=1,skill=33,targets=63,type="WhiteMagic"},
     [2] = {id=2,en="Cure II",ja="ケアルII",cast_time=2.25,element=6,icon_id=87,icon_id_nq=6,levels={[3]=11,[5]=14,[7]=17,[20]=17},mp_cost=24,prefix="/magic",range=12,recast=5.5,recast_id=2,requirements=1,skill=33,targets=63,type="WhiteMagic"},
     [3] = {id=3,en="Cure III",ja="ケアルIII",cast_time=2.5,element=6,icon_id=88,icon_id_nq=6,levels={[3]=21,[5]=26,[7]=30,[20]=30},mp_cost=46,prefix="/magic",range=12,recast=6,recast_id=3,requirements=1,skill=33,targets=63,type="WhiteMagic"},

@@ -182,7 +182,7 @@ H.Spell.Count = function(audits, spellId, spellName, hit, mpCost, targetCount)
         [Res.Spells.Enspell]       = DB.Trackable.MELEE_ENSPELL,
         [Res.Spells.Spikes]        = DB.Trackable.SPELLS_SPIKE_DAMAGE,
         [Res.Spells.MpDrain]       = DB.Trackable.SPELLS_MP_DRAIN,
-        [Res.Spells.Buff_Songs]    = DB.Trackable.SPELLS_BUFF_SONG,
+        [Res.Spells.BuffSongs]    = DB.Trackable.SPELLS_BUFF_SONG,
     }
 
     for spellCategory, spellTrackable in pairs(trackables) do
@@ -291,7 +291,7 @@ H.Spell.Blog = function(audits, spellId, spellData, spellName, damage, isBurst, 
         Blog.Add(audits.player_name, audits.pet_name, action_type, spellName, damage, blogNote, spellData)
 
     -- Bard Songs
-    elseif Res.Spells.Buff_Songs[spellId] then
+    elseif Res.Spells.BuffSongs[spellId] then
         appendTargetCount(true)
         Blog.Add(audits.player_name, audits.pet_name, Blog.ActionType.SONG_BUFFS, spellName, nil, blogNote, spellData)
 

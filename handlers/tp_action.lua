@@ -516,7 +516,7 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 H.TP.PetSkillData = function(actionId, actorMob)
-    local skillData = Res.Monster.Full_List[actionId]
+    local skillData = Res.Monster.FullList[actionId]
 
     if not skillData then
         local errorMessage = string.format("Actor {%s} used TP move {%d} and it was unmapped.", actorMob.name or DB.Enum.DEBUG, actionId or 0)

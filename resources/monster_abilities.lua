@@ -1,6 +1,7 @@
 -- Automatically generated file: Monster Abilities
 
-return {
+return
+{
     [257] = {id=257,en="Foot Kick",ja="フットキック"},
     [258] = {id=258,en="Dust Cloud",ja="土煙"},
     [259] = {id=259,en="Whirl Claws",ja="爪旋風脚"},

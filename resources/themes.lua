@@ -1,6 +1,7 @@
-local themes = {}
+local themes = { }
 
-themes.Elements = {
+themes.Elements =
+{
     ImGuiCol_Text                  = 0;
     ImGuiCol_TextDisabled          = 1;
     ImGuiCol_WindowBg              = 2; -- Background of normal windows
@@ -56,7 +57,8 @@ themes.Elements = {
     ImGuiCol_ModalWindowDimBg      = 52; -- Darken/colorize entire screen behind a modal window, when one is active
 }
 
-themes.Default = {
+themes.Default =
+{
     ImGuiCol_Text                   = {0.94, 0.94, 0.94, 1.00},
     ImGuiCol_TextDisabled           = {0.94, 0.94, 0.94, 0.29},
     ImGuiCol_WindowBg               = {0.18, 0.20, 0.23, 0.96},

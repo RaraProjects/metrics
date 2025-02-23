@@ -1,6 +1,7 @@
-Res.Colors = T{}
+Res.Colors = { }
 
-Res.Colors.Basic = {
+Res.Colors.Basic =
+{
     -- Base Colors
     WHITE    = {1.00, 1.00, 1.00, 1.0},
     RED      = {1.00, 0.00, 0.00, 1.0},
@@ -24,7 +25,8 @@ Res.Colors.Basic = {
     WATER    = {0.30, 0.50, 0.80, 1.0},
 }
 
-Res.Colors.Elements = {
+Res.Colors.Elements =
+{
     [0] = Res.Colors.Basic.FIRE,
     [1] = Res.Colors.Basic.ICE,
     [2] = Res.Colors.Basic.WIND,
@@ -35,7 +37,8 @@ Res.Colors.Elements = {
     [7] = Res.Colors.Basic.DARK,
 }
 
-Res.Colors.Avatars = {
+Res.Colors.Avatars =
+{
     Carbuncle = Res.Colors.Basic.LIGHT,
     Fenrir    = Res.Colors.Basic.DARK,
     Diabolos  = Res.Colors.Basic.DARK,
@@ -47,7 +50,8 @@ Res.Colors.Avatars = {
     Leviathan = Res.Colors.Basic.WATER,
 }
 
-Res.Colors.Jobs = T{
+Res.Colors.Jobs =
+{
     [0] =  {0.40, 0.40, 0.40, 1.0}, -- NON
     [1] =  {0.90, 0.00, 0.00, 1.0}, -- WAR
     [2] =  {0.96, 0.77, 0.01, 1.0}, -- MNK
@@ -73,7 +77,8 @@ Res.Colors.Jobs = T{
     [22] = {0.79, 0.76, 0.89, 1.0}, -- RUN
 }
 
-Res.Colors.XP = T{
+Res.Colors.XP =
+{
     [1] = {0.83, 0.65, 0.31, 1.0},    -- Experience
     [2] = {0.30, 0.56, 0.83, 1.0},    -- Limit
 }
