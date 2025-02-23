@@ -98,8 +98,8 @@ ashita.events.register('d3d_present', 'present_cb', function()
 
     WindowManager.CheckMouse()
 
-    Timers.Cycle(Timers.Enum.Names.AUTOPAUSE)
-    Timers.Cycle(Timers.Enum.Names.DPS)
+    Timers.Cycle(Timers.Types.AUTOPAUSE)
+    Timers.Cycle(Timers.Types.DPS)
 
     if not WindowManager.Menu.Hide() and not WindowManager.IsMasked() then
         -- Windows that always standalone.

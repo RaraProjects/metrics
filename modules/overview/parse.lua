@@ -60,8 +60,8 @@ Overview.Parse.Clock = function()
         UI.TableHeadersRow()
 
         UI.TableNextRow()
-        UI.TableNextColumn() UI.Text(tostring(Timers.Check(Timers.Enum.Names.METRICS)))
-        UI.TableNextColumn() UI.Text(tostring(Timers.Check(Timers.Enum.Names.PARSE)))
+        UI.TableNextColumn() UI.Text(tostring(Timers.Check(Timers.Types.METRICS)))
+        UI.TableNextColumn() UI.Text(tostring(Timers.Check(Timers.Types.PARSE)))
 
         UI.EndTable()
     end

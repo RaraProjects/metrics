@@ -136,11 +136,11 @@ ashita.events.register('load', 'load_cb', function()
     Ashita.Party.NeedRefresh = true
 
     -- Start the clock.
-    Timers.Start(Timers.Enum.Names.METRICS)
-    Timers.Start(Timers.Enum.Names.PARSE)
-    Timers.Start(Timers.Enum.Names.AUTOPAUSE)
-    Timers.Start(Timers.Enum.Names.DPS)
-    Timers.Start(Timers.Enum.Names.ZONE)
+    Timers.Start(Timers.Types.METRICS)
+    Timers.Start(Timers.Types.PARSE)
+    Timers.Start(Timers.Types.AUTOPAUSE)
+    Timers.Start(Timers.Types.DPS)
+    Timers.Start(Timers.Types.ZONE)
 
     _Globals.Initialized = true
 end)

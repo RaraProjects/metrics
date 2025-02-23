@@ -7,13 +7,13 @@ Parse.Widgets.Clock = function()
     if Parse.Settings.Show_Clock then
         local pauseString = ""
 
-        if Timers.Is_Paused(Timers.Enum.Names.PARSE) then
+        if Timers.IsPaused(Timers.Types.PARSE) then
             pauseString = " (||)"
         end
 
-        UI.Text(string.format("Total: %s", tostring(Timers.Check(Timers.Enum.Names.METRICS))))
+        UI.Text(string.format("Total: %s", tostring(Timers.Check(Timers.Types.METRICS))))
         UI.SameLine() UI.Text(" ") UI.SameLine()
-        UI.SameLine() UI.Text(string.format("Active: %s", tostring(Timers.Check(Timers.Enum.Names.PARSE))))
+        UI.SameLine() UI.Text(string.format("Active: %s", tostring(Timers.Check(Timers.Types.PARSE))))
         UI.SameLine() UI.Text(pauseString) Parse.Help.TimerDurationHelpText()
     end
 end
@@ -78,14 +78,14 @@ end
 -- Pauses the parse timer.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Pause = function()
-    if Timers.Timers[Timers.Enum.Names.PARSE] then
-        if Timers.Timers[Timers.Enum.Names.PARSE].Paused then
+    if Timers.Timers[Timers.Types.PARSE] then
+        if Timers.Timers[Timers.Types.PARSE].Paused then
             if UI.SmallButton("Unpause") then
-                Timers.Start(Timers.Enum.Names.PARSE)
+                Timers.Start(Timers.Types.PARSE)
             end
         else
             if UI.SmallButton("Pause") then
-                Timers.Pause(Timers.Enum.Names.PARSE)
+                Timers.Pause(Timers.Types.PARSE)
             end
         end
     end

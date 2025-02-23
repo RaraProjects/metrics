@@ -99,7 +99,7 @@ DB.DPS.GetDPS = function(playerName)
     -- Average DPS
     if DB.DPS.GetMode() == DB.DPS.Modes[1] then
         local totalDamage = Column.Damage.RawTotalPlayerDamage(playerName)
-        local duration    = math.max(Timers.GetDuration(Timers.Enum.Names.PARSE), 1)    -- Prevent division by zero.
+        local duration    = math.max(Timers.GetDuration(Timers.Types.PARSE), 1)    -- Prevent division by zero.
 
         return totalDamage / duration
     end

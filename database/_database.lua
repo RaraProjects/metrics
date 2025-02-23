@@ -100,7 +100,7 @@ DB.Initialize = function(isManualReset)
 
 	DB.AttackSpeed.Reset()
 
-	Timers.Reset(Timers.Enum.Names.PARSE)
+	Timers.Reset(Timers.Types.PARSE)
 end
 
 ------------------------------------------------------------------------------------------------------

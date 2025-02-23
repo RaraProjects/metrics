@@ -89,14 +89,14 @@ H.StartActionPacket = function(packet)
     -- OFFENSE: The actor is an affiliate or the pet of an affiliate.
     if petOwnerMob or Ashita.Party.IsAffiliate(actorMob.name) then
         isOffense = true
-        Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
-        Timers.Unpause(Timers.Enum.Names.PARSE)
+        Timers.Reset(Timers.Types.AUTOPAUSE)
+        Timers.Unpause(Timers.Types.PARSE)
 
     -- DEFENSE: The actor is not another player and the target is an affiliate or the pet of an affiliate.
     elseif not Ashita.Mob.IsPlayer(actorMob) and (targetPetOwnerMob or Ashita.Party.IsAffiliate(targetMob.name)) then
         isDefense = true
-        Timers.Reset(Timers.Enum.Names.AUTOPAUSE)
-        Timers.Unpause(Timers.Enum.Names.PARSE)
+        Timers.Reset(Timers.Types.AUTOPAUSE)
+        Timers.Unpause(Timers.Types.PARSE)
 
     -- The actor is a mob claimed by the party and is doing something that is targetting itself.
     elseif Ashita.Mob.ClaimedByAffiliate(actorMob) and actorMob.name == targetMob.name then
@@ -251,7 +251,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.ZoningEnd = function()
     Ashita.Player.Zoning(false)             -- Clear zoning flag.
-    Timers.Reset(Timers.Enum.Names.ZONE)    -- Reset time in zone timer.
+    Timers.Reset(Timers.Types.ZONE)    -- Reset time in zone timer.
     WindowManager.SetBarDelay()
     XP.Chains.End()                         -- Reset any XP chains.
 

@@ -332,7 +332,7 @@ end
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
 XP.Columns.ZoneTime = function()
-    return Timers.Check(Timers.Enum.Names.ZONE)
+    return Timers.Check(Timers.Types.ZONE)
 end
 
 -- ------------------------------------------------------------------------------------------------------
