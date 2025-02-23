@@ -43,7 +43,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 Settings_File.register(Config.ModuleFile.WINDOW, "settings_update", function(settings)
     if settings ~= nil then
-        WindowManager.Settings = settings
+        WindowManager.Settings    = settings
         WindowManager.Theme.IsSet = false
         WindowManager.SettingsReset()
         Settings_File.save(Config.ModuleFile.WINDOW)
@@ -109,12 +109,13 @@ ashita.events.register('load', 'load_cb', function()
         Model  = Settings_File.load(DB.Defaults, Config.ModuleFile.DATABASE),
     }
 
-    Metrics.Debug = {}
-    Metrics.Debug.Visible = {false}
+    Metrics.Debug = { }
+    Metrics.Debug.Visible = { false }
 
     -- Initialize modules. Even though a settings update will occur after this, the initialization needs
     -- to happen here to avoid running into nil settings tables in the Ashita settings cache.
-    local modules = {
+    local modules =
+    {
         XP,
         Hub,
         Blog,
@@ -127,7 +128,10 @@ ashita.events.register('load', 'load_cb', function()
         DB,
         WindowManager
     }
-    for _, module in ipairs(modules) do module.Initialize() end
+
+    for _, module in ipairs(modules) do
+        module.Initialize()
+    end
 
     Ashita.Party.NeedRefresh = true
 
