@@ -166,13 +166,14 @@ DB.Catalog.UpdateMetric = function(mode, value, audits, trackable, actionName, m
 	local targetName = audits.target_name
 	local petName    = audits.pet_name
 
-	-- Early quit out to prevent crashing.
+	-- Early quits
 	local caller = "DB.Catalog.UpdateMetric"
 	if DB.IsValueEmpty(caller, playerName, "Player") or
 	   DB.IsValueEmpty(caller, targetName, "Target") or
 	   DB.IsValueEmpty(caller, actionName, "Action") or
 	   DB.IsValueEmpty(caller, trackable,  "Trackable") or
-	   DB.IsValueEmpty(caller, metric,     "Metric") then
+	   DB.IsValueEmpty(caller, metric,     "Metric") or
+	   playerName == DB.Enum.DEBUG then
 		return false
 	end
 

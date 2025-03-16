@@ -62,7 +62,10 @@ end
 ---@param playerName string
 ------------------------------------------------------------------------------------------------------
 DB.Data.InitializePlayerTrackingTables = function(playerName)
-	if playerName and playerName ~= "" and not DB.Tracking.InitializedPlayers[playerName] then
+	if playerName and
+	   playerName ~= "" and
+	   playerName ~= DB.Enum.DEBUG and
+	   not DB.Tracking.InitializedPlayers[playerName] then
 		DB.Tracking.InitializedPlayers[playerName] = true
 		DB.Lists.SortInitializedPlayers()
 		DB.Tracking.RunningAccuracy[playerName]    = { }
