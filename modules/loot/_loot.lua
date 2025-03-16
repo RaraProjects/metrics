@@ -62,22 +62,23 @@ end
 Loot.Dropped = function(data)
     local dropData = Ashita.Packets.ItemDrop(data)
 
-    if not dropData then
+    -- Upon logging in, there are 10 blank dropped item packets (probably one for each treasure slot).
+    if not dropData or dropData.Dropper_Index == 0 then
         return nil
     end
 
     local itemName = Ashita.Item.GetItemName(dropData.Item)
     Loot.Pool[dropData.Index] = itemName
 
-    local mob      = Ashita.Mob.GetMobByIndex(dropData.Dropper_Index)
-    local mob_name = mob and mob.name or DB.Enum.DEBUG
+    local mob     = Ashita.Mob.GetMobByIndex(dropData.Dropper_Index)
+    local mobName = mob and mob.name or DB.Enum.DEBUG
 
     -- Track total drops.
     DB.Tracking.TotalItems[itemName] = (DB.Tracking.TotalItems[itemName] or 0) + 1
 
     -- Track mob specific drops.
-    DB.Tracking.DropRates[mob_name] = DB.Tracking.DropRates[mob_name]  or { }
-    DB.Tracking.DropRates[mob_name][itemName] = (DB.Tracking.DropRates[mob_name][itemName] or 0) + 1
+    DB.Tracking.DropRates[mobName] = DB.Tracking.DropRates[mobName]  or { }
+    DB.Tracking.DropRates[mobName][itemName] = (DB.Tracking.DropRates[mobName][itemName] or 0) + 1
 
     -- Sort the items alphabetically.
     Loot.SortedItemsAll = { }
