@@ -10,6 +10,7 @@ H.Packet =
     EXAMPLAR_UPDATE = 0x061,
     ITEM_DROPPED    = 0x0D2,
     ITEM_OBTAINED   = 0x0D3,
+    SPECIAL_MESSAGE = 0x02A,
     PARTY_UPDATE    = 0x0DD,
     PLAYER_UPDATE   = 0x037,
     XP_UPDATE       = 0x02D,

@@ -285,6 +285,30 @@ Ashita.Packets.CharacterUpdate = function(data)
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Handles parsing special messages out of incoming packet 0x02A.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.SpecialMessage = function(data)
+	local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+
+	local parsedData = { }
+	parsedData.Player       = reader:read(32)
+	parsedData.Param1       = reader:read(32)
+	parsedData.Param2       = reader:read(32)
+	parsedData.Param3       = reader:read(32)
+	parsedData.Param4       = reader:read(32)
+	parsedData.Player_Index = reader:read(16)
+	parsedData.Message_ID   = reader:read(16)
+	parsedData.Unknown      = reader:read(32)
+
+	return parsedData
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Handles parsing messages out of incoming packet 0x0D2.
 -- ------------------------------------------------------------------------------------------------------
 ---@param data table parsed packet data

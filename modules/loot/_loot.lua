@@ -55,6 +55,28 @@ Loot.Content = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Pickup special messages like getting gil from chests.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table
+-- ------------------------------------------------------------------------------------------------------
+Loot.SpecialMessage = function(data)
+    local messageData = Ashita.Packets.SpecialMessage(data)
+
+    if not messageData then
+        return nil
+    end
+
+    local param     = messageData.Param1
+    local messageId = messageData.Message_ID
+
+    -- TO DO:
+    -- Messages that can mean GIL_OBTAINED based on zone.
+    -- 228,  6391, 6404, 6413, 6426, 6435, 6437, 6446, 6531, 6550
+    -- 6554, 6560, 6570, 6572, 6576, 6580, 6581, 6596, 6599, 6913
+    -- 6923, 7132, 10974
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- File which item dropped.
 -- ------------------------------------------------------------------------------------------------------
 ---@param data table
