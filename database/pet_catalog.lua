@@ -181,7 +181,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.PetCatalog.Get = function(playerName, petName, trackable, actionName, metric, tempMobFocus)
-	local caller = "DB.PetCatalog.Inc"
+	local caller = "DB.PetCatalog.Get"
 	if DB.IsValueEmpty(caller, playerName, "Player") or
 	   DB.IsValueEmpty(caller, petName,    "Pet") or
 	   DB.IsValueEmpty(caller, actionName, "Action") or

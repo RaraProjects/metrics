@@ -437,7 +437,7 @@ Focus.Overview.PetTP = function(playerName)
                 UI.TableNextRow()
                 UI.TableNextColumn() UI.Text(actionName)
                 UI.TableNextColumn() Column.Damage.PetAverage(playerName, petName, trackable, actionName)
-                UI.TableNextColumn() Column.Acc.ByTypePet(playerName, petName, actionName, trackable)
+                UI.TableNextColumn() Column.Acc.ByTypePet(playerName, petName, trackable, actionName)
                 UI.TableNextColumn() Column.Damage.AveragePetTP(playerName, petName, trackable, actionName)
                 WindowManager.TableRowColor(row)
                 row = row + 1
