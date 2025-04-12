@@ -116,6 +116,14 @@ Report.Section.File = function()
             return nil
         end
 
+        if Debug.IsEnabled() then
+            UI.TableNextColumn()
+            if UI.Button("Action P.   ") then
+                File.SaveAction()
+                return nil
+            end
+        end
+
         UI.EndTable()
     end
 end
