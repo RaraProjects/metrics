@@ -23,13 +23,14 @@ H.Spell.Action = function(action, actorMob, ownerMob, logOffense)
         return nil
     end
 
-    local spellName   = Ashita.Spell.Name(spellId, spellData)
-    local mpCost      = Ashita.Spell.MP(spellId, spellData)
-    local totalDamage = 0
-    local targetCount = 0
-    local isBurst     = false
-    local hit         = false  -- Mainly for enfeebles in this context.
-    local targetMob   = { }
+    local spellName      = Ashita.Spell.Name(spellId, spellData)
+    local mpCost         = Ashita.Spell.MP(spellId, spellData)
+    local totalDamage    = 0
+    local targetCount    = 0
+    local isBurst        = false
+    local hit            = false  -- Mainly for enfeebles in this context.
+    local targetMob      = { }
+    local skillchainData = { }
 
     for _, target in pairs(action.targets) do
         targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
@@ -40,12 +41,13 @@ H.Spell.Action = function(action, actorMob, ownerMob, logOffense)
         end
 
         for _, actionData in pairs(target.actions) do
-            local targetDamage, targetBurst = H.Spell.Parse(spellData, actionData, actorMob, targetMob, ownerMob)
+            local targetDamage, targetBurst, spellSkillchain = H.Spell.Parse(spellData, actionData, actorMob, targetMob, ownerMob)
 
-            totalDamage = totalDamage + (targetDamage or 0)      -- Handle damage. Hits are primarily for enfeebles.
-            hit         = hit or (targetDamage > -2)
-            isBurst     = isBurst or targetBurst                 -- Burst: The Use level is a burst if any of the target checks are bursts.
-            targetCount = targetCount + 1                        -- AOE Target Counts
+            totalDamage    = totalDamage + (targetDamage or 0)      -- Handle damage. Hits are primarily for enfeebles.
+            hit            = hit or (targetDamage > -2)
+            isBurst        = isBurst or targetBurst                 -- Burst: The Use level is a burst if any of the target checks are bursts.
+            targetCount    = targetCount + 1                        -- AOE Target Counts
+            skillchainData = spellSkillchain or skillchainData
         end
     end
 
@@ -54,6 +56,10 @@ H.Spell.Action = function(action, actorMob, ownerMob, logOffense)
     local audits = H.Spell.Audits(actorMob, targetMob, ownerMob)
     H.Spell.Count(audits, spellId, spellName, hit, mpCost, targetCount)
     H.Spell.Blog(audits, spellId, spellData, spellName, totalDamage, isBurst, targetCount)
+
+    if skillchainData and skillchainData.Damage > 0 then
+        Blog.Add(actorMob.name, nil, Blog.ActionType.SKILLCHAIN, skillchainData.Name, skillchainData.Damage)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -65,21 +71,22 @@ end
 ---@param actorMob   table
 ---@param targetMob  table
 ---@param ownerMob?  table
----@return number, boolean
+---@return number, boolean, table
 ------------------------------------------------------------------------------------------------------
 H.Spell.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob)
     Debug.Packet.AddAction(actorMob.name, targetMob.name, "Spell", actionData)
 
-    local spellId   = spellData.Index
-    local spellName = Ashita.Spell.Name(spellId, spellData)
-    local damage    = actionData.param or 0
-    local messageId = actionData.message
-    local isBurst   = H.Messages.MagicBurst(messageId)
-    local audits    = H.Spell.Audits(actorMob, targetMob, ownerMob)
+    local spellId        = spellData.Index
+    local spellName      = Ashita.Spell.Name(spellId, spellData)
+    local damage         = actionData.param or 0
+    local messageId      = actionData.message
+    local isBurst        = H.Messages.MagicBurst(messageId)
+    local audits         = H.Spell.Audits(actorMob, targetMob, ownerMob)
+    local skillchainData = { }
 
     -- Shadow absorption
     if H.Messages.NoDamage(messageId) then
-        return 0, false
+        return 0, false, skillchainData
 
     -- Enfeebles shouldn't come with damage.
     elseif Res.Spells.Enfeebling[spellId] then
@@ -122,7 +129,12 @@ H.Spell.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob)
         Debug.Error.Add(Debug.Error.WARNING, "H.Spell.Parse", warning)
     end
 
-    return damage, isBurst
+    -- SCH Immanence skillchains.
+    if actionData.has_add_effect then
+        skillchainData = H.Spell.AdditionalEffect(actorMob, targetMob, actionData, spellName)
+    end
+
+    return damage, isBurst, skillchainData
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -414,6 +426,28 @@ H.Spell.EnfeeblingAndDoTs = function(audits, trackable, damage, spellName, messa
     end
 
     return damage
+end
+
+------------------------------------------------------------------------------------------------------
+-- SCH skillchains from Immanence come in as an additional effect.
+------------------------------------------------------------------------------------------------------
+---@param actorMob   table
+---@param targetMob  table
+---@param actionData table
+---@param spellName  string
+---@return table
+------------------------------------------------------------------------------------------------------
+H.Spell.AdditionalEffect = function(actorMob, targetMob, actionData, spellName)
+    local messageId      = actionData.add_effect_message
+    local skillchainName = Res.WS.Skillchains[messageId]
+    local skillchainData = { }
+
+    if skillchainName then
+        local damage = H.TP.SkillchainParse(actionData, actorMob, targetMob, spellName)
+        skillchainData = { Name = skillchainName, Damage = damage }
+    end
+
+    return skillchainData
 end
 
 ------------------------------------------------------------------------------------------------------
