@@ -241,6 +241,14 @@ H.MeleeDef.AdditionalEffect = function(audits, actionData, animationId, messageI
             DB.Data.Update(DB.UpdateMode.INC, -1, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.HITS_ON_TARGET)
             DB.Data.Update(DB.UpdateMode.INC, -1, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.ATTEMPTS_ON_TARGET)
         end
+
+    elseif messageId == Ashita.Message.ENDEBUFF then
+        local buff = Res.Buffs.List[additionalDamage]
+        additionalDamage = 0
+
+        if buff then
+            H.Offense.CatalogNoDamageHit(audits, DB.Trackable.DEF_MELEE_ENDEBUFF, buff.en)
+        end
     end
 
     return additionalDamage

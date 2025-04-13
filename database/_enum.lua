@@ -76,6 +76,7 @@ DB.Trackable =
     DEF_TP_MOVE_PET               = "Defense TP Move Pet",
     DEF_MELEE                     = "Defense Melee",
     DEF_MELEE_PET                 = "Defense Melee Pet",
+    DEF_MELEE_ENDEBUFF            = "Defense Melee Endebuff",
     DEF_RANGED                    = "Defense Ranged",
     DEF_RANGED_PET                = "Defense Ranged Pet",
     DEF_EVASION_MELEE             = "Defense Evasion Melee",

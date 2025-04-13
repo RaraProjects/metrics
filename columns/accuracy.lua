@@ -115,8 +115,8 @@ end
 -- Grabs the multi attack rate for a specific melee type.
 ------------------------------------------------------------------------------------------------------
 ---@param playerName        string
----@param meleeType         string
----@param multiAttackMetric string
+---@param meleeType         DB.Trackable
+---@param multiAttackMetric DB.Metric
 ---@param totalMulti?       boolean
 ---@return string
 ------------------------------------------------------------------------------------------------------
@@ -144,7 +144,7 @@ end
 -- Displays Phantom Roll rates.
 ------------------------------------------------------------------------------------------------------
 ---@param playerName  string
----@param rollMetric  string
+---@param rollMetric  DB.Metric
 ---@param actionName? string
 ---@return string
 ------------------------------------------------------------------------------------------------------
@@ -160,4 +160,20 @@ Column.Acc.PhantomRoll = function(playerName, rollMetric, actionName)
     local color        = Column.Acc.ColorSelection(rollHits, rollAttempts, 0)
 
     return Column.Output.Percent(rollHits, rollAttempts, color)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Displays how often certain additional effect debuffs proc.
+------------------------------------------------------------------------------------------------------
+---@param playerName string
+---@param trackable  DB.Trackable
+---@param actionName string
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Acc.AdditionalEffectProc = function(playerName, trackable, actionName)
+    local hits     = DB.Catalog.Get(playerName, trackable, actionName, DB.Metric.HITS_ON_TARGET)
+    local attempts = DB.Data.Get(playerName, DB.Trackable.DEF_MELEE, DB.Metric.ATTEMPTS_ON_TARGET)
+    local color    = Column.Acc.ColorSelection(hits, attempts)
+
+    return Column.Output.Percent(hits, attempts, color)
 end

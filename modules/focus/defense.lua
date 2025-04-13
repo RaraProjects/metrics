@@ -13,6 +13,7 @@ Focus.Defense.Display = function(playerName)
 
     UI.Separator()
 
+    Focus.Defense.Endebuff(playerName, DB.Trackable.DEF_MELEE_ENDEBUFF)
     Focus.Defense.TpMove(playerName, DB.Trackable.DEF_TP_MOVE)
     Focus.Defense.TpMove(playerName, DB.Trackable.DEF_NUKING)
 
@@ -347,6 +348,48 @@ Focus.Defense.TpMove = function(playerName, trackable)
             UI.TableNextColumn() Column.Damage.ByType(playerName,  trackable, DB.Metric.MIN, actionName)
             UI.TableNextColumn() Column.Damage.ByType(playerName,  trackable, DB.Metric.MAX, actionName)
             WindowManager.TableRowColor(0)
+        end
+
+        UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Tracks additional effects that have an endebuff effect.
+------------------------------------------------------------------------------------------------------
+---@param playerName string
+---@param trackable  DB.Trackable a trackable from the data model.
+------------------------------------------------------------------------------------------------------
+Focus.Defense.Endebuff = function(playerName, trackable)
+    if not trackable then
+        return nil
+    end
+
+    local tableFlags   = WindowManager.Table.Flags.FixedBorders
+    local colFlags     = Column.Flags.None
+    local nameWidth    = Column.Widths.Name
+    local width        = Column.Widths.Standard
+    local actionString = "Additional Effect"
+
+    -- Error Protection
+    if not DB.Tracking.Trackables[trackable] or not DB.Tracking.Trackables[trackable][playerName] then
+        return nil
+    end
+
+    if UI.BeginTable(trackable, 3, tableFlags) then
+        UI.TableSetupColumn(actionString, colFlags, nameWidth)
+        UI.TableSetupColumn("Rate",       colFlags, width)
+        UI.TableSetupColumn("Tries",      colFlags, width)
+        UI.TableHeadersRow()
+
+        local row = 1
+
+        for actionName, _ in pairs(DB.Tracking.Trackables[trackable][playerName]) do
+            UI.TableNextColumn() UI.Text(string.format("- %s", actionName))
+            UI.TableNextColumn() Column.Acc.AdditionalEffectProc(playerName, trackable, actionName)
+            UI.TableNextColumn() Column.Damage.Attempts(playerName, trackable, nil, actionName, true)
+            WindowManager.TableRowColor(row)
+            row = row + 1
         end
 
         UI.EndTable()
