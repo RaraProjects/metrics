@@ -85,6 +85,21 @@ Ashita.Mob.Data = function(id, convertId)
         entity.name = DB.Enum.DEBUG
     end
 
+    local convertRotation = function(rawRotation)
+        if not rawRotation then
+            return 0
+        end
+
+        local degrees = (rawRotation / 3) * 180
+        degrees = degrees % 360
+
+        if degrees < 0 then
+            degrees = degrees + 360
+        end
+
+        return degrees
+    end
+
     local serverId      = entityManager:GetServerId(index)
     entity.id           = string.sub(string.format("0x%X", serverId), -3) -- This came from HXUI
     entity.id_num       = serverId
@@ -96,6 +111,8 @@ Ashita.Mob.Data = function(id, convertId)
     entity.x            = entityManager:GetLocalPositionX(index)
     entity.y            = entityManager:GetLocalPositionY(index)
     entity.z            = entityManager:GetLocalPositionZ(index)
+    entity.rotation_raw = entityManager:GetLocalPositionYaw(index)
+    entity.rotation_deg = convertRotation(entity.rotation_raw)
     entity.target_index = entityManager:GetTargetIndex(index)      -- Should be same as index.
     entity.pet_index    = entityManager:GetPetTargetIndex(index)   -- The index of the entity's pet. This should be blank for the pet.
     entity.claim_id     = entityManager:GetClaimStatus(index)      -- The server ID of the entity who has claim.
