@@ -78,4 +78,7 @@ Debug.Mob.Rows = function(mob)
     UI.TableNextRow()
     UI.TableNextColumn() UI.Text("in_alliance")
     UI.TableNextColumn() UI.Text(tostring(mob.in_alliance))
+    UI.TableNextRow()
+    UI.TableNextColumn() UI.Text("Attack Speed")
+    UI.TableNextColumn() Column.AttackSpeed.Get(tostring(mob.id))
 end

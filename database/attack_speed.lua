@@ -20,6 +20,8 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.AttackSpeed.Update = function(playerName)
     playerName = playerName or DB.Enum.DEBUG
+
+    DB.Tracking.RunningAttackSpeed[playerName] = DB.Tracking.RunningAttackSpeed[playerName] or { }
     local attackSpeedData = DB.Tracking.RunningAttackSpeed[playerName]
 
     if not attackSpeedData then
