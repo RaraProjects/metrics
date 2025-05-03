@@ -292,6 +292,8 @@ File.SaveAction = function()
             tostring("Entity")           .. File.Delimiter ..
             tostring("Target")           .. File.Delimiter ..
             tostring("Action")           .. File.Delimiter ..
+            tostring("ID")               .. File.Delimiter ..
+            tostring("Name")             .. File.Delimiter ..
             tostring("Reaction")         .. File.Delimiter ..
             tostring("Animation")        .. File.Delimiter ..
             tostring("Effect")           .. File.Delimiter ..
@@ -320,6 +322,8 @@ File.SaveAction = function()
                 tostring(data.Entity)                   .. File.Delimiter ..
                 tostring(data.Target)                   .. File.Delimiter ..
                 tostring(data.Action)                   .. File.Delimiter ..
+                tostring(data.ID)                       .. File.Delimiter ..
+                tostring(data.Name)                     .. File.Delimiter ..
                 tostring(result.reaction)               .. File.Delimiter ..
                 tostring(result.animation)              .. File.Delimiter ..
                 tostring(result.effect)                 .. File.Delimiter ..

@@ -61,15 +61,16 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.SpellDef.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob)
-    Debug.Packet.AddAction(actorMob.name, targetMob.name, "Spell Def", actionData)
+    local spellId   = spellData.Index
+    local spellName = Ashita.Spell.Name(spellId, spellData)
+
+    Debug.Packet.AddAction(actorMob.name, targetMob.name, "Spell Def", actionData, spellId, spellName)
 
     -- Need to double check each target in case a pet gets hit by AOE and wasn't the primary target.
     if not ownerMob then
         ownerMob = Ashita.Mob.PetOwner(targetMob)
     end
 
-    local spellId   = spellData.Index
-    local spellName = Ashita.Spell.Name(spellId, spellData)
     local messageId = actionData.message
     local noDamage  = H.Messages.NoDamage(messageId)
     local damage    = actionData.param or 0

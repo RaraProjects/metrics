@@ -104,15 +104,16 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.Ability.Parse = function(abilityId, abilityData, actionData, actorMob, targetName, ownerMob)
-    Debug.Packet.AddAction(actorMob.name, targetName, "Ability", actionData)
-
-    local playerName  = actorMob.name
     local abilityName = abilityData.Name
-    local damage      = actionData.param
-    local messageId   = actionData.message
-    local pet_name    = ownerMob and ownerMob.name or nil
 
-    local audits = H.Ability.Audits(playerName, targetName, pet_name)
+    Debug.Packet.AddAction(actorMob.name, targetName, "Ability", actionData, abilityData.Index, abilityName)
+
+    local playerName = actorMob.name
+    local damage     = actionData.param
+    local messageId  = actionData.message
+    local petName    = ownerMob and ownerMob.name or nil
+
+    local audits = H.Ability.Audits(playerName, targetName, petName)
 
     local tag = "H.Ability.Parse"
     local warning = string.format("BENIGN: Ability {%s} (%s) has message {%s} and damage {%s}.",

@@ -3,7 +3,7 @@ Debug.Packet.Action_Log  = { }      -- Entity, Action, Result
 Debug.Packet.Message_Log = { }
 Debug.Packet.Item_Log    = { }
 Debug.Packet.Timestamps  = { }      -- [mobID][category]
-Debug.Packet.Limit       = 1000
+Debug.Packet.Limit       = 100000
 Debug.Packet.Size        = 32
 
 Debug.Packet.Actions =
@@ -60,12 +60,14 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Adds a packet entry to the packet viewer.
 ------------------------------------------------------------------------------------------------------
----@param entity string
----@param target string
----@param action string
----@param result table
+---@param entity      string
+---@param target      string
+---@param actionLabel string
+---@param actionData  table
+---@param id          integer
+---@param name        string
 ------------------------------------------------------------------------------------------------------
-Debug.Packet.AddAction = function(entity, target, action, result)
+Debug.Packet.AddAction = function(entity, target, actionLabel, actionData, id, name)
     if #Debug.Packet.Action_Log >= Debug.Packet.Limit then
         table.remove(Debug.Packet.Action_Log, Debug.Packet.Limit)
     end
@@ -75,8 +77,10 @@ Debug.Packet.AddAction = function(entity, target, action, result)
         Time   = os.date("%X"),
         Entity = entity,
         Target = target,
-        Action = action,
-        Result = result,
+        Action = actionLabel,
+        Result = actionData,
+        ID     = id or 0,
+        Name   = name or "",
     }
 
     table.insert(Debug.Packet.Action_Log, 1, entry)
@@ -90,7 +94,7 @@ Debug.Packet.PopulateAction = function()
 
     local tableSize = { 0, Debug.Packet.Size * 8 }
 
-    if UI.BeginTable("Action Packet Log", 21, WindowManager.Table.Flags.Scrollable, tableSize) then
+    if UI.BeginTable("Action Packet Log", 23, WindowManager.Table.Flags.Scrollable, tableSize) then
         Debug.Packet.ActionHeaders()
 
         for _, data in ipairs(Debug.Packet.Action_Log) do
@@ -113,6 +117,8 @@ Debug.Packet.ActionHeaders = function()
     UI.TableSetupColumn("\nEntity",           flags)
     UI.TableSetupColumn("\nTarget",           flags)
     UI.TableSetupColumn("\nAction",           flags)
+    UI.TableSetupColumn("\nID",               flags)
+    UI.TableSetupColumn("\nName",             flags)
     UI.TableSetupColumn("\nReaction",         flags)
     UI.TableSetupColumn("\nAnimation",        flags)
     UI.TableSetupColumn("\nEffect",           flags)
@@ -144,6 +150,8 @@ Debug.Packet.ActionRows = function(data)
     UI.TableNextColumn() UI.Text(tostring(data.Entity))
     UI.TableNextColumn() UI.Text(tostring(data.Target))
     UI.TableNextColumn() UI.Text(tostring(data.Action))
+    UI.TableNextColumn() UI.Text(tostring(data.ID))
+    UI.TableNextColumn() UI.Text(tostring(data.Name))
     UI.TableNextColumn() UI.Text(tostring(result.reaction))
     UI.TableNextColumn() UI.Text(tostring(result.animation))
     UI.TableNextColumn() UI.Text(tostring(result.effect))
