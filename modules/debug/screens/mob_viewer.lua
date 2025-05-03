@@ -10,6 +10,12 @@ Debug.Mob.Populate = function(mob)
             Debug.Mob.Rows(mob)
             UI.EndTable()
         end
+
+        if Debug.Packet.Timestamps[mob.id] then
+            UI.Text("\nPacket Delays")
+            UI.Text(string.format("7 > 3 : %.2f", Debug.Packet.TimeDiff(mob, 7, 3)))
+            UI.Text(string.format("7 > 11: %.2f", Debug.Packet.TimeDiff(mob, 7, 11)))
+        end
     end
 end
 

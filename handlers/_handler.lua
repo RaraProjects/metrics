@@ -133,6 +133,8 @@ end
 H.PickActionCategory = function(action, actorMob, targetPetOwnerMob, petOwnerMob, isOffense, isDefense, mobSelfBuff)
     local category = action.category
 
+    Debug.Packet.MarkTime(actorMob, category)
+
     if category == H.ActionCategory.MELEE then
         if isOffense then
             H.Melee.Action(action, actorMob, petOwnerMob, isOffense)

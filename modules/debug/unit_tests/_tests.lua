@@ -135,7 +135,7 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Run unit tests.
 ------------------------------------------------------------------------------------------------------
-Debug.Unit.Run_Tests = function()
+Debug.Unit.RunTests = function()
     Debug.Unit.Active = true
     Debug.Unit.Mob.PLAYER = Ashita.Mob.GetMobByTarget(Ashita.TargetString.ME)
 
