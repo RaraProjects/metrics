@@ -268,6 +268,83 @@ File.SaveLoot = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Write to file for action packet data.
+-- ------------------------------------------------------------------------------------------------------
+File.SaveAction = function()
+    local path = File.Path()
+    File.FileExists(path)
+
+    local player = Ashita.Mob.GetMobByTarget(Ashita.TargetString.ME)
+
+    if not player then
+        return nil
+    end
+
+    local filename = tostring(os.date("%m-%d-%Y %H-%M-%S Action Packets ", os.time()) .. tostring(player.name) .. ".csv")
+
+    ---@diagnostic disable-next-line: undefined-field
+    local file = io.open(('%s/%s'):fmt(path, filename), "w")
+
+    if file ~= nil then
+        file:write
+        (
+            tostring("Time")             .. File.Delimiter ..
+            tostring("Entity")           .. File.Delimiter ..
+            tostring("Target")           .. File.Delimiter ..
+            tostring("Action")           .. File.Delimiter ..
+            tostring("Reaction")         .. File.Delimiter ..
+            tostring("Animation")        .. File.Delimiter ..
+            tostring("Effect")           .. File.Delimiter ..
+            tostring("Stagger")          .. File.Delimiter ..
+            tostring("Param")            .. File.Delimiter ..
+            tostring("Message")          .. File.Delimiter ..
+            tostring("Unknown")          .. File.Delimiter ..
+            tostring("Has Add. Effect")  .. File.Delimiter ..
+            tostring("Add. Animation")   .. File.Delimiter ..
+            tostring("Add. Effect")      .. File.Delimiter ..
+            tostring("Add. Param")       .. File.Delimiter ..
+            tostring("Add. Message")     .. File.Delimiter ..
+            tostring("Has Spike Effect") .. File.Delimiter ..
+            tostring("Spike Animation")  .. File.Delimiter ..
+            tostring("Spike Effect")     .. File.Delimiter ..
+            tostring("Spike Param")      .. File.Delimiter ..
+            tostring("Spike Message")    .. "\n"
+        )
+
+        for _, data in pairs(Debug.Packet.Action_Log) do
+            local result = data.Result
+
+            file:write
+            (
+                tostring(data.Time)                     .. File.Delimiter ..
+                tostring(data.Entity)                   .. File.Delimiter ..
+                tostring(data.Target)                   .. File.Delimiter ..
+                tostring(data.Action)                   .. File.Delimiter ..
+                tostring(result.reaction)               .. File.Delimiter ..
+                tostring(result.animation)              .. File.Delimiter ..
+                tostring(result.effect)                 .. File.Delimiter ..
+                tostring(result.stagger)                .. File.Delimiter ..
+                tostring(result.param)                  .. File.Delimiter ..
+                tostring(result.message)                .. File.Delimiter ..
+                tostring(result.unknown)                .. File.Delimiter ..
+                tostring(result.has_add_effect)         .. File.Delimiter ..
+                tostring(result.add_effect_animation)   .. File.Delimiter ..
+                tostring(result.add_effect_effect)      .. File.Delimiter ..
+                tostring(result.add_effect_param)       .. File.Delimiter ..
+                tostring(result.add_effect_message)     .. File.Delimiter ..
+                tostring(result.has_spike_effect)       .. File.Delimiter ..
+                tostring(result.spike_effect_animation) .. File.Delimiter ..
+                tostring(result.spike_effect_effect)    .. File.Delimiter ..
+                tostring(result.spike_effect_param)     .. File.Delimiter ..
+                tostring(result.spike_effect_message)   .. "\n"
+            )
+        end
+
+        file:close()
+    end
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Create the base file path.
 -- ------------------------------------------------------------------------------------------------------
 File.Path = function()

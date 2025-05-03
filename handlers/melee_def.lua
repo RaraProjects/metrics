@@ -34,6 +34,9 @@ H.MeleeDef.Action = function(action, actorMob, ownerMob, logDefense)
         end
     end
 
+    -- Update mob attack speed tracking.
+    DB.AttackSpeed.Update(tostring(actorMob.id))
+
     H.MeleeDef.Blog(actorMob, totalDamage, counterDamage)
 end
 
