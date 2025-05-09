@@ -120,6 +120,14 @@ ashita.events.register('command', 'command_cb', function (e)
                 DB.Widgets.PlayerSwitch(playerString)
             end
 
+        -- Mob filter selection
+        elseif argument == "mob" then
+            local mobString = commandArgs[3]
+
+            if mobString then
+                DB.Widgets.MobFilterSwitch(mobString)
+            end
+
         -- Focus tab switching.
         elseif argument == "melee" then
             Focus.Tabs.Switch[Focus.Tabs.Names.MELEE] = ImGuiTabItemFlags_SetSelected

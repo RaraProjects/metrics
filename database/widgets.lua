@@ -44,6 +44,24 @@ DB.Widgets.PlayerSwitch = function(playerString)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Switches to a mob in the mob filter based on partial matching.
+------------------------------------------------------------------------------------------------------
+---@param mobString string
+------------------------------------------------------------------------------------------------------
+DB.Widgets.MobFilterSwitch = function(mobString)
+    local list = DB.Lists.Mobs
+    local searchKey = string.lower(mobString) or DB.Enum.DEBUG
+
+    for index, mobName in pairs(list) do
+        if string.match(string.lower(mobName), searchKey) then
+            DB.Widgets.DropdownMobFilterIndex = index
+            DB.Widgets.DropdownMobFilterFocus = mobName
+            break
+        end
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Creates a dropdown menu to show only damage done by a certain entity.
 ------------------------------------------------------------------------------------------------------
 ---@param width integer

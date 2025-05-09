@@ -109,7 +109,14 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.GetTeamDamage = function()
-	return Parse.Config.IncludeSkillchainDamage() and DB.TotalDamage or DB.TotalDamageNoSkillchain
+	local totalDamage = 0
+	local trackable   = Parse.Config.IncludeSkillchainDamage() and DB.Trackable.TOTAL_DAMAGE or DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN
+
+	for playerName, _ in pairs(DB.Tracking.InitializedPlayers) do
+		totalDamage = totalDamage + DB.Data.Get(playerName, trackable, DB.Metric.TOTAL)
+	end
+
+	return totalDamage
 end
 
 ------------------------------------------------------------------------------------------------------
