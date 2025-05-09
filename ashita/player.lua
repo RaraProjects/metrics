@@ -62,23 +62,27 @@ Ashita.Player.JobData = function()
     end
 
     -- Helper function to get job data.
-    local function getJobData(jobId)
+    local function getJobData(jobId, subjob)
         local job = Res.Jobs.GetJob(jobId)
+
         if not job then
             job = Res.Jobs.List[0]
         end
+
         local jobColor = Res.Colors.GetJob(job.id)
         local jobShort = job.ens
-        return jobShort, player:GetJobLevel(jobId), jobColor
+        local level    = subjob and player:GetSubJobLevel() or player:GetMainJobLevel()
+
+        return jobShort, level, jobColor
     end
 
     local mainShort, mainLevel, mainColor = getJobData(player:GetMainJob())
-    local subShort,  subLevel,  subColor  = getJobData(player:GetSubJob())
+    local subShort,  subLevel,  subColor  = getJobData(player:GetSubJob(), true)
 
     return
     {
         main = mainShort, main_level = mainLevel, main_color = mainColor,
-        sub = subShort,   sub_level  = subLevel,  sub_color  = subColor
+        sub  = subShort,  sub_level  = subLevel,  sub_color  = subColor,
     }
 end
 
