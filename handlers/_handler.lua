@@ -153,6 +153,8 @@ H.PickActionCategory = function(action, actorMob, targetPetOwnerMob, petOwnerMob
             H.Spell.Action(action, actorMob, petOwnerMob, isOffense)
         elseif isDefense then
             H.SpellDef.Action(action, actorMob, targetPetOwnerMob, isDefense)
+        elseif mobSelfBuff then
+            H.SpellDef.MobSelfTarget(action, actorMob)
         end
 
     elseif category == H.ActionCategory.FINISH_ITEM then

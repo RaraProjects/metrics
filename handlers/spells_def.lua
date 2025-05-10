@@ -50,6 +50,25 @@ H.SpellDef.Action = function(action, actorMob, ownerMob, logDefense)
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Parse the packet where a mob buffs themselves with a self-targeting buff.
+------------------------------------------------------------------------------------------------------
+---@param action   table action packet data.
+---@param actorMob table the mob data of the entity performing the action.
+------------------------------------------------------------------------------------------------------
+H.SpellDef.MobSelfTarget = function(action, actorMob)
+    local spellID   = action.param
+    local spellData = Ashita.Spell.GetByID(spellID)
+
+    if not spellData then
+        return nil
+    end
+
+    local spellName = Ashita.Spell.Name(spellID, spellData)
+
+    H.SpellDef.Blog(actorMob, spellData, spellName, -1, 0)
+end
+
+------------------------------------------------------------------------------------------------------
 -- Set data for a spell action (including healing).
 -- Not all spells do damage and not all spells heal this will sort those out.
 ------------------------------------------------------------------------------------------------------
