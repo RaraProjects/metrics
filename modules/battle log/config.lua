@@ -25,6 +25,7 @@ Blog.Config.Defaults = T{               -- Default values that populate the Metr
     Show_Spells           = true,
     Show_Timestamp        = false,      -- Battle Log component visibility flags.
     Show_Weaponskill      = true,
+    Show_XP               = false,
     Show_Zone             = false,
     Is_Paging_Enabled     = false,
     Is_Lurking_Enabled    = false,      -- This is linked with the settings of other modules.
@@ -90,6 +91,7 @@ Blog.Config.ColumnSettings = function()
 
         UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Enfeebles", Blog.Settings, "Show_Enfeebling")
         UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Healing",   Blog.Settings, "Show_Healing")
+        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("XP",        Blog.Settings, "Show_XP")
         UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Zoning",    Blog.Settings, "Show_Zone")
         UI.EndTable()
     end

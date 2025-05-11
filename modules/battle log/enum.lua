@@ -47,5 +47,6 @@ Blog.ActionType =
     SKILLCHAIN      = "Skillchain",
     SONG_BUFFS      = "Bard Song Buffs",
     WEAPONSKILL     = "Weaponskill",
+    XP              = "XP Gained",
     ZONE            = "Zone",
 }

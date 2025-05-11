@@ -73,9 +73,12 @@ XP.Tracking.AddEXP = function(xpAmount, xpType)
     local bonusXp = 0
 
     if XP.Dedication.IsActive and XP.Settings.Boost_Item_Rate > 0 then
-        baseXp  = xpAmount / (1 + (XP.Settings.Boost_Item_Rate / 100))
+        baseXp  = math.floor(xpAmount / (1 + (XP.Settings.Boost_Item_Rate / 100)))
         bonusXp = xpAmount - baseXp
     end
+
+    -- Add message to battle log.
+    XP.Blog(xpAmount, baseXp, bonusXp)
 
     -- Increment the XP totals. These are client session specific.
     local xpTracker = trackingTables[xpType]

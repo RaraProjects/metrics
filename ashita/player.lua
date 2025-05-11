@@ -13,6 +13,7 @@ Ashita.Player.Buffs =
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Player.Get = function(attribute)
     local player = AshitaCore:GetMemoryManager():GetPlayer()
+
     if not player then
         return nil
     end

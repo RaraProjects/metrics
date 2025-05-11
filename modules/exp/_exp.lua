@@ -286,6 +286,21 @@ XP.RefreshDisplayMode = function()
     end
 end
 
+-- ------------------------------------------------------------------------------------------------------
+-- Add an XP message to the battle log.
+-- ------------------------------------------------------------------------------------------------------
+XP.Blog = function(totalXp, baseXp, bonusXp)
+    local me = Ashita.Player.MyMob()
+
+    if not me then
+        return
+    end
+
+    local note = bonusXp > 0 and string.format("%d +%d", baseXp, bonusXp) or nil
+
+    Blog.Add(me.name, nil, Blog.ActionType.XP, string.format("XP Gained: %d", totalXp), -1, note)
+end
+
 ------------------------------------------------------------------------------------------------------
 -- DEPRECATED (Keeping for future reference.)
 -- Converts a codepoint to UTF8.
