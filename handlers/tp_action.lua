@@ -242,8 +242,6 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 H.TP.WeaponskillParse = function(actionData, actorMob, targetMob, wsName, wsId, ownerMob)
-    Debug.Packet.AddAction(actorMob.name, targetMob.name, "Weaponskill", actionData, wsId, wsName)
-
     local damage     = actionData.param
     local messageId  = actionData.message
     local audits     = H.TP.Audits(actorMob, ownerMob, targetMob)

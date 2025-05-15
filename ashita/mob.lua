@@ -68,12 +68,6 @@ end
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Mob.Data = function(id, convertId)
-    -- Unit testing short circuit for creating pets.
-    local unitTestingMob = Debug.Unit.Get_Mob(id)
-    if unitTestingMob then
-        return unitTestingMob
-    end
-
     local index = convertId and Ashita.Mob.GetIndexByID(id) or id
 	local entityManager = AshitaCore:GetMemoryManager():GetEntity()
     local entity = { }
@@ -212,11 +206,6 @@ end
 Ashita.Mob.PetOwner = function(petData)
     if not petData or not petData.index then
         return nil
-    end
-
-    -- May not always have a pet when running unit tests so need to short circuit here.
-    if Debug.Enabled and Debug.Unit.Active and Debug.Unit.Has_Pet and petData.spawn_flags == Ashita.EntityType.PET then
-        return Ashita.Mob.GetMobByTarget(Ashita.TargetString.ME)
     end
 
     -- Loop through party members to find the owner.

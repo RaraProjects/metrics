@@ -105,13 +105,10 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Ability.Parse = function(abilityId, abilityData, actionData, actorMob, targetName, ownerMob)
     local abilityName = abilityData.Name
-
-    Debug.Packet.AddAction(actorMob.name, targetName, "Ability", actionData, abilityData.Index, abilityName)
-
-    local playerName = actorMob.name
-    local damage     = actionData.param
-    local messageId  = actionData.message
-    local petName    = ownerMob and ownerMob.name or nil
+    local playerName  = actorMob.name
+    local damage      = actionData.param
+    local messageId   = actionData.message
+    local petName     = ownerMob and ownerMob.name or nil
 
     local audits = H.Ability.Audits(playerName, targetName, petName)
 

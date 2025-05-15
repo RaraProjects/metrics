@@ -133,8 +133,6 @@ end
 H.PickActionCategory = function(action, actorMob, targetPetOwnerMob, petOwnerMob, isOffense, isDefense, mobSelfBuff)
     local category = action.category
 
-    Debug.Packet.MarkTime(actorMob, category)
-
     if category == H.ActionCategory.MELEE then
         if isOffense then
             H.Melee.Action(action, actorMob, petOwnerMob, isOffense)
@@ -205,10 +203,6 @@ H.ActionMessage = function(packet)
 
     if not data then
         return nil
-    end
-
-    if Debug.IsEnabled() then
-        Debug.Packet.AddMessage(data)
     end
 
     -- Killing a mob.

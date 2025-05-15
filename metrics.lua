@@ -83,10 +83,6 @@ ashita.events.register('d3d_present', 'present_cb', function()
         return nil
     end
 
-    if Debug.IsEnabled() and Debug.Show_Demo then
-        UI.ShowDemoWindow()
-    end
-
     -- Throttling for performance.
     Throttle.Throttle()
 

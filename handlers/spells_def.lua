@@ -83,8 +83,6 @@ H.SpellDef.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob
     local spellId   = spellData.Index
     local spellName = Ashita.Spell.Name(spellId, spellData)
 
-    Debug.Packet.AddAction(actorMob.name, targetMob.name, "Spell Def", actionData, spellId, spellName)
-
     -- Need to double check each target in case a pet gets hit by AOE and wasn't the primary target.
     if not ownerMob then
         ownerMob = Ashita.Mob.PetOwner(targetMob)

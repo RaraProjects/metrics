@@ -1,46 +1,27 @@
 Debug = { }
-Debug.Enabled   = false
-Debug.Show_Demo = false
+Debug.Enabled = false
 
 Debug.Name   = "Debug"
 Debug.Title  = "Metrics - Debug"
 Debug.Module = "Debug"
 
 Debug.Window = Window:New({
-    Name     = Debug.Name,
-    Title    = Debug.Title,
-    Module   = Debug.Module,
-    Settings = { Visible = { false }, X = 100, Y = 100 },
+    Name       = Debug.Name,
+    Title      = Debug.Title,
+    Module     = Debug.Module,
+    Settings   = { Visible = { false }, X = 100, Y = 100 },
     Show_Title = true,
 })
 
 Debug.Modes =
 {
-    MOB_VIEWER     = "Mob Viewer    ",
-    ACTION_PACKET  = "Action Packet ",
-    MESSAGE_PACKET = "Message Packet",
-    ERROR_LOG      = "Error Log     ",
-    DATA_VIEWER    = "Data Viewer   ",
-    JOB_COLORS     = "Job Colors    ",
-    UNIT_TESTS     = "Unit Tests    ",
-    DEMO           = "Demo Window   ",
+    ERROR_LOG   = "Error Log  ",
+    DATA_VIEWER = "Data Viewer",
+    JOB_COLORS  = "Job Colors ",
 }
 
-Debug.Active_Mode = Debug.Modes.MOB_VIEWER
-
-require("modules.debug.performance")
-require("modules.debug.screens.mob_viewer")
-require("modules.debug.screens.packet_viewer")
-require("modules.debug.screens.error_log")
-require("modules.debug.screens.data_viewer")
-require("modules.debug.unit_tests._tests")
-require("modules.debug.unit_tests.melee")
-require("modules.debug.unit_tests.ranged")
-require("modules.debug.unit_tests.tp_action")
-require("modules.debug.unit_tests.abilities")
-require("modules.debug.unit_tests.spells")
-require("modules.debug.unit_tests.defense")
-require("modules.debug.unit_tests.xp")
+require("modules.debug.error_log")
+require("modules.debug.data_viewer")
 
 ------------------------------------------------------------------------------------------------------
 -- Is debug mode enabled.
@@ -87,37 +68,24 @@ Debug.Content = function()
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
 
-        UI.TableNextColumn() if UI.Button(Debug.Modes.MOB_VIEWER)     then Debug.Active_Mode = Debug.Modes.MOB_VIEWER end
-        UI.TableNextColumn() if UI.Button(Debug.Modes.ACTION_PACKET)  then Debug.Active_Mode = Debug.Modes.ACTION_PACKET end
-        UI.TableNextColumn() if UI.Button(Debug.Modes.MESSAGE_PACKET) then Debug.Active_Mode = Debug.Modes.MESSAGE_PACKET end
-        UI.TableNextColumn() if UI.Button(Debug.Modes.ERROR_LOG)      then Debug.Active_Mode = Debug.Modes.ERROR_LOG end
-        UI.TableNextColumn() if UI.Button(Debug.Modes.DATA_VIEWER)    then Debug.Active_Mode = Debug.Modes.DATA_VIEWER end
-        UI.TableNextColumn() if UI.Button(Debug.Modes.JOB_COLORS)     then Debug.Active_Mode = Debug.Modes.JOB_COLORS end
-        UI.TableNextColumn() if UI.Button(Debug.Modes.UNIT_TESTS)     then
-            Debug.Active_Mode = Debug.Modes.UNIT_TESTS
-            Debug.Unit.Results = { }
-            Debug.Unit.RunTests()
-        end
-
-        UI.TableNextColumn() if UI.Button(Debug.Modes.DEMO) then
-            Debug.Show_Demo = not Debug.Show_Demo
-        end
+        UI.TableNextColumn() if UI.Button(Debug.Modes.ERROR_LOG)   then Debug.Active_Mode = Debug.Modes.ERROR_LOG end
+        UI.TableNextColumn() if UI.Button(Debug.Modes.DATA_VIEWER) then Debug.Active_Mode = Debug.Modes.DATA_VIEWER end
+        UI.TableNextColumn() if UI.Button(Debug.Modes.JOB_COLORS)  then Debug.Active_Mode = Debug.Modes.JOB_COLORS end
 
         UI.EndTable()
     end
 
-    if     Debug.Active_Mode == Debug.Modes.MOB_VIEWER     then Debug.Mob.Populate(Ashita.Mob.GetMobByTarget(Ashita.TargetString.TARGET))
-    elseif Debug.Active_Mode == Debug.Modes.ACTION_PACKET  then Debug.Packet.PopulateAction()
-    elseif Debug.Active_Mode == Debug.Modes.MESSAGE_PACKET then Debug.Packet.PopulateMessage()
-    elseif Debug.Active_Mode == Debug.Modes.ERROR_LOG      then
+    if Debug.Active_Mode == Debug.Modes.ERROR_LOG then
         Debug.Error.Populate(Debug.Error.ERROR)
 
         if UI.CollapsingHeader("Warnings") then
             Debug.Error.Populate(Debug.Error.WARNING)
         end
 
-    elseif Debug.Active_Mode == Debug.Modes.DATA_VIEWER then Debug.Data_View.Populate()
-    elseif Debug.Active_Mode == Debug.Modes.JOB_COLORS  then
+    elseif Debug.Active_Mode == Debug.Modes.DATA_VIEWER then
+        Debug.Data_View.Populate()
+
+    elseif Debug.Active_Mode == Debug.Modes.JOB_COLORS then
         UI.TextColored(Res.Colors.GetJob(1),  "Warrior")
         UI.TextColored(Res.Colors.GetJob(2),  "Monk")
         UI.TextColored(Res.Colors.GetJob(3),  "White Mage")
@@ -140,8 +108,6 @@ Debug.Content = function()
         UI.TextColored(Res.Colors.GetJob(20), "Scholar")
         UI.TextColored(Res.Colors.GetJob(21), "Geomancer")
         UI.TextColored(Res.Colors.GetJob(22), "Runefencer")
-    elseif Debug.Active_Mode == Debug.Modes.UNIT_TESTS then
-        Debug.Unit.Populate()
     else
         UI.Text("Select a tool.")
     end

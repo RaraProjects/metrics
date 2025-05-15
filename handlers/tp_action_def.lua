@@ -108,8 +108,6 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 H.TpDef.Parse = function(actionData, actorMob, targetMob, actionName, actionId, ownerMob)
-    Debug.Packet.AddAction(actorMob.name, targetMob.name, "TP Def", actionData, actionId, actionName)
-
     local damage     = actionData.param
     local messageId  = actionData.message
     local audits     = H.TpDef.Audits(actorMob, ownerMob, targetMob)

@@ -74,11 +74,8 @@ end
 ---@return number, boolean, table
 ------------------------------------------------------------------------------------------------------
 H.Spell.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob)
-    local spellId   = spellData.Index
-    local spellName = Ashita.Spell.Name(spellId, spellData)
-
-    Debug.Packet.AddAction(actorMob.name, targetMob.name, "Spell", actionData, spellId, spellName)
-
+    local spellId        = spellData.Index
+    local spellName      = Ashita.Spell.Name(spellId, spellData)
     local damage         = actionData.param or 0
     local messageId      = actionData.message
     local isBurst        = H.Messages.MagicBurst(messageId)
