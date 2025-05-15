@@ -23,7 +23,7 @@ H.TpDef.MonsterAction = function(action, actorMob, ownerMob, logDefense)
     local skillName, actionId = skillData.en, skillData.id
 
     -- Mob ranged attacks come in as TP moves. Jump to Ranged Defense if that happens.
-    if skillName and skillName == "Ranged Attack" then
+    if skillName and (skillName == "Ranged Attack" or skillName == "Aern Ranged") then
         H.RangedDef.Action(action, actorMob, ownerMob, logDefense)
         return nil
     end
