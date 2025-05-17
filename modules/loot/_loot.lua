@@ -117,6 +117,10 @@ end
 -- Add items that were stolen.
 -- ------------------------------------------------------------------------------------------------------
 Loot.NonDrop = function(recipientName, itemName, itemCount)
+    if itemName ~= "Gil" then
+        itemName = string.format("*%s", itemName)
+    end
+
     DB.Tracking.TotalItems[itemName] = (DB.Tracking.TotalItems[itemName] or 0) + itemCount
 
     Loot.SortedItemsAll = { }
