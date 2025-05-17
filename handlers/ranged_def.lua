@@ -43,8 +43,6 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.RangedDef.Parse = function(actionData, actorMob, targetMob, ownerMob)
-    Debug.Packet.AddAction(actorMob.name, targetMob.name, "Ranged Def.", actionData)
-
     local damage          = actionData.param
     local messageId       = actionData.message
     local playerName      = targetMob.name

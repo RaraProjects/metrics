@@ -35,6 +35,7 @@ XP.FullBarHeight         = 18
 XP.TinyBarHeight         = 8
 XP.ShowAdditionalInfo    = false
 XP.ShowResetConfirmation = false
+XP.IsBlocked             = false
 
 -- ------------------------------------------------------------------------------------------------------
 -- Initializes the XP module.
@@ -179,24 +180,30 @@ end
 -- ------------------------------------------------------------------------------------------------------
 XP.OnXpGained = function(rawPacket)
     if not rawPacket then
-        return nil
+        return
     end
 
     -- Parse the packet. Added a short circuit here for unit testing.
     local parsedPacket = Ashita.Packets.EXP(rawPacket)
     if not parsedPacket then
-        return nil
+        return
     end
 
     -- Exclude non-XP related content (like Records of Eminance).
     local messageId = parsedPacket.message_id
     if not XP.Messages.ALL[messageId] then
-        return nil
+        return
     end
 
     local xpType = XP.GetMessageXPType(parsedPacket.message_id)
     if xpType == XP.Type.ERROR then
-        return nil
+        return
+    end
+
+    -- Block XP from XP scroll etc. but just for that scroll.
+    if XP.IsBlocked then
+        XP.IsBlocked = false
+        return
     end
 
     local xpAmount = parsedPacket.xp_amount

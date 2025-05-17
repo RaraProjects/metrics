@@ -100,6 +100,13 @@ Ashita.EffectAnimation =
     HASTE        = 23,
 }
 
+---@enum Ashita.ActionType
+Ashita.ActionType =
+{
+    INITIATE  = 24931,
+    INTERRUPT = 28787,
+}
+
 ---@enum Ashita.Message
 Ashita.Message =
 {

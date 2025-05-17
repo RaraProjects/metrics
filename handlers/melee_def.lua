@@ -50,8 +50,6 @@ end
 ---@return integer, integer
 ------------------------------------------------------------------------------------------------------
 H.MeleeDef.Parse = function(actionData, actorName, targetName, ownerMob)
-    Debug.Packet.AddAction(actorName, targetName, "Melee Def.", actionData)
-
     local damage            = actionData.param
     local reactionId        = actionData.reaction
     local messageId         = actionData.message

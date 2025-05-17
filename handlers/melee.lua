@@ -85,8 +85,6 @@ end
 ---@return table
 ------------------------------------------------------------------------------------------------------
 H.Melee.Parse = function(actionData, actorName, targetName, ownerMob)
-    Debug.Packet.AddAction(actorName, targetName, "Melee", actionData)
-
     local animationId       = actionData.animation
     local damage            = actionData.param
     local messageId         = actionData.message

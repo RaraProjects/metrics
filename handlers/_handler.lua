@@ -156,7 +156,7 @@ H.PickActionCategory = function(action, actorMob, targetPetOwnerMob, petOwnerMob
         end
 
     elseif category == H.ActionCategory.FINISH_ITEM then
-        H.Item.Action(action, actorMob)
+        H.Item.Finish(action, actorMob)
 
     elseif category == H.ActionCategory.JOB_ABILITY then
         H.Ability.Action(action, actorMob, isOffense)
@@ -168,7 +168,7 @@ H.PickActionCategory = function(action, actorMob, targetPetOwnerMob, petOwnerMob
         -- Do nothing (Begin Spellcasting)
 
     elseif category == H.ActionCategory.BEGIN_ITEM then
-        -- Do nothing (Begin or Interrupt Item Usage)
+        H.Item.Begin(action, actorMob)
 
     elseif category == H.ActionCategory.FINISH_TP then
         if isOffense then

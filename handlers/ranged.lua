@@ -51,8 +51,6 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 H.Ranged.Parse = function(actionData, actorMob, targetMob, ownerMob)
-    Debug.Packet.AddAction(actorMob.name, targetMob.name, "Ranged", actionData)
-
     local damage          = actionData.param
     local messageId       = actionData.message
     local noDamage        = H.Messages.NoDamage(messageId)

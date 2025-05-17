@@ -2,29 +2,37 @@ Res.Items = { }
 
 Res.Items.Dedication =
 {
-    [0]     = {name = "Unknown",          boost = -1,  max = -1},
-    [8191]  = {name = "Wandering Heroes", boost = 75,  max = 10000},
-    [15793] = {name = "Anniversary Ring", boost = 100, max = 3000},
-    [15763] = {name = "Emperor Band",     boost = 75,  max = 2250},
-    [15762] = {name = "Empress Band",     boost = 50,  max = 1000},
-    [15761] = {name = "Chariot Band",     boost = 100, max = 4000},
+    [ 0     ] = { name = "Unknown",          boost = -1,  max = -1    },
+    [ 8191  ] = { name = "Wandering Heroes", boost = 75,  max = 10000 },
+    [ 15793 ] = { name = "Anniversary Ring", boost = 100, max = 3000  },
+    [ 15763 ] = { name = "Emperor Band",     boost = 75,  max = 2250  },
+    [ 15762 ] = { name = "Empress Band",     boost = 50,  max = 1000  },
+    [ 15761 ] = { name = "Chariot Band",     boost = 100, max = 4000  },
+}
+
+Res.Items.XP_Scroll =
+{
+    [ 4247 ] = { name = "Miratete's Memoirs"     },
+    [ 4248 ] = { name = "Ginuva's Battle Theory" },
+    [ 4249 ] = { name = "Schultz Stratagems"     },
+    -- Dragon Chronicles
 }
 
 -- Used for item dropdown selection.
 Res.Items.Dedication_Selection =
 {
-    [1] = "Chariot Band",       -- 15761
-    [2] = "Emperor Band",       -- 15763
-    [3] = "Empress Band",       -- 15762
-    [4] = "Wandering Heroes",   -- 8191
-    [5] = "Anniversary Ring",   -- 15793
+    [ 1 ] = "Chariot Band",       -- 15761
+    [ 2 ] = "Emperor Band",       -- 15763
+    [ 3 ] = "Empress Band",       -- 15762
+    [ 4 ] = "Wandering Heroes",   -- 8191
+    [ 5 ] = "Anniversary Ring",   -- 15793
 }
 
 Res.Items.DedicationItemNameToId =
 {
-    ["Chariot Band"]     = 15761,
-    ["Emperor Band"]     = 15763,
-    ["Empress Band"]     = 15762,
-    ["Wandering Heroes"] = 8191,
-    ["Anniversary Ring"] = 15793,
+    [ "Chariot Band"     ] = 15761,
+    [ "Emperor Band"     ] = 15763,
+    [ "Empress Band"     ] = 15762,
+    [ "Wandering Heroes" ] = 8191,
+    [ "Anniversary Ring" ] = 15793,
 }
