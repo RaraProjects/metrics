@@ -32,7 +32,13 @@ Focus.WS.Display = function(playerName, hidePublish)
         end
 
         if skillchainsFound then
-            UI.SameLine() UI.Text(" ") UI.SameLine()
+            -- SCH skillchains do not require weaponskills. Avoid same-lining with the table.
+            if weaponskillsFound then
+                UI.SameLine()
+            end
+
+            UI.Text(" ") UI.SameLine()
+
             Report.Widgets.Button(playerName, trackableSC, "Publish Skillchains")
         end
     end
