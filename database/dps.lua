@@ -24,7 +24,7 @@ DB.DPS.ModeHeader = "DPS Mode"
 ------------------------------------------------------------------------------------------------------
 DB.DPS.IncBuffer = function(playerName, damage)
     if not playerName or not damage then
-        return nil
+        return
     end
 
     DB.Tracking.RunningDamage[playerName] = (DB.Tracking.RunningDamage[playerName] or 0) + damage
@@ -51,7 +51,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.DPS.ClearBuffer = function(playerName)
     if not playerName then
-        return nil
+        return
     end
 
     DB.Tracking.RunningDamage[playerName] = 0
@@ -84,9 +84,23 @@ DB.DPS.CreateSnapshot = function()
         end
 
         local dps = totalDamage / (DB.DPS.SnapshotTime * DB.DPS.SnapshotCount)
+
         DB.DPS.DPS[playerName] = dps
         DB.DPS.Max[playerName] = math.max(DB.DPS.Max[playerName] or 0, dps)
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Get a player's average DPS.
+------------------------------------------------------------------------------------------------------
+---@param playerName string
+---@return number
+------------------------------------------------------------------------------------------------------
+DB.DPS.GetAverageDPS = function(playerName)
+    local totalDamage = Column.Damage.RawTotalPlayerDamage(playerName)
+    local duration    = math.max(Timers.GetDuration(Timers.Types.PARSE), 1)    -- Prevent division by zero.
+
+    return totalDamage / duration
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -96,15 +110,7 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.DPS.GetDPS = function(playerName)
-    -- Average DPS
-    if DB.DPS.GetMode() == DB.DPS.Modes[1] then
-        local totalDamage = Column.Damage.RawTotalPlayerDamage(playerName)
-        local duration    = math.max(Timers.GetDuration(Timers.Types.PARSE), 1)    -- Prevent division by zero.
-
-        return totalDamage / duration
-    end
-
-    return DB.DPS.DPS[playerName] or 0
+    return DB.DPS.GetMode() == DB.DPS.Modes[1] and DB.DPS.GetAverageDPS(playerName) or DB.DPS.DPS[playerName] or 0
 end
 
 ------------------------------------------------------------------------------------------------------

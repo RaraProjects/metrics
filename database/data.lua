@@ -11,13 +11,16 @@ DB.Data = { }
 DB.Data.Initialize = function(playerName, targetName)
 	-- Early quit out to prevent crashing.
 	local caller = "DB.Data.Initialize"
+
 	if DB.IsValueEmpty(caller, playerName, "Player") or
-	   DB.IsValueEmpty(caller, targetName, "Target") then
+	   DB.IsValueEmpty(caller, targetName, "Target")
+	then
 		return false
 	end
 
 	-- Don't want to overwrite data node if it already exists. This is for mob specfic data.
 	local initializationList = { }
+
 	if not DB.Parse[playerName] then DB.Parse[playerName] = { } end
 	if not DB.Parse[playerName][targetName] then
 		DB.Parse[playerName][targetName] = { }
@@ -65,7 +68,8 @@ DB.Data.InitializePlayerTrackingTables = function(playerName)
 	if playerName and
 	   playerName ~= "" and
 	   playerName ~= DB.Enum.DEBUG and
-	   not DB.Tracking.InitializedPlayers[playerName] then
+	   not DB.Tracking.InitializedPlayers[playerName]
+	then
 		DB.Tracking.InitializedPlayers[playerName] = true
 		DB.Lists.SortInitializedPlayers()
 		DB.Tracking.RunningAccuracy[playerName]    = { }
@@ -90,7 +94,7 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 
 	if not audits then
 		Debug.Error.Add(Debug.Error.ERROR, caller, "Nil audits passed in.")
-		return nil
+		return
 	end
 
 	local playerName = audits.player_name
@@ -98,8 +102,9 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	local petName    = audits.pet_name
 
 	if DB.IsValueEmpty(caller, playerName, "Player") or
-	   DB.IsValueEmpty(caller, targetName, "Target") then
-		return nil
+	   DB.IsValueEmpty(caller, targetName, "Target")
+	then
+		return
 	end
 
 	DB.Data.Initialize(playerName, targetName)
@@ -113,11 +118,13 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	for _, updateTarget in ipairs(updateList) do
 		if mode == DB.UpdateMode.INC then
 			DB.Data.Inc(value, playerName, updateTarget, trackable, metric)
+
 			if petName then
 				DB.PetData.Inc(value, playerName, petName, updateTarget, trackable, metric)
 			end
 		elseif mode == DB.UpdateMode.SET then
 			DB.Data.Set(value, playerName, updateTarget, trackable, metric)
+
 			if petName then
 				DB.PetData.Set(value, playerName, petName, updateTarget, trackable, metric)
 			end
@@ -127,7 +134,8 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	-- Increment the running damage count for DPS if this is a total damage increase.
 	if mode == DB.UpdateMode.INC and
 	   trackable == DB.Trackable.TOTAL_DAMAGE and
-	   metric == DB.Metric.TOTAL then
+	   metric == DB.Metric.TOTAL
+	then
 		DB.DPS.IncBuffer(playerName, value)
 	end
 end
@@ -221,15 +229,17 @@ DB.Data.Set = function(value, playerName, targetName, trackable, metric)
 	   DB.IsValueEmpty(caller, trackable,  "Trackable") or
 	   DB.IsValueEmpty(caller, metric,     "Metric") or
 	   DB.IsValueEmpty(caller, value,      "Value") or
-	   not DB.Data.IsIndexNodeInitialized(caller, true, playerName, targetName) then
+	   not DB.Data.IsIndexNodeInitialized(caller, true, playerName, targetName)
+	then
 		return false
 	end
 
 	-- Don't set an unfiltered minimum if the mob specific minimum isn't less than the unfiltered one.
 	if DB.MetricNeedsMaxValue(metric) and
-	targetName == DB.Enum.ALL_MOBS and
-	DB.Parse[playerName][targetName][trackable][metric] and
-	value >= DB.Parse[playerName][targetName][trackable][metric] then
+	   targetName == DB.Enum.ALL_MOBS and
+	   DB.Parse[playerName][targetName][trackable][metric] and
+	   value >= DB.Parse[playerName][targetName][trackable][metric]
+	then
 		return false
 	end
 
@@ -252,13 +262,15 @@ end
 DB.Data.Inc = function(value, playerName, targetName, trackable, metric)
 	-- Early quit out to prevent crashing.
 	local caller = "DB.Data.Inc"
+
 	if DB.IsValueEmpty(caller, playerName, "Player") or
 	   DB.IsValueEmpty(caller, targetName, "Target") or
 	   DB.IsValueEmpty(caller, trackable,  "Trackable") or
 	   DB.IsValueEmpty(caller, metric,     "Metric") or
 	   DB.IsValueEmpty(caller, value,      "Value") or
 	   not DB.Data.IsIndexNodeInitialized(caller, true, playerName, targetName) or
-	   not DB.Data.Is_Metric_Node_Initialized(caller, true, playerName, targetName, trackable, metric) then
+	   not DB.Data.Is_Metric_Node_Initialized(caller, true, playerName, targetName, trackable, metric)
+	then
 		return false
 	end
 
@@ -280,9 +292,11 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.Data.Get = function(playerName, trackable, metric, tempMobFocus)
 	local caller = "DB.Data.Get"
+
 	if DB.IsValueEmpty(caller, playerName, "Player") or
 	   DB.IsValueEmpty(caller, trackable,  "Trackable") or
-	   DB.IsValueEmpty(caller, metric,     "Metric") then
+	   DB.IsValueEmpty(caller, metric,     "Metric")
+	then
 		return 0
 	end
 
@@ -290,7 +304,8 @@ DB.Data.Get = function(playerName, trackable, metric, tempMobFocus)
 	if (Throttle.IsEnabled() and not Throttle.AllowCalculation()) and not tempMobFocus then
 		if DB.Cache[playerName] and
 		   DB.Cache[playerName][trackable] and
-		   DB.Cache[playerName][trackable][metric] then
+		   DB.Cache[playerName][trackable][metric]
+		then
 			return DB.Cache[playerName][trackable][metric]
 		end
 	end
@@ -327,7 +342,8 @@ end
 DB.Data.IsIndexNodeInitialized = function(caller, writeError, playerName, targetName)
 	if not DB.Parse or
 	   not DB.Parse[playerName] or
-	   not DB.Parse[playerName][targetName] then
+	   not DB.Parse[playerName][targetName]
+	then
 		if writeError then
 			local errorMessage = string.format("Not initialized in DB.Parse[%s][%s].", tostring(playerName), tostring(targetName))
 			Debug.Error.Add(Debug.Error.ERROR, caller, errorMessage)
@@ -353,7 +369,8 @@ end
 DB.Data.Is_Metric_Node_Initialized = function(caller, writeError, playerName, targetName, trackable, metric)
 	if not DB.Parse or
 	   not DB.Parse[playerName] or
-	   not DB.Parse[playerName][targetName] then
+	   not DB.Parse[playerName][targetName]
+	then
 		if writeError then
 			local errorMessage = string.format("Metric not initialized in DB.Parse[%s][%s][%s][%s].",
 			                     tostring(playerName), tostring(targetName), tostring(trackable), tostring(metric))

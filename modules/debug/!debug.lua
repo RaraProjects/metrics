@@ -18,10 +18,12 @@ Debug.Modes =
     ERROR_LOG   = "Error Log  ",
     DATA_VIEWER = "Data Viewer",
     JOB_COLORS  = "Job Colors ",
+    DPS         = "DPS        ",
 }
 
 require("modules.debug.error_log")
 require("modules.debug.data_viewer")
+require("modules.debug.dps")
 
 ------------------------------------------------------------------------------------------------------
 -- Is debug mode enabled.
@@ -52,7 +54,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Debug.Message = function(message)
     if Debug.Enabled then
-        print("METRICS DEBUG: " .. message)
+        print("METRICS: " .. message)
     end
 end
 
@@ -70,6 +72,7 @@ Debug.Content = function()
 
         UI.TableNextColumn() if UI.Button(Debug.Modes.ERROR_LOG)   then Debug.Active_Mode = Debug.Modes.ERROR_LOG end
         UI.TableNextColumn() if UI.Button(Debug.Modes.DATA_VIEWER) then Debug.Active_Mode = Debug.Modes.DATA_VIEWER end
+        UI.TableNextColumn() if UI.Button(Debug.Modes.DPS)         then Debug.Active_Mode = Debug.Modes.DPS end
         UI.TableNextColumn() if UI.Button(Debug.Modes.JOB_COLORS)  then Debug.Active_Mode = Debug.Modes.JOB_COLORS end
 
         UI.EndTable()
@@ -84,6 +87,9 @@ Debug.Content = function()
 
     elseif Debug.Active_Mode == Debug.Modes.DATA_VIEWER then
         Debug.Data_View.Populate()
+
+    elseif Debug.Active_Mode == Debug.Modes.DPS then
+        Debug.DPS.Populate()
 
     elseif Debug.Active_Mode == Debug.Modes.JOB_COLORS then
         UI.TextColored(Res.Colors.GetJob(1),  "Warrior")
