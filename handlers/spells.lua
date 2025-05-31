@@ -30,7 +30,7 @@ H.Spell.Action = function(action, actorMob, ownerMob, logOffense)
     local isBurst        = false
     local hit            = false  -- Mainly for enfeebles in this context.
     local targetMob      = { }
-    local skillchainData = { }
+    local skillchainData
 
     for _, target in pairs(action.targets) do
         targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
@@ -80,7 +80,7 @@ H.Spell.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob)
     local messageId      = actionData.message
     local isBurst        = H.Messages.MagicBurst(messageId)
     local audits         = H.Spell.Audits(actorMob, targetMob, ownerMob)
-    local skillchainData = { }
+    local skillchainData
 
     -- Shadow absorption
     if H.Messages.NoDamage(messageId) then

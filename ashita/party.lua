@@ -169,6 +169,11 @@ end
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Party.IsAffiliate = function(playerName)
+    -- Short circuit for unit tests. Other players won't be in the normal party table.
+    if Debug.Enabled and Debug.Unit.Active and playerName == "Player Two" then
+        return true
+    end
+
     -- Disregard if player isn't in the party list.
     if not Ashita.Party.List[playerName] then
         return false

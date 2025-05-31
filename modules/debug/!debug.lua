@@ -15,15 +15,17 @@ Debug.Window = Window:New({
 
 Debug.Modes =
 {
-    ERROR_LOG   = "Error Log  ",
     DATA_VIEWER = "Data Viewer",
-    JOB_COLORS  = "Job Colors ",
     DPS         = "DPS        ",
+    ERROR_LOG   = "Error Log  ",
+    JOB_COLORS  = "Job Colors ",
+    UNIT_TESTS  = "Unit Tests ",
 }
 
 require("modules.debug.error_log")
 require("modules.debug.data_viewer")
 require("modules.debug.dps")
+require("modules.debug.unit_tests")
 
 ------------------------------------------------------------------------------------------------------
 -- Is debug mode enabled.
@@ -65,14 +67,22 @@ Debug.Content = function()
     local col_flags = Column.Flags.None
     local width     = 150
 
-    if UI.BeginTable("Debug Functions", 3, WindowManager.Table.Flags.None) then
+    if UI.BeginTable("Debug Functions", 4, WindowManager.Table.Flags.None) then
         UI.TableSetupColumn("Col 1", col_flags, width)
         UI.TableSetupColumn("Col 2", col_flags, width)
         UI.TableSetupColumn("Col 3", col_flags, width)
+        UI.TableSetupColumn("Col 4", col_flags, width)
 
         UI.TableNextColumn() if UI.Button(Debug.Modes.ERROR_LOG)   then Debug.Active_Mode = Debug.Modes.ERROR_LOG end
         UI.TableNextColumn() if UI.Button(Debug.Modes.DATA_VIEWER) then Debug.Active_Mode = Debug.Modes.DATA_VIEWER end
         UI.TableNextColumn() if UI.Button(Debug.Modes.DPS)         then Debug.Active_Mode = Debug.Modes.DPS end
+
+        UI.TableNextColumn() if UI.Button(Debug.Modes.UNIT_TESTS)  then
+            Debug.Active_Mode  = Debug.Modes.UNIT_TESTS
+            Debug.Unit.Results = { }
+            Debug.Unit.RunTests()
+        end
+
         UI.TableNextColumn() if UI.Button(Debug.Modes.JOB_COLORS)  then Debug.Active_Mode = Debug.Modes.JOB_COLORS end
 
         UI.EndTable()
@@ -90,6 +100,9 @@ Debug.Content = function()
 
     elseif Debug.Active_Mode == Debug.Modes.DPS then
         Debug.DPS.Populate()
+
+    elseif Debug.Active_Mode == Debug.Modes.UNIT_TESTS then
+        Debug.Unit.Populate()
 
     elseif Debug.Active_Mode == Debug.Modes.JOB_COLORS then
         UI.TextColored(Res.Colors.GetJob(1),  "Warrior")
