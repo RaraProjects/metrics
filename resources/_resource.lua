@@ -13,7 +13,7 @@ require("resources.items")
 Res.WS.FullList      = require("resources.weapon_skills")
 Res.Monster          = { }
 Res.Monster.FullList = require("resources.monster_abilities")
-Themes = require("resources.themes")
+Themes               = require("resources.themes")
 
 -- ------------------------------------------------------------------------------------------------------
 -- Gets an elemental color.

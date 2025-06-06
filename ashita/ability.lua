@@ -56,7 +56,7 @@ Ashita.Ability.Name = function(id, data)
         return "Error"
     end
 
-    return ability.Name[1]
+    return ability.Name[3]
 end
 
 -- ------------------------------------------------------------------------------------------------------

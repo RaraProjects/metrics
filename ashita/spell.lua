@@ -34,7 +34,7 @@ Ashita.Spell.Name = function(id, data)
         return "Error"
     end
 
-    return spell.Name[1]
+    return spell.Name[3]
 end
 
 -- ------------------------------------------------------------------------------------------------------
