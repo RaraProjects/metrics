@@ -10,10 +10,8 @@ Column.Healing = { }
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Column.Healing.Total = function(playerName, percent, justify, raw)
-    local spellHealing   = DB.Data.Get(playerName, DB.Trackable.SPELLS_HEALING, DB.Metric.TOTAL)
-    local abilityHealing = DB.Data.Get(playerName, DB.Trackable.ABILITY_HEALING, DB.Metric.TOTAL)
-    local totalHealing   = spellHealing + abilityHealing
-    local color          = Column.String.ColorZero(totalHealing)
+    local totalHealing = DB.Data.Get(playerName, DB.Trackable.ALL_HEAL, DB.Metric.TOTAL)
+    local color        = Column.String.ColorZero(totalHealing)
 
     if percent then
         local totalDamage = Column.Damage.RawTotalPlayerDamage(playerName)
