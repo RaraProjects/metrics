@@ -17,7 +17,7 @@ H.Spell.Action = function(action, actorMob, ownerMob, logOffense)
     local spellData = Ashita.Spell.GetByID(spellId)
 
     -- Paralyze, Intimidate, etc.
-    local isBlocked = H.Spell.IsActionBlocked(action, actorMob)
+    local isBlocked = H.Spell.IsActionBlocked(action, actorMob, ownerMob)
 
     if isBlocked or not spellData then
         return nil
@@ -141,15 +141,16 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param action   table
 ---@param actorMob table
+---@param ownerMob table
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Spell.IsActionBlocked = function(action, actorMob)
+H.Spell.IsActionBlocked = function(action, actorMob, ownerMob)
     local isBlocked = false
 
     for _, target in pairs(action.targets) do
         for _, actionData in pairs(target.actions) do
             local messageId = actionData.message
-            local audits    = H.Spell.Audits(actorMob, Ashita.Mob.GetMobByID(target.id))
+            local audits    = H.Spell.Audits(actorMob, Ashita.Mob.GetMobByID(target.id), ownerMob)
 
             if messageId == Ashita.Message.IS_PARALYZED or messageId == Ashita.Message.IS_PARALYZED_2 then
                 DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.ALL_PARALYZE, DB.Metric.HITS_ON_USE)
