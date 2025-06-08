@@ -141,7 +141,7 @@ end
 ------------------------------------------------------------------------------------------------------
 ---@param action   table
 ---@param actorMob table
----@param ownerMob table
+---@param ownerMob table|nil
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 H.Spell.IsActionBlocked = function(action, actorMob, ownerMob)
