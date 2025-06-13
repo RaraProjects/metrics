@@ -137,7 +137,7 @@ H.TP.BeginMonsterAction = function(action, actorMob, logOffense)
 
             if skillData and isSMNorDRG then
                 -- Avatar and Wyvern Healing
-                if Res.Pets.Healing[actionId] then
+                if Horizon.HealingList(actionId) then
                     trackable = DB.Trackable.PET_HEALING
                 end
             end

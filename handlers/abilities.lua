@@ -58,6 +58,7 @@ H.Ability.PetAction = function(action, actorMob, logOffense)
 
     -- Check to see if the pet belongs to anyone in the party.
     local ownerMob = Ashita.Mob.PetOwner(actorMob)
+
     if not ownerMob then
         return nil
     end
@@ -71,6 +72,7 @@ H.Ability.PetAction = function(action, actorMob, logOffense)
 
     for _, target in pairs(action.targets) do
         targetMob = Ashita.Mob.GetMobByID(target.id)
+
         if targetMob then
             -- Keep the mob list up-to-date.
             if Ashita.Mob.IsMonster(targetMob) then
@@ -109,8 +111,7 @@ H.Ability.Parse = function(abilityId, abilityData, actionData, actorMob, targetN
     local damage      = actionData.param
     local messageId   = actionData.message
     local petName     = ownerMob and ownerMob.name or nil
-
-    local audits = H.Ability.Audits(playerName, targetName, petName)
+    local audits      = H.Ability.Audits(playerName, targetName, petName)
 
     local tag = "H.Ability.Parse"
     local warning = string.format("BENIGN: Ability {%s} (%s) has message {%s} and damage {%s}.",
@@ -119,12 +120,13 @@ H.Ability.Parse = function(abilityId, abilityData, actionData, actorMob, targetN
 
     -- Rage blood pacts and wyvern breaths
     if ownerMob then
-        if Res.Pets.BloodPactRage[abilityId] then
+        abilityName = Horizon.GetAbilityName(abilityId, abilityName)
+
+        if Horizon.RageList(abilityId) then
             H.Offense.Hit(audits, DB.Trackable.PET_OVERALL, damage)
             H.Offense.CatalogHit(audits, DB.Trackable.PET_TP, damage, abilityName)
 
-        -- TODO: Add handling for Horizon difference with Spring Water.
-        elseif Res.Pets.Healing[abilityId] then
+        elseif Horizon.HealingList(abilityId) then
             H.Offense.Hit(audits, DB.Trackable.ALL_HEAL, damage)
             H.Offense.CatalogHit(audits, DB.Trackable.PET_HEALING, damage, abilityName)
         end
@@ -238,15 +240,17 @@ end
 ---@param targetCount? integer
 ------------------------------------------------------------------------------------------------------
 H.Ability.PetBlog = function(actorMob, ownerMob, abilityData, abilityId, damage, targetCount)
+    local abilityName = Horizon.GetAbilityName(abilityId, abilityData.Name)
+
     if damage > 0 then
-        if Res.Pets.BloodPactRage[abilityId] then
-            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, abilityData.Name, damage)
+        if Horizon.RageList(abilityId) then
+            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, abilityName, damage)
 
-        elseif Res.Pets.Healing[abilityId] then
-            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.ALL_HEALING, abilityData.Name, damage)
+        elseif Horizon.HealingList(abilityId) then
+            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.ALL_HEALING, abilityName, damage)
 
-        elseif Res.Pets.BloodPactWard[abilityId] then
-            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, abilityData.Name, nil, string.format("TGTs: %d", targetCount), abilityData)
+        elseif Horizon.WardList(abilityId) then
+            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, abilityName, nil, string.format("TGTs: %d", targetCount), abilityData)
         end
     end
 end
@@ -312,12 +316,13 @@ end
 ---@param damage      number
 ------------------------------------------------------------------------------------------------------
 H.Ability.PetCount = function(actorMob, ownerMob, targetMob, abilityData, abilityId, damage)
-    local audits    = H.Ability.Audits(ownerMob.name, targetMob.name, actorMob.name)
-    local trackable = Res.Pets.Healing[abilityId] and DB.Trackable.PET_HEALING or DB.Trackable.PET_TP
+    local audits      = H.Ability.Audits(ownerMob.name, targetMob.name, actorMob.name)
+    local trackable   = Horizon.HealingList(abilityId) and DB.Trackable.PET_HEALING or DB.Trackable.PET_TP
+    local abilityName = Horizon.GetAbilityName(abilityId, abilityData.Name)
 
     local function updateMetrics(metric)
         DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, metric)
-        DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, abilityData.Name, metric)
+        DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, abilityName, metric)
     end
 
     updateMetrics(DB.Metric.ATTEMPTS_ON_USE)

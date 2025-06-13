@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author  = "Metra"
 addon.name    = "Metrics"
-addon.version = "06.08.25.00"
+addon.version = "06.12.25.00"
 
 _Globals = { }
 _Globals.Initialized = false
@@ -70,6 +70,7 @@ require("modules.overview._overview")
 require("modules.hub.!hub")
 require("modules.debug.!debug")
 require("commands")
+require("horizon")
 require("initialization")
 
 ------------------------------------------------------------------------------------------------------
