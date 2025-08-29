@@ -175,7 +175,7 @@ H.TpDef.DamageMitigation = function(audits, damage, messageId, actionName, owner
     -- Mob misses the player.
     if H.Messages.NoDamageMiss(messageId) then
         H.Defense.GrandTotals(audits, 0, ownerMob)
-        H.Offense.CatalogHit(audits, audits.trackable, 0, actionName)
+        H.Offense.CatalogMiss(audits, audits.trackable, actionName)
         DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.HITS_ON_TARGET)
         damage = 0
         miss   = true

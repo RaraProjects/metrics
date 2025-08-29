@@ -280,19 +280,16 @@ H.Melee.Message = function(audits, damage, messageId, meleeTypeOverall, meleeTyp
         H.Offense.UpdateRecentAccuracy(audits, true, ownerMob)
         wasCriticalHit = true
 
-    -- Shadows have no impact on recent accuracy.
     elseif messageId == Ashita.Message.SHADOW_ABSORPTION then
-        local metric = DB.Metric.SHADOW_ABSORPTION
-        H.Offense.NoDamageHit(audits, meleeTypeOverall, metric)
-        H.Offense.NoDamageHit(audits, meleeTypeSpecific, metric)
+        H.Offense.PhysicalShadowAbsorption(audits, meleeTypeOverall, ownerMob)
+        H.Offense.PhysicalShadowAbsorption(audits, meleeTypeSpecific, ownerMob)
 
     elseif messageId == Ashita.Message.PERFECT_DODGE then
-        H.Melee.Dodge(audits, meleeTypeOverall, meleeTypeSpecific)
+        -- Pretend Perfect Dodge swings never occurred.
 
     elseif messageId == Ashita.Message.MOB_HEAL_MELEE then
-        H.Offense.MobHeal(audits, meleeTypeOverall, damage)
-        H.Offense.MobHeal(audits, meleeTypeSpecific, damage)
-        H.Offense.UpdateRecentAccuracy(audits, true, ownerMob)
+        H.Offense.MobHeal(audits, meleeTypeOverall, damage, ownerMob)
+        H.Offense.MobHeal(audits, meleeTypeSpecific, damage, ownerMob)
 
     elseif messageId == Ashita.Message.RANGE_HIT then
         H.Offense.Hit(audits, meleeTypeOverall, damage)
@@ -328,19 +325,6 @@ H.Melee.Message = function(audits, damage, messageId, meleeTypeOverall, meleeTyp
     end
 
     return wasCriticalHit, hasHit
-end
-
-------------------------------------------------------------------------------------------------------
--- Regular melee evaded by Pefect Dodge.
--- Remove the count so perfect dodge isn't penalized.
-------------------------------------------------------------------------------------------------------
----@param audits            table        contains necessary entity audit data; helps save on parameter slots.
----@param meleeTypeOverall  DB.Trackable player melee or pet melee.
----@param meleeTypeSpecific DB.Trackable main-hand, off-hand, etc.
-------------------------------------------------------------------------------------------------------
-H.Melee.Dodge = function(audits, meleeTypeOverall, meleeTypeSpecific)
-    DB.Data.Update(DB.UpdateMode.INC, -1, audits, meleeTypeOverall,  DB.Metric.ATTEMPTS_ON_TARGET)
-    DB.Data.Update(DB.UpdateMode.INC, -1, audits, meleeTypeSpecific, DB.Metric.ATTEMPTS_ON_TARGET)
 end
 
 ------------------------------------------------------------------------------------------------------

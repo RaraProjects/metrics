@@ -164,15 +164,18 @@ DB.Data.UpdateDamage = function(audits, trackable, damage, isCriticalHit)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Sets the minimum and maximum values.
+-- Sets the minimum and maximum values. Assumes zero damage can be a hit.
 ------------------------------------------------------------------------------------------------------
 ---@param audits         table
 ---@param trackable      DB.Trackable a tracked item from the trackable list.
----@param damage         number damage value to be logged.
+---@param damage         number       damage value to be logged.
 ---@param isCriticalHit? boolean
 ------------------------------------------------------------------------------------------------------
 DB.Data.UpdateDamageBasic = function(audits, trackable, damage, isCriticalHit)
-	-- Increment the trackable specific totals.
+    -- Set trackable hits and minimums
+	local minMetric = (isCriticalHit and DB.Metric.CRITICAL_MIN) or DB.Metric.MIN
+	local maxMetric = (isCriticalHit and DB.Metric.CRITICAL_MAX) or DB.Metric.MAX
+
     DB.Data.Update(DB.UpdateMode.INC, damage, audits, trackable, DB.Metric.TOTAL)
 
 	if isCriticalHit then
@@ -180,18 +183,8 @@ DB.Data.UpdateDamageBasic = function(audits, trackable, damage, isCriticalHit)
     	DB.Data.Update(DB.UpdateMode.INC, damage, audits, trackable, DB.Metric.CRITICAL_DAMAGE)
 	end
 
-	-- Log an attempt on the target.
-	DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
-
-	-- Set trackable hits and minimums
-	local minMetric = (isCriticalHit and DB.Metric.CRITICAL_MIN) or DB.Metric.MIN
-	local maxMetric = (isCriticalHit and DB.Metric.CRITICAL_MAX) or DB.Metric.MAX
-
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
-	-- We log a hit on the target here too since we have a damage check.
 	if damage > 0 then
-		DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-
 		if audits.pet_name then
 			if damage < DB.PetData.Get(audits.player_name, audits.pet_name, trackable, minMetric, audits.target_name) then
 				DB.Data.Update(DB.UpdateMode.SET, damage, audits, trackable, minMetric)
@@ -207,6 +200,19 @@ DB.Data.UpdateDamageBasic = function(audits, trackable, damage, isCriticalHit)
 	if damage > DB.Data.Get(audits.player_name, trackable, maxMetric, audits.target_name) then
 		DB.Data.Update(DB.UpdateMode.SET, damage, audits, trackable, maxMetric)
 	end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Updates accuracy.
+------------------------------------------------------------------------------------------------------
+---@param audits    table
+---@param trackable DB.Trackable a tracked item from the trackable list.
+---@param isHit     boolean
+------------------------------------------------------------------------------------------------------
+DB.Data.UpdateAccuracy = function(audits, trackable, isHit)
+    local value = isHit and 1 or 0
+    DB.Data.Update(DB.UpdateMode.INC, value, audits, trackable, DB.Metric.HITS_ON_TARGET)
+    DB.Data.Update(DB.UpdateMode.INC, 1,     audits, trackable, DB.Metric.ATTEMPTS_ON_TARGET)
 end
 
 ------------------------------------------------------------------------------------------------------

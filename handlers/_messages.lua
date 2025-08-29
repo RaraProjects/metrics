@@ -9,7 +9,9 @@ H.Messages = { }
 H.Messages.NoDamageMiss = function(messageId)
     return messageId == Ashita.Message.MELEE_MISS or
            messageId == Ashita.Message.WEAPONSKILL_MISS or
-           messageId == Ashita.Message.RANGE_MISS
+           messageId == Ashita.Message.RANGE_MISS or
+           messageId == Ashita.Message.ABILITY_MISS or
+           messageId == Ashita.Message.ABILITY_MISS_2
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -133,6 +135,7 @@ H.Messages.Debuff = function(messageId)
            messageId == Ashita.Message.SPELL_MAGIC_BURST_ENFEEBLE_PRIMARY_2 or
            messageId == Ashita.Message.SPELL_MAGIC_BURST_ENFEEBLE_ADDITIONAL or
            messageId == Ashita.Message.SPELL_MAGIC_BURST_ENFEEBLE_ADDITIONAL_2 or
+           messageId == Ashita.Message.ABILITY_ENFEEBLE_IS or
            messageId == Ashita.Message.TARGET_STATUS
 end
 

@@ -86,8 +86,8 @@ H.RangedDef.Parse = function(actionData, actorMob, targetMob, ownerMob)
     else
         -- Full Mitigation
         local fullMitigation =
-            H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION_RANGED, damage, messageId, Ashita.Message.RANGE_MISS, true) or
-            H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_RANGED, damage, messageId, Ashita.Message.SHADOW_ABSORPTION, true)
+            H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION_RANGED, 0, messageId, Ashita.Message.RANGE_MISS) or
+            H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_RANGED, 0, messageId, Ashita.Message.SHADOW_ABSORPTION)
 
         -- Full damage mitigation just increments attempts.
         if fullMitigation then

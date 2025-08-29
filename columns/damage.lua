@@ -416,8 +416,8 @@ Column.Damage.AveragePetTP = function(playerName, petName, trackable, actionName
         tp       = DB.PetCatalog.Get(playerName, petName, trackable, actionName, DB.Metric.TP_SPENT)
         attempts = DB.PetCatalog.Get(playerName, petName, trackable, actionName, DB.Metric.ATTEMPTS_ON_USE)
     else
-        tp       = DB.Data.Get(playerName, trackable, DB.Metric.TP_SPENT)
-        attempts = DB.Data.Get(playerName, trackable, DB.Metric.ATTEMPTS_ON_USE)
+        tp       = DB.PetData.Get(playerName, petName, trackable, DB.Metric.TP_SPENT)
+        attempts = DB.PetData.Get(playerName, petName, trackable, DB.Metric.ATTEMPTS_ON_USE)
     end
 
     local color = Column.String.ColorZero(tp)

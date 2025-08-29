@@ -110,7 +110,7 @@ H.SpellDef.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob
 
     -- Not tracking mitigation, MP drain, or enfeebling for pets at this time.
     if not ownerMob then
-        local fullMitigation = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MAGIC, damage, messageId, Ashita.Message.SHADOW_ABSORPTION, true)
+        local fullMitigation = H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MAGIC, 0, messageId, Ashita.Message.SHADOW_ABSORPTION)
 
         -- Player was hit by the spell.
         if not fullMitigation then

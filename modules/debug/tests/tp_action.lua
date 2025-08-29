@@ -814,8 +814,8 @@ Debug.Unit.Tests.TP_Action.Pet_No_Damage = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local pet_name = Debug.Unit.Mob.PET.name
     local target_name = Debug.Unit.Mob.ENEMY.name
-    local damage = 0
-    local message = Ashita.Message.WEAPONSKILL_DAMAGE
+    local damage = 20
+    local message = Ashita.Message.ABILITY_ENFEEBLE_IS
     local action_id = 264
     local action_name = "Sheep Song"
 
@@ -842,31 +842,39 @@ Debug.Unit.Tests.TP_Action.Pet_No_Damage = function()
     for _, target_index in ipairs(target_lists) do
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.PET_TP] = {}
+        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
         player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP] = {}
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
         pet[player_name][pet_name][target_index] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP] = {}
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_TARGET] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
         pet_catalog[player_name][pet_name][target_index] = {}
         pet_catalog[player_name][pet_name][target_index][action_name] = {}
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP] = {}
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_TARGET] = 1
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     end
 
     local battle_log = {
         player = player_name,
         pet    = pet_name,
-        damage = tostring(damage),
+        damage = '---',
         action = action_name,
         note   = " ",
     }

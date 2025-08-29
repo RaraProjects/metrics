@@ -392,16 +392,8 @@ H.Spell.EnfeeblingAndDoTs = function(audits, trackable, damage, spellName, messa
         H.Offense.Hit(audits, overall, damage)
         H.Offense.CatalogHit(audits, trackable, damage, spellName)
 
-        -- Need to supplement counts just in case the damage was zero but it wasn't resisted.
-        if damage == 0 then
-            DB.Data.Update(DB.UpdateMode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
-            DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-            DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, spellName, DB.Metric.HITS_ON_TARGET)
-        end
-
     -- No Effects: These will not negatively impact resist metrics.
     elseif H.Messages.NoEffect(messageId) then
-        DB.Data.Update(DB.UpdateMode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
         H.Offense.Hit(audits, overall, 0)
         H.Offense.CatalogNoDamageHit(audits, trackable, spellName)
         damage = -1
@@ -409,14 +401,13 @@ H.Spell.EnfeeblingAndDoTs = function(audits, trackable, damage, spellName, messa
     -- Resists
     elseif H.Messages.Resist(messageId) then
         H.Offense.Miss(audits, overall)
-        H.Offense.CatalogHit(audits, trackable, 0, spellName)
+        H.Offense.CatalogMiss(audits, trackable, spellName)
         damage = -2
 
     -- Effect Landed
     else
-        DB.Data.Update(DB.UpdateMode.INC, 1, audits, overall, DB.Metric.HITS_ON_TARGET)
         H.Offense.Hit(audits, overall, 0)
-        H.Offense.CatalogNoDamageHit(audits, trackable, spellName)
+        H.Offense.CatalogHit(audits, trackable, 0, spellName)
 
         -- Preserve the damage for dispels since it is the buff ID.
         if not H.Messages.Dispel(messageId) then

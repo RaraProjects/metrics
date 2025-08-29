@@ -44,6 +44,7 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Offense.Hit = function(audits, trackable, damage, criticalHit)
     DB.Data.UpdateDamageBasic(audits, trackable, damage, criticalHit)
+    DB.Data.UpdateAccuracy(audits, trackable, true)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -57,7 +58,7 @@ H.Offense.Miss = function(audits, trackable)
 end
 
 ------------------------------------------------------------------------------------------------------
--- Player attacks absorbed by shadows. These are counted as hits in terms of accuracy.
+-- Player attacks absorbed by shadows or mob heal. These are counted as hits in terms of accuracy.
 -- No effect on recent accuracy tracking.
 ------------------------------------------------------------------------------------------------------
 ---@param audits    table        Contains necessary entity audit data; helps save on parameter slots.
@@ -66,8 +67,20 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Offense.NoDamageHit = function(audits, trackable, metric)
     H.Offense.Hit(audits, trackable, 0)
-    DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-    DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, metric)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Attempt being absorbed by shadows.
+-- Accuracy doesn't suffer because this isn't a miss. It just heals the mob.
+------------------------------------------------------------------------------------------------------
+---@param audits    table        Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable DB.Trackable player melee or pet melee.
+---@param ownerMob? table
+------------------------------------------------------------------------------------------------------
+H.Offense.PhysicalShadowAbsorption = function(audits, trackable, ownerMob)
+    H.Offense.Hit(audits, trackable, 0)
+    H.Offense.UpdateRecentAccuracy(audits, true, ownerMob)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.SHADOW_ABSORPTION)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -77,10 +90,11 @@ end
 ---@param audits    table        Contains necessary entity audit data; helps save on parameter slots.
 ---@param trackable DB.Trackable player melee or pet melee.
 ---@param damage    integer
+---@param ownerMob? table
 ------------------------------------------------------------------------------------------------------
-H.Offense.MobHeal = function(audits, trackable, damage)
+H.Offense.MobHeal = function(audits, trackable, damage, ownerMob)
     H.Offense.Hit(audits, trackable, 0)
-    DB.Data.Update(DB.UpdateMode.INC,      1, audits, trackable, DB.Metric.HITS_ON_TARGET)
+    H.Offense.UpdateRecentAccuracy(audits, true, ownerMob)
     DB.Data.Update(DB.UpdateMode.INC, damage, audits, trackable, DB.Metric.MOB_HEALING)
 end
 
@@ -95,6 +109,20 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Offense.CatalogHit = function(audits, trackable, damage, actionName, criticalHit)
     DB.Catalog.UpdateDamage(audits.player_name, audits.target_name, trackable, damage, actionName, audits.pet_name, criticalHit)
+    DB.Catalog.UpdateAccuracy(audits, trackable, actionName, true)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Cataloged action miss.
+------------------------------------------------------------------------------------------------------
+---@param audits       table        Contains necessary entity audit data; helps save on parameter slots.
+---@param trackable    DB.Trackable
+---@param actionName   string
+---@param criticalHit? boolean
+------------------------------------------------------------------------------------------------------
+H.Offense.CatalogMiss = function(audits, trackable, actionName, criticalHit)
+    DB.Catalog.UpdateDamage(audits.player_name, audits.target_name, trackable, 0, actionName, audits.pet_name, criticalHit)
+    DB.Catalog.UpdateAccuracy(audits, trackable, actionName, false)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -182,9 +210,9 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Defense.GrandTotals = function(audits, damage, ownerMob)
     if ownerMob then
-        H.Offense.Hit(audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, damage)
+        DB.Data.UpdateDamageBasic(audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL_PET, damage)
     else
-        H.Offense.Hit(audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, damage)
+        DB.Data.UpdateDamageBasic(audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, damage)
     end
 end
 
@@ -196,20 +224,14 @@ end
 ---@param damage       integer
 ---@param messageId    integer        the ID of the entity animation when taking a hit.
 ---@param messageCheck integer
----@param noDamageHit? boolean        If this is set hits will increment with 0 damage.
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.Defense.Mitigation = function(audits, trackable, damage, messageId, messageCheck, noDamageHit)
+H.Defense.Mitigation = function(audits, trackable, damage, messageId, messageCheck)
     local mitigationOccurred = false
 
     if messageId == messageCheck then
-        H.Offense.Hit(audits, trackable, damage)
-
-        if noDamageHit then
-            DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_TARGET)
-        end
-
         mitigationOccurred = true
+        H.Offense.Hit(audits, trackable, damage)
 
     else
         H.Offense.Miss(audits, trackable)

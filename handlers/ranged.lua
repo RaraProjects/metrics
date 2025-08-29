@@ -139,13 +139,11 @@ H.Ranged.Message = function(audits, damage, messageId, rangedTypeOverall, ownerM
         H.Offense.Hit(audits, rangedTypeOverall, damage, true)
         H.Offense.UpdateRecentAccuracy(audits, true, ownerMob)
 
-    -- Shadows have no impact on recent accuracy.
     elseif messageId == Ashita.Message.SHADOW_ABSORPTION then
-        H.Offense.NoDamageHit(audits, rangedTypeOverall, DB.Metric.SHADOW_ABSORPTION)
+        H.Offense.PhysicalShadowAbsorption(audits, rangedTypeOverall, ownerMob)
 
-    elseif messageId == Ashita.Message.MOB_HEAL_MELEE then
-        H.Offense.MobHeal(audits, rangedTypeOverall, damage)
-        H.Offense.UpdateRecentAccuracy(audits, true, ownerMob)
+    elseif messageId == Ashita.Message.MOB_HEAL_RANGED then
+        H.Offense.MobHeal(audits, rangedTypeOverall, damage, ownerMob)
 
     -- PUP ranged hits will not negatively impact true strike or square hit rates.
     elseif messageId == Ashita.Message.WEAPONSKILL_DAMAGE then

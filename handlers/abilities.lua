@@ -136,7 +136,11 @@ H.Ability.Parse = function(abilityId, abilityData, actionData, actorMob, targetN
         local offsetId = math.max(abilityId - Ashita.AbilityOffset.ABILITY, 0)
 
         if Res.Abilities.Damaging[abilityId] then
-            H.Offense.CatalogHit(audits, DB.Trackable.ABILITY_DAMAGING, damage, abilityName)
+            if H.Messages.NoDamageMiss(messageId) then
+                H.Offense.CatalogMiss(audits, DB.Trackable.ABILITY_DAMAGING, abilityName)
+            else
+                H.Offense.CatalogHit(audits, DB.Trackable.ABILITY_DAMAGING, damage, abilityName)
+            end
 
         elseif Res.Abilities.Healing[abilityId] or Res.Abilities.PetHealing[abilityId] then
             H.Offense.Hit(audits, DB.Trackable.ALL_HEAL, damage)

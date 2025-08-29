@@ -116,7 +116,6 @@ DB.Catalog.UpdateDamage = function(playerName, targetName, trackable, damage, ac
 	end
 
 	-- Attempts on the target.
-	DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, actionName, DB.Metric.ATTEMPTS_ON_TARGET)
 	if isCriticalHit then
 		DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, actionName, DB.Metric.CRITICAL_COUNT)
 	end
@@ -126,9 +125,6 @@ DB.Catalog.UpdateDamage = function(playerName, targetName, trackable, damage, ac
 	local maxMetric = (isCriticalHit and DB.Metric.CRITICAL_MAX) or DB.Metric.MAX
 
     if damage > 0 then
-		-- Log hits here since we have a damage check.
-		DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, actionName, DB.Metric.HITS_ON_TARGET)
-
 		-- Minimum damage.
 		if damage < DB.Catalog.Get(playerName, trackable, actionName, minMetric, audits.target_name) then
 			DB.Catalog.UpdateMetric(DB.UpdateMode.SET, damage, audits, trackable, actionName, minMetric)
@@ -146,6 +142,23 @@ DB.Catalog.UpdateDamage = function(playerName, targetName, trackable, damage, ac
 		-- Maximum damage.
 		DB.Catalog.UpdateMetric(DB.UpdateMode.SET, damage, audits, trackable, actionName, maxMetric)
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Updates cataloged accuracy.
+------------------------------------------------------------------------------------------------------
+---@param audits     table
+---@param trackable  DB.Trackable a tracked item from the trackable list.
+---@param actionName string
+---@param isHit      boolean
+------------------------------------------------------------------------------------------------------
+DB.Catalog.UpdateAccuracy = function(audits, trackable, actionName, isHit)
+    local value = isHit and 1 or 0
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, value, audits, trackable, actionName, DB.Metric.HITS_ON_TARGET)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1,     audits, trackable, actionName, DB.Metric.ATTEMPTS_ON_TARGET)
+
+    -- Update non-cataloged accuracy.
+    DB.Data.UpdateAccuracy(audits, trackable, isHit)
 end
 
 ------------------------------------------------------------------------------------------------------

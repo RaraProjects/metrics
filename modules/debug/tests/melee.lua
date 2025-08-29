@@ -2063,8 +2063,6 @@ Debug.Unit.Tests.Melee.Spikes = function()
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.TOTAL] = spike_damage
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.MIN] = spike_damage
         player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.MAX] = spike_damage
-        player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.HITS_ON_TARGET] = 1
-        player[player_name][target_index][DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][spike_name] = {}

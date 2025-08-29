@@ -265,9 +265,9 @@ H.TP.WeaponskillParse = function(actionData, actorMob, targetMob, wsName, wsId, 
     elseif H.Messages.Dispel(messageId) then
         isNoDamage = true
 
-    -- The player debuffs the mob. (this situation may not exist)
+    -- The player debuffs the mob.
     elseif H.Messages.Debuff(messageId) then
-        H.Offense.CatalogNoDamageHit(audits, audits.trackable, wsName)
+        H.Offense.CatalogHit(audits, audits.trackable, 0, wsName)
         isNoDamage = true
 
     -- A pet does damage to the mob.
@@ -308,7 +308,7 @@ H.TP.DamageMitigation = function(audits, damage, messageId, wsName, ownerMob)
     -- Mob misses the player.
     if H.Messages.NoDamageMiss(messageId) then
         H.Offense.GrandTotals(audits, 0, ownerMob)
-        H.Offense.CatalogHit(audits, audits.trackable, 0, wsName)
+        H.Offense.CatalogMiss(audits, audits.trackable, wsName)
         damage = 0
         miss   = true
 

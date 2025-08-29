@@ -13,7 +13,7 @@ Debug.Unit.Tests.Spells.Nuke = function()
     local message = Ashita.Message.SPELL_DAMAGE_HIT
     local action_id = 145
     local action_name = "Fire II"
-    local mp_cost = 68
+    local mp_cost = 26
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
@@ -97,7 +97,7 @@ Debug.Unit.Tests.Spells.Nuke_Burst = function()
     local damage = 100
     local action_id = 145
     local action_name = "Fire II"
-    local mp_cost = 68
+    local mp_cost = 26
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, Ashita.Message.SPELL_MAGIC_BURST_PRIMARY))
@@ -188,7 +188,7 @@ Debug.Unit.Tests.Spells.Nuke_Shadow = function()
     local message = Ashita.Message.SHADOW_ABSORPTION
     local action_id = 145
     local action_name = "Fire II"
-    local mp_cost = 68
+    local mp_cost = 26
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
@@ -257,7 +257,7 @@ Debug.Unit.Tests.Spells.Nuke_AOE = function()
     local message = Ashita.Message.SPELL_DAMAGE_HIT
     local action_id = 174
     local action_name = "Firaga"
-    local mp_cost = 71
+    local mp_cost = 57
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
@@ -407,7 +407,7 @@ Debug.Unit.Tests.Spells.Nuke_AOE_Burst = function()
     local message = Ashita.Message.SPELL_DAMAGE_HIT
     local action_id = 174
     local action_name = "Firaga"
-    local mp_cost = 71
+    local mp_cost = 57
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, burst_damage, nil, nil, Ashita.Message.SPELL_MAGIC_BURST_PRIMARY))
@@ -573,7 +573,7 @@ Debug.Unit.Tests.Spells.Pet_Nuke = function()
     local message = Ashita.Message.SPELL_DAMAGE_HIT
     local action_id = 145
     local action_name = "Fire II"
-    local mp_cost = 68
+    local mp_cost = 26
 
     local payload = {}
     table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))

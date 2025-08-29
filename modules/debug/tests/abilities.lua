@@ -88,11 +88,12 @@ Debug.Unit.Tests.Ability.Damaging_Miss = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 0
+    local message = Ashita.Message.ABILITY_MISS
     local action_id = 46
     local action_name = "Shield Bash"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.Ability.Action(action, Debug.Unit.Mob.PLAYER, true)
 
@@ -230,11 +231,12 @@ Debug.Unit.Tests.Ability.Damaging_Miss_TP = function()
     local player_name = Debug.Unit.Mob.PLAYER.name
     local target_name = Debug.Unit.Mob.ENEMY.name
     local damage = 0
+    local message = Ashita.Message.ABILITY_MISS
     local action_id = 66
     local action_name = "Jump"
 
     local payload = {}
-    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage))
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
     local action = Debug.Unit.Util.Build_Action(payload, action_id)
     H.TP.Action(action, Debug.Unit.Mob.PLAYER, true)
 

@@ -85,21 +85,21 @@ H.MeleeDef.Parse = function(actionData, actorName, targetName, ownerMob)
 
     -- Mitigation from pets is not tracked at this time.
     if ownerMob then
-        if damage > 0 then
+        if H.Messages.NoDamageMiss(messageId) then
+            H.Offense.Miss(audits, meleeTrackable)
+        else
             H.Offense.Hit(audits, meleeTrackable, damage)
             H.Offense.MinMax(audits, meleeTrackable, damage)
-        else
-            H.Offense.Miss(audits, meleeTrackable)
         end
 
     -- There is an order of operations to defensive actions. Need to protect the denominator.
     else
         -- All damage was mitigated.
         local fullMitigation =
-            H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION_MELEE, damage, messageId, Ashita.Message.MELEE_MISS, true) or
-            H.Defense.Mitigation(audits, DB.Trackable.DEF_PARRY, damage, messageId, Ashita.Message.MELEE_PARRY, true) or
-            H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MELEE, damage, messageId, Ashita.Message.SHADOW_ABSORPTION, true) or
-            H.Defense.Mitigation(audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, damage, messageId, Ashita.Message.THIRD_EYE_ANTICIPATION, true)
+            H.Defense.Mitigation(audits, DB.Trackable.DEF_EVASION_MELEE, 0, messageId, Ashita.Message.MELEE_MISS) or
+            H.Defense.Mitigation(audits, DB.Trackable.DEF_PARRY, 0, messageId, Ashita.Message.MELEE_PARRY) or
+            H.Defense.Mitigation(audits, DB.Trackable.DEF_SHADOWS_MELEE, 0, messageId, Ashita.Message.SHADOW_ABSORPTION) or
+            H.Defense.Mitigation(audits, DB.Trackable.DEF_THIRD_EYE_ANTICIPATION, 0, messageId, Ashita.Message.THIRD_EYE_ANTICIPATION)
 
         if not fullMitigation then
             fullMitigation, counterDamage = H.MeleeDef.Counter(audits, actionData)
@@ -237,10 +237,6 @@ H.MeleeDef.AdditionalEffect = function(audits, actionData, animationId, messageI
         if enspellName then
             H.Defense.GrandTotals(audits, additionalDamage)
             H.Offense.CatalogHit(audits, DB.Trackable.DEF_NUKING, additionalDamage, enspellName)
-
-            -- Need to undo the counts because Grand Totals is also called in the main parse function.
-            DB.Data.Update(DB.UpdateMode.INC, -1, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.HITS_ON_TARGET)
-            DB.Data.Update(DB.UpdateMode.INC, -1, audits, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.ATTEMPTS_ON_TARGET)
         end
 
     elseif messageId == Ashita.Message.ENDEBUFF then
