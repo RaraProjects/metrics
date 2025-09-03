@@ -49,9 +49,11 @@ end
 Ashita.Ability.Name = function(id, data)
     if not id then
         Debug.Error.Add(Debug.Error.ERROR, "Ashita.Ability.Name", string.format("Parameter \"id\" was nil."))
+        return 'Error'
     end
 
     local ability = data or Ashita.Ability.GetByID(id)
+
     if not ability or not ability.Name or not ability.Name[1] then
         return "Error"
     end

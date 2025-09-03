@@ -26,6 +26,7 @@ end
 Ashita.Spell.Name = function(id, data)
     if not id then
         Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.Name", string.format("Parameter \"id\" was nil."))
+        return 'Error'
     end
 
     local spell = data or Ashita.Spell.GetByID(id)

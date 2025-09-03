@@ -7,17 +7,18 @@ Ashita.Item = { }
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Item.GetItemName = function(itemId)
+    if not itemId then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Item.GetItemName", string.format("Parameter \"id\" was nil."))
+        return 'Error'
+    end
+
     local item = AshitaCore:GetResourceManager():GetItemById(itemId)
-    if not item then
-        return "Unknown"
+
+    if not item or not item.Name or not item.Name[1] then
+        return "Error"
     end
 
-    local itemName = item.Name[1]
-    if not itemName then
-        return DB.Enum.DEBUG
-    end
-
-    return itemName
+    return item.Name[3]
 end
 
 -- ------------------------------------------------------------------------------------------------------
