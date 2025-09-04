@@ -85,14 +85,20 @@ DB.Initialize = function(isManualReset)
 	DB.Tracking.ReceivedItems      = { }
 	DB.Tracking.DropRates          = { }
 
-	DB.Lists.Mobs = { [1] = DB.Enum.ALL_MOBS }
-
 	DB.HealingMax = { }
 
 	DB.Widgets.DropdownPlayerFilterFocus = DB.Enum.NONE
 	DB.Widgets.DropdownPlayerFilterIndex = 1
-	DB.Widgets.DropdownMobFilterFocus = DB.Enum.ALL_MOBS
-	DB.Widgets.DropdownMobFilterIndex = 1
+
+    DB.Lists.Mobs = { DB.Enum.ALL_MOBS }
+
+    if isManualReset then
+        local focus = DB.Widgets.DropdownMobFilterFocus
+        table.insert(DB.Lists.Mobs, focus)
+        DB.Tracking.InitializedMobs[focus] = true
+    end
+
+    DB.Widgets.DropdownMobFilterIndex = isManualReset and 2 or 1
 
 	for spell, threshold in pairs(DB.HealingMaxDefaults) do
 		DB.HealingMax[spell] = threshold
