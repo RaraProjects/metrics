@@ -145,28 +145,28 @@ Focus.Pets.PetSubTab = function(playerName, petName)
     Focus.Pets.PetSpecificTPMoves(playerName, petName, DB.Trackable.PET_TP, "TP Move")
 
     local trackable = DB.Trackable.PET_NUKING
-    local nuking   = DB.PetData.Get(playerName, petName, trackable, DB.Metric.TOTAL) > 0
+    local nuking = DB.PetData.Get(playerName, petName, trackable, DB.Metric.TOTAL) > 0
 
     if nuking then
         Focus.Pets.PetSpecificTPMoves(playerName, petName, trackable, "Nuking")
     end
 
+    trackable = DB.Trackable.PET_ENFEEBLING
     local enfeeble = DB.PetData.Get(playerName, petName, trackable, DB.Metric.HITS_ON_USE) > 0
-    trackable      = DB.Trackable.PET_ENFEEBLING
 
     if enfeeble then
         Focus.Pets.PetSpecificNonDamagingSpells(playerName, petName, trackable, "Enfeebling")
     end
 
+    trackable = DB.Trackable.PET_HEALING
     local healing = DB.PetData.Get(playerName, petName, trackable, DB.Metric.TOTAL) > 0
-    trackable     = DB.Trackable.PET_HEALING
 
     if healing then
         Focus.Pets.PetSpecificTPMoves(playerName, petName, trackable, "Healing")
     end
 
+    trackable = DB.Trackable.PET_SPELL_BUFFS
     local buffs = DB.PetData.Get(playerName, petName, trackable, DB.Metric.HITS_ON_USE) > 0
-    trackable   = DB.Trackable.PET_SPELL_BUFFS
 
     if buffs then
         Focus.Pets.PetSpecificNonDamagingSpells(playerName, petName, trackable, "Buffs", true)
