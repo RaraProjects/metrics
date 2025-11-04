@@ -142,7 +142,19 @@ function Window:New(initSettings)
     ------------------------------------------------------------------------------------------------------
     self.SetScaling = function()
         if not isScalingSet then
-            UI.SetWindowFontScale(WindowManager.Config.GetScaling())
+            if UI.GetStyle then
+                local style = UI.GetStyle()
+
+                -- Ashita 4.2.0.1+
+                if style and style.FontScaleMain ~= nil then
+                    style.FontScaleMain = WindowManager.Settings.Window_Scaling
+                end
+
+                -- Ashita Legacy
+                if WindowManager.IO and WindowManager.IO.FontGlobalScale ~= nil then
+                    WindowManager.IO.FontGlobalScale = WindowManager.Settings.Window_Scaling
+                end
+            end
             isScalingSet = true
         end
     end
