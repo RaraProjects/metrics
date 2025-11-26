@@ -13,7 +13,6 @@ function Window:New(initSettings)
     local showBg    = true
 
     local needPositionReset = true
-    local isScalingSet      = false
     local isVisible         = { settings.Visible[1] }
 
     local flagDefaults = bit.bor
@@ -41,7 +40,8 @@ function Window:New(initSettings)
         UI.PushStyleVar(ImGuiStyleVar_ItemSpacing,      { 0,  5 })
         UI.PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, { 5,  0 })
 
-        local flags = flagDefaults
+        local flags         = flagDefaults
+        local globalScaling = self.GetScaling()
 
         -- Title Bar
         if not WindowManager.Settings.Show_Title and not showTitle then
@@ -54,18 +54,23 @@ function Window:New(initSettings)
         end
 
         self.CheckPosition()
+        self.SetScaling()
 
         if UI.Begin(title, isVisible, flags) then
             self.UpdateSettings()
-            self.SetScaling()
+            self.SetLegacyScaling()
+
             WindowManager.Theme.Set()
 
             if content and type(content) == "function" then
                 content()
             end
 
+            self.SetLegacyScaling(globalScaling)
             UI.End()
         end
+
+        self.SetScaling(globalScaling)
 
         UI.PopStyleVar(5)
     end
@@ -134,36 +139,53 @@ function Window:New(initSettings)
     ------------------------------------------------------------------------------------------------------
     self.SettingsReset = function()
         needPositionReset = true
-        isScalingSet      = false
     end
 
     ------------------------------------------------------------------------------------------------------
-    -- Sets the window scaling.
+    -- Gets the window scaling.
     ------------------------------------------------------------------------------------------------------
-    self.SetScaling = function()
-        if not isScalingSet then
-            if UI.GetStyle then
-                local style = UI.GetStyle()
+    self.GetScaling = function()
+        if UI.GetStyle then
+            local style = UI.GetStyle()
 
-                -- Ashita 4.2.0.1+
-                if style and style.FontScaleMain ~= nil then
-                    style.FontScaleMain = WindowManager.Settings.Window_Scaling
-                end
-
-                -- Ashita Legacy
-                if WindowManager.IO and WindowManager.IO.FontGlobalScale ~= nil then
-                    WindowManager.IO.FontGlobalScale = WindowManager.Settings.Window_Scaling
-                end
+            -- Ashita 4.2.0.1+
+            if style and style.FontScaleMain ~= nil then
+                return style.FontScaleMain
             end
-            isScalingSet = true
+
+            -- Ashita Legacy
+            if WindowManager.IO and WindowManager.IO.FontGlobalScale ~= nil then
+                return WindowManager.IO.FontGlobalScale
+            end
         end
     end
 
     ------------------------------------------------------------------------------------------------------
-    -- Forces the scaling flag to reset after toggling the scaling setting.
+    -- Sets the window scaling for Ashita 4.2.0.1+.
     ------------------------------------------------------------------------------------------------------
-    self.ForceScalingReset = function()
-        isScalingSet = false
+    ---@param scale? number
+    ------------------------------------------------------------------------------------------------------
+    self.SetScaling = function(scale)
+        if WindowManager.GetDrawMode() == WindowManager.Draw.Modes.BETA then
+            if UI.GetStyle then
+                local style = UI.GetStyle()
+
+                if style and style.FontScaleMain ~= nil then
+                    style.FontScaleMain = scale or WindowManager.Settings.Window_Scaling or 1
+                end
+            end
+        end
+    end
+
+    ------------------------------------------------------------------------------------------------------
+    -- Sets the window scaling for legacy Ashita.
+    ------------------------------------------------------------------------------------------------------
+    ---@param scale? number
+    ------------------------------------------------------------------------------------------------------
+    self.SetLegacyScaling = function(scale)
+        if WindowManager.GetDrawMode() == WindowManager.Draw.Modes.LEGACY then
+            UI.SetWindowFontScale(scale or WindowManager.Settings.Window_Scaling or 1)
+        end
     end
 
     ------------------------------------------------------------------------------------------------------

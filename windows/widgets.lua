@@ -64,7 +64,7 @@ WindowManager.Widgets.WindowScale = function()
 
     if UI.DragFloat("Window Scaling", windowScale, 0.005, 0.7, 3, "%.2f", ImGuiSliderFlags_None) then
         WindowManager.Settings.Window_Scaling = math.clamp(windowScale[1], 0.7, 3)
-        WindowManager.ResetScalingFlags()
     end
+
     WindowManager.Widgets.HelpMarker("Adjust window element size.")
 end

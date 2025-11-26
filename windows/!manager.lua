@@ -27,19 +27,28 @@ WindowManager.Table.Flags =
     Scrollable   = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders, ImGuiTableFlags_ScrollY),
 }
 
-WindowManager.BarDelay          = Socket.gettime()
-WindowManager.BarDelayThreshold = 0.70
+WindowManager.BarDelay           = Socket.gettime()
+WindowManager.BarDelayThreshold  = 0.70
 
 WindowManager.ShowMouseRefresh   = true
 
 WindowManager.IO                 = UI.GetIO()
 WindowManager.IO.MouseDrawCursor = false
 
+WindowManager.Draw               = { }
+WindowManager.Draw.Modes         =
+{
+    LEGACY = 0,
+    BETA   = 1,
+}
+WindowManager.Draw.CurrentMode   = WindowManager.Draw.Modes.LEGACY
+
 ------------------------------------------------------------------------------------------------------
 -- Initializes the window manager.
 ------------------------------------------------------------------------------------------------------
 WindowManager.Initialize = function()
     WindowManager.ShowMouseRefresh = true
+    WindowManager.SetDrawMode()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -80,17 +89,6 @@ WindowManager.SettingsReset = function()
     for _, pointer in pairs(WindowManager.WindowList) do
         if pointer.SettingsReset and type(pointer.SettingsReset) == "function" then
             pointer.SettingsReset()
-        end
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Resets all window scaling flags.
-------------------------------------------------------------------------------------------------------
-WindowManager.ResetScalingFlags = function()
-    for _, pointer in pairs(WindowManager.WindowList) do
-        if pointer.ForceScalingReset and type(pointer.ForceScalingReset) == "function" then
-            pointer.ForceScalingReset()
         end
     end
 end
@@ -151,6 +149,31 @@ WindowManager.ClearModuleSwitch = function(module)
 
     WindowManager.Tabs.Switches[module] = nil
     WindowManager.Tabs.Active           = module
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns the draw mode.
+------------------------------------------------------------------------------------------------------
+---@return integer
+------------------------------------------------------------------------------------------------------
+WindowManager.GetDrawMode = function()
+    return WindowManager.Draw.CurrentMode
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks whether this is 4.2.0.1+ or not.
+------------------------------------------------------------------------------------------------------
+WindowManager.SetDrawMode = function()
+    if UI.GetStyle then
+        local style = UI.GetStyle()
+
+        -- Ashita 4.2.0.1+
+        if style and style.FontScaleMain ~= nil then
+            WindowManager.Draw.CurrentMode = WindowManager.Draw.Modes.BETA
+        elseif WindowManager.IO and WindowManager.IO.FontGlobalScale ~= nil then
+            WindowManager.Draw.CurrentMode = WindowManager.Draw.Modes.LEGACY
+        end
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
