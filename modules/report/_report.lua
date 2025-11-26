@@ -36,7 +36,8 @@ end
 Report.Content = function()
     Report.Widgets.SettingsButton()
     UI.Separator() Report.Section.ChatReports()
-    UI.Separator() Report.Section.File()
+    UI.Separator() Report.Section.Export()
+    UI.Separator() Report.Section.Import()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -77,12 +78,12 @@ Report.Section.ChatReports = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Builds the file section.
+-- Builds the export section.
 ------------------------------------------------------------------------------------------------------
-Report.Section.File = function()
+Report.Section.Export = function()
     local colFlags = Column.Flags.None
     local width    = Column.Widths.Report
-    UI.Text("Create CSV File")
+    UI.Text("Export Data")
     UI.Text("Files can be found in: /config/Metrics/")
 
     local blogLength = #Blog.Log
@@ -117,5 +118,59 @@ Report.Section.File = function()
         end
 
         UI.EndTable()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Builds the import section.
+------------------------------------------------------------------------------------------------------
+Report.Section.Import = function()
+    Import             = { }
+    Import.DialogTitle = "Import CSV"
+    Import.Selected    = nil
+
+    UI.Text('Import Data')
+    UI.Text('Database files from /config/Metrics/')
+
+    if UI.Button("Import") then
+        UI.OpenPopup(Import.DialogTitle)
+    end
+
+    UI.Separator()
+
+    if UI.BeginPopup(Import.DialogTitle) then
+        UI.BeginChild("File List", { 420, 240 })
+
+        local directory = tostring(AshitaCore:GetInstallPath()) .. "config\\Metrics"
+        local p = io.popen('dir /b /a:-d "' .. directory .. '"')
+
+        if p then
+            for line in p:lines() do
+                if line:lower():find("database", 1, true) then
+                    local name = line
+                    local is_sel = (Import.Selected == name)
+
+                    if UI.Selectable(name, is_sel) then
+                        Import.Selected = name
+                    end
+
+                    if UI.IsItemHovered() and UI.IsMouseDoubleClicked(0) then
+                        Import.Selected = name
+                        print(("Importing: %s"):format(Import.Selected))
+                        File.Import(string.format("%s\\%s", directory, name))
+                        UI.CloseCurrentPopup()
+                    end
+                end
+            end
+            p:close()
+        end
+        UI.EndChild()
+
+        UI.Separator()
+        if UI.Button("Cancel") then
+            UI.CloseCurrentPopup()
+        end
+
+        UI.EndPopup()
     end
 end

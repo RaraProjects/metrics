@@ -8,8 +8,8 @@ DB.PetCatalog = { }
 ---@param playerName string
 ---@param petName    string
 ---@param targetName string
----@param actionName string       the name of the action to be cataloged.
----@param trackable  DB.Trackable a tracked item from the trackable list.
+---@param actionName string              the name of the action to be cataloged.
+---@param trackable  DB.Trackable|string a tracked item from the trackable list.
 ------------------------------------------------------------------------------------------------------
 DB.PetCatalog.Initialize = function(playerName, petName, targetName, actionName, trackable)
 	-- Early quit out to prevent crashing.

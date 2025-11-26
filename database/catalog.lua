@@ -8,8 +8,8 @@ DB.Catalog = { }
 ------------------------------------------------------------------------------------------------------
 ---@param playerName string
 ---@param targetName string
----@param actionName string       the name of the action to be cataloged.
----@param trackable  DB.Trackable a tracked item from the trackable list.
+---@param actionName string              the name of the action to be cataloged.
+---@param trackable  DB.Trackable|string a tracked item from the trackable list.
 ---@param petName?   string
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Initialize = function(playerName, targetName, actionName, trackable, petName)
