@@ -91,7 +91,10 @@ Column.String.FormatPercent = function(numerator, denominator, justify, noScalin
     local scaling  = noScaling and 1 or 100
     local retValue = string.format(format, 0)
 
-    if denominator and denominator ~= 0 then
+    numerator   = tonumber(numerator) or 0
+    denominator = tonumber(denominator) or 0
+
+    if denominator ~= 0 then
         percent = (numerator / denominator) * scaling
     end
 

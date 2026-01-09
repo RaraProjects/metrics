@@ -131,9 +131,10 @@ Report.Publishing.Catalog = function(playerName, trackable)
             local actionName = data[1]
             local total   = Column.Damage.ByType(playerName, trackable, DB.Metric.TOTAL, actionName, false, false, true)
             local count   = Column.Damage.Attempts(playerName, trackable, nil, actionName, nil, true)
-            local average = Column.Damage.ByTypeAverage(playerName, trackable, actionName, nil, nil, true)
+            local average = Column.Damage.ByTypeAverage(playerName, trackable, nil, actionName, nil, true)
             local max     = Column.Damage.ByType(playerName, trackable, DB.Metric.MAX, actionName, false, false, true)
             local min     = Column.Damage.ByType(playerName, trackable, DB.Metric.MIN, actionName, false, false, true)
+
             if min == tostring(DB.Enum.MAX_DAMAGE) then
                 min = "0"
             end
