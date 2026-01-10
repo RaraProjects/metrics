@@ -352,6 +352,17 @@ table.insert(Parse.ColumnContent,
     Is_Nano   = false,
 })
 
+-- Melee Evasion
+table.insert(Parse.ColumnContent,
+{
+    Condition = function() return Parse.Settings.Show_Evasion end,
+    Header    = function() return "%M.Eva" end,
+    Content   = function(playerName) Column.Acc.ByType(playerName, DB.Trackable.DEF_EVASION_MELEE, nil, false, nil, true) end,
+    Total     = function() UI.Text(" ") end,
+    Is_Mini   = false,
+    Is_Nano   = false,
+})
+
 -- Deaths
 table.insert(Parse.ColumnContent,
 {

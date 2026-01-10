@@ -51,6 +51,7 @@ Parse.Config.Defaults = T{
     Show_Pet_TP_Move           = false,
     Show_Pet_Healing           = false,
     Show_Damage_Taken          = false,
+    Show_Evasion               = false,
     Show_Player_Deaths         = false,
 }
 
@@ -75,6 +76,7 @@ table.insert(Parse.Config.Columns.General, { header = "Focus Jump",         sett
 table.insert(Parse.Config.Columns.General, { header = "Player Job",         setting = "Show_Jobs"                                              })
 table.insert(Parse.Config.Columns.General, { header = "DPS",                setting = "Show_DPS"                                               })
 table.insert(Parse.Config.Columns.General, { header = "Damage Taken",       setting = "Show_Damage_Taken"                                      })
+table.insert(Parse.Config.Columns.General, { header = "Evasion",            setting = "Show_Evasion"                                           })
 table.insert(Parse.Config.Columns.General, { header = "Player Deaths",      setting = "Show_Player_Deaths"                                     })
 
 Parse.Config.Columns.Accuracy = { }
