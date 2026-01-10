@@ -49,6 +49,27 @@ require("database.pet_catalog")
 require("database.pet_data")
 require("database.widgets")
 
+DB.ExcludedDamageTrackables =
+{
+    [DB.Trackable.SPELLS_HEALING]       = true,
+    [DB.Trackable.DEF_HEALING_RECEIVED] = true,
+    [DB.Trackable.ALL_HEAL]             = true,
+    [DB.Trackable.ABILITY_HEALING]      = true,
+    [DB.Trackable.ABILITY_MP_RECOVERY]  = true,
+    [DB.Trackable.PET_HEALING]          = true,
+    [DB.Trackable.SPELLS_MP_DRAIN]      = true,
+    [DB.Trackable.WEAPONSKILL_MP_DRAIN] = true,
+    [DB.Trackable.DEF_NUKING]           = true,
+    [DB.Trackable.DEF_NUKING_PET]       = true,
+    [DB.Trackable.DEF_SPIKES]           = true,
+    [DB.Trackable.DEF_TP_MOVE]          = true,
+    [DB.Trackable.DEF_TP_MOVE_PET]      = true,
+    [DB.Trackable.DEF_MELEE]            = true,
+    [DB.Trackable.DEF_MELEE_PET]        = true,
+    [DB.Trackable.DEF_MP_DRAIN]         = true,
+    [DB.Trackable.SPELLS_TP_DRAIN]      = true,
+}
+
 ------------------------------------------------------------------------------------------------------
 -- Resets the parsing data and clears the battle log.
 ------------------------------------------------------------------------------------------------------
@@ -162,27 +183,7 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 DB.IsTotalDamageTrackable = function(trackable)
-	local excludedTrackables =
-	{
-		[DB.Trackable.SPELLS_HEALING]       = true,
-		[DB.Trackable.DEF_HEALING_RECEIVED] = true,
-		[DB.Trackable.ALL_HEAL]             = true,
-		[DB.Trackable.ABILITY_HEALING]      = true,
-		[DB.Trackable.ABILITY_MP_RECOVERY]  = true,
-		[DB.Trackable.PET_HEALING]          = true,
-		[DB.Trackable.SPELLS_MP_DRAIN]      = true,
-		[DB.Trackable.WEAPONSKILL_MP_DRAIN] = true,
-		[DB.Trackable.DEF_NUKING]           = true,
-		[DB.Trackable.DEF_NUKING_PET]       = true,
-		[DB.Trackable.DEF_SPIKES]           = true,
-		[DB.Trackable.DEF_TP_MOVE]          = true,
-		[DB.Trackable.DEF_TP_MOVE_PET]      = true,
-		[DB.Trackable.DEF_MELEE]            = true,
-		[DB.Trackable.DEF_MELEE_PET]        = true,
-		[DB.Trackable.DEF_MP_DRAIN]         = true,
-	}
-
-	return not excludedTrackables[trackable]
+	return not DB.ExcludedDamageTrackables[trackable]
 end
 
 ------------------------------------------------------------------------------------------------------

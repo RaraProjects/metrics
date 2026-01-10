@@ -13,6 +13,7 @@ Focus.Magic.Display = function(playerName, hidePublish)
     local rangeEndamage = DB.Data.Get(playerName, DB.Trackable.RANGED_ENDAMAGE,       DB.Metric.TOTAL)
     local endrain       = DB.Data.Get(playerName, DB.Trackable.RANGED_ENDRAIN,        DB.Metric.TOTAL)
     local mpDrain       = DB.Data.Get(playerName, DB.Trackable.SPELLS_MP_DRAIN,       DB.Metric.TOTAL)
+    local tpDrain       = DB.Data.Get(playerName, DB.Trackable.SPELLS_TP_DRAIN,       DB.Metric.TOTAL)
     local healingTotal  = DB.Data.Get(playerName, DB.Trackable.SPELLS_HEALING,        DB.Metric.TOTAL)
     local debuffRemoval = DB.Data.Get(playerName, DB.Trackable.SPELLS_DEBUFF_REMOVAL, DB.Metric.ATTEMPTS_ON_USE)
     local buff          = DB.Data.Get(playerName, DB.Trackable.SPELLS_BUFFS,          DB.Metric.ATTEMPTS_ON_USE)
@@ -39,6 +40,7 @@ Focus.Magic.Display = function(playerName, hidePublish)
     if meleeEndamage > 0 then Focus.Catalog.Endamage(playerName, DB.Trackable.MELEE_ENDAMAGE,         " (M)") end
     if rangeEndamage > 0 then Focus.Catalog.Endamage(playerName, DB.Trackable.RANGED_ENDAMAGE,        " (R)") end
     if mpDrain > 0       then Focus.Magic.NoDamageSpell(playerName, DB.Trackable.SPELLS_MP_DRAIN,     "MP Drain") end
+    if tpDrain > 0       then Focus.Magic.NoDamageSpell(playerName, DB.Trackable.SPELLS_TP_DRAIN,     "TP Drain") end
     if healingTotal > 0  then Focus.Magic.NoDamageSpell(playerName, DB.Trackable.SPELLS_HEALING,      "Healing") end
     if debuffRemoval > 0 then Focus.Magic.BasicSpell(playerName, DB.Trackable.SPELLS_DEBUFF_REMOVAL,  "Debuff Removal") end
     if buff > 0          then Focus.Magic.BasicSpell(playerName, DB.Trackable.SPELLS_BUFFS,           "Buff Spell") end
@@ -225,6 +227,12 @@ Focus.Magic.NoDamageSpell = function(playerName, trackable, header, makeBrief)
         unitString   = "HP+/MP-"
         showOvercure = true
         columns      = columns + 1
+    end
+
+    -- TP Drain case.
+    if trackable == DB.Trackable.SPELLS_TP_DRAIN then
+        totalString  = "TP+"
+        unitString   = "TP+/MP-"
     end
 
     -- Error Protection

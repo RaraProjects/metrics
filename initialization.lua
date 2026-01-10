@@ -102,6 +102,40 @@ SettingsFile.register(Hub.File, "settings_update", function(settings)
 end)
 
 ------------------------------------------------------------------------------------------------------
+-- Initialize spell trackable index for performance.
+------------------------------------------------------------------------------------------------------
+local InitializeSpellResources = function()
+    -- Index spells once for performance.
+    local spellTrackables =
+    {
+        [Res.Spells.MpDrain]       = DB.Trackable.SPELLS_MP_DRAIN,
+        [Res.Spells.TpDrain]       = DB.Trackable.SPELLS_TP_DRAIN,
+        [Res.Spells.Enspell]       = DB.Trackable.MELEE_ENSPELL,
+        [Res.Spells.Spikes]        = DB.Trackable.SPELLS_SPIKE_DAMAGE,
+        [Res.Spells.Healing]       = DB.Trackable.SPELLS_HEALING,
+        [Res.Spells.DebuffRemoval] = DB.Trackable.SPELLS_DEBUFF_REMOVAL,
+        [Res.Spells.Buffs]         = DB.Trackable.SPELLS_BUFFS,
+        [Res.Spells.Enfeebling]    = DB.Trackable.SPELLS_ENFEEBLING,
+        [Res.Spells.DoT]           = DB.Trackable.SPELLS_DOT,
+        [Res.Spells.BuffSongs]     = DB.Trackable.SPELLS_BUFF_SONG,
+        [Res.Spells.Damaging]      = DB.Trackable.SPELLS_NUKING,
+    }
+
+    for list, trackable in pairs(spellTrackables) do
+        Res.Spells.MapSpellId(list, trackable)
+    end
+
+    Res.Spells.PetTrackableOverride =
+    {
+        [DB.Trackable.SPELLS_HEALING]    = DB.Trackable.PET_HEALING,
+        [DB.Trackable.SPELLS_BUFFS]      = DB.Trackable.PET_SPELL_BUFFS,
+        [DB.Trackable.SPELLS_ENFEEBLING] = DB.Trackable.PET_ENFEEBLING,
+        [DB.Trackable.SPELLS_DOT]        = DB.Trackable.PET_DOT,
+        [DB.Trackable.SPELLS_NUKING]     = DB.Trackable.PET_NUKING,
+    }
+end
+
+------------------------------------------------------------------------------------------------------
 -- Load settings when the addon is loaded.
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('load', 'load_cb', function()
@@ -141,6 +175,8 @@ ashita.events.register('load', 'load_cb', function()
     Timers.Start(Timers.Types.AUTOPAUSE)
     Timers.Start(Timers.Types.DPS)
     Timers.Start(Timers.Types.ZONE)
+
+    InitializeSpellResources()
 
     _Globals.Initialized = true
 end)

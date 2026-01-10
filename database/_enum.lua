@@ -50,6 +50,7 @@ DB.Trackable =
     SPELLS_GEOMANCY               = "Spells Geomancy",
     SPELLS_HP_DRAIN               = "Spells HP Drain",
     SPELLS_MP_DRAIN               = "Spells MP Drain",
+    SPELLS_TP_DRAIN               = "Spells TP Drain",
     SPELLS_SPIKE_DAMAGE           = "Spells Spike Damage",
     PET_OVERALL                   = "Pet Overall",
     PET_MELEE_OVERALL             = "Pet Melee",

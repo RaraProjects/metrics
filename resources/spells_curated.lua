@@ -1,5 +1,21 @@
 Res.Spells = { }
 
+-- Holds a spell trackable indexed by spell ID.
+Res.Spells.TrackableBySpellId   = { }
+Res.Spells.PetTrackableOverride = { }
+
+------------------------------------------------------------------------------------------------------
+-- Maps all spell IDs to a trackable at runtime for performance.
+------------------------------------------------------------------------------------------------------
+---@param spellList table        a spell list for Res.
+---@param trackable DB.Trackable name of the player that did the action.
+------------------------------------------------------------------------------------------------------
+Res.Spells.MapSpellId = function(spellList, trackable)
+    for spellId in pairs(spellList) do
+        Res.Spells.TrackableBySpellId[spellId] = trackable
+    end
+end
+
 -- Based off of spells.lua from Windower.
 Res.Spells.Enspell =
 {
@@ -329,7 +345,6 @@ Res.Spells.Enfeebling =
     [272] = {id=272,en="Absorb-CHR",ja="アブゾカリス",cast_time=0.5,element=7,icon_id=326,icon_id_nq=15,levels={[8]=33},mp_cost=33,prefix="/magic",range=12,recast=60,recast_id=272,requirements=2,skill=37,targets=32,type="BlackMagic"},
     [273] = {id=273,en="Sleepga",ja="スリプガ",cast_time=3,duration=60,element=7,icon_id=312,icon_id_nq=15,levels={[4]=31},mp_cost=38,prefix="/magic",range=12,recast=30,recast_id=273,requirements=0,skill=35,status=2,targets=32,type="BlackMagic"},
     [274] = {id=274,en="Sleepga II",ja="スリプガII",cast_time=3.5,duration=90,element=7,icon_id=313,icon_id_nq=15,levels={[4]=56},mp_cost=58,overwrites={253,273},prefix="/magic",range=12,recast=45,recast_id=274,requirements=0,skill=35,status=2,targets=32,type="BlackMagic"},
-    [275] = {id=275,en="Absorb-TP",ja="アブゾタック",cast_time=0.5,element=7,icon_id=326,icon_id_nq=15,levels={[8]=45},mp_cost=33,prefix="/magic",range=12,recast=60,recast_id=275,requirements=2,skill=37,targets=32,type="BlackMagic"},
     [276] = {id=276,en="Blind II",ja="ブラインII",cast_time=3,duration=180,element=7,icon_id=234,icon_id_nq=15,levels={[5]=75},mp_cost=31,overwrites={254,347,348,349},prefix="/magic",range=12,recast=20,recast_id=276,requirements=0,skill=35,status=5,targets=32,type="BlackMagic"},
     [286] = {id=286,en="Addle",ja="アドル",cast_time=2,duration=120,element=0,icon_id=171,icon_id_nq=0,levels={[3]=93,[5]=83},mp_cost=36,prefix="/magic",range=12,recast=20,recast_id=286,requirements=0,skill=35,status=21,targets=32,type="WhiteMagic"},
     [287] = {id=287,en="Klimaform",ja="虚誘掩殺の策",cast_time=3,duration=300,element=7,icon_id=551,icon_id_nq=15,levels={[20]=46},mp_cost=30,prefix="/magic",range=12,recast=52,recast_id=287,requirements=2,skill=37,status=407,targets=1,type="BlackMagic"},
@@ -465,6 +480,11 @@ Res.Spells.MpDrain =
     [521] = {id=521,en="MP Drainkiss",ja="MP吸収キッス",blu_points=4,cast_time=4,element=7,icon_id=-1,icon_id_nq=63,levels={[16]=42},mp_cost=20,prefix="/magic",range=2,recast=26,recast_id=521,requirements=0,skill=43,targets=32,type="BlueMagic"},
     [646] = {id=646,en="Magic Hammer",ja="マジックハンマー",blu_points=4,cast_time=4,element=6,icon_id=-1,icon_id_nq=62,levels={[16]=74},mp_cost=40,prefix="/magic",range=8,recast=52,recast_id=646,requirements=0,skill=43,targets=32,type="BlueMagic"},
     [881] = {id=881,en="Aspir III",ja="アスピルIII",cast_time=3,element=7,icon_id=657,icon_id_nq=15,levels={[4]=550,[21]=550},mp_cost=2,prefix="/magic",range=12,recast=26,recast_id=881,requirements=0,skill=37,targets=32,type="BlackMagic"},
+}
+
+Res.Spells.TpDrain =
+{
+    [275] = {id=275,en="Absorb-TP",ja="アブゾタック",cast_time=0.5,element=7,icon_id=326,icon_id_nq=15,levels={[8]=45},mp_cost=33,prefix="/magic",range=12,recast=60,recast_id=275,requirements=2,skill=37,targets=32,type="BlackMagic"},
 }
 
 -- Based off of spells.lua from Windower.

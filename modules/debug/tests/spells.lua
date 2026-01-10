@@ -1547,6 +1547,82 @@ Debug.Unit.Tests.Spells.Aspir_Burst = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Spells - Absorb TP
+------------------------------------------------------------------------------------------------------
+---@return table
+------------------------------------------------------------------------------------------------------
+Debug.Unit.Tests.Spells.AbsorbTP = function()
+    Debug.Unit.Reset()
+    local playerName = Debug.Unit.Mob.PLAYER.name
+    local targetName = Debug.Unit.Mob.ENEMY.name
+    local damage     = 100
+    local message    = Ashita.Message.ABSORB_TP
+    local actionID   = 275
+    local actionName = "Absorb-TP"
+    local mpCost     = 33
+
+    local payload = {}
+    table.insert(payload, Debug.Unit.Util.Build_Target_Packet(Debug.Unit.Mob.Target_ID, damage, nil, nil, message))
+    local action = Debug.Unit.Util.Build_Action(payload, actionID)
+    H.Spell.Action(action, Debug.Unit.Mob.PLAYER, nil, true)
+
+    local player = {}
+    local player_catalog = {}
+    local target_lists = {[1] = targetName, [2] = DB.Enum.ALL_MOBS}
+
+    player[playerName] = {}
+    player_catalog[playerName] = {}
+
+    for _, target_index in ipairs(target_lists) do
+        player[playerName][target_index] = {}
+        player[playerName][target_index][DB.Trackable.SPELLS_OVERALL] = {}
+        player[playerName][target_index][DB.Trackable.SPELLS_OVERALL][DB.Metric.MP_SPENT] = mpCost
+        player[playerName][target_index][DB.Trackable.SPELLS_TP_DRAIN] = {}
+        player[playerName][target_index][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.TOTAL] = damage
+        player[playerName][target_index][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.MIN] = damage
+        player[playerName][target_index][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.MAX] = damage
+        player[playerName][target_index][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.HITS_ON_USE] = 1
+        player[playerName][target_index][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.HITS_ON_TARGET] = 1
+        player[playerName][target_index][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[playerName][target_index][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player[playerName][target_index][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.MP_SPENT] = mpCost
+
+        player_catalog[playerName][target_index] = {}
+        player_catalog[playerName][target_index][actionName] = {}
+        player_catalog[playerName][target_index][actionName][DB.Trackable.SPELLS_TP_DRAIN] = {}
+        player_catalog[playerName][target_index][actionName][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.TOTAL] = damage
+        player_catalog[playerName][target_index][actionName][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.MIN] = damage
+        player_catalog[playerName][target_index][actionName][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.MAX] = damage
+        player_catalog[playerName][target_index][actionName][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[playerName][target_index][actionName][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.HITS_ON_TARGET] = 1
+        player_catalog[playerName][target_index][actionName][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[playerName][target_index][actionName][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.ATTEMPTS_ON_TARGET] = 1
+        player_catalog[playerName][target_index][actionName][DB.Trackable.SPELLS_TP_DRAIN][DB.Metric.MP_SPENT] = mpCost
+    end
+
+    local battle_log = {
+        player = playerName,
+        pet    = Blog.Enum.NO_PET,
+        damage = tostring(damage),
+        action = actionName,
+        note   = " ",
+    }
+
+    local misc = {}
+    misc["Total Damage"] = 0
+    misc["Total Damage No Skillchain"] = 0
+
+    local test_package = {
+        player = player,
+        player_catalog = player_catalog,
+        battle_log = battle_log,
+        misc = misc,
+    }
+
+    return Debug.Unit.Check_Result("Spells - Absorb TP", test_package)
+end
+
+------------------------------------------------------------------------------------------------------
 -- Spells - Enfeeble > Land
 ------------------------------------------------------------------------------------------------------
 ---@return table

@@ -110,6 +110,12 @@ H.Spell.Parse = function(spellData, actionData, actorMob, targetMob, ownerMob)
 
         H.Offense.CatalogHit(audits, trackable, damage, spellName, isBurst)
 
+    -- TP Drain doesn't do damage.
+    elseif H.Messages.TpDrain(messageId) then
+        local trackable = DB.Trackable.SPELLS_TP_DRAIN
+
+        H.Offense.CatalogHit(audits, trackable, damage, spellName)
+
     -- Check for magic bursts. Enfeebles shouldn't be caught in this because they are an earlier check.
     elseif H.Messages.Damaging(messageId) then
         H.Spell.Nuke(audits, spellName, damage, messageId, isBurst)
@@ -179,28 +185,10 @@ end
 ------------------------------------------------------------------------------------------------------
 H.Spell.Count = function(audits, spellId, spellName, hit, mpCost, targetCount)
     local isPet     = audits.pet_name ~= nil
-    local trackable = DB.Trackable.SPELLS_OVERALL
+    local trackable = Res.Spells.TrackableBySpellId[spellId] or DB.Trackable.SPELLS_OVERALL
 
-    -- Trackable Mapping
-    local trackables =
-    {
-        [Res.Spells.Healing]       = isPet and DB.Trackable.PET_HEALING     or DB.Trackable.SPELLS_HEALING,
-        [Res.Spells.DebuffRemoval] = DB.Trackable.SPELLS_DEBUFF_REMOVAL,
-        [Res.Spells.Buffs]         = isPet and DB.Trackable.PET_SPELL_BUFFS or DB.Trackable.SPELLS_BUFFS,
-        [Res.Spells.Damaging]      = isPet and DB.Trackable.PET_NUKING      or DB.Trackable.SPELLS_NUKING,
-        [Res.Spells.Enfeebling]    = isPet and DB.Trackable.PET_ENFEEBLING  or DB.Trackable.SPELLS_ENFEEBLING,
-        [Res.Spells.DoT]           = isPet and DB.Trackable.PET_DOT         or DB.Trackable.SPELLS_DOT,
-        [Res.Spells.Enspell]       = DB.Trackable.MELEE_ENSPELL,
-        [Res.Spells.Spikes]        = DB.Trackable.SPELLS_SPIKE_DAMAGE,
-        [Res.Spells.MpDrain]       = DB.Trackable.SPELLS_MP_DRAIN,
-        [Res.Spells.BuffSongs]    = DB.Trackable.SPELLS_BUFF_SONG,
-    }
-
-    for spellCategory, spellTrackable in pairs(trackables) do
-        if spellCategory[spellId] then
-            trackable = spellTrackable
-            break
-        end
+    if isPet then
+        trackable = Res.Spells.PetTrackableOverride[trackable] or trackable
     end
 
     if Ashita.Spell.Skill(spellId) == 44 then
@@ -250,10 +238,11 @@ H.Spell.Blog = function(audits, spellId, spellData, spellName, damage, isBurst, 
     end
 
     -- Nukes and MP Drains
-    if Res.Spells.Damaging[spellId] or Res.Spells.MpDrain[spellId] then
+    if Res.Spells.Damaging[spellId] or Res.Spells.MpDrain[spellId] or Res.Spells.TpDrain[spellId] then
         if isBurst then
             blogNote = Blog.Enum.MAGIC_BURST
         end
+
         appendTargetCount()
         Blog.Add(audits.player_name, audits.pet_name, Blog.ActionType.MAGIC_OFFENSIVE, spellName, damage, blogNote, spellData)
 

@@ -185,7 +185,8 @@ end
 ---@return boolean
 ------------------------------------------------------------------------------------------------------
 H.Messages.TpDrain = function(messageId)
-    return messageId == Ashita.Message.WEAPONSKILL_TP_DRAIN
+    return messageId == Ashita.Message.WEAPONSKILL_TP_DRAIN or
+           messageId == Ashita.Message.ABSORB_TP
 end
 
 ------------------------------------------------------------------------------------------------------
