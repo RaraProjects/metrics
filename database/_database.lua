@@ -154,7 +154,7 @@ end
 ------------------------------------------------------------------------------------------------------
 DB.GetTeamDamageByType = function(trackable)
 	local totalDamage  = 0
-	local sortedDamage = DB.Lists.GetSortedDamage()
+	local sortedDamage = DB.Lists.GetSortedDataDamage()
 	local rankCutoff   = Parse.Config.RankCutoff()
 
 	for rank, data in ipairs(sortedDamage) do

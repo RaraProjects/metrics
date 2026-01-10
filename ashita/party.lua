@@ -148,6 +148,8 @@ Ashita.Party.Refresh = function(playerName, node)
     -- Reset the refresh flag.
     Ashita.Party.NeedRefresh = false
 
+    DB.Lists.ResortDataDamage()
+
     return returnData
 end
 

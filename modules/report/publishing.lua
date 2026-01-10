@@ -19,7 +19,7 @@ Report.Publishing.Overall = function()
         -- Chat header.
         Ashita.Chat.AddToChat(Report.Publishing.ChatMode.Prefix, "Total Damage and Accuracy") coroutine.sleep(Report.Publishing.Delay)
 
-        local sortedDamage = DB.Lists.GetSortedDamage()
+        local sortedDamage = DB.Lists.GetSortedDataDamage()
 
         for rank, data in ipairs(sortedDamage) do
             if rank <= Parse.Config.RankCutoff() then
@@ -70,7 +70,7 @@ Report.Publishing.DamageByType = function(trackable)
         Ashita.Chat.AddToChat(Report.Publishing.ChatMode.Prefix, "Total " .. tostring(trackable) .. tostring(suffix)) coroutine.sleep(Report.Publishing.Delay)
 
         -- Loop through the data.
-        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDataDamage(trackable)
 
         for rank, data in ipairs(sortedDamage) do
             if rank <= Parse.Config.RankCutoff() then
@@ -125,7 +125,7 @@ Report.Publishing.Catalog = function(playerName, trackable)
         Ashita.Chat.AddToChat(Report.Publishing.ChatMode.Prefix, "WS: Total (Count) ~Average Min<Max") coroutine.sleep(Report.Publishing.Delay)
 
         -- Loop through weaponskill data.
-        local sortedCatalogDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+        local sortedCatalogDamage = DB.Lists.GetSortedPlayerCatalogDamage(playerName, trackable)
 
         for _, data in ipairs(sortedCatalogDamage) do
             local actionName = data[1]

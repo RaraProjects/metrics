@@ -142,6 +142,12 @@ DB.Catalog.UpdateDamage = function(playerName, targetName, trackable, damage, ac
 		-- Maximum damage.
 		DB.Catalog.UpdateMetric(DB.UpdateMode.SET, damage, audits, trackable, actionName, maxMetric)
     end
+
+    DB.Lists.ResortPlayerCatalogDamage(playerName, trackable)
+
+    if petName then
+        DB.Lists.ResortPetCatalogDamage(playerName, petName)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -200,12 +206,14 @@ DB.Catalog.UpdateMetric = function(mode, value, audits, trackable, actionName, m
 	for _, updateTarget in ipairs(updateList) do
 		if mode == DB.UpdateMode.INC then
 			DB.Catalog.Inc(value, playerName, updateTarget, actionName, trackable, metric)
+
 			if petName then
 				DB.PetCatalog.Inc(value, playerName, petName, updateTarget, actionName, trackable, metric)
 			end
 
 		elseif mode == DB.UpdateMode.SET then
 			DB.Catalog.Set(value, playerName, updateTarget, actionName, trackable, metric)
+
 			if petName then
 				DB.PetCatalog.Set(value, playerName, petName, updateTarget, actionName, trackable, metric)
 			end

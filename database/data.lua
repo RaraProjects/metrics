@@ -108,6 +108,7 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	end
 
 	DB.Data.Initialize(playerName, targetName)
+
 	if petName then
 		DB.PetData.Initialize(playerName, petName, targetName)
 	end
@@ -122,6 +123,7 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 			if petName then
 				DB.PetData.Inc(value, playerName, petName, updateTarget, trackable, metric)
 			end
+
 		elseif mode == DB.UpdateMode.SET then
 			DB.Data.Set(value, playerName, updateTarget, trackable, metric)
 
@@ -151,12 +153,14 @@ end
 DB.Data.UpdateDamage = function(audits, trackable, damage, isCriticalHit)
 	-- Increment grand totals if necessary. There is an all damage track and a no-skillchain track.
     if DB.IsTotalDamageTrackable(trackable) then
-    	DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
+        DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE, DB.Metric.TOTAL)
 		DB.TotalDamage = DB.TotalDamage + damage
+        DB.Lists.ResortDataDamage(DB.Trackable.TOTAL_DAMAGE)
 
 		if trackable ~= DB.Trackable.SKILLCHAIN then
 			DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN, DB.Metric.TOTAL)
 			DB.TotalDamageNoSkillchain = DB.TotalDamageNoSkillchain + damage
+            DB.Lists.ResortDataDamage(DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN)
 		end
     end
 
@@ -200,6 +204,13 @@ DB.Data.UpdateDamageBasic = function(audits, trackable, damage, isCriticalHit)
 	if damage > DB.Data.Get(audits.player_name, trackable, maxMetric, audits.target_name) then
 		DB.Data.Update(DB.UpdateMode.SET, damage, audits, trackable, maxMetric)
 	end
+
+    -- Resort damage lists.
+    DB.Lists.ResortDataDamage(trackable)
+
+    if audits.pet_name then
+        DB.Lists.ResortPetDamage(audits.player_name)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

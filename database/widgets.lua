@@ -116,6 +116,7 @@ DB.Widgets.DropdownMobFilter = function()
             if UI.Selectable(mobName, isSelected) then
                 DB.Widgets.DropdownMobFilterIndex = index
                 DB.Widgets.DropdownMobFilterFocus = mobName
+                DB.Lists.ResortDataDamage()
             end
 
             if isSelected then

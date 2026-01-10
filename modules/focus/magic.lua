@@ -172,7 +172,7 @@ Focus.Magic.DamagingSpell = function(playerName, trackable, header, makeBrief, h
         if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,        trackable, metricMax) end
         WindowManager.TableRowColor(1)
 
-        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+        local sortedDamage = DB.Lists.GetSortedPlayerCatalogDamage(playerName, trackable)
 
         for _, data in ipairs(sortedDamage) do
             local actionName = data[1]
@@ -263,7 +263,7 @@ Focus.Magic.NoDamageSpell = function(playerName, trackable, header, makeBrief)
         if not makeBrief then UI.TableNextColumn() Column.Damage.ByType(playerName,        trackable, DB.Metric.MAX) end
         WindowManager.TableRowColor(1)
 
-        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+        local sortedDamage = DB.Lists.GetSortedPlayerCatalogDamage(playerName, trackable)
 
         for _, data in ipairs(sortedDamage) do
             local actionName = data[1]
@@ -323,7 +323,7 @@ Focus.Magic.Debuff = function(playerName, hideMP)
         if not hideMP then UI.TableNextColumn() Column.Spell.MpUsed(playerName, trackable) end
         WindowManager.TableRowColor(1)
 
-        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+        local sortedDamage = DB.Lists.GetSortedPlayerCatalogDamage(playerName, trackable)
 
         for _, data in ipairs(sortedDamage) do
             local actionName = data[1]
@@ -374,7 +374,7 @@ Focus.Magic.BasicSpell = function(playerName, trackable, header, noMP)
         UI.TableNextColumn() Column.Damage.Attempts(playerName, trackable)
         WindowManager.TableRowColor(1)
 
-        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+        local sortedDamage = DB.Lists.GetSortedPlayerCatalogDamage(playerName, trackable)
 
         for _, data in ipairs(sortedDamage) do
             local actionName = data[1]

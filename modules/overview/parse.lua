@@ -88,7 +88,7 @@ Overview.Parse.Melee = function()
         UI.TableSetupColumn("Maximum",  colFlags, width)
         UI.TableHeadersRow()
 
-        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDataDamage(trackable)
         local row = 1
 
         for rank, data in ipairs(sortedDamage) do
@@ -152,7 +152,7 @@ Overview.Parse.Ranged = function()
         UI.TableSetupColumn("Maximum",   colFlags, width)
         UI.TableHeadersRow()
 
-        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDataDamage(trackable)
         local row = 1
 
         for rank, data in ipairs(sortedDamage) do
@@ -218,7 +218,7 @@ Overview.Parse.Weaponskills = function()
         UI.TableSetupColumn("Maximum",     colFlags, width)
         UI.TableHeadersRow()
 
-        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDataDamage(trackable)
         local row = 1
 
         for rank, data in ipairs(sortedDamage) do
@@ -244,7 +244,7 @@ Overview.Parse.Weaponskills = function()
 
                     -- Specific Weaponskills
                     if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][playerName] then
-                        local sortedCatalogDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+                        local sortedCatalogDamage = DB.Lists.GetSortedPlayerCatalogDamage(playerName, trackable)
 
                         for _, singleData in ipairs(sortedCatalogDamage) do
                             local actionName = singleData[1]
@@ -305,7 +305,7 @@ Overview.Parse.Nukes = function()
         UI.TableSetupColumn("Maximum", colFlags, width)
         UI.TableHeadersRow()
 
-        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDataDamage(trackable)
         local row = 1
 
         for rank, data in ipairs(sortedDamage) do
@@ -330,7 +330,7 @@ Overview.Parse.Nukes = function()
 
                     -- Specific Nuke Spells
                     if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][playerName] then
-                        local sortedCatalogDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+                        local sortedCatalogDamage = DB.Lists.GetSortedPlayerCatalogDamage(playerName, trackable)
 
                         for _, singleData in ipairs(sortedCatalogDamage) do
                             local actionName = singleData[1]
@@ -388,7 +388,7 @@ Overview.Parse.Pets = function()
         UI.TableSetupColumn("%TP Move", colFlags, width)
         UI.TableHeadersRow()
 
-        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDataDamage(trackable)
         local row = 1
 
         for rank, data in ipairs(sortedDamage) do
@@ -466,7 +466,7 @@ Overview.Parse.Healing = function()
         UI.TableSetupColumn("Maximum",  colFlags, width)
         UI.TableHeadersRow()
 
-        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDataDamage(trackable)
         local row = 1
 
         for rank, data in ipairs(sortedDamage) do
@@ -491,7 +491,7 @@ Overview.Parse.Healing = function()
 
                     -- Specific Healing Spells
                     if DB.Tracking.Trackables[trackable] and DB.Tracking.Trackables[trackable][playerName] then
-                        local sortedCatalogDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+                        local sortedCatalogDamage = DB.Lists.GetSortedPlayerCatalogDamage(playerName, trackable)
 
                         for _, singleData in ipairs(sortedCatalogDamage) do
                             local actionName = singleData[1]
@@ -550,7 +550,7 @@ Overview.Parse.Defense = function()
         UI.TableSetupColumn("%Evasion", colFlags, width)
         UI.TableHeadersRow()
 
-        local sortedDamage = DB.Lists.GetSortedDamage(trackable)
+        local sortedDamage = DB.Lists.GetSortedDataDamage(trackable)
         local row = 1
 
         for rank, data in ipairs(sortedDamage) do

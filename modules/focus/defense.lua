@@ -272,7 +272,7 @@ Focus.Defense.HealingReceived = function(playerName)
         UI.TableNextColumn() Column.Spell.MpUsed(playerName, trackable)
         WindowManager.TableRowColor(1)
 
-        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+        local sortedDamage = DB.Lists.GetSortedPlayerCatalogDamage(playerName, trackable)
 
         for _, data in ipairs(sortedDamage) do
             local actionName = data[1]
@@ -337,7 +337,7 @@ Focus.Defense.TpMove = function(playerName, trackable)
         UI.TableNextColumn() Column.Damage.ByType(playerName,  trackable, DB.Metric.MAX)
         WindowManager.TableRowColor(1)
 
-        local sortedDamage = DB.Lists.GetSortedCatalogDamage(playerName, trackable)
+        local sortedDamage = DB.Lists.GetSortedPlayerCatalogDamage(playerName, trackable)
 
         for _, data in ipairs(sortedDamage) do
             local actionName = data[1]

@@ -14,8 +14,12 @@ H.Offense.GrandTotals = function(audits, damage, ownerMob)
     DB.TotalDamage = DB.TotalDamage + damage
     DB.TotalDamageNoSkillchain = DB.TotalDamageNoSkillchain + damage
 
+    DB.Lists.ResortDataDamage(DB.Trackable.TOTAL_DAMAGE)
+    DB.Lists.ResortDataDamage(DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN)
+
     if ownerMob then
         DB.Data.Update(DB.UpdateMode.INC, damage, audits, DB.Trackable.PET_OVERALL, DB.Metric.TOTAL)
+        DB.Lists.ResortDataDamage(DB.Trackable.PET_OVERALL)
     end
 end
 
