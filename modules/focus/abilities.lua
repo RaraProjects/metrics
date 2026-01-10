@@ -48,7 +48,7 @@ end
 ---@param makeBrief? boolean
 ------------------------------------------------------------------------------------------------------
 Focus.Abilities.Damaging = function(playerName, trackable, header, makeBrief)
-    if not DB.Tracking.Trackables[trackable] or not not DB.Tracking.Trackables[trackable][playerName] then
+    if not DB.Tracking.Trackables[trackable] or not DB.Tracking.Trackables[trackable][playerName] then
         return nil
     end
 

@@ -96,7 +96,7 @@ Debug.Content = function()
         end
 
     elseif Debug.Active_Mode == Debug.Modes.DATA_VIEWER then
-        Debug.Data_View.Populate()
+        Debug.DataView.Populate()
 
     elseif Debug.Active_Mode == Debug.Modes.DPS then
         Debug.DPS.Populate()
