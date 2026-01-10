@@ -88,6 +88,7 @@ end
 -- Loads the focus data to the screen.
 ------------------------------------------------------------------------------------------------------
 Focus.Content = function()
+    local perfStart  = Socket.gettime()
     local playerName = DB.Widgets.GetPlayerFocus()
     local unselected = playerName == DB.Enum.NONE
 
@@ -145,6 +146,8 @@ Focus.Content = function()
 
         UI.EndTabBar()
     end
+
+    Perf.Capture(Perf.Enums.UI_FOCUS, perfStart)
 end
 
 ------------------------------------------------------------------------------------------------------

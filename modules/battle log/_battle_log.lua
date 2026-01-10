@@ -67,6 +67,8 @@ Blog.Content = function()
         return nil
     end
 
+    local perfStart = Socket.gettime()
+
     -- Table dimensions.
     local visibleLength = Blog.Settings.Visible_Length
     local tableSize     = { 0, Blog.Settings.Line_Height * (visibleLength + 1) }    -- One for header row.
@@ -119,6 +121,8 @@ Blog.Content = function()
             UI.Text(string.format("Showing: %d", count))
         end
     end
+
+    Perf.Capture(Perf.Enums.UI_BATTLE_LOG, perfStart)
 end
 
 ------------------------------------------------------------------------------------------------------

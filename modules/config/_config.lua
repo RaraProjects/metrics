@@ -102,6 +102,11 @@ Config.Display = function()
             UI.EndTabItem()
         end
 
+        if UI.BeginTabItem("Performance", tabFlags) then
+            Perf.Populate()
+            UI.EndTabItem()
+        end
+
         UI.EndTabBar()
     end
 end

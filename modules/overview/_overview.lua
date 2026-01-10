@@ -42,6 +42,8 @@ end
 -- Opens a new window to show all tabs as a vertical column.
 ------------------------------------------------------------------------------------------------------
 Overview.Content = function()
+    local perfStart = Socket.gettime()
+
     if Overview.ActiveMode == Overview.Modes.PARSE then
         Overview.Parse.Content()
 
@@ -58,6 +60,8 @@ Overview.Content = function()
     else
         UI.Text("No content.")
     end
+
+    Perf.Capture(Perf.Enums.UI_OVERVIEW, perfStart)
 end
 
 ------------------------------------------------------------------------------------------------------

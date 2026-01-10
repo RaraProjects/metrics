@@ -74,6 +74,8 @@ end
 -- Populates the XP window.
 -- ------------------------------------------------------------------------------------------------------
 XP.Content = function()
+    local perfStart = Socket.gettime()
+
     -- Settings buttons don't show when mini mode is enabled.
     if not XP.Settings.Mini_Mode_Enabled then
         XP.Config.SettingsButton()            -- Settings
@@ -96,6 +98,8 @@ XP.Content = function()
             UI.Text("Loading...")
         end
     end
+
+    Perf.Capture(Perf.Enums.UI_EXP, perfStart)
 end
 
 -- ------------------------------------------------------------------------------------------------------

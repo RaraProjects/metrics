@@ -67,6 +67,8 @@ Parse.Content = function()
         return nil
     end
 
+    local perfStart = Socket.gettime()
+
     -- The full toolbar is only available in full mode.
     Parse.Toolbar()
 
@@ -83,6 +85,8 @@ Parse.Content = function()
 
         UI.EndTable()
     end
+
+    Perf.Capture(Perf.Enums.UI_PARSE, perfStart)
 end
 
 ------------------------------------------------------------------------------------------------------

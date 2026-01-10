@@ -85,6 +85,11 @@ Debug.Content = function()
 
         UI.TableNextColumn() if UI.Button(Debug.Modes.JOB_COLORS)  then Debug.Active_Mode = Debug.Modes.JOB_COLORS end
 
+        UI.TableNextColumn()
+        if UI.Checkbox("Reset Unit", { Debug.Unit.ResetEachTime }) then
+            Debug.Unit.ResetEachTime = not Debug.Unit.ResetEachTime
+        end
+
         UI.EndTable()
     end
 

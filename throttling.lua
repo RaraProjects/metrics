@@ -1,7 +1,7 @@
 Throttle = { }
 
 Throttle.Enabled     = true
-Throttle.Mod         = 15
+Throttle.Mod         = 30
 Throttle.Tick        = 0
 Throttle.NeedRefresh = true
 

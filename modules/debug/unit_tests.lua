@@ -8,6 +8,7 @@ Debug.Unit.Results            = { }
 Debug.Unit.Mob                = { }
 Debug.Unit.Active             = false
 Debug.Unit.Has_Pet            = false
+Debug.Unit.ResetEachTime      = true
 
 Debug.Unit.Mob.Target_ID     = 3333333
 Debug.Unit.Mob.Target_ID_Two = 4444444
@@ -80,9 +81,11 @@ require("modules.debug.tests.tp_action")
 -- Resets modules between each test.
 ------------------------------------------------------------------------------------------------------
 Debug.Unit.Reset = function()
-    DB.Initialize(true)
-    Blog.Initialize()
-    XP.Initialize()
+    if Debug.Unit.ResetEachTime then
+        DB.Initialize(true)
+        Blog.Initialize()
+        XP.Initialize()
+    end
 end
 
 ------------------------------------------------------------------------------------------------------

@@ -131,26 +131,34 @@ end
 ---@param mobSelfBuff        boolean
 ------------------------------------------------------------------------------------------------------
 H.PickActionCategory = function(action, actorMob, targetPetOwnerMob, petOwnerMob, isOffense, isDefense, mobSelfBuff)
-    local category = action.category
+    local perfStart = Socket.gettime()
+    local perfType  = Perf.Enums.PARSE_GENERAL
+    local category  = action.category
 
     if category == H.ActionCategory.MELEE then
         if isOffense then
             H.Melee.Action(action, actorMob, petOwnerMob, isOffense)
+            perfType = Perf.Enums.PARSE_MELEE
         elseif isDefense then
             H.MeleeDef.Action(action, actorMob, targetPetOwnerMob, isDefense)
+            perfType = Perf.Enums.PARSE_MELEE_DEF
         end
 
     elseif category == H.ActionCategory.FINISH_RANGED then
         H.Ranged.Action(action, actorMob, isOffense)
+        perfType = Perf.Enums.PARSE_RANGED
 
     elseif category == H.ActionCategory.FINISH_WEAPONSKILL then
         H.TP.Action(action, actorMob, isOffense)
+        perfType = Perf.Enums.PARSE_PLAYER_TP
 
     elseif category == H.ActionCategory.FINISH_CASTING then
         if isOffense then
             H.Spell.Action(action, actorMob, petOwnerMob, isOffense)
+            perfType = Perf.Enums.PARSE_SPELL
         elseif isDefense then
             H.SpellDef.Action(action, actorMob, targetPetOwnerMob, isDefense)
+            perfType = Perf.Enums.PARSE_SPELL_DEF
         elseif mobSelfBuff then
             H.SpellDef.MobSelfTarget(action, actorMob)
         end
@@ -160,6 +168,7 @@ H.PickActionCategory = function(action, actorMob, targetPetOwnerMob, petOwnerMob
 
     elseif category == H.ActionCategory.JOB_ABILITY then
         H.Ability.Action(action, actorMob, isOffense)
+        perfType = Perf.Enums.PARSE_ABILITY
 
     elseif category == H.ActionCategory.BEGIN_TP then
         H.TP.BeginMonsterAction(action, actorMob, isOffense)
@@ -175,6 +184,7 @@ H.PickActionCategory = function(action, actorMob, targetPetOwnerMob, petOwnerMob
             H.TP.MonsterAction(action, actorMob, isOffense)
         elseif isDefense then
             H.TpDef.MonsterAction(action, actorMob, petOwnerMob, isDefense)
+            perfType = Perf.Enums.PARSE_MOB_TP
         elseif mobSelfBuff then
             H.TpDef.MobSelfTarget(action, actorMob)
         end
@@ -191,6 +201,8 @@ H.PickActionCategory = function(action, actorMob, targetPetOwnerMob, petOwnerMob
     elseif category == H.ActionCategory.RUNEFENCER_ABILITY then
         H.Ability.Action(action, actorMob, isOffense)
     end
+
+    Perf.Capture(perfType, perfStart)
 end
 
 ------------------------------------------------------------------------------------------------------

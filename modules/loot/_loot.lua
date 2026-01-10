@@ -37,6 +37,8 @@ end
 -- Loads the loot data to the screen.
 ------------------------------------------------------------------------------------------------------
 Loot.Content = function()
+    local perfStart = Socket.gettime()
+
     Loot.Config.LootModeDropdown()
     Loot.Config.ItemFilterInput()
 
@@ -52,6 +54,8 @@ Loot.Content = function()
     if displayFunction and type(displayFunction) == "function" then
         displayFunction()
     end
+
+    Perf.Capture(Perf.Enums.UI_LOOT, perfStart)
 end
 
 -- ------------------------------------------------------------------------------------------------------
