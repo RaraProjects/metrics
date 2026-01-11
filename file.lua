@@ -304,11 +304,158 @@ File.SaveLoot = function()
 end
 
 -- ------------------------------------------------------------------------------------------------------
+-- Helper function for crawling through tables.
+-- ------------------------------------------------------------------------------------------------------
+---@param parent table
+---@param key string
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+local getOrCreate = function(parent, key)
+    local child = parent[key]
+
+    if not child then
+        child = { }
+        parent[key] = child
+    end
+
+    return child
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Import specific pet catalog data row.
+-- ------------------------------------------------------------------------------------------------------
+---@param player    string
+---@param pet       string
+---@param target    string
+---@param action    string
+---@param trackable string
+---@param metric    string
+---@param value     any
+---@param sortTable table
+-- ------------------------------------------------------------------------------------------------------
+local importPetCatalogRow = function(player, pet, target, action, trackable, metric, value, sortTable)
+    local catalog  = DB.PetParseCatalog
+    local tracking = DB.Tracking.PetTrackables
+
+    DB.PetCatalog.Initialize(player, pet, target, action, trackable)
+
+    -- Database
+    local db = getOrCreate(catalog, player)
+    db = getOrCreate(db, pet)
+    db = getOrCreate(db, target)
+    db = getOrCreate(db, action)
+    db = getOrCreate(db, trackable)
+    db[metric] = value
+
+    -- Needed for catalog actions to show in Focus.
+    local sort = getOrCreate(tracking, trackable)
+    sort = getOrCreate(sort, player)
+    sort = getOrCreate(sort, pet)
+    sort[action] = true
+
+    sortTable[player] = sortTable[player] or { }
+    sortTable[player][pet] = true
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Import specific catalog data row.
+-- ------------------------------------------------------------------------------------------------------
+---@param player    string
+---@param pet       string
+---@param target    string
+---@param action    string
+---@param trackable string
+---@param metric    string
+---@param value     any
+---@param sortTable table
+-- ------------------------------------------------------------------------------------------------------
+local importCatalogRow = function(player, pet, target, action, trackable, metric, value, sortTable)
+    local catalog   = DB.ParseCatalog
+    local tracking  = DB.Tracking.Trackables
+
+    DB.Catalog.Initialize(player, target, action, trackable, pet)
+
+    -- Database
+    local db = getOrCreate(catalog, player)
+    db = getOrCreate(db, target)
+    db = getOrCreate(db, action)
+    db = getOrCreate(db, trackable)
+    db[metric] = value
+
+    -- Needed for catalog actions to show in Focus.
+    local sort = getOrCreate(tracking, trackable)
+    sort = getOrCreate(sort, player)
+    sort[action] = true
+
+    sortTable[trackable] = sortTable[trackable] or { }
+    sortTable[trackable][player] = true
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Import specific pet data row.
+-- ------------------------------------------------------------------------------------------------------
+---@param player    string
+---@param pet       string
+---@param target    string
+---@param trackable string
+---@param metric    string
+---@param value     any
+---@param sortTable table
+-- ------------------------------------------------------------------------------------------------------
+local importPetDataRow = function(player, pet, target, trackable, metric, value, sortTable)
+    local parse     = DB.PetParse
+    local initPets  = DB.Tracking.InitializedPets
+
+    DB.PetData.Initialize(player, pet, target)
+
+    -- Database
+    local db = getOrCreate(parse, player)
+    db = getOrCreate(db, pet)
+    db = getOrCreate(db, target)
+    db = getOrCreate(db, trackable)
+    db[metric] = value
+
+    -- Needed to populate lists in Focus.
+    local sort = getOrCreate(initPets, player)
+    sort[pet] = true
+
+    sortTable[player] = true
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Import data row.
+-- ------------------------------------------------------------------------------------------------------
+---@param player    string
+---@param target    string
+---@param trackable string
+---@param metric    string
+---@param value     any
+---@param sortTable table
+-- ------------------------------------------------------------------------------------------------------
+local importDataRow = function(player, target, trackable, metric, value, sortTable)
+    local parse = DB.Parse
+
+    DB.Data.Initialize(player, target)
+
+    local db = getOrCreate(parse, player)
+    db = getOrCreate(db, target)
+    db = getOrCreate(db, trackable)
+    db[metric] = value
+
+    sortTable[trackable] = true
+end
+
+-- ------------------------------------------------------------------------------------------------------
 -- Import data into Metrics.
 -- ------------------------------------------------------------------------------------------------------
 ---@param path string
 -- ------------------------------------------------------------------------------------------------------
 File.Import = function(path)
+    local sortPetCatalog = { }
+    local sortCatalog    = { }
+    local sortPets       = { }
+    local sortTrackables = { }
+
     local file = io.open(path, "r")
 
     if file then
@@ -317,65 +464,37 @@ File.Import = function(path)
         local isHeader = true
 
         for line in file:lines() do
-            line = (line or ""):gsub("\r$", "") -- ???
+            line = (line or ""):gsub("\r$", "")
 
             if line ~= "" then
-
                 -- Skip the first line.
                 if isHeader then
                     isHeader = false
                 else
                     local fields = File.SplitCSV(line)
-                    local data =
-                    {
-                        Player    = fields[1] or "",
-                        Pet       = fields[2] or "",
-                        Target    = fields[3] or "",
-                        Action    = fields[4] or "",
-                        Trackable = fields[5] or "",
-                        Metric    = fields[6] or "",
-                        Value     = tonumber(fields[7] or "") or 0
-                    }
 
-                    local hasAction = data.Action ~= ""
-                    local hasPet    = data.Pet    ~= ""
+                    local player    = fields[1] or ""
+                    local pet       = fields[2] or ""
+                    local target    = fields[3] or ""
+                    local action    = fields[4] or ""
+                    local trackable = fields[5] or ""
+                    local metric    = fields[6] or ""
+                    local value     = tonumber(fields[7] or "") or 0
+
+                    local hasAction = action ~= ""
+                    local hasPet    = pet    ~= ""
 
                     if hasAction and hasPet then
-                        DB.PetCatalog.Initialize (data.Player, data.Pet, data.Target, data.Action, data.Trackable)
-                        if not DB.PetParseCatalog[data.Player] then DB.PetParseCatalog[data.Player] = { } end
-                        if not DB.PetParseCatalog[data.Player][data.Pet] then DB.PetParseCatalog[data.Player][data.Pet] = { } end
-                        if not DB.PetParseCatalog[data.Player][data.Pet][data.Target] then DB.PetParseCatalog[data.Player][data.Pet][data.Target] = { } end
-                        if not DB.PetParseCatalog[data.Player][data.Pet][data.Target][data.Action] then DB.PetParseCatalog[data.Player][data.Pet][data.Target][data.Action] = { } end
-                        if not DB.PetParseCatalog[data.Player][data.Pet][data.Target][data.Action][data.Trackable] then DB.PetParseCatalog[data.Player][data.Pet][data.Target][data.Action][data.Trackable] = { } end
-                        if not DB.PetParseCatalog[data.Player][data.Pet][data.Target][data.Action][data.Trackable][data.Metric] then DB.PetParseCatalog[data.Player][data.Pet][data.Target][data.Action][data.Trackable][data.Metric] = { } end
-                        DB.PetParseCatalog[data.Player][data.Pet][data.Target][data.Action][data.Trackable][data.Metric] = data.Value
+                        importPetCatalogRow(player, pet, target, action, trackable, metric, value, sortPetCatalog)
 
                     elseif hasAction then
-                        DB.Catalog.Initialize(data.Player, data.Target, data.Action, data.Trackable, data.Pet)
-
-                        if not DB.ParseCatalog[data.Player] then DB.ParseCatalog[data.Player] = { } end
-                        if not DB.ParseCatalog[data.Player][data.Target] then DB.ParseCatalog[data.Player][data.Target] = { } end
-                        if not DB.ParseCatalog[data.Player][data.Target][data.Action] then DB.ParseCatalog[data.Player][data.Target][data.Action] = { } end
-                        if not DB.ParseCatalog[data.Player][data.Target][data.Action][data.Trackable] then DB.ParseCatalog[data.Player][data.Target][data.Action][data.Trackable] = { } end
-                        if not DB.ParseCatalog[data.Player][data.Target][data.Action][data.Trackable][data.Metric] then DB.ParseCatalog[data.Player][data.Target][data.Action][data.Trackable][data.Metric] = { } end
-                        DB.ParseCatalog[data.Player][data.Target][data.Action][data.Trackable][data.Metric] = data.Value
+                        importCatalogRow(player, pet, target, action, trackable, metric, value, sortCatalog)
 
                     elseif hasPet then
-                        DB.PetData.Initialize(data.Player, data.Pet, data.Target)
-                        if not DB.PetParse[data.Player] then DB.PetParse[data.Player] = { } end
-                        if not DB.PetParse[data.Player][data.Pet] then DB.PetParse[data.Player][data.Pet] = { } end
-                        if not DB.PetParse[data.Player][data.Pet][data.Target] then DB.PetParse[data.Player][data.Pet][data.Target] = { } end
-                        if not DB.PetParse[data.Player][data.Pet][data.Target][data.Trackable] then DB.PetParse[data.Player][data.Pet][data.Target][data.Trackable] = { } end
-                        if not DB.PetParse[data.Player][data.Pet][data.Target][data.Trackable][data.Metric] then DB.PetParse[data.Player][data.Pet][data.Target][data.Trackable][data.Metric] = { } end
-                        DB.PetParse[data.Player][data.Pet][data.Target][data.Trackable][data.Metric] = data.Value
+                        importPetDataRow(player, pet, target, trackable, metric, value, sortPets)
 
                     else
-                        DB.Data.Initialize(data.Player, data.Target)
-                        if not DB.Parse[data.Player] then DB.Parse[data.Player] = { } end
-                        if not DB.Parse[data.Player][data.Target] then DB.Parse[data.Player][data.Target] = { } end
-                        if not DB.Parse[data.Player][data.Target][data.Trackable] then DB.Parse[data.Player][data.Target][data.Trackable] = { } end
-                        if not DB.Parse[data.Player][data.Target][data.Trackable][data.Metric] then DB.Parse[data.Player][data.Target][data.Trackable][data.Metric] = { } end
-                        DB.Parse[data.Player][data.Target][data.Trackable][data.Metric] = data.Value
+                        importDataRow(player, target, trackable, metric, value, sortTrackables)
                     end
                 end
             end
@@ -384,5 +503,30 @@ File.Import = function(path)
         file:close()
     else
         print(string.format("Failed to open file: %s", path))
+    end
+
+    -- Refresh the sorted list caches.
+    local lists = DB.Lists
+    lists.ResortDataDamage(DB.Trackable.TOTAL_DAMAGE)
+    lists.ResortDataDamage(DB.Trackable.TOTAL_DAMAGE_NO_SKILLCHAIN)
+
+    for player, pets in pairs(sortPetCatalog) do
+        for pet, _ in pairs(pets) do
+            lists.ResortPetCatalogDamage(player, pet)
+        end
+    end
+
+    for trackable, players in pairs(sortCatalog) do
+        for player, _ in pairs(players) do
+            lists.ResortPlayerCatalogDamage(player, trackable)
+        end
+    end
+
+    for trackable, _ in pairs(sortTrackables) do
+        lists.ResortDataDamage(trackable)
+    end
+
+    for player, _ in pairs(sortPets) do
+        lists.ResortPetDamage(player)
     end
 end
