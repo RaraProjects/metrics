@@ -10,6 +10,7 @@ local apiURL             = 'https://api.github.com/repos/RaraProjects/metrics/re
 local maxReleaseCount    = 3
 local versionDataPulled  = false
 local recentDownload     = nil
+local hasTestRelease     = false
 
 -- ------------------------------------------------------------------------------------------------------
 -- Gets asset data from the Github JSON results.
@@ -122,37 +123,81 @@ local openFolder = function(path)
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Displays the version table.
+-- Shows the first version update screen.
 -- ------------------------------------------------------------------------------------------------------
-Version.Populate = function()
+local uiGetGitHubData = function()
     if versionDataPulled == false then
-        UI.Text('Clicking this button will pull data from Github.')
-        UI.Text('You may experience a very short stutter in game.')
-        UI.Text('This will not download files to your computer.')
+        UI.Text('Clicking this button will...')
+        UI.Text('- Check Github for recent Metrics releases.')
+        UI.Text('- Likely cause a very short system stutter.')
+        UI.Text('- Show you a table of Metrics versions (in game).')
+        UI.Text('- NOT download files to your computer.')
+        UI.Text('')
 
-        if UI.Button('Check version data from Github.') then
+        if UI.Button('Check for new Metrics releases.') then
             Version.PullGithubData()
             versionDataPulled = true
         end
     end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Basic install instructions.
+-- ------------------------------------------------------------------------------------------------------
+local basicInstallInstructions = function()
+    UI.Text('1. Click Addon Folder button above to open your addons folder.')
+    UI.Text('2. Move your metrics.zip file to addons folder.')
+    UI.Text('3. Unzip metrics.zip.')
+    UI.Text('4. You can overwrite the metrics files.')
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Instructions that show after a download has taken place.
+-- ------------------------------------------------------------------------------------------------------
+local uiInstructions = function()
+    if recentDownload then
+        UI.Text('')
+        UI.Text(string.format('You downloaded: %s! Next steps...', recentDownload))
+        basicInstallInstructions()
+    elseif hasTestRelease then
+        UI.Text('')
+        UI.Text('Brave soul! You downloaded the cutting edge development. Next steps...')
+        basicInstallInstructions()
+        UI.Text('5. If something breaks (badly) fall back to a release or pre-release.')
+        UI.Text('6. Leave a comment in the Metrics Discord or Github Issues page.')
+    end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Displays the version table.
+-- ------------------------------------------------------------------------------------------------------
+Version.Populate = function()
+    uiGetGitHubData()
 
     if versionDataPulled == false then
         return
     end
 
     UI.Text(string.format('Your version is: %s.', addon.version))
-    UI.Text('Clicking \'Get\' will download the addon zip file to your computer.')
-    UI.Text('You will then get a button to take you to your addon folder.')
+    if UI.Button('Ashita Addon Folder - Quick Access') then
+        openFolder(string.format('%saddons\\', AshitaCore:GetInstallPath()))
+    end
+
+    UI.Text('')
+    UI.Text('Clicking...')
+    UI.Text('- Doc: Open release info on Github website.')
+    UI.Text('- Get: DOWNLOAD the release .zip file.')
     UI.Text('')
 
     local showReleaseColor = true
     local colFlags         = Column.Flags.None
 
-    if UI.BeginTable('Versions', 5, Focus.Catalog.TableFlags) then
+    if UI.BeginTable('Versions', 6, Focus.Catalog.TableFlags) then
         UI.TableSetupColumn('Version',      colFlags)
         UI.TableSetupColumn('Pre-release?', colFlags)
-        UI.TableSetupColumn('Date',         colFlags)
+        UI.TableSetupColumn('Update Date',  colFlags)
         UI.TableSetupColumn('Downloads',    colFlags)
+        UI.TableSetupColumn('Info',         colFlags)
         UI.TableSetupColumn('DL',           colFlags)
         UI.TableHeadersRow()
 
@@ -163,11 +208,19 @@ Version.Populate = function()
             UI.TableNextColumn() UI.Text(string.format('%s', release.downloadCount))
 
             UI.TableNextColumn()
+            UI.PushID(string.format('Doc %s', release.version))
+            if UI.SmallButton('Doc') then
+                openUrl(release.htmlURL)
+            end
+            UI.PopID()
 
+
+            UI.TableNextColumn()
             UI.PushID(string.format('Get %s', release.version))
             if UI.SmallButton('Get') then
                 openUrl(release.downloadURL)
                 recentDownload = release.version
+                hasTestRelease = false
             end
             UI.PopID()
 
@@ -182,15 +235,15 @@ Version.Populate = function()
         UI.EndTable()
     end
 
-    if recentDownload then
-        UI.Text('')
-        if UI.Button('Ashita Addon Folder - Move File Here') then
-            openFolder(string.format('%saddons\\', AshitaCore:GetInstallPath()))
-        end
-        UI.Text(string.format('You downloaded: %s!', recentDownload))
-        UI.Text(string.format('Move your metrics.zip file here and unzip it.'))
-        UI.Text(string.format('You can overwrite the metrics files.'))
+    UI.Text('')
+    UI.Text('Feel free to try the newest unreleased features. It\'s what I use.')
+    if UI.Button('Download - UNRELEASED EXPERIMENTAL - May Break!') then
+        openUrl('https://github.com/RaraProjects/metrics/archive/refs/heads/Testing.zip')
+        recentDownload = nil
+        hasTestRelease = true
     end
+
+    uiInstructions()
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -222,6 +275,7 @@ Version.PullGithubData = function()
                 downloadURL   = assetData.downloadURL,
                 downloadCount = assetData.downloadCount,
                 updateTime    = assetData.updateTime,
+                htmlURL       = release.html_url,
                 notes         = release.body,
             })
         end
