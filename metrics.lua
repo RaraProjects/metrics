@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author  = "Metra"
 addon.name    = "Metrics"
-addon.version = "01.10.26.01"
+addon.version = "01.11.26.00"
 
 _Globals = { }
 _Globals.Initialized = false
@@ -50,6 +50,7 @@ FFI.cdef[[
 LastChunkBuffer    = T{ }
 CurrentChunkBuffer = T{ }
 
+require("version")
 require("resources._resource")
 require("database._database")
 require("file")
