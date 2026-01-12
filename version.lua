@@ -3,7 +3,6 @@ Version = { }
 
 local http = require('socket.http')
 local json = require('json')
-local os   = require('os')
 
 local curatedReleaseList = { }
 local apiURL             = 'https://api.github.com/repos/RaraProjects/metrics/releases'

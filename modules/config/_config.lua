@@ -131,27 +131,51 @@ Config.Section.Revert = function()
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Copies text to the clipboard.
+------------------------------------------------------------------------------------------------------
+---@param text string
+------------------------------------------------------------------------------------------------------
+local clipboardCopy = function(text)
+    os.execute(string.format('echo %s | clip', text))
+    Ashita.Chat.Echo(string.format('Copied to Clipboard: %s', text))
+end
+
+------------------------------------------------------------------------------------------------------
 -- Shows text commands the user can use.
 ------------------------------------------------------------------------------------------------------
 Config.Section.TextCommands = function()
-    if UI.BeginTable("Help General", 2, WindowManager.Table.Flags.Borders) then
-        UI.TableSetupColumn("Col1")
-        UI.TableSetupColumn("Col2")
+    if UI.BeginTable("Help General", 3, WindowManager.Table.Flags.Borders) then
+        local github  = 'https://github.com/RaraProjects/metrics'
+        local discord = 'https://discord.gg/u5yqUbR6R7'
 
         UI.TableNextColumn() UI.Text("GitHub")
-        UI.TableNextColumn() UI.Text("https://github.com/RaraProjects/metrics")
+        UI.TableNextColumn() UI.Text(github)
+        UI.TableNextColumn()
+        UI.PushID('Copy GitHub')
+        if UI.SmallButton('Copy') then
+            clipboardCopy(github)
+        end
+        UI.PopID()
         WindowManager.TableRowColor(1)
 
         UI.TableNextColumn() UI.Text("Discord")
-        UI.TableNextColumn() UI.Text("https://discord.gg/u5yqUbR6R7")
+        UI.TableNextColumn() UI.Text(discord)
+        UI.TableNextColumn()
+        UI.PushID('Copy Discord')
+        if UI.SmallButton('Copy') then
+            clipboardCopy(discord)
+        end
+        UI.PopID()
         WindowManager.TableRowColor(0)
 
         UI.TableNextColumn() UI.Text("Version")
         UI.TableNextColumn() UI.Text(tostring(addon.version))
+        UI.TableNextColumn()
         WindowManager.TableRowColor(1)
 
         UI.TableNextColumn() UI.Text("Command")
         UI.TableNextColumn() UI.Text("/metrics or /met")
+        UI.TableNextColumn()
         WindowManager.TableRowColor(0)
 
         UI.EndTable()
