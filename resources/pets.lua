@@ -173,9 +173,14 @@ Res.Pets.BloodPactWard =
 
 Res.Pets.Healing =
 {
+    -- Carbuncle
     [512] = {id=512,en="Healing Ruby",ja="ルビーの癒し",element=6,icon_id=340,mp_cost=6,prefix="/pet",range=12,recast_id=174,targets=5,tp_cost=0,type="BloodPactWard"},
     [517] = {id=517,en="Healing Ruby II",ja="ルビーの癒しII",element=6,icon_id=340,mp_cost=124,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
+
+    -- Garuda
     [594] = {id=594,en="Whispering Wind",ja="風の囁き",element=2,icon_id=345,mp_cost=119,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
+
+    -- Wyvern
     [639] = {id=639,en="Healing Breath IV"},
     [640] = {id=894,en="Healing Breath",ja="ヒールブレス"},
     [641] = {id=895,en="Healing Breath II",ja="ヒールブレスII"},
@@ -246,14 +251,6 @@ Res.Pets.BloodPactRageHorizon =
     [892] = {id=892,en="Thunderstorm",ja="サンダーストーム"},
     [893] = {id=893,en="Judgment Bolt",ja="ジャッジボルト"},
 
-    -- Wyvern
-    [900] = {id=900,en="Flame Breath",ja="フレイムブレス"},
-    [901] = {id=901,en="Frost Breath",ja="フロストブレス"},
-    [902] = {id=902,en="Gust Breath",ja="ガストブレス"},
-    [903] = {id=903,en="Sand Breath",ja="サンドブレス"},
-    [904] = {id=904,en="Lightning Breath",ja="ライトニングブレス"},
-    [905] = {id=905,en="Hydro Breath",ja="ハイドロブレス"},
-
     -- Carbuncle
     [907] = {id=907,en="Poison Nails",ja="ポイズンネイル"},
     [910] = {id=910,en="Meteorite",ja="プチメテオ"},
@@ -288,7 +285,6 @@ Res.Pets.BloodPactWardHorizon =
     [862] = {id=862,en="Slowga",ja="スロウガ"},
 
     -- Garuda
-    [869] = {id=869,en="Whispering Wind",ja="風の囁き"},
     [870] = {id=870,en="Hastega",ja="ヘイスガ"},
     [871] = {id=871,en="Aerial Armor",ja="真空の鎧"},
 
@@ -301,10 +297,8 @@ Res.Pets.BloodPactWardHorizon =
     [889] = {id=889,en="Lightning Armor",ja="雷電の鎧"},
 
     -- Carbuncle
-    [906] = {id=906,en="Healing Ruby",ja="ルビーの癒し"},
     [908] = {id=908,en="Shining Ruby",ja="ルビーの輝き"},
     [909] = {id=909,en="Glittering Ruby",ja="ルビーの煌き"},
-    [911] = {id=911,en="Healing Ruby II",ja="ルビーの癒しII"},
 
     -- Diabolos
     [1905] = {id=1905,en="Noctoshield",ja="ノクトシールド"},
@@ -317,11 +311,6 @@ Res.Pets.HealingHorizon =
 {
     -- Garuda
     [869] = {id=869,en="Whispering Wind",ja="風の囁き"},
-
-    -- Wyvern
-    [894] = {id=894,en="Healing Breath",ja="ヒールブレス"},
-    [895] = {id=895,en="Healing Breath II",ja="ヒールブレスII"},
-    [896] = {id=896,en="Healing Breath III",ja="ヒールブレスIII"},
 
     -- Carbuncle
     [906] = {id=906,en="Healing Ruby",ja="ルビーの癒し"},

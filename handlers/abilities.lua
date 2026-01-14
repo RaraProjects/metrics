@@ -113,18 +113,21 @@ H.Ability.Parse = function(abilityId, abilityData, actionData, actorMob, targetN
     local petName     = ownerMob and ownerMob.name or nil
     local audits      = H.Ability.Audits(playerName, targetName, petName)
 
-    local tag = "H.Ability.Parse"
+    local tag     = "H.Ability.Parse"
     local warning = string.format("BENIGN: Ability {%s} (%s) has message {%s} and damage {%s}.",
                     tostring(abilityName), tostring(abilityId), tostring(messageId), tostring(damage))
     Debug.Error.Add(Debug.Error.WARNING, tag, warning)
 
-    -- Rage blood pacts and wyvern breaths
+    -- Blood pacts and wyvern breaths
     if ownerMob then
         abilityName = Horizon.GetAbilityName(abilityId, abilityName)
 
         if Horizon.RageList(abilityId) then
             H.Offense.Hit(audits, DB.Trackable.PET_OVERALL, damage)
             H.Offense.CatalogHit(audits, DB.Trackable.PET_TP, damage, abilityName)
+
+        elseif Horizon.WardList(abilityId) then
+            H.Offense.CatalogNoDamageHit(audits, DB.Trackable.PET_TP, abilityName)
 
         elseif Horizon.HealingList(abilityId) then
             H.Offense.Hit(audits, DB.Trackable.ALL_HEAL, damage)

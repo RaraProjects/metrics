@@ -146,6 +146,7 @@ H.TP.BeginMonsterAction = function(action, actorMob, logOffense)
 
     local petTp  = Ashita.Player.Get(Ashita.PlayerAttributes.PET_TP) or 0
     local audits = H.TP.Audits(actorMob, ownerMob, targetMob)
+
     H.Offense.WeaponskillTP(audits, petTp, skillName, trackable)
 end
 
@@ -170,6 +171,7 @@ H.TP.MonsterAction = function(action, actorMob, logOffense)
     end
 
     local skillData = H.TP.PetSkillData(action.param, actorMob)
+
     if not skillData then
         return nil
     end
@@ -211,6 +213,7 @@ H.TP.MonsterAction = function(action, actorMob, logOffense)
     end
 
     local audits = H.TP.Audits(actorMob, ownerMob, targetMob)
+
     H.TP.PetSkillAttempts(audits, audits.trackable, skillName)
 
     if tpDamage > 0 then
