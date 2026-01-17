@@ -71,6 +71,18 @@ DB.ExcludedDamageTrackables =
 }
 
 ------------------------------------------------------------------------------------------------------
+-- Need to empty tables instead of reinitializing in order to keep their address.
+-- This is necessary due to local global bindings for performance.
+------------------------------------------------------------------------------------------------------
+---@param dataTable table
+------------------------------------------------------------------------------------------------------
+local resetData = function(dataTable)
+    for i in pairs(dataTable) do
+        dataTable[i] = nil
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Resets the parsing data and clears the battle log.
 ------------------------------------------------------------------------------------------------------
 ---@param isManualReset? boolean true: manual reset; false: normal initialization
@@ -81,17 +93,18 @@ DB.Initialize = function(isManualReset)
 		File.SaveBattlelog()
 	end
 
-	DB.Parse           = { }
-	DB.ParseCatalog    = { }
-	DB.PetParse        = { }
-	DB.PetParseCatalog = { }
+	resetData(DB.Parse)
+	resetData(DB.ParseCatalog)
+	resetData(DB.PetParse)
+	resetData(DB.PetParseCatalog)
+
 	DB.TotalDamage = 0
 	DB.TotalDamageNoSkillchain = 0
 
-	DB.Cache           = { }
-	DB.CatalogCache    = { }
-	DB.PetCache        = { }
-	DB.PetCatalogCache = { }
+	resetData(DB.Cache)
+	resetData(DB.CatalogCache)
+	resetData(DB.PetCache)
+	resetData(DB.PetCatalogCache)
 
 	DB.Tracking.Trackables         = { }
 	DB.Tracking.PetTrackables      = { }
@@ -126,6 +139,8 @@ DB.Initialize = function(isManualReset)
 	end
 
 	DB.AttackSpeed.Reset()
+
+    DB.Data.BindGlobals()
 
 	Timers.Reset(Timers.Types.PARSE)
 end
