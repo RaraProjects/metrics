@@ -126,7 +126,7 @@ Parse.Config.Reset = function()
         Parse.Settings[setting] = value
     end
 
-    Parse.RefreshColumnCount()
+    Parse.RefreshColumnList()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -149,7 +149,7 @@ Parse.Config.Display = function()
     Parse.Config.ShowColumnGroup(Parse.Config.Columns.Magic, "Magic")
     UI.Separator()
     Parse.Config.ShowColumnGroup(Parse.Config.Columns.Pets, "Pets")
-    Parse.RefreshColumnCount()
+    Parse.RefreshColumnList()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -230,7 +230,7 @@ end
 Parse.Config.SetPetColumns = function(bool)
     Parse.Settings.Show_Pet_Total    = bool
     Parse.Settings.Show_Pet_Accuracy = bool
-    Parse.RefreshColumnCount()
+    Parse.RefreshColumnList()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -290,7 +290,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Config.ToggleDPS = function()
     Parse.Settings.Show_DPS = not Parse.Settings.Show_DPS
-    Parse.RefreshColumnCount()
+    Parse.RefreshColumnList()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -298,7 +298,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Config.ToggleMeleeDelay = function()
     Parse.Settings.Show_Melee_Delay = not Parse.Settings.Show_Melee_Delay
-    Parse.RefreshColumnCount()
+    Parse.RefreshColumnList()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -356,7 +356,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Config.EnabledFullMode = function()
     Parse.Settings.Display_Mode = Parse.DisplayModes.FULL
-    Parse.RefreshColumnCount()
+    Parse.RefreshColumnList()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -373,7 +373,7 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Config.EnableMiniMode = function()
     Parse.Settings.Display_Mode = Parse.DisplayModes.MINI
-    Parse.RefreshColumnCount()
+    Parse.RefreshColumnList()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -390,5 +390,5 @@ end
 ------------------------------------------------------------------------------------------------------
 Parse.Config.EnableNanoMode = function()
     Parse.Settings.Display_Mode = Parse.DisplayModes.NANO
-    Parse.RefreshColumnCount()
+    Parse.RefreshColumnList()
 end

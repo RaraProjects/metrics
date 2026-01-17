@@ -1,3 +1,5 @@
+-- Performance review: 01/17/26
+
 Parse = { }
 
 -- Config has a dependency on this.
@@ -8,28 +10,104 @@ Parse.DisplayModes =
     NANO = 3,
 }
 
-require("modules.parse.help_text")
-require("modules.parse.config")
-require("modules.parse.columns")
-require("modules.parse.widgets")
+require('modules.parse.help_text')
+require('modules.parse.config')
+require('modules.parse.columns')
+require('modules.parse.widgets')
 
-Parse.Name   = "Parse"
-Parse.Title  = "Metrics - Parse"
-Parse.Module = "Parse"
-Parse.File   = "parse"
+Parse.Name   = 'Parse'
+Parse.Title  = 'Metrics - Parse'
+Parse.Module = 'Parse'
+Parse.File   = 'parse'
 
-Parse.Columns =
+Parse.VisibleColumnsByMode =
 {
-    [Parse.DisplayModes.FULL] = 0,
-    [Parse.DisplayModes.MINI] = 0,
-    [Parse.DisplayModes.NANO] = 0,
+    [Parse.DisplayModes.FULL] = { },
+    [Parse.DisplayModes.MINI] = { },
+    [Parse.DisplayModes.NANO] = { },
 }
 
--- How many columns should be visible. Keep this global to avoid recounting over and over again.
-Parse.NanoColumns   = 0
-Parse.TableFlags    = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders)
 Parse.IsInitialized = false
 Parse.Confirmation  = false
+
+------------------------------------------------------------------------------------------------------
+-- Shows the Parse toolbar if in full mode.
+------------------------------------------------------------------------------------------------------
+local toolbar = function()
+    local settings = Parse.Settings
+    local widgets  = Parse.Widgets
+
+    if Parse.Config.IsFullMode() then
+        widgets.SettingsButton()
+
+        UI.SameLine() UI.Text(' ') UI.SameLine() Overview.OverviewButton()
+        UI.SameLine() UI.Text(' ') UI.SameLine() widgets.FilterButton()
+        UI.SameLine() UI.Text(' ') UI.SameLine() Focus.Config.PercentDetails()
+        UI.SameLine() UI.Text(' ') UI.SameLine() widgets.TimerButton()
+        UI.SameLine() UI.Text(' ') UI.SameLine() widgets.ResetButton()
+        if Parse.Confirmation   then UI.SameLine() UI.Text(' ') UI.SameLine() widgets.ResetConfirmationButton() end
+        if settings.Lurk_Mode   then UI.SameLine() UI.Text(' Lurking...') end
+
+        if settings.Show_Filter then DB.Widgets.DropdownMobFilter() end
+        widgets.Clock()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Populate parse table headers.
+------------------------------------------------------------------------------------------------------
+---@param columnList table
+------------------------------------------------------------------------------------------------------
+local headers = function(columnList)
+    for _, col in ipairs(columnList) do
+        UI.TableSetupColumn(col.Header(), Column.Flags.None)
+    end
+    UI.TableHeadersRow()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Populate parse data rows.
+------------------------------------------------------------------------------------------------------
+---@param columnList table
+---@param player     table
+------------------------------------------------------------------------------------------------------
+local dataRows = function(columnList, player)
+    local sortedDamage = DB.Lists.GetSortedDataDamage()
+
+    for rank, data in ipairs(sortedDamage) do
+        if rank <= Parse.Config.RankCutoff() or data[1] == player.name then
+            local playerName = data[1]
+
+            for _, col in ipairs(columnList) do
+                UI.TableNextColumn() col.Content(playerName)
+            end
+        end
+
+        WindowManager.TableRowColor(rank)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Populate parse total row.
+------------------------------------------------------------------------------------------------------
+---@param columnList table
+------------------------------------------------------------------------------------------------------
+local totalRow = function(columnList)
+    if Parse.Settings.Grand_Totals and not Parse.Config.IsNanoMode() then
+        UI.TableNextRow()   -- Need to do this to get the color to apply to the total and not the last data row.
+        UI.TableNextRow()
+
+        -- Make the row the same color as the header row.
+        local r, g, b, a = UI.GetStyleColorVec4(ImGuiCol_TableHeaderBg)
+        local rowBgColor = UI.GetColorU32({ r, g, b, a })
+
+        UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, rowBgColor)
+
+        for _, col in ipairs(columnList) do
+            UI.TableNextColumn() col.Total()
+        end
+    end
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Initializes the Parse screen.
@@ -49,7 +127,7 @@ Parse.Initialize = function(settings)
         Settings = Parse.Settings,
     })
 
-    Parse.RefreshColumnCount()
+    Parse.RefreshColumnList()
     Parse.IsInitialized = true
 end
 
@@ -68,20 +146,22 @@ Parse.Content = function()
     end
 
     local perfStart = Socket.gettime()
+    local settings  = Parse.Settings
 
-    -- The full toolbar is only available in full mode.
-    Parse.Toolbar()
+    -- Toolbar is only available in full mode.
+    toolbar()
 
-    if Parse.Config.IsMiniMode() and Parse.Settings.Lurk_Mode then
-        UI.Text(" Lurking...")
+    if Parse.Config.IsMiniMode() and settings.Lurk_Mode then
+        UI.Text(' Lurking...')
     end
 
-    local columns = Parse.Columns[Parse.Settings.Display_Mode]
+    local columnList = Parse.VisibleColumnsByMode[settings.Display_Mode]
+    local tableFlags = bit.bor(ImGuiTableFlags_PadOuterX, ImGuiTableFlags_Borders)
 
-    if UI.BeginTable("Parse Full", columns, Parse.TableFlags) then
-        Parse.Headers()
-        Parse.DataRows(player)
-        Parse.TotalRow()
+    if UI.BeginTable('Parse Full', #columnList, tableFlags) then
+        headers(columnList)
+        dataRows(columnList, player)
+        totalRow(columnList)
 
         UI.EndTable()
     end
@@ -90,101 +170,24 @@ Parse.Content = function()
 end
 
 ------------------------------------------------------------------------------------------------------
--- Shows the Parse toolbar if in full mode.
-------------------------------------------------------------------------------------------------------
-Parse.Toolbar = function()
-    if Parse.Config.IsFullMode() then
-        Parse.Widgets.SettingsButton()
-        UI.SameLine() UI.Text(" ") UI.SameLine() Overview.OverviewButton()
-        UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.FilterButton()
-        UI.SameLine() UI.Text(" ") UI.SameLine() Focus.Config.PercentDetails()
-        UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.TimerButton()
-        UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.ResetButton()
-        if Parse.Confirmation         then UI.SameLine() UI.Text(" ") UI.SameLine() Parse.Widgets.ResetConfirmationButton() end
-        if Parse.Settings.Lurk_Mode   then UI.SameLine() UI.Text(" Lurking...") end
-        if Parse.Settings.Show_Filter then DB.Widgets.DropdownMobFilter() end
-        Parse.Widgets.Clock()
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Populate parse table headers.
-------------------------------------------------------------------------------------------------------
-Parse.Headers = function()
-    for _, col in ipairs(Parse.ColumnContent) do
-        if col.Condition() and (not Parse.Config.IsMiniMode() or col.Is_Mini) and (not Parse.Config.IsNanoMode() or col.Is_Nano) then
-            UI.TableSetupColumn(col.Header(), Column.Flags.None)
-        end
-    end
-    UI.TableHeadersRow()
-end
-
-------------------------------------------------------------------------------------------------------
--- Populate parse data rows.
-------------------------------------------------------------------------------------------------------
----@param player table
-------------------------------------------------------------------------------------------------------
-Parse.DataRows = function(player)
-    local sortedDamage = DB.Lists.GetSortedDataDamage()
-
-    for rank, data in ipairs(sortedDamage) do
-        if rank <= Parse.Config.RankCutoff() or data[1] == player.name then
-            -- Player specific content.
-            local playerName = data[1]
-
-            for _, col in ipairs(Parse.ColumnContent) do
-                if col.Condition() and (not Parse.Config.IsMiniMode() or col.Is_Mini) and (not Parse.Config.IsNanoMode() or col.Is_Nano) then
-                    UI.TableNextColumn() col.Content(playerName)
-                end
-            end
-
-        end
-
-        WindowManager.TableRowColor(rank)
-    end
-end
-
-------------------------------------------------------------------------------------------------------
--- Populate parse total row.
-------------------------------------------------------------------------------------------------------
-Parse.TotalRow = function()
-    if Parse.Settings.Grand_Totals and not Parse.Config.IsNanoMode() then
-        UI.TableNextRow()   -- Need to do this to get the color to apply to the total and not the last data row.
-        UI.TableNextRow()
-
-        -- Make the row the same color as the header row.
-        local r, g, b, a = UI.GetStyleColorVec4(ImGuiCol_TableHeaderBg)
-        local rowBgColor = UI.GetColorU32({ r, g, b, a })
-
-        UI.TableSetBgColor(ImGuiTableBgTarget_RowBg0, rowBgColor)
-
-        for _, col in ipairs(Parse.ColumnContent) do
-            if col.Condition() and (not Parse.Config.IsMiniMode() or col.Is_Mini) and (not Parse.Config.IsNanoMode() or col.Is_Nano) then
-                UI.TableNextColumn() col.Total()
-            end
-        end
-    end
-end
-
-------------------------------------------------------------------------------------------------------
 -- Calculates how many columns should be shown on the Parse table based on column visibility flags.
 ------------------------------------------------------------------------------------------------------
-Parse.RefreshColumnCount = function()
-    local fullColumns = 0
-    local miniColumns = 0
-    local nanoColumns = 0
+Parse.RefreshColumnList = function()
+    local fullList    = { }
+    local miniList    = { }
+    local nanoList    = { }
 
     -- Loop through available columns.
     for _, col in ipairs(Parse.ColumnContent) do
         if col.Condition() then
-            fullColumns = fullColumns + 1
-            if col.Is_Mini then miniColumns = miniColumns + 1 end
-            if col.Is_Nano then nanoColumns = nanoColumns + 1 end
+            fullList[#fullList + 1] = col
+            if col.Is_Mini then miniList[#miniList + 1] = col end
+            if col.Is_Nano then nanoList[#nanoList + 1] = col end
         end
     end
 
-    -- Apply new column count.
-    Parse.Columns[Parse.DisplayModes.FULL] = fullColumns
-    Parse.Columns[Parse.DisplayModes.MINI] = miniColumns
-    Parse.Columns[Parse.DisplayModes.NANO] = nanoColumns
+    -- Apply new column list.
+    Parse.VisibleColumnsByMode[Parse.DisplayModes.FULL] = fullList
+    Parse.VisibleColumnsByMode[Parse.DisplayModes.MINI] = miniList
+    Parse.VisibleColumnsByMode[Parse.DisplayModes.NANO] = nanoList
 end
