@@ -1,4 +1,108 @@
+-- Performance review: 01/16/26
+
 DB.Catalog = { }
+
+-- Local holders for common global tables--performance+.
+---@type table
+local catalogParse  = nil
+---@type table
+local trackables    = nil
+---@type table
+local metrics       = nil
+---@type table
+local trackingLists = nil
+---@type table
+local updateMode    = nil
+---@type table
+local lists         = nil
+---@type table
+local cache         = nil
+---@type table
+local dbData        = nil
+
+------------------------------------------------------------------------------------------------------
+-- Directly sets a trackable's cataloged action metric to a specified value.
+-- Some trackables need to be cataloged discretely in addition to holistically.
+-- For example, metrics for weapons skill damage and metrics for each individual weapon skill.
+-- CALLER SHOULD ENSURE ARGUMENTS EXIST!!!
+------------------------------------------------------------------------------------------------------
+---@param newValue   number       the value to set the node to
+---@param playerName string
+---@param targetName string
+---@param actionName string       the name of the action to be cataloged.
+---@param trackable  DB.Trackable a tracked item from the trackable list.
+---@param metric     DB.Metric    a trackable's metric from the metric list.
+---@return boolean
+------------------------------------------------------------------------------------------------------
+local set = function(newValue, playerName, targetName, actionName, trackable, metric)
+    local playerData    = catalogParse[playerName]
+    local targetData    = playerData and playerData[targetName]
+    local actionData    = targetData and targetData[actionName]
+    local trackableData = actionData and actionData[trackable]
+
+    if not trackableData then
+        return false
+    end
+
+    local currentValue = trackableData[metric]
+
+	-- Don't set an unfiltered minimum if the mob specific minimum isn't less than the unfiltered one.
+    if DB.MetricNeedsMaxValue(metric) and
+       targetName == DB.Enum.ALL_MOBS and
+       currentValue and
+       newValue >= currentValue
+    then
+        return false
+    end
+
+	-- Apply the change.
+	trackableData[metric] = newValue
+
+	return true
+end
+
+------------------------------------------------------------------------------------------------------
+-- Increments a trackable's metric by a specified amount.
+-- Some trackables need to be cataloged discretely in addition to holistically.
+-- For example, metrics for weapons skill damage and metrics for each individual weapon skill.
+-- CALLER SHOULD ENSURE ARGUMENTS EXIST!!!
+------------------------------------------------------------------------------------------------------
+---@param newValue   number       the value to increment the node by.
+---@param playerName string
+---@param targetName string
+---@param actionName string       the name of the action to be cataloged.
+---@param trackable  DB.Trackable a tracked item from the trackable list.
+---@param metric     DB.Metric    a trackable's metric from the metric list.
+---@return boolean
+------------------------------------------------------------------------------------------------------
+local inc = function(newValue, playerName, targetName, actionName, trackable, metric)
+    local playerData    = catalogParse[playerName]
+    local targetData    = playerData and playerData[targetName]
+    local actionData    = targetData and targetData[actionName]
+    local trackableData = actionData and actionData[trackable]
+
+    if not trackableData then
+        return false
+    end
+
+    trackableData[metric] = trackableData[metric] + newValue
+
+	return true
+end
+
+------------------------------------------------------------------------------------------------------
+-- Helper function for binding globals to locals to increase performance.
+------------------------------------------------------------------------------------------------------
+DB.Catalog.BindGlobals = function()
+    catalogParse  = catalogParse or DB.ParseCatalog
+    trackables    = trackables or DB.Trackable
+    metrics       = metrics or DB.Metric
+    trackingLists = trackingLists or DB.Tracking
+    updateMode    = updateMode or DB.UpdateMode
+    lists         = lists or DB.Lists
+    cache         = cache or DB.CatalogCache
+    dbData        = dbData or DB.Data
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Initializes a cataloged action.
@@ -13,39 +117,47 @@ DB.Catalog = { }
 ---@param petName?   string
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Initialize = function(playerName, targetName, actionName, trackable, petName)
-	-- Early quit out to prevent crashing.
-	local caller = "DB.Catalog.Initialize"
-	if DB.IsValueEmpty(caller, playerName, "Player") or
-	   DB.IsValueEmpty(caller, targetName, "Target") or
-	   DB.IsValueEmpty(caller, actionName, "Action") or
-	   DB.IsValueEmpty(caller, trackable, "Trackable") then
+	local caller = 'DB.Catalog.Initialize'
+
+	if DB.IsValueEmpty(caller, playerName, 'Player') or
+	   DB.IsValueEmpty(caller, targetName, 'Target') or
+	   DB.IsValueEmpty(caller, actionName, 'Action') or
+	   DB.IsValueEmpty(caller, trackable,  'Trackable')
+    then
 		return false
 	end
 
 	-- Initializations
-	DB.Data.Initialize(playerName, targetName)
+	dbData.Initialize(playerName, targetName)
+
 	if petName then
 		DB.PetData.Initialize(playerName, petName, targetName)
 	end
 
-	-- Don't want to overwrite data node if it already exists. This is for mob specfic data.
-	local initializationList = { }
-	if not DB.ParseCatalog[playerName] then DB.ParseCatalog[playerName] = { } end
-	if not DB.ParseCatalog[playerName][targetName] then DB.ParseCatalog[playerName][targetName] = { } end
-	if not DB.ParseCatalog[playerName][targetName][actionName] then DB.ParseCatalog[playerName][targetName][actionName] = { } end
-	if not DB.ParseCatalog[playerName][targetName][actionName][trackable] then
-		DB.ParseCatalog[playerName][targetName][actionName][trackable] = { }
-		table.insert(initializationList, targetName)
-	end
+    local allMobs            = DB.Enum.ALL_MOBS
+    local initializationList = { }
+    local playerData         = catalogParse[playerName] or { }
 
-	-- Don't want to overwrite data node if it already exists. This is for all mob data.
-	local allMobs = DB.Enum.ALL_MOBS
-	if not DB.ParseCatalog[playerName][allMobs] then  DB.ParseCatalog[playerName][allMobs] = { } end
-	if not DB.ParseCatalog[playerName][allMobs][actionName] then DB.ParseCatalog[playerName][allMobs][actionName] = { } end
-	if not DB.ParseCatalog[playerName][allMobs][actionName][trackable] then
-		DB.ParseCatalog[playerName][allMobs][actionName][trackable] = { }
-		table.insert(initializationList, allMobs)
-	end
+    catalogParse[playerName] = playerData
+
+    -- Helper for traversing the table.
+    local function initTable(target)
+        local targetData = playerData[target] or { }
+
+        playerData[target] = targetData
+
+        local actionData = targetData[actionName] or { }
+
+        targetData[actionName] = actionData
+
+        if not actionData[trackable] then
+            actionData[trackable] = { }
+            initializationList[#initializationList + 1] = target
+        end
+    end
+
+    initTable(targetName)
+    initTable(allMobs)
 
 	-- Make sure the pet catalog is also initialized if necessary.
 	if petName then
@@ -55,22 +167,22 @@ DB.Catalog.Initialize = function(playerName, targetName, actionName, trackable, 
 	-- Initialize data nodes.
 	-- Need to set minimum high manually to capture accurate minimums.
 	if #initializationList == 0 then
-		return nil
+		return false
 	end
 
-	for _, initializationTarget in ipairs(initializationList) do
-		for _, metric in pairs(DB.Metric) do
-			if DB.MetricNeedsMaxValue(metric) then
-				DB.Catalog.Set(DB.Enum.MAX_DAMAGE, playerName, initializationTarget, actionName, trackable, metric)
-			else
-				DB.Catalog.Set(0, playerName, initializationTarget, actionName, trackable, metric)
-			end
-		end
-	end
+    for _, initializationTarget in ipairs(initializationList) do
+        for _, metric in pairs(metrics) do
+            local value = DB.MetricNeedsMaxValue(metric) and DB.Enum.MAX_DAMAGE or 0
+
+            set(value, playerName, initializationTarget, actionName, trackable, metric)
+        end
+    end
 
 	-- Initialize tracking tables.
-	if not DB.Tracking.Trackables[trackable] then DB.Tracking.Trackables[trackable] = { } end
-	if not DB.Tracking.Trackables[trackable][playerName] then DB.Tracking.Trackables[trackable][playerName] = { } end
+    trackingLists.Trackables[trackable] = trackingLists.Trackables[trackable] or { }
+    trackingLists.Trackables[trackable][playerName] = trackingLists.Trackables[trackable][playerName] or { }
+
+    return true
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -86,10 +198,11 @@ end
 ---@param isCriticalHit? boolean      whether or not a critical hit or magic burst took place.
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.UpdateDamage = function(playerName, targetName, trackable, damage, actionName, petName, isCriticalHit)
-	-- Early quit out to prevent crashing.
-	local caller = "DB.Catalog.UpdateDamage"
-	if DB.IsValueEmpty(caller, playerName, "Player") or
-	   DB.IsValueEmpty(caller, targetName, "Target") then
+	local caller = 'DB.Catalog.UpdateDamage'
+
+	if DB.IsValueEmpty(caller, playerName, 'Player') or
+	   DB.IsValueEmpty(caller, targetName, 'Target')
+    then
 		return false
 	end
 
@@ -105,66 +218,56 @@ DB.Catalog.UpdateDamage = function(playerName, targetName, trackable, damage, ac
 		pet_name    = petName,
 	}
 
+    local updateMetric = DB.Catalog.UpdateMetric
+    local get          = DB.Catalog.Get
+    local maxHealing   = DB.HealingMax
+
 	-- Update the non-catalog database with the damage
-	DB.Data.UpdateDamage(audits, trackable, damage, isCriticalHit)
+	dbData.UpdateDamage(audits, trackable, damage, isCriticalHit)
 	-- Everything after this is for the catalog.
 
 	-- Total Damage
-    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, damage, audits, trackable, actionName, DB.Metric.TOTAL)
+    updateMetric(updateMode.INC, damage, audits, trackable, actionName, metrics.TOTAL)
+
 	if isCriticalHit then
-		DB.Catalog.UpdateMetric(DB.UpdateMode.INC, damage, audits, trackable, actionName, DB.Metric.CRITICAL_DAMAGE)
+		updateMetric(updateMode.INC, damage, audits, trackable, actionName, metrics.CRITICAL_DAMAGE)
 	end
 
 	-- Attempts on the target.
 	if isCriticalHit then
-		DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, actionName, DB.Metric.CRITICAL_COUNT)
+		updateMetric(updateMode.INC, 1, audits, trackable, actionName, metrics.CRITICAL_COUNT)
 	end
 
 	-- Set trackable hits and minimums
-	local minMetric = (isCriticalHit and DB.Metric.CRITICAL_MIN) or DB.Metric.MIN
-	local maxMetric = (isCriticalHit and DB.Metric.CRITICAL_MAX) or DB.Metric.MAX
+	local minMetric = (isCriticalHit and metrics.CRITICAL_MIN) or metrics.MIN
+	local maxMetric = (isCriticalHit and metrics.CRITICAL_MAX) or metrics.MAX
 
     if damage > 0 then
 		-- Minimum damage.
-		if damage < DB.Catalog.Get(playerName, trackable, actionName, minMetric, audits.target_name) then
-			DB.Catalog.UpdateMetric(DB.UpdateMode.SET, damage, audits, trackable, actionName, minMetric)
+		if damage < get(playerName, trackable, actionName, minMetric, audits.target_name) then
+			updateMetric(updateMode.SET, damage, audits, trackable, actionName, minMetric)
 		end
     end
 
-    if damage > DB.Catalog.Get(playerName, trackable, actionName, maxMetric) then
+    if damage > get(playerName, trackable, actionName, maxMetric) then
     	-- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
-		if trackable == DB.Trackable.SPELLS_HEALING and DB.HealingMax[actionName] then
-			if damage > DB.HealingMax[actionName] then
-				damage = DB.HealingMax[actionName]
+		if trackable == trackables.SPELLS_HEALING and maxHealing[actionName] then
+			if damage > maxHealing[actionName] then
+				damage = maxHealing[actionName]
 			end
 		end
 
 		-- Maximum damage.
-		DB.Catalog.UpdateMetric(DB.UpdateMode.SET, damage, audits, trackable, actionName, maxMetric)
+		updateMetric(updateMode.SET, damage, audits, trackable, actionName, maxMetric)
     end
 
-    DB.Lists.ResortPlayerCatalogDamage(playerName, trackable)
+    lists.ResortPlayerCatalogDamage(playerName, trackable)
 
     if petName then
-        DB.Lists.ResortPetCatalogDamage(playerName, petName)
+        lists.ResortPetCatalogDamage(playerName, petName)
     end
-end
 
-------------------------------------------------------------------------------------------------------
--- Updates cataloged accuracy.
-------------------------------------------------------------------------------------------------------
----@param audits     table
----@param trackable  DB.Trackable a tracked item from the trackable list.
----@param actionName string
----@param isHit      boolean
-------------------------------------------------------------------------------------------------------
-DB.Catalog.UpdateAccuracy = function(audits, trackable, actionName, isHit)
-    local value = isHit and 1 or 0
-    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, value, audits, trackable, actionName, DB.Metric.HITS_ON_TARGET)
-    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1,     audits, trackable, actionName, DB.Metric.ATTEMPTS_ON_TARGET)
-
-    -- Update non-cataloged accuracy.
-    DB.Data.UpdateAccuracy(audits, trackable, isHit)
+    return true
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -184,35 +287,34 @@ DB.Catalog.UpdateMetric = function(mode, value, audits, trackable, actionName, m
 	local playerName = audits.player_name
 	local targetName = audits.target_name
 	local petName    = audits.pet_name
+	local caller     = 'DB.Catalog.UpdateMetric'
 
-	-- Early quits
-	local caller = "DB.Catalog.UpdateMetric"
-	if DB.IsValueEmpty(caller, playerName, "Player") or
-	   DB.IsValueEmpty(caller, targetName, "Target") or
-	   DB.IsValueEmpty(caller, actionName, "Action") or
-	   DB.IsValueEmpty(caller, trackable,  "Trackable") or
-	   DB.IsValueEmpty(caller, metric,     "Metric") or
-	   playerName == DB.Enum.DEBUG then
+	if DB.IsValueEmpty(caller, playerName, 'Player') or
+	   DB.IsValueEmpty(caller, targetName, 'Target') or
+	   DB.IsValueEmpty(caller, actionName, 'Action') or
+	   DB.IsValueEmpty(caller, trackable,  'Trackable') or
+	   DB.IsValueEmpty(caller, metric,     'Metric') or
+	   playerName == DB.Enum.DEBUG
+    then
 		return false
 	end
 
 	-- Initialization
 	DB.Catalog.Initialize(playerName, targetName, actionName, trackable, petName)
-	DB.Tracking.InitializedPlayers[playerName] = DB.Tracking.InitializedPlayers[playerName] or true
 
 	-- Set the data; loop once for mob-specific data and a second time for all mob data.
 	local updateList = { targetName, DB.Enum.ALL_MOBS }
 
 	for _, updateTarget in ipairs(updateList) do
-		if mode == DB.UpdateMode.INC then
-			DB.Catalog.Inc(value, playerName, updateTarget, actionName, trackable, metric)
+		if mode == updateMode.INC then
+			inc(value, playerName, updateTarget, actionName, trackable, metric)
 
 			if petName then
 				DB.PetCatalog.Inc(value, playerName, petName, updateTarget, actionName, trackable, metric)
 			end
 
-		elseif mode == DB.UpdateMode.SET then
-			DB.Catalog.Set(value, playerName, updateTarget, actionName, trackable, metric)
+		elseif mode == updateMode.SET then
+			set(value, playerName, updateTarget, actionName, trackable, metric)
 
 			if petName then
 				DB.PetCatalog.Set(value, playerName, petName, updateTarget, actionName, trackable, metric)
@@ -221,93 +323,38 @@ DB.Catalog.UpdateMetric = function(mode, value, audits, trackable, actionName, m
 	end
 
 	-- This is used for the focus window
-	DB.Tracking.Trackables[trackable][playerName][actionName] = true
+	trackingLists.Trackables[trackable][playerName][actionName] = true
 
 	if petName then
 		if not DB.PetCatalog.InitializeTracking(trackable, playerName, petName) then
 			return false
 		end
 
-		DB.Tracking.PetTrackables[trackable][playerName][petName][actionName] = true
+		trackingLists.PetTrackables[trackable][playerName][petName][actionName] = true
 	end
 
 	return true
 end
 
 ------------------------------------------------------------------------------------------------------
--- Directly sets a trackable's cataloged action metric to a specified value.
--- Some trackables need to be cataloged discretely in addition to holistically.
--- For example, metrics for weapons skill damage and metrics for each individual weapon skill.
--- The discrete tracking happens in the "catalog" node under each trackable.
+-- Updates cataloged accuracy.
 ------------------------------------------------------------------------------------------------------
----@param value      number       the value to set the node to
----@param playerName string
----@param targetName string
----@param actionName string       the name of the action to be cataloged.
+---@param audits     table
 ---@param trackable  DB.Trackable a tracked item from the trackable list.
----@param metric     DB.Metric    a trackable's metric from the metric list.
----@return boolean
+---@param actionName string
+---@param isHit      boolean
 ------------------------------------------------------------------------------------------------------
-DB.Catalog.Set = function(value, playerName, targetName, actionName, trackable, metric)
-	-- Early quit out to prevent crashing.
-	-- Can't quit out early for blank metric nodes because this is used for initialization.
-	local caller = "DB.Catalog.Set"
-	if DB.IsValueEmpty(caller, playerName, "Player") or
-	   DB.IsValueEmpty(caller, targetName, "Target") or
-	   DB.IsValueEmpty(caller, actionName, "Action") or
-	   DB.IsValueEmpty(caller, trackable,  "Trackable") or
-	   DB.IsValueEmpty(caller, metric,     "Metric") or
-	   DB.IsValueEmpty(caller, value,      "Value") or
-	   not DB.Catalog.IsIndexNodeInitialized(caller, true, playerName, targetName, actionName) then
-		return false
-	end
+DB.Catalog.UpdateAccuracy = function(audits, trackable, actionName, isHit)
+    local updateMetric = DB.Catalog.UpdateMetric
 
-	-- Don't set an unfiltered minimum if the mob specific minimum isn't less than the unfiltered one.
-	if DB.MetricNeedsMaxValue(metric) and targetName == DB.Enum.ALL_MOBS and
-	   DB.ParseCatalog[playerName][targetName][actionName][trackable] and
-	   DB.ParseCatalog[playerName][targetName][actionName][trackable][metric] and
-	   value >= DB.ParseCatalog[playerName][targetName][actionName][trackable][metric] then
-		return false
-	end
+    updateMetric(updateMode.INC, 1, audits, trackable, actionName, metrics.ATTEMPTS_ON_TARGET)
 
-	-- Apply the change.
-	DB.ParseCatalog[playerName][targetName][actionName][trackable][metric] = value
+    if isHit then
+        updateMetric(updateMode.INC, 1, audits, trackable, actionName, metrics.HITS_ON_TARGET)
+    end
 
-	return true
-end
-
-------------------------------------------------------------------------------------------------------
--- Increments a trackable's metric by a specified amount.
--- Some trackables need to be cataloged discretely in addition to holistically.
--- For example, metrics for weapons skill damage and metrics for each individual weapon skill.
--- The discrete tracking happens in the "catalog" node under each trackable.
-------------------------------------------------------------------------------------------------------
----@param value      number       the value to increment the node by.
----@param playerName string
----@param targetName string
----@param actionName string       the name of the action to be cataloged.
----@param trackable  DB.Trackable a tracked item from the trackable list.
----@param metric     DB.Metric    a trackable's metric from the metric list.
----@return boolean
-------------------------------------------------------------------------------------------------------
-DB.Catalog.Inc = function(value, playerName, targetName, actionName, trackable, metric)
-	-- Early quit out to prevent crashing.
-	local caller = "DB.Catalog.Inc"
-	if DB.IsValueEmpty(caller, playerName, "Player") or
-	   DB.IsValueEmpty(caller, targetName, "Target") or
-	   DB.IsValueEmpty(caller, actionName, "Action") or
-	   DB.IsValueEmpty(caller, trackable,  "Trackable") or
-	   DB.IsValueEmpty(caller, metric,     "Metric") or
-	   DB.IsValueEmpty(caller, value,      "Value") or
-	   not DB.Catalog.IsIndexNodeInitialized(caller, true, playerName, targetName, actionName) or
-	   not DB.Catalog.IsMetricNodeInitialized(caller, true, playerName, targetName, actionName, trackable, metric) then
-		return false
-	end
-
-	-- Apply the change.
-	DB.ParseCatalog[playerName][targetName][actionName][trackable][metric] = DB.ParseCatalog[playerName][targetName][actionName][trackable][metric] + value
-
-	return true
+    -- Update non-cataloged accuracy.
+    dbData.UpdateAccuracy(audits, trackable, isHit)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -322,94 +369,84 @@ end
 ---@return number
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.Get = function(playerName, trackable, actionName, metric, tempMobFocus)
-	local caller = "DB.Catalog.Get"
-	if DB.IsValueEmpty(caller, playerName, "Player") or
-	   DB.IsValueEmpty(caller, actionName, "Action") or
-	   DB.IsValueEmpty(caller, trackable,  "Trackable") or
-	   DB.IsValueEmpty(caller, metric,     "Metric") then
-		return 0
-	end
+    if Throttle.IsEnabled() and not Throttle.AllowCalculation() and not tempMobFocus then
+        local playerCache = cache[playerName]
 
-	-- Dont get new data unless we are in a new throttle cycle or cached data doesn't exist.
-	if (Throttle.IsEnabled() and not Throttle.AllowCalculation()) and not tempMobFocus then
-		if DB.CatalogCache[playerName] and
-		   DB.CatalogCache[playerName][actionName] and
-		   DB.CatalogCache[playerName][actionName][trackable] and
-		   DB.CatalogCache[playerName][actionName][trackable][metric] then
-			return DB.CatalogCache[playerName][actionName][trackable][metric]
-		end
+        if playerCache then
+            local actionCache = playerCache[actionName]
+
+            if actionCache then
+                local trackableCache = actionCache[trackable]
+
+                if trackableCache then
+                    local cacheValue = trackableCache[metric]
+
+                    if cacheValue ~= nil then
+                        return cacheValue
+                    end
+                end
+            end
+        end
+    end
+
+    local caller = 'DB.Catalog.Get'
+
+	if DB.IsValueEmpty(caller, playerName, 'Player') or
+	   DB.IsValueEmpty(caller, actionName, 'Action') or
+	   DB.IsValueEmpty(caller, trackable,  'Trackable') or
+	   DB.IsValueEmpty(caller, metric,     'Metric') then
+		return 0
 	end
 
 	local value       = DB.MetricNeedsMaxValue(metric) and DB.Enum.MAX_DAMAGE or 0
 	local targetIndex = tempMobFocus or DB.Widgets.GetMobFocus()
 
 	-- Get the data.
-	if DB.Catalog.IsIndexNodeInitialized(caller, false, playerName, targetIndex, actionName) then
-		if DB.Catalog.IsMetricNodeInitialized(caller, false, playerName, targetIndex, actionName, trackable, metric) then
-			value = DB.ParseCatalog[playerName][targetIndex][actionName][trackable][metric]
-		end
-	end
+    local catalogPlayer = catalogParse[playerName]
+
+    if catalogPlayer then
+        local catalogTarget = catalogPlayer[targetIndex]
+
+        if catalogTarget then
+            local catalogAction = catalogTarget[actionName]
+
+            if catalogAction then
+                local catalogTrackable = catalogAction[trackable]
+
+                if catalogTrackable then
+                    local catalogData = catalogTrackable[metric]
+
+                    if catalogData ~= nil then
+                        value = catalogData
+                    end
+                end
+            end
+        end
+    end
 
 	-- Cache for performance.
-	if not DB.CatalogCache[playerName] then DB.CatalogCache[playerName] = { } end
-	if not DB.CatalogCache[playerName][actionName] then DB.CatalogCache[playerName][actionName] = { } end
-	if not DB.CatalogCache[playerName][actionName][trackable] then DB.CatalogCache[playerName][actionName][trackable] = { } end
-	DB.CatalogCache[playerName][actionName][trackable][metric] = value
+    local playerCache = cache[playerName]
+
+    if not playerCache then
+        playerCache = { }
+        cache[playerName] = playerCache
+    end
+
+    local actionCache = playerCache[actionName]
+
+    if not actionCache then
+        actionCache = { }
+        playerCache[actionName] = actionCache
+    end
+
+    local trackableCache = actionCache[trackable]
+
+    if not trackableCache then
+        trackableCache = { }
+        actionCache[trackable] = trackableCache
+    end
+
+    trackableCache[metric] = value
 
 	return value
-end
-
-------------------------------------------------------------------------------------------------------
--- Checks if the [player_name][target_name] nodes are initialized in the catalog database.
-------------------------------------------------------------------------------------------------------
----@param caller     string
----@param writeError boolean
----@param playerName string
----@param targetName string
----@param actionName string
----@return boolean
-------------------------------------------------------------------------------------------------------
-DB.Catalog.IsIndexNodeInitialized = function(caller, writeError, playerName, targetName, actionName)
-	if not DB.ParseCatalog or
-	   not DB.ParseCatalog[playerName] or
-	   not DB.ParseCatalog[playerName][targetName] or
-	   not DB.ParseCatalog[playerName][targetName][actionName] then
-		if writeError then
-			local errorMessage = string.format("Not initialized in DB.ParseCatalog[%s][%s][%s].", tostring(playerName), tostring(targetName), tostring(actionName))
-			Debug.Error.Add(Debug.Error.ERROR, caller, errorMessage)
-		end
-
-		return false
-	end
-
-	return true
-end
-
-------------------------------------------------------------------------------------------------------
--- Checks if the [player_name][target_name][trackable][metric] nodes are initialized in the catalog database.
-------------------------------------------------------------------------------------------------------
----@param caller     string
----@param writeError boolean
----@param playerName string
----@param targetName string
----@param actionName string
----@param trackable  DB.Trackable
----@param metric     DB.Metric
----@return boolean
-------------------------------------------------------------------------------------------------------
-DB.Catalog.IsMetricNodeInitialized = function(caller, writeError, playerName, targetName, actionName, trackable, metric)
-	if not DB.ParseCatalog or
-	   not DB.ParseCatalog[playerName] or not DB.ParseCatalog[playerName][targetName] or
-	   not DB.ParseCatalog[playerName][targetName][actionName] or not DB.ParseCatalog[playerName][targetName][actionName][trackable] or
-	   not DB.ParseCatalog[playerName][targetName][actionName][trackable][metric] then
-		if writeError then
-			local errorMessage = string.format("Metric not initialized in DB.Parse_Catalog[%s][%s][%s][%s][%s].",
-			                     tostring(playerName), tostring(targetName), tostring(actionName), tostring(trackable), tostring(metric))
-			Debug.Error.Add(Debug.Error.ERROR, caller, errorMessage)
-		end
-
-		return false
-	end
-
-	return true
 end

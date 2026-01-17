@@ -141,6 +141,7 @@ DB.Initialize = function(isManualReset)
 	DB.AttackSpeed.Reset()
 
     DB.Data.BindGlobals()
+    DB.Catalog.BindGlobals()
 
 	Timers.Reset(Timers.Types.PARSE)
 end

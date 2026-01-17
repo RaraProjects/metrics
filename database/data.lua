@@ -17,6 +17,8 @@ local updateMode    = nil
 local lists         = nil
 ---@type table
 local cache         = nil
+---@type table
+local petData       = nil
 
 ------------------------------------------------------------------------------------------------------
 -- Directly sets a trackable's metric to a specified value.
@@ -91,6 +93,7 @@ DB.Data.BindGlobals = function()
     updateMode    = updateMode or DB.UpdateMode
     lists         = lists or DB.Lists
     cache         = cache or DB.Cache
+    petData       = petData or DB.PetData
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -134,8 +137,6 @@ DB.Data.Initialize = function(playerName, targetName)
 		return false
 	end
 
-    local maxDamage = DB.Enum.MAX_DAMAGE
-
     -- Initialize data nodes.
 	-- Need to set minimum high manually to capture accurate minimums.
 	for _, initializationTarget in ipairs(initializationList) do
@@ -145,11 +146,9 @@ DB.Data.Initialize = function(playerName, targetName)
 			targetData[trackable] = { }
 
 			for _, metric in pairs(metrics) do
-				if DB.MetricNeedsMaxValue(metric) then
-					set(maxDamage, playerName, initializationTarget, trackable, metric)
-				else
-					set(0, playerName, initializationTarget, trackable, metric)
-				end
+				local value = DB.MetricNeedsMaxValue(metric) and DB.Enum.MAX_DAMAGE or 0
+
+				set(value, playerName, initializationTarget, trackable, metric)
 			end
 		end
 	end
@@ -176,7 +175,7 @@ DB.Data.InitializePlayerTrackingTables = function(playerName)
     end
 
     initialized[playerName] = true
-    DB.Lists.SortInitializedPlayers()
+    lists.SortInitializedPlayers()
 
     trackingLists.RunningAccuracy[playerName]    = { }
     trackingLists.RunningDamage[playerName]      = 0
@@ -215,11 +214,11 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 	DB.Data.Initialize(playerName, targetName)
 
 	if petName then
-		DB.PetData.Initialize(playerName, petName, targetName)
+		petData.Initialize(playerName, petName, targetName)
 	end
 
-    local isInc = mode == DB.UpdateMode.INC
-    local isSet = mode == DB.UpdateMode.SET
+    local isInc = mode == updateMode.INC
+    local isSet = mode == updateMode.SET
 
 	-- Set the data; loop once for mob-specific data and a second time for all mob data.
 	local updateList = { targetName, DB.Enum.ALL_MOBS }
@@ -229,14 +228,14 @@ DB.Data.Update = function(mode, value, audits, trackable, metric)
 			inc(value, playerName, updateTarget, trackable, metric)
 
 			if petName then
-				DB.PetData.Inc(value, playerName, petName, updateTarget, trackable, metric)
+				petData.Inc(value, playerName, petName, updateTarget, trackable, metric)
 			end
 
 		elseif isSet then
 			set(value, playerName, updateTarget, trackable, metric)
 
 			if petName then
-				DB.PetData.Set(value, playerName, petName, updateTarget, trackable, metric)
+				petData.Set(value, playerName, petName, updateTarget, trackable, metric)
 			end
 		end
 	end
@@ -306,7 +305,7 @@ DB.Data.UpdateDamageBasic = function(audits, trackable, damage, isCriticalHit)
 	-- We can't log a miss (0 damage) to MIN because then the miminum will always be zero.
 	if damage > 0 then
 		if petName then
-			if damage < DB.PetData.Get(playerName, petName, trackable, minMetric, targetName) then
+			if damage < petData.Get(playerName, petName, trackable, minMetric, targetName) then
 				update(updateMode.SET, damage, audits, trackable, minMetric)
 			end
 		else

@@ -179,6 +179,7 @@ ashita.events.register('load', 'load_cb', function()
     InitializeSpellResources()
 
     DB.Data.BindGlobals()
+    DB.Catalog.BindGlobals()
 
     _Globals.Initialized = true
 end)
