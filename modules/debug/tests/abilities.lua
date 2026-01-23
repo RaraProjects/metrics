@@ -662,24 +662,32 @@ Debug.Unit.Tests.Ability.Avatar_Ward = function()
         player[player_name][target_index] = {}
         player[player_name][target_index][DB.Trackable.PET_TP] = {}
         player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_TARGET] = 1
         player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player[player_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
         player_catalog[player_name][target_index] = {}
         player_catalog[player_name][target_index][action_name] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP] = {}
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_TARGET] = 1
         player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
+        player_catalog[player_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
         pet[player_name][pet_name][target_index] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP] = {}
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.HITS_ON_TARGET] = 1
         pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
+        pet[player_name][pet_name][target_index][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_TARGET] = 1
 
         pet_catalog[player_name][pet_name][target_index] = {}
         pet_catalog[player_name][pet_name][target_index][action_name] = {}
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP] = {}
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_USE] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.HITS_ON_TARGET] = 1
         pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_USE] = 1
+        pet_catalog[player_name][pet_name][target_index][action_name][DB.Trackable.PET_TP][DB.Metric.ATTEMPTS_ON_TARGET] = 1
     end
 
     local battle_log = {

@@ -103,10 +103,8 @@ Res.Pets.BloodPactRage =
 Res.Pets.BloodPactWard =
 {
     -- Carbuncle
-    [512] = {id=512,en="Healing Ruby",ja="ルビーの癒し",element=6,icon_id=340,mp_cost=6,prefix="/pet",range=12,recast_id=174,targets=5,tp_cost=0,type="BloodPactWard"},
     [514] = {id=514,en="Shining Ruby",ja="ルビーの輝き",duration=180,element=6,icon_id=340,mp_cost=44,prefix="/pet",range=12,recast_id=174,status=154,targets=1,tp_cost=0,type="BloodPactWard"},
     [515] = {id=515,en="Glittering Ruby",ja="ルビーの煌き",element=6,icon_id=340,mp_cost=62,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
-    [517] = {id=517,en="Healing Ruby II",ja="ルビーの癒しII",element=6,icon_id=340,mp_cost=124,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
     [520] = {id=520,en="Soothing Ruby",ja="ルビーの安らぎ",element=6,icon_id=340,mp_cost=74,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
     [773] = {id=773,en="Pacifying Ruby",ja="ルビーの贖罪",element=6,icon_id=340,mp_cost=83,prefix="/pet",range=12,recast_id=174,targets=5,tp_cost=0,type="BloodPactWard"},
 
@@ -133,13 +131,11 @@ Res.Pets.BloodPactWard =
     [569] = {id=569,en="Earthen Armor",ja="大地の鎧",duration=60,element=3,icon_id=343,mp_cost=156,prefix="/pet",range=12,recast_id=174,status=458,targets=1,tp_cost=0,type="BloodPactWard"},
 
     -- Leviathan
-    [579] = {id=579,en="Spring Water",ja="湧水",element=5,icon_id=344,mp_cost=99,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
     [580] = {id=580,en="Slowga",ja="スロウガ",element=5,icon_id=344,mp_cost=48,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
     [585] = {id=585,en="Tidal Roar",ja="タイダルロア",element=5,icon_id=344,mp_cost=138,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
     [586] = {id=586,en="Soothing Current",ja="スージングカレント",duration=180,element=5,icon_id=344,mp_cost=95,prefix="/pet",range=12,recast_id=174,status=586,targets=1,tp_cost=0,type="BloodPactWard"},
 
     -- Garuda
-    [594] = {id=594,en="Whispering Wind",ja="風の囁き",element=2,icon_id=345,mp_cost=119,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
     [595] = {id=595,en="Hastega",ja="ヘイスガ",duration=180,element=2,icon_id=345,mp_cost=129,prefix="/pet",range=12,recast_id=174,status=33,targets=1,tp_cost=0,type="BloodPactWard"},
     [596] = {id=596,en="Aerial Armor",ja="真空の鎧",duration=900,element=2,icon_id=345,mp_cost=92,prefix="/pet",range=12,recast_id=174,status=36,targets=1,tp_cost=0,type="BloodPactWard"},
     [601] = {id=601,en="Fleet Wind",ja="真空の具足",duration=120,element=2,icon_id=345,mp_cost=114,prefix="/pet",range=12,recast_id=174,status=176,targets=1,tp_cost=0,type="BloodPactWard"},
@@ -176,6 +172,9 @@ Res.Pets.Healing =
     -- Carbuncle
     [512] = {id=512,en="Healing Ruby",ja="ルビーの癒し",element=6,icon_id=340,mp_cost=6,prefix="/pet",range=12,recast_id=174,targets=5,tp_cost=0,type="BloodPactWard"},
     [517] = {id=517,en="Healing Ruby II",ja="ルビーの癒しII",element=6,icon_id=340,mp_cost=124,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
+
+    -- Leviathan
+    [579] = {id=579,en="Spring Water",ja="湧水",element=5,icon_id=344,mp_cost=99,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},
 
     -- Garuda
     [594] = {id=594,en="Whispering Wind",ja="風の囁き",element=2,icon_id=345,mp_cost=119,prefix="/pet",range=12,recast_id=174,targets=1,tp_cost=0,type="BloodPactWard"},

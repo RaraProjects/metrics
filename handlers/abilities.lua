@@ -249,16 +249,14 @@ end
 H.Ability.PetBlog = function(actorMob, ownerMob, abilityData, abilityId, damage, targetCount)
     local abilityName = Horizon.GetAbilityName(abilityId, abilityData.Name)
 
-    if damage > 0 then
-        if Horizon.RageList(abilityId) then
-            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, abilityName, damage)
+    if Horizon.RageList(abilityId) then
+        Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, abilityName, damage)
 
-        elseif Horizon.HealingList(abilityId) then
-            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.ALL_HEALING, abilityName, damage)
+    elseif Horizon.WardList(abilityId) then
+        Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, abilityName, nil, string.format("TGTs: %d", targetCount), abilityData)
 
-        elseif Horizon.WardList(abilityId) then
-            Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, abilityName, nil, string.format("TGTs: %d", targetCount), abilityData)
-        end
+    elseif Horizon.HealingList(abilityId) then
+        Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.ALL_HEALING, abilityName, damage)
     end
 end
 

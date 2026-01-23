@@ -502,7 +502,7 @@ File.Import = function(path)
 
         file:close()
     else
-        print(string.format("Failed to open file: %s", path))
+        Ashita.Chat.Echo(string.format("Failed to open file: %s", path))
     end
 
     -- Refresh the sorted list caches.
