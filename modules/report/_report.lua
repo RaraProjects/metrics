@@ -1,13 +1,13 @@
 Report = { }
 
-require("modules.report.config")
-require("modules.report.publishing")
-require("modules.report.widgets")
+require('modules.report.config')
+require('modules.report.publishing')
+require('modules.report.widgets')
 
-Report.Name   = "Report"
-Report.Title  = "Metrics - Reporting"
-Report.Module = "Report"
-Report.File   = "report"
+Report.Name   = 'Report'
+Report.Title  = 'Metrics - Reporting'
+Report.Module = 'Report'
+Report.File   = 'report'
 
 Report.Section = { }
 
@@ -47,29 +47,29 @@ Report.Section.ChatReports = function()
     local colFlags = Column.Flags.None
     local width    = Column.Widths.Report
 
-    UI.Text("Chat Reports")
+    UI.Text('Chat Reports')
     Report.Widgets.ChatMode()
 
-    if UI.BeginTable("Chat Reports", 4, WindowManager.Table.Flags.None) then
-        UI.TableSetupColumn("Col 1", colFlags, width)
-        UI.TableSetupColumn("Col 2", colFlags, width)
-        UI.TableSetupColumn("Col 3", colFlags, width)
-        UI.TableSetupColumn("Col 4", colFlags, width)
+    if UI.BeginTable('Chat Reports', 4, WindowManager.Table.Flags.None) then
+        UI.TableSetupColumn('Col 1', colFlags, width)
+        UI.TableSetupColumn('Col 2', colFlags, width)
+        UI.TableSetupColumn('Col 3', colFlags, width)
+        UI.TableSetupColumn('Col 4', colFlags, width)
 
         -- The early returns are necessary for crash prevention.
         UI.TableNextRow()
-        UI.TableNextColumn() if UI.Button("Overall     ") then Report.Publishing.Overall() return end
+        UI.TableNextColumn() if UI.Button('Overall     ') then Report.Publishing.Overall() return end
         UI.TableNextColumn()
         UI.TableNextColumn()
         UI.TableNextColumn()
         --
-        UI.TableNextColumn() if UI.Button("Melee       ") then Report.Publishing.DamageByType(DB.Trackable.MELEE_OVERALL) return end
-        UI.TableNextColumn() if UI.Button("Weaponskills") then Report.Publishing.DamageByType(DB.Trackable.WEAPONSKILL) return end
-        UI.TableNextColumn() if UI.Button("Magic       ") then Report.Publishing.DamageByType(DB.Trackable.SPELLS_OVERALL) return end
-        UI.TableNextColumn() if UI.Button("Pet         ") then Report.Publishing.DamageByType(DB.Trackable.PET_OVERALL) return end
+        UI.TableNextColumn() if UI.Button('Melee       ') then Report.Publishing.DamageByType(DB.Trackable.MELEE_OVERALL) return end
+        UI.TableNextColumn() if UI.Button('Weaponskills') then Report.Publishing.DamageByType(DB.Trackable.WEAPONSKILL) return end
+        UI.TableNextColumn() if UI.Button('Magic       ') then Report.Publishing.DamageByType(DB.Trackable.SPELLS_OVERALL) return end
+        UI.TableNextColumn() if UI.Button('Pet         ') then Report.Publishing.DamageByType(DB.Trackable.PET_OVERALL) return end
         --
-        UI.TableNextColumn() if UI.Button("Abilities   ") then Report.Publishing.DamageByType(DB.Trackable.ABILITY_DAMAGING) return end
-        UI.TableNextColumn() if UI.Button("Healing     ") then Report.Publishing.DamageByType(DB.Trackable.ALL_HEAL) return end
+        UI.TableNextColumn() if UI.Button('Abilities   ') then Report.Publishing.DamageByType(DB.Trackable.ABILITY_DAMAGING) return end
+        UI.TableNextColumn() if UI.Button('Healing     ') then Report.Publishing.DamageByType(DB.Trackable.ALL_HEAL) return end
         UI.TableNextColumn()
         UI.TableNextColumn()
 
@@ -83,36 +83,36 @@ end
 Report.Section.Export = function()
     local colFlags = Column.Flags.None
     local width    = Column.Widths.Report
-    UI.Text("Export Data")
-    UI.Text("Files can be found in: /config/Metrics/")
+    UI.Text('Export Data')
+    UI.Text('Files can be found in: /config/Metrics/')
 
     local blogLength = #Blog.Log
     if blogLength >= 50000 then
-        UI.Text("NOTICE: There are " .. tostring(blogLength) .. " entries in the battle log.")
-        UI.Text("        You may notice a stagger when saving it.")
+        UI.Text('NOTICE: There are ' .. tostring(blogLength) .. ' entries in the battle log.')
+        UI.Text('        You may notice a stagger when saving it.')
     end
 
-    if UI.BeginTable("Save File", 4, WindowManager.Table.Flags.None) then
-        UI.TableSetupColumn("Col 1", colFlags, width)
-        UI.TableSetupColumn("Col 2", colFlags, width)
-        UI.TableSetupColumn("Col 3", colFlags, width)
-        UI.TableSetupColumn("Col 4", colFlags, width)
+    if UI.BeginTable('Save File', 4, WindowManager.Table.Flags.None) then
+        UI.TableSetupColumn('Col 1', colFlags, width)
+        UI.TableSetupColumn('Col 2', colFlags, width)
+        UI.TableSetupColumn('Col 3', colFlags, width)
+        UI.TableSetupColumn('Col 4', colFlags, width)
 
         UI.TableNextRow()
         UI.TableNextColumn()
-        if UI.Button("Database    ") then
+        if UI.Button('Database    ') then
             File.SaveData()
             return
         end
 
         UI.TableNextColumn()
-        if UI.Button("Battle Log  ") then
+        if UI.Button('Battle Log  ') then
             File.SaveBattlelog()
             return
         end
 
         UI.TableNextColumn()
-        if UI.Button("Loot        ") then
+        if UI.Button('Loot        ') then
             File.SaveLoot()
             return
         end
@@ -126,27 +126,27 @@ end
 ------------------------------------------------------------------------------------------------------
 Report.Section.Import = function()
     Import             = { }
-    Import.DialogTitle = "Import CSV"
+    Import.DialogTitle = 'Import CSV'
     Import.Selected    = nil
 
     UI.Text('Import Data')
     UI.Text('Database files from /config/Metrics/')
 
-    if UI.Button("Import") then
+    if UI.Button('Import') then
         UI.OpenPopup(Import.DialogTitle)
     end
 
     UI.Separator()
 
     if UI.BeginPopup(Import.DialogTitle) then
-        UI.BeginChild("File List", { 420, 240 })
+        UI.BeginChild('File List', { 420, 240 })
 
-        local directory = tostring(AshitaCore:GetInstallPath()) .. "config\\Metrics"
+        local directory = tostring(AshitaCore:GetInstallPath()) .. 'config\\Metrics'
         local p = io.popen('dir /b /a:-d "' .. directory .. '"')
 
         if p then
             for line in p:lines() do
-                if line:lower():find("database", 1, true) then
+                if line:lower():find('database', 1, true) then
                     local name = line
                     local is_sel = (Import.Selected == name)
 
@@ -156,8 +156,8 @@ Report.Section.Import = function()
 
                     if UI.IsItemHovered() and UI.IsMouseDoubleClicked(0) then
                         Import.Selected = name
-                        print(("Importing: %s"):format(Import.Selected))
-                        File.Import(string.format("%s\\%s", directory, name))
+                        Ashita.Chat.Echo(('Importing: %s'):format(Import.Selected))
+                        File.Import(string.format('%s\\%s', directory, name))
                         UI.CloseCurrentPopup()
                     end
                 end
@@ -167,7 +167,7 @@ Report.Section.Import = function()
         UI.EndChild()
 
         UI.Separator()
-        if UI.Button("Cancel") then
+        if UI.Button('Cancel') then
             UI.CloseCurrentPopup()
         end
 

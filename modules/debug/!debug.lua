@@ -1,9 +1,9 @@
 Debug = { }
 Debug.Enabled = false
 
-Debug.Name   = "Debug"
-Debug.Title  = "Metrics - Debug"
-Debug.Module = "Debug"
+Debug.Name   = 'Debug'
+Debug.Title  = 'Metrics - Debug'
+Debug.Module = 'Debug'
 
 Debug.Window = Window:New({
     Name       = Debug.Name,
@@ -15,17 +15,17 @@ Debug.Window = Window:New({
 
 Debug.Modes =
 {
-    DATA_VIEWER = "Data Viewer",
-    DPS         = "DPS        ",
-    ERROR_LOG   = "Error Log  ",
-    JOB_COLORS  = "Job Colors ",
-    UNIT_TESTS  = "Unit Tests ",
+    DATA_VIEWER = 'Data Viewer',
+    DPS         = 'DPS        ',
+    ERROR_LOG   = 'Error Log  ',
+    JOB_COLORS  = 'Job Colors ',
+    UNIT_TESTS  = 'Unit Tests ',
 }
 
-require("modules.debug.error_log")
-require("modules.debug.data_viewer")
-require("modules.debug.dps")
-require("modules.debug.unit_tests")
+require('modules.debug.error_log')
+require('modules.debug.data_viewer')
+require('modules.debug.dps')
+require('modules.debug.unit_tests')
 
 ------------------------------------------------------------------------------------------------------
 -- Is debug mode enabled.
@@ -56,7 +56,7 @@ end
 -- ------------------------------------------------------------------------------------------------------
 Debug.Message = function(message)
     if Debug.Enabled then
-        print("METRICS: " .. message)
+        Ashita.Chat.Echo(message)
     end
 end
 
@@ -67,11 +67,11 @@ Debug.Content = function()
     local col_flags = Column.Flags.None
     local width     = 150
 
-    if UI.BeginTable("Debug Functions", 4, WindowManager.Table.Flags.None) then
-        UI.TableSetupColumn("Col 1", col_flags, width)
-        UI.TableSetupColumn("Col 2", col_flags, width)
-        UI.TableSetupColumn("Col 3", col_flags, width)
-        UI.TableSetupColumn("Col 4", col_flags, width)
+    if UI.BeginTable('Debug Functions', 4, WindowManager.Table.Flags.None) then
+        UI.TableSetupColumn('Col 1', col_flags, width)
+        UI.TableSetupColumn('Col 2', col_flags, width)
+        UI.TableSetupColumn('Col 3', col_flags, width)
+        UI.TableSetupColumn('Col 4', col_flags, width)
 
         UI.TableNextColumn() if UI.Button(Debug.Modes.ERROR_LOG)   then Debug.Active_Mode = Debug.Modes.ERROR_LOG end
         UI.TableNextColumn() if UI.Button(Debug.Modes.DATA_VIEWER) then Debug.Active_Mode = Debug.Modes.DATA_VIEWER end
@@ -86,7 +86,7 @@ Debug.Content = function()
         UI.TableNextColumn() if UI.Button(Debug.Modes.JOB_COLORS)  then Debug.Active_Mode = Debug.Modes.JOB_COLORS end
 
         UI.TableNextColumn()
-        if UI.Checkbox("Reset Unit", { Debug.Unit.ResetEachTime }) then
+        if UI.Checkbox('Reset Unit', { Debug.Unit.ResetEachTime }) then
             Debug.Unit.ResetEachTime = not Debug.Unit.ResetEachTime
         end
 
@@ -96,7 +96,7 @@ Debug.Content = function()
     if Debug.Active_Mode == Debug.Modes.ERROR_LOG then
         Debug.Error.Populate(Debug.Error.ERROR)
 
-        if UI.CollapsingHeader("Warnings") then
+        if UI.CollapsingHeader('Warnings') then
             Debug.Error.Populate(Debug.Error.WARNING)
         end
 
@@ -110,29 +110,29 @@ Debug.Content = function()
         Debug.Unit.Populate()
 
     elseif Debug.Active_Mode == Debug.Modes.JOB_COLORS then
-        UI.TextColored(Res.Colors.GetJob(1),  "Warrior")
-        UI.TextColored(Res.Colors.GetJob(2),  "Monk")
-        UI.TextColored(Res.Colors.GetJob(3),  "White Mage")
-        UI.TextColored(Res.Colors.GetJob(4),  "Black Mage")
-        UI.TextColored(Res.Colors.GetJob(5),  "Red Mage")
-        UI.TextColored(Res.Colors.GetJob(6),  "Thief")
-        UI.TextColored(Res.Colors.GetJob(7),  "Paladin")
-        UI.TextColored(Res.Colors.GetJob(8),  "Dark Knight")
-        UI.TextColored(Res.Colors.GetJob(9),  "Beastmaster")
-        UI.TextColored(Res.Colors.GetJob(10), "Bard")
-        UI.TextColored(Res.Colors.GetJob(11), "Ranger")
-        UI.TextColored(Res.Colors.GetJob(12), "Samurai")
-        UI.TextColored(Res.Colors.GetJob(13), "Ninja")
-        UI.TextColored(Res.Colors.GetJob(14), "Dragoon")
-        UI.TextColored(Res.Colors.GetJob(15), "Summoner")
-        UI.TextColored(Res.Colors.GetJob(16), "Blue Mage")
-        UI.TextColored(Res.Colors.GetJob(17), "Corsair")
-        UI.TextColored(Res.Colors.GetJob(18), "Puppetmaster")
-        UI.TextColored(Res.Colors.GetJob(19), "Dancer")
-        UI.TextColored(Res.Colors.GetJob(20), "Scholar")
-        UI.TextColored(Res.Colors.GetJob(21), "Geomancer")
-        UI.TextColored(Res.Colors.GetJob(22), "Runefencer")
+        UI.TextColored(Res.Colors.GetJob(1),  'Warrior')
+        UI.TextColored(Res.Colors.GetJob(2),  'Monk')
+        UI.TextColored(Res.Colors.GetJob(3),  'White Mage')
+        UI.TextColored(Res.Colors.GetJob(4),  'Black Mage')
+        UI.TextColored(Res.Colors.GetJob(5),  'Red Mage')
+        UI.TextColored(Res.Colors.GetJob(6),  'Thief')
+        UI.TextColored(Res.Colors.GetJob(7),  'Paladin')
+        UI.TextColored(Res.Colors.GetJob(8),  'Dark Knight')
+        UI.TextColored(Res.Colors.GetJob(9),  'Beastmaster')
+        UI.TextColored(Res.Colors.GetJob(10), 'Bard')
+        UI.TextColored(Res.Colors.GetJob(11), 'Ranger')
+        UI.TextColored(Res.Colors.GetJob(12), 'Samurai')
+        UI.TextColored(Res.Colors.GetJob(13), 'Ninja')
+        UI.TextColored(Res.Colors.GetJob(14), 'Dragoon')
+        UI.TextColored(Res.Colors.GetJob(15), 'Summoner')
+        UI.TextColored(Res.Colors.GetJob(16), 'Blue Mage')
+        UI.TextColored(Res.Colors.GetJob(17), 'Corsair')
+        UI.TextColored(Res.Colors.GetJob(18), 'Puppetmaster')
+        UI.TextColored(Res.Colors.GetJob(19), 'Dancer')
+        UI.TextColored(Res.Colors.GetJob(20), 'Scholar')
+        UI.TextColored(Res.Colors.GetJob(21), 'Geomancer')
+        UI.TextColored(Res.Colors.GetJob(22), 'Runefencer')
     else
-        UI.Text("Select a tool.")
+        UI.Text('Select a tool.')
     end
 end

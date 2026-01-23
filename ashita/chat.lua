@@ -1,10 +1,12 @@
 Ashita.Chat = { }
 
+local chat = require('chat')
+
 Ashita.Chat.Modes = {
-    [1] = { Name = "Party",       Prefix = "/p"  },
-    [2] = { Name = "Linkshell 1", Prefix = "/l"  },
-    [3] = { Name = "Linkshell 2", Prefix = "/l2" },
-    [4] = { Name = "Say",         Prefix = "/s"  },
+    [1] = { Name = 'Party',       Prefix = '/p'  },
+    [2] = { Name = 'Linkshell 1', Prefix = '/l'  },
+    [3] = { Name = 'Linkshell 2', Prefix = '/l2' },
+    [4] = { Name = 'Say',         Prefix = '/s'  },
 }
 
 -- ------------------------------------------------------------------------------------------------------
@@ -13,7 +15,9 @@ Ashita.Chat.Modes = {
 ---@param message string
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Chat.Echo = function(message)
-    print(string.format("METRICS: %s", tostring(message)))
+    local brand = chat.header('METRICS')
+
+    print(string.format('%s: %s', brand, message))
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -22,5 +26,5 @@ end
 ---@param message string
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Chat.AddToChat = function(type, message)
-    AshitaCore:GetChatManager():QueueCommand(1, tostring(type) .. " " .. tostring(message))
+    AshitaCore:GetChatManager():QueueCommand(1, string.format('%s %s', type, message))
 end

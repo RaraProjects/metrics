@@ -92,14 +92,13 @@ end
 ---@param url string
 -- ------------------------------------------------------------------------------------------------------
 local openUrl = function(url)
-    print(tostring(url))
+    Ashita.Chat.Echo(string.format('Opening URL: %s', url))
 
     if not url then
         return
     end
 
     if os.getenv('OS') == 'Windows_NT' then
-        print(string.format('Opening URL: %s', url))
         os.execute(string.format('start %s', url))
     end
 end
@@ -114,9 +113,8 @@ local openFolder = function(path)
         return
     end
 
-    path = path:gsub("/", "\\")
-
-    print(string.format('Opening Directory: %s', path))
+    path = path:gsub('/', '\\')
+    Ashita.Chat.Echo(string.format('Opening Directory: %s', path))
 
     os.execute(string.format('explorer %s', path))
 end
@@ -253,7 +251,7 @@ Version.PullGithubData = function()
     local body, status = http.request(apiURL)
 
     if status ~= 200 or not body then
-        print('Unable to reach GitHub.')
+        Ashita.Chat.Echo('Unable to reach GitHub.')
         return
     end
 
