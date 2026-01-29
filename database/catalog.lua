@@ -91,6 +91,34 @@ local inc = function(newValue, playerName, targetName, actionName, trackable, me
 end
 
 ------------------------------------------------------------------------------------------------------
+-- Helper for checking maximums.
+------------------------------------------------------------------------------------------------------
+---@param damage     integer
+---@param audits     table
+---@param playerName string
+---@param targetName string
+---@param actionName string
+---@param trackable  DB.Trackable
+---@param maxMetric  DB.Metric
+------------------------------------------------------------------------------------------------------
+local checkMax = function(damage, audits, playerName, targetName, actionName, trackable, maxMetric)
+    local maxHealing   = DB.HealingMax
+
+    -- Mob specific maximum.
+    if damage > DB.Catalog.Get(playerName, trackable, actionName, maxMetric, targetName) then
+        -- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
+        if trackable == trackables.SPELLS_HEALING and maxHealing[actionName] then
+            if damage > maxHealing[actionName] then
+                damage = maxHealing[actionName]
+            end
+        end
+
+        -- Maximum damage.
+        DB.Catalog.UpdateMetric(updateMode.SET, damage, audits, trackable, actionName, maxMetric)
+    end
+end
+
+------------------------------------------------------------------------------------------------------
 -- Helper function for binding globals to locals to increase performance.
 ------------------------------------------------------------------------------------------------------
 DB.Catalog.BindGlobals = function()
@@ -220,7 +248,6 @@ DB.Catalog.UpdateDamage = function(playerName, targetName, trackable, damage, ac
 
     local updateMetric = DB.Catalog.UpdateMetric
     local get          = DB.Catalog.Get
-    local maxHealing   = DB.HealingMax
 
 	-- Update the non-catalog database with the damage
 	dbData.UpdateDamage(audits, trackable, damage, isCriticalHit)
@@ -249,17 +276,9 @@ DB.Catalog.UpdateDamage = function(playerName, targetName, trackable, damage, ac
 		end
     end
 
-    if damage > get(playerName, trackable, actionName, maxMetric) then
-    	-- Add a check for abnormally high healing magic to prevent Divine Seal from messing up overcure.
-		if trackable == trackables.SPELLS_HEALING and maxHealing[actionName] then
-			if damage > maxHealing[actionName] then
-				damage = maxHealing[actionName]
-			end
-		end
-
-		-- Maximum damage.
-		updateMetric(updateMode.SET, damage, audits, trackable, actionName, maxMetric)
-    end
+    -- Need to check for per-mob maximum and global all mobs maximum.
+    checkMax(damage, audits, playerName, targetName, actionName, trackable, maxMetric)
+    checkMax(damage, audits, playerName, DB.Enum.ALL_MOBS, actionName, trackable, maxMetric)
 
     lists.ResortPlayerCatalogDamage(playerName, trackable)
 
