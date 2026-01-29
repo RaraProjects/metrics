@@ -5,11 +5,17 @@ local http = require('socket.http')
 local json = require('json')
 
 local curatedReleaseList = { }
-local apiURL             = 'https://api.github.com/repos/RaraProjects/metrics/releases'
 local maxReleaseCount    = 3
 local versionDataPulled  = false
 local recentDownload     = nil
 local hasTestRelease     = false
+
+local gitOwner   = 'RaraProjects'
+local repoName   = 'metrics'
+local branchName = 'Testing'
+local addonName  = addon.name or 'Addon'
+local apiURL     = string.format('https://api.github.com/repos/%s/%s/releases', gitOwner, repoName)
+local branchURL  = string.format('https://github.com/%s/%s/archive/refs/heads/%s.zip', gitOwner, repoName, branchName)
 
 -- ------------------------------------------------------------------------------------------------------
 -- Gets asset data from the Github JSON results.
@@ -125,13 +131,13 @@ end
 local uiGetGitHubData = function()
     if versionDataPulled == false then
         UI.Text('Clicking this button will...')
-        UI.Text('- Check Github for recent Metrics releases.')
+        UI.Text(string.format('- Check Github for recent %s releases.', addonName))
         UI.Text('- Likely cause a very short system stutter.')
-        UI.Text('- Show you a table of Metrics versions (in game).')
+        UI.Text(string.format('- Show you a table of %s versions (in game).', addonName))
         UI.Text('- NOT download files to your computer.')
         UI.Text('')
 
-        if UI.Button('Check for new Metrics releases.') then
+        if UI.Button(string.format('Check for new %s releases.', addonName)) then
             Version.PullGithubData()
             versionDataPulled = true
         end
@@ -143,9 +149,9 @@ end
 -- ------------------------------------------------------------------------------------------------------
 local basicInstallInstructions = function()
     UI.Text('1. Click Addon Folder button above to open your addons folder.')
-    UI.Text('2. Move your metrics.zip file to addons folder.')
-    UI.Text('3. Unzip metrics.zip.')
-    UI.Text('4. You can overwrite the metrics files.')
+    UI.Text(string.format('2. Move your %s.zip file to addons folder.', repoName))
+    UI.Text(string.format('3. Unzip %s.zip.', repoName))
+    UI.Text(string.format('4. You can overwrite the %s files.', repoName))
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -161,7 +167,7 @@ local uiInstructions = function()
         UI.Text('Brave soul! You downloaded the cutting edge development. Next steps...')
         basicInstallInstructions()
         UI.Text('5. If something breaks (badly) fall back to a release or pre-release.')
-        UI.Text('6. Leave a comment in the Metrics Discord or Github Issues page.')
+        UI.Text(string.format('6. Leave a comment in the %s Discord or Github Issues page.', addonName))
     end
 end
 
@@ -235,7 +241,7 @@ Version.Populate = function()
     UI.Text('')
     UI.Text('Feel free to try the newest unreleased features. It\'s what I use.')
     if UI.Button('Download - UNRELEASED EXPERIMENTAL - May Break!') then
-        openUrl('https://github.com/RaraProjects/metrics/archive/refs/heads/Testing.zip')
+        openUrl(branchURL)
         recentDownload = nil
         hasTestRelease = true
     end
