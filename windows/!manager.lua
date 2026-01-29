@@ -5,7 +5,8 @@ WindowManager = { }
 require("windows.themes")
 require("windows.widgets")
 require("windows.config")
-require("windows.menu")
+
+local menuHandler = require("windows.menu")
 
 WindowManager.WindowList = { }
 WindowManager.Settings   = SettingsFile.load(WindowManager.Config.Defaults, "window")
@@ -225,4 +226,26 @@ WindowManager.CanBarLoad = function()
     local now = Socket.gettime()
 
     return (now - WindowManager.BarDelay) > WindowManager.BarDelayThreshold
+end
+
+------------------------------------------------------------------------------------------------------
+-- Get the active menu name from the menu handler.
+------------------------------------------------------------------------------------------------------
+---@return string
+------------------------------------------------------------------------------------------------------
+WindowManager.GetMenuName = function()
+    return menuHandler and menuHandler.GetMenuName() or 'No menu handler.'
+end
+
+------------------------------------------------------------------------------------------------------
+-- Should we hide windows due to menus?
+------------------------------------------------------------------------------------------------------
+---@return boolean
+------------------------------------------------------------------------------------------------------
+WindowManager.ShouldHideFromMenu = function()
+    if not menuHandler then
+        return false
+    end
+
+    return menuHandler.ShouldHideFromMenu() == true
 end

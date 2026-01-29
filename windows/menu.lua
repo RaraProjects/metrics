@@ -1,9 +1,7 @@
-WindowManager.Menu = { }
+local menuHandler = { }
 
-WindowManager.Menu.Module  = "FFXiMain.dll"
-WindowManager.Menu.Pattern = "8B480C85C974??8B510885D274??3B05"
-
-WindowManager.Menu.Types = T{
+menuHandler.Types =
+{
     fulllog  = true,    -- Expanded chat log
     equip    = true,    -- Equipment menu
     inventor = true,    -- Inventory
@@ -80,6 +78,10 @@ WindowManager.Menu.Types = T{
     inspect  = true,    -- Checking equipment
 }
 
+menuHandler.Module  = 'FFXiMain.dll'
+menuHandler.Pattern = '8B480C85C974??8B510885D274??3B05'
+menuHandler.Memory  = nil
+
 -- ------------------------------------------------------------------------------------------------------
 -- Gets the name of the upper most menu.
 -- Copied from PetMe which got it from XITools.
@@ -88,28 +90,43 @@ WindowManager.Menu.Types = T{
 -- ------------------------------------------------------------------------------------------------------
 ---@return string, integer
 -- ------------------------------------------------------------------------------------------------------
-function WindowManager.Menu.GetMenuName()
-    local menu         = ashita.memory.find(WindowManager.Menu.Module, 0, WindowManager.Menu.Pattern, 16, 0)
-    local pointer      = ashita.memory.read_uint32(menu)
+menuHandler.GetMenuName = function()
+    if not menuHandler.Memory then
+        menuHandler.Memory = ashita.memory.find(menuHandler.Module, 0, menuHandler.Pattern, 16, 0)
+    end
+
+    local menu = menuHandler.Memory
+
+    if not menu or menu == 0 then
+        menuHandler.Memory = nil
+        return '', 0
+    end
+
+    local pointer = ashita.memory.read_uint32(menu)
+
+    if not pointer or pointer == 0 then
+        return '', 0
+    end
+
     local pointerValue = ashita.memory.read_uint32(pointer)
 
     if pointerValue == 0 then
-        return "", 0
+        return '', 0
     end
 
     local menuHeader = ashita.memory.read_uint32(pointerValue + 4)
     local menuName   = ashita.memory.read_string(menuHeader + 0x46, 16)
 
-    return string.gsub(menuName, "\x00", "")
+    return string.gsub(menuName, '\x00', '')
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Checks whether a menu is up that we should hide Metrics for.
+-- Checks whether a menu is up that we should hide windows for.
 -- ------------------------------------------------------------------------------------------------------
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-function WindowManager.Menu.Hide()
-    local menuName = WindowManager.Menu.GetMenuName()
+menuHandler.ShouldHideFromMenu = function()
+    local menuName = menuHandler.GetMenuName()
 
     if not menuName then
         return true
@@ -117,7 +134,9 @@ function WindowManager.Menu.Hide()
 
     -- Get rid of prefix junk and clip off trailing spaces.
     menuName = string.sub(menuName, 9)
-    menuName = string.gsub(menuName, " ", "")
+    menuName = string.gsub(menuName, ' ', '')
 
-    return WindowManager.Menu.Types[menuName]
+    return menuHandler.Types[menuName]
 end
+
+return menuHandler

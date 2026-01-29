@@ -102,7 +102,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
     Timers.Cycle(Timers.Types.AUTOPAUSE)
     Timers.Cycle(Timers.Types.DPS)
 
-    if not WindowManager.Menu.Hide() and not WindowManager.IsMasked() then
+    if not WindowManager.ShouldHideFromMenu() and not WindowManager.IsMasked() then
         -- Windows that always standalone.
         Hub.Window.Populate(Hub.Content)
         Overview.Window.Populate(Overview.Content)

@@ -112,7 +112,7 @@ Focus.Content = function()
         UI.Text("No player selected.")
 
         if Debug.IsEnabled() then
-            UI.SameLine() UI.Text(WindowManager.Menu.GetMenuName())
+            UI.SameLine() UI.Text(WindowManager.GetMenuName())
         end
 
         return nil
