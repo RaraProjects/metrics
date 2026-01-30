@@ -1,3 +1,5 @@
+local widgets = require('windows.widgets')
+
 Blog.Config = { }
 
 Blog.Config.Defaults = T{               -- Default values that populate the Metrics settings global.
@@ -62,13 +64,13 @@ Blog.Config.GeneralSettings = function()
     local colFlags = Blog.Tables.ColumnFlagsNone
     local width    = Blog.Tables.WidthSettings
 
-    UI.Text("Additional Columns")
-    if UI.BeginTable("Battle Log", 3) then
-        UI.TableSetupColumn("Col 1", colFlags, width)
-        UI.TableSetupColumn("Col 2", colFlags, width)
-        UI.TableSetupColumn("Col 3", colFlags, width)
+    UI.Text('Additional Columns')
+    if UI.BeginTable('Battle Log', 3) then
+        UI.TableSetupColumn('Col 1', colFlags, width)
+        UI.TableSetupColumn('Col 2', colFlags, width)
+        UI.TableSetupColumn('Col 3', colFlags, width)
 
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Show Timestamps", Blog.Settings, "Show_Timestamp")
+        UI.TableNextColumn() widgets.ToggleCheckbox('Show Timestamps', Blog.Settings, 'Show_Timestamp')
         UI.TableNextColumn()
         UI.TableNextColumn()
         UI.EndTable()
@@ -83,61 +85,61 @@ Blog.Config.ColumnSettings = function()
     local width       = Blog.Tables.WidthSettings
     local columnCount = 3
 
-    UI.Text("General")
-    if UI.BeginTable("Battle Log - General", columnCount) then
-        UI.TableSetupColumn("Col 1", colFlags, width)
-        UI.TableSetupColumn("Col 2", colFlags, width)
-        UI.TableSetupColumn("Col 3", colFlags, width)
+    UI.Text('General')
+    if UI.BeginTable('Battle Log - General', columnCount) then
+        UI.TableSetupColumn('Col 1', colFlags, width)
+        UI.TableSetupColumn('Col 2', colFlags, width)
+        UI.TableSetupColumn('Col 3', colFlags, width)
 
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Enfeebles", Blog.Settings, "Show_Enfeebling")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Healing",   Blog.Settings, "Show_Healing")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("XP",        Blog.Settings, "Show_XP")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Zoning",    Blog.Settings, "Show_Zone")
+        UI.TableNextColumn() widgets.ToggleCheckbox('Enfeebles', Blog.Settings, 'Show_Enfeebling')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Healing',   Blog.Settings, 'Show_Healing')
+        UI.TableNextColumn() widgets.ToggleCheckbox('XP',        Blog.Settings, 'Show_XP')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Zoning',    Blog.Settings, 'Show_Zone')
         UI.EndTable()
     end
 
-    UI.Separator() UI.Text("Player")
-    if UI.BeginTable("Battle Log - Player", columnCount) then
-        UI.TableSetupColumn("Col 1", colFlags, width)
-        UI.TableSetupColumn("Col 2", colFlags, width)
-        UI.TableSetupColumn("Col 3", colFlags, width)
+    UI.Separator() UI.Text('Player')
+    if UI.BeginTable('Battle Log - Player', columnCount) then
+        UI.TableSetupColumn('Col 1', colFlags, width)
+        UI.TableSetupColumn('Col 2', colFlags, width)
+        UI.TableSetupColumn('Col 3', colFlags, width)
 
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Melee",        Blog.Settings, "Show_Melee")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Ranged",       Blog.Settings, "Show_Ranged")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Weaponskills", Blog.Settings, "Show_Weaponskill")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Skillchains",  Blog.Settings, "Show_Skillchain")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Nukes",        Blog.Settings, "Show_Spells")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Misc Spells",  Blog.Settings, "Show_Misc_Spells")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Song Buffs",   Blog.Settings, "Show_Song_Buffs")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Phantom Roll", Blog.Settings, "Show_Phantom_Roll")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Abilities",    Blog.Settings, "Show_Ability")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Deaths",       Blog.Settings, "Show_Player_Deaths")
+        UI.TableNextColumn() widgets.ToggleCheckbox('Melee',        Blog.Settings, 'Show_Melee')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Ranged',       Blog.Settings, 'Show_Ranged')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Weaponskills', Blog.Settings, 'Show_Weaponskill')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Skillchains',  Blog.Settings, 'Show_Skillchain')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Nukes',        Blog.Settings, 'Show_Spells')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Misc Spells',  Blog.Settings, 'Show_Misc_Spells')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Song Buffs',   Blog.Settings, 'Show_Song_Buffs')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Phantom Roll', Blog.Settings, 'Show_Phantom_Roll')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Abilities',    Blog.Settings, 'Show_Ability')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Deaths',       Blog.Settings, 'Show_Player_Deaths')
         UI.EndTable()
     end
 
-    UI.Separator() UI.Text("Pets")
-    if UI.BeginTable("Battle Log - Pets", columnCount) then
-        UI.TableSetupColumn("Col 1", colFlags, width)
-        UI.TableSetupColumn("Col 2", colFlags, width)
-        UI.TableSetupColumn("Col 3", colFlags, width)
+    UI.Separator() UI.Text('Pets')
+    if UI.BeginTable('Battle Log - Pets', columnCount) then
+        UI.TableSetupColumn('Col 1', colFlags, width)
+        UI.TableSetupColumn('Col 2', colFlags, width)
+        UI.TableSetupColumn('Col 3', colFlags, width)
 
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Melee",        Blog.Settings, "Show_Pet_Melee")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("TP/Abilities", Blog.Settings, "Show_Pet_TP")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Commands",     Blog.Settings, "Show_Pet_Command")
+        UI.TableNextColumn() widgets.ToggleCheckbox('Melee',        Blog.Settings, 'Show_Pet_Melee')
+        UI.TableNextColumn() widgets.ToggleCheckbox('TP/Abilities', Blog.Settings, 'Show_Pet_TP')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Commands',     Blog.Settings, 'Show_Pet_Command')
         UI.EndTable()
     end
 
-    UI.Separator() UI.Text("Mobs")
-    if UI.BeginTable("Battle Log - Mobs", columnCount) then
-        UI.TableSetupColumn("Col 1", colFlags, width)
-        UI.TableSetupColumn("Col 2", colFlags, width)
-        UI.TableSetupColumn("Col 3", colFlags, width)
+    UI.Separator() UI.Text('Mobs')
+    if UI.BeginTable('Battle Log - Mobs', columnCount) then
+        UI.TableSetupColumn('Col 1', colFlags, width)
+        UI.TableSetupColumn('Col 2', colFlags, width)
+        UI.TableSetupColumn('Col 3', colFlags, width)
 
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Melee",        Blog.Settings, "Show_Mob_Melee")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Ranged",       Blog.Settings, "Show_Mob_Ranged")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("TP/Abilities", Blog.Settings, "Show_Mob_TP")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Spells",       Blog.Settings, "Show_Mob_Spells")
-        UI.TableNextColumn() WindowManager.Widgets.ToggleCheckbox("Deaths",       Blog.Settings, "Show_Mob_Deaths")
+        UI.TableNextColumn() widgets.ToggleCheckbox('Melee',        Blog.Settings, 'Show_Mob_Melee')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Ranged',       Blog.Settings, 'Show_Mob_Ranged')
+        UI.TableNextColumn() widgets.ToggleCheckbox('TP/Abilities', Blog.Settings, 'Show_Mob_TP')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Spells',       Blog.Settings, 'Show_Mob_Spells')
+        UI.TableNextColumn() widgets.ToggleCheckbox('Deaths',       Blog.Settings, 'Show_Mob_Deaths')
         UI.EndTable()
     end
 end
@@ -146,10 +148,10 @@ end
 -- Shows filters that affect the Battle Log screen.
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Filters = function()
-    UI.Text("Log Filters")
-    if UI.BeginTable("Battle Log - Filters", 2) then
-        UI.TableSetupColumn("Col 1")
-        UI.TableSetupColumn("Col 2")
+    UI.Text('Log Filters')
+    if UI.BeginTable('Battle Log - Filters', 2) then
+        UI.TableSetupColumn('Col 1')
+        UI.TableSetupColumn('Col 2')
 
         UI.TableNextColumn() Blog.Widgets.PlayerFilter()
         UI.TableNextColumn() Blog.Widgets.ActionFilterInput()
@@ -162,19 +164,19 @@ end
 -- Shows blog length settings that affect the Battle Log screen.
 ------------------------------------------------------------------------------------------------------
 Blog.Config.Length = function()
-    UI.Text("Battle Log Length")
+    UI.Text('Battle Log Length')
 
-    if UI.Button("Default") then
+    if UI.Button('Default') then
         Blog.Settings.Visible_Length = Blog.Config.Defaults.Visible_Length
     end
 
-    UI.SameLine() UI.Text(" ") UI.SameLine()
+    UI.SameLine() UI.Text(' ') UI.SameLine()
 
     local length = { Blog.Settings.Visible_Length }
 
     UI.SetNextItemWidth(50)
 
-    if UI.DragInt("Lines", length, 0.1, Blog.Config.Defaults.Visible_Length, 50, "%d", ImGuiSliderFlags_None) then
+    if UI.DragInt('Lines', length, 0.1, Blog.Config.Defaults.Visible_Length, 50, '%d', ImGuiSliderFlags_None) then
         Blog.Settings.Visible_Length = length[1]
         local lastPage = Blog.MaxPage()
 

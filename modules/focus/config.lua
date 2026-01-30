@@ -1,3 +1,5 @@
+local widgets = require('windows.widgets')
+
 Focus.Config = { }
 
 Focus.Config.Defaults = T{
@@ -18,19 +20,19 @@ Focus.Config.ColumnWidth        = Column.Widths.Settings
 Focus.Config.Display = function()
     local colFlags = Focus.Config.ColumnFlags
 
-    if UI.BeginTable("Focus General", 2) then
-        UI.TableSetupColumn("Col 1", colFlags)
-        UI.TableSetupColumn("Col 2", colFlags)
+    if UI.BeginTable('Focus General', 2) then
+        UI.TableSetupColumn('Col 1', colFlags)
+        UI.TableSetupColumn('Col 2', colFlags)
 
         UI.TableNextColumn()
-        if UI.Checkbox("Misc Actions", { Focus.Settings.Show_Misc_Actions }) then
+        if UI.Checkbox('Misc Actions', { Focus.Settings.Show_Misc_Actions }) then
             Focus.Settings.Show_Misc_Actions = not Focus.Settings.Show_Misc_Actions
         end
-        WindowManager.Widgets.HelpMarker
+        widgets.HelpMarker
         (
-            "Shows uncategorized actions in the catalog lists. " ..
-            "Sometimes these lists can get quite long and take up a lot of space. " ..
-            "Turn this off if you aren't interested in seeing those."
+            'Shows uncategorized actions in the catalog lists. ' ..
+            'Sometimes these lists can get quite long and take up a lot of space. ' ..
+            'Turn this off if you aren\'t interested in seeing those.'
         )
 
         UI.EndTable()
@@ -41,7 +43,7 @@ end
 -- Shows percent details checkbox.
 ------------------------------------------------------------------------------------------------------
 Focus.Config.PercentDetails = function()
-    if UI.SmallButton("% Details") then
+    if UI.SmallButton('% Details') then
         Focus.Config.PercentToggle()
     end
 end
@@ -57,7 +59,7 @@ end
 -- Toggles miscellaneous actions.
 ------------------------------------------------------------------------------------------------------
 Focus.Config.MiscActions = function()
-    if UI.SmallButton("Misc. Actions") then
+    if UI.SmallButton('Misc. Actions') then
         Focus.Settings.Show_Misc_Actions = not Focus.Settings.Show_Misc_Actions
     end
 end

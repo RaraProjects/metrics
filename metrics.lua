@@ -109,7 +109,7 @@ ashita.events.register('d3d_present', 'present_cb', function()
         Debug.Window.Populate(Debug.Content)
 
         -- Windows that standalone only in multi-window mode.
-        if WindowManager.Settings.Multi_Window then
+        if WindowManager.IsMultiWindow() then
             Parse.Window.Populate(Parse.Content)
             Focus.Window.Populate(Focus.Content)
             Blog.Window.Populate(Blog.Content)

@@ -1,13 +1,15 @@
+local widgets = require('windows.widgets')
+
 DB.Widgets = { }
 
 DB.Widgets.DropdownWidth = 150
 DB.Widgets.DropdownFlags = ImGuiComboFlags_None
 
-DB.Widgets.DropdownPlayerFilterHeader = "Player"
+DB.Widgets.DropdownPlayerFilterHeader = 'Player'
 DB.Widgets.DropdownPlayerFilterFocus  = DB.Enum.NONE
 DB.Widgets.DropdownPlayerFilterIndex  = 1
 
-DB.Widgets.DropdownMobFilterHeader = "Mob Filter"
+DB.Widgets.DropdownMobFilterHeader = 'Mob Filter'
 DB.Widgets.DropdownMobFilterFocus  = DB.Enum.ALL_MOBS
 DB.Widgets.DropdownMobFilterIndex  = 1
 
@@ -89,14 +91,14 @@ DB.Widgets.DropdownDPS = function(width)
         UI.EndCombo()
     end
 
-    WindowManager.Widgets.HelpMarker
+    widgets.HelpMarker
     (
-        "Average DPS is your total damage divided by the parse duration timer. The timer only runs while actions " ..
-        "are taking place by your affiliates near you so idle time by the party won't hurt your DPS by much. " ..
-        "Average DPS is smoother and averaged over a longer period. It won't drop over time as long as no one is taking a battle action. \n \n" ..
-        "Recent DPS is spikey and closer to the present. Actions you do right now matter more. " ..
-        "For example, if you were to stop taking actions for {X} amount of seconds your DPS would drop to zero. " ..
-        "Use Recent DPS mode if you're more interested in what's happening right now."
+        'Average DPS is your total damage divided by the parse duration timer. The timer only runs while actions ' ..
+        'are taking place by your affiliates near you so idle time by the party won\'t hurt your DPS by much. ' ..
+        'Average DPS is smoother and averaged over a longer period. It won\'t drop over time as long as no one is taking a battle action. \n \n' ..
+        'Recent DPS is spikey and closer to the present. Actions you do right now matter more. ' ..
+        'For example, if you were to stop taking actions for {X} amount of seconds your DPS would drop to zero. ' ..
+        'Use Recent DPS mode if you\'re more interested in what\'s happening right now.'
     )
 end
 
@@ -127,15 +129,15 @@ DB.Widgets.DropdownMobFilter = function()
         UI.EndCombo()
     end
 
-    WindowManager.Widgets.HelpMarker
+    widgets.HelpMarker
     (
-        "You can filter to show only data for actions taken against mobs with a specific name.\n" ..
-        "Notes:\n" ..
-        "1. The filter may not be for individual mobs. It is for mobs with that name collectively.\n" ..
-        "2. If the mob has a unique name (like an NM) then the data will be mob specific.\n" ..
-        "3. The filter only affects actions taken against mobs with that name.\n" ..
-        "4. The filter does not work for healing because those actions are taken on other players.\n" ..
-        "5. The filter does not work for abilities that are used on yourself or other players.\n"
+        'You can filter to show only data for actions taken against mobs with a specific name.\n' ..
+        'Notes:\n' ..
+        '1. The filter may not be for individual mobs. It is for mobs with that name collectively.\n' ..
+        '2. If the mob has a unique name (like an NM) then the data will be mob specific.\n' ..
+        '3. The filter only affects actions taken against mobs with that name.\n' ..
+        '4. The filter does not work for healing because those actions are taken on other players.\n' ..
+        '5. The filter does not work for abilities that are used on yourself or other players.\n'
     )
 end
 
@@ -165,8 +167,8 @@ DB.Widgets.DropdownPlayerFilter = function()
         UI.EndCombo()
     end
 
-    WindowManager.Widgets.HelpMarker
+    widgets.HelpMarker
     (
-        "Pick a player that you would like to see more detailed stats for.\n"
+        'Pick a player that you would like to see more detailed stats for.\n'
     )
 end

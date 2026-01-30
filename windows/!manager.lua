@@ -2,15 +2,17 @@ UI = require('imgui')
 
 WindowManager = { }
 
-require('windows.widgets')
-require('windows.config')
 require('windows.!window')
 
-local themeHandler = require('windows.themes')
-local menuHandler  = require('windows.menu')
+local themeHandler  = require('windows.themes')
+local menuHandler   = require('windows.menu')
+local configHandler = require('windows.config')
 
 WindowManager.WindowList = { }
-WindowManager.Settings   = SettingsFile.load(WindowManager.Config.Defaults, 'window')
+
+WindowManager.Settings     = { }
+WindowManager.SettingsKeys = { }
+
 WindowManager.Mask       = false -- Hides all windows.
 
 WindowManager.Tabs          = { }
@@ -51,6 +53,73 @@ WindowManager.Draw.CurrentMode   = WindowManager.Draw.Modes.LEGACY
 WindowManager.Initialize = function()
     WindowManager.ShowMouseRefresh = true
     WindowManager.SetDrawMode()
+    configHandler.LoadSettings()
+    WindowManager.Settings     = configHandler.GetSettings()
+    WindowManager.SettingsKeys = configHandler.GetKeys()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Updates the settings table from Ashita settings_update event.
+------------------------------------------------------------------------------------------------------
+---@param settings table
+------------------------------------------------------------------------------------------------------
+WindowManager.UpdateSettingsFromLoad = function(settings)
+    if settings then
+        configHandler.UpdateSettingsFromLoad(settings)
+        WindowManager.Settings = configHandler.GetSettings()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns a pointer to the window settings table.
+------------------------------------------------------------------------------------------------------
+---@return table, table
+------------------------------------------------------------------------------------------------------
+WindowManager.GetSettings = function()
+    return WindowManager.Settings, WindowManager.SettingsKeys
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns whether the window manager is in multi-window mode or not.
+------------------------------------------------------------------------------------------------------
+---@return boolean
+------------------------------------------------------------------------------------------------------
+WindowManager.IsMultiWindow = function()
+    return configHandler.IsMultiWindow()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns the current window scaling.
+------------------------------------------------------------------------------------------------------
+---@return number
+------------------------------------------------------------------------------------------------------
+WindowManager.GetScaling = function()
+    return configHandler.GetScaling()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns the current window transparency.
+------------------------------------------------------------------------------------------------------
+---@return number
+------------------------------------------------------------------------------------------------------
+WindowManager.GetTransparency = function()
+    return configHandler.GetTransparency()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Should windows show titles or not.
+------------------------------------------------------------------------------------------------------
+---@return boolean
+------------------------------------------------------------------------------------------------------
+WindowManager.IsShowingTitles = function()
+    return configHandler.IsShowingTitles()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Returns the active window when multi-window is enabled.
+------------------------------------------------------------------------------------------------------
+WindowManager.SetActiveWindow = function(windowName)
+    WindowManager.Settings.Active_Window = windowName
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -93,6 +162,13 @@ WindowManager.SettingsReset = function()
             pointer.SettingsReset()
         end
     end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Call window configuration reset handler.
+------------------------------------------------------------------------------------------------------
+WindowManager.ResetConfig = function()
+    return configHandler and configHandler.Reset()
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -297,4 +373,11 @@ end
 ------------------------------------------------------------------------------------------------------
 WindowManager.PopThemeElements = function()
     return themeHandler and themeHandler.PopThemeElements()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Display the window configuration settings.
+------------------------------------------------------------------------------------------------------
+WindowManager.ConfigDisplay = function()
+    return configHandler and configHandler.Display()
 end

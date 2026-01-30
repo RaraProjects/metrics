@@ -34,7 +34,7 @@ function Window:New(initSettings)
             return nil
         end
 
-        UI.PushStyleVar(ImGuiStyleVar_Alpha, WindowManager.Config.GetAlpha())
+        UI.PushStyleVar(ImGuiStyleVar_Alpha, WindowManager.GetTransparency())
         UI.PushStyleVar(ImGuiStyleVar_CellPadding,      { 10, 1 })
         UI.PushStyleVar(ImGuiStyleVar_WindowPadding,    { 7,  3 })
         UI.PushStyleVar(ImGuiStyleVar_ItemSpacing,      { 0,  5 })
@@ -44,7 +44,7 @@ function Window:New(initSettings)
         local globalScaling = self.GetScaling()
 
         -- Title Bar
-        if not WindowManager.Settings.Show_Title and not showTitle then
+        if not WindowManager.IsShowingTitles() and not showTitle then
             flags = bit.bor(flags, ImGuiWindowFlags_NoTitleBar)
         end
 
@@ -172,7 +172,7 @@ function Window:New(initSettings)
                 local style = UI.GetStyle()
 
                 if style and style.FontScaleMain ~= nil then
-                    style.FontScaleMain = scale or WindowManager.Settings.Window_Scaling or 1
+                    style.FontScaleMain = scale or WindowManager.GetScaling() or 1
                 end
             end
         end
@@ -185,7 +185,7 @@ function Window:New(initSettings)
     ------------------------------------------------------------------------------------------------------
     self.SetLegacyScaling = function(scale)
         if WindowManager.GetDrawMode() == WindowManager.Draw.Modes.LEGACY then
-            UI.SetWindowFontScale(scale or WindowManager.Settings.Window_Scaling or 1)
+            UI.SetWindowFontScale(scale or WindowManager.GetScaling() or 1)
         end
     end
 

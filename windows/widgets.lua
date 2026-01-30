@@ -1,19 +1,57 @@
-WindowManager.Widgets = { }
+local widgets = { }
 
-WindowManager.Widgets.SliderWidth = 100
+widgets.sliderWidth = 100
 
 ------------------------------------------------------------------------------------------------------
 -- Creates a help text marker.
 ------------------------------------------------------------------------------------------------------
-WindowManager.Widgets.HelpMarker = function(text)
+widgets.HelpMarker = function(text)
     UI.SameLine()
-    UI.TextDisabled("(?)")
+    UI.TextDisabled('(?)')
     if UI.IsItemHovered() then
         UI.BeginTooltip()
         UI.PushTextWrapPos(UI.GetFontSize() * 25)
         UI.TextUnformatted(text)
         UI.PopTextWrapPos()
         UI.EndTooltip()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Sets window scaling.
+------------------------------------------------------------------------------------------------------
+widgets.slider = function(args)
+    if not args or not args.settingTable or not args.settingName then
+        return UI.Text('Unable to parse settings table.')
+    end
+
+    local currentSetting = args.settingTable[args.settingName]
+
+    if type(currentSetting) ~= 'number' then
+        return UI.Text('Invalid slider value.')
+    end
+
+    local width  = args.width or widgets.sliderWidth
+    local label  = args.label or 'Slider Name'
+    local step   = args.step or 0.005
+    local min    = args.min or 0
+    local max    = args.max or 1
+    local format = args.format or '%.2f'
+    local flags  = args.flags or ImGuiSliderFlags_None
+    local value = { currentSetting }
+
+    UI.SetNextItemWidth(width)
+
+    if UI.DragFloat(label, value, step, min, max, format, flags) then
+        local v = value[1]
+
+        v = math.clamp(v, min, max)
+
+        args.settingTable[args.settingName] = v
+    end
+
+    if args.help then
+        widgets.HelpMarker(args.help)
     end
 end
 
@@ -25,7 +63,7 @@ end
 ---@param settingsPointer table
 ---@param settingName     string
 ------------------------------------------------------------------------------------------------------
-WindowManager.Widgets.ToggleCheckbox = function(caption, settingsPointer, settingName)
+widgets.ToggleCheckbox = function(caption, settingsPointer, settingName)
     if not caption or not settingsPointer or not settingName then
         return nil
     end
@@ -39,32 +77,4 @@ WindowManager.Widgets.ToggleCheckbox = function(caption, settingsPointer, settin
     end
 end
 
-------------------------------------------------------------------------------------------------------
--- Sets screen alpha.
-------------------------------------------------------------------------------------------------------
-WindowManager.Widgets.Alpha = function()
-    local alpha = { WindowManager.Settings.Alpha }
-
-    UI.SetNextItemWidth(WindowManager.Widgets.SliderWidth)
-
-    if UI.DragFloat("Window Transparency", alpha, 0.005, 0.2, 1, "%.2f", ImGuiSliderFlags_None) then
-        WindowManager.Settings.Alpha = math.clamp(alpha[1], 0.2, 1)
-    end
-
-    WindowManager.Widgets.HelpMarker("Window transparency.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Sets window scaling.
-------------------------------------------------------------------------------------------------------
-WindowManager.Widgets.WindowScale = function()
-    local windowScale = { WindowManager.Settings.Window_Scaling }
-
-    UI.SetNextItemWidth(WindowManager.Widgets.SliderWidth)
-
-    if UI.DragFloat("Window Scaling", windowScale, 0.005, 0.7, 3, "%.2f", ImGuiSliderFlags_None) then
-        WindowManager.Settings.Window_Scaling = math.clamp(windowScale[1], 0.7, 3)
-    end
-
-    WindowManager.Widgets.HelpMarker("Adjust window element size.")
-end
+return widgets

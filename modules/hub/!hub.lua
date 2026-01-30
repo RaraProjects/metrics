@@ -1,11 +1,11 @@
 Hub = { }
 
-require("modules.hub.config")
+require('modules.hub.config')
 
-Hub.Name   = "Hub"
-Hub.Title  = "Metrics"
-Hub.Module = "Hub"
-Hub.File   = "hub"
+Hub.Name   = 'Hub'
+Hub.Title  = 'Metrics'
+Hub.Module = 'Hub'
+Hub.File   = 'hub'
 
 ------------------------------------------------------------------------------------------------------
 -- Initializes the Hub screen.
@@ -32,7 +32,7 @@ end
 Hub.Content = function()
     -- If Multi Window mode is enabled then just show the buttons here. The rest of the content is handled
     -- in the primary screen refresh event.
-    if WindowManager.Settings.Multi_Window then
+    if WindowManager.IsMultiWindow() then
         Hub.Buttons()
 
     -- Only show the Mini or Nano mode if they are enabled while in Single Window mode.
@@ -64,7 +64,7 @@ end
 -- Shows Metrics in a single window with tabs.
 ------------------------------------------------------------------------------------------------------
 Hub.SingleWindow = function()
-    if UI.BeginTabBar("Tabs", WindowManager.Tabs.Flags) then
+    if UI.BeginTabBar('Tabs', WindowManager.Tabs.Flags) then
         if UI.BeginTabItem(Parse.Name, false, WindowManager.IsModuleActive(Parse.Name)) then
             WindowManager.ClearModuleSwitch(Parse.Name)
             Parse.Content()
@@ -125,11 +125,11 @@ Hub.ParseButton = function()
     end
 
     if UI.Button(Parse.Name) then
-        if WindowManager.Settings.Multi_Window then
+        if WindowManager.IsMultiWindow() then
             Parse.Window.ToggleVisibility()
         end
 
-        WindowManager.Settings.Active_Window = Parse.Name
+        WindowManager.SetActiveWindow(Parse.Name)
     end
 
     if not active then
@@ -150,11 +150,11 @@ Hub.FocusButton = function()
     end
 
     if UI.Button(Focus.Name) then
-        if WindowManager.Settings.Multi_Window then
+        if WindowManager.IsMultiWindow() then
             Focus.Window.ToggleVisibility()
         end
 
-        WindowManager.Settings.Active_Window = Focus.Name
+        WindowManager.SetActiveWindow(Focus.Name)
     end
 
     if not active then
@@ -175,11 +175,11 @@ Hub.BattleLogButton = function()
     end
 
     if UI.Button(Blog.Name) then
-        if WindowManager.Settings.Multi_Window then
+        if WindowManager.IsMultiWindow() then
             Blog.Window.ToggleVisibility()
         end
 
-        WindowManager.Settings.Active_Window = Blog.Name
+        WindowManager.SetActiveWindow(Blog.Name)
     end
 
     if not active then
@@ -200,11 +200,11 @@ Hub.XpButton = function()
     end
 
     if UI.Button(XP.Name) then
-        if WindowManager.Settings.Multi_Window then
+        if WindowManager.IsMultiWindow() then
             XP.Window.ToggleVisibility()
         end
 
-        WindowManager.Settings.Active_Window = XP.Name
+        WindowManager.SetActiveWindow(XP.Name)
     end
 
     if not active then
@@ -225,11 +225,11 @@ Hub.LootButton = function()
     end
 
     if UI.Button(Loot.Name) then
-        if WindowManager.Settings.Multi_Window then
+        if WindowManager.IsMultiWindow() then
             Loot.Window.ToggleVisibility()
         end
 
-        WindowManager.Settings.Active_Window = Loot.Name
+        WindowManager.SetActiveWindow(Loot.Name)
     end
 
     if not active then
@@ -250,11 +250,11 @@ Hub.ReportButton = function()
     end
 
     if UI.Button(Report.Name) then
-        if WindowManager.Settings.Multi_Window then
+        if WindowManager.IsMultiWindow() then
             Report.Window.ToggleVisibility()
         end
 
-        WindowManager.Settings.Active_Window = Report.Name
+        WindowManager.SetActiveWindow(Report.Name)
     end
 
     if not active then
@@ -277,12 +277,12 @@ Hub.SettingsButton = function()
     if UI.Button(Config.Name) then
         -- Don't toggle off if config window is open and not showing settings.
         if not (Config.Window.IsVisible() and Config.ActiveSettingsWindow ~= Config.ModuleFile.CONFIG) then
-            if WindowManager.Settings.Multi_Window then
+            if WindowManager.IsMultiWindow() then
                 Config.Window.ToggleVisibility()
             end
         end
 
-        WindowManager.Settings.Active_Window = Config.Name
+        WindowManager.SetActiveWindow(Config.Name)
         Config.ActiveSettingsWindow = Config.ModuleFile.CONFIG
     end
 
@@ -308,11 +308,11 @@ Hub.DebugButton = function()
     end
 
     if UI.Button(Debug.Name) then
-        if WindowManager.Settings.Multi_Window then
+        if WindowManager.IsMultiWindow() then
             Debug.Window.ToggleVisibility()
         end
 
-        WindowManager.Settings.Active_Window = Debug.Name
+        WindowManager.SetActiveWindow(Debug.Name)
     end
 
     if not active then
@@ -324,7 +324,7 @@ end
 -- Hides or shows all windows.
 ------------------------------------------------------------------------------------------------------
 Hub.ToggleAllButton = function()
-    if UI.Button("X") then
+    if UI.Button('X') then
         Blog.Window.Hide()
         Config.Window.Hide()
         Focus.Window.Hide()
