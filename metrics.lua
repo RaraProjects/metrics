@@ -11,7 +11,7 @@ modification, are permitted provided that the following conditions are met:
     * Neither the name of React nor the
       names of its contributors may be used to endorse or promote products
       derived from this software without specific prior written permission.
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 'AS IS' AND
 ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
 WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
 DISCLAIMED. IN NO EVENT SHALL --Metra-- BE LIABLE FOR ANY
@@ -25,55 +25,54 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -- Horizon Approved Addon 0457
 
-addon.author  = "Metra"
-addon.name    = "Metrics"
-addon.version = "2026-01-28"
+addon.author  = 'Metra'
+addon.name    = 'Metrics'
+addon.version = '2026-01-29'
 
 _Globals = { }
 _Globals.Initialized = false
 
-SettingsFile = require("settings")
-Socket       = require("socket")   -- Needed for millisecond precision on timestamps for attack speed.
-Timers       = require("timers")
+SettingsFile = require('settings')
+Socket       = require('socket')   -- Needed for millisecond precision on timestamps for attack speed.
+Timers       = require('timers')
 
 -- This holds all of the settings for the various Metrics modules.
--- It needs to be initialized after requiring "settings" because "settings" contains the definition for the "T" table modifier.
--- The "T" table modifier is needed for the settings to save correctly without crashing on initial load.
+-- It needs to be initialized after requiring 'settings' because 'settings' contains the definition for the 'T' table modifier.
+-- The 'T' table modifier is needed for the settings to save correctly without crashing on initial load.
 Metrics = T{ }
 
 -- Duplicate packet checking from Thorny by way of the parse addon.
 -- https://github.com/WinterSolstice8/parse/
-FFI = require("ffi")
+FFI = require('ffi')
 FFI.cdef[[
     int32_t memcmp(const void* buff1, const void* buff2, size_t count);
 ]]
 LastChunkBuffer    = T{ }
 CurrentChunkBuffer = T{ }
 
-require("version")
-require("resources._resource")
-require("database._database")
-require("file")
-require("throttling")
-require("performance")
-require("ashita._ashita")
-require("handlers._handler")
-require("windows.!manager")
-require("windows.!window")
-require("columns.!column")
-require("modules.config._config")
-require("modules.exp._exp")
-require("modules.loot._loot")
-require("modules.parse._parse")
-require("modules.focus._focus")
-require("modules.battle log._battle_log")
-require("modules.report._report")
-require("modules.overview._overview")
-require("modules.hub.!hub")
-require("modules.debug.!debug")
-require("commands")
-require("horizon")
-require("initialization")
+require('version')
+require('resources._resource')
+require('database._database')
+require('file')
+require('throttling')
+require('performance')
+require('ashita._ashita')
+require('handlers._handler')
+require('windows.!manager')
+require('columns.!column')
+require('modules.config._config')
+require('modules.exp._exp')
+require('modules.loot._loot')
+require('modules.parse._parse')
+require('modules.focus._focus')
+require('modules.battle log._battle_log')
+require('modules.report._report')
+require('modules.overview._overview')
+require('modules.hub.!hub')
+require('modules.debug.!debug')
+require('commands')
+require('horizon')
+require('initialization')
 
 ------------------------------------------------------------------------------------------------------
 -- Subscribe to screen rendering. Use this to drive things over time.
@@ -138,7 +137,7 @@ ashita.events.register('packet_in', 'packet_in_cb', function(packet)
     -- Duplicate packet checking from Thorny by way of the parse addon.
     -- https://github.com/WinterSolstice8/parse/
 	if not packet.injected and Ashita.Packets.IsDuplicate(packet) then
-        Debug.Error.Add(Debug.Error.WARNING, "Packet In", string.format("Duplicate packet for packet {%s} found.", tostring(packet.id)))
+        Debug.Error.Add(Debug.Error.WARNING, 'Packet In', string.format('Duplicate packet for packet {%s} found.', tostring(packet.id)))
         return nil
     end
 

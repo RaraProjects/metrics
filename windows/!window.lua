@@ -5,9 +5,9 @@ function Window:New(initSettings)
     local self = { }
     initSettings = initSettings or { }
 
-    local name      = initSettings.Name       or "Default"
-    local title     = initSettings.Title      or "Default Title"
-    local module    = initSettings.Module     or "Default"
+    local name      = initSettings.Name       or 'Default'
+    local title     = initSettings.Title      or 'Default Title'
+    local module    = initSettings.Module     or 'Default'
     local settings  = initSettings.Settings   or { }
     local showTitle = initSettings.Show_Title or false
     local showBg    = true
@@ -60,9 +60,9 @@ function Window:New(initSettings)
             self.UpdateSettings()
             self.SetLegacyScaling()
 
-            WindowManager.Theme.Set()
+            WindowManager.SetThemeElements()
 
-            if content and type(content) == "function" then
+            if content and type(content) == 'function' then
                 content()
             end
 
@@ -70,6 +70,7 @@ function Window:New(initSettings)
             UI.End()
         end
 
+        WindowManager.PopThemeElements()
         self.SetScaling(globalScaling)
 
         UI.PopStyleVar(5)

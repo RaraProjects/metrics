@@ -1,7 +1,7 @@
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Database settings.
 ------------------------------------------------------------------------------------------------------
-SettingsFile.register(Config.ModuleFile.DATABASE, "settings_update", function(settings)
+SettingsFile.register(Config.ModuleFile.DATABASE, 'settings_update', function(settings)
     if settings ~= nil then
         Metrics.Model = settings
         SettingsFile.save(Config.ModuleFile.DATABASE)
@@ -11,7 +11,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Parse settings.
 ------------------------------------------------------------------------------------------------------
-SettingsFile.register(Parse.File, "settings_update", function(settings)
+SettingsFile.register(Parse.File, 'settings_update', function(settings)
     if settings ~= nil then
         Parse.Initialize(settings)
         SettingsFile.save(Parse.File)
@@ -21,7 +21,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Focus settings.
 ------------------------------------------------------------------------------------------------------
-SettingsFile.register(Focus.File, "settings_update", function(settings)
+SettingsFile.register(Focus.File, 'settings_update', function(settings)
     if settings ~= nil then
         Focus.Initialize(settings)
         SettingsFile.save(Focus.File)
@@ -31,7 +31,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Battle Log settings.
 ------------------------------------------------------------------------------------------------------
-SettingsFile.register(Blog.File, "settings_update", function(settings)
+SettingsFile.register(Blog.File, 'settings_update', function(settings)
     if settings ~= nil then
         Blog.Initialize(settings)
         SettingsFile.save(Blog.File)
@@ -41,10 +41,10 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Window settings.
 ------------------------------------------------------------------------------------------------------
-SettingsFile.register(Config.ModuleFile.WINDOW, "settings_update", function(settings)
+SettingsFile.register(Config.ModuleFile.WINDOW, 'settings_update', function(settings)
     if settings ~= nil then
-        WindowManager.Settings    = settings
-        WindowManager.Theme.IsSet = false
+        WindowManager.Settings = settings
+        WindowManager.ResetTheme()
         WindowManager.SettingsReset()
         SettingsFile.save(Config.ModuleFile.WINDOW)
     end
@@ -53,7 +53,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific EXP settings.
 ------------------------------------------------------------------------------------------------------
-SettingsFile.register(XP.File, "settings_update", function(settings)
+SettingsFile.register(XP.File, 'settings_update', function(settings)
     if settings ~= nil then
         XP.Initialize(settings)
         XP.IsInitialized = false
@@ -64,7 +64,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Loot settings.
 ------------------------------------------------------------------------------------------------------
-SettingsFile.register(Loot.File, "settings_update", function(settings)
+SettingsFile.register(Loot.File, 'settings_update', function(settings)
     if settings ~= nil then
         Loot.Initialize(settings)
         SettingsFile.save(Loot.File)
@@ -74,7 +74,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Report settings.
 ------------------------------------------------------------------------------------------------------
-SettingsFile.register(Report.File, "settings_update", function(settings)
+SettingsFile.register(Report.File, 'settings_update', function(settings)
     if settings ~= nil then
         Report.Initialize(settings)
         SettingsFile.save(Report.File)
@@ -84,7 +84,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Overview settings.
 ------------------------------------------------------------------------------------------------------
-SettingsFile.register(Overview.File, "settings_update", function(settings)
+SettingsFile.register(Overview.File, 'settings_update', function(settings)
     if settings ~= nil then
         Overview.Initialize(settings)
         SettingsFile.save(Overview.File)
@@ -94,7 +94,7 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Hub settings.
 ------------------------------------------------------------------------------------------------------
-SettingsFile.register(Hub.File, "settings_update", function(settings)
+SettingsFile.register(Hub.File, 'settings_update', function(settings)
     if settings ~= nil then
         Hub.Initialize(settings)
         SettingsFile.save(Hub.File)

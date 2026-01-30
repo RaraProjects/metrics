@@ -1,19 +1,18 @@
 Res = { }
 
-require("resources.weapon_skills_curated")
-require("resources.spells_curated")
-require("resources.abilities")
-require("resources.buffs")
-require("resources.pets")
-require("resources.colors")
-require("resources.game")
-require("resources.jobs")
-require("resources.items")
+require('resources.weapon_skills_curated')
+require('resources.spells_curated')
+require('resources.abilities')
+require('resources.buffs')
+require('resources.pets')
+require('resources.colors')
+require('resources.game')
+require('resources.jobs')
+require('resources.items')
 
-Res.WS.FullList      = require("resources.weapon_skills")
+Res.WS.FullList      = require('resources.weapon_skills')
 Res.Monster          = { }
-Res.Monster.FullList = require("resources.monster_abilities")
-Themes               = require("resources.themes")
+Res.Monster.FullList = require('resources.monster_abilities')
 
 -- ------------------------------------------------------------------------------------------------------
 -- Gets an elemental color.

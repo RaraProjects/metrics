@@ -61,7 +61,7 @@ XP.Tracking.AddEXP = function(xpAmount, xpType)
     }
 
     if not xpType or not trackingTables[xpType] then
-        Debug.Error.Add(Debug.Error.ERROR, "XP.Tracking.AddEXP", "Invalid XP Type.")
+        Debug.Error.Add(Debug.Error.ERROR, 'XP.Tracking.AddEXP', 'Invalid XP Type.')
         return 0, 0
     end
 
@@ -197,42 +197,42 @@ XP.Tracking.DebugContent = function()
     local capacity   = XP.Tracking.Capacity
     local exemplar   = XP.Tracking.Exemplar
 
-    UI.PushStyleColor(ImGuiCol_TableRowBg, WindowManager.Theme.TableRowBg)
-    UI.PushStyleColor(ImGuiCol_TableRowBgAlt, WindowManager.Theme.TableRowBg)
+    UI.PushStyleColor(ImGuiCol_TableRowBg, WindowManager.GetRowBgColor())
+    UI.PushStyleColor(ImGuiCol_TableRowBgAlt, WindowManager.GetRowBgColor())
 
-    if UI.BeginTable("Current XP", 5, tableFlags) then
-        UI.TableSetupColumn("Metric", flags)
-        UI.TableSetupColumn("EXP",    flags)
-        UI.TableSetupColumn("Limit",  flags)
-        UI.TableSetupColumn("CP",     flags)
-        UI.TableSetupColumn("EP",     flags)
+    if UI.BeginTable('Current XP', 5, tableFlags) then
+        UI.TableSetupColumn('Metric', flags)
+        UI.TableSetupColumn('EXP',    flags)
+        UI.TableSetupColumn('Limit',  flags)
+        UI.TableSetupColumn('CP',     flags)
+        UI.TableSetupColumn('EP',     flags)
         UI.TableHeadersRow()
 
-        UI.TableNextColumn() UI.Text("Total XP Gained")
+        UI.TableNextColumn() UI.Text('Total XP Gained')
         UI.TableNextColumn() UI.Text(tostring(exp.Base))
         UI.TableNextColumn() UI.Text(tostring(limit.Base))
         UI.TableNextColumn() UI.Text(tostring(capacity.Base))
         UI.TableNextColumn() UI.Text(tostring(exemplar.Base))
 
-        UI.TableNextColumn() UI.Text("Current")
+        UI.TableNextColumn() UI.Text('Current')
         UI.TableNextColumn() UI.Text(tostring(Ashita.Player.CurrentXP()))
         UI.TableNextColumn() UI.Text(tostring(Ashita.Player.CurrentLimit()))
         UI.TableNextColumn() UI.Text(tostring(capacity.Total))
         UI.TableNextColumn() UI.Text(tostring(exemplar.IntoLevel))
 
-        UI.TableNextColumn() UI.Text("TNL")
+        UI.TableNextColumn() UI.Text('TNL')
         UI.TableNextColumn() UI.Text(XP.Columns.TNL(xpTypes.EXPERIENCE))
         UI.TableNextColumn() UI.Text(XP.Columns.TNL(xpTypes.LIMIT))
         UI.TableNextColumn() UI.Text(XP.Columns.TNL(xpTypes.CAPACITY))
         UI.TableNextColumn() UI.Text(XP.Columns.TNL(xpTypes.EXEMPLAR))
 
-        UI.TableNextColumn() UI.Text("Average XP/Kill")
-        UI.TableNextColumn() UI.Text(string.format("%.2f", (XP.Columns.AverageXP(xpTypes.EXPERIENCE))))
-        UI.TableNextColumn() UI.Text(string.format("%.2f", (XP.Columns.AverageXP(xpTypes.LIMIT))))
-        UI.TableNextColumn() UI.Text(string.format("%.2f", (XP.Columns.AverageXP(xpTypes.CAPACITY))))
-        UI.TableNextColumn() UI.Text(string.format("%.2f", (XP.Columns.AverageXP(xpTypes.EXEMPLAR))))
+        UI.TableNextColumn() UI.Text('Average XP/Kill')
+        UI.TableNextColumn() UI.Text(string.format('%.2f', (XP.Columns.AverageXP(xpTypes.EXPERIENCE))))
+        UI.TableNextColumn() UI.Text(string.format('%.2f', (XP.Columns.AverageXP(xpTypes.LIMIT))))
+        UI.TableNextColumn() UI.Text(string.format('%.2f', (XP.Columns.AverageXP(xpTypes.CAPACITY))))
+        UI.TableNextColumn() UI.Text(string.format('%.2f', (XP.Columns.AverageXP(xpTypes.EXEMPLAR))))
 
-        UI.TableNextColumn() UI.Text("XP/hr")
+        UI.TableNextColumn() UI.Text('XP/hr')
         UI.TableNextColumn() UI.Text(tostring(XP.Columns.AverageRate(xpTypes.EXPERIENCE)))
         UI.TableNextColumn() UI.Text(tostring(XP.Columns.AverageRate(xpTypes.LIMIT)))
         UI.TableNextColumn() UI.Text(tostring(XP.Columns.AverageRate(xpTypes.CAPACITY)))
@@ -246,23 +246,23 @@ XP.Tracking.DebugContent = function()
     if xpKillEntries > 0 then
         local averageWindows = XP.Tracking.AverageWindows
 
-        if UI.BeginTable("Kill Speed XP", 2 + xpKillEntries, tableFlags) then
-            UI.TableSetupColumn("Type", flags)
-            UI.TableSetupColumn("Current XP Window", flags)
+        if UI.BeginTable('Kill Speed XP', 2 + xpKillEntries, tableFlags) then
+            UI.TableSetupColumn('Type', flags)
+            UI.TableSetupColumn('Current XP Window', flags)
             for i, _ in ipairs(exp.KillTimes) do UI.TableSetupColumn(tostring(i), flags) end
             UI.TableHeadersRow()
 
-            UI.TableNextColumn() UI.Text("Kill Times")
+            UI.TableNextColumn() UI.Text('Kill Times')
             UI.TableNextColumn() UI.Text(Timers.Format(os.time() - exp.LastXpInstant))
             for _, v in ipairs(exp.KillTimes) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
 
-            UI.TableNextColumn() UI.Text("Base Only")
-            for _, v in ipairs(averageWindows.ExpBase) do UI.TableNextColumn() UI.Text(string.format("%.1f", v)) end
+            UI.TableNextColumn() UI.Text('Base Only')
+            for _, v in ipairs(averageWindows.ExpBase) do UI.TableNextColumn() UI.Text(string.format('%.1f', v)) end
 
-            UI.TableNextColumn() UI.Text("Boost Only")
-            for _, v in ipairs(averageWindows.ExpBoost) do UI.TableNextColumn() UI.Text(string.format("%.1f", v)) end
+            UI.TableNextColumn() UI.Text('Boost Only')
+            for _, v in ipairs(averageWindows.ExpBoost) do UI.TableNextColumn() UI.Text(string.format('%.1f', v)) end
 
-            UI.TableNextColumn() UI.Text("Base + Boost")
+            UI.TableNextColumn() UI.Text('Base + Boost')
             for _, v in ipairs(averageWindows.ExpTotal) do UI.TableNextColumn() UI.Text(tostring(v)) end
 
             UI.EndTable()
@@ -272,8 +272,8 @@ XP.Tracking.DebugContent = function()
     local cpKillEntries = #capacity.KillTimes
 
     if cpKillEntries > 0 then
-        if UI.BeginTable("Kill Speed CP", 1 + cpKillEntries, tableFlags) then
-            UI.TableSetupColumn("Current CP Window", flags)
+        if UI.BeginTable('Kill Speed CP', 1 + cpKillEntries, tableFlags) then
+            UI.TableSetupColumn('Current CP Window', flags)
             for i, _ in ipairs(capacity.KillTimes) do UI.TableSetupColumn(tostring(i), flags) end
             UI.TableHeadersRow()
 
@@ -287,8 +287,8 @@ XP.Tracking.DebugContent = function()
     local epKillEntries = #exemplar.KillTimes
 
     if epKillEntries > 0 then
-        if UI.BeginTable("Kill Speed CP", 1 + epKillEntries, tableFlags) then
-            UI.TableSetupColumn("Current CP Window", flags)
+        if UI.BeginTable('Kill Speed CP', 1 + epKillEntries, tableFlags) then
+            UI.TableSetupColumn('Current CP Window', flags)
             for i, _ in ipairs(exemplar.KillTimes) do UI.TableSetupColumn(tostring(i), flags) end
             UI.TableHeadersRow()
 

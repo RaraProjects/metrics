@@ -4,18 +4,18 @@ XP = { }
 -- ASB Code: /src/map/utils/charutils.cpp->DistributeExperiencePoints
 -- https://github.com/Shinzaku/Points
 
-require("modules.exp.columns")
-require("modules.exp.config")
-require("modules.exp.messages")
-require("modules.exp.tracking")
-require("modules.exp.chains")
-require("modules.exp.dedication")
-require("modules.exp.widgets")
+require('modules.exp.columns')
+require('modules.exp.config')
+require('modules.exp.messages')
+require('modules.exp.tracking')
+require('modules.exp.chains')
+require('modules.exp.dedication')
+require('modules.exp.widgets')
 
-XP.Name   = "XP"
-XP.Title  = "Metrics - EXP"
-XP.Module = "XP"
-XP.File   = "exp"
+XP.Name   = 'XP'
+XP.Title  = 'Metrics - EXP'
+XP.Module = 'XP'
+XP.File   = 'exp'
 
 XP.TableFlags = bit.bor(ImGuiTableFlags_Borders)
 
@@ -95,7 +95,7 @@ XP.Content = function()
     else
         -- Show a loading message if the progress bar can't be loaded but it's set to show.
         if XP.Settings.Show_XP_Progress_Bar or XP.Settings.Show_Boost_Progress_Bar then
-            UI.Text("Loading...")
+            UI.Text('Loading...')
         end
     end
 
@@ -112,33 +112,33 @@ XP.DisplayTable = function()
     -- XP Mode determines which type of XP is displayed.
     local xpType = XP.DisplayMode or XP.Type.EXPERIENCE
 
-    local typeString  = (xpType == XP.Type.LIMIT) and "LP" or "XP"
-    local levelString = (xpType == XP.Type.LIMIT) and "M"  or "L"
+    local typeString  = (xpType == XP.Type.LIMIT) and 'LP' or 'XP'
+    local levelString = (xpType == XP.Type.LIMIT) and 'M'  or 'L'
 
-    UI.PushStyleColor(ImGuiCol_TableRowBg, WindowManager.Theme.TableRowBg)
+    UI.PushStyleColor(ImGuiCol_TableRowBg, WindowManager.GetRowBgColor())
 
-    if UI.BeginTable("XP Metrics", XP.Columns.DisplayCount, tableFlags) then
-        if XP.Settings.Show_Job                 then UI.TableSetupColumn("Job",                               flags) end
-                                                     UI.TableSetupColumn("Chain",                             flags)
-                                                     UI.TableSetupColumn(string.format("*%s/hr", typeString), flags)
-        if XP.Settings.Show_Base_Rate           then UI.TableSetupColumn(string.format("%s/hr", typeString),  flags) end
-        if XP.Settings.Show_Time_To_Level       then UI.TableSetupColumn(string.format("~TT%s", levelString), flags) end
-        if XP.Settings.Show_Boost_Time_To_Level then UI.TableSetupColumn("TTB",                               flags) end
-        if XP.Settings.Show_TNL                 then UI.TableSetupColumn(string.format("TN%s", levelString),  flags) end
-        if XP.Settings.Show_Capacity_Base_Rate  then UI.TableSetupColumn("CP/hr",                             flags) end
-        if XP.Settings.Show_Time_To_Job_Point   then UI.TableSetupColumn("~TTJP",                             flags) end
-        if XP.Settings.Show_TNJP                then UI.TableSetupColumn("TNJP",                              flags) end
-        if XP.Settings.Show_Exemplar_Base_Rate  then UI.TableSetupColumn("EP/hr",                             flags) end
-        if XP.Settings.Show_Time_To_Mastery     then UI.TableSetupColumn("~TTML",                             flags) end
-        if XP.Settings.Show_TNML                then UI.TableSetupColumn("TNML",                              flags) end
-        if XP.Settings.Show_Kill_Rate           then UI.TableSetupColumn("Time/Kill",                         flags) end
-        if XP.Settings.Show_Average_XP          then UI.TableSetupColumn("XP/Kill",                           flags) end
-        if XP.Settings.Show_Total_XP_Gained     then UI.TableSetupColumn("Total",                             flags) end
-        if XP.Settings.Show_Max_Chain           then UI.TableSetupColumn("Max Chain",                         flags) end
-        if XP.Settings.Show_Zone_Time           then UI.TableSetupColumn("Zone Time",                         flags) end
-        if XP.Settings.Show_Boost_Item          then UI.TableSetupColumn("Bonus",                             flags) end
-        if XP.Settings.Show_Boost_Rate          then UI.TableSetupColumn("Bonus %",                           flags) end
-        if XP.Settings.Show_Boost_Max           then UI.TableSetupColumn("Bonus Max",                         flags) end
+    if UI.BeginTable('XP Metrics', XP.Columns.DisplayCount, tableFlags) then
+        if XP.Settings.Show_Job                 then UI.TableSetupColumn('Job',                               flags) end
+                                                     UI.TableSetupColumn('Chain',                             flags)
+                                                     UI.TableSetupColumn(string.format('*%s/hr', typeString), flags)
+        if XP.Settings.Show_Base_Rate           then UI.TableSetupColumn(string.format('%s/hr', typeString),  flags) end
+        if XP.Settings.Show_Time_To_Level       then UI.TableSetupColumn(string.format('~TT%s', levelString), flags) end
+        if XP.Settings.Show_Boost_Time_To_Level then UI.TableSetupColumn('TTB',                               flags) end
+        if XP.Settings.Show_TNL                 then UI.TableSetupColumn(string.format('TN%s', levelString),  flags) end
+        if XP.Settings.Show_Capacity_Base_Rate  then UI.TableSetupColumn('CP/hr',                             flags) end
+        if XP.Settings.Show_Time_To_Job_Point   then UI.TableSetupColumn('~TTJP',                             flags) end
+        if XP.Settings.Show_TNJP                then UI.TableSetupColumn('TNJP',                              flags) end
+        if XP.Settings.Show_Exemplar_Base_Rate  then UI.TableSetupColumn('EP/hr',                             flags) end
+        if XP.Settings.Show_Time_To_Mastery     then UI.TableSetupColumn('~TTML',                             flags) end
+        if XP.Settings.Show_TNML                then UI.TableSetupColumn('TNML',                              flags) end
+        if XP.Settings.Show_Kill_Rate           then UI.TableSetupColumn('Time/Kill',                         flags) end
+        if XP.Settings.Show_Average_XP          then UI.TableSetupColumn('XP/Kill',                           flags) end
+        if XP.Settings.Show_Total_XP_Gained     then UI.TableSetupColumn('Total',                             flags) end
+        if XP.Settings.Show_Max_Chain           then UI.TableSetupColumn('Max Chain',                         flags) end
+        if XP.Settings.Show_Zone_Time           then UI.TableSetupColumn('Zone Time',                         flags) end
+        if XP.Settings.Show_Boost_Item          then UI.TableSetupColumn('Bonus',                             flags) end
+        if XP.Settings.Show_Boost_Rate          then UI.TableSetupColumn('Bonus %',                           flags) end
+        if XP.Settings.Show_Boost_Max           then UI.TableSetupColumn('Bonus Max',                         flags) end
         UI.TableHeadersRow()
 
         -- Content
@@ -158,12 +158,12 @@ XP.DisplayTable = function()
         if XP.Settings.Show_Kill_Rate           then
             local killTime = XP.Columns.AverageKillTime(XP.Tracking.EXP.LastXpInstant, XP.Tracking.EXP.KillTimes)
             if killTime < 0 then
-                UI.TableNextColumn() UI.Text("--:--")
+                UI.TableNextColumn() UI.Text('--:--')
             else
                 UI.TableNextColumn() UI.Text(Timers.Format(killTime, true))
             end
         end
-        if XP.Settings.Show_Average_XP          then UI.TableNextColumn() UI.Text(string.format("%d", XP.Columns.AverageXP(xpType))) end
+        if XP.Settings.Show_Average_XP          then UI.TableNextColumn() UI.Text(string.format('%d', XP.Columns.AverageXP(xpType))) end
         if XP.Settings.Show_Total_XP_Gained     then UI.TableNextColumn() UI.Text(XP.Columns.TotalXP(xpType)) end
         if XP.Settings.Show_Max_Chain           then UI.TableNextColumn() UI.Text(XP.Columns.MaxChain()) end
         if XP.Settings.Show_Zone_Time           then UI.TableNextColumn() UI.Text(XP.Columns.ZoneTime()) end
@@ -307,9 +307,9 @@ XP.Blog = function(totalXp, baseXp, bonusXp)
         return
     end
 
-    local note = bonusXp > 0 and string.format("%d +%d", baseXp, bonusXp) or nil
+    local note = bonusXp > 0 and string.format('%d +%d', baseXp, bonusXp) or nil
 
-    Blog.Add(me.name, nil, Blog.ActionType.XP, string.format("XP Gained: %d", totalXp), -1, note)
+    Blog.Add(me.name, nil, Blog.ActionType.XP, string.format('XP Gained: %d', totalXp), -1, note)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -329,6 +329,6 @@ XP.Unicode_To_UTF8 = function(codepoint)
     elseif codepoint <= 0x10FFFF then
         return string.char(0xF0 + math.floor(codepoint / 0x40000), 0x80 + (math.floor(codepoint / 0x1000) % 0x40), 0x80 + (math.floor(codepoint / 0x40) % 0x40), 0x80 + (codepoint % 0x40))
     else
-        return "Codepoint out of range"
+        return 'Codepoint out of range'
     end
 end

@@ -1,15 +1,16 @@
-UI = require("imgui")
+UI = require('imgui')
 
 WindowManager = { }
 
-require("windows.themes")
-require("windows.widgets")
-require("windows.config")
+require('windows.widgets')
+require('windows.config')
+require('windows.!window')
 
-local menuHandler = require("windows.menu")
+local themeHandler = require('windows.themes')
+local menuHandler  = require('windows.menu')
 
 WindowManager.WindowList = { }
-WindowManager.Settings   = SettingsFile.load(WindowManager.Config.Defaults, "window")
+WindowManager.Settings   = SettingsFile.load(WindowManager.Config.Defaults, 'window')
 WindowManager.Mask       = false -- Hides all windows.
 
 WindowManager.Tabs          = { }
@@ -88,7 +89,7 @@ end
 ------------------------------------------------------------------------------------------------------
 WindowManager.SettingsReset = function()
     for _, pointer in pairs(WindowManager.WindowList) do
-        if pointer.SettingsReset and type(pointer.SettingsReset) == "function" then
+        if pointer.SettingsReset and type(pointer.SettingsReset) == 'function' then
             pointer.SettingsReset()
         end
     end
@@ -248,4 +249,52 @@ WindowManager.ShouldHideFromMenu = function()
     end
 
     return menuHandler.ShouldHideFromMenu() == true
+end
+
+------------------------------------------------------------------------------------------------------
+-- Set the window theme flag.
+------------------------------------------------------------------------------------------------------
+WindowManager.ResetTheme = function()
+    if not themeHandler then
+        return false
+    end
+
+    themeHandler.ResetTheme()
+end
+
+------------------------------------------------------------------------------------------------------
+-- Gets the style color for the row background from the theme.
+------------------------------------------------------------------------------------------------------
+WindowManager.GetRowBgColor = function()
+    return themeHandler and themeHandler.GetRowBgColor() or { 0.00, 0.00, 0.00, 0.00 }
+end
+
+------------------------------------------------------------------------------------------------------
+-- Populates the theme selection portion of a configuration screen.
+------------------------------------------------------------------------------------------------------
+WindowManager.ThemeSelectionContent = function()
+    if not themeHandler then
+        return UI.Text('No theme handler detected.')
+    end
+
+    local newStyle = themeHandler.ThemeSelectionContent(WindowManager.Settings.Style)
+
+    if newStyle then
+        WindowManager.Settings.Style = newStyle
+        themeHandler.ResetTheme()
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Apply theme elements to the current window frame.
+------------------------------------------------------------------------------------------------------
+WindowManager.SetThemeElements = function()
+    return themeHandler and themeHandler.SetThemeElements(WindowManager.Settings.Style)
+end
+
+------------------------------------------------------------------------------------------------------
+-- Pop theme elements from the current window frame.
+------------------------------------------------------------------------------------------------------
+WindowManager.PopThemeElements = function()
+    return themeHandler and themeHandler.PopThemeElements()
 end

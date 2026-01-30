@@ -1,79 +1,115 @@
-WindowManager.Theme = { }
+local themeHandler = { }
 
-WindowManager.Theme.IsSet      = false
-WindowManager.Theme.TableRowBg = { 0.00, 0.00, 0.00, 0.00 }
+themeHandler.isSet      = false
+themeHandler.tableRowBg = { 0.00, 0.00, 0.00, 0.00 }
+themeHandler.resources  = require("resources.themes")
+themeHandler.colorCount = 0
 
 ------------------------------------------------------------------------------------------------------
--- Change the window themes.
--- Modeled from the ImGui demo.
--- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
+-- Reset the theme flag.
 ------------------------------------------------------------------------------------------------------
-WindowManager.Theme.Choose = function()
-    UI.Text("Theme (will affect other ImGui based addons)")
-
-    if UI.RadioButton("Default ", { WindowManager.Settings.Style }, 0) then
-        WindowManager.Settings.Style = 0
-        WindowManager.Theme.IsSet    = false
-    end
-
-    UI.SameLine()
-    if UI.RadioButton("Dark ", { WindowManager.Settings.Style }, 1) then
-        WindowManager.Settings.Style = 1
-        WindowManager.Theme.IsSet    = false
-    end
-
-    UI.SameLine()
-    if UI.RadioButton("Classic ", { WindowManager.Settings.Style }, 3) then
-        WindowManager.Settings.Style = 3
-        WindowManager.Theme.IsSet    = false
-    end
-
-    WindowManager.Theme.Set()
+themeHandler.ResetTheme = function()
+    themeHandler.isSet = false
 end
 
 ------------------------------------------------------------------------------------------------------
--- Change the window themes.
--- Modeled from the ImGui demo.
--- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
+-- Gets the style color for the row background.
 ------------------------------------------------------------------------------------------------------
-WindowManager.Theme.Set = function()
-    if not WindowManager.Theme.IsSet then
-        -- Default
-        if WindowManager.Settings.Style == 0 then
-            WindowManager.Theme.ApplyCustom(Themes.Default)
-            WindowManager.Theme.TableRowBg = { 0.18, 0.20, 0.23, 1.00 }
-
-        -- Dark
-        elseif WindowManager.Settings.Style == 1 then
-            UI.StyleColorsDark()
-            WindowManager.Theme.TableRowBg = { 0.06, 0.06, 0.06, 1.00 }
-
-        -- Light (Not Used)
-        elseif WindowManager.Settings.Style == 2 then
-            UI.StyleColorsLight()
-
-        -- Classic
-        elseif WindowManager.Settings.Style == 3 then
-            UI.StyleColorsClassic()
-            WindowManager.Theme.TableRowBg = { 0.00, 0.00, 0.00, 1.00 }
-
-        else
-            WindowManager.Theme.ApplyCustom(Themes.Default)
-        end
-
-        WindowManager.Theme.IsSet = true
-    end
+themeHandler.GetRowBgColor = function()
+    return themeHandler.tableRowBg
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Applies a custom theme.
+-- Style colors MUST be popped via themeHandler.PopThemeStyle().
 ------------------------------------------------------------------------------------------------------
 ---@param theme table defined in resources.themes.
 ------------------------------------------------------------------------------------------------------
-WindowManager.Theme.ApplyCustom = function(theme)
-    for flagName, flagValue in pairs(Themes.Elements) do
+themeHandler.ApplyCustomTheme = function(theme)
+    local themeResources = themeHandler.resources
+
+    themeHandler.colorCount = 0
+
+    for flagName, flagValue in pairs(themeResources.Elements) do
         if theme[flagName] then
             UI.PushStyleColor(flagValue, theme[flagName])
+            themeHandler.colorCount = themeHandler.colorCount + 1
         end
     end
 end
+
+------------------------------------------------------------------------------------------------------
+-- Pops the style colors added during ApplyCustomTheme.
+------------------------------------------------------------------------------------------------------
+themeHandler.PopThemeElements = function()
+    if themeHandler.colorCount > 0 then
+        UI.PopStyleColor(themeHandler.colorCount)
+        themeHandler.colorCount = 0
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Change the window themes.
+-- Modeled from the ImGui demo.
+-- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
+------------------------------------------------------------------------------------------------------
+themeHandler.SetThemeElements = function(style)
+    local themeResources = themeHandler.resources
+
+    if not themeHandler.isSet then
+        -- Default
+        if style == 0 then
+            themeHandler.ApplyCustomTheme(themeResources.Default)
+            themeHandler.tableRowBg = { 0.18, 0.20, 0.23, 1.00 }
+
+        -- Dark
+        elseif style == 1 then
+            UI.StyleColorsDark()
+            themeHandler.tableRowBg = { 0.06, 0.06, 0.06, 1.00 }
+
+        -- Light (Not Used)
+        elseif style == 2 then
+            UI.StyleColorsLight()
+
+        -- Classic
+        elseif style == 3 then
+            UI.StyleColorsClassic()
+            themeHandler.tableRowBg = { 0.00, 0.00, 0.00, 1.00 }
+
+        else
+            themeHandler.ApplyCustomTheme(themeResources.Default)
+        end
+
+        themeHandler.isSet = true
+    end
+end
+
+------------------------------------------------------------------------------------------------------
+-- Change the window themes.
+-- Modeled from the ImGui demo.
+-- https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp
+------------------------------------------------------------------------------------------------------
+---@param style integer
+---@return integer|nil
+------------------------------------------------------------------------------------------------------
+themeHandler.ThemeSelectionContent = function(style)
+    UI.Text('Theme (will affect other ImGui based addons)')
+
+    if UI.RadioButton('Default ', { style }, 0) then
+        return 0
+    end
+
+    UI.SameLine()
+    if UI.RadioButton('Dark ', { style }, 1) then
+        return 1
+    end
+
+    UI.SameLine()
+    if UI.RadioButton('Classic ', { style }, 3) then
+        return 3
+    end
+
+    return nil
+end
+
+return themeHandler
