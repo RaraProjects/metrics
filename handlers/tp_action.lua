@@ -1,68 +1,398 @@
-H.TP = {}
+-- Performance review: 01/14/26
 
-H.TP.SC_Opener = nil
-H.TP.SC_Opening_WS = nil
-H.TP.SC_Step   = 0
+H.TP = { }
+
+H.TP.SkillchainOpener    = nil
+H.TP.SkillchainOpeningWS = nil
+H.TP.SkillchainStep      = 0
+
+local globalsInitialized = false
+
+-- Local holders for common global tables--performance+.
+---@type table
+local messages   = nil
+---@type table
+local offense    = nil
+---@type table
+local trackables = nil
+---@type table
+local metrics    = nil
+---@type table
+local data       = nil
+---@type table
+local updateMode = nil
+---@type table
+local catalog    = nil
+---@type table
+local mobs       = nil
+---@type table
+local dataLists  = nil
+
+------------------------------------------------------------------------------------------------------
+-- Helper function for binding globals to locals to increase performance.
+------------------------------------------------------------------------------------------------------
+local bindGlobals = function()
+    if globalsInitialized then
+        return nil
+    end
+
+    messages   = messages or H.Messages
+    offense    = offense or H.Offense
+    data       = data or DB.Data
+    catalog    = catalog or DB.Catalog
+    updateMode = updateMode or DB.UpdateMode
+    trackables = trackables or DB.Trackable
+    metrics    = metrics or DB.Metric
+    mobs       = mobs or Ashita.Mob
+    dataLists  = dataLists or DB.Lists
+
+    globalsInitialized = true
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Set audit information for pet skills.
+-- ------------------------------------------------------------------------------------------------------
+---@param actorMob  table
+---@param ownerMob  table|nil
+---@param targetMob table
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+local getAudits = function(actorMob, ownerMob, targetMob)
+    -- Initialize on case where this is a trust or regular monster.
+    local playerName = actorMob.name
+    local trackable  = trackables.WEAPONSKILL
+    local petName
+
+    -- Case where this is a player's pet using an ability.
+    if ownerMob then
+        playerName = ownerMob.name
+        petName    = actorMob.name
+        trackable  = trackables.PET_TP
+    end
+
+    local audits =
+    {
+        player_name = playerName,
+        target_name = targetMob.name,
+        pet_name    = petName,
+        trackable   = trackable
+    }
+
+    return audits
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Get weaponskill data.
+-- ------------------------------------------------------------------------------------------------------
+---@param action   table
+---@param actorMob table
+---@return table|nil
+-- ------------------------------------------------------------------------------------------------------
+local weaponskillData = function(action, actorMob)
+    local wsData = Ashita.WS.GetByID(action.param)
+
+	if not wsData then
+        local errorMessage = string.format("Actor {%s} used WS ID {%d} and it wasn't found.", actorMob.name or DB.Enum.DEBUG, action.param or 0)
+
+        Debug.Error.Add(Debug.Error.ERROR, "weaponskillData", errorMessage)
+
+        return nil
+    end
+
+    return wsData
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Checks for abilities that come through on the WS packet.
+-- I'm differentiating them based on chat message, so this needs to be called in the result loop and not before.
+-- Specific case: Steal/Swift Blade, Atonement/Mug, Gale Axe/Jump, Spinning Axe/Super Jump
+-- ------------------------------------------------------------------------------------------------------
+---@param result   table
+---@param wsID     number
+---@param action   table
+---@param actorMob table
+---@return boolean true: weaponskill was actually an ability
+-- ------------------------------------------------------------------------------------------------------
+local isWeaponskillAbility = function(result, wsID, action, actorMob)
+    local isWeaponskillMessage = result.message == 185 or result.message == 188
+
+    if not Res.WS.Abilities[wsID] or isWeaponskillMessage then
+        return false
+    end
+
+    return true
+end
+
+------------------------------------------------------------------------------------------------------
+-- Checks for damage mitigation like evasion or shadows.
+------------------------------------------------------------------------------------------------------
+---@param audits    table
+---@param damage    integer
+---@param messageID Ashita.Message
+---@param wsName    string
+---@param ownerMob? table
+---@return integer  damage
+---@return boolean  isHit
+---@return boolean  isNoDamage
+------------------------------------------------------------------------------------------------------
+local damageMitigation = function(audits, damage, messageID, wsName, ownerMob)
+    -- Mob misses the player.
+    if messages.NoDamageMiss(messageID) then
+        offense.GrandTotals(audits, 0, ownerMob)
+        offense.CatalogMiss(audits, audits.trackable, wsName)
+        return 0, false, true
+
+    -- Player's shadow absorbs the ability.
+    elseif messages.NoDamage(messageID) then
+        offense.GrandTotals(audits, 0, ownerMob)
+        offense.CatalogNoDamageHit(audits, audits.trackable, wsName)
+        return 0, true, true
+    end
+
+    return damage, true, false
+end
+
+------------------------------------------------------------------------------------------------------
+-- Set data for a weaponskill action.
+-- AOE weaponskills will go through this one time for each mob hit.
+------------------------------------------------------------------------------------------------------
+---@param actionData table   contains all the information for the action.
+---@param actorMob   table   name of the player that did the action.
+---@param targetMob  table   name of the target that received the action.
+---@param wsName     string  name of the weaponskill that was used.
+---@param wsID       integer ID of the ability that was used. Right now this is used to check monster abilities.
+---@param ownerMob?  table   if the action was from a pet then this will hold the owner's mob.
+---@return table     result
+------------------------------------------------------------------------------------------------------
+local weaponskillParse = function(actionData, actorMob, targetMob, wsName, wsID, ownerMob)
+    local messageID  = actionData.message
+    local audits     = getAudits(actorMob, ownerMob, targetMob)
+    local isDamaging = messages.Damaging(messageID)
+    local isDrain    = messages.HpDrain(messageID)
+
+    local result =
+    {
+        damage   = actionData.param,
+        hit      = true,
+        noDamage = false,
+        mpDrain  = false,
+    }
+
+    -- Check damage mitigation first. If mitigated, the damage is set to zero for the counts, blog, etc.
+    result.damage, result.hit, result.noDamage = damageMitigation(audits, result.damage, messageID, wsName, ownerMob)
+
+    -- Pet Damage
+    if ownerMob and isDamaging then
+        data.Update(updateMode.INC, result.damage, audits, trackables.PET_OVERALL, metrics.TOTAL)
+        offense.CatalogHit(audits, audits.trackable, result.damage, wsName)
+
+    -- Damaging Weaponskill
+    elseif isDamaging then
+        offense.CatalogHit(audits, audits.trackable, result.damage, wsName)
+
+    -- Debuff
+    elseif messages.Debuff(messageID) then
+        offense.CatalogHit(audits, audits.trackable, 0, wsName)
+        result.noDamage = true
+
+    -- HP Drain
+    elseif isDrain then
+        offense.CatalogHit(audits, audits.trackable, result.damage, wsName)
+        offense.CatalogHit(audits, trackables.SPELLS_HP_DRAIN, result.damage, wsName)
+
+    -- MP Drain
+    elseif messages.MpDrain(messageID) then
+        offense.CatalogHit(audits, trackables.WEAPONSKILL_MP_DRAIN, result.damage, wsName)
+        result.mpDrain = true
+
+    -- TP Drain and Dispel
+    elseif messages.TpDrain(messageID) or messages.Dispel(messageID) then
+        result.noDamage = true
+
+    -- Just for information gathering purposes.
+    else
+        local warning = string.format("BENIGN: Weaponskill {%s} (%d) has unaccounted message {%d}.", wsName or DB.Enum.DEBUG, wsID or 0, messageID or 0)
+
+        Debug.Error.Add(Debug.Error.WARNING, "weaponskillParse", warning)
+    end
+
+    return result
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Increments skillchain counts.
+-- ------------------------------------------------------------------------------------------------------
+---@param audits table
+---@param scName string
+-- ------------------------------------------------------------------------------------------------------
+local skillchainHit = function(audits, scName)
+    -- Total Attempts
+    data.Update(updateMode.INC, 1, audits, trackables.SKILLCHAIN, metrics.ATTEMPTS_ON_USE)
+    catalog.UpdateMetric(updateMode.INC, 1, audits, trackables.SKILLCHAIN, scName, metrics.ATTEMPTS_ON_USE)
+
+    -- Successfull SC Count
+    data.Update(updateMode.INC, 1, audits, trackables.SKILLCHAIN, metrics.HITS_ON_USE)
+    catalog.UpdateMetric(updateMode.INC, 1, audits, trackables.SKILLCHAIN, scName, metrics.HITS_ON_USE)
+
+    -- Credit to skillchain closer.
+    data.Update(updateMode.INC, 1, audits, trackables.SKILLCHAIN, metrics.SKILLCHAIN_CLOSED)
+    catalog.UpdateMetric(updateMode.INC, 1, audits, trackables.SKILLCHAIN, scName, metrics.SKILLCHAIN_CLOSED)
+
+    -- Credit to skillchain opener (except for multistep skillchains).
+    if H.TP.SkillchainStep <= 2 then
+        local scAudits =
+        {
+            player_name = H.TP.SkillchainOpener,
+            target_name = audits.target_name,
+        }
+
+        data.Update(updateMode.INC, 1, scAudits, trackables.SKILLCHAIN, metrics.SKILLCHAIN_OPENED)
+        catalog.UpdateMetric(updateMode.INC, 1, scAudits, trackables.SKILLCHAIN, scName, metrics.SKILLCHAIN_OPENED)
+    end
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Wraps up weaponskill and skillchain tallys outside of the target loop.
+-- ------------------------------------------------------------------------------------------------------
+---@param actorMob   table
+---@param targetMob  table
+---@param damage     integer
+---@param wsName     string
+---@param scName     string
+---@param wasHit     boolean
+---@param wasMpDrain boolean
+---@return integer   tp
+-- ------------------------------------------------------------------------------------------------------
+local weaponskillWrapUp = function(actorMob, targetMob, damage, wsName, scName, wasHit, wasMpDrain)
+    local audits =
+    {
+        player_name = actorMob.name,
+        target_name = targetMob.name,
+    }
+
+    local trackable = wasMpDrain and trackables.WEAPONSKILL_MP_DRAIN or trackables.WEAPONSKILL
+    local tp        = Ashita.Party.Refresh(audits.player_name, Ashita.PlayerAttributes.TP)
+
+    -- Update TP usage.
+    tp = offense.WeaponskillTP(audits, tp, wsName, trackable)
+
+    -- Update non-target loop hits and attempts.
+    data.Update(updateMode.INC, 1, audits, trackable, metrics.ATTEMPTS_ON_USE)
+    catalog.UpdateMetric(updateMode.INC, 1, audits, trackable, wsName, metrics.ATTEMPTS_ON_USE)
+
+    if damage > 0 or wasHit then
+        data.Update(updateMode.INC, 1, audits, trackable, metrics.HITS_ON_USE)
+        catalog.UpdateMetric(updateMode.INC, 1, audits, trackable, wsName, metrics.HITS_ON_USE)
+    end
+
+    if scName ~= DB.Enum.DEBUG then
+        skillchainHit(audits, scName)
+    end
+
+    return tp
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Increments pet skill attempts.
+-- ------------------------------------------------------------------------------------------------------
+---@param audits    table
+---@param trackable DB.Trackable
+---@param skillName string
+-- ------------------------------------------------------------------------------------------------------
+local petSkillAttempts = function(audits, trackable, skillName)
+    data.Update(updateMode.INC, 1, audits, trackable, metrics.ATTEMPTS_ON_USE)
+    catalog.UpdateMetric(updateMode.INC, 1, audits, trackable, skillName, metrics.ATTEMPTS_ON_USE)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Increments pet skill hits.
+-- ------------------------------------------------------------------------------------------------------
+---@param audits    table
+---@param trackable DB.Trackable
+---@param skillName string
+-- ------------------------------------------------------------------------------------------------------
+local petSkillHit = function(audits, trackable, skillName)
+    data.Update(updateMode.INC, 1, audits, trackable, metrics.HITS_ON_USE)
+    catalog.UpdateMetric(updateMode.INC, 1, audits, trackable, skillName, metrics.HITS_ON_USE)
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Parse the weaponskill packet.
 -- Surprises:
 -- 1. Some abilities--like DRG Jumps--oddly show up in this packet.
 ------------------------------------------------------------------------------------------------------
----@param action table action packet data.
----@param actor_mob table the mob data of the entity performing the action.
----@param log_offense boolean if this action should actually be logged.
+---@param action     table action packet data.
+---@param actorMob   table the mob data of the entity performing the action.
+---@param logOffense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-H.TP.Action = function(action, actor_mob, log_offense)
-    if not log_offense then return nil end
+H.TP.Action = function(action, actorMob, logOffense)
+    if not logOffense then
+        return nil
+    end
 
-	local ws_data = H.TP.WS_Data(action, actor_mob)
-    if not ws_data then return nil end
-    local ws_name = ws_data.en
-    local ws_id = ws_data.id
+    bindGlobals()
 
-    local result, target_mob, sc_name
-    local damage    = 0
-    local sc_damage = 0
+	local wsData = weaponskillData(action, actorMob)
 
-    for target_index, target_value in pairs(action.targets) do
-        for action_index, _ in pairs(target_value.actions) do
+    if not wsData then
+        return nil
+    end
 
-            result = action.targets[target_index].actions[action_index]
+    local wsName        = wsData.en
+    local wsID          = wsData.id
+    local targetMob     = { }
+    local scName        = "None"
+    local tpDamage      = 0
+    local scDamage      = 0
+    local isUseHit      = false
+    local isUseNoDamage = true
+    local isUseMpDrain  = false
 
-            -- Abilities marked as weaponskills
-            if H.TP.WS_Ability(result, ws_id, action, actor_mob) then return nil end
-            target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
+    for _, target in ipairs(action.targets) do
+        targetMob = mobs.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
 
-            if target_mob then
-                if Ashita.Mob.Is_Monster(target_mob) then DB.Lists.Check.Mob_Exists(target_mob.name) end
+        -- Keep the mob list up-to-date.
+        if mobs.IsMonster(targetMob) then
+            dataLists.AddToInitializedMobs(targetMob.name)
+        end
 
-                -- Check for skillchains
-                sc_damage, sc_name = H.TP.Skillchain_Parse(result, actor_mob, target_mob, ws_name)
-
-                -- Need to calculate WS damage here to account for AOE weaponskills
-                damage = damage + H.TP.Weaponskill_Parse(result, actor_mob, target_mob, ws_name, ws_id)
+        for _, actionData in ipairs(target.actions) do
+            -- Send to the ability handler is the TP action is actually an ability.
+            if isWeaponskillAbility(actionData, wsID, action, actorMob) then
+                return H.Ability.Action(action, actorMob, true)
             end
+
+            -- Check for skillchains
+            scDamage, scName = H.TP.SkillchainParse(actionData, actorMob, targetMob, wsName)
+
+            -- Need to calculate WS damage here to account for AOE weaponskills
+            local result = weaponskillParse(actionData, actorMob, targetMob, wsName, wsID)
+
+            tpDamage = tpDamage + result.damage
+
+            -- No Damage: The "use: level is only no damage if all of the target checks are no damage.
+            isUseNoDamage = isUseNoDamage and result.noDamage
+
+            -- Hit: The "use" level is a hit if any of the target checks are hits.
+            isUseHit     = isUseHit or result.hit
+            isUseMpDrain = isUseMpDrain or result.mpDrain
         end
     end
 
-    -- Finalize weaponskill data.
+    -- Finalize weaponskill and skillchain data.
     -- Have to do it outside of the loop to avoid counting attempts and hits multiple times.
-    local audits = {
-        player_name = actor_mob.name,
-        target_name = target_mob.name,
-    }
-    local tp = Ashita.Party.Refresh(actor_mob.name, Ashita.Enum.Player_Attributes.TP)
-    if not tp then tp = 0 end
-
-    H.TP.Weaponskill_Attempts(audits, ws_name)
-    H.TP.Weaponskill_TP(audits, ws_name, tp, H.Trackable.WS)
-    if damage > 0 then H.TP.Weaponskill_Hit(audits, ws_name) end
-    if sc_name ~= DB.Enum.Values.DEBUG then H.TP.Skillchain_Hit(audits, sc_name) end
+    local tp = weaponskillWrapUp(actorMob, targetMob, tpDamage, wsName, scName, isUseHit, isUseMpDrain)
 
     -- Update the battle log.
-    H.TP.Blog_WS(actor_mob, damage, ws_data, ws_name, tp)
-    H.TP.Blog_SC(actor_mob, sc_damage, sc_name)
+    if isUseNoDamage then
+        tpDamage = 0
+    end
+
+    Blog.Add(actorMob.name, nil, Blog.ActionType.WEAPONSKILL, wsName, tpDamage, tp, wsData)
+
+    if scDamage > 0 then
+        Blog.Add(actorMob.name, nil, Blog.ActionType.SKILLCHAIN, scName, scDamage)
+    end
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -72,46 +402,69 @@ end
 -- As DRG, using Smiting Breath and Restoring Breath also come through here (as abilities).
 -- Using the avatar ability as SMN also goes through here.
 ------------------------------------------------------------------------------------------------------
----@param action table action packet data.
----@param actor_mob table the mob data of the entity performing the action.
----@param log_offense boolean if this action should actually be logged.
+---@param action     table   action packet data.
+---@param actorMob   table   the mob data of the entity performing the action.
+---@param logOffense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-H.TP.Begin_Monster_Action = function(action, actor_mob, log_offense)
-    if not log_offense or Ashita.Mob.Is_Player(actor_mob) then return false end
-    local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
+H.TP.BeginMonsterAction = function(action, actorMob, logOffense)
+    if not logOffense or mobs.IsPlayer(actorMob) then
+        return nil
+    end
 
-    local target_mob, result, action_id, skill_data, skill_name
-    local trackable = H.Trackable.PET_WS
-    for target_index, target_value in pairs(action.targets) do
-        target_mob = Ashita.Mob.Get_Mob_By_ID(target_value.id)
-        if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
-        for action_index, _ in pairs(target_value.actions) do
-            result = action.targets[target_index].actions[action_index]
-            action_id = result.param
-            skill_data = H.TP.Pet_Skill_Data(action_id, actor_mob)
-            if not skill_data then return nil end
-            skill_name = skill_data.en
+    bindGlobals()
 
-            -- Avatar and wyvern abilities go through here too.
-            if Res.Avatar.Get_Healing(action_id) then
-                trackable = H.Trackable.PET_HEAL
-            elseif Res.Avatar.Get_Rage(action_id) or Res.Avatar.Get_Ward(action_id) then
-                trackable = H.Trackable.PET_ABILITY
-            elseif Res.Pets.Get_Damaging_Wyvern_Breath(action_id) then
-                trackable = H.Trackable.PET_ABILITY
-                skill_name = Res.Pets.Get_Damaging_Wyvern_Breath(action_id).en
-            elseif Res.Pets.Get_Healing_Wyvern_Breath(action_id) then
-                trackable = H.Trackable.PET_HEAL
-                skill_name = Res.Pets.Get_Healing_Wyvern_Breath(action_id).en
-            elseif not Res.Monster.Get_Damaging_Ability(action_id) then
-                return nil
+    -- Check to see if the pet belongs to anyone in the party.
+    local ownerMob = mobs.PetOwner(actorMob)
+
+    if not ownerMob then
+        return nil
+    end
+
+    local skillName = DB.Enum.DEBUG
+    local trackable = trackables.PET_TP
+    local targetMob = { }
+
+    for _, target in ipairs(action.targets) do
+        targetMob = mobs.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
+
+        -- Keep the mob list up-to-date.
+        if mobs.IsMonster(targetMob) then
+            dataLists.AddToInitializedMobs(targetMob.name)
+        end
+
+        for _, actionData in ipairs(target.actions) do
+            local actionID   = actionData.param
+            local isSMNorDRG = false
+            local ownerJob   = Ashita.Party.GetMember(ownerMob.name)
+            local skillData  = { }
+
+            -- The pet ability IDs have two different sources based on type of pet so need to check job.
+            if ownerJob then
+                if ownerJob.main == Ashita.Jobs.BST or ownerJob.main == Ashita.Jobs.PUP then
+                    skillData = H.TP.PetSkillData(actionID, actorMob)
+                    skillName = skillData.en or DB.Enum.DEBUG
+
+                -- SMN and DRG
+                else
+                    skillData  = Ashita.Ability.GetByID(actionID + Ashita.AbilityOffset.PET)
+                    skillName  = skillData.Name or DB.Enum.DEBUG
+                    isSMNorDRG = true
+                end
+            end
+
+            -- Avatar and Wyvern Healing
+            if skillData and isSMNorDRG then
+                if Horizon.HealingList(actionID) then
+                    trackable = trackables.PET_HEALING
+                end
             end
         end
     end
 
-    local pet_tp = Ashita.Player.Get(Ashita.Enum.Player_Attributes.PET_TP) or 0
-    local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
-    H.TP.Weaponskill_TP(audits, skill_name, pet_tp, trackable)
+    local petTp  = Ashita.Player.Get(Ashita.PlayerAttributes.PET_TP) or 0
+    local audits = getAudits(actorMob, ownerMob, targetMob)
+
+    offense.WeaponskillTP(audits, petTp, skillName, trackable)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -119,371 +472,141 @@ end
 -- BST Pet and Puppet ranged attacks fall into this category.
 -- Trust abilities can show up here too. They don't have an owner.
 ------------------------------------------------------------------------------------------------------
----@param action table action packet data.
----@param actor_mob table the mob data of the entity performing the action.
----@param log_offense boolean if this action should actually be logged.
+---@param action     table   action packet data.
+---@param actorMob   table   the mob data of the entity performing the action.
+---@param logOffense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-H.TP.Monster_Action = function(action, actor_mob, log_offense)
-    if not log_offense then return false end
-    local owner_mob = Ashita.Mob.Pet_Owner(actor_mob)    -- Check to see if the pet belongs to anyone in the party.
+H.TP.MonsterAction = function(action, actorMob, logOffense)
+    if not logOffense then
+        return nil
+    end
 
-    local skill_data = H.TP.Pet_Skill_Data(action.param, actor_mob)
-    if not skill_data then return nil end
-    local skill_name = skill_data.en
-    local action_id = skill_data.id
+    bindGlobals()
 
-    local result, target_mob
-    local damage = 0
+    -- Check to see if the pet belongs to anyone in the party.
+    local ownerMob = mobs.PetOwner(actorMob)
 
-    for target_index, target_value in pairs(action.targets) do
-        for action_index, _ in pairs(target_value.actions) do
-            result = action.targets[target_index].actions[action_index]
-            target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if not target_mob then target_mob = {name = DB.Enum.Values.DEBUG} end
+    if not ownerMob and not Parse.Config.IsLurking() then
+        return nil
+    end
 
-            -- Puppet ranged attack
-            -- This needs to be inside the result loop in order to send the data to the ranged handler.
-            if action_id == 1949 then
-                H.Ranged.Parse(result, actor_mob, target_mob, owner_mob)
-                skill_name = "Pet Ranged"
-                damage = result.param
+    local skillData = H.TP.PetSkillData(action.param, actorMob)
+
+    if not skillData then
+        return nil
+    end
+
+    local skillName     = skillData.en
+    local actionID      = skillData.id
+    local tpDamage      = 0
+    local isUseHit      = false
+    local isUseNoDamage = true
+    local targetMob     = { }
+
+    for _, target in ipairs(action.targets) do
+        targetMob = mobs.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
+
+        -- Keep the mob list up-to-date.
+        if mobs.IsMonster(targetMob) then
+            dataLists.AddToInitializedMobs(targetMob.name)
+        end
+
+        for _, actionData in ipairs(target.actions) do
+            -- Puppet ranged attack. Send this action to the ranged action parser.
+            if actionID == Ashita.Abilities.PUP_RANGED then
+                return H.Ranged.Parse(actionData, actorMob, targetMob, ownerMob)
 
             -- BST pet abilities can't skillchain in HorizonXI.
             -- Need to calculate WS damage here to account for AOE weaponskills.
             else
-                damage = damage + H.TP.Weaponskill_Parse(result, actor_mob, target_mob, skill_name, action_id, owner_mob)
+                local result = weaponskillParse(actionData, actorMob, targetMob, skillName, actionID, ownerMob)
+
+                tpDamage = tpDamage + result.damage
+
+                -- No Damage: The "use: level is only no damage if all of the target checks are no damage.
+                isUseNoDamage = isUseNoDamage and result.noDamage
+
+                -- Hit: The "use" level is a hit if any of the target checks are hits.
+                isUseHit = isUseHit or result.hit
             end
         end
     end
 
-    local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
-    H.TP.Pet_Skill_Attempts(audits, audits.trackable, skill_name)
-    if damage > 0 then H.TP.Pet_Skill_Hit(audits, audits.trackable, skill_name) end
+    local audits = getAudits(actorMob, ownerMob, targetMob)
 
-    -- Update the battle log.
-    H.TP.Blog_Pet_Skill(owner_mob, actor_mob, action_id, damage, skill_name)
+    petSkillAttempts(audits, audits.trackable, skillName)
+
+    if tpDamage > 0 then
+        petSkillHit(audits, audits.trackable, skillName)
+    end
+
+    -- Update the battle log. -1 is a formatting flag for the battle log.
+    if ownerMob then
+        tpDamage = isUseNoDamage and -1 or tpDamage
+        Blog.Add(ownerMob.name, actorMob.name, Blog.ActionType.PET_TP, skillName, tpDamage)
+    end
 
     return true
-end
-
-------------------------------------------------------------------------------------------------------
--- Set data for a weaponskill action.
--- AOE weaponskills will go through this one time for each mob hit.
-------------------------------------------------------------------------------------------------------
----@param result table contains all the information for the action.
----@param actor_mob table name of the player that did the action.
----@param target_mob table name of the target that received the action.
----@param ws_name string name of the weaponskill that was used.
----@param ws_id number ID of the ability that was used. Right now this is used to check monster abilities.
----@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
----@return number
-------------------------------------------------------------------------------------------------------
-H.TP.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
-    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "Weaponskill", result)
-    local damage = result.param
-    local audits = H.TP.Audits(actor_mob, owner_mob, target_mob)
-
-    -- A lot of pet abilities just land a status effect and it carries in a value as if it were damage.
-    damage = H.TP.Pet_Skill_Ignore(owner_mob, audits, damage, ws_id, ws_name)
-
-    -- Some weaponskills drain MP instead of doing damage.
-    audits = H.TP.MP_Drain(audits, ws_id)
-
-    -- This handles both the pet and player case.
-    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, audits.trackable, damage, ws_name, audits.pet_name)
-
-    return damage
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Get weaponskill data.
--- ------------------------------------------------------------------------------------------------------
----@param action table
----@param actor_mob table
----@return table|nil
--- ------------------------------------------------------------------------------------------------------
-H.TP.WS_Data = function(action, actor_mob)
-    local ws_data = Ashita.WS.Get_By_ID(action.param)
-	if not ws_data then
-        Debug.Error.Add("TP.WS_Data: {" .. tostring(actor_mob.name) .. "} used ws ID " .. tostring(action.param) .. " and it wasn't found.")
-        return nil
-    end
-    return ws_data
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Get pet skill data.
--- ------------------------------------------------------------------------------------------------------
----@param action_id number
----@param actor_mob table
----@return table
--- ------------------------------------------------------------------------------------------------------
-H.TP.Pet_Skill_Data = function(action_id, actor_mob)
-    local skill_data = Res.Monster.Get_Full_List(action_id)
-    if not skill_data then
-        Debug.Error.Add("TP.Pet_Skill_Data: {" .. tostring(actor_mob.name) .. "} TP move " .. tostring(action_id) .. " unmapped in Pet_Skill.")
-        skill_data = {id = action_id, en = "UNK Mon. Ability (" .. action_id .. ")"}
-    end
-    return skill_data
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Checks for abilities that come through on the WS packet.
--- I'm differentiating them based on chat message, so this needs to be called in the result loop and not before.
--- Specific case: Steal/Swift Blade, Atonement/Mug, Gale Axe/Jump, Spinning Axe/Super Jump
--- ------------------------------------------------------------------------------------------------------
----@param result table
----@param ws_id number
----@param action table
----@param actor_mob table
----@return boolean true: weaponskill was actually an ability
--- ------------------------------------------------------------------------------------------------------
-H.TP.WS_Ability = function(result, ws_id, action, actor_mob)
-    if Res.WS.Get_Ability(ws_id) then
-        if result.message ~= 185 and result.message ~= 188 then
-            H.Ability.Action(action, actor_mob, true)
-            return true
-        end
-    end
-    return false
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Increments weaponskill attempts.
--- ------------------------------------------------------------------------------------------------------
----@param audits table
----@param ws_name string
--- ------------------------------------------------------------------------------------------------------
-H.TP.Weaponskill_Attempts = function(audits, ws_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.WS, H.Metric.COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.WS, ws_name, H.Metric.COUNT)
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Increments weaponskill hits.
--- ------------------------------------------------------------------------------------------------------
----@param audits table
----@param ws_name string
--- ------------------------------------------------------------------------------------------------------
-H.TP.Weaponskill_Hit = function(audits, ws_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.WS, H.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.WS, ws_name, H.Metric.HIT_COUNT)
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Increments weaponskill hits.
--- ------------------------------------------------------------------------------------------------------
----@param audits table
----@param ws_name string
----@param tp integer
----@param trackable string
--- ------------------------------------------------------------------------------------------------------
-H.TP.Weaponskill_TP = function(audits, ws_name, tp, trackable)
-    if tp < 0 then tp = 0 end
-    if tp > 3000 then tp = 3000 end
-    DB.Data.Update(H.Mode.INC, tp, audits, trackable, H.Metric.TP_SPENT)
-    DB.Catalog.Update_Metric(H.Mode.INC, tp, audits, trackable, ws_name, H.Metric.TP_SPENT)
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Increments pet skill attempts.
--- ------------------------------------------------------------------------------------------------------
----@param audits table
----@param trackable string
----@param skill_name string
--- ------------------------------------------------------------------------------------------------------
-H.TP.Pet_Skill_Attempts = function(audits, trackable, skill_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, skill_name, H.Metric.COUNT)
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Some pet skills don't do direct damage and their effects come in as damage--must be ignored.
--- ------------------------------------------------------------------------------------------------------
----@param owner_mob table|nil
----@param audits table
----@param damage number
----@param ws_id number
----@param ws_name string
----@return number
--- ------------------------------------------------------------------------------------------------------
-H.TP.Pet_Skill_Ignore = function(owner_mob, audits, damage, ws_id, ws_name)
-    if owner_mob then
-        if not Res.Monster.Get_Damaging_Ability(ws_id) then
-            Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
-            damage = 0
-        end
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.PET, H.Metric.TOTAL)
-    end
-    return damage
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Increments pet skill hits.
--- ------------------------------------------------------------------------------------------------------
----@param audits table
----@param trackable string
----@param skill_name string
--- ------------------------------------------------------------------------------------------------------
-H.TP.Pet_Skill_Hit = function(audits, trackable, skill_name)
-    DB.Data.Update(H.Mode.INC, 1, audits, trackable, H.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, trackable, skill_name, H.Metric.HIT_COUNT)
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Handle weaponskills that drain MP instead of doing damage.
--- ------------------------------------------------------------------------------------------------------
----@param audits table
----@param ws_id number
----@return table
--- ------------------------------------------------------------------------------------------------------
-H.TP.MP_Drain = function(audits, ws_id)
-    if Res.WS.Get_MP_Drain(ws_id) then
-        audits.trackable = DB.Enum.Trackable.MP_DRAIN
-    end
-    return audits
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Set audit information for pet skills.
--- ------------------------------------------------------------------------------------------------------
----@param actor_mob table
----@param owner_mob table|nil
----@param target_mob table
----@return table
--- ------------------------------------------------------------------------------------------------------
-H.TP.Audits = function(actor_mob, owner_mob, target_mob)
-    -- Initialize on case where this is a trust or regular monster.
-    local player_name = actor_mob.name
-    local pet_name = nil
-    local trackable = H.Trackable.WS
-    -- Case where this is a player's pet using an ability.
-    if owner_mob then
-        player_name = owner_mob.name
-        pet_name = actor_mob.name
-        trackable = H.Trackable.PET_WS
-    end
-    local audits = {
-        player_name = player_name,
-        target_name = target_mob.name,
-        pet_name = pet_name,
-        trackable = trackable
-    }
-    return audits
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Check for skillchains.
 -- ------------------------------------------------------------------------------------------------------
----@param result table
----@param actor_mob table
----@param target_mob table
----@param ws_name string
----@return number, string
--- ------------------------------------------------------------------------------------------------------
-H.TP.Skillchain_Parse = function(result, actor_mob, target_mob, ws_name)
-    local sc_id = result.add_effect_message
-    local sc_damage = 0
-    local sc_name = DB.Enum.Values.DEBUG
-    if sc_id > 0 then
-        sc_name    = Res.WS.Get_Skillchain(sc_id)
-        sc_damage  = sc_damage + H.TP.Skillchain_Damage(result, actor_mob.name, target_mob.name, sc_name)
-        H.TP.SC_Step = H.TP.SC_Step + 1
-    else
-        H.TP.SC_Opener = actor_mob.name
-        H.TP.SC_Opening_WS = ws_name
-        H.TP.SC_Step   = 1
-    end
-    return sc_damage, sc_name
-end
-
-------------------------------------------------------------------------------------------------------
--- Set damage data for a skillchain action.
-------------------------------------------------------------------------------------------------------
----@param result table contains all the information for the action.
----@param player_name string name of the player that did the action.
----@param target_name string name of the target that received the action.
----@param sc_name string name of the skillchain that happened.
+---@param actionData table
+---@param actorMob   table
+---@param targetMob  table
+---@param wsName     string
 ---@return number
-------------------------------------------------------------------------------------------------------
-H.TP.Skillchain_Damage = function(result, player_name, target_name, sc_name)
-    local damage = result.add_effect_param
-    DB.Catalog.Update_Damage(player_name, target_name, H.Trackable.SC, damage, sc_name)
-    return damage
-end
-
+---@return string
 -- ------------------------------------------------------------------------------------------------------
--- Increments skillchain counts.
--- ------------------------------------------------------------------------------------------------------
----@param audits table
----@param sc_name string
--- ------------------------------------------------------------------------------------------------------
-H.TP.Skillchain_Hit = function(audits, sc_name)
-    -- Total Attempts
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.COUNT)
+H.TP.SkillchainParse = function(actionData, actorMob, targetMob, wsName)
+    bindGlobals()
 
-    -- Successfull SC Count
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.HIT_COUNT)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.HIT_COUNT)
+    local scID = actionData.add_effect_message
 
-    -- Credit to skillchain closer.
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.SC, H.Metric.SC_CLOSED)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, H.Trackable.SC, sc_name, H.Metric.SC_CLOSED)
-
-    -- Credit to skillchain opener (except for multistep skillchains).
-    if H.TP.SC_Step <= 2 then
-        local sc_audits = T{
-            player_name = H.TP.SC_Opener,
-            target_name = audits.target_name,
-        }
-        DB.Data.Update(H.Mode.INC, 1, sc_audits, H.Trackable.SC, H.Metric.SC_OPENED)
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, sc_audits, H.Trackable.SC, sc_name, H.Metric.SC_OPENED)
+    if scID <= 0 then
+        H.TP.SkillchainOpener    = actorMob.name
+        H.TP.SkillchainOpeningWS = wsName
+        H.TP.SkillchainStep      = 1
+        return 0, DB.Enum.DEBUG
     end
+
+    local audits =
+    {
+        player_name = actorMob.name,
+        target_name = targetMob.name,
+    }
+
+    local scName   = Res.WS.Skillchains[scID]
+    local scDamage = actionData.add_effect_param
+
+    offense.CatalogHit(audits, trackables.SKILLCHAIN, scDamage, scName)
+    H.TP.SkillchainStep = H.TP.SkillchainStep + 1
+
+    return scDamage, scName
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Adds weaponskill damage to the battle log.
+-- Get pet skill data.
 -- ------------------------------------------------------------------------------------------------------
----@param actor_mob table
----@param damage number
----@param ws_data table
----@param ws_name string
----@param tp integer
+---@param actionID number
+---@param actorMob table
+---@return table
 -- ------------------------------------------------------------------------------------------------------
-H.TP.Blog_WS = function(actor_mob, damage, ws_data, ws_name, tp)
-    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.WS, ws_name, damage, tp, H.Trackable.WS, ws_data)
-end
+H.TP.PetSkillData = function(actionID, actorMob)
+    bindGlobals()
 
--- ------------------------------------------------------------------------------------------------------
--- Adds skillchain damage to the battle log.
--- ------------------------------------------------------------------------------------------------------
----@param actor_mob table
----@param sc_damage number
----@param sc_name string
--- ------------------------------------------------------------------------------------------------------
-H.TP.Blog_SC = function(actor_mob, sc_damage, sc_name)
-    if sc_damage > 0 then
-        Blog.Add(actor_mob.name, nil, Blog.Enum.Types.SC, sc_name, sc_damage, nil, DB.Enum.Trackable.SC)
+    actionID = actionID or 0
+
+    local skillData = Res.Monster.FullList[actionID]
+
+    if skillData then
+        return skillData
     end
-end
 
--- ------------------------------------------------------------------------------------------------------
--- Adds pet skill damage to the battle log.
--- The battle log is interesting here. Pets have abilities that have status effects but don't do any damage.
--- The text needs a little massaging to avoid making it look like all the pet's status effect abilities missed.
--- Additional abilities such as these may need to be added to monster ability filter.
--- ------------------------------------------------------------------------------------------------------
----@param owner_mob? table
----@param actor_mob table
----@param action_id number
----@param damage number
----@param skill_name string
--- ------------------------------------------------------------------------------------------------------
-H.TP.Blog_Pet_Skill = function(owner_mob, actor_mob, action_id, damage, skill_name)
-    if owner_mob then
-        local ignore = nil
-        if not Res.Monster.Get_Damaging_Ability(action_id) then ignore = H.Enum.Flags.IGNORE end
-        Blog.Add(owner_mob.name, actor_mob.name, Blog.Enum.Types.PET_TP, skill_name, damage, H.Enum.Text.BLANK, ignore)
-    end
+    local errorMessage = string.format("Actor {%s} used TP move {%d} and it was unmapped.", actorMob.name or DB.Enum.DEBUG, actionID)
+
+    Debug.Error.Add(Debug.Error.ERROR, "H.TP.PetSkillData", errorMessage)
+
+    return { id = actionID, en = string.format("(%d) UNK Mon. Ability", actionID) }
 end

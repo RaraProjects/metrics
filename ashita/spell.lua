@@ -1,13 +1,17 @@
-Ashita.Spell = T{}
+Ashita.Spell = { }
 
 -- ------------------------------------------------------------------------------------------------------
 -- Get spell data.
 -- https://wiki.ashitaxi.com/doku.php?id=addons:adk:iresourcemanager
 -- ------------------------------------------------------------------------------------------------------
----@param id number spell ID.
+---@param id integer spell ID.
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Spell.Get_By_ID = function(id)
+Ashita.Spell.GetByID = function(id)
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.GetByID", string.format("Parameter \"id\" was nil."))
+    end
+
     return AshitaCore:GetResourceManager():GetSpellById(id)
 end
 
@@ -20,12 +24,18 @@ end
 ---@return string
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Spell.Name = function(id, data)
-    local spell = data
-    if not spell then
-        spell = Ashita.Spell.Get_By_ID(id)
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.Name", string.format("Parameter \"id\" was nil."))
+        return 'Error'
     end
-    if not spell then return "Error" end
-    return spell.Name[1]
+
+    local spell = data or Ashita.Spell.GetByID(id)
+
+    if not spell or not spell.Name or not spell.Name[1] then
+        return "Error"
+    end
+
+    return spell.Name[3]
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -37,10 +47,37 @@ end
 ---@return number
 -- ------------------------------------------------------------------------------------------------------
 Ashita.Spell.MP = function(id, data)
-    local spell = data
-    if not spell then
-        spell = Ashita.Spell.Get_By_ID(id)
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.MP", string.format("Parameter \"id\" was nil."))
     end
-    if not spell then return 0 end
+
+    local spell = data or Ashita.Spell.GetByID(id)
+
+    if not spell or not spell.ManaCost then
+        return 0
+    end
+
     return spell.ManaCost
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Get the skill a spell.
+-- If we already have the spell data then we don't need to get it again.
+-- ------------------------------------------------------------------------------------------------------
+---@param id number spell ID.
+---@param data? table spell table if we already have it.
+---@return number
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Spell.Skill = function(id, data)
+    if not id then
+        Debug.Error.Add(Debug.Error.ERROR, "Ashita.Spell.Skill", string.format("Parameter \"id\" was nil."))
+    end
+
+    local spell = data or Ashita.Spell.GetByID(id)
+
+    if not spell or not spell.Skill then
+        return 0
+    end
+
+    return spell.Skill
 end

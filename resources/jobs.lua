@@ -1,6 +1,7 @@
-Res.Jobs = T{}
+Res.Jobs = { }
 
-Res.Jobs.List = T{
+Res.Jobs.List =
+{
     [0] = {id=0,en="None",ja="なし",ens="NON",jas=""},
     [1] = {id=1,en="Warrior",ja="戦士",ens="WAR",jas="戦"},
     [2] = {id=2,en="Monk",ja="モンク",ens="MNK",jas="モ"},

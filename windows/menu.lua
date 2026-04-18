@@ -1,9 +1,7 @@
-Ashita.Menu = T{}
+local menuHandler = { }
 
-Ashita.Menu.Module  = "FFXiMain.dll"
-Ashita.Menu.Pattern = "8B480C85C974??8B510885D274??3B05"
-
-Ashita.Menu.Types = T{
+menuHandler.Types =
+{
     fulllog  = true,    -- Expanded chat log
     equip    = true,    -- Equipment menu
     inventor = true,    -- Inventory
@@ -75,7 +73,14 @@ Ashita.Menu.Types = T{
     miss00   = true,    -- Mission submenu
     faqsub   = true,    -- Help Desk
     cmbhlst  = true,    -- Synthesis History
+    mapv2    = true,    -- Map marker creation
+    mapv3    = true,    -- Map markers
+    inspect  = true,    -- Checking equipment
 }
+
+menuHandler.Module  = 'FFXiMain.dll'
+menuHandler.Pattern = '8B480C85C974??8B510885D274??3B05'
+menuHandler.Memory  = nil
 
 -- ------------------------------------------------------------------------------------------------------
 -- Gets the name of the upper most menu.
@@ -85,28 +90,53 @@ Ashita.Menu.Types = T{
 -- ------------------------------------------------------------------------------------------------------
 ---@return string, integer
 -- ------------------------------------------------------------------------------------------------------
-function Ashita.Menu.Get_Menu_Name()
-    local menu = ashita.memory.find(Ashita.Menu.Module, 0, Ashita.Menu.Pattern, 16, 0)
+menuHandler.GetMenuName = function()
+    if not menuHandler.Memory then
+        menuHandler.Memory = ashita.memory.find(menuHandler.Module, 0, menuHandler.Pattern, 16, 0)
+    end
+
+    local menu = menuHandler.Memory
+
+    if not menu or menu == 0 then
+        menuHandler.Memory = nil
+        return '', 0
+    end
+
     local pointer = ashita.memory.read_uint32(menu)
-    local pointer_value = ashita.memory.read_uint32(pointer)
-    if pointer_value == 0 then return "", 0 end
-    local menu_header = ashita.memory.read_uint32(pointer_value + 4)
-    local menu_name = ashita.memory.read_string(menu_header + 0x46, 16)
-    return string.gsub(menu_name, "\x00", "")
+
+    if not pointer or pointer == 0 then
+        return '', 0
+    end
+
+    local pointerValue = ashita.memory.read_uint32(pointer)
+
+    if pointerValue == 0 then
+        return '', 0
+    end
+
+    local menuHeader = ashita.memory.read_uint32(pointerValue + 4)
+    local menuName   = ashita.memory.read_string(menuHeader + 0x46, 16)
+
+    return string.gsub(menuName, '\x00', '')
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Checks whether a menu is up that we should hide Metrics for.
+-- Checks whether a menu is up that we should hide windows for.
 -- ------------------------------------------------------------------------------------------------------
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-function Ashita.Menu.Hide()
-    local menu_name = Ashita.Menu.Get_Menu_Name()
-    if not menu_name then return true end
+menuHandler.ShouldHideFromMenu = function()
+    local menuName = menuHandler.GetMenuName()
+
+    if not menuName then
+        return true
+    end
 
     -- Get rid of prefix junk and clip off trailing spaces.
-    menu_name = string.sub(menu_name, 9)
-    menu_name = string.gsub(menu_name, " ", "")
+    menuName = string.sub(menuName, 9)
+    menuName = string.gsub(menuName, ' ', '')
 
-    return Ashita.Menu.Types[menu_name]
+    return menuHandler.Types[menuName]
 end
+
+return menuHandler

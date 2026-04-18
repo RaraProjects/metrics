@@ -1,4 +1,4 @@
-Ashita = T{}
+Ashita = { }
 
 -- ------------------------------------------------------------------------------------------------------
 -- https://github.com/AshitaXI/Ashita-v4beta/blob/main/plugins/sdk/Ashita.h
@@ -12,11 +12,9 @@ Ashita = T{}
 -- IRecast* GetRecast(void)
 -- ITarget* GetTarget(void)
 -- ------------------------------------------------------------------------------------------------------
--- TO DO
--- 1. Finish the pet portion in a.Mob.Get_Mob_By_Target
--- ------------------------------------------------------------------------------------------------------
 
-Ashita.States = {
+Ashita.States =
+{
     Zoning = false,
 }
 
@@ -30,4 +28,3 @@ require("ashita.weaponskill")   -- Getting data related to weaponskills.
 require("ashita.item")          -- Getting data related to items.
 require("ashita.chat")          -- Chat functions.
 require("ashita.packets")       -- Packet functions.
-require("ashita.menu")          -- Memory and Menus.

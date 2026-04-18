@@ -1,60 +1,66 @@
-Parse.Widgets = T{}
+local widgets = require('windows.widgets')
+
+Parse.Widgets = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Shows the parse duration clock.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Clock = function()
-    if Metrics.Parse.Show_Clock then
-        local pause_string = ""
-        if Timers.Is_Paused(Timers.Enum.Names.PARSE) then pause_string = " (||)" end
-        UI.Text("Total: " .. tostring(Timers.Check(Timers.Enum.Names.METRICS)))
-        UI.SameLine() UI.Text(" ") UI.SameLine()
-        UI.SameLine() UI.Text("Active: " .. tostring(Timers.Check(Timers.Enum.Names.PARSE)))
-        UI.SameLine() UI.Text(pause_string) Parse.Widgets.Timer_Duration_Help_Text()
+    if Parse.Settings.Show_Clock then
+        local pauseString = ''
+
+        if Timers.IsPaused(Timers.Types.PARSE) then
+            pauseString = ' (||)'
+        end
+
+        UI.Text(string.format('Total: %s', tostring(Timers.Check(Timers.Types.METRICS))))
+        UI.SameLine() UI.Text(' ') UI.SameLine()
+        UI.SameLine() UI.Text(string.format('Active: %s', tostring(Timers.Check(Timers.Types.PARSE))))
+        UI.SameLine() UI.Text(pauseString) Parse.Help.TimerDurationHelpText()
     end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles the settings showing for the parse window.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Settings_Button = function()
-    if UI.SmallButton("Settings") then
-        Config.Button_Toggle(Config.Enum.File.PARSE)
+Parse.Widgets.SettingsButton = function()
+    if UI.SmallButton('Settings') then
+        Config.ButtonToggle(Config.ModuleFile.PARSE)
     end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles the mob filter showing for the parse window.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Filter_Button = function()
-    if UI.SmallButton("Filters") then
-        Metrics.Parse.Show_Filter = not Metrics.Parse.Show_Filter
+Parse.Widgets.FilterButton = function()
+    if UI.SmallButton('Filters') then
+        Parse.Settings.Show_Filter = not Parse.Settings.Show_Filter
     end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles player name masking.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Mask_Names = function()
-    if UI.SmallButton("Mask Names") then
-        Metrics.Parse.Hide_Name = not Metrics.Parse.Hide_Name
+Parse.Widgets.MaskNames = function()
+    if UI.SmallButton('Mask Names') then
+        Parse.Settings.Mask_Names = not Parse.Settings.Mask_Names
     end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles the duration timer showing for the parse window.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Timer_Button = function()
-    if UI.SmallButton("Timer") then
-        Metrics.Parse.Show_Clock = not Metrics.Parse.Show_Clock
+Parse.Widgets.TimerButton = function()
+    if UI.SmallButton('Timer') then
+        Parse.Settings.Show_Clock = not Parse.Settings.Show_Clock
     end
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Toggles the Confirmation button showing for the parse window.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Reset_Button = function()
-    if UI.SmallButton("Reset") then
+Parse.Widgets.ResetButton = function()
+    if UI.SmallButton('Reset') then
         Parse.Confirmation = not Parse.Confirmation
     end
 end
@@ -62,9 +68,10 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Confirms database reset.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Reset_Confirmation_Button = function()
-    if UI.SmallButton("I'm sure.") then
+Parse.Widgets.ResetConfirmationButton = function()
+    if UI.SmallButton('I\'m sure.') then
         DB.Initialize(true)
+        Blog.Initialize()
         Parse.Confirmation = false
     end
 end
@@ -73,101 +80,45 @@ end
 -- Pauses the parse timer.
 ------------------------------------------------------------------------------------------------------
 Parse.Widgets.Pause = function()
-    if Timers.Timers[Timers.Enum.Names.PARSE] then
-        if Timers.Timers[Timers.Enum.Names.PARSE].Paused then
-            if UI.SmallButton("Unpause") then
-                Timers.Start(Timers.Enum.Names.PARSE)
+    if Timers.Timers[Timers.Types.PARSE] then
+        if Timers.Timers[Timers.Types.PARSE].Paused then
+            if UI.SmallButton('Unpause') then
+                Timers.Start(Timers.Types.PARSE)
             end
         else
-            if UI.SmallButton("Pause") then
-                Timers.Pause(Timers.Enum.Names.PARSE)
+            if UI.SmallButton('Pause') then
+                Timers.Pause(Timers.Types.PARSE)
             end
         end
     end
 end
 
 ------------------------------------------------------------------------------------------------------
--- Toggles whether skillchain damage is included in damage displays.
-------------------------------------------------------------------------------------------------------
-Parse.Widgets.SC_Damage = function()
-    if UI.Checkbox("Include SC Damage", {Metrics.Parse.Include_SC_Damage}) then
-        Metrics.Parse.Include_SC_Damage = not Metrics.Parse.Include_SC_Damage
-        Parse.Util.Calculate_Column_Flags()
-    end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("The player that closes the skill chain gets the damage credit. "
-                                    .. "You can choose to exclude skillchain damage from the parse display. "
-                                    .. "You won't lose any data by toggling this. There is a track where "
-                                    .. "skillchains are included and one where they aren't. This just toggles "
-                                    .. "between the two.")
-end
-
-------------------------------------------------------------------------------------------------------
--- Toggles whether or not numbers are shown in condensed format or not.
-------------------------------------------------------------------------------------------------------
-Parse.Widgets.Condensed_Numbers = function()
-    if UI.Checkbox("Short Numbers", {Metrics.Parse.Condensed_Numbers}) then
-        Metrics.Parse.Condensed_Numbers = not Metrics.Parse.Condensed_Numbers
-        Parse.Util.Calculate_Column_Flags()
-    end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("1.2K instead of 1,200.")
-end
-
-------------------------------------------------------------------------------------------------------
 -- Sets the running accuracy buffer limit.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Acc_Limit = function()
-    local acc_limit = {[1] = Metrics.Model.Running_Accuracy_Limit}
+Parse.Widgets.AccLimit = function()
+    local accLimit = { Metrics.Model.Running_Accuracy_Limit }
+
     UI.SetNextItemWidth(Parse.Config.Slider_Width)
-    if UI.DragInt("Recent Accuracy Lookback", acc_limit, 0.1, 10, 50, "%d", ImGuiSliderFlags_None) then
-        Metrics.Model.Running_Accuracy_Limit = acc_limit[1]
-        DB.Tracking.Running_Accuracy = {}
+
+    if UI.DragInt('Recent Accuracy Lookback', accLimit, 0.1, 10, 50, '%d', ImGuiSliderFlags_None) then
+        Metrics.Model.Running_Accuracy_Limit = accLimit[1]
+        DB.Tracking.RunningAccuracy = { }
     end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("Recent accuracy calculates based off of {X} many attack attempts.")
+
+    widgets.HelpMarker('Recent accuracy calculates based off of {X} many attack attempts.')
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Sets how many players can be shown on the Team screen.
 ------------------------------------------------------------------------------------------------------
-Parse.Widgets.Player_Limit = function()
+Parse.Widgets.PlayerLimit = function()
     UI.SetNextItemWidth(Parse.Config.Slider_Width)
-    local cutoff = {[1] = Metrics.Parse.Rank_Cutoff}
-    if UI.DragInt("Player Limit", cutoff, 0.1, 0, 18, "%d", ImGuiSliderFlags_None) then
-        Metrics.Parse.Rank_Cutoff = cutoff[1]
-    end
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("How many players are listed on the Team table.")
-end
+    local cutoff = { Parse.Settings.Rank_Cutoff }
 
-------------------------------------------------------------------------------------------------------
--- Sets the height of the DPS graph.
-------------------------------------------------------------------------------------------------------
-Parse.Widgets.DPS_Graph_Height = function()
-    UI.SetNextItemWidth(Parse.Config.Slider_Width)
-    local height = {[1] = Metrics.Parse.DPS_Graph_Height}
-    if UI.DragInt("DPS Graph Height", height, 0.1, 25, 100, "%d", ImGuiSliderFlags_None) then
-        Metrics.Parse.DPS_Graph_Height = height[1]
+    if UI.DragInt('Player Limit', cutoff, 0.1, 0, 18, '%d', ImGuiSliderFlags_None) then
+        Parse.Settings.Rank_Cutoff = cutoff[1]
     end
-end
 
-------------------------------------------------------------------------------------------------------
--- Shows the help text for the player filter.
-------------------------------------------------------------------------------------------------------
-Parse.Widgets.Timer_Duration_Help_Text = function()
-    UI.SameLine() Window_Manager.Widgets.HelpMarker("The active timer will auto-pause after " .. tostring(Timers.Tresholds.AUTOPAUSE)
-                                        .. " seconds of no actions. The timer will auto restart after someone affiliated with you "
-                                        .. "(in your party or alliance) takes an action. Data collection does NOT stop while "
-                                        .. "paused! The duration and auto-pause is to help you see how long your group has actually "
-                                        .. "been active. \n")
-end
-
-------------------------------------------------------------------------------------------------------
--- DEPRECATED
--- Shows a graph of a player's DPS.
-------------------------------------------------------------------------------------------------------
----@param player_name string
-------------------------------------------------------------------------------------------------------
-Parse.Widgets.DPS_Graph = function(player_name)
-    if Metrics.Parse.Show_DPS_Graph then
-        local data = DB.DPS.Get_DPS_Graph(player_name)
-        UI.PlotLines("DPS", data, #data, 8, nil, 0, nil, {Parse.Full.Width.Base, Metrics.Parse.DPS_Graph_Height})
-    end
+    widgets.HelpMarker('How many players are listed on the Team table.')
 end

@@ -1,7 +1,24 @@
-Res.Spells = T{}
+Res.Spells = { }
+
+-- Holds a spell trackable indexed by spell ID.
+Res.Spells.TrackableBySpellId   = { }
+Res.Spells.PetTrackableOverride = { }
+
+------------------------------------------------------------------------------------------------------
+-- Maps all spell IDs to a trackable at runtime for performance.
+------------------------------------------------------------------------------------------------------
+---@param spellList table        a spell list for Res.
+---@param trackable DB.Trackable name of the player that did the action.
+------------------------------------------------------------------------------------------------------
+Res.Spells.MapSpellId = function(spellList, trackable)
+    for spellId in pairs(spellList) do
+        Res.Spells.TrackableBySpellId[spellId] = trackable
+    end
+end
 
 -- Based off of spells.lua from Windower.
-Res.Spells.Enspell = T{
+Res.Spells.Enspell =
+{
     [100] = {id=100,en="Enfire",ja="エンファイア",cast_time=3,duration=180,element=0,icon_id=172,icon_id_nq=0,levels={[5]=24},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=100,requirements=1,skill=34,status=94,targets=1,type="WhiteMagic"},
     [101] = {id=101,en="Enblizzard",ja="エンブリザド",cast_time=3,duration=180,element=1,icon_id=173,icon_id_nq=1,levels={[5]=22},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=101,requirements=1,skill=34,status=95,targets=1,type="WhiteMagic"},
     [102] = {id=102,en="Enaero",ja="エンエアロ",cast_time=3,duration=180,element=2,icon_id=174,icon_id_nq=2,levels={[5]=20},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=102,requirements=1,skill=34,status=96,targets=1,type="WhiteMagic"},
@@ -10,7 +27,8 @@ Res.Spells.Enspell = T{
     [105] = {id=105,en="Enwater",ja="エンウォータ",cast_time=3,duration=180,element=5,icon_id=177,icon_id_nq=5,levels={[5]=27},mp_cost=12,overwrites={100,101,102,103,104,105},prefix="/magic",range=0,recast=10,recast_id=105,requirements=1,skill=34,status=99,targets=1,type="WhiteMagic"},
 }
 
-Res.Spells.Enspell_Type = T{
+Res.Spells.EnspellType =
+{
     [1] = "Enfire",
     [2] = "Enblizzard",
     [3] = "Enaero",
@@ -24,7 +42,8 @@ Res.Spells.Enspell_Type = T{
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.Healing = T{
+Res.Spells.Healing =
+{
     [1]   = {id = 1,   en = "Cure"},
     [2]   = {id = 2,   en = "Cure II"},
     [3]   = {id = 3,   en = "Cure III"},
@@ -47,7 +66,8 @@ Res.Spells.Healing = T{
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.Avatar = T{
+Res.Spells.Avatar =
+{
     [288] = {id=288,en="Fire Spirit",ja="火精霊召喚",cast_time=1,element=0,icon_id=16,icon_id_nq=16,levels={[15]=1},mp_cost=10,prefix="/magic",range=0,recast=5,recast_id=288,requirements=0,skill=38,targets=1,type="SummonerPact"},
     [289] = {id=289,en="Ice Spirit",ja="氷精霊召喚",cast_time=1,element=1,icon_id=17,icon_id_nq=17,levels={[15]=1},mp_cost=10,prefix="/magic",range=0,recast=5,recast_id=289,requirements=0,skill=38,targets=1,type="SummonerPact"},
     [290] = {id=290,en="Air Spirit",ja="風精霊召喚",cast_time=1,element=2,icon_id=18,icon_id_nq=18,levels={[15]=1},mp_cost=10,prefix="/magic",range=0,recast=5,recast_id=290,requirements=0,skill=38,targets=1,type="SummonerPact"},
@@ -71,7 +91,8 @@ Res.Spells.Avatar = T{
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.Debuff_Removal = T{
+Res.Spells.DebuffRemoval =
+{
     [14] = {id=14,en="Poisona",ja="ポイゾナ",cast_time=1,element=6,icon_id=114,icon_id_nq=6,levels={[3]=6,[20]=10},mp_cost=8,prefix="/magic",range=12,recast=5,recast_id=14,requirements=5,skill=33,targets=29,type="WhiteMagic"},
     [15] = {id=15,en="Paralyna",ja="パラナ",cast_time=1,element=6,icon_id=114,icon_id_nq=6,levels={[3]=9,[20]=12},mp_cost=12,prefix="/magic",range=12,recast=5,recast_id=15,requirements=5,skill=33,targets=29,type="WhiteMagic"},
     [16] = {id=16,en="Blindna",ja="ブライナ",cast_time=1,element=6,icon_id=114,icon_id_nq=6,levels={[3]=14,[20]=17},mp_cost=16,prefix="/magic",range=12,recast=10,recast_id=16,requirements=5,skill=33,targets=29,type="WhiteMagic"},
@@ -83,7 +104,8 @@ Res.Spells.Debuff_Removal = T{
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.Buffs = T{
+Res.Spells.Buffs =
+{
     [43] = {id=43,en="Protect",ja="プロテス",cast_time=1,duration=1800,element=6,icon_id=197,icon_id_nq=6,levels={[3]=7,[5]=7,[7]=10,[20]=10,[22]=20},mp_cost=9,prefix="/magic",range=12,recast=5,recast_id=43,requirements=1,skill=34,status=40,targets=29,type="WhiteMagic"},
     [44] = {id=44,en="Protect II",ja="プロテスII",cast_time=1.25,duration=1800,element=6,icon_id=117,icon_id_nq=6,levels={[3]=27,[5]=27,[7]=30,[20]=30,[22]=40},mp_cost=28,overwrites={43},prefix="/magic",range=12,recast=5.25,recast_id=44,requirements=1,skill=34,status=40,targets=29,type="WhiteMagic"},
     [45] = {id=45,en="Protect III",ja="プロテスIII",cast_time=1.5,duration=1800,element=6,icon_id=118,icon_id_nq=6,levels={[3]=47,[5]=47,[7]=50,[20]=50,[22]=60},mp_cost=46,overwrites={43,44},prefix="/magic",range=12,recast=5.5,recast_id=45,requirements=1,skill=34,status=40,targets=29,type="WhiteMagic"},
@@ -153,17 +175,43 @@ Res.Spells.Buffs = T{
     [136] = {id=136,en="Invisible",ja="インビジ",cast_time=3,element=2,icon_id=149,icon_id_nq=2,levels={[3]=25,[5]=25,[20]=25},mp_cost=15,prefix="/magic",range=12,recast=10,recast_id=136,requirements=1,skill=34,status=69,targets=5,type="WhiteMagic"},
     [137] = {id=137,en="Sneak",ja="スニーク",cast_time=3,element=2,icon_id=150,icon_id_nq=2,levels={[3]=20,[5]=20,[20]=20},mp_cost=12,prefix="/magic",range=12,recast=10,recast_id=137,requirements=1,skill=34,status=71,targets=5,type="WhiteMagic"},
     [138] = {id=138,en="Deodorize",ja="デオード",cast_time=2,element=2,icon_id=151,icon_id_nq=2,levels={[3]=15,[5]=15,[20]=15},mp_cost=10,prefix="/magic",range=12,recast=8,recast_id=138,requirements=1,skill=34,status=70,targets=5,type="WhiteMagic"},
+    [141] = {id=141,en="Reraise II",ja="リレイズII",cast_time=7.5,duration=3600,element=6,icon_id=139,icon_id_nq=6,levels={[3]=56,[20]=70},mp_cost=150,prefix="/magic",range=0,recast=60,recast_id=141,requirements=4,skill=33,status=113,targets=1,type="WhiteMagic"},
+    [142] = {id=142,en="Reraise III",ja="リレイズIII",cast_time=7,duration=3600,element=6,icon_id=140,icon_id_nq=6,levels={[3]=70,[20]=91},mp_cost=150,prefix="/magic",range=0,recast=60,recast_id=142,requirements=4,skill=33,status=113,targets=1,type="WhiteMagic"},
     [338] = {id=338,en="Utsusemi: Ichi",ja="空蝉の術:壱",cast_time=4,duration=600,element=2,icon_id=-1,icon_id_nq=26,levels={[13]=12},mp_cost=0,prefix="/ninjutsu",range=0,recast=30,recast_id=338,requirements=0,skill=39,targets=1,type="Ninjutsu"},
     [339] = {id=339,en="Utsusemi: Ni",ja="空蝉の術:弐",cast_time=1.5,duration=600,element=2,icon_id=-1,icon_id_nq=26,levels={[13]=37},mp_cost=0,prefix="/ninjutsu",range=0,recast=45,recast_id=339,requirements=0,skill=39,targets=1,type="Ninjutsu"},
     [340] = {id=340,en="Utsusemi: San",ja="空蝉の術:参",cast_time=0.5,duration=900,element=2,icon_id=-1,icon_id_nq=26,levels={[13]=100},mp_cost=0,prefix="/ninjutsu",range=0,recast=60,recast_id=340,requirements=0,skill=39,targets=1,type="Ninjutsu"},
     [353] = {id=353,en="Tonko: Ichi",ja="遁甲の術:壱",cast_time=1.5,duration=420,element=2,icon_id=-1,icon_id_nq=26,levels={[13]=9},mp_cost=0,prefix="/ninjutsu",range=0,recast=30,recast_id=353,requirements=0,skill=39,status=69,targets=1,type="Ninjutsu"},
     [354] = {id=354,en="Tonko: Ni",ja="遁甲の術:弐",cast_time=1.5,duration=600,element=2,icon_id=-1,icon_id_nq=26,levels={[13]=34},mp_cost=0,prefix="/ninjutsu",range=0,recast=45,recast_id=354,requirements=0,skill=39,status=69,targets=1,type="Ninjutsu"},
-    [141] = {id=141,en="Reraise II",ja="リレイズII",cast_time=7.5,duration=3600,element=6,icon_id=139,icon_id_nq=6,levels={[3]=56,[20]=70},mp_cost=150,prefix="/magic",range=0,recast=60,recast_id=141,requirements=4,skill=33,status=113,targets=1,type="WhiteMagic"},
-    [142] = {id=142,en="Reraise III",ja="リレイズIII",cast_time=7,duration=3600,element=6,icon_id=140,icon_id_nq=6,levels={[3]=70,[20]=91},mp_cost=150,prefix="/magic",range=0,recast=60,recast_id=142,requirements=4,skill=33,status=113,targets=1,type="WhiteMagic"},
+    [473] = {id=473,en="Refresh II",ja="リフレシュII",cast_time=5,duration=150,element=6,icon_id=189,icon_id_nq=6,levels={[5]=82},mp_cost=60,prefix="/magic",range=12,recast=27,recast_id=473,requirements=0,skill=34,status=43,targets=5,type="WhiteMagic"},
+    [476] = {id=476,en="Crusade",ja="クルセード",cast_time=3,duration=300,element=7,icon_id=552,icon_id_nq=7,levels={[7]=88,[22]=88},mp_cost=18,prefix="/magic",range=12,recast=10,recast_id=476,requirements=0,skill=34,status=289,targets=1,type="WhiteMagic"},
+    [477] = {id=477,en="Regen IV",ja="リジェネIV",cast_time=2.25,duration=60,element=6,icon_id=155,icon_id_nq=6,levels={[3]=86,[20]=79,[22]=99},mp_cost=82,prefix="/magic",range=12,recast=24,recast_id=477,requirements=1,skill=34,status=42,targets=5,type="WhiteMagic"},
+    [478] = {id=478,en="Embrava",ja="オーラ",cast_time=3,duration=90,element=6,icon_id=204,icon_id_nq=6,levels={[20]=5},mp_cost=1,prefix="/magic",range=12,recast=6,recast_id=478,requirements=9,skill=34,status=228,targets=29,type="WhiteMagic"},
+    [479] = {id=479,en="Boost-STR",ja="アディスト",cast_time=5,duration=300,element=0,icon_id=165,icon_id_nq=0,levels={[3]=93},mp_cost=36,prefix="/magic",range=12,recast=10,recast_id=479,requirements=0,skill=34,status=119,targets=1,type="WhiteMagic"},
+    [480] = {id=480,en="Boost-DEX",ja="アディデック",cast_time=5,duration=300,element=4,icon_id=199,icon_id_nq=4,levels={[3]=99},mp_cost=36,prefix="/magic",range=12,recast=10,recast_id=480,requirements=0,skill=34,status=120,targets=1,type="WhiteMagic"},
+    [481] = {id=481,en="Boost-VIT",ja="アディバイト",cast_time=5,duration=300,element=3,icon_id=168,icon_id_nq=3,levels={[3]=81},mp_cost=36,prefix="/magic",range=12,recast=10,recast_id=481,requirements=0,skill=34,status=121,targets=1,type="WhiteMagic"},
+    [482] = {id=482,en="Boost-AGI",ja="アディアジル",cast_time=5,duration=300,element=2,icon_id=167,icon_id_nq=2,levels={[3]=90},mp_cost=36,prefix="/magic",range=12,recast=10,recast_id=482,requirements=0,skill=34,status=122,targets=1,type="WhiteMagic"},
+    [483] = {id=483,en="Boost-INT",ja="アディイン",cast_time=5,duration=300,element=1,icon_id=166,icon_id_nq=1,levels={[3]=96},mp_cost=36,prefix="/magic",range=12,recast=10,recast_id=483,requirements=0,skill=34,status=123,targets=1,type="WhiteMagic"},
+    [484] = {id=484,en="Boost-MND",ja="アディマイン",cast_time=5,duration=300,element=5,icon_id=169,icon_id_nq=5,levels={[3]=84},mp_cost=36,prefix="/magic",range=12,recast=10,recast_id=484,requirements=0,skill=34,status=124,targets=1,type="WhiteMagic"},
+    [485] = {id=485,en="Boost-CHR",ja="アディカリス",cast_time=5,duration=300,element=6,icon_id=170,icon_id_nq=6,levels={[3]=87},mp_cost=36,prefix="/magic",range=12,recast=10,recast_id=485,requirements=0,skill=34,status=86,targets=1,type="WhiteMagic"},
+    [486] = {id=486,en="Gain-STR",ja="ゲインスト",cast_time=5,duration=300,element=0,icon_id=190,icon_id_nq=0,levels={[5]=93},mp_cost=36,prefix="/magic",range=0,recast=10,recast_id=486,requirements=0,skill=34,status=119,targets=1,type="WhiteMagic"},
+    [487] = {id=487,en="Gain-DEX",ja="ゲインデック",cast_time=5,duration=300,element=4,icon_id=200,icon_id_nq=4,levels={[5]=99},mp_cost=36,prefix="/magic",range=0,recast=10,recast_id=487,requirements=0,skill=34,status=120,targets=1,type="WhiteMagic"},
+    [488] = {id=488,en="Gain-VIT",ja="ゲインバイト",cast_time=5,duration=300,element=3,icon_id=193,icon_id_nq=3,levels={[5]=81},mp_cost=36,prefix="/magic",range=0,recast=10,recast_id=488,requirements=0,skill=34,status=121,targets=1,type="WhiteMagic"},
+    [489] = {id=489,en="Gain-AGI",ja="ゲインアジル",cast_time=5,duration=300,element=2,icon_id=192,icon_id_nq=2,levels={[5]=90},mp_cost=36,prefix="/magic",range=0,recast=10,recast_id=489,requirements=0,skill=34,status=122,targets=1,type="WhiteMagic"},
+    [490] = {id=490,en="Gain-INT",ja="ゲインイン",cast_time=5,duration=300,element=1,icon_id=191,icon_id_nq=1,levels={[5]=96},mp_cost=36,prefix="/magic",range=0,recast=10,recast_id=490,requirements=0,skill=34,status=123,targets=1,type="WhiteMagic"},
+    [491] = {id=491,en="Gain-MND",ja="ゲインマイン",cast_time=5,duration=300,element=5,icon_id=194,icon_id_nq=5,levels={[5]=84},mp_cost=36,prefix="/magic",range=0,recast=10,recast_id=491,requirements=0,skill=34,status=124,targets=1,type="WhiteMagic"},
+    [492] = {id=492,en="Gain-CHR",ja="ゲインカリス",cast_time=5,duration=300,element=6,icon_id=195,icon_id_nq=6,levels={[5]=87},mp_cost=36,prefix="/magic",range=0,recast=10,recast_id=492,requirements=0,skill=34,status=125,targets=1,type="WhiteMagic"},
+    [493] = {id=493,en="Temper",ja="ストライ",cast_time=3,duration=180,element=6,icon_id=205,icon_id_nq=6,levels={[5]=95,[22]=550},mp_cost=36,prefix="/magic",range=0,recast=30,recast_id=493,requirements=0,skill=34,status=432,targets=1,type="WhiteMagic"},
+    [495] = {id=495,en="Adloquium",ja="鼓舞激励の策",cast_time=5,duration=180,element=6,icon_id=554,icon_id_nq=6,levels={[20]=88},mp_cost=50,prefix="/magic",range=12,recast=18,recast_id=495,requirements=1,skill=34,status=170,targets=5,type="WhiteMagic"},
+    [504] = {id=504,en="Regen V",ja="リジェネV",cast_time=2.5,duration=60,element=6,icon_id=203,icon_id_nq=6,levels={[20]=99},mp_cost=100,prefix="/magic",range=12,recast=28,recast_id=504,requirements=1,skill=34,status=42,targets=5,type="WhiteMagic"},
+    [511] = {id=511,en="Haste II",ja="ヘイストII",cast_time=3,duration=180,element=2,icon_id=209,icon_id_nq=2,levels={[5]=96},mp_cost=80,overwrites={57,845,846},prefix="/magic",range=12,recast=20,recast_id=511,requirements=0,skill=34,status=33,targets=29,type="WhiteMagic"},
+    [840] = {id=840,en="Foil",ja="フォイル",cast_time=1,duration=30,element=2,icon_id=-1,icon_id_nq=2,levels={[22]=58},mp_cost=48,prefix="/magic",range=0,recast=45,recast_id=840,requirements=0,skill=34,status=568,targets=1,type="WhiteMagic"},
+    [894] = {id=894,en="Refresh III",ja="リフレシュIII",cast_time=5,duration=150,element=6,icon_id=672,icon_id_nq=6,levels={[5]=1200},mp_cost=80,prefix="/magic",range=12,recast=36,recast_id=894,requirements=0,skill=34,status=43,targets=5,type="WhiteMagic"},
+    [895] = {id=895,en="Temper II",ja="ストライII",cast_time=3,duration=180,element=6,icon_id=673,icon_id_nq=6,levels={[5]=1200},mp_cost=72,prefix="/magic",range=0,recast=45,recast_id=895,requirements=0,skill=34,status=432,targets=1,type="WhiteMagic"},
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.Spikes = T{
+Res.Spells.Spikes =
+{
     [249] = {id=249,en="Blaze Spikes",ja="ブレイズスパイク",cast_time=3,duration=180,element=0,icon_id=307,icon_id_nq=8,levels={[4]=10,[5]=20,[20]=30,[22]=45},mp_cost=8,prefix="/magic",range=0,recast=10,recast_id=249,requirements=0,skill=34,status=34,targets=1,type="BlackMagic"},
     [250] = {id=250,en="Ice Spikes",ja="アイススパイク",cast_time=3,duration=180,element=1,icon_id=308,icon_id_nq=9,levels={[4]=20,[5]=40,[20]=50,[22]=65},mp_cost=16,prefix="/magic",range=0,recast=10,recast_id=250,requirements=0,skill=34,status=35,targets=1,type="BlackMagic"},
     [251] = {id=251,en="Shock Spikes",ja="ショックスパイク",cast_time=3,duration=180,element=4,icon_id=306,icon_id_nq=12,levels={[4]=30,[5]=60,[20]=70,[22]=85},mp_cost=24,prefix="/magic",range=0,recast=10,recast_id=251,requirements=0,skill=34,status=38,targets=1,type="BlackMagic"},
@@ -171,7 +219,8 @@ Res.Spells.Spikes = T{
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.Buff_Songs = T{
+Res.Spells.BuffSongs =
+{
     [378] = {id=378,en="Army's Paeon",ja="戦士達のピーアン",cast_time=8,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=5},mp_cost=0,prefix="/song",range=12,recast=24,recast_id=378,requirements=0,skill=40,status=195,targets=1,type="BardSong"},
     [379] = {id=379,en="Army's Paeon II",ja="戦士達のピーアンII",cast_time=8,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=15},mp_cost=0,prefix="/song",range=12,recast=24,recast_id=379,requirements=0,skill=40,status=195,targets=1,type="BardSong"},
     [380] = {id=380,en="Army's Paeon III",ja="戦士達のピーアンIII",cast_time=8,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=35},mp_cost=0,prefix="/song",range=12,recast=24,recast_id=380,requirements=0,skill=40,status=195,targets=1,type="BardSong"},
@@ -255,7 +304,8 @@ Res.Spells.Buff_Songs = T{
     [472] = {id=472,en="Pining Nocturne",ja="恋情のノクターン",cast_time=2,duration=120,element=0,icon_id=-1,icon_id_nq=32,levels={[10]=95},mp_cost=0,prefix="/song",range=12,recast=24,recast_id=472,requirements=0,skill=40,status=223,targets=32,type="BardSong"},
 }
 
-Res.Spells.Dispel = T{
+Res.Spells.Dispel =
+{
     [260] = {id=260,en="Dispel",ja="ディスペル",cast_time=3,element=7,icon_id=316,icon_id_nq=15,levels={[5]=32,[20]=32},mp_cost=25,prefix="/magic",range=12,recast=10,recast_id=260,requirements=6,skill=35,targets=32,type="BlackMagic"},
     [462] = {id=462,en="Magic Finale",ja="魔法のフィナーレ",cast_time=2,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=33},mp_cost=0,prefix="/song",range=12,recast=24,recast_id=462,requirements=0,skill=40,targets=32,type="BardSong"},
     [579] = {id=579,en="Voracious Trunk",ja="吸印",blu_points=4,cast_time=10,element=2,icon_id=-1,icon_id_nq=58,levels={[16]=64},mp_cost=72,prefix="/magic",range=8,recast=56,recast_id=579,requirements=0,skill=43,targets=32,type="BlueMagic"},
@@ -264,7 +314,8 @@ Res.Spells.Dispel = T{
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.Enfeebling = T{
+Res.Spells.Enfeebling =
+{
     [56] = {id=56,en="Slow",ja="スロウ",cast_time=2,duration=180,element=3,icon_id=141,icon_id_nq=3,levels={[3]=13,[5]=13},mp_cost=15,prefix="/magic",range=12,recast=20,recast_id=56,requirements=0,skill=35,status=13,targets=32,type="WhiteMagic"},
     [58] = {id=58,en="Paralyze",ja="パライズ",cast_time=3,duration=120,element=1,icon_id=144,icon_id_nq=1,levels={[3]=4,[5]=6},mp_cost=6,prefix="/magic",range=12,recast=10,recast_id=58,requirements=0,skill=35,status=4,targets=32,type="WhiteMagic"},
     [59] = {id=59,en="Silence",ja="サイレス",cast_time=3,duration=120,element=2,icon_id=146,icon_id_nq=2,levels={[3]=15,[5]=18},mp_cost=16,prefix="/magic",range=12,recast=10,recast_id=59,requirements=0,skill=35,status=6,targets=32,type="WhiteMagic"},
@@ -294,7 +345,6 @@ Res.Spells.Enfeebling = T{
     [272] = {id=272,en="Absorb-CHR",ja="アブゾカリス",cast_time=0.5,element=7,icon_id=326,icon_id_nq=15,levels={[8]=33},mp_cost=33,prefix="/magic",range=12,recast=60,recast_id=272,requirements=2,skill=37,targets=32,type="BlackMagic"},
     [273] = {id=273,en="Sleepga",ja="スリプガ",cast_time=3,duration=60,element=7,icon_id=312,icon_id_nq=15,levels={[4]=31},mp_cost=38,prefix="/magic",range=12,recast=30,recast_id=273,requirements=0,skill=35,status=2,targets=32,type="BlackMagic"},
     [274] = {id=274,en="Sleepga II",ja="スリプガII",cast_time=3.5,duration=90,element=7,icon_id=313,icon_id_nq=15,levels={[4]=56},mp_cost=58,overwrites={253,273},prefix="/magic",range=12,recast=45,recast_id=274,requirements=0,skill=35,status=2,targets=32,type="BlackMagic"},
-    [275] = {id=275,en="Absorb-TP",ja="アブゾタック",cast_time=0.5,element=7,icon_id=326,icon_id_nq=15,levels={[8]=45},mp_cost=33,prefix="/magic",range=12,recast=60,recast_id=275,requirements=2,skill=37,targets=32,type="BlackMagic"},
     [276] = {id=276,en="Blind II",ja="ブラインII",cast_time=3,duration=180,element=7,icon_id=234,icon_id_nq=15,levels={[5]=75},mp_cost=31,overwrites={254,347,348,349},prefix="/magic",range=12,recast=20,recast_id=276,requirements=0,skill=35,status=5,targets=32,type="BlackMagic"},
     [286] = {id=286,en="Addle",ja="アドル",cast_time=2,duration=120,element=0,icon_id=171,icon_id_nq=0,levels={[3]=93,[5]=83},mp_cost=36,prefix="/magic",range=12,recast=20,recast_id=286,requirements=0,skill=35,status=21,targets=32,type="WhiteMagic"},
     [287] = {id=287,en="Klimaform",ja="虚誘掩殺の策",cast_time=3,duration=300,element=7,icon_id=551,icon_id_nq=15,levels={[20]=46},mp_cost=30,prefix="/magic",range=12,recast=52,recast_id=287,requirements=2,skill=37,status=407,targets=1,type="BlackMagic"},
@@ -359,7 +409,8 @@ Res.Spells.Enfeebling = T{
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.DoT = T{
+Res.Spells.DoT =
+{
     [23]  = {id=23,en="Dia",ja="ディア",cast_time=1,duration=60,element=6,icon_id=99,icon_id_nq=6,levels={[3]=3,[5]=1},mp_cost=7,prefix="/magic",range=12,recast=5,recast_id=23,requirements=0,skill=35,status=134,targets=32,type="WhiteMagic"},
     [24]  = {id=24,en="Dia II",ja="ディアII",cast_time=1.5,duration=120,element=6,icon_id=100,icon_id_nq=6,levels={[3]=36,[5]=31},mp_cost=30,overwrites={23,230},prefix="/magic",range=12,recast=6,recast_id=24,requirements=0,skill=35,status=134,targets=32,type="WhiteMagic"},
     [25]  = {id=25,en="Dia III",ja="ディアIII",cast_time=2,duration=180,element=6,icon_id=202,icon_id_nq=6,levels={[5]=75},mp_cost=45,overwrites={23,24,230,231},prefix="/magic",range=12,recast=7,recast_id=25,requirements=0,skill=35,status=134,targets=32,type="WhiteMagic"},
@@ -410,10 +461,20 @@ Res.Spells.DoT = T{
     [373] = {id=373,en="Foe Requiem VI",ja="魔物のレクイエムVI",cast_time=2,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=67},mp_cost=0,overwrites={368,369,370,371,372},prefix="/song",range=11,recast=24,recast_id=373,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
     [374] = {id=374,en="Foe Requiem VII",ja="魔物のレクイエムVII",cast_time=2,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={[10]=76},mp_cost=0,overwrites={368,369,370,371,372,373},prefix="/song",range=11,recast=24,recast_id=374,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
     [375] = {id=375,en="Foe Requiem VIII",ja="魔物のレクイエムVIII",cast_time=2,duration=120,element=6,icon_id=-1,icon_id_nq=38,levels={},mp_cost=0,overwrites={368,369,370,371,372,373,374},prefix="/song",range=11,recast=24,recast_id=375,requirements=0,skill=40,status=192,targets=32,type="BardSong"},
+    [502] = {id=502,en="Kaustra",ja="メルトン",cast_time=5,element=7,icon_id=327,icon_id_nq=15,levels={[20]=5},mp_cost=1,prefix="/magic",range=12,recast=30,recast_id=502,requirements=10,skill=37,targets=32,type="BlackMagic"},
+    [885] = {id=885,en="Geohelix II",ja="土門の計II",cast_time=7.5,duration=230,element=3,icon_id=667,icon_id_nq=11,levels={[20]=1200},mp_cost=78,overwrites={278,279,280,281,282,283,284,285},prefix="/magic",range=12,recast=60,recast_id=885,requirements=0,skill=36,status=186,targets=32,type="BlackMagic"},
+    [886] = {id=886,en="Hydrohelix II",ja="水門の計II",cast_time=7.5,duration=230,element=5,icon_id=669,icon_id_nq=13,levels={[20]=1200},mp_cost=78,overwrites={278,279,280,281,282,283,284,285},prefix="/magic",range=12,recast=60,recast_id=886,requirements=0,skill=36,status=186,targets=32,type="BlackMagic"},
+    [887] = {id=887,en="Anemohelix II",ja="風門の計II",cast_time=7.5,duration=230,element=2,icon_id=666,icon_id_nq=10,levels={[20]=1200},mp_cost=78,overwrites={278,279,280,281,282,283,284,285},prefix="/magic",range=12,recast=60,recast_id=887,requirements=0,skill=36,status=186,targets=32,type="BlackMagic"},
+    [888] = {id=888,en="Pyrohelix II",ja="火門の計II",cast_time=7.5,duration=230,element=0,icon_id=664,icon_id_nq=8,levels={[20]=1200},mp_cost=78,overwrites={278,279,280,281,282,283,284,285},prefix="/magic",range=12,recast=60,recast_id=888,requirements=0,skill=36,status=186,targets=32,type="BlackMagic"},
+    [889] = {id=889,en="Cryohelix II",ja="氷門の計II",cast_time=7.5,duration=230,element=1,icon_id=665,icon_id_nq=9,levels={[20]=1200},mp_cost=78,overwrites={278,279,280,281,282,283,284,285},prefix="/magic",range=12,recast=60,recast_id=889,requirements=0,skill=36,status=186,targets=32,type="BlackMagic"},
+    [890] = {id=890,en="Ionohelix II",ja="雷門の計II",cast_time=7.5,duration=230,element=4,icon_id=668,icon_id_nq=12,levels={[20]=1200},mp_cost=78,overwrites={278,279,280,281,282,283,284,285},prefix="/magic",range=12,recast=60,recast_id=890,requirements=0,skill=36,status=186,targets=32,type="BlackMagic"},
+    [891] = {id=891,en="Noctohelix II",ja="闇門の計II",cast_time=7.5,duration=230,element=7,icon_id=671,icon_id_nq=15,levels={[20]=1200},mp_cost=78,overwrites={278,279,280,281,282,283,284,285},prefix="/magic",range=12,recast=60,recast_id=891,requirements=0,skill=36,status=186,targets=32,type="BlackMagic"},
+    [892] = {id=892,en="Luminohelix II",ja="光門の計II",cast_time=7.5,duration=230,element=6,icon_id=670,icon_id_nq=14,levels={[20]=1200},mp_cost=78,overwrites={278,279,280,281,282,283,284,285},prefix="/magic",range=12,recast=60,recast_id=892,requirements=0,skill=36,status=186,targets=32,type="BlackMagic"},
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.MP_Drain = T{
+Res.Spells.MpDrain =
+{
     [247] = {id=247,en="Aspir",ja="アスピル",cast_time=3,element=7,icon_id=238,icon_id_nq=15,levels={[4]=25,[8]=20,[20]=36,[21]=30},mp_cost=10,prefix="/magic",range=12,recast=60,recast_id=247,requirements=2,skill=37,targets=32,type="BlackMagic"},
     [248] = {id=248,en="Aspir II",ja="アスピルII",cast_time=3,element=7,icon_id=239,icon_id_nq=15,levels={[4]=83,[8]=78,[20]=97,[21]=90},mp_cost=5,prefix="/magic",range=12,recast=11,recast_id=248,requirements=2,skill=37,targets=32,type="BlackMagic"},
     [521] = {id=521,en="MP Drainkiss",ja="MP吸収キッス",blu_points=4,cast_time=4,element=7,icon_id=-1,icon_id_nq=63,levels={[16]=42},mp_cost=20,prefix="/magic",range=2,recast=26,recast_id=521,requirements=0,skill=43,targets=32,type="BlueMagic"},
@@ -421,58 +482,14 @@ Res.Spells.MP_Drain = T{
     [881] = {id=881,en="Aspir III",ja="アスピルIII",cast_time=3,element=7,icon_id=657,icon_id_nq=15,levels={[4]=550,[21]=550},mp_cost=2,prefix="/magic",range=12,recast=26,recast_id=881,requirements=0,skill=37,targets=32,type="BlackMagic"},
 }
 
--- Based off of spells.lua from Windower.
-Res.Spells.AOE = T{
-    [7]   = {id = 7,   en = "Curaga"},
-    [8]   = {id = 8,   en = "Curaga II"},
-    [9]   = {id = 9,   en = "Curaga III"},
-    [10]  = {id = 10,  en = "Curaga IV"},
-    [11]  = {id = 11,  en = "Curaga V"},
-    [38]  = {id = 38,  en = "Banishga"},
-    [39]  = {id = 39,  en = "Banishga II"},
-    [40]  = {id = 40,  en = "Banishga III"},
-    [41]  = {id = 41,  en = "Banishga IV"},
-    [42]  = {id = 42,  en = "Banishga V"},
-    [174] = {id = 174, en = "Firaga"},
-    [175] = {id = 175, en = "Firaga II"},
-    [176] = {id = 176, en = "Firaga III"},
-    [177] = {id = 177, en = "Firaga IV"},
-    [178] = {id = 178, en = "Firaga V"},
-    [496] = {id = 496, en = "Firaja"},
-    [179] = {id = 179, en = "Blizzaga"},
-    [180] = {id = 180, en = "Blizzaga II"},
-    [181] = {id = 181, en = "Blizzaga III"},
-    [182] = {id = 182, en = "Blizzaga IV"},
-    [183] = {id = 183, en = "Blizzaga V"},
-    [497] = {id = 497, en = "Blizzaja"},
-    [184] = {id = 184, en = "Aeroga"},
-    [185] = {id = 185, en = "Aeroga II"},
-    [186] = {id = 186, en = "Aeroga III"},
-    [187] = {id = 187, en = "Aeroga IV"},
-    [188] = {id = 188, en = "Aeroga V"},
-    [498] = {id = 498, en = "Aeroja"},
-    [189] = {id = 189, en = "Stonega"},
-    [190] = {id = 190, en = "Stonega II"},
-    [191] = {id = 191, en = "Stonega III"},
-    [192] = {id = 192, en = "Stonega IV"},
-    [193] = {id = 193, en = "Stonega V"},
-    [499] = {id = 499, en = "Stoneja"},
-    [194] = {id = 194, en = "Thundaga"},
-    [195] = {id = 195, en = "Thundaga II"},
-    [196] = {id = 196, en = "Thundaga III"},
-    [197] = {id = 197, en = "Thundaga IV"},
-    [198] = {id = 198, en = "Thundaga V"},
-    [500] = {id = 500, en = "Thundaja"},
-    [199] = {id = 199, en = "Waterga"},
-    [200] = {id = 200, en = "Waterga II"},
-    [201] = {id = 201, en = "Waterga III"},
-    [202] = {id = 202, en = "Waterga IV"},
-    [203] = {id = 203, en = "Waterga V"},
-    [501] = {id = 501, en = "Waterja"},
+Res.Spells.TpDrain =
+{
+    [275] = {id=275,en="Absorb-TP",ja="アブゾタック",cast_time=0.5,element=7,icon_id=326,icon_id_nq=15,levels={[8]=45},mp_cost=33,prefix="/magic",range=12,recast=60,recast_id=275,requirements=2,skill=37,targets=32,type="BlackMagic"},
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.Damaging = T{
+Res.Spells.Damaging =
+{
     -- Light Elemental Magic
     [21]  = {id = 21,  en = "Holy"},
     [22]  = {id = 22,  en = "Holy II"},
@@ -577,15 +594,12 @@ Res.Spells.Damaging = T{
     [215] = {id = 215, en = "Flood II"},
     [501] = {id = 501, en = "Waterja"},
     -- Dark Elemental Magic
-    [230] = {id = 230, en = "Bio"},
-    [231] = {id = 231, en = "Bio II"},
     [245] = {id = 245, en = "Drain"},
     [246] = {id = 246, en = "Drain II"},
     [880] = {id = 880, en = "Drain III"},
     [367] = {id = 367, en = "Death"},
     [219] = {id = 219, en = "Comet"},
     [503] = {id = 503, en = "Impact"},
-    [502] = {id = 502, en = "Kaustra"},
     -- Non-elemental Magic
     [218] = {id = 218, en = "Meteor"},
     -- GEO nukes
@@ -607,23 +621,6 @@ Res.Spells.Damaging = T{
     [838] = {id = 838, en = "Watera"},
     [839] = {id = 839, en = "Watera II"},
     [870] = {id = 870, en = "Watera III"},
-    -- Helix
-    [278] = {id = 278, en = "Geohelix"},
-    [279] = {id = 279, en = "Hydrohelix"},
-    [280] = {id = 280, en = "Anemohelix"},
-    [281] = {id = 281, en = "Pyrohelix"},
-    [282] = {id = 282, en = "Cryohelix"},
-    [283] = {id = 283, en = "Ionohelix"},
-    [284] = {id = 284, en = "Noctohelix"},
-    [285] = {id = 285, en = "Luminohelix"},
-    [885] = {id = 885, en = "Geohelix II"},
-    [886] = {id = 886, en = "Hydrohelix II"},
-    [887] = {id = 887, en = "Anemohelix II"},
-    [888] = {id = 888, en = "Pyrohelix II"},
-    [889] = {id = 889, en = "Cryohelix II"},
-    [890] = {id = 890, en = "Ionohelix II"},
-    [891] = {id = 891, en = "Noctohelix II"},
-    [892] = {id = 892, en = "Luminohelix II"},
     -- Ninjustsu Nukes
     [320] = {id = 320, en = "Katon: Ichi"},
     [321] = {id = 321, en = "Katon: Ni"},
@@ -773,7 +770,8 @@ Res.Spells.Damaging = T{
 }
 
 -- Based off of spells.lua from Windower.
-Res.Spells.BLU_Buff = T{
+Res.Spells.BluBuff =
+{
     [517] = {id=517,en="Metallic Body",ja="メタルボディ",blu_points=1,cast_time=2.5,duration=900,element=15,icon_id=-1,icon_id_nq=59,levels={[16]=8},mp_cost=19,prefix="/magic",range=0,recast=60,recast_id=517,requirements=0,skill=43,status=37,targets=1,type="BlueMagic"},
     [530] = {id=530,en="Refueling",ja="リフュエリング",blu_points=4,cast_time=1.5,duration=300,element=15,icon_id=-1,icon_id_nq=58,levels={[16]=48},mp_cost=29,prefix="/magic",range=0,recast=30,recast_id=530,requirements=0,skill=43,status=33,targets=1,type="BlueMagic"},
     [538] = {id=538,en="Memento Mori",ja="メメントモーリ",blu_points=4,cast_time=3.5,duration=60,element=15,icon_id=-1,icon_id_nq=57,levels={[16]=62},mp_cost=46,prefix="/magic",range=0,recast=56,recast_id=538,requirements=0,skill=43,status=190,targets=1,type="BlueMagic"},

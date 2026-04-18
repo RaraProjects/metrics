@@ -1,15 +1,17 @@
-Res.Abilities = T{}
+Res.Abilities = { }
 
 Res.Abilities.CHIVALRY = 670
+Res.Abilities.STEAL    = 553
+Res.Abilities.MUG      = 557
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.Damaging = T{
+Res.Abilities.Damaging =
+{
     [538] = {id = 538, old_id = 26,  en = "Eagle Eye Shot"},
     [540] = {id = 540, old_id = 28,  en = "Mijin Gakure"},
     [558] = {id = 558, old_id = 46,  en = "Shield Bash"},
     [578] = {id = 578, old_id = 66,  en = "Jump"},
     [579] = {id = 579, old_id = 67,  en = "High Jump"},
-    [580] = {id = 579, old_id = 68,  en = "Super Jump"},
     [589] = {id = 589, old_id = 77,  en = "Weapon Bash"},
     [594] = {id = 594, old_id = 82,  en = "Chi Blast"},
     [637] = {id = 637, old_id = 125, en = "Fire Shot"},
@@ -23,10 +25,13 @@ Res.Abilities.Damaging = T{
     [772] = {id = 772, old_id = 260, en = "Spirit Jump"},
     [805] = {id = 805, old_id = 293, en = "Soul Jump"},
     [841] = {id = 841              , en = "Intervene"},
+    [856] = {id = 856              , en = "Swipe"},
+    [880] = {id = 880              , en = "Lunge"},
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.Maneuvers = T{
+Res.Abilities.Maneuvers =
+{
     [141] = {id=141,en="Fire Maneuver",ja="ファイアマニューバ",element=0,icon_id=505,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
     [142] = {id=142,en="Ice Maneuver",ja="アイスマニューバ",element=1,icon_id=506,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
     [143] = {id=143,en="Wind Maneuver",ja="ウィンドマニューバ",element=2,icon_id=507,mp_cost=0,prefix="/pet",range=0,recast_id=210,targets=1,tp_cost=0,type="PetCommand"},
@@ -38,9 +43,10 @@ Res.Abilities.Maneuvers = T{
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.Phantom_Roll = T{
-    [98] = {id=98,en="Fighter's Roll",ja="ファイターズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=310,targets=1,tp_cost=0,type="CorsairRoll"},
-    [99] = {id=99,en="Monk's Roll",ja="モンクスロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=311,targets=1,tp_cost=0,type="CorsairRoll"},
+Res.Abilities.PhantomRoll =
+{
+    [98]  = {id=98,en="Fighter's Roll",ja="ファイターズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=310,targets=1,tp_cost=0,type="CorsairRoll"},
+    [99]  = {id=99,en="Monk's Roll",ja="モンクスロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=311,targets=1,tp_cost=0,type="CorsairRoll"},
     [100] = {id=100,en="Healer's Roll",ja="ヒーラーズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=312,targets=1,tp_cost=0,type="CorsairRoll"},
     [101] = {id=101,en="Wizard's Roll",ja="ウィザーズロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=313,targets=1,tp_cost=0,type="CorsairRoll"},
     [102] = {id=102,en="Warlock's Roll",ja="ワーロックスロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=314,targets=1,tp_cost=0,type="CorsairRoll"},
@@ -72,7 +78,8 @@ Res.Abilities.Phantom_Roll = T{
     [391] = {id=391,en="Runeist's Roll",ja="ルーニストロール",duration=300,element=1,icon_id=485,mp_cost=0,prefix="/jobability",range=0,recast_id=193,status=600,targets=1,tp_cost=0,type="CorsairRoll"},
 }
 
-Res.Abilities.Phantom_Roll_Lucky = T{
+Res.Abilities.PhantomRollLucky =
+{
     [98]  = {lucky = 5, unlucky = 9},  -- Fighters
     [99]  = {lucky = 3, unlucky = 7},  -- Monks
     [100] = {lucky = 3, unlucky = 7},  -- Healers
@@ -107,31 +114,36 @@ Res.Abilities.Phantom_Roll_Lucky = T{
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.Healing = T{
-    [541] = {id = 541, oldid = 29, en = "Spirit Surge"},
-    [550] = {id = 550, oldid = 38, en = "Chakra"},
+Res.Abilities.Healing =
+{
+    [541] = {id = 541, oldid = 29,  en = "Spirit Surge"},
+    [550] = {id = 550, oldid = 38,  en = "Chakra"},
     [702] = {id = 702, oldid = 190, en = "Curing Waltz"},
     [703] = {id = 703, oldid = 191, en = "Curing Waltz II"},
     [704] = {id = 704, oldid = 192, en = "Curing Waltz III"},
     [705] = {id = 705, oldid = 193, en = "Curing Waltz IV"},
     [707] = {id = 707, oldid = 195, en = "Divine Waltz"},
+    [895] = {id = 895,              en = "Vivacious Pulse"},
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.Pet_Healing = T{
+Res.Abilities.PetHealing =
+{
     [590] = {id = 590, oldid = 78,  en = "Reward"},
     [592] = {id = 592, oldid = 80,  en = "Spirit Link"},
     [649] = {id = 649, oldid = 137, en = "Repair"},
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.MP_Recovery = T{
+Res.Abilities.MPRecovery =
+{
     [666] = {id = 666, oldid = 154, en = "Devotion"},
     [670] = {id = 670, oldid = 158, en = "Chivalry"},
 }
 
 -- Based off of job_abilities.lua from Windower.
-Res.Abilities.Pet_Commands = T{
+Res.Abilities.PetCommands =
+{
     [69] = {id=69,en="Fight",ja="たたかえ",element=6,icon_id=423,mp_cost=0,prefix="/pet",range=11,recast_id=100,targets=32,tp_cost=0,type="PetCommand"},
     [70] = {id=70,en="Heel",ja="もどれ",element=6,icon_id=423,mp_cost=0,prefix="/pet",range=11,recast_id=101,targets=1,tp_cost=0,type="PetCommand"},
     [71] = {id=71,en="Leave",ja="かえれ",element=6,icon_id=423,mp_cost=0,prefix="/pet",range=11,recast_id=101,targets=1,tp_cost=0,type="PetCommand"},
@@ -239,6 +251,22 @@ Res.Abilities.Pet_Commands = T{
     [632] = {id=632,en="Judgment Bolt",ja="ジャッジボルト",element=4,icon_id=347,mp_cost=0,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
     [633] = {id=633,en="Shock Squall",ja="スタンガ",element=4,icon_id=347,mp_cost=67,prefix="/pet",range=9,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
     [634] = {id=634,en="Volt Strike",ja="ボルトストライク",element=4,icon_id=347,mp_cost=229,prefix="/pet",range=2,recast_id=173,skillchain_a="Fragmentation",skillchain_b="Scission",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    [656] = {id=656,en="Camisado",ja="カミサドー",element=7,icon_id=348,mp_cost=20,prefix="/pet",range=8,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    [657] = {id=657,en="Somnolence",ja="ソムノレンス",element=7,icon_id=348,mp_cost=30,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
+    [658] = {id=658,en="Nightmare",ja="ナイトメア",element=7,icon_id=348,mp_cost=42,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
+    [659] = {id=659,en="Ultimate Terror",ja="アルティメットテラー",element=7,icon_id=348,mp_cost=27,prefix="/pet",range=4,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
+    [660] = {id=660,en="Noctoshield",ja="ノクトシールド",duration=180,element=7,icon_id=348,mp_cost=92,prefix="/pet",range=12,recast_id=174,status=116,targets=1,tp_cost=0,type="BloodPactWard"},
+    [661] = {id=661,en="Dream Shroud",ja="ドリームシュラウド",duration=180,element=7,icon_id=348,mp_cost=121,prefix="/pet",range=12,recast_id=174,status=190,targets=1,tp_cost=0,type="BloodPactWard"},
+    [662] = {id=662,en="Nether Blast",ja="ネザーブラスト",element=7,icon_id=348,mp_cost=109,prefix="/pet",range=9,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    [663] = {id=663,en="Cacodemonia",ja="カコデモニア",element=7,icon_id=348,mp_cost=0,prefix="/pet",range=9,recast_id=173,targets=32,tp_cost=0,type="BloodPactRage"},
+    [664] = {id=664,en="Ruinous Omen",ja="ルイナスオーメン",element=7,icon_id=348,mp_cost=0,prefix="/pet",range=4,recast_id=173,targets=32,tp_cost=0,type="BloodPactRage"},
+    [665] = {id=665,en="Night Terror",ja="ナイトテラー",element=7,icon_id=348,mp_cost=177,prefix="/pet",range=4,recast_id=173,skillchain_a="",skillchain_b="",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    [666] = {id=666,en="Pavor Nocturnus",ja="パボルノクターナス",element=7,icon_id=348,mp_cost=246,prefix="/pet",range=9,recast_id=174,targets=32,tp_cost=0,type="BloodPactWard"},
+    [667] = {id=667,en="Blindside",ja="ブラインドサイド",element=7,icon_id=348,mp_cost=147,prefix="/pet",range=8,recast_id=173,skillchain_a="Gravitation",skillchain_b="Transfixion",skillchain_c="",targets=32,tp_cost=0,type="BloodPactRage"},
+    [668] = {id=668,en="Deconstruction",ja="ディコンストラクション",element=7,icon_id=23,mp_cost=0,prefix="/pet",range=12,recast_id=0,targets=32,tp_cost=0,type="BloodPactRage"},
+    [669] = {id=669,en="Chronoshift",ja="クロノシフト",element=7,icon_id=23,mp_cost=0,prefix="/pet",range=0,recast_id=0,targets=32,tp_cost=0,type="BloodPactRage"},
+    [670] = {id=670,en="Zantetsuken",ja="斬鉄剣",element=7,icon_id=349,mp_cost=0,prefix="/pet",range=8,recast_id=0,targets=32,tp_cost=0,type="BloodPactRage"},
+    [671] = {id=671,en="Perfect Defense",ja="絶対防御",element=7,icon_id=350,mp_cost=0,prefix="/pet",range=0,recast_id=0,targets=32,tp_cost=0,type="BloodPactRage"},
     [672] = {id=672,en="Foot Kick",ja="フットキック",element=6,icon_id=46,mp_cost=1,prefix="/pet",range=2,recast_id=102,targets=3,tp_cost=0,type="Monster"},
     [673] = {id=673,en="Dust Cloud",ja="土煙",element=3,icon_id=43,mp_cost=1,prefix="/pet",range=2,recast_id=102,targets=3,tp_cost=0,type="Monster"},
     [674] = {id=674,en="Whirl Claws",ja="爪旋風脚",element=6,icon_id=46,mp_cost=1,prefix="/pet",range=2,recast_id=102,targets=3,tp_cost=0,type="Monster"},

@@ -1,147 +1,187 @@
-DB.Enum = T{}
-
-DB.Enum.Mode = T{
-    INC = "inc",
-	SET = "set",
-}
-
-DB.Enum.Trackable = T{
-    TOTAL               = "Total",
-    TOTAL_NO_SC         = "No SC Total",
-    MELEE               = "Melee",               -- Melee
-    MELEE_MAIN          = "Melee Mainhand",
-    MELEE_OFFHAND       = "Melee Offhand",
-    MELEE_KICK          = "Melee Kicks",
-    PET_MELEE           = "Pet Melee",
-    PET_MELEE_DISCRETE  = "Pet Melee Discrete",
-    MELEE_COUNTERED     = "Countered",
-    RANGED              = "Ranged",              -- Ranged
-    RANGED_SQUARE       = "Ranged Square Hit",
-    RANGED_TRUE         = "Ranged True Strike",
-    PET_RANGED          = "Pet Ranged",
-    THROWING            = "Throwing",
-    WS                  = "Weaponskills",        -- TP Action
-    PET_WS              = "Pet Weaponskills",
-    SC                  = "Skillchains",
-    ABILITY             = "Abilities",           -- Ability
-    ABILITY_DAMAGING    = "Damaging Abilities",
-    ABILITY_HEALING     = "Healing Abilities",
-    ABILITY_MP_RECOVERY = "MP Recovery Abilities",
-    ABILITY_GENERAL     = "General Ability",
-    MANEUVER            = "Maneuver",
-    PHANTOM_ROLL        = "Corsair Roll",
-    PET                 = "Pet",                 -- Pets
-    PET_ABILITY         = "Pet Ability",
-    PET_HEAL            = "Pet Healing",
-    PET_NUKE            = "Pet Nuking",
-    PET_ENFEEBLING      = "Pet Enfeebling",
-    PET_MP_DRAIN        = "Pet MP Drain",
-    PET_MAGIC           = "Pet Magic",
-    MAGIC               = "Spells",              -- Magic
-    ENSPELL             = "Enspell",
-    ENDAMAGE            = "Melee Endamage",
-    ENDAMAGE_R          = "Ranged Endamage",
-    ENDRAIN             = "Melee Endrain",
-    ENDRAIN_R           = "Ranged Endrain",
-    ENASPIR             = "Melee Enaspir",
-    ENASPIR_R           = "Ranged Enaspir",
-    ENDEBUFF            = "Melee Debuff",
-    ENDEBUFF_R          = "Ranged Debuff",
-    NUKE                = "Nuking",
-    HEALING             = "Healing",
-    ALL_HEAL            = "Combined Healing",
-    ENFEEBLE            = "Enfeebling",
-    BUFF_SONG           = "BRD Buff Song",
-    DEBUFF_REMOVAL      = "Debuff Removal",
-    BUFF_SPELL          = "Buff Spell",
-    MP_DRAIN            = "MP Drain",
-    OUTGOING_SPIKE_DMG  = "Outgoing Spike Damage",
-    HEALING_RECEIVED    = "Healing Received",
-    DAMAGE_TAKEN_TOTAL  = "Total Damage Taken", -- Defense
-    DMG_TAKEN_TOTAL_PET = "Total Pet Damage Taken",
-    MELEE_DMG_TAKEN     = "Melee Damage Taken",
-    MELEE_PET_DMG_TAKEN = "Melee Pet Damage Taken",
-    DEF_EVASION         = "Evasion",
-    DEF_PARRY           = "Parry",
-    DEF_SHADOWS         = "Shadow Absorption",
-    DEF_COUNTER         = "Counter",
-    DEF_GUARD           = "Guard",
-    DEF_BLOCK           = "Shield Block",
-    DEF_CRIT            = "Crits Taken",
-    DEF_UNMITIGATED     = "Unmitigated Melee Damage Taken",
-    INCOMING_SPIKE_DMG  = "Incoming Spike Damage",
-    SPELL_DMG_TAKEN     = "Spell Damage Taken",
-    SPELL_PET_DMG_TAKEN = "Spell Pet Damage Taken",
-    DEF_NO_DMG_SPELLS   = "No Damage Spells",
-    DEF_MP_DRAIN        = "Player MP Drained",
-    DEF_ENFEEBLE        = "Player Enfeebled",
-    -- SPELL_ENF_RESIST   = "Enfeeble Resist"
-    TP_DMG_TAKEN        = "TP Move Damage Taken",
-    PET_TP_DMG_TAKEN    = "Pet TP Move Damage Taken",
-    DEATH               = "Death",               -- Misc
-    DEFAULT             = "Default",
-}
-
-DB.Enum.Metric = T{
-    TOTAL         = "Total",
-    COUNT         = "Attempts",
-    AOE_COUNT     = "AOE Targets Hit",
-    CYCLE         = "Melee Cycles",          -- How many times a melee cycle occurred.
-    ROUNDS        = "Attack Rounds",         -- Used in multi-attacks
-    MULTI_TOTAL   = "Multi-Attack",
-    MULT_ATK_1    = "Single",
-    MULT_ATK_2    = "Double",
-    MULT_ATK_3    = "Triple",
-    MULT_ATK_4    = "Quad",
-    MULT_ATK_5    = "Mult. V",
-    MULT_ATK_6    = "Mult. VI",
-    MULT_ATK_7    = "Mult. VII",
-    MULT_ATK_8    = "Mult. VIII",
-    GUARD         = "Guard",
-    HIT_COUNT     = "Hits",
-    SHOT_DISTANCE = "Shot Distance",
-    CRIT_COUNT    = "Crit Count",
-    CRIT_DAMAGE   = "Crit Damage",
-    SHADOWS       = "Shadow Absorption",
-    MOB_HEAL      = "Mob Heal",
-    MIN           = "Min",
-    MAX           = "Max",
-    BURST_COUNT   = "Burst Count",
-    BURST_DAMAGE  = "Burst Damage",
-    OVERCURE      = "Overcure",
-    MP_SPENT      = "MP Spent",
-    TP_SPENT      = "TP Spent",
-    SC_OPENED     = "Skillchains Opened",
-    SC_CLOSED     = "Skillchains Closed",
-    OVERLOAD      = "Maneuver Overload",
-    PHANTOM_ROLL_FIRST_ROLL = "Phantom Roll First Rolls",
-    PHANTOM_ROLL_REROLL     = "Phantom Roll Rerolls",
-    BUST_COUNT    = "COR Roll Bust Count",
-    LUCKY_COUNT   = "COR Roll Lucky Count",
-    UNLUCKY_COUNT = "COR Roll Unlucky Count",
-    LUCKY_11_COUNT = "COR Roll Lucky 11 Count",
-}
-
-DB.Enum.Pet_Single_Trackable = T{
-	PET_WS         = DB.Enum.Trackable.PET_WS,
-	PET_ABILITY    = DB.Enum.Trackable.PET_ABILITY,
-	PET_HEAL       = DB.Enum.Trackable.PET_HEAL,
-	PET_NUKE       = DB.Enum.Trackable.PET_NUKE,
-	PET_ENFEEBLING = DB.Enum.Trackable.PET_ENFEEBLING,
-	PET_MP_DRAIN   = DB.Enum.Trackable.PET_MP_DRAIN,
-	PET_MAGIC      = DB.Enum.Trackable.PET_MAGIC,
-}
-
-DB.Enum.Values = T{
-    CATALOG     = "catalog",
-	PET_CATALOG = "pet_catalog",
-    DEBUG       = "Debug",
-    IGNORE      = 'ignore',
-	COMBINED    = 'combined',
+---@enum DB.Enum
+DB.Enum =
+{
+    ALL_MOBS    = "!All Mobs",
+    NONE        = "!NONE",
+    BLANK       = "",
+    COMBINED    = "combined",
+    DEBUG       = "¯\\_(ツ)_/¯",
+    IGNORE      = "ignore",
     MAX_DAMAGE  = 100000,
 }
 
-DB.Enum.HEALING = T{
+---@enum DB.Trackable
+DB.Trackable =
+{
+    TOTAL_DAMAGE                  = "Total Damage",
+    TOTAL_DAMAGE_NO_SKILLCHAIN    = "Total Damage No Skillchain",
+    ALL_HEAL                      = "All Sources Healing",
+    ALL_PARALYZE                  = "All Paralyzed",
+    ALL_INTIMIDATE                = "All Intimidate",
+    MELEE_OVERALL                 = "Melee",
+    MELEE_MAIN_HAND               = "Melee Main-hand",
+    MELEE_OFF_HAND                = "Melee Off-hand",
+    MELEE_KICK_ATTACKS            = "Melee Kick Attacks",
+    MELEE_ENSPELL                 = "Melee Enspell",
+    MELEE_ENDAMAGE                = "Melee Endamage",
+    MELEE_ENDRAIN                 = "Melee Endrain",
+    MELEE_ENASPIR                 = "Melee Enaspir",
+    MELEE_ENDEBUFF                = "Melee Endebuff",
+    MELEE_COUNTER                 = "Melee Player Counters",       -- This is the player doing damage with a counter.
+    RANGED_OVERALL                = "Ranged",
+    RANGED_SQUARE_HIT             = "Ranged Square Hit",
+    RANGED_TRUE_STRIKE            = "Ranged True Strike",
+    RANGED_THROWING               = "Ranged Throwing",
+    RANGED_ENDAMAGE               = "Ranged Endamage",
+    RANGED_ENDRAIN                = "Ranged Endrain",
+    RANGED_ENASPIR                = "Ranged Enaspir",
+    RANGED_ENDEBUFF               = "Ranged Endebuff",
+    WEAPONSKILL                   = "Weaponskill",
+    WEAPONSKILL_MP_DRAIN          = "Weaponskill MP Drain",
+    SKILLCHAIN                    = "Skillchain",
+    SPELLS_OVERALL                = "Spells Overall",
+    SPELLS_NUKING                 = "Spells Nuking",
+    SPELLS_DOT                    = "Spells Damage Over Time",
+    SPELLS_HEALING                = "Spells Healing",
+    SPELLS_DEBUFF_REMOVAL         = "Spells Debuff Removal",
+    SPELLS_ENFEEBLING             = "Spells Enfeebling",
+    SPELLS_BUFFS                  = "Spells Buffs",
+    SPELLS_BUFF_SONG              = "Spells Buff Songs",
+    SPELLS_GEOMANCY               = "Spells Geomancy",
+    SPELLS_HP_DRAIN               = "Spells HP Drain",
+    SPELLS_MP_DRAIN               = "Spells MP Drain",
+    SPELLS_TP_DRAIN               = "Spells TP Drain",
+    SPELLS_SPIKE_DAMAGE           = "Spells Spike Damage",
+    PET_OVERALL                   = "Pet Overall",
+    PET_MELEE_OVERALL             = "Pet Melee",
+    PET_MELEE_DISCRETE            = "Pet Melee Discrete",          -- This fills the role of main-hand/off-hand.
+    PET_RANGED_OVERALL            = "Pet Ranged Overall",
+    PET_TP                        = "Pet TP Move",
+    PET_NUKING                    = "Pet Nuking",
+    PET_DOT                       = "Pet Damage Over Time",
+    PET_HEALING                   = "Pet Healing",
+    PET_ENFEEBLING                = "Pet Enfeebling",
+    PET_SPELL_BUFFS               = "Pet Spell Buffs",
+    PET_MP_DRAIN                  = "Pet MP Drain",
+    PET_GENERAL_MAGIC             = "Pet General Magic",
+    ABILITY_OVERALL               = "Ability Overall",
+    ABILITY_DAMAGING              = "Ability Damaging",
+    ABILITY_HEALING               = "Ability Healing",
+    ABILITY_MP_RECOVERY           = "Ability MP Recovery",
+    ABILITY_GENERAL               = "Ability General",
+    MANEUVER                      = "PUP Maneuver",
+    PHANTOM_ROLL                  = "COR Phantom Roll",
+    DEF_DAMAGE_TAKEN_TOTAL        = "Defense Damage Taken Total",
+    DEF_DAMAGE_TAKEN_TOTAL_PET    = "Defense Damage Taken Total Pet",
+    DEF_TP_MOVE                   = "Defense TP Move",
+    DEF_TP_MOVE_PET               = "Defense TP Move Pet",
+    DEF_MELEE                     = "Defense Melee",
+    DEF_MELEE_PET                 = "Defense Melee Pet",
+    DEF_MELEE_ENDEBUFF            = "Defense Melee Endebuff",
+    DEF_RANGED                    = "Defense Ranged",
+    DEF_RANGED_PET                = "Defense Ranged Pet",
+    DEF_EVASION_MELEE             = "Defense Evasion Melee",
+    DEF_EVASION_RANGED            = "Defense Evasion Ranged",
+    DEF_EVASION_TP_ACTION         = "Defense Evasion TP Action",
+    DEF_PARRY                     = "Defense Parry",
+    DEF_SHADOWS_MELEE             = "Defense Shadows Melee",
+    DEF_SHADOWS_RANGED            = "Defense Shadows Ranged",
+    DEF_SHADOWS_MAGIC             = "Defense Shadows Magic",
+    DEF_SHADOWS_TP_ACTION         = "Defense Shadows TP Action",
+    DEF_THIRD_EYE_ANTICIPATION    = "Defense Third Eye Anticipation",
+    DEF_COUNTERED                 = "Defense Player Countered",    -- This is the player being countered during an offensive melee attack.
+    DEF_GUARD                     = "Defense Guard",
+    DEF_SHIELD_BLOCK              = "Defense Shield Block",
+    DEF_UNMITIGATED_MELEE         = "Defense Unmitigated Melee",
+    DEF_UNMITIGATED_MELEE_PARTIAL = "Defense Unmitigated Melee Partial",    -- Shield block and counter
+    DEF_UNMITIGATED_RANGED        = "Defense Unmitigated Ranged",
+    DEF_UNMITIGATED_MAGIC         = "Defense Unmitigated Magic",
+    DEF_UNMITIGATED_TP_ACTION     = "Defense Unmitigated TP Action",
+    DEF_NUKING                    = "Defense Nuking",
+    DEF_NUKING_PET                = "Defense Nuking Pet",
+    DEF_ENFEEBLING                = "Defense Enfeebling",
+    DEF_HP_DRAIN                  = "Defense HP Drain",
+    DEF_MP_DRAIN                  = "Defense MP Drain",
+    DEF_SPIKES                    = "Defense Spikes",
+    DEF_HEALING_RECEIVED          = "Defense Healing Received",    -- Self healing is ignored.
+    DEATH                         = "Death",
+    DEF_NO_DAMAGE_SPELLS          = "Defense No Damage Spells",    -- Unsure of the purpose for this.
+    DEF_CRITICAL                  = "Defense Critical Hit",        -- This might not be necessary with DEF_MELEE
+    DEFAULT                       = "Unknown Melee Type",
+}
+
+---@enum DB.Metric
+DB.Metric =
+{
+    TOTAL                   = "Total",
+    ATTEMPTS_ON_USE         = "Attempts on Use",
+    ATTEMPTS_ON_TARGET      = "Attempts on Target",         -- Used primarily for AOE debuff tracking.
+    HITS_ON_USE             = "Hits on Use",
+    HITS_ON_TARGET          = "Hits on Target",
+    MIN                     = "Minimum",
+    MAX                     = "Maximum",
+    CRITICAL_COUNT          = "Critical Hit Count",         -- These need to be metrics so that each discrete trackable can have
+    CRITICAL_DAMAGE         = "Critical Hit Damage",        -- critical hit data.
+    CRITICAL_MIN            = "Critical Hit Minimum",
+    CRITICAL_MAX            = "Critical Hit Maximum",
+    MULTI_ATTACK_HIT_ON_USE = "Multi Attack Hits on Use",   -- How often a multi-attack occurred to any degree.
+    MULTI_ATTACK_TOTAL      = "Multi Attack Total",
+    MULTI_ATTACK_1          = "Single Attack",
+    MULTI_ATTACK_2          = "Double Attack",
+    MULTI_ATTACK_3          = "Triple Attack",
+    MULTI_ATTACK_4          = "Quad Attack",
+    MULTI_ATTACK_5          = "Penta Attack",
+    MULTI_ATTACK_6          = "Sextuple Attack",
+    MULTI_ATTACK_7          = "Septuple Attack",
+    MULTI_ATTACK_8          = "Octuple Attack",
+    MULTI_ATTACK_1_DAMAGE   = "Single Attack Damage",
+    MULTI_ATTACK_2_DAMAGE   = "Double Attack Damage",
+    MULTI_ATTACK_3_DAMAGE   = "Triple Attack Damage",
+    MULTI_ATTACK_4_DAMAGE   = "Quad Attack Damage",
+    MULTI_ATTACK_5_DAMAGE   = "Penta Attack Damage",
+    MULTI_ATTACK_6_DAMAGE   = "Sextuple Attack Damage",
+    MULTI_ATTACK_7_DAMAGE   = "Septuple Attack Damage",
+    MULTI_ATTACK_8_DAMAGE   = "Octuple Attack Damage",
+    SHADOW_ABSORPTION       = "Shadow Absorption",
+    MOB_HEALING             = "Mob Healing",
+    SHOT_DISTANCE           = "Shot Distance",
+    TP_SPENT                = "TP Spent",
+    SKILLCHAIN_OPENED       = "Skillchains Opened",
+    SKILLCHAIN_CLOSED       = "Skillchains Closed",
+    MAGIC_BURST_COUNT       = "Magic Burst Count",
+    MAGIC_BURST_DAMAGE      = "Magic Burst Damage",
+    OVERCURE                = "Overcure",
+    MP_SPENT                = "MP Spent",
+    OVERLOAD                = "Maneuver Overload",
+    REROLL                  = "COR Roll Rerolls",
+    BUSTS                   = "COR Roll Bust Count",
+    LUCKY                   = "COR Roll Lucky Count",
+    LUCKY_11                = "COR Roll Lucky 11 Count",
+    UNLUCKY                 = "COR Roll Unlucky Count",
+    GUARD                   = "Guard",                      -- Delete this?
+}
+
+---@enum DB.UpdateMode
+DB.UpdateMode =
+{
+    INC = "inc",
+    SET = "set",
+}
+
+-- Used in lists to find all the actions that pets have done.
+DB.PetSingleTrackables =
+{
+	PET_WS         = DB.Trackable.PET_TP,
+	PET_HEAL       = DB.Trackable.PET_HEALING,
+    PET_BUFF       = DB.Trackable.PET_SPELL_BUFFS,
+	PET_NUKE       = DB.Trackable.PET_NUKING,
+	PET_ENFEEBLING = DB.Trackable.PET_ENFEEBLING,
+	PET_MP_DRAIN   = DB.Trackable.PET_MP_DRAIN,
+	PET_MAGIC      = DB.Trackable.PET_GENERAL_MAGIC,
+}
+
+DB.HealingMaxDefaults =
+{
     ["Cure"]       = 50,	-- 35
     ["Cure II"]    = 150, 	-- 102
     ["Cure III"]   = 250, 	-- 212
@@ -155,7 +195,9 @@ DB.Enum.HEALING = T{
     ["Curaga V"]   = 800,
 }
 
-DB.Healing_Max = T{
+-- This is the configurable healing max used for overcure.
+DB.HealingMax =
+{
     ["Cure"]       = 50,
     ["Cure II"]    = 150,
     ["Cure III"]   = 250,

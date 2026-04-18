@@ -1,159 +1,303 @@
-XP.Local = T{}
-XP.Local.EXP_Buckets = T{}
-XP.Local.EXP_Base_Buckets = T{}
-XP.Local.LP_Buckets = T{}
-XP.Local.LP_Base_Buckets = T{}
-XP.Local.Bucket_Length = 30 -- seconds
-XP.Local.Bucket_Max    = 16  -- Total average window of 8 minutes (30 seconds * 16 buckets)
-XP.Local.EXP_Rate = 0
-XP.Local.LP_Rate = 0
-XP.Local.Show_Windows = false
+XP.Tracking = { }
+
+XP.Tracking.PerKillMaxWindows = 6
+XP.Tracking.KillTimeThreshold = 10 * 60    -- Seconds
+
+XP.Tracking.ShowDebug = false -- Shows debug information when enabled.
 
 -- ------------------------------------------------------------------------------------------------------
--- Initializes the local XP tracking table.
+-- Initializes XP Tracking.
 -- ------------------------------------------------------------------------------------------------------
-XP.Local.Initialize = function()
-    XP.Local.EXP_Buckets = T{}
-    XP.Local.EXP_Base_Buckets = T{}
-    XP.Local.LP_Buckets = T{}
-    XP.Local.LP_Base_Buckets = T{}
-    for i = 1, XP.Local.Bucket_Max do
-        table.insert(XP.Local.EXP_Buckets, 0)
-        table.insert(XP.Local.EXP_Base_Buckets, 0)
-        table.insert(XP.Local.LP_Buckets, 0)
-        table.insert(XP.Local.LP_Base_Buckets, 0)
+XP.Tracking.Initialize = function()
+    local function CreateXpTrackingTable()
+        return
+        {
+            KillTimes     = { },
+            LastXpInstant = 0,
+            IntoLevel     = 0,
+            LevelMax      = 0,
+            Total         = 0,
+            Base          = 0,
+            Boosted       = 0,
+        }
     end
+
+    XP.Tracking.EXP      = CreateXpTrackingTable()
+    XP.Tracking.Limit    = CreateXpTrackingTable()
+    XP.Tracking.Capacity = CreateXpTrackingTable()
+    XP.Tracking.Exemplar = CreateXpTrackingTable()
+
+    XP.Tracking.Chains =
+    {
+        Current      = -1,
+        IsActive     = false,
+        StartInstant = 0,
+        Duration     = 0,
+        Max          = 0,
+    }
+
+    XP.Tracking.AverageWindows =
+    {
+        ExpTotal     = { },
+        ExpBoost     = { },
+        ExpBase      = { },
+        CapacityBase = { },
+        ExemplarBase = { },
+    }
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Add XP to current window. More recent XP goes earlier on in the table.
+-- Tally's total experience / limit points.
 -- ------------------------------------------------------------------------------------------------------
----@param base_xp integer
----@param bonus_xp integer
----@param type string
+---@param xpAmount integer
+---@param xpType   integer
+---@return integer, integer
 -- ------------------------------------------------------------------------------------------------------
-XP.Local.Add_XP = function(base_xp, bonus_xp, type)
-    if not base_xp then base_xp = 0 end
-    if not bonus_xp then bonus_xp = 0 end
-    if type == XP.Type.EXPERIENCE then
-        XP.Local.EXP_Buckets[1] = XP.Local.EXP_Buckets[1] + base_xp + bonus_xp
-        XP.Local.EXP_Base_Buckets[1] = XP.Local.EXP_Base_Buckets[1] + base_xp
-    elseif type == XP.Type.LIMIT then
-        XP.Local.LP_Buckets[1] = XP.Local.LP_Buckets[1] + base_xp + bonus_xp
-        XP.Local.LP_Base_Buckets[1] = XP.Local.LP_Base_Buckets[1] + base_xp
+XP.Tracking.AddEXP = function(xpAmount, xpType)
+    local trackingTables =
+    {
+        [XP.Type.EXPERIENCE] = XP.Tracking.EXP,
+        [XP.Type.LIMIT]      = XP.Tracking.Limit,
+    }
+
+    if not xpType or not trackingTables[xpType] then
+        Debug.Error.Add(Debug.Error.ERROR, 'XP.Tracking.AddEXP', 'Invalid XP Type.')
+        return 0, 0
     end
-end
 
--- ------------------------------------------------------------------------------------------------------
--- Gets rid of old data in the current XP tracking windows.
--- ------------------------------------------------------------------------------------------------------
-XP.Local.Cycle_Window = function()
-    table.remove(XP.Local.EXP_Buckets)        -- Get rid of the last element (oldest XP).
-    table.insert(XP.Local.EXP_Buckets, 1, 0)  -- Add a new blank element at index [1].
-    table.remove(XP.Local.EXP_Base_Buckets)
-    table.insert(XP.Local.EXP_Base_Buckets, 1, 0)
-    table.remove(XP.Local.LP_Buckets)
-    table.insert(XP.Local.LP_Buckets, 1, 0)
-    table.remove(XP.Local.LP_Base_Buckets)
-    table.insert(XP.Local.LP_Base_Buckets, 1, 0)
-end
+    XP.Dedication.Refresh()
+    xpAmount = xpAmount or 0
 
--- ------------------------------------------------------------------------------------------------------
--- Gets the local XP tracking value.
--- ------------------------------------------------------------------------------------------------------
----@param type string
----@param base? boolean
----@return string
--- ------------------------------------------------------------------------------------------------------
-XP.Local.Get_XP_Rate = function(type, base)
-    local total_xp = XP.Local.XP_In_Window(type, base)
-    local average_xp = (total_xp / XP.Local.Window_Length()) * 3600
-    XP.Local.Set_Rate(average_xp, type)
-    local return_string = string.format("%d", average_xp)
-    if not base and XP.Dedication.Is_Active then return_string = return_string .. "*" end
-    return return_string
-end
+    -- Handle dedication bonus xp.
+    local baseXp  = xpAmount
+    local bonusXp = 0
 
--- ------------------------------------------------------------------------------------------------------
--- Shows how much XP is in each bucket.
--- ------------------------------------------------------------------------------------------------------
----@param type string
----@return string
--- ------------------------------------------------------------------------------------------------------
-XP.Local.Bucket_View = function(type)
-    local string = ""
-    local total_xp = 0
-    if type == XP.Type.EXPERIENCE then
-        for _, window_xp in ipairs(XP.Local.EXP_Buckets) do
-            string = string .. "|" .. tostring(window_xp)
-            total_xp = total_xp + window_xp
-        end
-    elseif type == XP.Type.LIMIT then
-        for _, window_xp in ipairs(XP.Local.LP_Buckets) do
-            string = string .. "|" .. tostring(window_xp)
-            total_xp = total_xp + window_xp
-        end
+    if XP.Dedication.IsActive and XP.Settings.Boost_Item_Rate > 0 then
+        baseXp  = math.floor(xpAmount / (1 + (XP.Settings.Boost_Item_Rate / 100)))
+        bonusXp = xpAmount - baseXp
     end
-    return string
+
+    -- Add message to battle log.
+    XP.Blog(xpAmount, baseXp, bonusXp)
+
+    -- Increment the XP totals. These are client session specific.
+    local xpTracker = trackingTables[xpType]
+
+    xpTracker.Total   = xpTracker.Total + (baseXp + bonusXp)
+    xpTracker.Boosted = xpTracker.Boosted + bonusXp
+    xpTracker.Base    = xpTracker.Base + baseXp
+
+    -- This is XP type agnositic and persists across client sessions.
+    XP.Settings.Boost_XP_Acquired = XP.Settings.Boost_XP_Acquired + bonusXp
+
+    -- Average XP
+    local averageWindows = XP.Tracking.AverageWindows
+
+    if #averageWindows.ExpTotal > XP.Tracking.PerKillMaxWindows then
+        table.remove(averageWindows.ExpTotal)
+        table.remove(averageWindows.ExpBoost)
+        table.remove(averageWindows.ExpBase)
+    end
+
+    table.insert(averageWindows.ExpTotal, 1, baseXp + bonusXp)
+    table.insert(averageWindows.ExpBoost, 1, bonusXp)
+    table.insert(averageWindows.ExpBase,  1, baseXp)
+
+    return baseXp, bonusXp
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Gets the total amount of XP from within the window.
+-- Tally's total capacity points.
 -- ------------------------------------------------------------------------------------------------------
----@param type string
----@param base? boolean
+---@param amount integer
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-XP.Local.XP_In_Window = function(type, base)
-    local total_xp = 0
-    if type == XP.Type.EXPERIENCE then
-        if base then
-            for _, window_xp in ipairs(XP.Local.EXP_Base_Buckets) do total_xp = total_xp + window_xp end
-        else
-            for _, window_xp in ipairs(XP.Local.EXP_Buckets) do total_xp = total_xp + window_xp end
-        end
-    elseif type == XP.Type.LIMIT then
-        if base then
-            for _, window_xp in ipairs(XP.Local.LP_Base_Buckets) do total_xp = total_xp + window_xp end
-        else
-            for _, window_xp in ipairs(XP.Local.LP_Buckets) do total_xp = total_xp + window_xp end
-        end
+XP.Tracking.AddCP = function(amount)
+    amount = amount or 0
+
+    local capacity       = XP.Tracking.Capacity
+    local averageWindows = XP.Tracking.AverageWindows
+
+    -- Increment the CP totals. These are client session specific.
+    -- Need to keep track of current CP in level because the Ashita data only refreshes when viewing the JP screen.
+    capacity.Base  = capacity.Base + amount
+    capacity.Total = (capacity.Total + amount) % 30000
+
+    if #averageWindows.CapacityBase > XP.Tracking.PerKillMaxWindows then
+        table.remove(averageWindows.CapacityBase)
     end
-    return total_xp
+
+    table.insert(averageWindows.CapacityBase, 1, amount)
+
+    return amount
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Returns window length in seconds.
+-- Tally's total exemplar points.
 -- ------------------------------------------------------------------------------------------------------
+---@param amount integer
 ---@return integer
 -- ------------------------------------------------------------------------------------------------------
-XP.Local.Window_Length = function()
-    local length = XP.Local.Bucket_Length * XP.Local.Bucket_Max
-    if length == 0 then length = 1 end
-    return length
+XP.Tracking.AddEP = function(amount)
+    amount = amount or 0
+
+    local exemplar       = XP.Tracking.Exemplar
+    local averageWindows = XP.Tracking.AverageWindows
+
+    -- Increment the EP totals. These are client session specific.
+    -- Need to keep track of current EP in level because the Ashita data only refreshes when viewing the JP screen.
+    exemplar.Base      = exemplar.Base + amount
+    exemplar.IntoLevel = (exemplar.IntoLevel + amount) % exemplar.LevelMax
+
+    if #averageWindows.ExemplarBase > XP.Tracking.PerKillMaxWindows then
+        table.remove(averageWindows.ExemplarBase)
+    end
+
+    table.insert(averageWindows.ExemplarBase, 1, amount)
+
+    return amount
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Sets the xp/hr rate.
+-- Handles mob kill time tracking.
+-- This gets called when an XP message comes in (from a kill).
 -- ------------------------------------------------------------------------------------------------------
----@param rate number
----@param type string
+---@param lastXpTime integer
+---@param timeTable  table   pointer
+---@return integer
 -- ------------------------------------------------------------------------------------------------------
-XP.Local.Set_Rate = function(rate, type)
-    if not rate then rate = 0 end
-    if     type == XP.Type.EXPERIENCE then XP.Local.EXP_Rate = rate
-    elseif type == XP.Type.LIMIT      then XP.Local.LP_Rate = rate
+XP.Tracking.AddKillTime = function(lastXpTime, timeTable)
+    local duration = os.time() - lastXpTime
+
+    if duration < XP.Tracking.KillTimeThreshold then       -- Throw out afk/break times.
+        if #timeTable >= XP.Tracking.PerKillMaxWindows then
+            table.remove(timeTable)
+        end
+
+        table.insert(timeTable, 1, duration)
     end
+
+    return os.time()
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- Gets the xp/hr rate.
+-- Shows XP tracking (debug) information.
+-- Debug mode needs to be enabled in order to turn this on.
 -- ------------------------------------------------------------------------------------------------------
----@param type string
--- ------------------------------------------------------------------------------------------------------
-XP.Local.Get_Rate = function(type)
-    if     type == XP.Type.EXPERIENCE then return XP.Local.EXP_Rate
-    elseif type == XP.Type.LIMIT      then return XP.Local.LP_Rate
-    else   return 0
+XP.Tracking.DebugContent = function()
+    if not XP.Tracking.ShowDebug then
+        return nil
     end
+
+    local flags      = Column.Flags.None
+    local tableFlags = bit.bor(XP.TableFlags, ImGuiTableFlags_RowBg)
+    local xpTypes    = XP.Type
+    local exp        = XP.Tracking.EXP
+    local limit      = XP.Tracking.Limit
+    local capacity   = XP.Tracking.Capacity
+    local exemplar   = XP.Tracking.Exemplar
+
+    UI.PushStyleColor(ImGuiCol_TableRowBg, WindowManager.GetRowBgColor())
+    UI.PushStyleColor(ImGuiCol_TableRowBgAlt, WindowManager.GetRowBgColor())
+
+    if UI.BeginTable('Current XP', 5, tableFlags) then
+        UI.TableSetupColumn('Metric', flags)
+        UI.TableSetupColumn('EXP',    flags)
+        UI.TableSetupColumn('Limit',  flags)
+        UI.TableSetupColumn('CP',     flags)
+        UI.TableSetupColumn('EP',     flags)
+        UI.TableHeadersRow()
+
+        UI.TableNextColumn() UI.Text('Total XP Gained')
+        UI.TableNextColumn() UI.Text(tostring(exp.Base))
+        UI.TableNextColumn() UI.Text(tostring(limit.Base))
+        UI.TableNextColumn() UI.Text(tostring(capacity.Base))
+        UI.TableNextColumn() UI.Text(tostring(exemplar.Base))
+
+        UI.TableNextColumn() UI.Text('Current')
+        UI.TableNextColumn() UI.Text(tostring(Ashita.Player.CurrentXP()))
+        UI.TableNextColumn() UI.Text(tostring(Ashita.Player.CurrentLimit()))
+        UI.TableNextColumn() UI.Text(tostring(capacity.Total))
+        UI.TableNextColumn() UI.Text(tostring(exemplar.IntoLevel))
+
+        UI.TableNextColumn() UI.Text('TNL')
+        UI.TableNextColumn() UI.Text(XP.Columns.TNL(xpTypes.EXPERIENCE))
+        UI.TableNextColumn() UI.Text(XP.Columns.TNL(xpTypes.LIMIT))
+        UI.TableNextColumn() UI.Text(XP.Columns.TNL(xpTypes.CAPACITY))
+        UI.TableNextColumn() UI.Text(XP.Columns.TNL(xpTypes.EXEMPLAR))
+
+        UI.TableNextColumn() UI.Text('Average XP/Kill')
+        UI.TableNextColumn() UI.Text(string.format('%.2f', (XP.Columns.AverageXP(xpTypes.EXPERIENCE))))
+        UI.TableNextColumn() UI.Text(string.format('%.2f', (XP.Columns.AverageXP(xpTypes.LIMIT))))
+        UI.TableNextColumn() UI.Text(string.format('%.2f', (XP.Columns.AverageXP(xpTypes.CAPACITY))))
+        UI.TableNextColumn() UI.Text(string.format('%.2f', (XP.Columns.AverageXP(xpTypes.EXEMPLAR))))
+
+        UI.TableNextColumn() UI.Text('XP/hr')
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.AverageRate(xpTypes.EXPERIENCE)))
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.AverageRate(xpTypes.LIMIT)))
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.AverageRate(xpTypes.CAPACITY)))
+        UI.TableNextColumn() UI.Text(tostring(XP.Columns.AverageRate(xpTypes.EXEMPLAR)))
+
+        UI.EndTable()
+    end
+
+    local xpKillEntries = #exp.KillTimes
+
+    if xpKillEntries > 0 then
+        local averageWindows = XP.Tracking.AverageWindows
+
+        if UI.BeginTable('Kill Speed XP', 2 + xpKillEntries, tableFlags) then
+            UI.TableSetupColumn('Type', flags)
+            UI.TableSetupColumn('Current XP Window', flags)
+            for i, _ in ipairs(exp.KillTimes) do UI.TableSetupColumn(tostring(i), flags) end
+            UI.TableHeadersRow()
+
+            UI.TableNextColumn() UI.Text('Kill Times')
+            UI.TableNextColumn() UI.Text(Timers.Format(os.time() - exp.LastXpInstant))
+            for _, v in ipairs(exp.KillTimes) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+
+            UI.TableNextColumn() UI.Text('Base Only')
+            for _, v in ipairs(averageWindows.ExpBase) do UI.TableNextColumn() UI.Text(string.format('%.1f', v)) end
+
+            UI.TableNextColumn() UI.Text('Boost Only')
+            for _, v in ipairs(averageWindows.ExpBoost) do UI.TableNextColumn() UI.Text(string.format('%.1f', v)) end
+
+            UI.TableNextColumn() UI.Text('Base + Boost')
+            for _, v in ipairs(averageWindows.ExpTotal) do UI.TableNextColumn() UI.Text(tostring(v)) end
+
+            UI.EndTable()
+        end
+    end
+
+    local cpKillEntries = #capacity.KillTimes
+
+    if cpKillEntries > 0 then
+        if UI.BeginTable('Kill Speed CP', 1 + cpKillEntries, tableFlags) then
+            UI.TableSetupColumn('Current CP Window', flags)
+            for i, _ in ipairs(capacity.KillTimes) do UI.TableSetupColumn(tostring(i), flags) end
+            UI.TableHeadersRow()
+
+            UI.TableNextColumn() UI.Text(Timers.Format(os.time() - capacity.LastXpInstant))
+            for _, v in ipairs(capacity.KillTimes) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+
+            UI.EndTable()
+        end
+    end
+
+    local epKillEntries = #exemplar.KillTimes
+
+    if epKillEntries > 0 then
+        if UI.BeginTable('Kill Speed CP', 1 + epKillEntries, tableFlags) then
+            UI.TableSetupColumn('Current CP Window', flags)
+            for i, _ in ipairs(exemplar.KillTimes) do UI.TableSetupColumn(tostring(i), flags) end
+            UI.TableHeadersRow()
+
+            UI.TableNextColumn() UI.Text(Timers.Format(os.time() - exemplar.LastXpInstant))
+            for _, v in ipairs(exemplar.KillTimes) do UI.TableNextColumn() UI.Text(Timers.Format(v)) end
+
+            UI.EndTable()
+        end
+    end
+
+    UI.PopStyleColor(2)
 end

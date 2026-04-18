@@ -1,55 +1,79 @@
-Overview = T{}
-
-Overview.Name   = "Overview"
-Overview.Title  = "Metrics - Overview"
-Overview.Module = "Overview"
-Overview.Window = Window:New({
-    Name    = Overview.Name,
-    Title   = Overview.Title,
-    Module  = Overview.Module,
-    Visible = {false},
-    Show_Title = true,
-})
-
-Overview.Modes = T{
-    PARSE = "Parse",
-    FOCUS = "Focus",
-    BLOG  = "Battle Log",
-}
-Overview.Mode = Overview.Modes.PARSE
+Overview = { }
 
 require("modules.overview.config")
 require("modules.overview.parse")
 require("modules.overview.focus")
 
+Overview.Name   = "Overview"
+Overview.Title  = "Metrics - Overview"
+Overview.Module = "Overview"
+Overview.File   = "overview"
+
+Overview.Modes =
+{
+    PARSE = "Parse",
+    FOCUS = "Focus",
+    BLOG  = "Battle Log",
+}
+
+Overview.ActiveMode = Overview.Modes.PARSE
+
+------------------------------------------------------------------------------------------------------
+-- Initializes the Hub screen.
+------------------------------------------------------------------------------------------------------
+---@param settings? table settings that come from the Ashita settings_update event.
+------------------------------------------------------------------------------------------------------
+Overview.Initialize = function(settings)
+    -- Get saved settings from file.
+    Overview.Settings = settings or SettingsFile.load(Overview.Config.Defaults, Overview.File)
+
+    -- Create the Overview Window.
+    Overview.Window = Window:New
+    ({
+        Name       = Overview.Name,
+        Title      = Overview.Title,
+        Module     = Overview.Module,
+        Settings   = Overview.Settings,
+        Show_Title = true,
+    })
+end
+
 ------------------------------------------------------------------------------------------------------
 -- Opens a new window to show all tabs as a vertical column.
 ------------------------------------------------------------------------------------------------------
 Overview.Content = function()
-    if Overview.Mode == Overview.Modes.PARSE then
+    local perfStart = Socket.gettime()
+
+    if Overview.ActiveMode == Overview.Modes.PARSE then
         Overview.Parse.Content()
-    elseif Overview.Mode == Overview.Modes.FOCUS then
-        local player_name = DB.Widgets.Util.Get_Player_Focus()
-        if player_name == DB.Widgets.Dropdown.Enum.NONE then
-            Focus.Screenshot_Mode[1] = false
+
+    elseif Overview.ActiveMode == Overview.Modes.FOCUS then
+        local playerName = DB.Widgets.GetPlayerFocus()
+
+        if playerName == DB.Enum.NONE then
+            Focus.ScreenshotMode[1] = false
             return nil
         end
-        Overview.Focus.Content(player_name)
+
+        Overview.Focus.Content(playerName)
+
     else
         UI.Text("No content.")
     end
+
+    Perf.Capture(Perf.Enums.UI_OVERVIEW, perfStart)
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Button that opens the overview window with focus content.
 ------------------------------------------------------------------------------------------------------
-Overview.Screenshot_Button = function()
+Overview.ScreenshotButton = function()
     if UI.SmallButton("Screenshot") then
-        if Overview.Mode == Overview.Modes.FOCUS then
-            Overview.Window.Toggle_Visibility()
+        if Overview.ActiveMode == Overview.Modes.FOCUS then
+            Overview.Window.ToggleVisibility()
         else
             Overview.Window.Show()
-            Overview.Mode = Overview.Modes.FOCUS
+            Overview.ActiveMode = Overview.Modes.FOCUS
         end
     end
 end
@@ -57,13 +81,13 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Button that opens the overview window with parse content.
 ------------------------------------------------------------------------------------------------------
-Overview.Overview_Button = function()
+Overview.OverviewButton = function()
     if UI.SmallButton("Overview") then
-        if Overview.Mode == Overview.Modes.PARSE then
-            Overview.Window.Toggle_Visibility()
+        if Overview.ActiveMode == Overview.Modes.PARSE then
+            Overview.Window.ToggleVisibility()
         else
             Overview.Window.Show()
-            Overview.Mode = Overview.Modes.PARSE
+            Overview.ActiveMode = Overview.Modes.PARSE
         end
     end
 end

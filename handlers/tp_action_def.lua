@@ -1,42 +1,78 @@
-H.TP_Def = T{}
+H.TpDef = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Parse the finish monster TP move packet.
 -- BST Pet and Puppet ranged attacks fall into this category.
 -- Trust abilities can show up here too. They don't have an owner.
 ------------------------------------------------------------------------------------------------------
----@param action table action packet data.
----@param actor_mob table the mob data of the entity performing the action.
----@param owner_mob table|nil (if pet) the mob data of the entity's owner.
----@param log_defense boolean if this action should actually be logged.
+---@param action     table   action packet data.
+---@param actorMob   table   the mob data of the entity performing the action.
+---@param ownerMob?  table   (if pet) the mob data of the entity's owner.
+---@param logDefense boolean if this action should actually be logged.
 ------------------------------------------------------------------------------------------------------
-H.TP_Def.Monster_Action = function(action, actor_mob, owner_mob, log_defense)
-    if not log_defense then return false end
+H.TpDef.MonsterAction = function(action, actorMob, ownerMob, logDefense)
+    if not logDefense then
+        return false
+    end
 
-    local skill_data = H.TP.Pet_Skill_Data(action.param, actor_mob)
-    if not skill_data then return nil end
-    local skill_name = skill_data.en
-    local action_id = skill_data.id
+    local skillData = H.TP.PetSkillData(action.param, actorMob)
+    if not skillData then
+        return nil
+    end
 
-    local result, target_mob
-    local damage = 0
-    local count = 0
+    local skillName, actionId = skillData.en, skillData.id
+
+    -- Mob ranged attacks come in as TP moves. Jump to Ranged Defense if that happens.
+    if skillName and (skillName == "Ranged Attack" or skillName == "Aern Ranged") then
+        H.RangedDef.Action(action, actorMob, ownerMob, logDefense)
+        return nil
+    end
+
+    -- Keep the mob list up-to-date.
+    if Ashita.Mob.IsMonster(actorMob) then
+        DB.Lists.AddToInitializedMobs(actorMob.name)
+    end
+
+    local totalDamage    = 0
+    local count          = 0
+    local isUseNoDamage  = true
+    local isUseHit       = false
+    local trackable      = DB.Trackable.DEF_TP_MOVE_PET
+    local targetMob
+    local targetOwnerMob
 
     -- Mob AOEs can hit pets. Need to check for all the target owner mobs because they may not be the original target.
-    for target_index, target_value in pairs(action.targets) do
-        for action_index, _ in pairs(target_value.actions) do
-            result = action.targets[target_index].actions[action_index]
-            target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            if target_mob and (Ashita.Party.Is_Affiliate(target_mob.name) or Ashita.Mob.Pet_Owner(target_mob) or Metrics.Parse.Lurk_Mode) then
-                if Ashita.Mob.Is_Monster(actor_mob) then DB.Lists.Check.Mob_Exists(actor_mob.name) end
-                owner_mob = Ashita.Mob.Pet_Owner(target_mob)    -- Need to recheck for AOEs.
-                count = count + 1
-                damage = damage + H.TP_Def.Weaponskill_Parse(result, actor_mob, target_mob, skill_name, action_id, owner_mob)
+    for _, target in pairs(action.targets) do
+        targetMob = Ashita.Mob.GetMobByID(target.id) or { name = DB.Enum.DEBUG }
+        targetOwnerMob = Ashita.Mob.PetOwner(targetMob)
+
+        if Ashita.Party.IsAffiliate(targetMob.name) or targetOwnerMob or Parse.Config.IsLurking() then
+            trackable = targetOwnerMob and DB.Trackable.DEF_TP_MOVE_PET or DB.Trackable.DEF_TP_MOVE
+
+            for _, actionData in pairs(target.actions) do
+                local targetDamage, isTargetHit, isTargetNoDamage = H.TpDef.Parse(actionData, actorMob, targetMob, skillName, actionId, targetOwnerMob)
+
+                -- If the ability is an AOE, if any of the hits are not "no damage" (like a miss) then the use level becomes a hit.
+                isUseNoDamage = isUseNoDamage and isTargetNoDamage
+                isUseHit      = isUseHit or isTargetHit
+                totalDamage   = totalDamage + targetDamage
+                count         = count + 1
             end
         end
     end
 
-    H.TP_Def.Blog(actor_mob, damage, skill_name, count)
+    -- Counts
+    local audits = H.TpDef.Audits(actorMob, targetOwnerMob, targetMob)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.ATTEMPTS_ON_USE)
+
+    if isUseHit then
+        DB.Data.Update(DB.UpdateMode.INC, 1, audits, trackable, DB.Metric.HITS_ON_USE)
+        DB.Catalog.UpdateMetric(DB.UpdateMode.INC, 1, audits, trackable, skillName, DB.Metric.HITS_ON_USE)
+    end
+
+    -- Battle Log
+    H.TpDef.Blog(actorMob, totalDamage, skillName, count, isUseNoDamage)
 
     return true
 end
@@ -44,117 +80,173 @@ end
 ------------------------------------------------------------------------------------------------------
 -- Parse the packet where a mob buffs themselves with a self-targeting buff.
 ------------------------------------------------------------------------------------------------------
----@param action table action packet data.
----@param actor_mob table the mob data of the entity performing the action.
+---@param action   table action packet data.
+---@param actorMob table the mob data of the entity performing the action.
 ------------------------------------------------------------------------------------------------------
-H.TP_Def.Mob_Self_Target = function(action, actor_mob)
-    local skill_data = H.TP.Pet_Skill_Data(action.param, actor_mob)
-    if not skill_data then return nil end
-    local skill_name = skill_data.en
-    H.TP_Def.Blog(actor_mob, 0, skill_name, 1)
+H.TpDef.MobSelfTarget = function(action, actorMob)
+    local skillData = H.TP.PetSkillData(action.param, actorMob)
+
+    if not skillData then
+        return nil
+    end
+
+    H.TpDef.Blog(actorMob, 0, skillData.en, 1, true)
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Set data for a weaponskill action.
 -- AOE weaponskills will go through this one time for each mob hit.
 ------------------------------------------------------------------------------------------------------
----@param result table contains all the information for the action.
----@param actor_mob table name of the player that did the action.
----@param target_mob table name of the target that received the action.
----@param ws_name string name of the weaponskill that was used.
----@param ws_id number ID of the ability that was used. Right now this is used to check monster abilities.
----@param owner_mob? table if the action was from a pet then this will hold the owner's mob.
+---@param actionData table contains all the information for the action.
+---@param actorMob   table name of the player that did the action.
+---@param targetMob  table name of the target that received the action.
+---@param actionName string name of the weaponskill that was used.
+---@param actionId   number ID of the ability that was used. Right now this is used to check monster abilities.
+---@param ownerMob?  table if the action was from a pet then this will hold the owner's mob.
 ---@return number
+---@return boolean
+---@return boolean
 ------------------------------------------------------------------------------------------------------
-H.TP_Def.Weaponskill_Parse = function(result, actor_mob, target_mob, ws_name, ws_id, owner_mob)
-    Debug.Packet.Add_Action(actor_mob.name, target_mob.name, "TP Def", result)
-    local damage = result.param
-    local message_id = result.message
-    local audits = H.TP_Def.Audits(actor_mob, owner_mob, target_mob)
+H.TpDef.Parse = function(actionData, actorMob, targetMob, actionName, actionId, ownerMob)
+    local damage     = actionData.param
+    local messageId  = actionData.message
+    local audits     = H.TpDef.Audits(actorMob, ownerMob, targetMob)
+    local hit        = false
+    local isNoDamage = false
 
-    -- A lot of pet abilities just land a status effect and it carries in a value as if it were damage.
-    damage = H.TP_Def.Ignore_Damage(damage, ws_id, ws_name, message_id)
+    -- Check damage mitigation first. If mitigated, the damage is set to zero for the counts, blog, etc.
+    damage, hit, isNoDamage = H.TpDef.DamageMitigation(audits, damage, messageId, actionName, ownerMob)
 
-    -- Some weaponskills drain MP instead of doing damage.
-    audits = H.TP.MP_Drain(audits, ws_id)
+    -- The mob drains the player's MP.
+    if H.Messages.MpDrain(messageId) then
+        H.Offense.CatalogNoDamageHit(audits, audits.trackable, actionName)
+        H.Offense.CatalogHit(audits, DB.Trackable.DEF_MP_DRAIN, damage, actionName)
 
-    -- Totals need to be updated manually here because Update_Damage isn't set up for defense metrics totals.
-    if owner_mob then
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DMG_TAKEN_TOTAL_PET, H.Metric.TOTAL)
+    -- The mob drains the player's TP.
+    elseif H.Messages.TpDrain(messageId) then
+
+    -- The mob dispels the player.
+    elseif H.Messages.Dispel(messageId) then
+        isNoDamage = true
+
+    -- The mob debuffs the player.
+    elseif H.Messages.Debuff(messageId) then
+        H.Offense.CatalogNoDamageHit(audits, audits.trackable, actionName)
+        isNoDamage = true
+
+    -- The mob's attack deals damage. This also includes HP drained from the player.
+    elseif H.Messages.Damaging(messageId) or H.Messages.HpDrain(messageId) then
+        H.Defense.GrandTotals(audits, damage, ownerMob)
+        H.Offense.CatalogHit(audits, audits.trackable, damage, actionName)
+
+        if not ownerMob then
+            H.Offense.Hit(audits, DB.Trackable.DEF_UNMITIGATED_TP_ACTION, damage)
+        end
+
+        if H.Messages.HpDrain(messageId) then
+            H.Offense.CatalogHit(audits, DB.Trackable.DEF_MP_DRAIN, damage, actionName)
+        end
+
+    -- Just for information gathering purposes.
     else
-        DB.Data.Update(H.Mode.INC, damage, audits, H.Trackable.DAMAGE_TAKEN_TOTAL, H.Metric.TOTAL)
+        local warning = string.format("BENIGN: Ability {%s} (%d) has message {%d}.", actionName or DB.Enum.DEBUG, actionId or 0, messageId or 0)
+        Debug.Error.Add(Debug.Error.WARNING, "H.TpDef.Parse", warning)
     end
 
-    DB.Catalog.Update_Damage(audits.player_name, audits.target_name, audits.trackable, damage, ws_name, audits.pet_name)
-    DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, audits.trackable, ws_name, H.Metric.COUNT)
-    DB.Data.Update(H.Mode.INC, 1, audits, audits.trackable, H.Metric.COUNT)
-    if damage > 0 then
-        DB.Catalog.Update_Metric(H.Mode.INC, 1, audits, audits.trackable, ws_name, H.Metric.HIT_COUNT)
-        DB.Data.Update(H.Mode.INC, 1, audits, audits.trackable, H.Metric.HIT_COUNT)
-    end
-
-    return damage
+    return damage, hit, isNoDamage
 end
 
--- ------------------------------------------------------------------------------------------------------
--- Set audit information for pet skills.
--- ------------------------------------------------------------------------------------------------------
----@param actor_mob table
----@param owner_mob table|nil
----@param target_mob table
----@return table
--- ------------------------------------------------------------------------------------------------------
-H.TP_Def.Audits = function(actor_mob, owner_mob, target_mob)
-    local player_name = actor_mob.name
-    local target_name = target_mob.name
-    local pet_name = nil
-    local trackable = H.Trackable.TP_DMG_TAKEN
+------------------------------------------------------------------------------------------------------
+-- Checks for damage mitigation like evasion or shadows.
+------------------------------------------------------------------------------------------------------
+---@param audits     table
+---@param damage     integer
+---@param messageId  Ashita.Message
+---@param actionName string
+---@param ownerMob?  table
+---@return integer
+---@return boolean
+---@return boolean
+------------------------------------------------------------------------------------------------------
+H.TpDef.DamageMitigation = function(audits, damage, messageId, actionName, ownerMob)
+    local miss   = false
+    local shadow = false
 
-    if owner_mob then
-        pet_name = target_mob.name
-        target_name = owner_mob.name
-        trackable = H.Trackable.PET_TP_DMG_TAKEN
+    -- Mob misses the player.
+    if H.Messages.NoDamageMiss(messageId) then
+        H.Defense.GrandTotals(audits, 0, ownerMob)
+        H.Offense.CatalogMiss(audits, audits.trackable, actionName)
+        DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.HITS_ON_TARGET)
+        damage = 0
+        miss   = true
+
+    -- Player's shadow absorbs the ability.
+    elseif H.Messages.NoDamage(messageId) then
+        H.Defense.GrandTotals(audits, 0, ownerMob)
+        H.Offense.CatalogNoDamageHit(audits, audits.trackable, actionName)
+        DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_SHADOWS_TP_ACTION, DB.Metric.HITS_ON_TARGET)
+        damage = 0
+        shadow = true
     end
 
-    -- These are switched compared to offense.
-    local audits = {
-        player_name = target_name,
-        target_name = player_name,
-        pet_name = pet_name,
-        trackable = trackable
-    }
-
-    return audits
-end
-
--- ------------------------------------------------------------------------------------------------------
--- Some pet skills don't do direct damage and their effects come in as damage--must be ignored.
--- ------------------------------------------------------------------------------------------------------
----@param damage number
----@param ws_id number
----@param ws_name string
----@return number
--- ------------------------------------------------------------------------------------------------------
-H.TP_Def.Ignore_Damage = function(damage, ws_id, ws_name, message_id)
-    if not Res.Monster.Get_Damaging_Ability(ws_id) then
-        Debug.Error.Add("TP.Pet_Skill_Ignore: " .. tostring(ws_id) .. " " .. tostring(ws_name) .. " considered a non-damage pet ability.")
-        damage = 0
-    elseif message_id == Ashita.Enum.Message.MISS_TP or message_id == Ashita.Enum.Message.SHADOWS then
-        damage = 0
+    -- Set attempts. Not tracking mitigation for pets.
+    if not ownerMob then
+        if miss then
+            DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.ATTEMPTS_ON_TARGET)
+        else
+            DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_EVASION_TP_ACTION, DB.Metric.ATTEMPTS_ON_TARGET)
+            DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEF_SHADOWS_TP_ACTION, DB.Metric.ATTEMPTS_ON_TARGET)
+        end
     end
-    return damage
+
+    return damage, not miss, miss or shadow
 end
 
 -- ------------------------------------------------------------------------------------------------------
 -- Adds mob TP damage to the battle log.
 -- ------------------------------------------------------------------------------------------------------
----@param actor_mob table
+---@param actorMob table
 ---@param damage integer
----@param skill_name string
----@param target_count integer
+---@param skillName string
+---@param targetCount integer
+---@param isNoDamage boolean
 -- ------------------------------------------------------------------------------------------------------
-H.TP_Def.Blog = function(actor_mob, damage, skill_name, target_count)
-    local note = nil
-    if target_count > 1 then note = "TGTs: " .. tostring(target_count) end
-    Blog.Add(actor_mob.name, nil, Blog.Enum.Types.MOB_TP, skill_name, damage, note, DB.Enum.Trackable.TP_DMG_TAKEN)
+H.TpDef.Blog = function(actorMob, damage, skillName, targetCount, isNoDamage)
+    local note = (targetCount > 1) and string.format("TGTs: %d", targetCount or 0) or ""
+
+    damage = isNoDamage and -1 or damage
+
+    Blog.Add(actorMob.name, nil, Blog.ActionType.MOB_TP, skillName, damage, note)
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Set audit information for pet skills.
+-- ------------------------------------------------------------------------------------------------------
+---@param actorMob  table
+---@param ownerMob  table|nil
+---@param targetMob table
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+H.TpDef.Audits = function(actorMob, ownerMob, targetMob)
+    local playerName = actorMob.name
+    local targetName = targetMob.name
+    local trackable  = DB.Trackable.DEF_TP_MOVE
+    local petName
+
+    if ownerMob then
+        petName    = targetMob.name
+        targetName = ownerMob.name
+        trackable  = DB.Trackable.DEF_TP_MOVE_PET
+    end
+
+    -- These are switched compared to offense.
+    local audits =
+    {
+        player_name = targetName,
+        target_name = playerName,
+        pet_name    = petName,
+        trackable   = trackable
+    }
+
+    return audits
 end

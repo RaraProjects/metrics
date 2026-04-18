@@ -1,6 +1,7 @@
-Res.Buffs = T{}
+Res.Buffs = { }
 
-Res.Buffs.List = T{
+Res.Buffs.List =
+{
     [0] = {id=0,en="KO",ja="戦闘不能",enl="KO'd",jal="戦闘不能"},
     [1] = {id=1,en="Weakness",ja="衰弱",enl="weakened",jal="衰弱"},
     [2] = {id=2,en="Sleep",ja="睡眠",enl="asleep",jal="睡眠"},

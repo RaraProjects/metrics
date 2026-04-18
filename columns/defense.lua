@@ -1,108 +1,118 @@
-Column.Defense = T{}
+Column.Defense = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Grabs the damage of a certain trackable that the entity has taken.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param damage_type string a trackable from the model.
----@param percent? boolean whether or not the damage should be raw or percent.
----@param justify? boolean whether or not to right justify the text
----@param raw? boolean true: just output the raw value; false: output a column to a table.
+---@param playerName string
+---@param trackable  DB.Trackable a trackable from the model.
+---@param percent?   boolean      whether or not the damage should be raw or percent.
+---@param justify?   boolean      whether or not to right justify the text
+---@param raw?       boolean      true: just output the raw value; false: output a column to a table.
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Defense.Damage_Taken_By_Type = function(player_name, damage_type, percent, justify, raw)
-    local total = DB.Data.Get(player_name, damage_type, Column.Metric.TOTAL)
-    local color = Column.String.Color_Zero(total)
-    if percent then
-        local total_damage = DB.Data.Get(player_name, Column.Trackable.DAMAGE_TAKEN_TOTAL, Column.Metric.TOTAL)
-        if raw then return Column.String.Format_Percent(total, total_damage) end
-        return UI.TextColored(color, Column.String.Format_Percent(total, total_damage, justify))
-    end
-    if raw then return Column.String.Format_Number(total) end
-    return UI.TextColored(color, Column.String.Format_Number(total, justify))
-end
+Column.Defense.DamageTakenByType = function(playerName, trackable, percent, justify, raw)
+    local total = DB.Data.Get(playerName, trackable, DB.Metric.TOTAL)
+    local color = Column.String.ColorZero(total)
 
-------------------------------------------------------------------------------------------------------
--- Grabs the proc rate of certain defensive actions.
-------------------------------------------------------------------------------------------------------
----@param player_name string
----@param damage_type string a trackable from the model.
----@param justify? boolean whether or not to right justify the text
----@param raw? boolean true: just output the raw value; false: output a column to a table.
----@return string
-------------------------------------------------------------------------------------------------------
-Column.Defense.Proc_Rate_By_Type = function(player_name, damage_type, justify, raw)
-    local proc_count = DB.Data.Get(player_name, damage_type, Column.Metric.HIT_COUNT)
-    local color = Column.String.Color_Zero(proc_count)
-    local attack_count = DB.Data.Get(player_name, damage_type, Column.Metric.COUNT)
-    if raw then return Column.String.Format_Percent(proc_count, attack_count) end
-    return UI.TextColored(color, Column.String.Format_Percent(proc_count, attack_count, justify))
+    if percent then
+        local totalDamage = DB.Data.Get(playerName, DB.Trackable.DEF_DAMAGE_TAKEN_TOTAL, DB.Metric.TOTAL)
+
+        return raw and Column.String.FormatPercent(total, totalDamage) or UI.TextColored(color, Column.String.FormatPercent(total, totalDamage, justify))
+    end
+
+    return raw and Column.String.FormatNumber(total) or UI.TextColored(color, Column.String.FormatNumber(total, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Approximates how much damage has been potentially mitigated by the given mitigation type.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param mitigation_type string a trackable from the model.
----@param justify? boolean whether or not to right justify the text
+---@param playerName string
+---@param trackable  DB.Trackable a trackable from the model.
+---@param justify?   boolean      whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Defense.Damage_Mitigation = function(player_name, mitigation_type, justify)
-    local mitigation_proc = DB.Data.Get(player_name, mitigation_type, Column.Metric.HIT_COUNT)
-    local color = Column.String.Color_Zero(mitigation_proc)
-    if mitigation_proc == 0 then return UI.TextColored(color, Column.String.Format_Number(mitigation_proc)) end
+Column.Defense.DamageMitigation = function(playerName, trackable, justify)
+    -- How many times the damage mitigation has proc'd.
+    local procs = DB.Data.Get(playerName, trackable, DB.Metric.HITS_ON_TARGET)
+    local color = Column.String.ColorZero(procs)
 
-    local average_melee = Column.Defense.Average_Damage_By_Type(player_name, Column.Trackable.DEF_UNMITIGATED, false, true)
-    color = Column.String.Color_Zero(average_melee)
-    if average_melee == 0 then return UI.TextColored(color, "...") end
+    if procs == 0 then
+        return UI.TextColored(color, Column.String.FormatNumber(procs))
+    end
 
-    local average_reduced_damage = Column.Defense.Average_Damage_By_Type(player_name, mitigation_type, false, true)
-    if mitigation_type == DB.Enum.Trackable.DEF_COUNTER then average_reduced_damage = 0 end -- Counter reduces damage 100%, but stores counter damage done.
-    local damage_mitigated = mitigation_proc * (average_melee - average_reduced_damage)
-    if damage_mitigated < 0 then damage_mitigated = 0 end
-    color = Column.String.Color_Zero(damage_mitigated)
-    return UI.TextColored(color, Column.String.Format_Number(damage_mitigated, justify))
+    -- What is the average unmitigated melee damage? (We ignore ranged evasions here)
+    local unmitigatedTrackable = DB.Trackable.DEF_UNMITIGATED_MELEE
+
+    if trackable == DB.Trackable.DEF_EVASION_RANGED or trackable == DB.Trackable.DEF_SHADOWS_RANGED then
+        unmitigatedTrackable = DB.Trackable.DEF_UNMITIGATED_RANGED
+    elseif trackable == DB.Trackable.DEF_SHADOWS_MAGIC then
+        unmitigatedTrackable = DB.Trackable.DEF_UNMITIGATED_MAGIC
+    end
+
+    local averageMelee = Column.Defense.AverageDamageByType(playerName, unmitigatedTrackable, false, true)
+    color = Column.String.ColorZero(averageMelee)
+
+    if averageMelee == 0 then
+        return UI.TextColored(color, "...")
+    end
+
+    -- What is the average damage for the trackable?
+    local averageTrackable = Column.Defense.AverageDamageByType(playerName, trackable, false, true)
+
+    -- Counter reduces damage 100%, but stores counter damage done.
+    if trackable == DB.Trackable.MELEE_COUNTER then
+        averageTrackable = 0
+    end
+
+    local damageMitigated = math.max(0, procs * (averageMelee - averageTrackable))
+    color = Column.String.ColorZero(damageMitigated)
+
+    return UI.TextColored(color, Column.String.FormatNumber(damageMitigated, justify))
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Gets the average amount of damage taken per damage type.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param damage_type string a trackable from the model.
----@param justify? boolean whether or not to right justify the text
----@param raw? boolean true: just output the raw value; false: output a column to a table.
+---@param playerName string
+---@param trackable  DB.Trackable a trackable from the model.
+---@param justify?   boolean      whether or not to right justify the text
+---@param raw?       boolean      true: just output the raw value; false: output a column to a table.
 ---@return integer
 ------------------------------------------------------------------------------------------------------
-Column.Defense.Average_Damage_By_Type = function(player_name, damage_type, justify, raw)
-    local count = DB.Data.Get(player_name, damage_type, Column.Metric.HIT_COUNT)
-    local color = Column.String.Color_Zero(count)
+Column.Defense.AverageDamageByType = function(playerName, trackable, justify, raw)
+    local count = DB.Data.Get(playerName, trackable, DB.Metric.HITS_ON_TARGET)
+    local color = Column.String.ColorZero(count)
+
     if count == 0 then
-        if raw then return 0 end
-        return UI.TextColored(color, "...", justify)
+        return raw and 0 or UI.TextColored(color, "...", justify)
     end
 
-    local damage = DB.Data.Get(player_name, damage_type, Column.Metric.TOTAL)
-    color = Column.String.Color_Zero(damage)
-    local average_damage = math.floor(damage / count)
-    if raw then return average_damage end
-    return UI.TextColored(color, Column.String.Format_Percent(damage, count, justify, true))
+    local damage        = DB.Data.Get(playerName, trackable, DB.Metric.TOTAL)
+    local averageDamage = math.floor(damage / count)
+
+    color = Column.String.ColorZero(damage)
+
+    return raw and averageDamage or UI.TextColored(color, Column.String.FormatPercent(damage, count, justify, true))
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Calculates how what the DT% is for a given mitigation type.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param mitigation_type string a trackable from the model.
----@param justify? boolean whether or not to right justify the text
+---@param playerName string
+---@param trackable  DB.Trackable a trackable from the model.
+---@param justify?   boolean      whether or not to right justify the text
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Column.Defense.Damage_Reduction = function(player_name, mitigation_type, justify)
-    local average_melee = Column.Defense.Average_Damage_By_Type(player_name, Column.Trackable.DEF_UNMITIGATED, false, true)
-    local color = Column.String.Color_Zero(average_melee)
-    if average_melee == 0 then return UI.TextColored(color, "...") end
+Column.Defense.DamageReduction = function(playerName, trackable, justify)
+    local averageMelee = Column.Defense.AverageDamageByType(playerName, DB.Trackable.DEF_UNMITIGATED_MELEE, false, true)
+    local color        = Column.String.ColorZero(averageMelee)
 
-    local average_reduced_damage = Column.Defense.Average_Damage_By_Type(player_name, mitigation_type, false, true)
-    color = Column.String.Color_Zero(average_reduced_damage)
+    if averageMelee == 0 then
+        return UI.TextColored(color, "...")
+    end
 
-    return UI.TextColored(color, Column.String.Format_Percent(average_melee - average_reduced_damage, average_melee, justify))
+    local averageReducedDamage = Column.Defense.AverageDamageByType(playerName, trackable, false, true)
+    color = Column.String.ColorZero(averageReducedDamage)
+
+    return UI.TextColored(color, Column.String.FormatPercent(averageMelee - averageReducedDamage, averageMelee, justify))
 end

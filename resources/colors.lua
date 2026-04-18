@@ -1,6 +1,7 @@
-Res.Colors = T{}
+Res.Colors = { }
 
-Res.Colors.Basic = {
+Res.Colors.Basic =
+{
     -- Base Colors
     WHITE    = {1.00, 1.00, 1.00, 1.0},
     RED      = {1.00, 0.00, 0.00, 1.0},
@@ -14,17 +15,18 @@ Res.Colors.Basic = {
     INACTIVE = {0.14, 0.14, 0.14, 1.0},
     MOB      = {0.60, 0.60, 0.60, 1.0},
     -- Elements
-    LIGHT    = {1.0, 1.0, 1.0, 1.0},
-    DARK     = {0.9, 0.0, 1.0, 1.0},
-    FIRE     = {1.0, 0.0, 0.0, 1.0},
-    ICE      = {0.0, 0.7, 1.0, 1.0},
-    WIND     = {0.0, 1.0, 0.0, 1.0},
-    EARTH    = {0.7, 0.5, 0.0, 1.0},
-    THUNDER  = {0.7, 0.2, 1.0, 1.0},
-    WATER    = {0.3, 0.5, 0.8, 1.0},
+    LIGHT    = {1.00, 1.00, 1.00, 1.0},
+    DARK     = {0.90, 0.00, 1.00, 1.0},
+    FIRE     = {0.91, 0.39, 0.40, 1.0},
+    ICE      = {0.00, 0.70, 1.00, 1.0},
+    WIND     = {0.00, 1.00, 0.00, 1.0},
+    EARTH    = {0.70, 0.50, 0.00, 1.0},
+    THUNDER  = {0.70, 0.20, 1.00, 1.0},
+    WATER    = {0.30, 0.50, 0.80, 1.0},
 }
 
-Res.Colors.Elements = {
+Res.Colors.Elements =
+{
     [0] = Res.Colors.Basic.FIRE,
     [1] = Res.Colors.Basic.ICE,
     [2] = Res.Colors.Basic.WIND,
@@ -35,7 +37,8 @@ Res.Colors.Elements = {
     [7] = Res.Colors.Basic.DARK,
 }
 
-Res.Colors.Avatars = {
+Res.Colors.Avatars =
+{
     Carbuncle = Res.Colors.Basic.LIGHT,
     Fenrir    = Res.Colors.Basic.DARK,
     Diabolos  = Res.Colors.Basic.DARK,
@@ -47,7 +50,8 @@ Res.Colors.Avatars = {
     Leviathan = Res.Colors.Basic.WATER,
 }
 
-Res.Colors.Jobs = T{
+Res.Colors.Jobs =
+{
     [0] =  {0.40, 0.40, 0.40, 1.0}, -- NON
     [1] =  {0.90, 0.00, 0.00, 1.0}, -- WAR
     [2] =  {0.96, 0.77, 0.01, 1.0}, -- MNK
@@ -67,13 +71,14 @@ Res.Colors.Jobs = T{
     [16] = {0.30, 0.56, 0.83, 1.0}, -- BLU
     [17] = {0.79, 0.46, 0.34, 1.0}, -- COR
     [18] = {0.51, 0.48, 0.67, 1.0}, -- PUP
-    [19] = {0.00, 0.00, 0.00, 1.0}, -- DNC
-    [20] = {0.00, 0.00, 0.00, 1.0}, -- SCH
-    [21] = {0.00, 0.00, 0.00, 1.0}, -- GEO
-    [22] = {0.00, 0.00, 0.00, 1.0}, -- RUN
+    [19] = {0.98, 0.21, 0.35, 1.0}, -- DNC
+    [20] = {0.80, 0.51, 0.15, 1.0}, -- SCH
+    [21] = {0.99, 0.56, 0.11, 1.0}, -- GEO
+    [22] = {0.79, 0.76, 0.89, 1.0}, -- RUN
 }
 
-Res.Colors.XP = T{
+Res.Colors.XP =
+{
     [1] = {0.83, 0.65, 0.31, 1.0},    -- Experience
     [2] = {0.30, 0.56, 0.83, 1.0},    -- Limit
 }

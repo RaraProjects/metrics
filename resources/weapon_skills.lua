@@ -1,6 +1,7 @@
 -- Automatically generated file: Weapon Skills
 
-return {
+return
+{
     [1] = {id=1,en="Combo",ja="コンボ",element=6,icon_id=590,prefix="/weaponskill",range=2,skill=1,skillchain_a="Impaction",skillchain_b="",skillchain_c="",targets=32},
     [2] = {id=2,en="Shoulder Tackle",ja="タックル",element=4,icon_id=591,prefix="/weaponskill",range=2,skill=1,skillchain_a="Impaction",skillchain_b="Reverberation",skillchain_c="",targets=32},
     [3] = {id=3,en="One Inch Punch",ja="短勁",element=6,icon_id=590,prefix="/weaponskill",range=2,skill=1,skillchain_a="Compression",skillchain_b="",skillchain_c="",targets=32},

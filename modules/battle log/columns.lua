@@ -1,54 +1,61 @@
-Blog.Columns = T{}
+Blog.Columns = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Creates a name string for display in the battle log.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
----@param pet_name string
+---@param playerName string
+---@param petName    string
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Blog.Columns.Name = function(player_name, pet_name)
-    if Metrics.Parse.Hide_Name then player_name = Blog.Columns.Job(player_name) end
-    if pet_name ~= Blog.Enum.Text.NO_PET then
-        local combined_string = player_name .. " (" .. pet_name .. ")"
-        if string.len(combined_string) > Blog.Settings.Truncate_Length then
-            local truncated_pet = Column.String.Truncate(pet_name, Blog.Settings.Pet_Name_Truncate_Length, true)
-            local truncated_player = Column.String.Truncate(player_name, Blog.Settings.Player_Name_Truncate_Length)
-            combined_string = truncated_player .. " (" .. truncated_pet .. ")"
-        end
-        return Column.String.Set_Length(combined_string, Blog.Settings.Truncate_Length)
+Blog.Columns.Name = function(playerName, petName)
+    if Blog.Dependencies.MaskNames() then
+        playerName = Blog.Columns.Job(playerName)
     end
-    player_name = Column.String.Set_Length(player_name, Blog.Settings.Truncate_Length)
-    return player_name
+
+    if petName ~= Blog.Enum.NO_PET then
+        local combinedString = string.format("%s (%s)", playerName, petName)
+
+        if string.len(combinedString) > Blog.Enum.TRUNCATE_TOTAL then
+            local truncatedPet    = Blog.Dependencies.StringTruncate(petName, Blog.Enum.TRUNCATE_PET, true)
+            local truncatedPlayer = Blog.Dependencies.StringTruncate(playerName, Blog.Enum.TRUNCATE_PLAYER)
+            combinedString = string.format("%s (%s)", truncatedPlayer, truncatedPet)
+        end
+
+        return Blog.Dependencies.StringSetLength(combinedString, Blog.Enum.TRUNCATE_TOTAL)
+    end
+
+    playerName = Blog.Dependencies.StringSetLength(playerName, Blog.Enum.TRUNCATE_TOTAL)
+
+    return playerName
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Gets the player's job for name masking.
 -- Don't need the color because it gets saved when the entry is saved.
 ------------------------------------------------------------------------------------------------------
----@param player_name string
+---@param playerName string
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Blog.Columns.Job = function(player_name)
-    local anon_string = "NON0/NON0"
-    local hide_subjob = Metrics.Parse.Hide_Subjob
-    if hide_subjob then anon_string = "NON0" end
-    if not player_name or not Ashita.Party.Jobs[player_name] then return anon_string end
+Blog.Columns.Job = function(playerName)
+    local hideSubjob = Blog.Settings.Hide_Subjobs
+    local playerInfo = Blog.Dependencies.CheckParty(playerName)
 
-    local main = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].main)
-    local main_level = Ashita.Party.Jobs[player_name].main_level
-    if not main then main = Res.Jobs.List[0] end
-    local main_string = string.format("%s%02d", main.ens, main_level)
-
-    local sub_string = ""
-    if not hide_subjob then
-        local sub = Res.Jobs.Get_Job(Ashita.Party.Jobs[player_name].sub)
-        local sub_level = Ashita.Party.Jobs[player_name].sub_level
-        if not sub then sub = Res.Jobs.List[0] end
-        sub_string = "/" .. string.format("%s%02d", sub.ens, sub_level)
+    if not playerName or not playerInfo then
+        return hideSubjob and "NON0" or "NON0/NON0"
     end
 
-    return main_string .. sub_string
+    local mainData   = Blog.Dependencies.JobData(playerInfo.main) or Blog.Dependencies.JobData(0)
+    local mainLevel  = playerInfo.main_level
+    local mainString = string.format("%s%02d", mainData.ens, mainLevel)
+    local subString  = ""
+
+    if not hideSubjob then
+        local subData  = Blog.Dependencies.JobData(playerInfo.sub) or Blog.Dependencies.JobData(0)
+        local subLevel = playerInfo.sub_level
+        subString = string.format("/%s%02d", subData.ens, subLevel)
+    end
+
+    return string.format("%s%s", mainString, subString)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -58,19 +65,17 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Damage = function(damage)
-    return Column.String.Set_Length(damage, Blog.Settings.Damage_Truncate_Length)
+    return Blog.Dependencies.StringSetLength(damage, Blog.Enum.TRUNCATE_DAMAGE)
 end
 
 ------------------------------------------------------------------------------------------------------
 -- Formats the action name.
 ------------------------------------------------------------------------------------------------------
----@param action_name string
+---@param actionName string
 ---@return string
 ------------------------------------------------------------------------------------------------------
-Blog.Columns.Action = function(action_name)
-    action_name = Column.String.Truncate(action_name, Blog.Settings.Action_Truncate_Length)
-    action_name = Column.String.Set_Length(action_name, Blog.Settings.Action_Truncate_Length)
-    return action_name
+Blog.Columns.Action = function(actionName)
+    return Blog.Dependencies.StringTruncate(actionName, Blog.Enum.TRUNCATE_ACTION)
 end
 
 ------------------------------------------------------------------------------------------------------
@@ -80,7 +85,7 @@ end
 ---@return string
 ------------------------------------------------------------------------------------------------------
 Blog.Columns.Notes = function(note)
-    note = Column.String.Truncate(note, Blog.Settings.Action_Truncate_Length)
-    note = Column.String.Set_Length(note, Blog.Settings.Action_Truncate_Length)
+    note = Blog.Dependencies.StringTruncate(note, Blog.Enum.TRUNCATE_ACTION)
+    note = Blog.Dependencies.StringSetLength(note, Blog.Enum.TRUNCATE_ACTION)
     return note
 end

@@ -1,20 +1,23 @@
-H.Death = {}
+H.Death = { }
 
 ------------------------------------------------------------------------------------------------------
 -- Parse the player death message.
 ------------------------------------------------------------------------------------------------------
----@param actor_mob table mob id of the entity performing the action
----@param target_mob table mob id of the entity receiving the action (this is the person dying)
+---@param actorMob  table mob id of the entity performing the action
+---@param targetMob table mob id of the entity receiving the action (this is the person dying)
 ------------------------------------------------------------------------------------------------------
-H.Death.Action = function(actor_mob, target_mob)
-    if not actor_mob or not target_mob then return nil end
+H.Death.Action = function(actorMob, targetMob)
+    if not actorMob or not targetMob then
+        return nil
+    end
 
-    local audits = {
-        player_name = target_mob.name,
-        target_name = actor_mob.name,
+    local audits =
+    {
+        player_name = targetMob.name,
+        target_name = actorMob.name,
     }
 
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEATH, H.Metric.COUNT)
-    DB.Data.Update(H.Mode.INC, 1, audits, H.Trackable.DEATH, H.Metric.TOTAL)
-    Blog.Add(target_mob.name, nil, Blog.Enum.Types.DEATH, Blog.Enum.Text.PLAYER_DEATH, nil, actor_mob.name, DB.Enum.Trackable.DEATH)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEATH, DB.Metric.ATTEMPTS_ON_USE)
+    DB.Data.Update(DB.UpdateMode.INC, 1, audits, DB.Trackable.DEATH, DB.Metric.TOTAL)
+    Blog.Add(targetMob.name, nil, Blog.ActionType.PLAYER_DEATH, Blog.Enum.PLAYER_DEATH, nil, actorMob.name)
 end

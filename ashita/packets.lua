@@ -1,7 +1,7 @@
-local parser = require('packets._parser') -- from atom0s
+local parser  = require('packets._parser') -- from atom0s
 local breader = require('packets._bitreader') -- from atom0s
 
-Ashita.Packets = T{}
+Ashita.Packets = { }
 
 -- ------------------------------------------------------------------------------------------------------
 -- Wintersolstice converted the the action packet 0x0028 to the Windower version.
@@ -13,69 +13,69 @@ Ashita.Packets = T{}
 ---@param data table parsed packet data
 ---@return nil
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Packets.Build_Action = function (data)
-	local parsed_packet = parser.parse(data)
-	local act = {}
+Ashita.Packets.BuildAction = function (data)
+	local parsedPacket = parser.parse(data)
+	local act = { }
 
 	-- Junk packet from server. Ignore it.
-	if parsed_packet.trg_sum == 0 then
+	if parsedPacket.trg_sum == 0 then
 		return nil
 	end
 
-	act.actor_id     = parsed_packet.m_uID
-	act.category     = parsed_packet.cmd_no
-	act.param        = parsed_packet.cmd_arg
-	act.target_count = parsed_packet.trg_sum
+	act.actor_id     = parsedPacket.m_uID
+	act.category     = parsedPacket.cmd_no
+	act.param        = parsedPacket.cmd_arg
+	act.target_count = parsedPacket.trg_sum
 	act.unknown      = 0
-	act.recast       = parsed_packet.info
-	act.targets      = {}
+	act.recast       = parsedPacket.info
+	act.targets      = { }
 
-	for _, v in ipairs(parsed_packet.target) do
-		local target = {}
+	for _, v in ipairs(parsedPacket.target) do
+		local target = { }
 
 		target.id           = v.m_uID
 		target.action_count = v.result_sum
-		target.actions      = {}
+		target.actions      = { }
 		for _, action in ipairs (v.result) do
-			local new_action = {}
+			local newAction = { }
 
-			new_action.reaction  = action.miss -- These values are different compared to windower, so the code outside of this function was adjusted.
-			new_action.animation = action.sub_kind
-			new_action.effect    = action.info
-			new_action.stagger   = action.scale
-			new_action.param     = action.value
-			new_action.message   = action.message
-			new_action.unknown   = action.bit
+			newAction.reaction  = action.miss -- These values are different compared to windower, so the code outside of this function was adjusted.
+			newAction.animation = action.sub_kind
+			newAction.effect    = action.info
+			newAction.stagger   = action.scale
+			newAction.param     = action.value
+			newAction.message   = action.message
+			newAction.unknown   = action.bit
 
 			if action.has_proc then
-				new_action.has_add_effect       = true
-				new_action.add_effect_animation = action.proc_kind
-				new_action.add_effect_effect    = action.proc_info
-				new_action.add_effect_param     = action.proc_value
-				new_action.add_effect_message   = action.proc_message
+				newAction.has_add_effect       = true
+				newAction.add_effect_animation = action.proc_kind
+				newAction.add_effect_effect    = action.proc_info
+				newAction.add_effect_param     = action.proc_value
+				newAction.add_effect_message   = action.proc_message
 			else
-				new_action.has_add_effect       = false
-				new_action.add_effect_animation = 0
-				new_action.add_effect_effect    = 0
-				new_action.add_effect_param     = 0
-				new_action.add_effect_message   = 0
+				newAction.has_add_effect       = false
+				newAction.add_effect_animation = 0
+				newAction.add_effect_effect    = 0
+				newAction.add_effect_param     = 0
+				newAction.add_effect_message   = 0
 			end
 
 			if action.has_react then
-				new_action.has_spike_effect       = true
-				new_action.spike_effect_animation = action.react_kind
-				new_action.spike_effect_effect    = action.react_info
-				new_action.spike_effect_param     = action.react_value
-				new_action.spike_effect_message   = action.react_message
-			else 
-				new_action.has_spike_effect       = false
-				new_action.spike_effect_animation = 0
-				new_action.spike_effect_effect    = 0
-				new_action.spike_effect_param     = 0
-				new_action.spike_effect_message   = 0
+				newAction.has_spike_effect       = true
+				newAction.spike_effect_animation = action.react_kind
+				newAction.spike_effect_effect    = action.react_info
+				newAction.spike_effect_param     = action.react_value
+				newAction.spike_effect_message   = action.react_message
+			else
+				newAction.has_spike_effect       = false
+				newAction.spike_effect_animation = 0
+				newAction.spike_effect_effect    = 0
+				newAction.spike_effect_param     = 0
+				newAction.spike_effect_message   = 0
 			end
 
-			table.insert(target.actions, new_action)
+			table.insert(target.actions, newAction)
 		end
 
 		table.insert(act.targets, target)
@@ -90,20 +90,22 @@ end
 ---@param data table parsed packet data
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Packets.Build_Message = function(data)
+Ashita.Packets.BuildMessage = function(data)
     local reader = breader:new()
     reader:set_data(data)
     reader:set_pos(4)
-    local parsed_data = {}
-    parsed_data.actor = reader:read(32)
-    parsed_data.target = reader:read(32)
-    parsed_data.param1 = reader:read(32)
-    parsed_data.param2 = reader:read(32)
-    parsed_data.actor_index = reader:read(16)
-    parsed_data.target_index = reader:read(16)
-    parsed_data.message = reader:read(16)
-    parsed_data.unknown = reader:read(16)
-    return parsed_data
+
+    local parsedData = { }
+    parsedData.actor        = reader:read(32)
+    parsedData.target       = reader:read(32)
+    parsedData.param1       = reader:read(32)
+    parsedData.param2       = reader:read(32)
+    parsedData.actor_index  = reader:read(16)
+    parsedData.target_index = reader:read(16)
+    parsedData.message      = reader:read(16)
+    parsedData.unknown      = reader:read(16)
+
+    return parsedData
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -116,16 +118,138 @@ Ashita.Packets.EXP = function(data)
 	local reader = breader:new()
     reader:set_data(data)
     reader:set_pos(4)
-	local parsed_data = T{}
-	parsed_data.player = reader:read(32)
-	parsed_data.target = reader:read(32)
-	parsed_data.player_index = reader:read(16)
-    parsed_data.target_index = reader:read(16)
-	parsed_data.xp_amount = reader:read(32)		-- Amount of XP or limit points.
-    parsed_data.chain_count = reader:read(32)	-- Current chain.
-	parsed_data.message_id = reader:read(16)	-- Determines if on a chain and if limit or exp.
-	parsed_data.unknown = reader:read(16)
-	return parsed_data
+
+	local parsedData = { }
+	parsedData.player       = reader:read(32)
+	parsedData.target       = reader:read(32)
+	parsedData.player_index = reader:read(16)
+    parsedData.target_index = reader:read(16)
+	parsedData.xp_amount    = reader:read(32)	-- Amount of XP or limit points.
+    parsedData.chain_count  = reader:read(32)	-- Current chain.
+	parsedData.message_id   = reader:read(16)	-- Determines if on a chain and if limit or exp.
+	parsedData.unknown      = reader:read(16)
+
+	return parsedData
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Handles parsing the capacity and limit points packet 0x063.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.CapacityAndLimitUpdate = function(data)
+	local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+
+	local parsedData = { }
+	parsedData.order = reader:read(16)
+
+	-- Limit Points
+	if parsedData.order == 2 then
+		parsedData.unknown                    = reader:read(16)
+		parsedData.limit_points_into_level    = reader:read(16)
+		parsedData.current_merit_points       = reader:read(7)
+		parsedData.assimilation               = reader:read(6)
+		parsedData.limit_breakder             = reader:read(1)
+		parsedData.exp_capped                 = reader:read(1)
+		parsedData.limit_point_mode           = reader:read(1)
+		parsedData.max_merit_points_aquirable = reader:read(8)
+
+	-- Capacity Points
+	elseif parsedData.order == 5 then
+		local jobId = Ashita.Player.MainJobID()
+		if not jobId then
+			jobId = 1
+		end
+
+		-- Skip the initial junk packets.
+		reader:read(16 * 6)
+
+		-- Jump to the specific job data.
+		reader:read((jobId - 1) * (16 * 3))
+
+		parsedData.capacity_points_into_level = reader:read(16) or 0
+		parsedData.current_job_points         = reader:read(16) or 0
+		parsedData.spent_job_points           = reader:read(16) or 0
+	end
+
+	return parsedData
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Handles parsing the stat update packet 0x061.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.StatUpdate = function(data)
+    local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+
+	local parsedData = { }
+	parsedData.max_hp                     = reader:read(32)
+	parsedData.max_mp                     = reader:read(32)
+	parsedData.main_job                   = reader:read(8)
+	parsedData.main_job_level             = reader:read(8)
+	parsedData.sub_job                    = reader:read(8)
+	parsedData.sub_job_level              = reader:read(8)
+	parsedData.current_exp                = reader:read(16)
+	parsedData.required_exp               = reader:read(16)
+	parsedData.base_str                   = reader:read(16)
+	parsedData.base_dex                   = reader:read(16)
+	parsedData.base_vit                   = reader:read(16)
+	parsedData.base_agi                   = reader:read(16)
+	parsedData.base_int                   = reader:read(16)
+	parsedData.base_mnd                   = reader:read(16)
+	parsedData.base_chr                   = reader:read(16)
+	parsedData.added_str                  = reader:read(16)
+	parsedData.added_dex                  = reader:read(16)
+	parsedData.added_vit                  = reader:read(16)
+	parsedData.added_agi                  = reader:read(16)
+	parsedData.added_int                  = reader:read(16)
+	parsedData.added_mnd                  = reader:read(16)
+	parsedData.added_chr                  = reader:read(16)
+	parsedData.attack                     = reader:read(16)
+	parsedData.defense                    = reader:read(16)
+	parsedData.fire_resist                = reader:read(16)
+	parsedData.wind_resist                = reader:read(16)
+	parsedData.lighting_resist            = reader:read(16)
+	parsedData.light_resist               = reader:read(16)
+	parsedData.ice_resist                 = reader:read(16)
+	parsedData.earth_resist               = reader:read(16)
+	parsedData.water_resist               = reader:read(16)
+	parsedData.dark_resist                = reader:read(16)
+	parsedData.title                      = reader:read(16)
+	parsedData.nation_rank                = reader:read(16)
+	parsedData.rank_points                = reader:read(16)
+	parsedData.home_point                 = reader:read(16)
+	parsedData.unknown1                   = reader:read(16)
+	parsedData.unknown2                   = reader:read(16)
+	parsedData.nation                     = reader:read(8)
+	parsedData.unknown3                   = reader:read(8)
+	parsedData.su_level                   = reader:read(8)
+	parsedData.unknown4                   = reader:read(8)
+	parsedData.max_ilevel                 = reader:read(8)
+	parsedData.ilevel_over_99             = reader:read(8)
+	parsedData.main_hand_ilevel           = reader:read(8)
+	parsedData.unknown5                   = reader:read(8)
+	parsedData.unity_id                   = reader:read(5)
+	parsedData.unity_rank                 = reader:read(5)
+	parsedData.unity_points               = reader:read(17)
+	parsedData.unknown6                   = reader:read(5)
+	parsedData.junk1                      = reader:read(32)
+	parsedData.junk2                      = reader:read(32)
+	parsedData.unknown7                   = reader:read(8)
+	parsedData.master_level               = reader:read(8)
+	parsedData.master_breaker             = reader:read(1)
+	parsedData.junk3                      = reader:read(15)
+	parsedData.exemplar_points_into_level = reader:read(32)
+	parsedData.exemplar_level_max         = reader:read(32)
+
+	return parsedData
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -134,39 +258,117 @@ end
 ---@param data table parsed packet data
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Packets.Character_Update = function(data)
+Ashita.Packets.CharacterUpdate = function(data)
 	local reader = breader:new()
     reader:set_data(data)
     reader:set_pos(4)
-	local parsed_data = T{}
-	parsed_data.ID    = reader:read(32)
-	parsed_data.HP    = reader:read(32)
-	parsed_data.MP    = reader:read(32)
-	parsed_data.TP    = reader:read(32)
-	parsed_data.Index = reader:read(16)
-	parsed_data.HPP   = reader:read(16)
-	parsed_data.MPP   = reader:read(16)
-	parsed_data.Unk1  = reader:read(16)
-	parsed_data.Unk2  = reader:read(16)
-	parsed_data.Mon_Species = reader:read(16)
-	parsed_data.Mon_Name1   = reader:read(8)
-	parsed_data.Mon_Name2   = reader:read(8)
-	parsed_data.Main_Job = reader:read(8)
-	parsed_data.Main_Lvl = reader:read(8)
-	parsed_data.Sub_Job  = reader:read(8)
-	parsed_data.Sub_Lvl  = reader:read(8)
-	return parsed_data
+
+	local parsedData = { }
+	parsedData.ID          = reader:read(32)
+	parsedData.HP          = reader:read(32)
+	parsedData.MP          = reader:read(32)
+	parsedData.TP          = reader:read(32)
+	parsedData.Index       = reader:read(16)
+	parsedData.HPP         = reader:read(16)
+	parsedData.MPP         = reader:read(16)
+	parsedData.Unk1        = reader:read(16)
+	parsedData.Unk2        = reader:read(16)
+	parsedData.Mon_Species = reader:read(16)
+	parsedData.Mon_Name1   = reader:read(8)
+	parsedData.Mon_Name2   = reader:read(8)
+	parsedData.Main_Job    = reader:read(8)
+	parsedData.Main_Lvl    = reader:read(8)
+	parsedData.Sub_Job     = reader:read(8)
+	parsedData.Sub_Lvl     = reader:read(8)
+
+	return parsedData
 end
 
 -- ------------------------------------------------------------------------------------------------------
--- NOT IMPLEMENTED
--- Handles parsing messages out of incoming packet 0x029.
+-- Handles parsing special messages out of incoming packet 0x02A.
 -- ------------------------------------------------------------------------------------------------------
 ---@param data table parsed packet data
 ---@return table
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Packets.Item_Message = function(data)
-    return {}
+Ashita.Packets.SpecialMessage = function(data)
+	local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+
+	local parsedData = { }
+	parsedData.Player       = reader:read(32)
+	parsedData.Param1       = reader:read(32)
+	parsedData.Param2       = reader:read(32)
+	parsedData.Param3       = reader:read(32)
+	parsedData.Param4       = reader:read(32)
+	parsedData.Player_Index = reader:read(16)
+	parsedData.Message_ID   = reader:read(16)
+	parsedData.Unknown      = reader:read(32)
+
+	return parsedData
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Handles parsing messages out of incoming packet 0x0D2.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.ItemDrop = function(data)
+	local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+
+	local parsedData = { }
+	parsedData.Unknown1      = reader:read(32)
+	parsedData.Dropper       = reader:read(32)
+	parsedData.Count         = reader:read(32)
+	parsedData.Item          = reader:read(16)
+	parsedData.Dropper_Index = reader:read(16)
+	parsedData.Index         = reader:read(8)
+	parsedData.Old           = reader:read(8)
+	parsedData.Unknown2      = reader:read(8)
+	parsedData.Unknown3      = reader:read(8)
+	parsedData.Timestamp     = reader:read(32)
+
+	return parsedData
+end
+
+-- ------------------------------------------------------------------------------------------------------
+-- Handles parsing messages out of incoming packet 0x0D3.
+-- ------------------------------------------------------------------------------------------------------
+---@param data table parsed packet data
+---@return table
+-- ------------------------------------------------------------------------------------------------------
+Ashita.Packets.ItemAction = function(data)
+	local reader = breader:new()
+    reader:set_data(data)
+    reader:set_pos(4)
+
+	local parsedData = { }
+	parsedData.Highest_Lotter       = reader:read(32)
+	parsedData.Current_Lotter       = reader:read(32)
+	parsedData.Highest_Lotter_Index = reader:read(16)
+	parsedData.Highest_Lot          = reader:read(16)
+	parsedData.Current_Lotter_Index = reader:read(15)
+	parsedData.Unknown              = reader:read(1)
+	parsedData.Current_Lot          = reader:read(16)
+	parsedData.Index                = reader:read(8)
+	parsedData.Drop                 = reader:read(8)
+
+	local highestLotter = ""
+	for x = 1, 16 do
+		highestLotter = highestLotter .. string.char(reader:read(8))
+	end
+	parsedData.Highest_Lotter_Name  = highestLotter
+
+	local currentLotter = ""
+	for x = 1, 16 do
+		currentLotter = currentLotter .. string.char(reader:read(8))
+	end
+	parsedData.Current_Lotter_Name  = currentLotter
+
+	return parsedData
 end
 
 -- ------------------------------------------------------------------------------------------------------
@@ -176,14 +378,13 @@ end
 ---@param action table
 ---@return table|nil
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Packets.Get_Action_Target = function(action)
-	for target_index, target_value in pairs(action.targets) do
-		for action_index, _ in pairs(target_value.actions) do
-			local result = action.targets[target_index].actions[action_index]
-			local target_mob = Ashita.Mob.Get_Mob_By_ID(action.targets[target_index].id)
-            return target_mob
+Ashita.Packets.GetActionTarget = function(action)
+	for _, target in pairs(action.targets) do
+		for _, _ in pairs(target.actions) do
+			return Ashita.Mob.GetMobByID(target.id)
 		end
 	end
+
 	return nil
 end
 
@@ -195,21 +396,21 @@ end
 ---@param packet table
 ---@return boolean
 -- ------------------------------------------------------------------------------------------------------
-Ashita.Packets.Is_Duplicate = function(packet)
+Ashita.Packets.IsDuplicate = function(packet)
 	--Check if new chunk..
     if (FFI.C.memcmp(packet.data_raw, packet.chunk_data_raw, packet.size) == 0) then
-        Last_Chunk_Buffer = Current_Chunk_Buffer
-        Current_Chunk_Buffer = T{}
+        LastChunkBuffer = CurrentChunkBuffer
+        CurrentChunkBuffer = T{}
     end
 
     --Add packet to current chunk's buffer..
-    local pointer = FFI.cast('uint8_t*', packet.data_raw)
-    local new_packet = FFI.new('uint8_t[?]', 512)
-    FFI.copy(new_packet, pointer, packet.size)
-    Current_Chunk_Buffer:append(new_packet)
+    local pointer   = FFI.cast('uint8_t*', packet.data_raw)
+    local newPacket = FFI.new('uint8_t[?]', 512)
+    FFI.copy(newPacket, pointer, packet.size)
+    CurrentChunkBuffer:append(newPacket)
 
     --Check if last chunk contained this packet..
-    for _, p in ipairs(Last_Chunk_Buffer) do
+    for _, p in ipairs(LastChunkBuffer) do
         if (FFI.C.memcmp(p, pointer, packet.size) == 0) then return true end
     end
 

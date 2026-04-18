@@ -1,26 +1,23 @@
-Column = T{}
+Column = { }
 
-Column.Flags = T{
-    None = bit.bor(ImGuiTableColumnFlags_None),
+Column.Flags =
+{
+    None       = bit.bor(ImGuiTableColumnFlags_None),
     Expandable = bit.bor(ImGuiTableColumnFlags_WidthStretch),
 }
 
-Column.Widths = T{
-    Name = 150,
-    Parse = 60,
-    Percent = 60,
-    Single = 40,
+Column.Widths =
+{
+    Name     = 150,
+    Parse    = 60,
+    Percent  = 60,
+    Single   = 40,
     Standard = 75,
     Settings = 175,
-    Report = 110,
-    Catalog = 65,
+    Report   = 110,
+    Catalog  = 65,
 }
 
-Column.Mode = DB.Enum.Mode
-Column.Trackable = DB.Enum.Trackable
-Column.Metric = DB.Enum.Metric
-
--- Load dependencies
 require("columns.string")
 require("columns.damage")
 require("columns.attack_speed")
@@ -32,3 +29,43 @@ require("columns.spell")
 require("columns.catalog")
 require("columns.util")
 require("columns.general")
+
+Column.Output = { }
+
+------------------------------------------------------------------------------------------------------
+-- Grabs an entities accuracy for a specific trackable.
+-- Accuracy can be broken up into type--like melee and ranged--or melee and ranged combined.
+------------------------------------------------------------------------------------------------------
+---@param value    integer
+---@param color    table
+---@param justify? boolean whether or not to right justify the text
+---@param raw?     boolean true: just output the raw value; false: output a column to a table.
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Output.Number = function(value, color, justify, raw)
+    if raw then
+        return Column.String.FormatNumber(value)
+    end
+
+    return UI.TextColored(color, Column.String.FormatNumber(value, justify))
+end
+
+------------------------------------------------------------------------------------------------------
+-- Grabs an entities accuracy for a specific trackable.
+-- Accuracy can be broken up into type--like melee and ranged--or melee and ranged combined.
+------------------------------------------------------------------------------------------------------
+---@param numerator   integer
+---@param denominator integer
+---@param color       table
+---@param noScaling?  boolean
+---@param justify?    boolean whether or not to right justify the text
+---@param raw?        boolean true: just output the raw value; false: output a column to a table.
+---@return string
+------------------------------------------------------------------------------------------------------
+Column.Output.Percent = function(numerator, denominator, color, noScaling, justify, raw)
+    if raw then
+        return Column.String.FormatPercent(numerator, denominator, justify, noScaling)
+    end
+
+    return UI.TextColored(color, Column.String.FormatPercent(numerator, denominator, justify, noScaling))
+end

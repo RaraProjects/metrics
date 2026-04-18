@@ -1,130 +1,185 @@
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Database settings.
 ------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.DATABASE, "settings_update", function(settings)
+SettingsFile.register(Config.ModuleFile.DATABASE, 'settings_update', function(settings)
     if settings ~= nil then
         Metrics.Model = settings
-        Settings_File.save(Config.Enum.File.DATABASE)
+        SettingsFile.save(Config.ModuleFile.DATABASE)
     end
 end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Parse settings.
 ------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.PARSE, "settings_update", function(settings)
+SettingsFile.register(Parse.File, 'settings_update', function(settings)
     if settings ~= nil then
-        Metrics.Parse = settings
-        Parse.Util.Calculate_Column_Flags()
-        Settings_File.save(Config.Enum.File.PARSE)
+        Parse.Initialize(settings)
+        SettingsFile.save(Parse.File)
     end
 end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Focus settings.
 ------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.FOCUS, "settings_update", function(settings)
+SettingsFile.register(Focus.File, 'settings_update', function(settings)
     if settings ~= nil then
-        Metrics.Focus = settings
-        Settings_File.save(Config.Enum.File.FOCUS)
+        Focus.Initialize(settings)
+        SettingsFile.save(Focus.File)
     end
 end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Battle Log settings.
 ------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.BLOG, "settings_update", function(settings)
+SettingsFile.register(Blog.File, 'settings_update', function(settings)
     if settings ~= nil then
-        Metrics.Blog = settings
-        Settings_File.save(Config.Enum.File.BLOG)
+        Blog.Initialize(settings)
+        SettingsFile.save(Blog.File)
     end
 end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Window settings.
 ------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.WINDOW, "settings_update", function(settings)
+SettingsFile.register(Config.ModuleFile.WINDOW, 'settings_update', function(settings)
     if settings ~= nil then
-        Metrics.Window = settings
-        Window_Manager.Theme.Is_Set = false
-        Window_Manager.Settings_Reset()
-        Settings_File.save(Config.Enum.File.WINDOW)
+        WindowManager.UpdateSettingsFromLoad(settings)
+        WindowManager.ResetTheme()
+        WindowManager.SettingsReset()
+        SettingsFile.save(Config.ModuleFile.WINDOW)
     end
 end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific EXP settings.
 ------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.EXP, "settings_update", function(settings)
+SettingsFile.register(XP.File, 'settings_update', function(settings)
     if settings ~= nil then
-        Metrics.XP = settings
-        XP.Is_Initialized = false
-        Settings_File.save(Config.Enum.File.EXP)
+        XP.Initialize(settings)
+        XP.IsInitialized = false
+        SettingsFile.save(XP.File)
+    end
+end)
+
+------------------------------------------------------------------------------------------------------
+-- Check for character switches. Reloads character specific Loot settings.
+------------------------------------------------------------------------------------------------------
+SettingsFile.register(Loot.File, 'settings_update', function(settings)
+    if settings ~= nil then
+        Loot.Initialize(settings)
+        SettingsFile.save(Loot.File)
     end
 end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Report settings.
 ------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.REPORT, "settings_update", function(settings)
+SettingsFile.register(Report.File, 'settings_update', function(settings)
     if settings ~= nil then
-        Metrics.Report = settings
-        Settings_File.save(Config.Enum.File.REPORT)
+        Report.Initialize(settings)
+        SettingsFile.save(Report.File)
     end
 end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Overview settings.
 ------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.OVERVIEW, "settings_update", function(settings)
+SettingsFile.register(Overview.File, 'settings_update', function(settings)
     if settings ~= nil then
-        Metrics.Overview = settings
-        Settings_File.save(Config.Enum.File.OVERVIEW)
+        Overview.Initialize(settings)
+        SettingsFile.save(Overview.File)
     end
 end)
 
 ------------------------------------------------------------------------------------------------------
 -- Check for character switches. Reloads character specific Hub settings.
 ------------------------------------------------------------------------------------------------------
-Settings_File.register(Config.Enum.File.HUB, "settings_update", function(settings)
+SettingsFile.register(Hub.File, 'settings_update', function(settings)
     if settings ~= nil then
-        Metrics.Hub = settings
-        Settings_File.save(Config.Enum.File.HUB)
+        Hub.Initialize(settings)
+        SettingsFile.save(Hub.File)
     end
 end)
+
+------------------------------------------------------------------------------------------------------
+-- Initialize spell trackable index for performance.
+------------------------------------------------------------------------------------------------------
+local InitializeSpellResources = function()
+    -- Index spells once for performance.
+    local spellTrackables =
+    {
+        [Res.Spells.MpDrain]       = DB.Trackable.SPELLS_MP_DRAIN,
+        [Res.Spells.TpDrain]       = DB.Trackable.SPELLS_TP_DRAIN,
+        [Res.Spells.Enspell]       = DB.Trackable.MELEE_ENSPELL,
+        [Res.Spells.Spikes]        = DB.Trackable.SPELLS_SPIKE_DAMAGE,
+        [Res.Spells.Healing]       = DB.Trackable.SPELLS_HEALING,
+        [Res.Spells.DebuffRemoval] = DB.Trackable.SPELLS_DEBUFF_REMOVAL,
+        [Res.Spells.Buffs]         = DB.Trackable.SPELLS_BUFFS,
+        [Res.Spells.Enfeebling]    = DB.Trackable.SPELLS_ENFEEBLING,
+        [Res.Spells.DoT]           = DB.Trackable.SPELLS_DOT,
+        [Res.Spells.BuffSongs]     = DB.Trackable.SPELLS_BUFF_SONG,
+        [Res.Spells.Damaging]      = DB.Trackable.SPELLS_NUKING,
+    }
+
+    for list, trackable in pairs(spellTrackables) do
+        Res.Spells.MapSpellId(list, trackable)
+    end
+
+    Res.Spells.PetTrackableOverride =
+    {
+        [DB.Trackable.SPELLS_HEALING]    = DB.Trackable.PET_HEALING,
+        [DB.Trackable.SPELLS_BUFFS]      = DB.Trackable.PET_SPELL_BUFFS,
+        [DB.Trackable.SPELLS_ENFEEBLING] = DB.Trackable.PET_ENFEEBLING,
+        [DB.Trackable.SPELLS_DOT]        = DB.Trackable.PET_DOT,
+        [DB.Trackable.SPELLS_NUKING]     = DB.Trackable.PET_NUKING,
+    }
+end
 
 ------------------------------------------------------------------------------------------------------
 -- Load settings when the addon is loaded.
 ------------------------------------------------------------------------------------------------------
 ashita.events.register('load', 'load_cb', function()
     Metrics = T{
-        Model    = Settings_File.load(DB.Defaults,                    Config.Enum.File.DATABASE),
-        Window   = Settings_File.load(Window_Manager.Config.Defaults, Config.Enum.File.WINDOW),
-        Parse    = Settings_File.load(Parse.Config.Defaults,          Config.Enum.File.PARSE),
-        Focus    = Settings_File.load(Focus.Config.Defaults,          Config.Enum.File.FOCUS),
-        Blog     = Settings_File.load(Blog.Config.Defaults,           Config.Enum.File.BLOG),
-        XP       = Settings_File.load(XP.Config.Defaults,             Config.Enum.File.EXP),
-        Report   = Settings_File.load(Report.Config.Defaults,         Config.Enum.File.REPORT),
-        Overview = Settings_File.load(Overview.Config.Defaults,       Config.Enum.File.OVERVIEW),
-        Hub      = Settings_File.load(Hub.Config.Defaults,            Config.Enum.File.HUB),
-        Config   = Settings_File.load(Config.Defaults,                Config.Enum.File.CONFIG),
+        Model  = SettingsFile.load(DB.Defaults, Config.ModuleFile.DATABASE),
     }
-    Metrics.Debug = T{}
-    Metrics.Debug.Visible = {false}
 
-    -- Initialize Modules
-    DB.Initialize()
-    Parse.Initialize()
-    Ashita.Party.Need_Refresh = true
-    Window_Manager.Show_Mouse_Refresh = true
-    XP.Window.Set_Background(Metrics.XP.Show_Background)
+    Metrics.Debug = { }
+    Metrics.Debug.Visible = { false }
+
+    -- Initialize modules. Even though a settings update will occur after this, the initialization needs
+    -- to happen here to avoid running into nil settings tables in the Ashita settings cache.
+    local modules =
+    {
+        XP,
+        Hub,
+        Blog,
+        Loot,
+        Parse,
+        Focus,
+        Config,
+        Report,
+        Overview,
+        DB,
+        WindowManager,
+    }
+
+    for _, module in ipairs(modules) do
+        module.Initialize()
+    end
+
+    Ashita.Party.NeedRefresh = true
 
     -- Start the clock.
-    Timers.Start(Timers.Enum.Names.METRICS)
-    Timers.Start(Timers.Enum.Names.PARSE)
-    Timers.Start(Timers.Enum.Names.AUTOPAUSE)
-    Timers.Start(Timers.Enum.Names.DPS)
-    Timers.Start(Timers.Enum.Names.EXP)
-    Timers.Start(Timers.Enum.Names.ZONE)
+    Timers.Start(Timers.Types.METRICS)
+    Timers.Start(Timers.Types.PARSE)
+    Timers.Start(Timers.Types.AUTOPAUSE)
+    Timers.Start(Timers.Types.DPS)
+    Timers.Start(Timers.Types.ZONE)
+
+    InitializeSpellResources()
+
+    DB.Data.BindGlobals()
+    DB.Catalog.BindGlobals()
 
     _Globals.Initialized = true
 end)
@@ -132,21 +187,22 @@ end)
 ------------------------------------------------------------------------------------------------------
 -- Save settings when the addon is unloaded.
 ------------------------------------------------------------------------------------------------------
-ashita.events.register('unload', 'unload_cb', function ()
-    Settings_File.save(Config.Enum.File.DATABASE)
-    Settings_File.save(Config.Enum.File.PARSE)
-    Settings_File.save(Config.Enum.File.FOCUS)
-    Settings_File.save(Config.Enum.File.BLOG)
-    Settings_File.save(Config.Enum.File.EXP)
-    Settings_File.save(Config.Enum.File.WINDOW)
-    Settings_File.save(Config.Enum.File.REPORT)
-    Settings_File.save(Config.Enum.File.OVERVIEW)
-    Settings_File.save(Config.Enum.File.HUB)
-    Settings_File.save(Config.Enum.File.CONFIG)
+ashita.events.register('unload', 'unload_cb', function()
+    SettingsFile.save(Config.ModuleFile.DATABASE)
+    SettingsFile.save(Parse.File)
+    SettingsFile.save(Focus.File)
+    SettingsFile.save(Blog.File)
+    SettingsFile.save(XP.File)
+    SettingsFile.save(Loot.File)
+    SettingsFile.save(Config.ModuleFile.WINDOW)
+    SettingsFile.save(Report.File)
+    SettingsFile.save(Overview.File)
+    SettingsFile.save(Hub.File)
+    SettingsFile.save(Config.File)
 
-    if Metrics.Report.Auto_Save then
-        File.Save_Data()
-        File.Save_Catalog()
-        File.Save_Battlelog()
+    if Report.Settings.Auto_Save then
+        File.SaveData()
+        File.SaveBattlelog()
+        File.SaveLoot()
     end
 end)
