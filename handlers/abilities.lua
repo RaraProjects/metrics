@@ -118,7 +118,7 @@ H.Ability.Parse = function(abilityId, abilityData, actionData, actorMob, targetN
                     tostring(abilityName), tostring(abilityId), tostring(messageId), tostring(damage))
     Debug.Error.Add(Debug.Error.WARNING, tag, warning)
 
-    -- Blood pacts and wyvern breaths
+    -- Blood pacts and wyvern breaths.
     if ownerMob then
         abilityName = Horizon.GetAbilityName(abilityId, abilityName)
 

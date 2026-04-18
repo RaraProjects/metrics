@@ -181,12 +181,6 @@ end
 ---@param abilityID integer
 ------------------------------------------------------------------------------------------------------
 Horizon.RageList = function(abilityID)
-    if isActive() then
-        local horizonID = horizonMap.Rage[abilityID]
-
-        return horizonID and Res.Pets.BloodPactRageHorizon[horizonID]
-    end
-
     return Res.Pets.BloodPactRage[abilityID]
 end
 
@@ -196,12 +190,6 @@ end
 ---@param abilityID integer
 ------------------------------------------------------------------------------------------------------
 Horizon.WardList = function(abilityID)
-    if isActive() then
-        local horizonID = horizonMap.Ward[abilityID]
-
-        return horizonID and Res.Pets.BloodPactWardHorizon[horizonID]
-    end
-
     return Res.Pets.BloodPactWard[abilityID]
 end
 
@@ -212,11 +200,5 @@ end
 ---@param abilityID integer
 ------------------------------------------------------------------------------------------------------
 Horizon.HealingList = function(abilityID)
-    if isActive() then
-        local horizonID = horizonMap.Healing[abilityID]
-
-        return horizonID and Res.Pets.HealingHorizon[horizonID]
-    end
-
     return Res.Pets.Healing[abilityID]
 end
