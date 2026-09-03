@@ -199,6 +199,7 @@ Parse.Config.ColumnGroupButtons = function(columns, groupName)
     if UI.SmallButton('All') then
         Parse.Config.SetColumnGroup(columns, true)
     end
+    UI.PopID()
 
     UI.SameLine() UI.Text(' ') UI.SameLine()
 
@@ -206,6 +207,7 @@ Parse.Config.ColumnGroupButtons = function(columns, groupName)
     if UI.SmallButton('None') then
         Parse.Config.SetColumnGroup(columns, false)
     end
+    UI.PopID()
 
     UI.SameLine() UI.Text(string.format(' %s', tostring(groupName)))
 end
