@@ -27,7 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 addon.author  = 'Metra'
 addon.name    = 'Metrics'
-addon.version = '2026-04-17'
+addon.version = '2026-09-02'
 
 _Globals = { }
 _Globals.Initialized = false
